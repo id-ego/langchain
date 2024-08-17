@@ -5,10 +5,6 @@
   "trailingSlash": true,
   "rewrites": [
     {
-      "source": "/v0.2/:path*",
-      "destination": "/:path*"
-    },
-    {
       "source": "/v0.1",
       "destination": "https://langchain-v01.vercel.app/v0.1"
     },
