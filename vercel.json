@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn build",
+  "buildCommand": "sh ./vercel-build.sh",
   "outputDirectory": "build",
   "ignoreCommand": "bash ignore-step.sh",
   "trailingSlash": true,
