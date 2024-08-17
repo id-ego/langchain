@@ -61,7 +61,7 @@ Direct Vector Access Index supports direct read and write of embedding vectors a
 
 ```python
 vector_search_endpoint_name = "vector_search_demo_endpoint"
-index_name = "ml.llm.demo_index"
+index_name = "vector_search_demo.vector_search.state_of_the_union_index"
 
 index = vsc.create_direct_access_index(
     endpoint_name=vector_search_endpoint_name,
@@ -111,7 +111,16 @@ print(docs[0].page_content)
 You can also use `DatabricksVectorSearch` to search in a Delta Sync Index. Delta Sync Index automatically syncs from a Delta table. You don't need to call `add_text`/`add_documents` manually. See [Databricks documentation page](https://docs.databricks.com/en/generative-ai/vector-search.html#delta-sync-index-with-managed-embeddings) for more details.
 
 ```python
-dvs_delta_sync = DatabricksVectorSearch("catalog_name.schema_name.delta_sync_index")
+delta_sync_index = vsc.create_delta_sync_index(
+    endpoint_name=vector_search_endpoint_name,
+    source_table_name="vector_search_demo.vector_search.state_of_the_union",
+    index_name="vector_search_demo.vector_search.state_of_the_union_index",
+    pipeline_type="TRIGGERED",
+    primary_key="id",
+    embedding_source_column="text",
+    embedding_model_endpoint_name="e5-small-v2",
+)
+dvs_delta_sync = DatabricksVectorSearch(delta_sync_index)
 dvs_delta_sync.similarity_search(query)
 ```
 
