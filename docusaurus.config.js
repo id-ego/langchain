@@ -196,11 +196,6 @@ const config = {
 						items: [
 							{
 								type: "doc",
-								docId: "people",
-								label: "People",
-							},
-							{
-								type: "doc",
 								docId: "contributing/index",
 								label: "Contributing",
 							},
