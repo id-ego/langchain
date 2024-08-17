@@ -93,6 +93,7 @@ const config = {
 						...args
 					}) {
 						const sidebarItems = await defaultSidebarItemsGenerator(args);
+						// biome-ignore lint/complexity/noForEach: <explanation>
 						sidebarItems.forEach((subItem) => {
 							// This allows breaking long sidebar labels into multiple lines
 							// by inserting a zero-width space after each slash.
