@@ -359,11 +359,6 @@ const config = {
 			crossorigin: "anonymous",
 		},
 	],
-
-	// customFields: {
-	// 	supabasePublicKey: process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY,
-	// 	supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-	// },
 };
 
 module.exports = config;
