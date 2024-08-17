@@ -25,6 +25,11 @@ const config = {
 	onBrokenLinks: "warn",
 	onBrokenMarkdownLinks: "warn",
 
+	i18n: {
+		defaultLocale: "en",
+		locales: ["en", "ko"],
+	},
+
 	themes: ["@docusaurus/theme-mermaid"],
 	markdown: {
 		mermaid: true,
@@ -331,7 +336,7 @@ const config = {
 						],
 					},
 				],
-				copyright: `Copyright © ${new Date().getFullYear()} LangChain, Inc.`,
+				copyright: `Copyright © ${new Date().getFullYear()} id-ego.`,
 			},
 			// algolia: {
 			// 	// The application ID provided by Algolia
