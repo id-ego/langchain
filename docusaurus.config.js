@@ -27,7 +27,7 @@ const config = {
 
 	i18n: {
 		defaultLocale: "en",
-		locales: ["en", "ko"],
+		locales: ["en"],
 	},
 
 	themes: ["@docusaurus/theme-mermaid"],
