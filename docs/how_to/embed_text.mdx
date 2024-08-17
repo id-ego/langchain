@@ -138,14 +138,10 @@ embeddings = embeddings_model.embed_documents(
 len(embeddings), len(embeddings[0])
 ```
 
-<CodeOutputBlock language="python">
-
 
 ```
 (5, 1536)
 ```
-
-</CodeOutputBlock>
 
 
 ### `embed_query`
@@ -157,8 +153,6 @@ embedded_query = embeddings_model.embed_query("What was the name mentioned in th
 embedded_query[:5]
 ```
 
-<CodeOutputBlock language="python">
-
 
 ```
 [0.0053587136790156364,
@@ -167,5 +161,3 @@ embedded_query[:5]
  -0.003001077566295862,
  -0.00900818221271038]
 ```
-
-</CodeOutputBlock>
