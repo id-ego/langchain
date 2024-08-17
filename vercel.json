@@ -5,8 +5,8 @@
   "trailingSlash": true,
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/v0.2/"
+      "source": "/:path*",
+      "destination": "/v0.2/:path*"
     },
     {
       "source": "/v0.1",
