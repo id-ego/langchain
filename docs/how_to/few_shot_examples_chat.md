@@ -34,7 +34,6 @@ The basic components of the template are:
 
 Below is a simple demonstration. First, define the examples you'd like to include. Let's give the LLM an unfamiliar mathematical operator, denoted by the "🦜" emoji:
 
-
 ```python
 %pip install -qU langchain langchain-openai langchain-chroma
 
@@ -46,7 +45,6 @@ os.environ["OPENAI_API_KEY"] = getpass()
 
 If we try to ask the model what the result of this expression is, it will fail:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use few shot examples in chat models"}]-->
 from langchain_openai import ChatOpenAI
@@ -56,15 +54,11 @@ model = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.0)
 model.invoke("What is 2 🦜 9?")
 ```
 
-
-
 ```output
 AIMessage(content='The expression "2 🦜 9" is not a standard mathematical operation or equation. It appears to be a combination of the number 2 and the parrot emoji 🦜 followed by the number 9. It does not have a specific mathematical meaning.', response_metadata={'token_usage': {'completion_tokens': 54, 'prompt_tokens': 17, 'total_tokens': 71}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-aad12dda-5c47-4a1e-9949-6fe94e03242a-0', usage_metadata={'input_tokens': 17, 'output_tokens': 54, 'total_tokens': 71})
 ```
 
-
 Now let's see what happens if we give the LLM some examples to work with. We'll define some below:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use few shot examples in chat models"}, {"imported": "FewShotChatMessagePromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotChatMessagePromptTemplate.html", "title": "How to use few shot examples in chat models"}]-->
@@ -77,7 +71,6 @@ examples = [
 ```
 
 Next, assemble them into the few-shot prompt template.
-
 
 ```python
 # This is a prompt template used to format each individual example.
@@ -99,7 +92,6 @@ print(few_shot_prompt.invoke({}).to_messages())
 ```
 Finally, we assemble the final prompt as shown below, passing `few_shot_prompt` directly into the `from_messages` factory method, and use it with a model:
 
-
 ```python
 final_prompt = ChatPromptTemplate.from_messages(
     [
@@ -112,7 +104,6 @@ final_prompt = ChatPromptTemplate.from_messages(
 
 And now let's ask the model the initial question and see how it does:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use few shot examples in chat models"}]-->
 from langchain_openai import ChatOpenAI
@@ -122,12 +113,9 @@ chain = final_prompt | model
 chain.invoke({"input": "What is 2 🦜 9?"})
 ```
 
-
-
 ```output
 AIMessage(content='11', response_metadata={'token_usage': {'completion_tokens': 1, 'prompt_tokens': 60, 'total_tokens': 61}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-5ec4e051-262f-408e-ad00-3f2ebeb561c3-0', usage_metadata={'input_tokens': 60, 'output_tokens': 1, 'total_tokens': 61})
 ```
-
 
 And we can see that the model has now inferred that the parrot emoji means addition from the given few-shot examples!
 
@@ -141,7 +129,6 @@ Sometimes you may want to select only a few examples from your overall set to sh
 These once again can be composed with other messages and chat templates to assemble your final prompt.
 
 Let's walk through an example with the `SemanticSimilarityExampleSelector`. Since this implementation uses a vectorstore to select examples based on semantic similarity, we will want to first populate the store. Since the basic idea here is that we want to search for and return examples most similar to the text input, we embed the `values` of our prompt examples rather than considering the keys:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to use few shot examples in chat models"}, {"imported": "SemanticSimilarityExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html", "title": "How to use few shot examples in chat models"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use few shot examples in chat models"}]-->
@@ -169,7 +156,6 @@ vectorstore = Chroma.from_texts(to_vectorize, embeddings, metadatas=examples)
 
 With a vectorstore created, we can create the `example_selector`. Here we will call it in isolation, and set `k` on it to only fetch the two example closest to the input.
 
-
 ```python
 example_selector = SemanticSimilarityExampleSelector(
     vectorstore=vectorstore,
@@ -180,18 +166,14 @@ example_selector = SemanticSimilarityExampleSelector(
 example_selector.select_examples({"input": "horse"})
 ```
 
-
-
 ```output
 [{'input': 'What did the cow say to the moon?', 'output': 'nothing at all'},
  {'input': '2 🦜 4', 'output': '6'}]
 ```
 
-
 ### Create prompt template
 
 We now assemble the prompt template, using the `example_selector` created above.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use few shot examples in chat models"}, {"imported": "FewShotChatMessagePromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotChatMessagePromptTemplate.html", "title": "How to use few shot examples in chat models"}]-->
@@ -217,7 +199,6 @@ print(few_shot_prompt.invoke(input="What's 3 🦜 3?").to_messages())
 ```
 And we can pass this few-shot chat message prompt template into another chat prompt template:
 
-
 ```python
 final_prompt = ChatPromptTemplate.from_messages(
     [
@@ -236,19 +217,15 @@ messages=[HumanMessage(content='2 🦜 3'), AIMessage(content='5'), HumanMessage
 
 Finally, you can connect your model to the few-shot prompt.
 
-
 ```python
 chain = final_prompt | ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.0)
 
 chain.invoke({"input": "What's 3 🦜 3?"})
 ```
 
-
-
 ```output
 AIMessage(content='6', response_metadata={'token_usage': {'completion_tokens': 1, 'prompt_tokens': 60, 'total_tokens': 61}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-d1863e5e-17cd-4e9d-bf7a-b9f118747a65-0', usage_metadata={'input_tokens': 60, 'output_tokens': 1, 'total_tokens': 61})
 ```
-
 
 ## Next steps
 

@@ -6,7 +6,6 @@ sidebar_position: 1.5
 
 # How to stream chat model responses
 
-
 All [chat models](https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html) implement the [Runnable interface](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable), which comes with a **default** implementations of standard runnable methods (i.e. `ainvoke`, `batch`, `abatch`, `stream`, `astream`, `astream_events`).
 
 The **default** streaming implementation provides an`Iterator` (or `AsyncIterator` for asynchronous streaming) that yields a single value: the final output from the underlying chat model provider.
@@ -25,7 +24,6 @@ See which [integrations support token-by-token streaming here](/docs/integration
 
 Below we use a `|` to help visualize the delimiter between tokens.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to stream chat model responses"}]-->
 from langchain_anthropic.chat_models import ChatAnthropic
@@ -43,7 +41,6 @@ Gol|dfish| swimming|,| peaceful| an|d free|,|
 Se|ren|ely| |drif|ting| across| the| lunar| sea|.|
 ```
 ## Async Streaming
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to stream chat model responses"}]-->
@@ -68,7 +65,6 @@ Where| their| aqu|atic| dream|'s| unf|ur|le|d.|
 Chat models also support the standard [astream events](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream_events) method.
 
 This method is useful if you're streaming output from a larger LLM application that contains multiple steps (e.g., an LLM chain composed of a prompt, llm and parser).
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to stream chat model responses"}]-->

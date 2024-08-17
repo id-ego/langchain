@@ -21,7 +21,6 @@ You can build a retriever from a vectorstore using its [.as_retriever](https://a
 
 First we instantiate a vectorstore. We will use an in-memory [FAISS](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html) vectorstore:
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "How to use a vectorstore as a retriever"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to use a vectorstore as a retriever"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use a vectorstore as a retriever"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to use a vectorstore as a retriever"}]-->
 from langchain_community.document_loaders import TextLoader
@@ -40,13 +39,11 @@ vectorstore = FAISS.from_documents(texts, embeddings)
 
 We can then instantiate a retriever:
 
-
 ```python
 retriever = vectorstore.as_retriever()
 ```
 
 This creates a retriever (specifically a [VectorStoreRetriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStoreRetriever.html)), which we can use in the usual way:
-
 
 ```python
 docs = retriever.invoke("what did the president say about ketanji brown jackson?")
@@ -57,11 +54,9 @@ By default, the vector store retriever uses similarity search. If the underlying
 
 This effectively specifies what method on the underlying vectorstore is used (e.g., `similarity_search`, `max_marginal_relevance_search`, etc.).
 
-
 ```python
 retriever = vectorstore.as_retriever(search_type="mmr")
 ```
-
 
 ```python
 docs = retriever.invoke("what did the president say about ketanji brown jackson?")
@@ -75,13 +70,11 @@ We can pass parameters to the underlying vectorstore's search methods using `sea
 
 For example, we can set a similarity score threshold and only return documents with a score above that threshold.
 
-
 ```python
 retriever = vectorstore.as_retriever(
     search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.5}
 )
 ```
-
 
 ```python
 docs = retriever.invoke("what did the president say about ketanji brown jackson?")
@@ -91,18 +84,14 @@ docs = retriever.invoke("what did the president say about ketanji brown jackson?
 
 We can also limit the number of documents `k` returned by the retriever.
 
-
 ```python
 retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
 ```
-
 
 ```python
 docs = retriever.invoke("what did the president say about ketanji brown jackson?")
 len(docs)
 ```
-
-
 
 ```output
 1

@@ -15,7 +15,7 @@ Inspired by Daniel Gross's snippet here: [https://gist.github.com/danielgross/3a
 | [MathPixPDFLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.MathpixPDFLoader.html) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) | ✅ | ❌ | ❌ | 
 ### Loader features
 | Source | Document Lazy Loading | Native Async Support
-| :---: | :---: | :---: | 
+| :---: | :---: | :---: |
 | MathPixPDFLoader | ✅ | ❌ | 
 
 ## Setup
@@ -23,7 +23,6 @@ Inspired by Daniel Gross's snippet here: [https://gist.github.com/danielgross/3a
 ### Credentials
 
 Sign up for Mathpix and [create an API key](https://mathpix.com/docs/ocr/creating-an-api-key) to set the `MATHPIX_API_KEY` variables in your environment
-
 
 ```python
 import getpass
@@ -35,7 +34,6 @@ if "MATHPIX_API_KEY" not in os.environ:
 
 If you want to get automated best in-class tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -45,7 +43,6 @@ If you want to get automated best in-class tracing of your model calls you can a
 
 Install **langchain_community**.
 
-
 ```python
 %pip install -qU langchain_community
 ```
@@ -53,7 +50,6 @@ Install **langchain_community**.
 ## Initialization
 
 Now we are ready to initialize our loader:
-
 
 ```python
 <!--IMPORTS:[{"imported": "MathpixPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.MathpixPDFLoader.html", "title": "MathPixPDFLoader"}]-->
@@ -65,19 +61,16 @@ loader = MathpixPDFLoader(file_path)
 
 ## Load
 
-
 ```python
 docs = loader.load()
 docs[0]
 ```
-
 
 ```python
 print(docs[0].metadata)
 ```
 
 ## Lazy Load
-
 
 ```python
 page = []
@@ -93,7 +86,6 @@ for doc in loader.lazy_load():
 ## API reference
 
 For detailed documentation of all MathpixPDFLoader features and configurations head to the API reference: https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.MathpixPDFLoader.html
-
 
 ## Related
 

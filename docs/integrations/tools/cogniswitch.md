@@ -12,17 +12,13 @@ CogniSwitch is used to build production ready applications that can consume, org
 Visit [this page](https://www.cogniswitch.ai/developer?utm_source=langchain&utm_medium=langchainbuild&utm_id=dev) to register a Cogniswitch account.
 
 - Signup with your email and verify your registration 
-
 - You will get a mail with a platform token and oauth token for using the services.
-
-
 
 ```python
 %pip install -qU langchain-community
 ```
 
 ## Import necessary libraries
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_conversational_retrieval_agent", "source": "langchain.agents.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_toolkits.conversational_retrieval.openai_functions.create_conversational_retrieval_agent.html", "title": "Cogniswitch Toolkit"}, {"imported": "CogniswitchToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.cogniswitch.toolkit.CogniswitchToolkit.html", "title": "Cogniswitch Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Cogniswitch Toolkit"}]-->
@@ -39,7 +35,6 @@ from langchain_openai import ChatOpenAI
 
 ## Cogniswitch platform token, OAuth token and OpenAI API key
 
-
 ```python
 cs_token = "Your CogniSwitch token"
 OAI_token = "Your OpenAI API token"
@@ -50,7 +45,6 @@ os.environ["OPENAI_API_KEY"] = OAI_token
 
 ## Instantiate the cogniswitch toolkit with the credentials
 
-
 ```python
 cogniswitch_toolkit = CogniswitchToolkit(
     cs_token=cs_token, OAI_token=OAI_token, apiKey=oauth_token
@@ -59,13 +53,11 @@ cogniswitch_toolkit = CogniswitchToolkit(
 
 ### Get the list of cogniswitch tools
 
-
 ```python
 tool_lst = cogniswitch_toolkit.get_tools()
 ```
 
 ## Instantiate the LLM
-
 
 ```python
 llm = ChatOpenAI(
@@ -80,13 +72,11 @@ llm = ChatOpenAI(
 
 ### Create an agent with the LLM and Toolkit
 
-
 ```python
 agent_executor = create_conversational_retrieval_agent(llm, tool_lst, verbose=False)
 ```
 
 ### Invoke the agent to upload a URL
-
 
 ```python
 response = agent_executor.invoke("upload this url https://cogniswitch.ai/developer")
@@ -98,7 +88,6 @@ The URL https://cogniswitch.ai/developer has been uploaded successfully. The sta
 ```
 ### Invoke the agent to upload a File
 
-
 ```python
 response = agent_executor.invoke("upload this file example_file.txt")
 
@@ -108,7 +97,6 @@ print(response["output"])
 The file example_file.txt has been uploaded successfully. The status of the document is currently being processed. You will receive an email notification once the processing is complete.
 ```
 ### Invoke the agent to get the status of a document
-
 
 ```python
 response = agent_executor.invoke("Tell me the status of this document example_file.txt")
@@ -128,7 +116,6 @@ The status of the document example_file.txt is as follows:
 The document is currently being processed.
 ```
 ### Invoke the agent with query and get the answer
-
 
 ```python
 response = agent_executor.invoke("How can cogniswitch help develop GenAI applications?")

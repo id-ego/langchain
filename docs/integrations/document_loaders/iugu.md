@@ -5,10 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Iugu
 
->[Iugu](https://www.iugu.com/) is a Brazilian services and software as a service (SaaS) company. It offers payment-processing software and application programming interfaces for e-commerce websites and mobile applications.
+> [Iugu](https://www.iugu.com/) is a Brazilian services and software as a service (SaaS) company. It offers payment-processing software and application programming interfaces for e-commerce websites and mobile applications.
 
 This notebook covers how to load data from the `Iugu REST API` into a format that can be ingested into LangChain, along with example usage for vectorization.
-
 
 ```python
 <!--IMPORTS:[{"imported": "VectorstoreIndexCreator", "source": "langchain.indexes", "docs": "https://api.python.langchain.com/en/latest/indexes/langchain.indexes.vectorstore.VectorstoreIndexCreator.html", "title": "Iugu"}, {"imported": "IuguLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.iugu.IuguLoader.html", "title": "Iugu"}]-->
@@ -24,12 +23,9 @@ Following resources are available:
 
 `Documentation` [Documentation](https://dev.iugu.com/reference/metadados)
 
-
-
 ```python
 iugu_loader = IuguLoader("charges")
 ```
-
 
 ```python
 # Create a vectorstore retriever from the loader
@@ -38,7 +34,6 @@ iugu_loader = IuguLoader("charges")
 index = VectorstoreIndexCreator().from_loaders([iugu_loader])
 iugu_doc_retriever = index.vectorstore.as_retriever()
 ```
-
 
 ## Related
 

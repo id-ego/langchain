@@ -9,13 +9,11 @@ LangChain provides tools for interacting with a local file system out of the box
 
 **Note:** these tools are not recommended for use outside a sandboxed environment! 
 
-
 ```python
 %pip install -qU langchain-community
 ```
 
 First, we'll import the tools.
-
 
 ```python
 <!--IMPORTS:[{"imported": "FileManagementToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.file_management.toolkit.FileManagementToolkit.html", "title": "File System"}]-->
@@ -34,15 +32,12 @@ If you want to provide all the file tooling to your agent, it's easy to do so wi
 It's recommended to always pass in a root directory, since without one, it's easy for the LLM to pollute the working directory, and without one, there isn't any validation against
 straightforward prompt injection.
 
-
 ```python
 toolkit = FileManagementToolkit(
     root_dir=str(working_directory.name)
 )  # If you don't provide a root_dir, operations will default to the current working directory
 toolkit.get_tools()
 ```
-
-
 
 ```output
 [CopyFileTool(root_dir='/tmp/tmprdvsw3tg'),
@@ -54,11 +49,9 @@ toolkit.get_tools()
  ListDirectoryTool(root_dir='/tmp/tmprdvsw3tg')]
 ```
 
-
 ### Selecting File System Tools
 
 If you only want to select certain tools, you can pass them in as arguments when initializing the toolkit, or you can individually initialize the desired tools.
-
 
 ```python
 tools = FileManagementToolkit(
@@ -68,41 +61,29 @@ tools = FileManagementToolkit(
 tools
 ```
 
-
-
 ```output
 [ReadFileTool(root_dir='/tmp/tmprdvsw3tg'),
  WriteFileTool(root_dir='/tmp/tmprdvsw3tg'),
  ListDirectoryTool(root_dir='/tmp/tmprdvsw3tg')]
 ```
 
-
-
 ```python
 read_tool, write_tool, list_tool = tools
 write_tool.invoke({"file_path": "example.txt", "text": "Hello World!"})
 ```
 
-
-
 ```output
 'File written successfully to example.txt.'
 ```
-
-
 
 ```python
 # List files in the working directory
 list_tool.invoke({})
 ```
 
-
-
 ```output
 'example.txt'
 ```
-
-
 
 ## Related
 

@@ -13,7 +13,6 @@ It can understand and perform tasks based on natural dialogue.
 
 ## Use SparkLLM
 
-
 ```python
 import os
 
@@ -21,7 +20,6 @@ os.environ["IFLYTEK_SPARK_APP_ID"] = "app_id"
 os.environ["IFLYTEK_SPARK_API_KEY"] = "api_key"
 os.environ["IFLYTEK_SPARK_API_SECRET"] = "api_secret"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "SparkLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sparkllm.SparkLLM.html", "title": "SparkLLM"}]-->
@@ -45,13 +43,9 @@ res = llm.generate(prompts=["hello!"])
 res
 ```
 
-
-
 ```output
 LLMResult(generations=[[Generation(text='Hello! How can I assist you today?')]], llm_output=None, run=[RunInfo(run_id=UUID('d8cdcd41-a698-4cbf-a28d-e74f9cd2037b'))])
 ```
-
-
 
 ```python
 for res in llm.stream("foo:"):

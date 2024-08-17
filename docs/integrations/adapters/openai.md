@@ -11,7 +11,6 @@ A lot of people get started with OpenAI but want to explore other models. LangCh
 
 At the moment this only deals with output and does not return other information (token counts, stop reasons, etc).
 
-
 ```python
 <!--IMPORTS:[{"imported": "openai", "source": "langchain_community.adapters", "docs": "https://api.python.langchain.com/en/latest/adapters/langchain_community.adapters.openai.openai.html", "title": "OpenAI Adapter"}]-->
 import openai
@@ -20,13 +19,11 @@ from langchain_community.adapters import openai as lc_openai
 
 ## chat.completions.create
 
-
 ```python
 messages = [{"role": "user", "content": "hi"}]
 ```
 
 Original OpenAI call
-
 
 ```python
 result = openai.chat.completions.create(
@@ -35,8 +32,6 @@ result = openai.chat.completions.create(
 result.choices[0].message.model_dump()
 ```
 
-
-
 ```output
 {'content': 'Hello! How can I assist you today?',
  'role': 'assistant',
@@ -44,9 +39,7 @@ result.choices[0].message.model_dump()
  'tool_calls': None}
 ```
 
-
 LangChain OpenAI wrapper call
-
 
 ```python
 lc_result = lc_openai.chat.completions.create(
@@ -56,27 +49,19 @@ lc_result = lc_openai.chat.completions.create(
 lc_result.choices[0].message  # Attribute access
 ```
 
-
-
 ```output
 {'role': 'assistant', 'content': 'Hello! How can I help you today?'}
 ```
-
-
 
 ```python
 lc_result["choices"][0]["message"]  # Also compatible with index access
 ```
 
-
-
 ```output
 {'role': 'assistant', 'content': 'Hello! How can I help you today?'}
 ```
 
-
 Swapping out model providers
-
 
 ```python
 lc_result = lc_openai.chat.completions.create(
@@ -85,17 +70,13 @@ lc_result = lc_openai.chat.completions.create(
 lc_result.choices[0].message
 ```
 
-
-
 ```output
 {'role': 'assistant', 'content': 'Hello! How can I assist you today?'}
 ```
 
-
 ## chat.completions.stream
 
 Original OpenAI call
-
 
 ```python
 for c in openai.chat.completions.create(
@@ -118,7 +99,6 @@ for c in openai.chat.completions.create(
 ```
 LangChain OpenAI wrapper call
 
-
 ```python
 for c in lc_openai.chat.completions.create(
     messages=messages, model="gpt-3.5-turbo", temperature=0, stream=True
@@ -139,7 +119,6 @@ for c in lc_openai.chat.completions.create(
 {}
 ```
 Swapping out model providers
-
 
 ```python
 for c in lc_openai.chat.completions.create(

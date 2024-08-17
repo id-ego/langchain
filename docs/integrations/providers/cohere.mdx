@@ -4,8 +4,8 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/providers/cohere/
 
 # Cohere
 
->[Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models
-> that help companies improve human-machine interactions.
+> [Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models
+that help companies improve human-machine interactions.
 
 ## Installation and Setup
 - Install the Python SDK :
@@ -41,7 +41,6 @@ print(chat.invoke(messages))
 Usage of the Cohere [chat model](/docs/integrations/chat/cohere)
 
 ### LLM
-
 
 ```python
 <!--IMPORTS:[{"imported": "Cohere", "source": "langchain_cohere.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_cohere.llms.Cohere.html", "title": "Cohere"}]-->
@@ -99,7 +98,7 @@ while res.tool_calls:
 
 print(res.content)
 ```
-Tool calling with Cohere LLM can be done by binding the necessary tools to the llm as seen above. 
+Tool calling with Cohere LLM can be done by binding the necessary tools to the llm as seen above.
 An alternative, is to support multi hop tool calling with the ReAct agent as seen below.
 
 ### ReAct Agent

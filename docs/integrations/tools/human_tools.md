@@ -5,14 +5,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Human as a tool
 
-Human are AGI so they can certainly be used as a tool to help out AI agent 
+Human are AGI so they can certainly be used as a tool to help out AI agent
 when it is confused.
-
 
 ```python
 %pip install --upgrade --quiet  langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Human as a tool"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Human as a tool"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Human as a tool"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Human as a tool"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Human as a tool"}]-->
@@ -36,7 +34,6 @@ agent_chain = initialize_agent(
 
 In the above code you can see the tool takes input directly from command line.
 You can customize `prompt_func` and `input_func` according to your need (as shown below).
-
 
 ```python
 agent_chain.run("What's my friend Eric's surname?")
@@ -62,18 +59,15 @@ Final Answer: Eric's surname is Zhu.[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 "Eric's surname is Zhu."
 ```
-
 
 ## Configuring the Input Function
 
 By default, the `HumanInputRun` tool uses the python `input` function to get input from the user.
 You can customize the input_func to be anything you'd like.
 For instance, if you want to accept multi-line input, you could do the following:
-
 
 ```python
 def get_input() -> str:
@@ -94,7 +88,6 @@ def get_input() -> str:
 tools = load_tools(["human", "ddg-search"], llm=math_llm, input_func=get_input)
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanInputRun", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.human.tool.HumanInputRun.html", "title": "Human as a tool"}]-->
 # Or you can directly instantiate the tool
@@ -102,7 +95,6 @@ from langchain_community.tools import HumanInputRun
 
 tool = HumanInputRun(input_func=get_input)
 ```
-
 
 ```python
 agent_chain = initialize_agent(
@@ -112,7 +104,6 @@ agent_chain = initialize_agent(
     verbose=True,
 )
 ```
-
 
 ```python
 agent_chain.run("I need help attributing a quote")
@@ -159,12 +150,9 @@ Final Answer: Julius Caesar said the quote "Veni, vidi, vici" which means "I cam
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Julius Caesar said the quote "Veni, vidi, vici" which means "I came, I saw, I conquered".'
 ```
-
-
 
 ## Related
 

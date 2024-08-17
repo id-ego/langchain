@@ -12,8 +12,7 @@ The [Hugging Face Model Hub](https://huggingface.co/models) hosts over 120k mode
 
 These can be called from LangChain through this local pipeline wrapper class.
 
-To use, you should have the ``transformers`` python [package installed](https://pypi.org/project/transformers/), as well as [pytorch](https://pytorch.org/get-started/locally/), [intel-extension-for-transformers](https://github.com/intel/intel-extension-for-transformers).
-
+To use, you should have the `transformers` python [package installed](https://pypi.org/project/transformers/), as well as [pytorch](https://pytorch.org/get-started/locally/), [intel-extension-for-transformers](https://github.com/intel/intel-extension-for-transformers).
 
 ```python
 %pip install transformers --quiet
@@ -23,7 +22,6 @@ To use, you should have the ``transformers`` python [package installed](https://
 ### Model Loading
 
 Models can be loaded by specifying the model parameters using the `from_model_id` method. The model parameters include `WeightOnlyQuantConfig` class in intel_extension_for_transformers.
-
 
 ```python
 <!--IMPORTS:[{"imported": "WeightOnlyQuantPipeline", "source": "langchain_community.llms.weight_only_quantization", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.weight_only_quantization.WeightOnlyQuantPipeline.html", "title": "Intel Weight-Only Quantization"}]-->
@@ -40,7 +38,6 @@ hf = WeightOnlyQuantPipeline.from_model_id(
 ```
 
 They can also be loaded by passing in an existing `transformers` pipeline directly
-
 
 ```python
 from intel_extension_for_transformers.transformers import AutoModelForSeq2SeqLM
@@ -59,7 +56,6 @@ hf = WeightOnlyQuantPipeline(pipeline=pipe)
 
 With the model loaded into memory, you can compose it with a prompt to
 form a chain.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Intel Weight-Only Quantization"}]-->
@@ -81,7 +77,6 @@ print(chain.invoke({"question": question}))
 
 Now intel-extension-for-transformers only support CPU device inference. Will support intel GPU soon.When running on a machine with CPU, you can specify the `device="cpu"` or `device=-1` parameter to put the model on CPU device.
 Defaults to `-1` for CPU inference.
-
 
 ```python
 conf = WeightOnlyQuantConfig(weight_dtype="nf4")
@@ -107,7 +102,6 @@ print(chain.invoke({"question": question}))
 ### Batch CPU Inference
 
 You can also run inference on the CPU in batch mode.
-
 
 ```python
 conf = WeightOnlyQuantConfig(weight_dtype="nf4")
@@ -158,8 +152,6 @@ Quantization algorithms supported in intel-extension-for-transformers(algorithm 
 > **AWQ:** Proved that protecting only 1% of salient weights can greatly reduce quantization error. the salient weight channels are selected by observing the distribution of activation and weight per channel. The salient weights are also quantized after multiplying a big scale factor before quantization for preserving.
 
 > **TEQ:** A trainable equivalent transformation that preserves the FP32 precision in weight-only quantization. It is inspired by AWQ while providing a new solution to search for the optimal per-channel scaling factor between activations and weights.
-
-
 
 ## Related
 

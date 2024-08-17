@@ -5,8 +5,8 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Sentence Transformers on Hugging Face
 
->[Hugging Face sentence-transformers](https://huggingface.co/sentence-transformers) is a Python framework for state-of-the-art sentence, text and image embeddings.
->You can use these embedding models from the `HuggingFaceEmbeddings` class.
+> [Hugging Face sentence-transformers](https://huggingface.co/sentence-transformers) is a Python framework for state-of-the-art sentence, text and image embeddings.
+You can use these embedding models from the `HuggingFaceEmbeddings` class.
 
 :::caution
 
@@ -18,13 +18,11 @@ Running sentence-transformers locally can be affected by your operating system a
 
 You'll need to install the `langchain_huggingface` package as a dependency:
 
-
 ```python
 %pip install -qU langchain-huggingface
 ```
 
 ## Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Sentence Transformers on Hugging Face"}]-->
@@ -53,11 +51,9 @@ print(str(doc_result)[:100] + "...")
 
 If you are having issues with the `accelerate` package not being found or failing to import, installing/upgrading it may help:
 
-
 ```python
 %pip install -qU accelerate
 ```
-
 
 ## Related
 

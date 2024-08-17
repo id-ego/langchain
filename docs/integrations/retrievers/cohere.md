@@ -5,10 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Cohere RAG
 
->[Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models that help companies improve human-machine interactions.
+> [Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models that help companies improve human-machine interactions.
 
 This notebook covers how to get started with the `Cohere RAG` retriever. This allows you to leverage the ability to search documents over various connectors or by supplying your own.
-
 
 ```python
 import getpass
@@ -17,18 +16,15 @@ import os
 os.environ["COHERE_API_KEY"] = getpass.getpass()
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatCohere", "source": "langchain_cohere", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_cohere.chat_models.ChatCohere.html", "title": "Cohere RAG"}, {"imported": "CohereRagRetriever", "source": "langchain_cohere", "docs": "https://api.python.langchain.com/en/latest/rag_retrievers/langchain_cohere.rag_retrievers.CohereRagRetriever.html", "title": "Cohere RAG"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Cohere RAG"}]-->
 from langchain_cohere import ChatCohere, CohereRagRetriever
 from langchain_core.documents import Document
 ```
 
-
 ```python
 rag = CohereRagRetriever(llm=ChatCohere())
 ```
-
 
 ```python
 def _pretty_print(docs):
@@ -37,7 +33,6 @@ def _pretty_print(docs):
         print("\n\n" + doc.page_content)
         print("\n\n" + "-" * 30 + "\n\n")
 ```
-
 
 ```python
 _pretty_print(rag.invoke("What is cohere ai?"))
@@ -141,7 +136,6 @@ Langchain supports cohere RAG!
 ------------------------------
 ```
 Please note that connectors and documents cannot be used simultaneously. If you choose to provide documents in the `invoke` method, they will take precedence, and connectors will not be utilized for that particular request, as shown in the snippet above!
-
 
 ## Related
 

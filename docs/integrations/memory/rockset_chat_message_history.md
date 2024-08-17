@@ -5,14 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Rockset
 
->[Rockset](https://rockset.com/product/) is a real-time analytics database service for serving low latency, high concurrency analytical queries at scale. It builds a Converged Index™ on structured and semi-structured data with an efficient store for vector embeddings. Its support for running SQL on schemaless data makes it a perfect choice for running vector search with metadata filters. 
-
+> [Rockset](https://rockset.com/product/) is a real-time analytics database service for serving low latency, high concurrency analytical queries at scale. It builds a Converged Index™ on structured and semi-structured data with an efficient store for vector embeddings. Its support for running SQL on schemaless data makes it a perfect choice for running vector search with metadata filters. 
 
 This notebook goes over how to use [Rockset](https://rockset.com/docs) to store chat message history. 
 
-
 ## Setting up
-
 
 ```python
 %pip install --upgrade --quiet  rockset langchain-community
@@ -21,7 +18,6 @@ This notebook goes over how to use [Rockset](https://rockset.com/docs) to store 
 To begin, with get your API key from the [Rockset console](https://console.rockset.com/apikeys). Find your API region for the Rockset [API reference](https://rockset.com/docs/rest-api#introduction).
 
 ## Example
-
 
 ```python
 <!--IMPORTS:[{"imported": "RocksetChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.rocksetdb.RocksetChatMessageHistory.html", "title": "Rockset"}]-->

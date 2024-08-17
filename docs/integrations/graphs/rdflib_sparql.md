@@ -5,12 +5,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # RDFLib
 
->[RDFLib](https://rdflib.readthedocs.io/) is a pure Python package for working with [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework). `RDFLib` contains most things you need to work with `RDF`, including:
->- parsers and serializers for RDF/XML, N3, NTriples, N-Quads, Turtle, TriX, Trig and JSON-LD
->- a Graph interface which can be backed by any one of a number of Store implementations
->- store implementations for in-memory, persistent on disk (Berkeley DB) and remote SPARQL endpoints
->- a SPARQL 1.1 implementation - supporting SPARQL 1.1 Queries and Update statements
->- SPARQL function extension mechanisms
+> [RDFLib](https://rdflib.readthedocs.io/) is a pure Python package for working with [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework). `RDFLib` contains most things you need to work with `RDF`, including:
+> - parsers and serializers for RDF/XML, N3, NTriples, N-Quads, Turtle, TriX, Trig and JSON-LD
+> - a Graph interface which can be backed by any one of a number of Store implementations
+> - store implementations for in-memory, persistent on disk (Berkeley DB) and remote SPARQL endpoints
+> - a SPARQL 1.1 implementation - supporting SPARQL 1.1 Queries and Update statements
+> - SPARQL function extension mechanisms
 
 Graph databases are an excellent choice for applications based on network-like models. To standardize the syntax and semantics of such graphs, the W3C recommends `Semantic Web Technologies`, cp. [Semantic Web](https://www.w3.org/standards/semanticweb/). 
 
@@ -22,13 +22,11 @@ Graph databases are an excellent choice for applications based on network-like m
 
 We have to install a python library:
 
-
 ```python
 !pip install rdflib
 ```
 
 There are several sources you can run queries against, including files on the web, files you have available locally, SPARQL endpoints, e.g., [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page), and [triple stores](https://www.w3.org/wiki/LargeTripleStores).
-
 
 ```python
 <!--IMPORTS:[{"imported": "GraphSparqlQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.sparql.GraphSparqlQAChain.html", "title": "RDFLib"}, {"imported": "RdfGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.rdf_graph.RdfGraph.html", "title": "RDFLib"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "RDFLib"}]-->
@@ -36,7 +34,6 @@ from langchain.chains import GraphSparqlQAChain
 from langchain_community.graphs import RdfGraph
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 graph = RdfGraph(
@@ -51,11 +48,9 @@ Note that providing a `local_file` is necessary for storing changes locally if t
 ## Refresh graph schema information
 If the schema of the database changes, you can refresh the schema information needed to generate SPARQL queries.
 
-
 ```python
 graph.load_schema()
 ```
-
 
 ```python
 graph.get_schema
@@ -71,13 +66,11 @@ The RDF graph supports the following relationships:
 
 Now, you can use the graph SPARQL QA chain to ask questions about the graph.
 
-
 ```python
 chain = GraphSparqlQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True
 )
 ```
-
 
 ```python
 chain.run("What is Tim Berners-Lee's work homepage?")
@@ -101,16 +94,13 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 "Tim Berners-Lee's work homepage is http://www.w3.org/People/Berners-Lee/."
 ```
 
-
 ## Updating the graph
 
 Analogously, you can update the graph, i.e., insert triples, using natural language.
-
 
 ```python
 chain.run(
@@ -135,14 +125,11 @@ WHERE {
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Successfully inserted triples into the graph.'
 ```
 
-
 Let's verify the results:
-
 
 ```python
 query = (
@@ -156,24 +143,19 @@ query = (
 graph.query(query)
 ```
 
-
-
 ```output
 [(rdflib.term.URIRef('https://www.w3.org/'),),
  (rdflib.term.URIRef('http://www.w3.org/foo/bar/'),)]
 ```
 
-
 ## Return SPARQL query
 You can return the SPARQL query step from the Sparql QA Chain using the `return_sparql_query` parameter
-
 
 ```python
 chain = GraphSparqlQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, return_sparql_query=True
 )
 ```
-
 
 ```python
 result = chain("What is Tim Berners-Lee's work homepage?")

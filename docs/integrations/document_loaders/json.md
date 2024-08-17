@@ -17,19 +17,18 @@ This notebook provides a quick overview for getting started with JSON [document 
 | [JSONLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.json_loader.JSONLoader.html) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) | ✅ | ❌ | ✅ | 
 ### Loader features
 | Source | Document Lazy Loading | Native Async Support
-| :---: | :---: | :---: | 
+| :---: | :---: | :---: |
 | JSONLoader | ✅ | ❌ | 
 
 ## Setup
 
-To access JSON document loader you'll need to install the `langchain-community` integration package as well as the ``jq`` python package.
+To access JSON document loader you'll need to install the `langchain-community` integration package as well as the `jq` python package.
 
 ### Credentials
 
 No credentials are required to use the `JSONLoader` class.
 
 If you want to get automated best in-class tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -40,7 +39,6 @@ If you want to get automated best in-class tracing of your model calls you can a
 
 Install **langchain_community** and **jq**:
 
-
 ```python
 %pip install -qU langchain_community jq 
 ```
@@ -50,7 +48,6 @@ Install **langchain_community** and **jq**:
 Now we can instantiate our model object and load documents:
 
 - TODO: Update model instantiation with relevant params.
-
 
 ```python
 <!--IMPORTS:[{"imported": "JSONLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.json_loader.JSONLoader.html", "title": "JSONLoader"}]-->
@@ -65,19 +62,14 @@ loader = JSONLoader(
 
 ## Load
 
-
 ```python
 docs = loader.load()
 docs[0]
 ```
 
-
-
 ```output
 Document(metadata={'source': '/Users/isaachershenson/Documents/langchain/docs/docs/integrations/document_loaders/example_data/facebook_chat.json', 'seq_num': 1}, page_content='Bye!')
 ```
-
-
 
 ```python
 print(docs[0].metadata)
@@ -86,7 +78,6 @@ print(docs[0].metadata)
 {'source': '/Users/isaachershenson/Documents/langchain/docs/docs/integrations/document_loaders/example_data/facebook_chat.json', 'seq_num': 1}
 ```
 ## Lazy Load
-
 
 ```python
 pages = []
@@ -103,7 +94,6 @@ for doc in loader.lazy_load():
 
 If you want to load documents from a JSON Lines file, you pass `json_lines=True`
 and specify `jq_schema` to extract `page_content` from a single JSON object.
-
 
 ```python
 loader = JSONLoader(
@@ -123,7 +113,6 @@ page_content='Bye!' metadata={'source': '/Users/isaachershenson/Documents/langch
 
 Another option is to set `jq_schema='.'` and provide a `content_key` in order to only load specific content:
 
-
 ```python
 loader = JSONLoader(
     file_path="./example_data/facebook_chat_messages.jsonl",
@@ -141,7 +130,6 @@ page_content='User 2' metadata={'source': '/Users/isaachershenson/Documents/lang
 ## JSON file with jq schema `content_key`
 
 To load documents from a JSON file using the `content_key` within the jq schema, set `is_content_key_jq_parsable=True`. Ensure that `content_key` is compatible and can be parsed using the jq schema.
-
 
 ```python
 loader = JSONLoader(
@@ -171,7 +159,6 @@ This allows us to pass the records (dict) into the `metadata_func` that has to b
 
 Additionally, we now have to explicitly specify in the loader, via the `content_key` argument, the key from the record where the value for the `page_content` needs to be extracted from.
 
-
 ```python
 # Define the metadata extraction function.
 def metadata_func(record: dict, metadata: dict) -> dict:
@@ -197,7 +184,6 @@ print(docs[0].metadata)
 ## API reference
 
 For detailed documentation of all JSONLoader features and configurations head to the API reference: https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.json_loader.JSONLoader.html
-
 
 ## Related
 

@@ -6,7 +6,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # OpenLM
 [OpenLM](https://github.com/r2d4/openlm) is a zero-dependency OpenAI-compatible LLM provider that can call different inference endpoints directly via HTTP. 
 
-
 It implements the OpenAI Completion class so that it can be used as a drop-in replacement for the OpenAI API. This changeset utilizes BaseOpenAI for minimal added code.
 
 This examples goes over how to use LangChain to interact with both OpenAI and HuggingFace. You'll need API keys from both.
@@ -14,14 +13,12 @@ This examples goes over how to use LangChain to interact with both OpenAI and Hu
 ### Setup
 Install dependencies and set API keys.
 
-
 ```python
 # Uncomment to install openlm and openai if you haven't already
 
 %pip install --upgrade --quiet  openlm
 %pip install --upgrade --quiet  langchain-openai
 ```
-
 
 ```python
 import os
@@ -42,14 +39,12 @@ if "HF_API_TOKEN" not in os.environ:
 
 Here we're going to call two models in an LLMChain, `text-davinci-003` from OpenAI and `gpt2` on HuggingFace.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "OpenLM"}, {"imported": "OpenLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.openlm.OpenLM.html", "title": "OpenLM"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "OpenLM"}]-->
 from langchain.chains import LLMChain
 from langchain_community.llms import OpenLM
 from langchain_core.prompts import PromptTemplate
 ```
-
 
 ```python
 question = "What is the capital of France?"

@@ -9,20 +9,18 @@ This page provides a quickstart for using [Apache Cassandra®](https://cassandra
 
 > [Cassandra](https://cassandra.apache.org/) is a NoSQL, row-oriented, highly scalable and highly available database.Starting with version 5.0, the database ships with [vector search capabilities](https://cassandra.apache.org/doc/trunk/cassandra/vector-search/overview.html).
 
-_Note: in addition to access to the database, an OpenAI API Key is required to run the full example._
+*Note: in addition to access to the database, an OpenAI API Key is required to run the full example.*
 
 ### Setup and general dependencies
 
 Use of the integration requires the following Python package.
 
-
 ```python
 %pip install --upgrade --quiet langchain-community "cassio>=0.1.4"
 ```
 
-_Note: depending on your LangChain setup, you may need to install/upgrade other dependencies needed for this demo_
-_(specifically, recent versions of `datasets`, `openai`, `pypdf` and `tiktoken` are required, along with `langchain-community`)._
-
+*Note: depending on your LangChain setup, you may need to install/upgrade other dependencies needed for this demo*
+*(specifically, recent versions of `datasets`, `openai`, `pypdf` and `tiktoken` are required, along with `langchain-community`).*
 
 ```python
 <!--IMPORTS:[{"imported": "PyPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html", "title": "Apache Cassandra"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Apache Cassandra"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Apache Cassandra"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Apache Cassandra"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Apache Cassandra"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Apache Cassandra"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Apache Cassandra"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Apache Cassandra"}]-->
@@ -41,18 +39,15 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 ```
 
-
 ```python
 os.environ["OPENAI_API_KEY"] = getpass("OPENAI_API_KEY = ")
 ```
-
 
 ```python
 embe = OpenAIEmbeddings()
 ```
 
 ## Import the Vector Store
-
 
 ```python
 <!--IMPORTS:[{"imported": "Cassandra", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.cassandra.Cassandra.html", "title": "Apache Cassandra"}]-->
@@ -71,7 +66,6 @@ Depending on whether you connect to a Cassandra cluster or to Astra DB through C
 
 You first need to create a `cassandra.cluster.Session` object, as described in the [Cassandra driver documentation](https://docs.datastax.com/en/developer/python-driver/latest/api/cassandra/cluster/#module-cassandra.cluster). The details vary (e.g. with network settings and authentication), but this might be something like:
 
-
 ```python
 from cassandra.cluster import Cluster
 
@@ -80,7 +74,6 @@ session = cluster.connect()
 ```
 
 You can now set the session, along with your desired keyspace name, as a global CassIO parameter:
-
 
 ```python
 import cassio
@@ -92,7 +85,6 @@ cassio.init(session=session, keyspace=CASSANDRA_KEYSPACE)
 
 Now you can create the vector store:
 
-
 ```python
 vstore = Cassandra(
     embedding=embe,
@@ -101,7 +93,7 @@ vstore = Cassandra(
 )
 ```
 
-_Note: you can also pass your session and keyspace directly as parameters when creating the vector store. Using the global `cassio.init` setting, however, comes handy if your applications uses Cassandra in several ways (for instance, for vector store, chat memory and LLM response caching), as it allows to centralize credential and DB connection management in one place._
+*Note: you can also pass your session and keyspace directly as parameters when creating the vector store. Using the global `cassio.init` setting, however, comes handy if your applications uses Cassandra in several ways (for instance, for vector store, chat memory and LLM response caching), as it allows to centralize credential and DB connection management in one place.*
 
 ### Connecting to Astra DB through CQL
 
@@ -110,7 +102,6 @@ In this case you initialize CassIO with the following connection parameters:
 - the Database ID, e.g. `01234567-89ab-cdef-0123-456789abcdef`
 - the Token, e.g. `AstraCS:6gBhNmsk135....` (it must be a "Database Administrator" token)
 - Optionally a Keyspace name (if omitted, the default one for the database will be used)
-
 
 ```python
 ASTRA_DB_ID = input("ASTRA_DB_ID = ")
@@ -122,7 +113,6 @@ if desired_keyspace:
 else:
     ASTRA_DB_KEYSPACE = None
 ```
-
 
 ```python
 import cassio
@@ -136,7 +126,6 @@ cassio.init(
 
 Now you can create the vector store:
 
-
 ```python
 vstore = Cassandra(
     embedding=embe,
@@ -148,7 +137,6 @@ vstore = Cassandra(
 ## Load a dataset
 
 Convert each entry in the source dataset into a `Document`, then write them into the vector store:
-
 
 ```python
 philo_dataset = load_dataset("datastax/philosopher-quotes")["train"]
@@ -167,7 +155,6 @@ In the above, `metadata` dictionaries are created from the source data and are p
 
 Add some more entries, this time with `add_texts`:
 
-
 ```python
 texts = ["I think, therefore I am.", "To the things themselves!"]
 metadatas = [{"author": "descartes"}, {"author": "husserl"}]
@@ -177,21 +164,19 @@ inserted_ids_2 = vstore.add_texts(texts=texts, metadatas=metadatas, ids=ids)
 print(f"\nInserted {len(inserted_ids_2)} documents.")
 ```
 
-_Note: you may want to speed up the execution of `add_texts` and `add_documents` by increasing the concurrency level for_
-_these bulk operations - check out the methods' `batch_size` parameter_
-_for more details. Depending on the network and the client machine specifications, your best-performing choice of parameters may vary._
+*Note: you may want to speed up the execution of `add_texts` and `add_documents` by increasing the concurrency level for*
+*these bulk operations - check out the methods' `batch_size` parameter*
+*for more details. Depending on the network and the client machine specifications, your best-performing choice of parameters may vary.*
 
 ## Run searches
 
 This section demonstrates metadata filtering and getting the similarity scores back:
-
 
 ```python
 results = vstore.similarity_search("Our life is what we make of it", k=3)
 for res in results:
     print(f"* {res.page_content} [{res.metadata}]")
 ```
-
 
 ```python
 results_filtered = vstore.similarity_search(
@@ -203,7 +188,6 @@ for res in results_filtered:
     print(f"* {res.page_content} [{res.metadata}]")
 ```
 
-
 ```python
 results = vstore.similarity_search_with_score("Our life is what we make of it", k=3)
 for res, score in results:
@@ -211,7 +195,6 @@ for res, score in results:
 ```
 
 ### MMR (Maximal-marginal-relevance) search
-
 
 ```python
 results = vstore.max_marginal_relevance_search(
@@ -225,12 +208,10 @@ for res in results:
 
 ## Deleting stored documents
 
-
 ```python
 delete_1 = vstore.delete(inserted_ids[:3])
 print(f"all_succeed={delete_1}")  # True, all documents deleted
 ```
-
 
 ```python
 delete_2 = vstore.delete(inserted_ids[2:5])
@@ -244,13 +225,11 @@ The next cells will implement a simple RAG pipeline:
 - create a RAG chain with LCEL (LangChain Expression Language), with the vector store at its heart;
 - run the question-answering chain.
 
-
 ```python
 !curl -L \
     "https://github.com/awesome-astra/datasets/blob/main/demo-resources/what-is-philosophy/what-is-philosophy.pdf?raw=true" \
     -o "what-is-philosophy.pdf"
 ```
-
 
 ```python
 pdf_loader = PyPDFLoader("what-is-philosophy.pdf")
@@ -261,7 +240,6 @@ print(f"Documents from PDF: {len(docs_from_pdf)}.")
 inserted_ids_from_pdf = vstore.add_documents(docs_from_pdf)
 print(f"Inserted {len(inserted_ids_from_pdf)} documents.")
 ```
-
 
 ```python
 retriever = vstore.as_retriever(search_kwargs={"k": 3})
@@ -291,7 +269,6 @@ chain = (
 )
 ```
 
-
 ```python
 chain.invoke("How does Russel elaborate on Peirce's idea of the security blanket?")
 ```
@@ -302,8 +279,7 @@ For more, check out a complete RAG template using Astra DB through CQL [here](ht
 
 the following essentially retrieves the `Session` object from CassIO and runs a CQL `DROP TABLE` statement with it:
 
-_(You will lose the data you stored in it.)_
-
+*(You will lose the data you stored in it.)*
 
 ```python
 cassio.config.resolve_session().execute(
@@ -318,8 +294,6 @@ For more information, extended quickstarts and additional usage examples, please
 #### Attribution statement
 
 > Apache Cassandra, Cassandra and Apache are either registered trademarks or trademarks of the [Apache Software Foundation](http://www.apache.org/) in the United States and/or other countries.
-
-
 
 ## Related
 

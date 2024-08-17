@@ -8,14 +8,13 @@ sidebar_class_name: hidden
 
 Note: `AirbyteCDKLoader` is deprecated. Please use [`AirbyteLoader`](/docs/integrations/document_loaders/airbyte) instead.
 
->[Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs, databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
+> [Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs, databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
 
 A lot of source connectors are implemented using the [Airbyte CDK](https://docs.airbyte.com/connector-development/cdk-python/). This loader allows to run any of these connectors and return the data as documents.
 
 ## Installation
 
 First, you need to install the `airbyte-cdk` python package.
-
 
 ```python
 %pip install --upgrade --quiet  airbyte-cdk
@@ -24,7 +23,6 @@ First, you need to install the `airbyte-cdk` python package.
 Then, either install an existing connector from the [Airbyte Github repository](https://github.com/airbytehq/airbyte/tree/master/airbyte-integrations/connectors) or create your own connector using the [Airbyte CDK](https://docs.airbyte.io/connector-development/connector-development).
 
 For example, to install the Github connector, run
-
 
 ```python
 %pip install --upgrade --quiet  "source_github@git+https://github.com/airbytehq/airbyte.git@master#subdirectory=airbyte-integrations/connectors/source-github"
@@ -38,7 +36,6 @@ Now you can create an `AirbyteCDKLoader` based on the imported source. It takes 
 
 * [https://github.com/airbytehq/airbyte/blob/master/airbyte-integrations/connectors/source-github/source_github/spec.json](https://github.com/airbytehq/airbyte/blob/master/airbyte-integrations/connectors/source-github/source_github/spec.json).
 * [https://docs.airbyte.com/integrations/sources/github/](https://docs.airbyte.com/integrations/sources/github/)
-
 
 ```python
 <!--IMPORTS:[{"imported": "AirbyteCDKLoader", "source": "langchain_community.document_loaders.airbyte", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.airbyte.AirbyteCDKLoader.html", "title": "Airbyte CDK (Deprecated)"}]-->
@@ -59,20 +56,17 @@ issues_loader = AirbyteCDKLoader(
 
 Now you can load documents the usual way
 
-
 ```python
 docs = issues_loader.load()
 ```
 
 As `load` returns a list, it will block until all documents are loaded. To have better control over this process, you can also you the `lazy_load` method which returns an iterator instead:
 
-
 ```python
 docs_iterator = issues_loader.lazy_load()
 ```
 
 Keep in mind that by default the page content is empty and the metadata object contains all the information from the record. To create documents in a different, pass in a record_handler function when creating the loader:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Airbyte CDK (Deprecated)"}]-->
@@ -102,7 +96,6 @@ Some streams allow incremental loading, this means the source keeps track of syn
 
 To take advantage of this, store the `last_state` property of the loader and pass it in when creating the loader again. This will ensure that only new records are loaded.
 
-
 ```python
 last_state = issues_loader.last_state  # store safely
 
@@ -112,7 +105,6 @@ incremental_issue_loader = AirbyteCDKLoader(
 
 new_docs = incremental_issue_loader.load()
 ```
-
 
 ## Related
 

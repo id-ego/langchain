@@ -5,22 +5,18 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Javelin AI Gateway Tutorial
 
-This Jupyter Notebook will explore how to interact with the Javelin AI Gateway using the Python SDK. 
-The Javelin AI Gateway facilitates the utilization of large language models (LLMs) like OpenAI, Cohere, Anthropic, and others by 
-providing a secure and unified endpoint. The gateway itself provides a centralized mechanism to roll out models systematically, 
+This Jupyter Notebook will explore how to interact with the Javelin AI Gateway using the Python SDK.
+The Javelin AI Gateway facilitates the utilization of large language models (LLMs) like OpenAI, Cohere, Anthropic, and others by
+providing a secure and unified endpoint. The gateway itself provides a centralized mechanism to roll out models systematically,
 provide access security, policy & cost guardrails for enterprises, etc., 
 
 For a complete listing of all the features & benefits of Javelin, please visit www.getjavelin.io
 
-
-
 ## Step 1: Introduction
 [The Javelin AI Gateway](https://www.getjavelin.io) is an enterprise-grade API Gateway for AI applications. It integrates robust access security, ensuring secure interactions with large language models. Learn more in the [official documentation](https://docs.getjavelin.io).
 
-
 ## Step 2: Installation
 Before we begin, we must install the `javelin_sdk` and set up the Javelin API key as an environment variable. 
-
 
 ```python
 pip install 'javelin_sdk'
@@ -41,7 +37,6 @@ Note: you may need to restart the kernel to use updated packages.
 ## Step 3: Completions Example
 This section will demonstrate how to interact with the Javelin AI Gateway to get completions from a large language model. Here is a Python script that demonstrates this:
 (note) assumes that you have setup a route in the gateway called 'eng_dept03'
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Javelin AI Gateway Tutorial"}, {"imported": "JavelinAIGateway", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.javelin_ai_gateway.JavelinAIGateway.html", "title": "Javelin AI Gateway Tutorial"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Javelin AI Gateway Tutorial"}]-->
@@ -83,7 +78,6 @@ ImportError: cannot import name 'JavelinAIGateway' from 'langchain.llms' (/usr/l
 This section demonstrates how to use the Javelin AI Gateway to obtain embeddings for text queries and documents. Here is a Python script that illustrates this:
 (note) assumes that you have setup a route in the gateway called 'embeddings'
 
-
 ```python
 <!--IMPORTS:[{"imported": "JavelinAIGatewayEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.javelin_ai_gateway.JavelinAIGatewayEmbeddings.html", "title": "Javelin AI Gateway Tutorial"}]-->
 from langchain_community.embeddings import JavelinAIGatewayEmbeddings
@@ -116,7 +110,6 @@ ImportError: cannot import name 'JavelinAIGatewayEmbeddings' from 'langchain.emb
 # Step 5: Chat Example
 This section illustrates how to interact with the Javelin AI Gateway to facilitate a chat with a large language model. Here is a Python script that demonstrates this:
 (note) assumes that you have setup a route in the gateway called 'mychatbot_route'
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatJavelinAIGateway", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.javelin_ai_gateway.ChatJavelinAIGateway.html", "title": "Javelin AI Gateway Tutorial"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Javelin AI Gateway Tutorial"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Javelin AI Gateway Tutorial"}]-->
@@ -161,11 +154,10 @@ ImportError: cannot import name 'ChatJavelinAIGateway' from 'langchain.chat_mode
 ```
 
 Step 6: Conclusion
-This tutorial introduced the Javelin AI Gateway and demonstrated how to interact with it using the Python SDK. 
+This tutorial introduced the Javelin AI Gateway and demonstrated how to interact with it using the Python SDK.
 Remember to check the Javelin [Python SDK](https://www.github.com/getjavelin.io/javelin-python) for more examples and to explore the official documentation for additional details.
 
 Happy coding!
-
 
 ## Related
 

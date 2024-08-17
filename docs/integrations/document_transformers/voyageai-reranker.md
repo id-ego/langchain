@@ -5,16 +5,14 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # VoyageAI Reranker
 
->[Voyage AI](https://www.voyageai.com/) provides cutting-edge embedding/vectorizations models.
+> [Voyage AI](https://www.voyageai.com/) provides cutting-edge embedding/vectorizations models.
 
 This notebook shows how to use [Voyage AI's rerank endpoint](https://api.voyageai.com/v1/rerank) in a retriever. This builds on top of ideas in the [ContextualCompressionRetriever](/docs/how_to/contextual_compression).
-
 
 ```python
 %pip install --upgrade --quiet  voyageai
 %pip install --upgrade --quiet  langchain-voyageai
 ```
-
 
 ```python
 %pip install --upgrade --quiet  faiss
@@ -24,7 +22,6 @@ This notebook shows how to use [Voyage AI's rerank endpoint](https://api.voyagea
 %pip install --upgrade --quiet  faiss-cpu
 ```
 
-
 ```python
 # To obtain your key, create an account on https://www.voyageai.com
 
@@ -33,7 +30,6 @@ import os
 
 os.environ["VOYAGE_API_KEY"] = getpass.getpass("Voyage AI API Key:")
 ```
-
 
 ```python
 # Helper function for printing docs
@@ -57,7 +53,6 @@ Let's start by initializing a simple vector store retriever and storing the 2023
 - `voyage-lite-02-instruct`
 - `voyage-finance-2`
 - `voyage-multilingual-2`
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "VoyageAI Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "VoyageAI Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "VoyageAI Reranker"}, {"imported": "VoyageAIEmbeddings", "source": "langchain_voyageai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_voyageai.embeddings.VoyageAIEmbeddings.html", "title": "VoyageAI Reranker"}]-->
@@ -291,7 +286,6 @@ Now let's wrap our base retriever with a `ContextualCompressionRetriever`. We'll
 - `rerank-1`
 - `rerank-lite-1`
 
-
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "VoyageAI Reranker"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "VoyageAI Reranker"}, {"imported": "VoyageAIRerank", "source": "langchain_voyageai", "docs": "https://api.python.langchain.com/en/latest/rerank/langchain_voyageai.rerank.VoyageAIRerank.html", "title": "VoyageAI Reranker"}]-->
 from langchain.retrievers import ContextualCompressionRetriever
@@ -338,12 +332,10 @@ So let’s not abandon our streets. Or choose between safety and equal justice.
 ```
 You can of course use this retriever within a QA pipeline
 
-
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "VoyageAI Reranker"}]-->
 from langchain.chains import RetrievalQA
 ```
-
 
 ```python
 chain = RetrievalQA.from_chain_type(
@@ -351,12 +343,9 @@ chain = RetrievalQA.from_chain_type(
 )
 ```
 
-
 ```python
 chain({"query": query})
 ```
-
-
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',

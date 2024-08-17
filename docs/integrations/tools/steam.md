@@ -5,9 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Steam Toolkit
 
->[Steam (Wikipedia)](https://en.wikipedia.org/wiki/Steam_(service)) is a video game digital distribution service and storefront developed by `Valve Corporation`. It provides game updates automatically for Valve's games, and expanded to distributing third-party titles. `Steam` offers various features, like game server matchmaking with Valve Anti-Cheat measures, social networking, and game streaming services.
+> [Steam (Wikipedia)](https://en.wikipedia.org/wiki/Steam_(service)) is a video game digital distribution service and storefront developed by `Valve Corporation`. It provides game updates automatically for Valve's games, and expanded to distributing third-party titles. `Steam` offers various features, like game server matchmaking with Valve Anti-Cheat measures, social networking, and game streaming services.
 
->[Steam](https://store.steampowered.com/about/) is the ultimate destination for playing, discussing, and creating games.
+> [Steam](https://store.steampowered.com/about/) is the ultimate destination for playing, discussing, and creating games.
 
 Steam toolkit has two tools:
 - `Game Details`
@@ -21,7 +21,6 @@ We have to install two python libraries.
 
 ## Imports
 
-
 ```python
 %pip install --upgrade --quiet  python-steam-api python-decouple
 ```
@@ -29,7 +28,6 @@ We have to install two python libraries.
 ## Assign Environmental Variables
 To use this toolkit, please have your OpenAI API Key, Steam API key (from [here](https://steamcommunity.com/dev/apikey)) and your own SteamID handy. Once you have received a Steam API Key, you can input it as an environmental variable below.
 The toolkit will read the "STEAM_KEY" API Key as an environmental variable to authenticate you so please set them here. You will also need to set your "OPENAI_API_KEY" and your "STEAM_ID".
-
 
 ```python
 import os
@@ -39,10 +37,9 @@ os.environ["STEAM_ID"] = "123"
 os.environ["OPENAI_API_KEY"] = "abc"
 ```
 
-## Initialization: 
+## Initialization:
 Initialize the LLM, SteamWebAPIWrapper, SteamToolkit and most importantly the langchain agent to process your query!
 ## Example
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Steam Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Steam Toolkit"}, {"imported": "SteamToolkit", "source": "langchain_community.agent_toolkits.steam.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.steam.toolkit.SteamToolkit.html", "title": "Steam Toolkit"}, {"imported": "SteamWebAPIWrapper", "source": "langchain_community.utilities.steam", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.steam.SteamWebAPIWrapper.html", "title": "Steam Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Steam Toolkit"}]-->
@@ -52,7 +49,6 @@ from langchain_community.utilities.steam import SteamWebAPIWrapper
 from langchain_openai import OpenAI
 ```
 
-
 ```python
 llm = OpenAI(temperature=0)
 Steam = SteamWebAPIWrapper()
@@ -61,7 +57,6 @@ agent = initialize_agent(
     toolkit.get_tools(), llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
 )
 ```
-
 
 ```python
 out = agent("can you give the information about the game Terraria")

@@ -7,16 +7,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to load data from a [PySpark](https://spark.apache.org/docs/latest/api/python/) DataFrame.
 
-
 ```python
 %pip install --upgrade --quiet  pyspark
 ```
 
-
 ```python
 from pyspark.sql import SparkSession
 ```
-
 
 ```python
 spark = SparkSession.builder.getOrCreate()
@@ -31,17 +28,14 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 df = spark.read.csv("example_data/mlb_teams_2012.csv", header=True)
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "PySparkDataFrameLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pyspark_dataframe.PySparkDataFrameLoader.html", "title": "PySpark"}]-->
 from langchain_community.document_loaders import PySparkDataFrameLoader
 ```
 
-
 ```python
 loader = PySparkDataFrameLoader(spark, df, page_content_column="Team")
 ```
-
 
 ```python
 loader.load()
@@ -49,7 +43,6 @@ loader.load()
 ```output
 [Stage 8:>                                                          (0 + 1) / 1]
 ```
-
 
 ```output
 [Document(page_content='Nationals', metadata={' "Payroll (millions)"': '     81.34', ' "Wins"': ' 98'}),
@@ -83,8 +76,6 @@ loader.load()
  Document(page_content='Cubs', metadata={' "Payroll (millions)"': '          88.19', ' "Wins"': ' 61'}),
  Document(page_content='Astros', metadata={' "Payroll (millions)"': '        60.65', ' "Wins"': ' 55'})]
 ```
-
-
 
 ## Related
 

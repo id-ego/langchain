@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # China Mobile ECloud ElasticSearch VectorSearch
 
->[China Mobile ECloud VectorSearch](https://ecloud.10086.cn/portal/product/elasticsearch) is a fully managed, enterprise-level distributed search and analysis service. China Mobile ECloud VectorSearch provides low-cost, high-performance, and reliable retrieval and analysis platform level product services for structured/unstructured data. As a vector database , it supports multiple index types and similarity distance methods. 
+> [China Mobile ECloud VectorSearch](https://ecloud.10086.cn/portal/product/elasticsearch) is a fully managed, enterprise-level distributed search and analysis service. China Mobile ECloud VectorSearch provides low-cost, high-performance, and reliable retrieval and analysis platform level product services for structured/unstructured data. As a vector database , it supports multiple index types and similarity distance methods. 
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
 
@@ -16,13 +16,11 @@ Read the [help document](https://ecloud.10086.cn/op-help-center/doc/category/109
 
 After the instance is up and running, follow these steps to split documents, get embeddings, connect to the baidu cloud elasticsearch instance, index documents, and perform vector retrieval.
 
-
 ```python
 #!pip install elasticsearch == 7.10.1
 ```
 
 First, we want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
-
 
 ```python
 import getpass
@@ -33,7 +31,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 
 Secondly, split documents and get embeddings.
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "China Mobile ECloud ElasticSearch VectorSearch"}, {"imported": "EcloudESVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.ecloud_vector_search.EcloudESVectorStore.html", "title": "China Mobile ECloud ElasticSearch VectorSearch"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "China Mobile ECloud ElasticSearch VectorSearch"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "China Mobile ECloud ElasticSearch VectorSearch"}]-->
 from langchain_community.document_loaders import TextLoader
@@ -41,7 +38,6 @@ from langchain_community.vectorstores import EcloudESVectorStore
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 loader = TextLoader("../../../state_of_the_union.txt")
@@ -59,7 +55,6 @@ indexname = "your index name"
 
 then, index documents
 
-
 ```python
 docsearch = EcloudESVectorStore.from_documents(
     docs,
@@ -74,7 +69,6 @@ docsearch = EcloudESVectorStore.from_documents(
 
 Finally, Query and retrive data
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = docsearch.similarity_search(query, k=10)
@@ -82,7 +76,6 @@ print(docs[0].page_content)
 ```
 
 A commonly used case
-
 
 ```python
 def test_dense_float_vectore_lsh_cosine() -> None:
@@ -156,7 +149,6 @@ def test_dense_float_vectore_lsh_cosine() -> None:
 
 With filter case
 
-
 ```python
 def test_dense_float_vectore_exact_with_filter() -> None:
     """
@@ -215,7 +207,6 @@ def test_dense_float_vectore_exact_with_filter() -> None:
     )
     print(docs[0].page_content)
 ```
-
 
 ## Related
 

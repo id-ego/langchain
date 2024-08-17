@@ -5,12 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # RST
 
->A [reStructured Text (RST)](https://en.wikipedia.org/wiki/ReStructuredText) file is a file format for textual data used primarily in the Python programming language community for technical documentation.
+> A [reStructured Text (RST)](https://en.wikipedia.org/wiki/ReStructuredText) file is a file format for textual data used primarily in the Python programming language community for technical documentation.
 
 ## `UnstructuredRSTLoader`
 
 You can load data from RST files with `UnstructuredRSTLoader` using the following workflow.
-
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredRSTLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.rst.UnstructuredRSTLoader.html", "title": "RST"}]-->

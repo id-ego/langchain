@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 We can construct agents to consume arbitrary APIs, here APIs conformant to the `OpenAPI`/`Swagger` specification.
 
-
 ```python
 # NOTE: In this example. We must set `allow_dangerous_request=True` to enable the OpenAPI Agent to automatically use the Request Tool.
 # This can be dangerous for calling unwanted requests. Please make sure your custom OpenAPI spec (yaml) is safe.
@@ -22,10 +21,9 @@ The idea is simple: to get coherent agent behavior over long sequences behavior 
 
 In the initial implementation, the planner is an LLM chain that has the name and a short description for each endpoint in context. The controller is an LLM agent that is instantiated with documentation for only the endpoints for a particular plan. There's a lot left to get this working very robustly :)
 
----
+* * *
 
 ### To start, let's collect some OpenAPI specs.
-
 
 ```python
 import os
@@ -34,7 +32,6 @@ import yaml
 ```
 
 You will be able to get OpenAPI specs from here: [APIs-guru/openapi-directory](https://github.com/APIs-guru/openapi-directory)
-
 
 ```python
 !wget https://raw.githubusercontent.com/openai/openai-openapi/master/openapi.yaml -O openai_openapi.yaml
@@ -81,7 +78,6 @@ openapi.yaml        100%[===================>] 280.03K  --.-KB/s    in 0.02s
 from langchain_community.agent_toolkits.openapi.spec import reduce_openapi_spec
 ```
 
-
 ```python
 with open("openai_openapi.yaml") as f:
     raw_openai_api_spec = yaml.load(f, Loader=yaml.Loader)
@@ -96,13 +92,12 @@ with open("spotify_openapi.yaml") as f:
 spotify_api_spec = reduce_openapi_spec(raw_spotify_api_spec)
 ```
 
----
+* * *
 
 We'll work with the Spotify API as one of the examples of a somewhat complex API. There's a bit of auth-related setup to do if you want to replicate this.
 
 - You'll have to set up an application in the Spotify developer console, documented [here](https://developer.spotify.com/documentation/general/guides/authorization/), to get credentials: `CLIENT_ID`, `CLIENT_SECRET`, and `REDIRECT_URI`.
 - To get an access tokens (and keep them fresh), you can implement the oauth flows, or you can use `spotipy`. If you've set your Spotify creedentials as environment variables `SPOTIPY_CLIENT_ID`, `SPOTIPY_CLIENT_SECRET`, and `SPOTIPY_REDIRECT_URI`, you can use the helper functions below:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RequestsWrapper", "source": "langchain_community.utilities.requests", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.requests.RequestsWrapper.html", "title": "OpenAPI Toolkit"}]-->
@@ -127,7 +122,6 @@ requests_wrapper = RequestsWrapper(headers=headers)
 
 ### How big is this spec?
 
-
 ```python
 endpoints = [
     (route, operation)
@@ -138,13 +132,9 @@ endpoints = [
 len(endpoints)
 ```
 
-
-
 ```output
 63
 ```
-
-
 
 ```python
 import tiktoken
@@ -159,17 +149,13 @@ def count_tokens(s):
 count_tokens(yaml.dump(raw_spotify_api_spec))
 ```
 
-
-
 ```output
 80326
 ```
 
-
 ### Let's see some examples!
 
 Starting with GPT-4. (Some robustness iterations under way for GPT-3 family.)
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "OpenAPI Toolkit"}]-->
@@ -246,12 +232,9 @@ Final Answer: I have created a playlist called "Machine Blues" with the first so
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'I have created a playlist called "Machine Blues" with the first song from the "Kind of Blue" album.'
 ```
-
-
 
 ```python
 user_query = "give me a song I'd like, make it blues-ey"
@@ -303,21 +286,16 @@ Final Answer: The recommended blues song for you is "Get Away Jordan" with the t
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The recommended blues song for you is "Get Away Jordan" with the track ID: 03lXHmokj9qsXspNsPoirR.'
 ```
 
-
 #### Try another API.
-
-
 
 ```python
 headers = {"Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"}
 openai_requests_wrapper = RequestsWrapper(headers=headers)
 ```
-
 
 ```python
 # Meta!
@@ -413,11 +391,9 @@ Final Answer: A short piece of advice for improving communication skills is to m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'A short piece of advice for improving communication skills is to make sure to listen.'
 ```
-
 
 Takes awhile to get there!
 
@@ -425,15 +401,12 @@ Takes awhile to get there!
 
 Here's an agent that's not particularly practical, but neat! The agent has access to 2 toolkits. One comprises tools to interact with json: one tool to list the keys of a json object and another tool to get the value for a given key. The other toolkit comprises `requests` wrappers to send GET and POST requests. This agent consumes a lot calls to the language model, but does a surprisingly decent job.
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "OpenAPIToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.toolkit.OpenAPIToolkit.html", "title": "OpenAPI Toolkit"}, {"imported": "create_openapi_agent", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.base.create_openapi_agent.html", "title": "OpenAPI Toolkit"}, {"imported": "JsonSpec", "source": "langchain_community.tools.json.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.json.tool.JsonSpec.html", "title": "OpenAPI Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "OpenAPI Toolkit"}]-->
 from langchain_community.agent_toolkits import OpenAPIToolkit, create_openapi_agent
 from langchain_community.tools.json.tool import JsonSpec
 from langchain_openai import OpenAI
 ```
-
 
 ```python
 with open("openai_openapi.yaml") as f:
@@ -451,7 +424,6 @@ openapi_agent_executor = create_openapi_agent(
     verbose=True,
 )
 ```
-
 
 ```python
 openapi_agent_executor.run(
@@ -570,12 +542,9 @@ Final Answer: The response of the POST request is {"id":"cmpl-70Ivzip3dazrIXU8DS
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The response of the POST request is {"id":"cmpl-70Ivzip3dazrIXU8DSVJGzFJj2rdv","object":"text_completion","created":1680307139,"model":"davinci","choices":[{"text":" with mummy not there”\\n\\nYou dig deep and come up with,","index":0,"logprobs":null,"finish_reason":"length"}],"usage":{"prompt_tokens":4,"completion_tokens":16,"total_tokens":20}}'
 ```
-
-
 
 ## Related
 

@@ -16,11 +16,9 @@ To obtain the string content directly, use `.split_text`.
 
 To create LangChain [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) objects (e.g., for use in downstream tasks), use `.create_documents`.
 
-
 ```python
 %pip install -qU langchain-text-splitters
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to split by character"}]-->
@@ -45,7 +43,6 @@ page_content='Madam Speaker, Madam Vice President, our First Lady and Second Gen
 ```
 Use `.create_documents` to propagate metadata associated with each document to the output chunks:
 
-
 ```python
 metadatas = [{"document": 1}, {"document": 2}]
 documents = text_splitter.create_documents(
@@ -58,12 +55,9 @@ page_content='Madam Speaker, Madam Vice President, our First Lady and Second Gen
 ```
 Use `.split_text` to obtain the string content directly:
 
-
 ```python
 text_splitter.split_text(state_of_the_union)[0]
 ```
-
-
 
 ```output
 'Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  \n\nLast year COVID-19 kept us apart. This year we are finally together again. \n\nTonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. \n\nWith a duty to one another to the American people to the Constitution. \n\nAnd with an unwavering resolve that freedom will always triumph over tyranny. \n\nSix days ago, Russia’s Vladimir Putin sought to shake the foundations of the free world thinking he could make it bend to his menacing ways. But he badly miscalculated. \n\nHe thought he could roll into Ukraine and the world would roll over. Instead he met a wall of strength he never imagined. \n\nHe met the Ukrainian people. \n\nFrom President Zelenskyy to every Ukrainian, their fearlessness, their courage, their determination, inspires the world.'

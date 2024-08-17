@@ -44,7 +44,6 @@ For a model to be able to call tools, we need to pass in tool schemas that descr
 ### Python functions
 Our tool schemas can be Python functions:
 
-
 ```python
 # The function name, type hints, and docstring are all part of the tool
 # schema that's passed to the model. Defining good, descriptive schemas
@@ -78,7 +77,6 @@ LangChain also implements a `@tool` decorator that allows for further control of
 
 You can equivalently define the schemas without the accompanying functions using [Pydantic](https://docs.pydantic.dev):
 
-
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
 
@@ -103,7 +101,6 @@ class multiply(BaseModel):
 :::
 
 Or using TypedDicts and annotations:
-
 
 ```python
 from typing_extensions import Annotated, TypedDict
@@ -133,10 +130,9 @@ the `add` and `multiply` schemas to the proper format for the model. The tool sc
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="llm"
-  fireworksParams={`model="accounts/fireworks/models/firefunction-v1", temperature=0`}
+customVarName="llm"
+fireworksParams={`model="accounts/fireworks/models/firefunction-v1", temperature=0`}
 />
-
 
 ```python
 llm_with_tools = llm.bind_tools(tools)
@@ -146,37 +142,31 @@ query = "What is 3 * 12?"
 llm_with_tools.invoke(query)
 ```
 
-
-
 ```output
 AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_BwYJ4UgU5pRVCBOUmiu7NhF9', 'function': {'arguments': '{"a":3,"b":12}', 'name': 'multiply'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 17, 'prompt_tokens': 80, 'total_tokens': 97}, 'model_name': 'gpt-4o-mini-2024-07-18', 'system_fingerprint': 'fp_ba606877f9', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-7f05e19e-4561-40e2-a2d0-8f4e28e9a00f-0', tool_calls=[{'name': 'multiply', 'args': {'a': 3, 'b': 12}, 'id': 'call_BwYJ4UgU5pRVCBOUmiu7NhF9', 'type': 'tool_call'}], usage_metadata={'input_tokens': 80, 'output_tokens': 17, 'total_tokens': 97})
 ```
-
 
 As we can see our LLM generated arguments to a tool! You can look at the docs for [bind_tools()](https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.BaseChatOpenAI.html#langchain_openai.chat_models.base.BaseChatOpenAI.bind_tools) to learn about all the ways to customize how your LLM selects tools, as well as [this guide on how to force the LLM to call a tool](/docs/how_to/tool_choice/) rather than letting it decide.
 
 ## Tool calls
 
-If tool calls are included in a LLM response, they are attached to the corresponding 
-[message](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage) 
-or [message chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk) 
-as a list of [tool call](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCall.html#langchain_core.messages.tool.ToolCall) 
+If tool calls are included in a LLM response, they are attached to the corresponding
+[message](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage)
+or [message chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk)
+as a list of [tool call](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCall.html#langchain_core.messages.tool.ToolCall)
 objects in the `.tool_calls` attribute.
 
 Note that chat models can call multiple tools at once.
 
-A `ToolCall` is a typed dict that includes a 
-tool name, dict of argument values, and (optionally) an identifier. Messages with no 
+A `ToolCall` is a typed dict that includes a
+tool name, dict of argument values, and (optionally) an identifier. Messages with no
 tool calls default to an empty list for this attribute.
-
 
 ```python
 query = "What is 3 * 12? Also, what is 11 + 49?"
 
 llm_with_tools.invoke(query).tool_calls
 ```
-
-
 
 ```output
 [{'name': 'multiply',
@@ -189,20 +179,17 @@ llm_with_tools.invoke(query).tool_calls
   'type': 'tool_call'}]
 ```
 
-
-The `.tool_calls` attribute should contain valid tool calls. Note that on occasion, 
-model providers may output malformed tool calls (e.g., arguments that are not 
-valid JSON). When parsing fails in these cases, instances 
-of [InvalidToolCall](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.InvalidToolCall.html#langchain_core.messages.tool.InvalidToolCall) 
-are populated in the `.invalid_tool_calls` attribute. An `InvalidToolCall` can have 
+The `.tool_calls` attribute should contain valid tool calls. Note that on occasion,
+model providers may output malformed tool calls (e.g., arguments that are not
+valid JSON). When parsing fails in these cases, instances
+of [InvalidToolCall](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.InvalidToolCall.html#langchain_core.messages.tool.InvalidToolCall)
+are populated in the `.invalid_tool_calls` attribute. An `InvalidToolCall` can have
 a name, string arguments, identifier, and error message.
-
 
 ## Parsing
 
 If desired, [output parsers](/docs/how_to#output-parsers) can further process the output. For example, we can convert existing values populated on the `.tool_calls` to Pydantic objects using the
 [PydanticToolsParser](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html):
-
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticToolsParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html", "title": "How to use chat models to call tools"}]-->
@@ -228,12 +215,9 @@ chain = llm_with_tools | PydanticToolsParser(tools=[add, multiply])
 chain.invoke(query)
 ```
 
-
-
 ```output
 [multiply(a=3, b=12), add(a=11, b=49)]
 ```
-
 
 ## Next steps
 

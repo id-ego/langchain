@@ -7,7 +7,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook shows how to use functionality related to the Marqo vectorstore.
 
->[Marqo](https://www.marqo.ai/) is an open-source vector search engine. Marqo allows you to store and query multi-modal data such as text and images. Marqo creates the vectors for you using a huge selection of open-source models, you can also provide your own fine-tuned models and Marqo will handle the loading and inference for you.
+> [Marqo](https://www.marqo.ai/) is an open-source vector search engine. Marqo allows you to store and query multi-modal data such as text and images. Marqo creates the vectors for you using a huge selection of open-source models, you can also provide your own fine-tuned models and Marqo will handle the loading and inference for you.
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
 
@@ -19,11 +19,9 @@ docker rm -f marqo
 docker run --name marqo -it --privileged -p 8882:8882 --add-host host.docker.internal:host-gateway marqoai/marqo:latest
 ```
 
-
 ```python
 %pip install --upgrade --quiet  marqo
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Marqo"}, {"imported": "Marqo", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.marqo.Marqo.html", "title": "Marqo"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Marqo"}]-->
@@ -31,7 +29,6 @@ from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import Marqo
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Marqo"}]-->
@@ -42,7 +39,6 @@ documents = loader.load()
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 ```
-
 
 ```python
 import marqo
@@ -96,13 +92,11 @@ And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketan
 One of the powerful features of Marqo as a vectorstore is that you can use indexes created externally. For example:
 
 + If you had a database of image and text pairs from another application, you can simply just use it in langchain with the Marqo vectorstore. Note that bringing your own multimodal indexes will disable the `add_texts` method.
-
 + If you had a database of text documents, you can bring it into the langchain framework and add more texts through `add_texts`.
 
 The documents that are returned are customised by passing your own function to the `page_content_builder` callback in the search methods.
 
 #### Multimodal Example
-
 
 ```python
 # use a new index
@@ -133,8 +127,6 @@ client.index(index_name).add_documents(
 )
 ```
 
-
-
 ```output
 {'errors': False,
  'processingTimeMs': 2090.2822139996715,
@@ -146,8 +138,6 @@ client.index(index_name).add_documents(
    'result': 'created',
    'status': 201}]}
 ```
-
-
 
 ```python
 def get_content(res):
@@ -162,7 +152,6 @@ query = "vehicles that fly"
 doc_results = docsearch.similarity_search(query)
 ```
 
-
 ```python
 for doc in doc_results:
     print(doc.page_content)
@@ -172,7 +161,6 @@ Plane: https://raw.githubusercontent.com/marqo-ai/marqo/mainline/examples/ImageS
 Bus: https://raw.githubusercontent.com/marqo-ai/marqo/mainline/examples/ImageSearchGuide/data/image4.jpg
 ```
 #### Text only example
-
 
 ```python
 # use a new index
@@ -202,8 +190,6 @@ client.index(index_name).add_documents(
 )
 ```
 
-
-
 ```output
 {'errors': False,
  'processingTimeMs': 139.2144540004665,
@@ -215,8 +201,6 @@ client.index(index_name).add_documents(
    'result': 'created',
    'status': 201}]}
 ```
-
-
 
 ```python
 # Note text indexes retain the ability to use add_texts despite different field names in documents
@@ -235,13 +219,9 @@ docsearch = Marqo(client, index_name, page_content_builder=get_content)
 docsearch.add_texts(["This is a document that is about elephants"])
 ```
 
-
-
 ```output
 ['9986cc72-adcd-4080-9d74-265c173a9ec3']
 ```
-
-
 
 ```python
 query = "modern communications devices"
@@ -266,7 +246,6 @@ This is a document that is about elephants
 
 We also expose marqos weighted queries which are a powerful way to compose complex semantic searches.
 
-
 ```python
 query = {"communications devices": 1.0}
 doc_results = docsearch.similarity_search(query)
@@ -287,7 +266,6 @@ A telephone is a telecommunications device that permits two or more users tocond
 # Question Answering with Sources
 
 This section shows how to use Marqo as part of a `RetrievalQAWithSourcesChain`. Marqo will perform the searches for information in the sources.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQAWithSourcesChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.qa_with_sources.retrieval.RetrievalQAWithSourcesChain.html", "title": "Marqo"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Marqo"}]-->
@@ -310,7 +288,6 @@ text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 texts = text_splitter.split_text(state_of_the_union)
 ```
 
-
 ```python
 index_name = "langchain-qa-with-retrieval"
 docsearch = Marqo.from_documents(docs, index_name=index_name)
@@ -325,7 +302,6 @@ chain = RetrievalQAWithSourcesChain.from_chain_type(
 )
 ```
 
-
 ```python
 chain(
     {"question": "What did the president say about Justice Breyer"},
@@ -333,14 +309,10 @@ chain(
 )
 ```
 
-
-
 ```output
 {'answer': ' The president honored Justice Breyer, thanking him for his service and noting that he is a retiring Justice of the United States Supreme Court.\n',
  'sources': '../../../state_of_the_union.txt'}
 ```
-
-
 
 ## Related
 

@@ -5,17 +5,14 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Trubrics
 
-
->[Trubrics](https://trubrics.com) is an LLM user analytics platform that lets you collect, analyse and manage user
+> [Trubrics](https://trubrics.com) is an LLM user analytics platform that lets you collect, analyse and manage user
 prompts & feedback on AI models.
->
->Check out [Trubrics repo](https://github.com/trubrics/trubrics-sdk) for more information on `Trubrics`.
+> 
+> Check out [Trubrics repo](https://github.com/trubrics/trubrics-sdk) for more information on `Trubrics`.
 
 In this guide, we will go over how to set up the `TrubricsCallbackHandler`. 
 
-
 ## Installation and Setup
-
 
 ```python
 %pip install --upgrade --quiet  trubrics langchain langchain-community
@@ -27,14 +24,12 @@ If you do not have a Trubrics account, create one on [here](https://trubrics.str
 
 Now set your credentials as environment variables:
 
-
 ```python
 import os
 
 os.environ["TRUBRICS_EMAIL"] = "***@***"
 os.environ["TRUBRICS_PASSWORD"] = "***"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TrubricsCallbackHandler", "source": "langchain_community.callbacks.trubrics_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.trubrics_callback.TrubricsCallbackHandler.html", "title": "Trubrics"}]-->
@@ -63,19 +58,16 @@ class TrubricsCallbackHandler(BaseCallbackHandler):
 
 Here are two examples of how to use the `TrubricsCallbackHandler` with Langchain [LLMs](/docs/how_to#llms) or [Chat Models](/docs/how_to#chat-models). We will use OpenAI models, so set your `OPENAI_API_KEY` key here:
 
-
 ```python
 os.environ["OPENAI_API_KEY"] = "sk-***"
 ```
 
 ### 1. With an LLM
 
-
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Trubrics"}]-->
 from langchain_openai import OpenAI
 ```
-
 
 ```python
 llm = OpenAI(callbacks=[TrubricsCallbackHandler()])
@@ -134,13 +126,11 @@ And to create my own destiny.
 ```
 ### 2. With a chat model
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Trubrics"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Trubrics"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Trubrics"}]-->
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 chat_llm = ChatOpenAI(
@@ -154,7 +144,6 @@ chat_llm = ChatOpenAI(
     ]
 )
 ```
-
 
 ```python
 chat_res = chat_llm.invoke(

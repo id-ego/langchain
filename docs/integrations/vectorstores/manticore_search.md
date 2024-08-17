@@ -15,7 +15,6 @@ As of now, the vector search functionality is only accessible in the development
 
 Starting Docker-container with ManticoreSearch and installing manticore-columnar-lib package (optional)
 
-
 ```python
 import time
 
@@ -78,7 +77,6 @@ a546aec22291
 ```
 Installing ManticoreSearch python client
 
-
 ```python
 %pip install --upgrade --quiet manticoresearch-dev
 ```
@@ -90,14 +88,12 @@ Note: you may need to restart the kernel to use updated packages.
 ```
 We want to use OpenAIEmbeddings so we have to get the OpenAI API Key.
 
-
 ```python
 <!--IMPORTS:[{"imported": "GPT4AllEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.gpt4all.GPT4AllEmbeddings.html", "title": "ManticoreSearch VectorStore"}, {"imported": "ManticoreSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.manticore_search.ManticoreSearch.html", "title": "ManticoreSearch VectorStore"}, {"imported": "ManticoreSearchSettings", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.manticore_search.ManticoreSearchSettings.html", "title": "ManticoreSearch VectorStore"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "ManticoreSearch VectorStore"}]-->
 from langchain_community.embeddings import GPT4AllEmbeddings
 from langchain_community.vectorstores import ManticoreSearch, ManticoreSearchSettings
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "ManticoreSearch VectorStore"}]-->

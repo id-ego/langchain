@@ -15,11 +15,9 @@ Once `text-generation-webui` is installed and confirmed working via the web inte
 
 ## Set model_url and run the example
 
-
 ```python
 model_url = "http://localhost:5000"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "TextGen"}, {"imported": "set_debug", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_debug.html", "title": "TextGen"}, {"imported": "TextGen", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.textgen.TextGen.html", "title": "TextGen"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "TextGen"}]-->
@@ -48,11 +46,9 @@ llm_chain.run(question)
 You should install websocket-client to use this feature.
 `pip install websocket-client`
 
-
 ```python
 model_url = "ws://localhost:5005"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "TextGen"}, {"imported": "set_debug", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_debug.html", "title": "TextGen"}, {"imported": "TextGen", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.textgen.TextGen.html", "title": "TextGen"}, {"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "TextGen"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "TextGen"}]-->
@@ -79,13 +75,11 @@ question = "What NFL team won the Super Bowl in the year Justin Bieber was born?
 llm_chain.run(question)
 ```
 
-
 ```python
 llm = TextGen(model_url=model_url, streaming=True)
 for chunk in llm.stream("Ask 'Hi, how are you?' like a pirate:'", stop=["'", "\n"]):
     print(chunk, end="", flush=True)
 ```
-
 
 ## Related
 

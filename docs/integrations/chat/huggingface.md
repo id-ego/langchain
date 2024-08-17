@@ -29,7 +29,6 @@ To access Hugging Face models you'll need to create a Hugging Face account, get 
 
 Generate a [Hugging Face Access Token](https://huggingface.co/docs/hub/security-tokens) and store it as an environment variable: `HUGGINGFACEHUB_API_TOKEN`.
 
-
 ```python
 import getpass
 import os
@@ -57,7 +56,6 @@ To access `langchain_huggingface` models you'll need to create a/an `Hugging Fac
 
 You'll need to have a [Hugging Face Access Token](https://huggingface.co/docs/hub/security-tokens) saved as an environment variable: `HUGGINGFACEHUB_API_TOKEN`.
 
-
 ```python
 import getpass
 import os
@@ -66,7 +64,6 @@ os.environ["HUGGINGFACEHUB_API_TOKEN"] = getpass.getpass(
     "Enter your Hugging Face API key: "
 )
 ```
-
 
 ```python
 %pip install --upgrade --quiet  langchain-huggingface text-generation transformers google-search-results numexpr langchainhub sentencepiece jinja2 bitsandbytes accelerate
@@ -82,7 +79,6 @@ Note: you may need to restart the kernel to use updated packages.
 You can instantiate a `ChatHuggingFace` model in two different ways, either from a `HuggingFaceEndpoint` or from a `HuggingFacePipeline`.
 
 ### `HuggingFaceEndpoint`
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatHuggingFace", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_huggingface.chat_models.huggingface.ChatHuggingFace.html", "title": "ChatHuggingFace"}, {"imported": "HuggingFaceEndpoint", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_endpoint.HuggingFaceEndpoint.html", "title": "ChatHuggingFace"}]-->
@@ -105,7 +101,6 @@ Your token has been saved to /Users/isaachershenson/.cache/huggingface/token
 Login successful
 ```
 ### `HuggingFacePipeline`
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatHuggingFace", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_huggingface.chat_models.huggingface.ChatHuggingFace.html", "title": "ChatHuggingFace"}, {"imported": "HuggingFacePipeline", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "ChatHuggingFace"}]-->
@@ -180,7 +175,6 @@ generation_config.json:   0%|          | 0.00/111 [00:00<?, ?B/s]
 
 To run a quantized version of your model, you can specify a `bitsandbytes` quantization config as follows:
 
-
 ```python
 from transformers import BitsAndBytesConfig
 
@@ -193,7 +187,6 @@ quantization_config = BitsAndBytesConfig(
 ```
 
 and pass it to the `HuggingFacePipeline` as a part of its `model_kwargs`:
-
 
 ```python
 llm = HuggingFacePipeline.from_model_id(
@@ -212,7 +205,6 @@ chat_model = ChatHuggingFace(llm=llm)
 
 ## Invocation
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatHuggingFace"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "ChatHuggingFace"}]-->
 from langchain_core.messages import (
@@ -230,7 +222,6 @@ messages = [
 ai_msg = chat_model.invoke(messages)
 ```
 
-
 ```python
 print(ai_msg.content)
 ```
@@ -246,7 +237,6 @@ For detailed documentation of all `ChatHuggingFace` features and configurations 
 ## API reference
 
 For detailed documentation of all ChatHuggingFace features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_huggingface.chat_models.huggingface.ChatHuggingFace.html
-
 
 ## Related
 

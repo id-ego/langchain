@@ -5,14 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Amazon MemoryDB
 
->[Vector Search](https://docs.aws.amazon.com/memorydb/latest/devguide/vector-search.html/) introduction and langchain integration guide.
+> [Vector Search](https://docs.aws.amazon.com/memorydb/latest/devguide/vector-search.html/) introduction and langchain integration guide.
 
 ## What is Amazon MemoryDB?
 
 MemoryDB is compatible with Redis OSS, a popular open source data store, enabling you to quickly build applications using the same flexible and friendly Redis OSS data structures, APIs, and commands that they already use today. With MemoryDB, all of your data is stored in memory, which enables you to achieve microsecond read and single-digit millisecond write latency and high throughput. MemoryDB also stores data durably across multiple Availability Zones (AZs) using a Multi-AZ transactional log to enable fast failover, database recovery, and node restarts.
 
-
-## Vector search for MemoryDB 
+## Vector search for MemoryDB
 
 Vector search for MemoryDB extends the functionality of MemoryDB. Vector search can be used in conjunction with existing MemoryDB functionality. Applications that do not use vector search are unaffected by its presence. Vector search is available in all Regions that MemoryDB is available. You can use your existing MemoryDB data or Redis OSS API to build machine learning and generative AI use cases, such as retrieval-augmented generation, anomaly detection, document retrieval, and real-time recommendations.
 
@@ -21,19 +20,15 @@ Vector search for MemoryDB extends the functionality of MemoryDB. Vector search 
 * Vector Range Search (e.g. find all vectors within a radius of a query vector)
 * Incremental indexing without performance loss
 
-
 ## Setting up
-
 
 ### Install Redis Python client
 
 `Redis-py` is a python  client that can be used to connect to MemoryDB
 
-
 ```python
 %pip install --upgrade --quiet  redis langchain-aws
 ```
-
 
 ```python
 from langchain_aws.embeddings import BedrockEmbeddings
@@ -52,7 +47,6 @@ More information about additional connection parameters can be found in the [red
 ### Sample data
 
 First we will describe some sample data so that the various attributes of the Redis vector store can be demonstrated.
-
 
 ```python
 metadata = [
@@ -94,12 +88,10 @@ index_name = "users"
 ### Create MemoryDB vector store
 
 The InMemoryVectorStore instance can be initialized using the below methods 
-- ``InMemoryVectorStore.__init__`` - Initialize directly
-- ``InMemoryVectorStore.from_documents`` - Initialize from a list of ``Langchain.docstore.Document`` objects
-- ``InMemoryVectorStore.from_texts`` - Initialize from a list of texts (optionally with metadata)
-- ``InMemoryVectorStore.from_existing_index`` - Initialize from an existing MemoryDB index
-
-
+- `InMemoryVectorStore.__init__` - Initialize directly
+- `InMemoryVectorStore.from_documents` - Initialize from a list of `Langchain.docstore.Document` objects
+- `InMemoryVectorStore.from_texts` - Initialize from a list of texts (optionally with metadata)
+- `InMemoryVectorStore.from_existing_index` - Initialize from an existing MemoryDB index
 
 ```python
 from langchain_aws.vectorstores.inmemorydb import InMemoryVectorStore
@@ -110,28 +102,23 @@ vds = InMemoryVectorStore.from_texts(
 )
 ```
 
-
 ```python
 vds.index_name
 ```
-
-
 
 ```output
 'users'
 ```
 
-
 ## Querying
 
-There are multiple ways to query the ``InMemoryVectorStore``  implementation based on what use case you have:
+There are multiple ways to query the `InMemoryVectorStore`  implementation based on what use case you have:
 
-- ``similarity_search``: Find the most similar vectors to a given vector.
-- ``similarity_search_with_score``: Find the most similar vectors to a given vector and return the vector distance
-- ``similarity_search_limit_score``: Find the most similar vectors to a given vector and limit the number of results to the ``score_threshold``
-- ``similarity_search_with_relevance_scores``: Find the most similar vectors to a given vector and return the vector similarities
-- ``max_marginal_relevance_search``: Find the most similar vectors to a given vector while also optimizing for diversity
-
+- `similarity_search`: Find the most similar vectors to a given vector.
+- `similarity_search_with_score`: Find the most similar vectors to a given vector and return the vector distance
+- `similarity_search_limit_score`: Find the most similar vectors to a given vector and limit the number of results to the `score_threshold`
+- `similarity_search_with_relevance_scores`: Find the most similar vectors to a given vector and return the vector similarities
+- `max_marginal_relevance_search`: Find the most similar vectors to a given vector while also optimizing for diversity
 
 ```python
 results = vds.similarity_search("foo")
@@ -189,19 +176,15 @@ new_metadata = [{"user": "sam", "age": 50, "job": "janitor", "credit_score": "hi
 vds.add_texts(new_document, new_metadata)
 ```
 
-
-
 ```output
 ['doc:users:b9c71d62a0a34241a37950b448dafd38']
 ```
-
 
 ## MemoryDB as Retriever
 
 Here we go over different options for using the vector store as a retriever.
 
 There are three different search methods we can use to do retrieval. By default, it will use semantic similarity.
-
 
 ```python
 query = "foo"
@@ -220,13 +203,10 @@ Content: foo  --- Score:  0.0
 retriever = vds.as_retriever(search_type="similarity", search_kwargs={"k": 4})
 ```
 
-
 ```python
 docs = retriever.invoke(query)
 docs
 ```
-
-
 
 ```output
 [Document(page_content='foo', metadata={'id': 'doc:users_modified:988ecca7574048e396756efc0e79aeca', 'user': 'john', 'job': 'engineer', 'credit_score': 'high', 'age': '18'}),
@@ -235,9 +215,7 @@ docs
  Document(page_content='bar', metadata={'id': 'doc:users_modified:01ef6caac12b42c28ad870aefe574253', 'user': 'tyler', 'job': 'engineer', 'credit_score': 'high', 'age': '100'})]
 ```
 
-
 There is also the `similarity_distance_threshold` retriever which allows the user to specify the vector distance
-
 
 ```python
 retriever = vds.as_retriever(
@@ -246,13 +224,10 @@ retriever = vds.as_retriever(
 )
 ```
 
-
 ```python
 docs = retriever.invoke(query)
 docs
 ```
-
-
 
 ```output
 [Document(page_content='foo', metadata={'id': 'doc:users_modified:988ecca7574048e396756efc0e79aeca', 'user': 'john', 'job': 'engineer', 'credit_score': 'high', 'age': '18'}),
@@ -260,9 +235,7 @@ docs
  Document(page_content='foo', metadata={'id': 'doc:users_modified:7087cee9be5b4eca93c30fbdd09a2731', 'user': 'nancy', 'job': 'doctor', 'credit_score': 'high', 'age': '94'})]
 ```
 
-
-Lastly, the ``similarity_score_threshold`` allows the user to define the minimum score for similar documents
-
+Lastly, the `similarity_score_threshold` allows the user to define the minimum score for similar documents
 
 ```python
 retriever = vds.as_retriever(
@@ -271,12 +244,9 @@ retriever = vds.as_retriever(
 )
 ```
 
-
 ```python
 retriever.invoke("foo")
 ```
-
-
 
 ```output
 [Document(page_content='foo', metadata={'id': 'doc:users_modified:988ecca7574048e396756efc0e79aeca', 'user': 'john', 'job': 'engineer', 'credit_score': 'high', 'age': '18'}),
@@ -284,13 +254,9 @@ retriever.invoke("foo")
  Document(page_content='foo', metadata={'id': 'doc:users_modified:7087cee9be5b4eca93c30fbdd09a2731', 'user': 'nancy', 'job': 'doctor', 'credit_score': 'high', 'age': '94'})]
 ```
 
-
-
 ```python
 retriever.invoke("foo")
 ```
-
-
 
 ```output
 [Document(page_content='foo', metadata={'id': 'doc:users:8f6b673b390647809d510112cde01a27', 'user': 'john', 'job': 'engineer', 'credit_score': 'high', 'age': '18'}),
@@ -299,11 +265,9 @@ retriever.invoke("foo")
  Document(page_content='foo', metadata={'id': 'doc:users:d6200ab3764c466082fde3eaab972a2a', 'user': 'derrick', 'job': 'doctor', 'credit_score': 'low', 'age': '45'})]
 ```
 
-
 ## Delete  index
 
 To delete your entries you have to address them by their keys.
-
 
 ```python
 # delete the indices too
@@ -317,13 +281,9 @@ InMemoryVectorStore.drop_index(
 )
 ```
 
-
-
 ```output
 True
 ```
-
-
 
 ## Related
 

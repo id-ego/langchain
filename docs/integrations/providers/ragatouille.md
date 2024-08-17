@@ -9,7 +9,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 There are multiple ways that we can use RAGatouille.
 
-
 ## Setup
 
 The integration lives in the `ragatouille` package.
@@ -17,7 +16,6 @@ The integration lives in the `ragatouille` package.
 ```bash
 pip install -U ragatouille
 ```
-
 
 ```python
 from ragatouille import RAGPretrainedModel
@@ -41,7 +39,6 @@ We can also use RAGatouille off-the-shelf as a reranker. This will allow us to u
 ## Setup Vanilla Retriever
 
 First, let's set up a vanilla retriever as an example.
-
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "RAGatouille"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "RAGatouille"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "RAGatouille"}]-->
@@ -86,30 +83,24 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
 texts = text_splitter.create_documents([text])
 ```
 
-
 ```python
 retriever = FAISS.from_documents(texts, OpenAIEmbeddings()).as_retriever(
     search_kwargs={"k": 10}
 )
 ```
 
-
 ```python
 docs = retriever.invoke("What animation studio did Miyazaki found")
 docs[0]
 ```
 
-
-
 ```output
 Document(page_content='collaborative projects. In April 1984, Miyazaki opened his own office in Suginami Ward, naming it Nibariki.')
 ```
 
-
 We can see that the result isn't super relevant to the question asked
 
 ## Using ColBERT as a reranker
-
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "RAGatouille"}]-->
@@ -132,11 +123,8 @@ compressed_docs = compression_retriever.invoke(
 compressed_docs[0]
 ```
 
-
-
 ```output
 Document(page_content='In June 1985, Miyazaki, Takahata, Tokuma and Suzuki founded the animation production company Studio Ghibli, with funding from Tokuma Shoten. Studio Ghibli\'s first film, Laputa: Castle in the Sky (1986), employed the same production crew of Nausicaä. Miyazaki\'s designs for the film\'s setting were inspired by Greek architecture and "European urbanistic templates". Some of the architecture in the film was also inspired by a Welsh mining town; Miyazaki witnessed the mining strike upon his first', metadata={'relevance_score': 26.5194149017334})
 ```
-
 
 This answer is much more relevant!

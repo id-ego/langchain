@@ -5,18 +5,16 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Redis
 
->[Redis (Remote Dictionary Server)](https://en.wikipedia.org/wiki/Redis) is an open-source in-memory storage, used as a distributed, in-memory key–value database, cache and message broker, with optional durability. Because it holds all data in memory and because of its design, `Redis` offers low-latency reads and writes, making it particularly suitable for use cases that require a cache. Redis is the most popular NoSQL database, and one of the most popular databases overall.
+> [Redis (Remote Dictionary Server)](https://en.wikipedia.org/wiki/Redis) is an open-source in-memory storage, used as a distributed, in-memory key–value database, cache and message broker, with optional durability. Because it holds all data in memory and because of its design, `Redis` offers low-latency reads and writes, making it particularly suitable for use cases that require a cache. Redis is the most popular NoSQL database, and one of the most popular databases overall.
 
 This notebook goes over how to use `Redis` to store chat message history.
 
 ## Setup
 First we need to install dependencies, and start a redis instance using commands like: `redis-server`.
 
-
 ```python
 pip install -U langchain-community redis
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RedisChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.redis.RedisChatMessageHistory.html", "title": "Redis"}]-->
@@ -24,7 +22,6 @@ from langchain_community.chat_message_histories import RedisChatMessageHistory
 ```
 
 ## Store and Retrieve Messages
-
 
 ```python
 history = RedisChatMessageHistory("foo", url="redis://localhost:6379")
@@ -34,25 +31,19 @@ history.add_user_message("hi!")
 history.add_ai_message("whats up?")
 ```
 
-
 ```python
 history.messages
 ```
-
-
 
 ```output
 [HumanMessage(content='hi!'), AIMessage(content='whats up?')]
 ```
 
-
 ## Using in the Chains
-
 
 ```python
 pip install -U langchain-openai
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Redis"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Redis"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "Redis"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Redis"}]-->
@@ -62,7 +53,6 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -90,8 +80,6 @@ chain_with_history.invoke({"question": "Hi! I'm bob"}, config=config)
 
 chain_with_history.invoke({"question": "Whats my name"}, config=config)
 ```
-
-
 
 ```output
 AIMessage(content='Your name is Bob, as you mentioned earlier. Is there anything specific you would like assistance with, Bob?')

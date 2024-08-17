@@ -4,7 +4,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 ---
 
 # SingleStoreDB
->[SingleStoreDB](https://singlestore.com/) is a robust, high-performance distributed SQL database solution designed to excel in both [cloud](https://www.singlestore.com/cloud/) and on-premises environments. Boasting a versatile feature set, it offers seamless deployment options while delivering unparalleled performance.
+> [SingleStoreDB](https://singlestore.com/) is a robust, high-performance distributed SQL database solution designed to excel in both [cloud](https://www.singlestore.com/cloud/) and on-premises environments. Boasting a versatile feature set, it offers seamless deployment options while delivering unparalleled performance.
 
 A standout feature of SingleStoreDB is its advanced support for vector storage and operations, making it an ideal choice for applications requiring intricate AI capabilities such as text similarity matching. With built-in vector functions like [dot_product](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/dot_product.html) and [euclidean_distance](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/euclidean_distance.html), SingleStoreDB empowers developers to implement sophisticated algorithms efficiently.
 
@@ -18,13 +18,11 @@ In essence, SingleStoreDB provides a comprehensive solution for managing and que
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
 
-
 ```python
 # Establishing a connection to the database is facilitated through the singlestoredb Python connector.
 # Please ensure that this connector is installed in your working environment.
 %pip install --upgrade --quiet  singlestoredb
 ```
-
 
 ```python
 import getpass
@@ -34,7 +32,6 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "SingleStoreDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.singlestoredb.SingleStoreDB.html", "title": "SingleStoreDB"}, {"imported": "DistanceStrategy", "source": "langchain_community.vectorstores.utils", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.utils.DistanceStrategy.html", "title": "SingleStoreDB"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "SingleStoreDB"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "SingleStoreDB"}]-->
 from langchain_community.vectorstores import SingleStoreDB
@@ -42,7 +39,6 @@ from langchain_community.vectorstores.utils import DistanceStrategy
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 ```
-
 
 ```python
 # loading docs
@@ -94,7 +90,6 @@ embeddings = OpenAIEmbeddings()
 
 There are several ways to establish a [connection](https://singlestoredb-python.labs.singlestore.com/generated/singlestoredb.connect.html) to the database. You can either set up environment variables or pass named parameters to the `SingleStoreDB constructor`. Alternatively, you may provide these parameters to the `from_documents` and `from_texts` methods.
 
-
 ```python
 # Setup connection url as environment variable
 os.environ["SINGLESTOREDB_URL"] = "root:pass@localhost:3306/db"
@@ -107,7 +102,6 @@ docsearch = SingleStoreDB.from_documents(
 )
 ```
 
-
 ```python
 query = "trees in the snow"
 docs = docsearch.similarity_search(query)  # Find documents that correspond to the query
@@ -115,7 +109,6 @@ print(docs[0].page_content)
 ```
 
 SingleStoreDB elevates search capabilities by enabling users to enhance and refine search results through prefiltering based on metadata fields. This functionality empowers developers and data analysts to fine-tune queries, ensuring that search results are precisely tailored to their requirements. By filtering search results using specific metadata attributes, users can narrow down the scope of their queries, focusing only on relevant data subsets. 
-
 
 ```python
 query = "trees branches"
@@ -128,7 +121,6 @@ print(docs[0].page_content)
 Enhance your search efficiency with SingleStore DB version 8.5 or above by leveraging [ANN vector indexes](https://docs.singlestore.com/cloud/reference/sql-reference/vector-functions/vector-indexing/). By setting `use_vector_index=True` during vector store object creation, you can activate this feature. Additionally, if your vectors differ in dimensionality from the default OpenAI embedding size of 1536, ensure to specify the `vector_size` parameter accordingly. 
 
 SingleStoreDB presents a diverse range of search strategies, each meticulously crafted to cater to specific use cases and user preferences. The default `VECTOR_ONLY` strategy utilizes vector operations such as `dot_product` or `euclidean_distance` to calculate similarity scores directly between vectors, while `TEXT_ONLY` employs Lucene-based full-text search, particularly advantageous for text-centric applications. For users seeking a balanced approach, `FILTER_BY_TEXT` first refines results based on text similarity before conducting vector comparisons, whereas `FILTER_BY_VECTOR` prioritizes vector similarity, filtering results before assessing text similarity for optimal matches. Notably, both `FILTER_BY_TEXT` and `FILTER_BY_VECTOR` necessitate a full-text index for operation. Additionally, `WEIGHTED_SUM` emerges as a sophisticated strategy, calculating the final similarity score by weighing vector and text similarities, albeit exclusively utilizing dot_product distance calculations and also requiring a full-text index. These versatile strategies empower users to fine-tune searches according to their unique needs, facilitating efficient and precise data retrieval and analysis. Moreover, SingleStoreDB's hybrid approaches, exemplified by `FILTER_BY_TEXT`, `FILTER_BY_VECTOR`, and `WEIGHTED_SUM` strategies, seamlessly blend vector and text-based searches to maximize efficiency and accuracy, ensuring users can fully leverage the platform's capabilities for a wide range of applications.
-
 
 ```python
 docsearch = SingleStoreDB.from_documents(
@@ -186,11 +178,9 @@ In the realm of multi-modal data analysis, the integration of diverse informatio
 
 To illustrate, let's consider an application scenario where we aim to effectively analyze multi-modal data. In this example, we harness the capabilities of [OpenClip multimodal embeddings](/docs/integrations/text_embedding/open_clip), which leverage CLIP's framework. With OpenClip, we can seamlessly embed textual descriptions alongside corresponding images, enabling comprehensive analysis and retrieval tasks. Whether it's identifying visually similar images based on textual queries or finding relevant text passages associated with specific visual content, OpenClip empowers users to explore and extract insights from multi-modal data with remarkable efficiency and accuracy.
 
-
 ```python
 %pip install -U langchain openai singlestoredb langchain-experimental # (newest versions required for multi-modal)
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "SingleStoreDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.singlestoredb.SingleStoreDB.html", "title": "SingleStoreDB"}, {"imported": "OpenCLIPEmbeddings", "source": "langchain_experimental.open_clip", "docs": "https://api.python.langchain.com/en/latest/open_clip/langchain_experimental.open_clip.open_clip.OpenCLIPEmbeddings.html", "title": "SingleStoreDB"}]-->
@@ -216,7 +206,6 @@ image_uris = sorted(
 # Add images
 docsearch.add_images(uris=image_uris)
 ```
-
 
 ## Related
 

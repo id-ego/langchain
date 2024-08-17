@@ -5,10 +5,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # HugeGraph
 
->[HugeGraph](https://hugegraph.apache.org/) is a convenient, efficient, and adaptable graph database compatible with
->the `Apache TinkerPop3` framework and the `Gremlin` query language.
->
->[Gremlin](https://en.wikipedia.org/wiki/Gremlin_(query_language)) is a graph traversal language and virtual machine developed by `Apache TinkerPop` of the `Apache Software Foundation`.
+> [HugeGraph](https://hugegraph.apache.org/) is a convenient, efficient, and adaptable graph database compatible with
+the `Apache TinkerPop3` framework and the `Gremlin` query language.
+> 
+> [Gremlin](https://en.wikipedia.org/wiki/Gremlin_(query_language)) is a graph traversal language and virtual machine developed by `Apache TinkerPop` of the `Apache Software Foundation`.
 
 This notebook shows how to use LLMs to provide a natural language interface to [HugeGraph](https://hugegraph.apache.org/cn/) database.
 
@@ -33,7 +33,6 @@ pip3 install hugegraph-python
 
 If you are using the docker container, you need to wait a couple of second for the database to start, and then we need create schema and write graph data for the database.
 
-
 ```python
 from hugegraph.connection import PyHugeGraph
 
@@ -41,7 +40,6 @@ client = PyHugeGraph("localhost", "8080", user="admin", pwd="admin", graph="huge
 ```
 
 First, we create the schema for a simple movie database:
-
 
 ```python
 """schema"""
@@ -59,15 +57,11 @@ schema.edgeLabel("ActedIn").sourceLabel("Person").targetLabel(
 ).ifNotExist().create()
 ```
 
-
-
 ```output
 'create EdgeLabel success, Detail: "b\'{"id":1,"name":"ActedIn","source_label":"Person","target_label":"Movie","frequency":"SINGLE","sort_keys":[],"nullable_keys":[],"index_labels":[],"properties":[],"status":"CREATED","ttl":0,"enable_label_index":true,"user_data":{"~create_time":"2023-07-04 10:48:47.908"}}\'"'
 ```
 
-
 Then we can insert some data.
-
 
 ```python
 """graph"""
@@ -86,17 +80,13 @@ g.addEdge(
 g.addEdge("ActedIn", "1:Robert De Niro", "2:The Godfather Part II", {})
 ```
 
-
-
 ```output
 1:Robert De Niro--ActedIn-->2:The Godfather Part II
 ```
 
-
 ## Creating `HugeGraphQAChain`
 
 We can now create the `HugeGraph` and `HugeGraphQAChain`. To create the `HugeGraph` we simply need to pass the database object to the `HugeGraph` constructor.
-
 
 ```python
 <!--IMPORTS:[{"imported": "HugeGraphQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.hugegraph.HugeGraphQAChain.html", "title": "HugeGraph"}, {"imported": "HugeGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.hugegraph.HugeGraph.html", "title": "HugeGraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "HugeGraph"}]-->
@@ -104,7 +94,6 @@ from langchain.chains import HugeGraphQAChain
 from langchain_community.graphs import HugeGraph
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 graph = HugeGraph(
@@ -120,11 +109,9 @@ graph = HugeGraph(
 
 If the schema of database changes, you can refresh the schema information needed to generate Gremlin statements.
 
-
 ```python
 # graph.refresh_schema()
 ```
-
 
 ```python
 print(graph.get_schema)
@@ -138,11 +125,9 @@ Relationships: ['Person--ActedIn-->Movie']
 
 We can now use the graph Gremlin QA chain to ask question of the graph
 
-
 ```python
 chain = HugeGraphQAChain.from_llm(ChatOpenAI(temperature=0), graph=graph, verbose=True)
 ```
-
 
 ```python
 chain.run("Who played in The Godfather?")
@@ -158,7 +143,6 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
-
 
 ```output
 'Al Pacino played in The Godfather.'

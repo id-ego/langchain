@@ -36,13 +36,11 @@ LangChain has a few [built-in message types](/docs/concepts/#message-types):
 | `FunctionMessage` / `ToolMessage` | Message for passing the results of tool invocation back to the model.               |
 | `AIMessageChunk` / `HumanMessageChunk` / ... | Chunk variant of each type of message. |
 
-
 ::: {.callout-note}
 `ToolMessage` and `FunctionMessage` closely follow OpenAI's `function` and `tool` roles.
 
 This is a rapidly developing field and as more models add function calling capabilities. Expect that there will be additions to this schema.
 :::
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to create a custom chat model class"}, {"imported": "BaseMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.base.BaseMessage.html", "title": "How to create a custom chat model class"}, {"imported": "FunctionMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.function.FunctionMessage.html", "title": "How to create a custom chat model class"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to create a custom chat model class"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to create a custom chat model class"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to create a custom chat model class"}]-->
@@ -60,7 +58,6 @@ from langchain_core.messages import (
 
 All the chat messages have a streaming variant that contains `Chunk` in the name.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AIMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "FunctionMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.function.FunctionMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "HumanMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "SystemMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "ToolMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessageChunk.html", "title": "How to create a custom chat model class"}]-->
 from langchain_core.messages import (
@@ -74,17 +71,13 @@ from langchain_core.messages import (
 
 These chunks are used when streaming output from chat models, and they all define an additive property!
 
-
 ```python
 AIMessageChunk(content="Hello") + AIMessageChunk(content=" World!")
 ```
 
-
-
 ```output
 AIMessageChunk(content='Hello World!')
 ```
-
 
 ## Base Chat Model
 
@@ -101,7 +94,6 @@ To do so, we will inherit from `BaseChatModel` and we'll need to implement the f
 | `_agenerate`                       | Use to implement a native async method.                           | Optional           |
 | `_astream`                         | Use to implement async version of `_stream`.                      | Optional           |
 
-
 :::tip
 The `_astream` implementation uses `run_in_executor` to launch the sync `_stream` in a separate thread if `_stream` is implemented, otherwise it fallsback to use `_agenerate`.
 
@@ -109,7 +101,6 @@ You can use this trick if you want to reuse the `_stream` implementation, but if
 :::
 
 ### Implementation
-
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncCallbackManagerForLLMRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun.html", "title": "How to create a custom chat model class"}, {"imported": "CallbackManagerForLLMRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForLLMRun.html", "title": "How to create a custom chat model class"}, {"imported": "BaseChatModel", "source": "langchain_core.language_models", "docs": "https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html", "title": "How to create a custom chat model class"}, {"imported": "SimpleChatModel", "source": "langchain_core.language_models", "docs": "https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.SimpleChatModel.html", "title": "How to create a custom chat model class"}, {"imported": "AIMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "BaseMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.base.BaseMessage.html", "title": "How to create a custom chat model class"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to create a custom chat model class"}, {"imported": "ChatGeneration", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.chat_generation.ChatGeneration.html", "title": "How to create a custom chat model class"}, {"imported": "ChatGenerationChunk", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.chat_generation.ChatGenerationChunk.html", "title": "How to create a custom chat model class"}, {"imported": "ChatResult", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.chat_result.ChatResult.html", "title": "How to create a custom chat model class"}, {"imported": "run_in_executor", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.run_in_executor.html", "title": "How to create a custom chat model class"}]-->
@@ -258,7 +249,6 @@ class CustomChatModelAdvanced(BaseChatModel):
 
 The chat model will implement the standard `Runnable` interface of LangChain which many of the LangChain abstractions support!
 
-
 ```python
 model = CustomChatModelAdvanced(n=3, model_name="my_custom_model")
 
@@ -271,38 +261,26 @@ model.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Meo', response_metadata={'time_in_seconds': 3}, id='run-ddb42bd6-4fdd-4bd2-8be5-e11b67d3ac29-0')
 ```
-
-
 
 ```python
 model.invoke("hello")
 ```
 
-
-
 ```output
 AIMessage(content='hel', response_metadata={'time_in_seconds': 3}, id='run-4d3cc912-44aa-454b-977b-ca02be06c12e-0')
 ```
-
-
 
 ```python
 model.batch(["hello", "goodbye"])
 ```
 
-
-
 ```output
 [AIMessage(content='hel', response_metadata={'time_in_seconds': 3}, id='run-9620e228-1912-4582-8aa1-176813afec49-0'),
  AIMessage(content='goo', response_metadata={'time_in_seconds': 3}, id='run-1ce8cdf8-6f75-448e-82f7-1bb4a121df93-0')]
 ```
-
-
 
 ```python
 for chunk in model.stream("cat"):
@@ -313,7 +291,6 @@ c|a|t||
 ```
 Please see the implementation of `_astream` in the model! If you do not implement it, then no output will stream.!
 
-
 ```python
 async for chunk in model.astream("cat"):
     print(chunk.content, end="|")
@@ -322,7 +299,6 @@ async for chunk in model.astream("cat"):
 c|a|t||
 ```
 Let's try to use the astream events API which will also help double check that all the callbacks were implemented!
-
 
 ```python
 async for event in model.astream_events("cat", version="v1"):
@@ -354,7 +330,6 @@ Tests:
 
 * [ ] Add unit or integration tests to the overridden methods. Verify that `invoke`, `ainvoke`, `batch`, `stream` work if you've over-ridden the corresponding code.
 
-
 Streaming (if you're implementing it):
 
 * [ ] Implement the _stream method to get streaming working
@@ -368,16 +343,14 @@ Secret API Keys:
 
 * [ ] If your model connects to an API it will likely accept API keys as part of its initialization. Use Pydantic's `SecretStr` type for secrets, so they don't get accidentally printed out when folks print the model.
 
-
 Identifying Params:
 
 * [ ] Include a `model_name` in identifying params
 
-
 Optimizations:
 
 Consider providing native async support to reduce the overhead from the model!
- 
+
 * [ ] Provided a native async of `_agenerate` (used by `ainvoke`)
 * [ ] Provided a native async of `_astream` (used by `astream`)
 

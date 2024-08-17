@@ -9,9 +9,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This example goes over how to use LangChain to interact with `ipex-llm` for text generation. 
 
-
 ## Setup
-
 
 ```python
 # Update Langchain
@@ -21,13 +19,11 @@ This example goes over how to use LangChain to interact with `ipex-llm` for text
 
 Install IEPX-LLM for running LLMs locally on Intel CPU.
 
-
 ```python
 %pip install --pre --upgrade ipex-llm[all]
 ```
 
 ## Basic Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "IPEX-LLM"}, {"imported": "IpexLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.ipex_llm.IpexLLM.html", "title": "IPEX-LLM"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "IPEX-LLM"}]-->
@@ -42,14 +38,12 @@ warnings.filterwarnings("ignore", category=UserWarning, message=".*padding_mask.
 
 Specify the prompt template for your model. In this example, we use the [vicuna-1.5](https://huggingface.co/lmsys/vicuna-7b-v1.5) model. If you're working with a different model, choose a proper template accordingly.
 
-
 ```python
 template = "USER: {question}\nASSISTANT:"
 prompt = PromptTemplate(template=template, input_variables=["question"])
 ```
 
 Load the model locally using IpexLLM using `IpexLLM.from_model_id`. It will load the model directly in its Huggingface format and convert it automatically to low-bit format for inference.
-
 
 ```python
 llm = IpexLLM.from_model_id(
@@ -59,7 +53,6 @@ llm = IpexLLM.from_model_id(
 ```
 
 Use it in Chains:
-
 
 ```python
 llm_chain = prompt | llm
@@ -73,7 +66,6 @@ Alternatively, you might save the low-bit model to disk once and use `from_model
 
 To save the low-bit model, use `save_low_bit` as follows.
 
-
 ```python
 saved_lowbit_model_path = "./vicuna-7b-1.5-low-bit"  # path to save low-bit model
 llm.model.save_low_bit(saved_lowbit_model_path)
@@ -82,7 +74,6 @@ del llm
 
 Load the model from saved lowbit model path as follows. 
 > Note that the saved path for the low-bit model only includes the model itself but not the tokenizers. If you wish to have everything in one place, you will need to manually download or copy the tokenizer files from the original model's directory to the location where the low-bit model is saved.
-
 
 ```python
 llm_lowbit = IpexLLM.from_model_id_low_bit(
@@ -95,7 +86,6 @@ llm_lowbit = IpexLLM.from_model_id_low_bit(
 
 Use the loaded model in Chains:
 
-
 ```python
 llm_chain = prompt | llm_lowbit
 
@@ -103,7 +93,6 @@ llm_chain = prompt | llm_lowbit
 question = "What is AI?"
 output = llm_chain.invoke(question)
 ```
-
 
 ## Related
 

@@ -5,15 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # AINetwork Toolkit
 
->[AI Network](https://www.ainetwork.ai/build-on-ain) is a layer 1 blockchain designed to accommodate large-scale AI models, utilizing a decentralized GPU network powered by the [$AIN token](https://www.ainetwork.ai/token), enriching AI-driven `NFTs` (`AINFTs`).
->
->The `AINetwork Toolkit` is a set of tools for interacting with the [AINetwork Blockchain](https://www.ainetwork.ai/public/whitepaper.pdf). These tools allow you to transfer `AIN`, read and write values, create apps, and set permissions for specific paths within the blockchain database.
+> [AI Network](https://www.ainetwork.ai/build-on-ain) is a layer 1 blockchain designed to accommodate large-scale AI models, utilizing a decentralized GPU network powered by the [$AIN token](https://www.ainetwork.ai/token), enriching AI-driven `NFTs` (`AINFTs`).
+> 
+> The `AINetwork Toolkit` is a set of tools for interacting with the [AINetwork Blockchain](https://www.ainetwork.ai/public/whitepaper.pdf). These tools allow you to transfer `AIN`, read and write values, create apps, and set permissions for specific paths within the blockchain database.
 
 ## Installing dependencies
 
 Before using the AINetwork Toolkit, you need to install the ain-py package. You can install it with pip:
-
-
 
 ```python
 %pip install --upgrade --quiet  ain-py langchain-community
@@ -23,7 +21,6 @@ Before using the AINetwork Toolkit, you need to install the ain-py package. You 
 
 You need to set the `AIN_BLOCKCHAIN_ACCOUNT_PRIVATE_KEY` environmental variable to your AIN Blockchain Account Private Key.
 
-
 ```python
 import os
 
@@ -31,7 +28,6 @@ os.environ["AIN_BLOCKCHAIN_ACCOUNT_PRIVATE_KEY"] = ""
 ```
 
 ### Get AIN Blockchain private key
-
 
 ```python
 import os
@@ -62,7 +58,6 @@ private_key: f5e2f359bb6b7836a2ac70815473d1a290c517f847d096f5effe818de8c2cf14
 
 You can initialize the AINetwork Toolkit like this:
 
-
 ```python
 <!--IMPORTS:[{"imported": "AINetworkToolkit", "source": "langchain_community.agent_toolkits.ainetwork.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.ainetwork.toolkit.AINetworkToolkit.html", "title": "AINetwork Toolkit"}]-->
 from langchain_community.agent_toolkits.ainetwork.toolkit import AINetworkToolkit
@@ -75,7 +70,6 @@ address = tools[0].interface.wallet.defaultAccount.address
 ## Initialize the Agent with the AINetwork Toolkit
 
 You can initialize the agent with the AINetwork Toolkit like this:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "AINetwork Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "AINetwork Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "AINetwork Toolkit"}]-->
@@ -97,13 +91,11 @@ Here are some examples of how you can use the agent with the AINetwork Toolkit:
 
 ### Define App name to test
 
-
 ```python
 appName = f"langchain_demo_{address.lower()}"
 ```
 
 ### Create an app in the AINetwork Blockchain database
-
 
 ```python
 print(
@@ -127,7 +119,6 @@ The app with the name "langchain_demo_0x5beb4defa2ccc274498416fd7cb34235dbc122ac
 ```
 ### Set a value at a given path in the AINetwork Blockchain database
 
-
 ```python
 print(
     agent.run(f"Set the value {{1: 2, '34': 56}} at the path /apps/{appName}/object .")
@@ -147,7 +138,6 @@ Invoking: `AINvalueOps` with `{'type': 'SET', 'path': '/apps/langchain_demo_0x5b
 The value {1: 2, '34': 56} has been set at the path /apps/langchain_demo_0x5beb4defa2ccc274498416fd7cb34235dbc122ac/object.
 ```
 ### Set permissions for a path in the AINetwork Blockchain database
-
 
 ```python
 print(
@@ -171,7 +161,6 @@ Invoking: `AINruleOps` with `{'type': 'SET', 'path': '/apps/langchain_demo_0x5be
 The write permissions for the path `/apps/langchain_demo_0x5beb4defa2ccc274498416fd7cb34235dbc122ac/user/$from` have been set with the eval string `auth.addr===$from`.
 ```
 ### Retrieve the permissions for a path in the AINetwork Blockchain database
-
 
 ```python
 print(agent.run(f"Retrieve the permissions for the path /apps/{appName}."))
@@ -203,7 +192,6 @@ The permissions for the path /apps/langchain_demo_0x5beb4defa2ccc274498416fd7cb3
 ```
 ### Get AIN from faucet
 
-
 ```python
 !curl http://faucet.ainetwork.ai/api/test/{address}/
 ```
@@ -211,7 +199,6 @@ The permissions for the path /apps/langchain_demo_0x5beb4defa2ccc274498416fd7cb3
 {"result":"0x0eb07b67b7d0a702cb60e865d3deafff3070d8508077ef793d69d6819fd92ea3","time":1692348112376}
 ```
 ### Get AIN Balance
-
 
 ```python
 print(agent.run(f"Check AIN balance of {address}"))
@@ -230,7 +217,6 @@ Invoking: `AINvalueOps` with `{'type': 'GET', 'path': '/accounts/0x5BEB4Defa2ccc
 The AIN balance of address 0x5BEB4Defa2ccc274498416Fd7Cb34235DbC122Ac is 100 AIN.
 ```
 ### Transfer AIN
-
 
 ```python
 print(

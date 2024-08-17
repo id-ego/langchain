@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Gitlab Toolkit
 
-The `Gitlab` toolkit contains tools that enable an LLM agent to interact with a gitlab repository. 
+The `Gitlab` toolkit contains tools that enable an LLM agent to interact with a gitlab repository.
 The tool is a wrapper for the [python-gitlab](https://github.com/python-gitlab/python-gitlab) library. 
 
 ## Quickstart
@@ -17,27 +17,17 @@ The tool is a wrapper for the [python-gitlab](https://github.com/python-gitlab/p
 Each of these steps will be explained in great detail below.
 
 1. **Get Issues**- fetches issues from the repository.
-
 2. **Get Issue**- fetches details about a specific issue.
-
 3. **Comment on Issue**- posts a comment on a specific issue.
-
 4. **Create Pull Request**- creates a pull request from the bot's working branch to the base branch.
-
 5. **Create File**- creates a new file in the repository.
-
 6. **Read File**- reads a file from the repository.
-
 7. **Update File**- updates a file in the repository.
-
 8. **Delete File**- deletes a file from the repository.
-
-
 
 ## Setup
 
-### 1. Install the `python-gitlab` library 
-
+### 1. Install the `python-gitlab` library
 
 ```python
 %pip install --upgrade --quiet  python-gitlab langchain-community
@@ -61,9 +51,7 @@ Before initializing your agent, the following environmental variables need to be
 * **GITLAB_BRANCH**- The branch where the bot will make its commits. Defaults to 'main.'
 * **GITLAB_BASE_BRANCH**- The base branch of your repo, usually either 'main' or 'master.' This is where pull requests will base from. Defaults to 'main.'
 
-
 ## Example: Simple Agent
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Gitlab Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Gitlab Toolkit"}, {"imported": "GitLabToolkit", "source": "langchain_community.agent_toolkits.gitlab.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.gitlab.toolkit.GitLabToolkit.html", "title": "Gitlab Toolkit"}, {"imported": "GitLabAPIWrapper", "source": "langchain_community.utilities.gitlab", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.gitlab.GitLabAPIWrapper.html", "title": "Gitlab Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Gitlab Toolkit"}]-->
@@ -74,7 +62,6 @@ from langchain_community.agent_toolkits.gitlab.toolkit import GitLabToolkit
 from langchain_community.utilities.gitlab import GitLabAPIWrapper
 from langchain_openai import OpenAI
 ```
-
 
 ```python
 # Set your environment variables using os.environ
@@ -88,7 +75,6 @@ os.environ["GITLAB_BASE_BRANCH"] = "main"
 os.environ["OPENAI_API_KEY"] = ""
 ```
 
-
 ```python
 llm = OpenAI(temperature=0)
 gitlab = GitLabAPIWrapper()
@@ -97,7 +83,6 @@ agent = initialize_agent(
     toolkit.get_tools(), llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
 )
 ```
-
 
 ```python
 agent.run(
@@ -156,12 +141,9 @@ Final Answer: I have created a pull request with number 12 that solves issue 15.
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'I have created a pull request with number 12 that solves issue 15.'
 ```
-
-
 
 ## Related
 

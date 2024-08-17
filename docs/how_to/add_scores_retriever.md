@@ -15,7 +15,6 @@ For (1), we will implement a short wrapper function around the corresponding vec
 
 First we populate a vector store with some data. We will use a [PineconeVectorStore](https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html), but this guide is compatible with any LangChain vector store that implements a `.similarity_search_with_score` method.
 
-
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to add scores to retriever results"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add scores to retriever results"}, {"imported": "PineconeVectorStore", "source": "langchain_pinecone", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html", "title": "How to add scores to retriever results"}]-->
 from langchain_core.documents import Document
@@ -65,7 +64,6 @@ To obtain scores from a vector store retriever, we wrap the underlying vector st
 
 We add a `@chain` decorator to the function to create a [Runnable](/docs/concepts/#langchain-expression-language) that can be used similarly to a typical retriever.
 
-
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to add scores to retriever results"}, {"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to add scores to retriever results"}]-->
 from typing import List
@@ -83,13 +81,10 @@ def retriever(query: str) -> List[Document]:
     return docs
 ```
 
-
 ```python
 result = retriever.invoke("dinosaur")
 result
 ```
-
-
 
 ```output
 (Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'genre': 'science fiction', 'rating': 7.7, 'year': 1993.0, 'score': 0.84429127}),
@@ -97,7 +92,6 @@ result
  Document(page_content='Three men walk into the Zone, three men walk out of the Zone', metadata={'director': 'Andrei Tarkovsky', 'genre': 'thriller', 'rating': 9.9, 'year': 1979.0, 'score': 0.751571238}),
  Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'director': 'Satoshi Kon', 'rating': 8.6, 'year': 2006.0, 'score': 0.747471571}))
 ```
-
 
 Note that similarity scores from the retrieval step are included in the metadata of the above documents.
 
@@ -108,7 +102,6 @@ Note that similarity scores from the retrieval step are included in the metadata
 `SelfQueryRetriever` includes a short (1 - 2 line) method `_get_docs_with_query` that executes the `vectorstore` search. We can subclass `SelfQueryRetriever` and override this method to propagate similarity scores.
 
 First, following the [how-to guide](/docs/how_to/self_query), we will need to establish some metadata on which to filter:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "How to add scores to retriever results"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "How to add scores to retriever results"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add scores to retriever results"}]-->
@@ -142,7 +135,6 @@ llm = ChatOpenAI(temperature=0)
 
 We then override the `_get_docs_with_query` to use the `similarity_search_with_score` method of the underlying vector store: 
 
-
 ```python
 from typing import Any, Dict
 
@@ -163,7 +155,6 @@ class CustomSelfQueryRetriever(SelfQueryRetriever):
 
 Invoking this retriever will now include similarity scores in the document metadata. Note that the underlying structured-query capabilities of `SelfQueryRetriever` are retained.
 
-
 ```python
 retriever = CustomSelfQueryRetriever.from_llm(
     llm,
@@ -177,12 +168,9 @@ result = retriever.invoke("dinosaur movie with rating less than 8")
 result
 ```
 
-
-
 ```output
 (Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'genre': 'science fiction', 'rating': 7.7, 'year': 1993.0, 'score': 0.84429127}),)
 ```
-
 
 ## MultiVectorRetriever
 
@@ -191,7 +179,6 @@ result
 To propagate similarity scores through this retriever, we can again subclass `MultiVectorRetriever` and override a method. This time we will override `_get_relevant_documents`.
 
 First, we prepare some fake data. We generate fake "whole documents" and store them in a document store; here we will use a simple [InMemoryStore](https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryBaseStore.html).
-
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryStore.html", "title": "How to add scores to retriever results"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add scores to retriever results"}]-->
@@ -208,7 +195,6 @@ docstore.mset(fake_whole_documents)
 ```
 
 Next we will add some fake "sub-documents" to our vector store. We can link these sub-documents to the parent documents by populating the `"doc_id"` key in its metadata.
-
 
 ```python
 docs = [
@@ -229,20 +215,16 @@ docs = [
 vectorstore.add_documents(docs)
 ```
 
-
-
 ```output
 ['62a85353-41ff-4346-bff7-be6c8ec2ed89',
  '5d4a0e83-4cc5-40f1-bc73-ed9cbad0ee15',
  '8c1d9a56-120f-45e4-ba70-a19cd19a38f4']
 ```
 
-
 To propagate the scores, we subclass `MultiVectorRetriever` and override its `_get_relevant_documents` method. Here we will make two changes:
 
 1. We will add similarity scores to the metadata of the corresponding "sub-documents" using the `similarity_search_with_score` method of the underlying vector store as above;
 2. We will include a list of these sub-documents in the metadata of the retrieved parent document. This surfaces what snippets of text were identified by the retrieval, together with their corresponding similarity scores.
-
 
 ```python
 <!--IMPORTS:[{"imported": "MultiVectorRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.multi_vector.MultiVectorRetriever.html", "title": "How to add scores to retriever results"}, {"imported": "CallbackManagerForRetrieverRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForRetrieverRun.html", "title": "How to add scores to retriever results"}]-->
@@ -289,14 +271,11 @@ class CustomMultiVectorRetriever(MultiVectorRetriever):
 
 Invoking this retriever, we can see that it identifies the correct parent document, including the relevant snippet from the sub-document with similarity score.
 
-
 ```python
 retriever = CustomMultiVectorRetriever(vectorstore=vectorstore, docstore=docstore)
 
 retriever.invoke("cat")
 ```
-
-
 
 ```output
 [Document(page_content='fake whole document 1', metadata={'sub_docs': [Document(page_content='A snippet from a larger document discussing cats.', metadata={'doc_id': 'fake_id_1', 'score': 0.831276655})]})]

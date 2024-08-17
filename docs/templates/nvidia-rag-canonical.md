@@ -66,7 +66,6 @@ LangSmith will help us trace, monitor and debug LangChain applications.
 You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
-
 ```shell
 export LANGCHAIN_TRACING_V2=true
 export LANGCHAIN_API_KEY=<your-api-key>
@@ -97,28 +96,27 @@ from langserve.client import RemoteRunnable
 runnable = RemoteRunnable("http://localhost:8000/nvidia-rag-canonical")
 ```
 
-
 ## Milvus Setup
 
 Use this step if you need to create a Milvus Vector Store and ingest data.
 We will first follow the standard Milvus setup instructions [here](https://milvus.io/docs/install_standalone-docker.md).
 
 1. Download the Docker Compose YAML file.
-    ```shell
-    wget https://github.com/milvus-io/milvus/releases/download/v2.3.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
-    ```
+   ```shell
+   wget https://github.com/milvus-io/milvus/releases/download/v2.3.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
+   ```
 2. Start the Milvus Vector Store container
-    ```shell
-    sudo docker compose up -d
-    ```
+   ```shell
+   sudo docker compose up -d
+   ```
 3. Install the PyMilvus package to interact with the Milvus container.
-    ```shell
-    pip install pymilvus
-    ```
+   ```shell
+   pip install pymilvus
+   ```
 4. Let's now ingest some data! We can do that by moving into this directory and running the code in `ingest.py`, eg:
-
-    ```shell
-    python ingest.py
-    ```
-
-    Note that you can (and should!) change this to ingest data of your choice.
+   
+   ```shell
+   python ingest.py
+   ```
+   
+   Note that you can (and should!) change this to ingest data of your choice.

@@ -53,13 +53,13 @@ A package to deploy LangChain chains as REST APIs. Makes it easy to get a produc
 A developer platform that lets you debug, test, evaluate, and monitor LLM applications.
 
 <ThemedImage
-  alt="Diagram outlining the hierarchical organization of the LangChain framework, displaying the interconnected parts across multiple layers."
-  sources={{
-    light: useBaseUrl('/svg/langchain_stack_062024.svg'),
-    dark: useBaseUrl('/svg/langchain_stack_062024_dark.svg'),
-  }}
-  title="LangChain Framework Overview"
-  style={{ width: "100%" }}
+alt="Diagram outlining the hierarchical organization of the LangChain framework, displaying the interconnected parts across multiple layers."
+sources={{
+light: useBaseUrl('/svg/langchain_stack_062024.svg'),
+dark: useBaseUrl('/svg/langchain_stack_062024_dark.svg'),
+}}
+title="LangChain Framework Overview"
+style={{ width: "100%" }}
 />
 
 ## LangChain Expression Language (LCEL)
@@ -129,7 +129,6 @@ The **input type** and **output type** varies by component:
 | Retriever | Single string | List of Documents |
 | Tool | Single string or dictionary, depending on the tool | Depends on the tool |
 
-
 All runnables expose input and output **schemas** to inspect the inputs and outputs:
 - `input_schema`: an input Pydantic model auto-generated from the structure of the Runnable
 - `output_schema`: an output Pydantic model auto-generated from the structure of the Runnable
@@ -164,7 +163,7 @@ We have some standardized parameters when constructing ChatModels:
 
 Some important things to note:
 - standard params only apply to model providers that expose parameters with the intended functionality. For example, some providers do not expose a configuration for maximum output tokens, so max_tokens can't be supported on these.
-- standard params are currently only enforced on integrations that have their own integration packages (e.g. `langchain-openai`, `langchain-anthropic`, etc.), they're not enforced on models in ``langchain-community``.
+- standard params are currently only enforced on integrations that have their own integration packages (e.g. `langchain-openai`, `langchain-anthropic`, etc.), they're not enforced on models in `langchain-community`.
 
 ChatModels also accept other parameters that are specific to that integration. To find all the parameters supported by a ChatModel head to the API reference for that model.
 
@@ -262,7 +261,6 @@ This represents the result of a tool call. In addition to `role` and `content`, 
 This is a legacy message type, corresponding to OpenAI's legacy function-calling API. `ToolMessage` should be used instead to correspond to the updated tool-calling API.
 
 This represents the result of a function call. In addition to `role` and `content`, this message has a `name` parameter which conveys the name of the function that was called to produce this result.
-
 
 ### Prompt templates
 <span data-heading-keywords="prompt,prompttemplate,chatprompttemplate"></span>
@@ -730,11 +728,11 @@ The `callbacks` property is available on most objects throughout the API (Models
 The callbacks are available on most objects throughout the API (Models, Tools, Agents, etc.) in two different places:
 
 - **Request time callbacks**: Passed at the time of the request in addition to the input data.
-    Available on all standard `Runnable` objects. These callbacks are INHERITED by all children
-    of the object they are defined on. For example, `chain.invoke({"number": 25}, {"callbacks": [handler]})`.
+Available on all standard `Runnable` objects. These callbacks are INHERITED by all children
+of the object they are defined on. For example, `chain.invoke({"number": 25}, {"callbacks": [handler]})`.
 - **Constructor callbacks**: `chain = TheNameOfSomeChain(callbacks=[handler])`. These callbacks
-    are passed as arguments to the constructor of the object. The callbacks are scoped
-    only to the object they are defined on, and are **not** inherited by any children of the object.
+are passed as arguments to the constructor of the object. The callbacks are scoped
+only to the object they are defined on, and are **not** inherited by any children of the object.
 
 :::warning
 Constructor callbacks are scoped only to the object they are defined on. They are **not** inherited by children
@@ -898,8 +896,8 @@ result.
 
 ![Diagram of a tool call by a chat model](/img/tool_call.png)
 
-Tool calling is not universal, but is supported by many popular LLM providers, including [Anthropic](/docs/integrations/chat/anthropic/), 
-[Cohere](/docs/integrations/chat/cohere/), [Google](/docs/integrations/chat/google_vertex_ai_palm/), 
+Tool calling is not universal, but is supported by many popular LLM providers, including [Anthropic](/docs/integrations/chat/anthropic/),
+[Cohere](/docs/integrations/chat/cohere/), [Google](/docs/integrations/chat/google_vertex_ai_palm/),
 [Mistral](/docs/integrations/chat/mistralai/), [OpenAI](/docs/integrations/chat/openai/), and even for locally-running models via [Ollama](/docs/integrations/chat/ollama/).
 
 LangChain provides a standardized interface for tool calling that is consistent across different models.
@@ -1115,7 +1113,7 @@ For a full list of model providers that support tool calling, [see this table](/
 
 ### Retrieval
 
-LLMs are trained on a large but fixed dataset, limiting their ability to reason over private or recent information. Fine-tuning an LLM with specific facts is one way to mitigate this, but is often [poorly suited for factual recall](https://www.anyscale.com/blog/fine-tuning-is-for-form-not-facts) and [can be costly](https://www.glean.com/blog/how-to-build-an-ai-assistant-for-the-enterprise). 
+LLMs are trained on a large but fixed dataset, limiting their ability to reason over private or recent information. Fine-tuning an LLM with specific facts is one way to mitigate this, but is often [poorly suited for factual recall](https://www.anyscale.com/blog/fine-tuning-is-for-form-not-facts) and [can be costly](https://www.glean.com/blog/how-to-build-an-ai-assistant-for-the-enterprise).
 Retrieval is the process of providing relevant information to an LLM to improve its response for a given input. Retrieval augmented generation (RAG) is the process of grounding the LLM generation (output) using the retrieved information.
 
 :::tip
@@ -1133,7 +1131,7 @@ You can and should experiment with using different pieces together. You might al
 #### Query Translation
 
 First, consider the user input(s) to your RAG system. Ideally, a RAG system can handle a wide range of inputs, from poorly worded questions to complex multi-part queries.
-**Using an LLM to review and optionally modify the input is the central idea behind query translation.** This serves as a general buffer, optimizing raw user inputs for your retrieval system. 
+**Using an LLM to review and optionally modify the input is the central idea behind query translation.** This serves as a general buffer, optimizing raw user inputs for your retrieval system.
 For example, this can be as simple as extracting keywords or as complex as generating multiple sub-questions for a complex query.
 
 | Name          | When to use | Description |
@@ -1284,7 +1282,6 @@ Table columns:
 - **Splits On**: How this text splitter splits text
 - **Adds Metadata**: Whether or not this text splitter adds metadata about where each chunk came from.
 - **Description**: Description of the splitter, including recommendation on when to use it.
-
 
 | Name     | Classes                                                                                                                                                                                                             | Splits On                                                   | Adds Metadata | Description                                                                                                                                                                                                                                                                  |
 |----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

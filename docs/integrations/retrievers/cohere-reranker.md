@@ -5,15 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Cohere reranker
 
->[Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models that help companies improve human-machine interactions.
+> [Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models that help companies improve human-machine interactions.
 
 This notebook shows how to use [Cohere's rerank endpoint](https://docs.cohere.com/docs/reranking) in a retriever. This builds on top of ideas in the [ContextualCompressionRetriever](/docs/how_to/contextual_compression).
-
 
 ```python
 %pip install --upgrade --quiet  cohere
 ```
-
 
 ```python
 %pip install --upgrade --quiet  faiss
@@ -23,7 +21,6 @@ This notebook shows how to use [Cohere's rerank endpoint](https://docs.cohere.co
 %pip install --upgrade --quiet  faiss-cpu
 ```
 
-
 ```python
 # get a new token: https://dashboard.cohere.ai/
 
@@ -32,7 +29,6 @@ import os
 
 os.environ["COHERE_API_KEY"] = getpass.getpass("Cohere API Key:")
 ```
-
 
 ```python
 # Helper function for printing docs
@@ -48,7 +44,6 @@ def pretty_print_docs(docs):
 
 ## Set up the base vector store retriever
 Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Cohere reranker"}, {"imported": "CohereEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.cohere.CohereEmbeddings.html", "title": "Cohere reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Cohere reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Cohere reranker"}]-->
@@ -275,7 +270,6 @@ And with an unwavering resolve that freedom will always triumph over tyranny.
 Now let's wrap our base retriever with a `ContextualCompressionRetriever`. We'll add an `CohereRerank`, uses the Cohere rerank endpoint to rerank the returned results.
 Do note that it is mandatory to specify the model name in CohereRerank!
 
-
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers.contextual_compression", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Cohere reranker"}, {"imported": "CohereRerank", "source": "langchain_cohere", "docs": "https://api.python.langchain.com/en/latest/rerank/langchain_cohere.rerank.CohereRerank.html", "title": "Cohere reranker"}, {"imported": "Cohere", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.cohere.Cohere.html", "title": "Cohere reranker"}]-->
 from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
@@ -296,12 +290,10 @@ pretty_print_docs(compressed_docs)
 
 You can of course use this retriever within a QA pipeline
 
-
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Cohere reranker"}]-->
 from langchain.chains import RetrievalQA
 ```
-
 
 ```python
 chain = RetrievalQA.from_chain_type(
@@ -309,19 +301,14 @@ chain = RetrievalQA.from_chain_type(
 )
 ```
 
-
 ```python
 chain({"query": query})
 ```
-
-
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',
  'result': " The president speaks highly of Ketanji Brown Jackson, stating that she is one of the nation's top legal minds, and will continue the legacy of excellence of Justice Breyer. The president also mentions that he worked with her family and that she comes from a family of public school educators and police officers. Since her nomination, she has received support from various groups, including the Fraternal Order of Police and judges from both major political parties. \n\nWould you like me to extract another sentence from the provided text? "}
 ```
-
-
 
 ## Related
 

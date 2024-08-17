@@ -25,7 +25,6 @@ To run this notebook, you will need to do the following:
 
 After confirmed access to database in the runtime environment of this notebook, filling the following values and run the cell before running example scripts.
 
-
 ```python
 # @markdown Please fill in the both the Google Cloud region and name of your Cloud SQL instance.
 REGION = "us-central1"  # @param {type:"string"}
@@ -40,13 +39,11 @@ TABLE_NAME = "test-default"  # @param {type:"string"}
 
 The integration lives in its own `langchain-google-cloud-sql-mysql` package, so we need to install it.
 
-
 ```python
 %pip install -upgrade --quiet langchain-google-cloud-sql-mysql
 ```
 
 **Colab only**: Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
-
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -65,7 +62,6 @@ If you don't know your project ID, try the following:
 * Run `gcloud projects list`.
 * See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
 
-
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
 
@@ -81,7 +77,6 @@ Authenticate to Google Cloud as the IAM user logged into this notebook in order 
 
 - If you are using Colab to run this notebook, use the cell below and continue.
 - If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
-
 
 ```python
 from google.colab import auth
@@ -114,7 +109,6 @@ Optionally, [built-in database authentication](https://cloud.google.com/sql/docs
 * `user` : Database user to use for built-in database authentication and login
 * `password` : Database password to use for built-in database authentication and login.
 
-
 ```python
 from langchain_google_cloud_sql_mysql import MySQLEngine
 
@@ -132,7 +126,6 @@ Initialize a table of default schema via `MySQLEngine.init_document_table(<table
 
 `overwrite_existing=True` flag means the newly initialized table will replace any existing table of the same name.
 
-
 ```python
 engine.init_document_table(TABLE_NAME, overwrite_existing=True)
 ```
@@ -143,7 +136,6 @@ Save langchain documents with `MySQLDocumentSaver.add_documents(<documents>)`. T
 
 1. `engine` - An instance of a `MySQLEngine` engine.
 2. `table_name` - The name of the table within the Cloud SQL database to store langchain documents.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google Cloud SQL for MySQL"}]-->
@@ -175,7 +167,6 @@ Load langchain documents with `MySQLLoader.load()` or `MySQLLoader.lazy_load()`.
 1. `engine` - An instance of a `MySQLEngine` engine.
 2. `table_name` - The name of the table within the Cloud SQL database to store langchain documents.
 
-
 ```python
 from langchain_google_cloud_sql_mysql import MySQLLoader
 
@@ -188,7 +179,6 @@ for doc in docs:
 ### Load documents via query
 
 Other than loading documents from a table, we can also choose to load documents from a view generated from a SQL query. For example:
-
 
 ```python
 from langchain_google_cloud_sql_mysql import MySQLLoader
@@ -214,7 +204,6 @@ A `row` should be deleted if there exists a `document` in the list, such that
 - `document.page_content` equals `row[page_content]`
 - `document.metadata` equals `row[langchain_metadata]`
 
-
 ```python
 from langchain_google_cloud_sql_mysql import MySQLLoader
 
@@ -230,7 +219,6 @@ print("Documents after delete:", loader.load())
 ### Load documents with customized document page content & metadata
 
 First we prepare an example table with non-default schema, and populate it with some arbitrary data.
-
 
 ```python
 import sqlalchemy
@@ -268,7 +256,6 @@ with engine.connect() as conn:
 
 If we still load langchain documents with default parameters of `MySQLLoader` from this example table, the `page_content` of loaded documents will be the first column of the table, and `metadata` will be consisting of key-value pairs of all the other columns.
 
-
 ```python
 loader = MySQLLoader(
     engine=engine,
@@ -283,7 +270,6 @@ We can specify the content and metadata we want to load by setting the `content_
 2. `metadata_columns`: The columns to write into the `metadata` of the document.
 
 For example here, the values of columns in `content_columns` will be joined together into a space-separated string, as `page_content` of loaded documents, and `metadata` of loaded documents will only contain key-value pairs of columns specified in `metadata_columns`.
-
 
 ```python
 loader = MySQLLoader(
@@ -316,7 +302,6 @@ We can use the following parameters with `MySQLEngine.init_document_table()` to 
 3. `content_column`: The name of column to store `page_content` of langchain document. Default: `page_content`.
 4. `metadata_json_column`: The name of JSON column to store extra `metadata` of langchain document. Default: `langchain_metadata`.
 
-
 ```python
 engine.init_document_table(
     TABLE_NAME,
@@ -347,7 +332,6 @@ Save documents with `MySQLDocumentSaver.add_documents(<documents>)`. As you can 
 - `document.metadata.organic` will be saved into `organic` column.
 - `document.metadata.fruit_id` will be saved into `other_metadata` column in JSON format.
 
-
 ```python
 test_docs = [
     Document(
@@ -364,7 +348,6 @@ saver = MySQLDocumentSaver(
 saver.add_documents(test_docs)
 ```
 
-
 ```python
 with engine.connect() as conn:
     result = conn.execute(sqlalchemy.text(f"select * from `{TABLE_NAME}`;"))
@@ -380,11 +363,8 @@ A `row` should be deleted if there exists a `document` in the list, such that
 
 - `document.page_content` equals `row[page_content]`
 - For every metadata field `k` in `document.metadata`
-    - `document.metadata[k]` equals `row[k]` or `document.metadata[k]` equals `row[langchain_metadata][k]`
+  - `document.metadata[k]` equals `row[k]` or `document.metadata[k]` equals `row[langchain_metadata][k]`
 - There no extra metadata field presents in `row` but not in `document.metadata`.
-
-
-
 
 ```python
 loader = MySQLLoader(engine=engine, table_name=TABLE_NAME)
@@ -393,7 +373,6 @@ print("Documents before delete:", docs)
 saver.delete(docs)
 print("Documents after delete:", loader.load())
 ```
-
 
 ## Related
 

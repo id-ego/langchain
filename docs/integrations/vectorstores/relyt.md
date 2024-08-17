@@ -5,19 +5,17 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Relyt
 
->[Relyt](https://docs.relyt.cn/docs/vector-engine/use/) is a cloud native data warehousing service that is designed to analyze large volumes of data online.
+> [Relyt](https://docs.relyt.cn/docs/vector-engine/use/) is a cloud native data warehousing service that is designed to analyze large volumes of data online.
 
->`Relyt` is compatible with the ANSI SQL 2003 syntax and the PostgreSQL and Oracle database ecosystems. Relyt also supports row store and column store. Relyt processes petabytes of data offline at a high performance level and supports highly concurrent online queries.
+> `Relyt` is compatible with the ANSI SQL 2003 syntax and the PostgreSQL and Oracle database ecosystems. Relyt also supports row store and column store. Relyt processes petabytes of data offline at a high performance level and supports highly concurrent online queries.
 
 This notebook shows how to use functionality related to the `Relyt` vector database.
 To run, you should have an [Relyt](https://docs.relyt.cn/) instance up and running:
 - Using [Relyt Vector Database](https://docs.relyt.cn/docs/vector-engine/use/). Click here to fast deploy it.
 
-
 ```python
 %pip install "pgvecto_rs[sdk]" langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Relyt"}, {"imported": "FakeEmbeddings", "source": "langchain_community.embeddings.fake", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.fake.FakeEmbeddings.html", "title": "Relyt"}, {"imported": "Relyt", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.relyt.Relyt.html", "title": "Relyt"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Relyt"}]-->
@@ -28,7 +26,6 @@ from langchain_text_splitters import CharacterTextSplitter
 ```
 
 Split documents and get embeddings by call community API
-
 
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
@@ -49,7 +46,6 @@ export PG_PASSWORD={database_password}
 ```
 
 Then store your embeddings and documents into Relyt
-
 
 ```python
 import os
@@ -72,12 +68,10 @@ vector_db = Relyt.from_documents(
 
 Query and retrieve data
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = vector_db.similarity_search(query)
 ```
-
 
 ```python
 print(docs[0].page_content)

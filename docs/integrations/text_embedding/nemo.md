@@ -13,7 +13,6 @@ NREM uses NVIDIA's TensorRT built on top of the Triton Inference Server for opti
 
 ## Imports
 
-
 ```python
 <!--IMPORTS:[{"imported": "NeMoEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.nemo.NeMoEmbeddings.html", "title": "NVIDIA NeMo embeddings"}]-->
 from langchain_community.embeddings import NeMoEmbeddings
@@ -21,13 +20,11 @@ from langchain_community.embeddings import NeMoEmbeddings
 
 ## Setup
 
-
 ```python
 batch_size = 16
 model = "NV-Embed-QA-003"
 api_endpoint_url = "http://localhost:8080/v1/embeddings"
 ```
-
 
 ```python
 embedding_model = NeMoEmbeddings(
@@ -41,7 +38,6 @@ Checking if endpoint is live: http://localhost:8080/v1/embeddings
 ```python
 embedding_model.embed_query("This is a test.")
 ```
-
 
 ## Related
 

@@ -29,7 +29,6 @@ This notebook provides a quick overview for getting started with Databricks [cha
 
 `ChatDatabricks` supports all methods of `ChatModel` including async APIs.
 
-
 ### Endpoint Requirement
 
 The serving endpoint `ChatDatabricks` wraps must have OpenAI-compatible chat input/output format ([reference](https://mlflow.org/docs/latest/llms/deployments/index.html#chat)). As long as the input format is compatible, `ChatDatabricks` can be used for any endpoint type hosted on [Databricks Model Serving](https://docs.databricks.com/en/machine-learning/model-serving/index.html):
@@ -38,7 +37,6 @@ The serving endpoint `ChatDatabricks` wraps must have OpenAI-compatible chat inp
 2. Custom Models - You can also deploy custom models to a serving endpoint via MLflow with
 your choice of framework such as LangChain, Pytorch, Transformers, etc.
 3. External Models - Databricks endpoints can serve models that are hosted outside Databricks as a proxy, such as proprietary model service like OpenAI GPT4.
-
 
 ## Setup
 
@@ -49,7 +47,6 @@ To access Databricks models you'll need to create a Databricks account, set up c
 If you are running LangChain app inside Databricks, you can skip this step.
 
 Otherwise, you need manually set the Databricks workspace hostname and personal access token to `DATABRICKS_HOST` and `DATABRICKS_TOKEN` environment variables, respectively. See [Authentication Documentation](https://docs.databricks.com/en/dev-tools/auth/index.html#databricks-personal-access-tokens) for how to get an access token.
-
 
 ```python
 import getpass
@@ -65,7 +62,6 @@ Enter your Databricks access token:  ········
 
 The LangChain Databricks integration lives in the `langchain-community` package. Also, `mlflow >= 2.9 ` is required to run the code in this notebook.
 
-
 ```python
 %pip install -qU langchain-community mlflow>=2.9.0
 ```
@@ -75,8 +71,6 @@ We first demonstrates how to query DBRX-instruct model hosted as Foundation Mode
 For other type of endpoints, there are some difference in how to set up the endpoint itself, however, once the endpoint is ready, there is no difference in how to query it with `ChatDatabricks`. Please refer to the bottom of this notebook for the examples with other type of endpoints.
 
 ## Instantiation
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatDatabricks", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.databricks.ChatDatabricks.html", "title": "ChatDatabricks"}]-->
@@ -92,18 +86,13 @@ chat_model = ChatDatabricks(
 
 ## Invocation
 
-
 ```python
 chat_model.invoke("What is MLflow?")
 ```
 
-
-
 ```output
 AIMessage(content='MLflow is an open-source platform for managing end-to-end machine learning workflows. It was introduced by Databricks in 2018. MLflow provides tools for tracking experiments, packaging and sharing code, and deploying models. It is designed to work with any machine learning library and can be used in a variety of environments, including local machines, virtual machines, and cloud-based clusters. MLflow aims to streamline the machine learning development lifecycle, making it easier for data scientists and engineers to collaborate and deploy models into production.', response_metadata={'prompt_tokens': 229, 'completion_tokens': 104, 'total_tokens': 333}, id='run-d3fb4d06-3e10-4471-83c9-c282cc62b74d-0')
 ```
-
-
 
 ```python
 # You can also pass a list of messages
@@ -114,16 +103,12 @@ messages = [
 chat_model.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='Databricks Model Serving is a feature of the Databricks platform that allows data scientists and engineers to easily deploy machine learning models into production. With Model Serving, you can host, manage, and serve machine learning models as APIs, making it easy to integrate them into applications and business processes. It supports a variety of popular machine learning frameworks, including TensorFlow, PyTorch, and scikit-learn, and provides tools for monitoring and managing the performance of deployed models. Model Serving is designed to be scalable, secure, and easy to use, making it a great choice for organizations that want to quickly and efficiently deploy machine learning models into production.', response_metadata={'prompt_tokens': 35, 'completion_tokens': 130, 'total_tokens': 165}, id='run-b3feea21-223e-4105-8627-41d647d5ccab-0')
 ```
 
-
 ## Chaining
 Similar to other chat models, `ChatDatabricks` can be used as a part of a complex chain.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatDatabricks"}]-->
@@ -148,17 +133,13 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content="Unity Catalog is a new data catalog feature in Databricks that allows you to discover, manage, and govern all your data assets across your data landscape, including data lakes, data warehouses, and data marts. It provides a centralized repository for storing and managing metadata, data lineage, and access controls for all your data assets. Unity Catalog enables data teams to easily discover and access the data they need, while ensuring compliance with data privacy and security regulations. It is designed to work seamlessly with Databricks' Lakehouse platform, providing a unified experience for managing and analyzing all your data.", response_metadata={'prompt_tokens': 32, 'completion_tokens': 118, 'total_tokens': 150}, id='run-82d72624-f8df-4c0d-a976-919feec09a55-0')
 ```
 
-
 ## Invocation (streaming)
 
 `ChatDatabricks` supports streaming response by `stream` method since `langchain-community>=0.2.1`.
-
 
 ```python
 for chunk in chat_model.stream("How are you?"):
@@ -168,7 +149,6 @@ for chunk in chat_model.stream("How are you?"):
 I|'m| an| AI| and| don|'t| have| feelings|,| but| I|'m| here| and| ready| to| assist| you|.| How| can| I| help| you| today|?||
 ```
 ## Async Invocation
-
 
 ```python
 import asyncio
@@ -186,7 +166,6 @@ Prerequisites:
 * You have ["Can Query" permission](https://docs.databricks.com/security/auth-authz/access-control/serving-endpoint-acl.html) to the endpoint.
 
 Once the endpoint is ready, the usage pattern is completely same as Foundation Models.
-
 
 ```python
 chat_model_custom = ChatDatabricks(
@@ -212,7 +191,6 @@ databricks secrets put-secret <scope> openai-api-key --string-value $OPENAI_API_
 ```
 
 For how to set up Databricks CLI and manage secrets, please refer to https://docs.databricks.com/en/security/secrets/secrets.html
-
 
 ```python
 from mlflow.deployments import get_deploy_client
@@ -243,7 +221,6 @@ client.create_endpoint(
 
 Once the endpoint status has become "Ready", you can query the endpoint in the same way as other types of endpoints.
 
-
 ```python
 chat_model_external = ChatDatabricks(
     endpoint=endpoint_name,
@@ -258,7 +235,6 @@ chat_model_external.invoke("How to use Databricks?")
 Databricks Function Calling is OpenAI-compatible and is only available during model serving as part of Foundation Model APIs.
 
 See [Databricks function calling introduction](https://docs.databricks.com/en/machine-learning/model-serving/function-calling.html#supported-models) for supported models.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatDatabricks", "source": "langchain_community.chat_models.databricks", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.databricks.ChatDatabricks.html", "title": "ChatDatabricks"}]-->
@@ -298,7 +274,6 @@ See [Databricks Unity Catalog](docs/integrations/tools/databricks.md) about how 
 ## API reference
 
 For detailed documentation of all ChatDatabricks features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.ChatDatabricks.html
-
 
 ## Related
 

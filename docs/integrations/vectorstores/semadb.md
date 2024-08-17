@@ -17,11 +17,9 @@ You'll need to install `langchain-community` with `pip install -qU langchain-com
 
 To run things locally, we are using [Sentence Transformers](https://www.sbert.net/) which are commonly used for embedding sentences. You can use any embedding model LangChain offers.
 
-
 ```python
 %pip install --upgrade --quiet  sentence_transformers
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "SemaDB"}]-->
@@ -29,7 +27,6 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 embeddings = HuggingFaceEmbeddings()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "SemaDB"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "SemaDB"}]-->
@@ -48,7 +45,6 @@ print(len(docs))
 ## Connect to SemaDB
 
 SemaDB Cloud uses [RapidAPI keys](https://rapidapi.com/semafind-semadb/api/semadb) to authenticate. You can obtain yours by creating a free RapidAPI account.
-
 
 ```python
 import getpass
@@ -74,7 +70,6 @@ The parameters to the SemaDB vector store reflect the API directly:
 - embeddings: correspond to how the embeddings of documents, texts and queries will be generated.
 - DistanceStrategy: is the distance metric used. The wrapper automatically normalises vectors if COSINE is used.
 
-
 ```python
 db = SemaDB("mycollection", 768, embeddings, DistanceStrategy.COSINE)
 
@@ -83,32 +78,24 @@ db = SemaDB("mycollection", 768, embeddings, DistanceStrategy.COSINE)
 db.create_collection()
 ```
 
-
-
 ```output
 True
 ```
 
-
 The SemaDB vector store wrapper adds the document text as point metadata to collect later. Storing large chunks of text is *not recommended*. If you are indexing a large collection, we instead recommend storing references to the documents such as external Ids.
-
 
 ```python
 db.add_documents(docs)[:2]
 ```
-
-
 
 ```output
 ['813c7ef3-9797-466b-8afa-587115592c6c',
  'fc392f7f-082b-4932-bfcc-06800db5e017']
 ```
 
-
 ## Similarity Search
 
 We use the default LangChain similarity search interface to search for the most similar sentences.
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -124,30 +111,22 @@ docs = db.similarity_search_with_score(query)
 docs[0]
 ```
 
-
-
 ```output
 (Document(page_content='And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.', metadata={'source': '../../how_to/state_of_the_union.txt', 'text': 'And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.'}),
  0.42369342)
 ```
 
-
 ## Clean up
 
 You can delete the collection to remove all data.
-
 
 ```python
 db.delete_collection()
 ```
 
-
-
 ```output
 True
 ```
-
-
 
 ## Related
 

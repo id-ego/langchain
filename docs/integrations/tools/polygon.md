@@ -13,7 +13,6 @@ This notebook shows how to use agents to interact with the [Polygon IO](https://
 
 To use Polygon IO tools, you need to install the `langchain-community` package.
 
-
 ```python
 %pip install -qU langchain-community > /dev/null
 ```
@@ -21,7 +20,6 @@ To use Polygon IO tools, you need to install the `langchain-community` package.
 ### Credentials
 
 Get your Polygon IO API key [here](https://polygon.io/), and then set it below. 
-
 
 ```python
 import getpass
@@ -32,7 +30,6 @@ if "POLYGON_API_KEY" not in os.environ:
 ```
 
 It's also helpful (but not needed) to set up [LangSmith](https://smith.langchain.com/) for best-in-class observability
-
 
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -47,7 +44,6 @@ Polygon IO provides both a toolkit and individual tools for each of the tools in
 
 We can initialize the toolkit by importing it alongside the API wrapper needed to use the tools.
 
-
 ```python
 <!--IMPORTS:[{"imported": "PolygonToolkit", "source": "langchain_community.agent_toolkits.polygon.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.polygon.toolkit.PolygonToolkit.html", "title": "Polygon IO Toolkit and Tools"}, {"imported": "PolygonAPIWrapper", "source": "langchain_community.utilities.polygon", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.polygon.PolygonAPIWrapper.html", "title": "Polygon IO Toolkit and Tools"}]-->
 from langchain_community.agent_toolkits.polygon.toolkit import PolygonToolkit
@@ -61,12 +57,9 @@ toolkit = PolygonToolkit.from_polygon_api_wrapper(polygon)
 
 We can examine the tools included in this toolkit:
 
-
 ```python
 toolkit.get_tools()
 ```
-
-
 
 ```output
 [PolygonAggregates(api_wrapper=PolygonAPIWrapper(polygon_api_key='K231Rg76pOsN_IdT2eWhCC9npBguCYEj')),
@@ -75,11 +68,9 @@ toolkit.get_tools()
  PolygonFinancials(api_wrapper=PolygonAPIWrapper(polygon_api_key='K231Rg76pOsN_IdT2eWhCC9npBguCYEj'))]
 ```
 
-
 ### Use within an agent
 
 Next we can add our toolkit to an agent and use it!
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Polygon IO Toolkit and Tools"}, {"imported": "create_openai_functions_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.create_openai_functions_agent.html", "title": "Polygon IO Toolkit and Tools"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Polygon IO Toolkit and Tools"}]-->
@@ -96,7 +87,6 @@ prompt = base_prompt.partial(instructions=instructions)
 agent = create_openai_functions_agent(llm, toolkit.get_tools(), prompt)
 ```
 
-
 ```python
 agent_executor = AgentExecutor(
     agent=agent,
@@ -106,7 +96,6 @@ agent_executor = AgentExecutor(
 ```
 
 We can examine yesterdays information for a certain ticker:
-
 
 ```python
 agent_executor.invoke({"input": "What was yesterdays financial info for AAPL?"})
@@ -132,15 +121,12 @@ Invoking: `polygon_aggregates` with `{'ticker': 'AAPL', 'timespan': 'day', 'time
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'What was yesterdays financial info for AAPL?',
  'output': 'Here is the financial information for Apple Inc. (AAPL) for October 5, 2023:\n\n- **Opening Price**: $173.79\n- **Closing Price**: $174.91\n- **High Price**: $175.45\n- **Low Price**: $172.68\n- **Volume**: 48,527,918 shares\n- **Volume Weighted Average Price (VWAP)**: $174.2297\n- **Number of Transactions**: 509,175'}
 ```
 
-
 We can also ask for recent news regarding a stock:
-
 
 ```python
 agent_executor.invoke({"input": "What is the recent new regarding MSFT?"})
@@ -190,15 +176,12 @@ These articles provide a mix of predictions, investment insights, and event high
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'What is the recent new regarding MSFT?',
  'output': 'Here are some recent news articles regarding Microsoft (MSFT):\n\n1. **Prediction: 1 Unstoppable Stock Will Join Nvidia, Apple, Microsoft, and Alphabet in the $2 Trillion Club Within 3 Years**\n   - **Publisher:** The Motley Fool\n   - **Published Date:** August 8, 2024\n   - **Summary:** The article predicts that Meta Platforms (META) will join the $2 trillion club within 3 years, driven by its advancements in artificial intelligence and potential to drive significant returns for investors. Microsoft is mentioned as one of the companies currently valued at over $2 trillion.\n   - [Read more](https://www.fool.com/investing/2024/08/08/prediction-1-stock-nvidia-microsoft-in-2-trillion/?source=iedfolrf0000001)\n\n2. **Nasdaq Correction: My Top "Magnificent Seven" Stock to Buy in August**\n   - **Publisher:** The Motley Fool\n   - **Published Date:** August 8, 2024\n   - **Summary:** The article discusses why Microsoft is a compelling investment opportunity among the \'Magnificent Seven\' tech stocks, despite the recent market sell-off. It highlights Microsoft\'s strong profitability, ongoing investments in cloud and AI, and its ability to balance growth and shareholder returns.\n   - [Read more](https://www.fool.com/investing/2024/08/08/nasdaq-buy-microsoft-stock-magnificent-seven/?source=iedfolrf0000001)\n\n3. **Zacks Earnings Trends Highlights: Microsoft, Alphabet, Amazon, Apple, Meta, Tesla and Nvidia**\n   - **Publisher:** Zacks Investment Research\n   - **Published Date:** August 8, 2024\n   - **Summary:** The overall earnings picture for Q2 2024 is one of stability and an improving outlook, with management teams providing a reassuring view of the economic situation. However, estimates for Q3 2024 have started to weaken faster than in previous quarters.\n   - [Read more](https://www.zacks.com/stock/news/2318733/zacks-earnings-trends-highlights-microsoft-alphabet-amazon-apple-meta-tesla-and-nvidia?cid=CS-ZC-FT-press_releases-2318733)\n\n4. **VDS: Steve Chen, Randi Zuckerberg, and Juan Antonio Samaranch Lead Top Speaker Lineup at Valencia’s Premier Tech Event**\n   - **Publisher:** GlobeNewswire Inc.\n   - **Published Date:** August 7, 2024\n   - **Summary:** VDS, a prominent tech event in Southern Europe, will feature influential speakers like Steve Chen, Randi Zuckerberg, and Juan Antonio Samaranch. The event aims to empower entrepreneurs and foster connections in the tech ecosystem.\n   - [Read more](https://www.globenewswire.com/news-release/2024/08/07/2926271/0/en/VDS-Steve-Chen-Randi-Zuckerberg-and-Juan-Antonio-Samaranch-Lead-Top-Speaker-Lineup-at-Valencia-s-Premier-Tech-Event.html)\n\n5. **Which \'Magnificent 7\' Stock Offers the Most Value for Money Today?**\n   - **Publisher:** Investing.com\n   - **Published Date:** August 7, 2024\n   - **Summary:** The article analyzes the performance and outlook of the \'Magnificent 7\' stocks - Apple, Microsoft, Amazon, Alphabet, Meta, Nvidia, and Tesla - in the current market conditions. It highlights the strengths and challenges faced by each company and provides insights on which stock offers the most value for investors.\n   - [Read more](https://www.investing.com/analysis/which-magnificent-7-stock-offers-the-most-value-for-money-today-200650755)\n\nThese articles provide a mix of predictions, investment insights, and event highlights related to Microsoft and its position in the tech industry.'}
 ```
 
-
 You can also ask about financial information for a company:
-
 
 ```python
 agent_executor.invoke(
@@ -266,15 +249,12 @@ These numbers reflect Nvidia's strong financial performance in the first quarter
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'What were last quarters financial numbers for Nvidia?',
  'output': "Here are the financial numbers for Nvidia for the last quarter (Q1 of fiscal year 2025):\n\n### Income Statement\n- **Revenues:** $26,044,000,000\n- **Cost of Revenue:** $5,638,000,000\n- **Gross Profit:** $20,406,000,000\n- **Operating Expenses:** $3,497,000,000\n  - **Research and Development:** $2,720,000,000\n  - **Selling, General, and Administrative Expenses:** $777,000,000\n- **Operating Income:** $16,909,000,000\n- **Nonoperating Income:** $370,000,000\n- **Income Before Tax:** $17,279,000,000\n- **Income Tax Expense:** $2,398,000,000\n- **Net Income:** $14,881,000,000\n- **Net Income Attributable to Parent:** $14,881,000,000\n- **Basic Earnings Per Share:** $6.04\n- **Diluted Earnings Per Share:** $5.98\n\n### Balance Sheet\n- **Total Assets:** $77,072,000,000\n  - **Current Assets:** $53,729,000,000\n    - **Inventory:** $5,864,000,000\n    - **Other Current Assets:** $47,865,000,000\n  - **Noncurrent Assets:** $23,343,000,000\n    - **Fixed Assets:** $4,006,000,000\n    - **Intangible Assets:** $986,000,000\n    - **Other Non-current Assets:** $18,351,000,000\n- **Total Liabilities:** $27,930,000,000\n  - **Current Liabilities:** $15,223,000,000\n    - **Accounts Payable:** $2,715,000,000\n    - **Other Current Liabilities:** $11,869,000,000\n  - **Noncurrent Liabilities:** $12,707,000,000\n    - **Long-term Debt:** $9,710,000,000\n    - **Other Non-current Liabilities:** $2,997,000,000\n- **Total Equity:** $49,142,000,000\n  - **Equity Attributable to Parent:** $49,142,000,000\n\n### Cash Flow Statement\n- **Net Cash Flow from Operating Activities:** $15,345,000,000\n- **Net Cash Flow from Investing Activities:** -$5,693,000,000\n- **Net Cash Flow from Financing Activities:** -$9,345,000,000\n- **Net Cash Flow:** $307,000,000\n\n### Comprehensive Income\n- **Comprehensive Income:** $14,745,000,000\n- **Other Comprehensive Income:** -$136,000,000\n- **Comprehensive Income Attributable to Parent:** $14,745,000,000\n\nThese numbers reflect Nvidia's strong financial performance in the first quarter of fiscal year 2025."}
 ```
 
-
 Lastly, you can get live data, although this requires a "Stocks Advanced" subscription
-
 
 ```python
 agent_executor.invoke({"input": "What is Doordash stock price right now?"})
@@ -288,7 +268,6 @@ For detailed documentation of all the Polygon IO toolkit features and configurat
 
 First, let's set up the API wrapper that we will use for all the tools and then we will walk through each one of them.
 
-
 ```python
 <!--IMPORTS:[{"imported": "PolygonAPIWrapper", "source": "langchain_community.utilities.polygon", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.polygon.PolygonAPIWrapper.html", "title": "Polygon IO Toolkit and Tools"}]-->
 from langchain_community.utilities.polygon import PolygonAPIWrapper
@@ -299,7 +278,6 @@ api_wrapper = PolygonAPIWrapper()
 ### Aggregate
 
 This tool shows aggregate information for a stock.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PolygonAggregates", "source": "langchain_community.tools.polygon.aggregates", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.polygon.aggregates.PolygonAggregates.html", "title": "Polygon IO Toolkit and Tools"}]-->
@@ -343,7 +321,6 @@ content='[{"v": 61125243.0, "vw": 219.4773, "o": 224.37, "c": 218.36, "h": 224.4
 
 This tool provides general financial information about a stock
 
-
 ```python
 <!--IMPORTS:[{"imported": "PolygonFinancials", "source": "langchain_community.tools.polygon.financials", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.polygon.financials.PolygonFinancials.html", "title": "Polygon IO Toolkit and Tools"}]-->
 from langchain_community.tools.polygon.financials import PolygonFinancials
@@ -372,7 +349,6 @@ content='[{"start_date": "2023-03-31", "end_date": "2024-03-30", "timeframe": "t
 
 This tool provides information about the live data of a stock, although it requires a "Stocks Advanced" subscription to use.
 
-
 ```python
 <!--IMPORTS:[{"imported": "PolygonLastQuote", "source": "langchain_community.tools.polygon.last_quote", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.polygon.last_quote.PolygonLastQuote.html", "title": "Polygon IO Toolkit and Tools"}]-->
 from langchain_community.tools.polygon.last_quote import PolygonLastQuote
@@ -396,7 +372,6 @@ res = last_quote_tool.invoke(model_generated_tool_call)
 ### Ticker News
 
 This tool provides recent news about a certain ticker.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PolygonTickerNews", "source": "langchain_community.tools.polygon.ticker_news", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.polygon.ticker_news.PolygonTickerNews.html", "title": "Polygon IO Toolkit and Tools"}]-->
@@ -430,7 +405,6 @@ For detailed documentation of all Polygon IO tools head to the API reference for
 - Financials: https://api.python.langchain.com/en/latest/tools/langchain_community.tools.polygon.financials.PolygonFinancials.html
 - Last Quote: https://api.python.langchain.com/en/latest/tools/langchain_community.tools.polygon.last_quote.PolygonLastQuote.html
 - Ticker News: https://api.python.langchain.com/en/latest/tools/langchain_community.tools.polygon.ticker_news.PolygonTickerNews.html
-
 
 ## Related
 

@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Lantern
 
->[Lantern](https://github.com/lanterndata/lantern) is an open-source vector similarity search for `Postgres`
+> [Lantern](https://github.com/lanterndata/lantern) is an open-source vector similarity search for `Postgres`
 
 It supports:
 - Exact and approximate nearest neighbor search
@@ -23,7 +23,6 @@ We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
 !pip install openai
 !pip install psycopg2-binary
 !pip install tiktoken
-
 
 ```python
 import getpass
@@ -44,13 +43,9 @@ from dotenv import load_dotenv
 load_dotenv()
 ```
 
-
-
 ```output
 False
 ```
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Lantern"}, {"imported": "Lantern", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.lantern.Lantern.html", "title": "Lantern"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Lantern"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Lantern"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Lantern"}]-->
@@ -61,7 +56,6 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
-
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
 documents = loader.load()
@@ -70,7 +64,6 @@ docs = text_splitter.split_documents(documents)
 
 embeddings = OpenAIEmbeddings()
 ```
-
 
 ```python
 # Lantern needs the connection string to the database.
@@ -96,7 +89,6 @@ DB Connection String: ········
 ```
 ## Similarity Search with Cosine Distance (Default)
 
-
 ```python
 # The Lantern Module will try to create a table with the name of the collection.
 # So, make sure that the collection name is unique and the user has the permission to create a table.
@@ -112,12 +104,10 @@ db = Lantern.from_documents(
 )
 ```
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db.similarity_search_with_score(query)
 ```
-
 
 ```python
 for doc, score in docs_with_score:
@@ -187,11 +177,9 @@ Let’s increase Pell Grants and increase our historic support of HBCUs, and inv
 ## Maximal Marginal Relevance Search (MMR)
 Maximal marginal relevance optimizes for similarity to query AND diversity among selected documents.
 
-
 ```python
 docs_with_score = db.max_marginal_relevance_search_with_score(query)
 ```
-
 
 ```python
 for doc, score in docs_with_score:
@@ -281,7 +269,6 @@ While it shouldn’t have taken something so terrible for people around the worl
 Above, we created a vectorstore from scratch. However, often times we want to work with an existing vectorstore.
 In order to do that, we can initialize it directly.
 
-
 ```python
 store = Lantern(
     collection_name=COLLECTION_NAME,
@@ -293,53 +280,39 @@ store = Lantern(
 ### Add documents
 We can add documents to the existing vectorstore.
 
-
 ```python
 store.add_documents([Document(page_content="foo")])
 ```
-
-
 
 ```output
 ['f8164598-aa28-11ee-a037-acde48001122']
 ```
 
-
-
 ```python
 docs_with_score = db.similarity_search_with_score("foo")
 ```
-
 
 ```python
 docs_with_score[0]
 ```
 
-
-
 ```output
 (Document(page_content='foo'), -1.1920929e-07)
 ```
 
-
-
 ```python
 docs_with_score[1]
 ```
-
-
 
 ```output
 (Document(page_content='And let’s pass the PRO Act when a majority of workers want to form a union—they shouldn’t be stopped.  \n\nWhen we invest in our workers, when we build the economy from the bottom up and the middle out together, we can do something we haven’t done in a long time: build a better America. \n\nFor more than two years, COVID-19 has impacted every decision in our lives and the life of the nation. \n\nAnd I know you’re tired, frustrated, and exhausted. \n\nBut I also know this. \n\nBecause of the progress we’ve made, because of your resilience and the tools we have, tonight I can say  \nwe are moving forward safely, back to more normal routines.  \n\nWe’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.  \n\nJust a few days ago, the Centers for Disease Control and Prevention—the CDC—issued new mask guidelines. \n\nUnder these new guidelines, most Americans in most of the country can now be mask free.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
  0.24038416)
 ```
 
-
 ### Overriding a vectorstore
 
-If you have an existing collection, you override it by doing `from_documents` and setting `pre_delete_collection` = True 
+If you have an existing collection, you override it by doing `from_documents` and setting `pre_delete_collection` = True
 This will delete the collection before re-populating it
-
 
 ```python
 db = Lantern.from_documents(
@@ -351,31 +324,24 @@ db = Lantern.from_documents(
 )
 ```
 
-
 ```python
 docs_with_score = db.similarity_search_with_score("foo")
 ```
 
-
 ```python
 docs_with_score[0]
 ```
-
-
 
 ```output
 (Document(page_content='And let’s pass the PRO Act when a majority of workers want to form a union—they shouldn’t be stopped.  \n\nWhen we invest in our workers, when we build the economy from the bottom up and the middle out together, we can do something we haven’t done in a long time: build a better America. \n\nFor more than two years, COVID-19 has impacted every decision in our lives and the life of the nation. \n\nAnd I know you’re tired, frustrated, and exhausted. \n\nBut I also know this. \n\nBecause of the progress we’ve made, because of your resilience and the tools we have, tonight I can say  \nwe are moving forward safely, back to more normal routines.  \n\nWe’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.  \n\nJust a few days ago, the Centers for Disease Control and Prevention—the CDC—issued new mask guidelines. \n\nUnder these new guidelines, most Americans in most of the country can now be mask free.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
  0.2403456)
 ```
 
-
 ### Using a VectorStore as a Retriever
-
 
 ```python
 retriever = store.as_retriever()
 ```
-
 
 ```python
 print(retriever)

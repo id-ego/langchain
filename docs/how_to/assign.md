@@ -27,7 +27,6 @@ This is useful in the common [LangChain Expression Language](/docs/concepts/#lan
 
 Here's an example:
 
-
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
 
@@ -36,7 +35,6 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "How to add values to a chain's state"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add values to a chain's state"}]-->
@@ -50,12 +48,9 @@ runnable = RunnableParallel(
 runnable.invoke({"num": 1})
 ```
 
-
-
 ```output
 {'extra': {'num': 1, 'mult': 3}, 'modified': 2}
 ```
-
 
 Let's break down what's happening here.
 
@@ -69,7 +64,6 @@ Thus, the result is `{'extra': {'num': 1, 'mult': 3}, 'modified': 2}`.
 ## Streaming
 
 One convenient feature of this method is that it allows values to pass through as soon as they are available. To show this off, we'll use `RunnablePassthrough.assign()` to immediately return source docs in a retrieval chain:
-
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to add values to a chain's state"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to add values to a chain's state"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add values to a chain's state"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add values to a chain's state"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add values to a chain's state"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add values to a chain's state"}]-->

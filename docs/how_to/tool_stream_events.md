@@ -59,7 +59,6 @@ async def special_summarization_tool(long_text: str) -> str:
 
 Invoking the tool directly works just fine:
 
-
 ```python
 LONG_TEXT = """
 NARRATOR:
@@ -77,15 +76,11 @@ Coming! Hang on a second.
 await special_summarization_tool.ainvoke({"long_text": LONG_TEXT})
 ```
 
-
-
 ```output
 '.yad noitaudarg rof tiftuo sesoohc yrraB ;scisyhp seifed eeB'
 ```
 
-
 But if you wanted to access the raw output from the chat model rather than the full tool, you might try to use the [`astream_events()`](/docs/how_to/streaming/#using-stream-events) method and look for an `on_chat_model_end` event. Here's what happens:
-
 
 ```python
 stream = special_summarization_tool.astream_events(
@@ -101,7 +96,6 @@ async for event in stream:
 You'll notice (unless you're running through this guide in `python>=3.11`) that there are no chat model events emitted from the child run!
 
 This is because the example above does not pass the tool's config object into the internal chain. To fix this, redefine your tool to take a special parameter typed as `RunnableConfig` (see [this guide](/docs/how_to/tool_configure) for more details). You'll also need to pass that parameter through into the internal chain when executing it:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to stream events from a tool"}]-->
@@ -128,7 +122,6 @@ async def special_summarization_tool_with_config(
 
 And now try the same `astream_events()` call as before with your new tool:
 
-
 ```python
 stream = special_summarization_tool_with_config.astream_events(
     {"long_text": LONG_TEXT}, version="v2"
@@ -144,7 +137,6 @@ async for event in stream:
 Awesome! This time there's an event emitted.
 
 For streaming, `astream_events()` automatically calls internal runnables in a chain with streaming enabled if possible, so if you wanted to a stream of tokens as they are generated from the chat model, you could simply filter to look for `on_chat_model_stream` events with no other changes:
-
 
 ```python
 stream = special_summarization_tool_with_config.astream_events(

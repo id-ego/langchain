@@ -8,7 +8,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to use the `CouchbaseChatMessageHistory` class to store the chat message history in a Couchbase cluster
 
-
 ## Set Up Couchbase Cluster
 To run this demo, you need a Couchbase Cluster. 
 
@@ -16,7 +15,6 @@ You can work with both [Couchbase Capella](https://www.couchbase.com/products/ca
 
 ## Install Dependencies
 `CouchbaseChatMessageHistory` lives inside the `langchain-couchbase` package. 
-
 
 ```python
 %pip install --upgrade --quiet langchain-couchbase
@@ -31,7 +29,6 @@ Here, we are connecting using the username and password. You can also connect us
 
 For more information on connecting to the Couchbase cluster, please check the [Python SDK documentation](https://docs.couchbase.com/python-sdk/current/hello-world/start-using-sdk.html#connect).
 
-
 ```python
 COUCHBASE_CONNECTION_STRING = (
     "couchbase://localhost"  # or "couchbases://localhost" if using TLS
@@ -39,7 +36,6 @@ COUCHBASE_CONNECTION_STRING = (
 DB_USERNAME = "Administrator"
 DB_PASSWORD = "Password"
 ```
-
 
 ```python
 from datetime import timedelta
@@ -60,7 +56,6 @@ We will now set the bucket, scope, and collection names in the Couchbase cluster
 
 Note that the bucket, scope, and collection need to exist before using them to store the message history.
 
-
 ```python
 BUCKET_NAME = "langchain-testing"
 SCOPE_NAME = "_default"
@@ -80,7 +75,6 @@ Optionally you can configure the following:
 - message_key: Field in the chat message documents to store the message content
 - create_index: Used to specify if the index needs to be created on the collection. By default, an index is created on the `message_key` and the `session_id_key` of the documents
 
-
 ```python
 from langchain_couchbase.chat_message_histories import CouchbaseChatMessageHistory
 
@@ -97,21 +91,16 @@ message_history.add_user_message("hi!")
 message_history.add_ai_message("how are you doing?")
 ```
 
-
 ```python
 message_history.messages
 ```
-
-
 
 ```output
 [HumanMessage(content='hi!'), AIMessage(content='how are you doing?')]
 ```
 
-
 ## Chaining
 The chat message history class can be used with [LCEL Runnables](https://python.langchain.com/v0.2/docs/how_to/message_history/)
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Couchbase"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Couchbase"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "Couchbase"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Couchbase"}]-->
@@ -125,7 +114,6 @@ from langchain_openai import ChatOpenAI
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ```
 
-
 ```python
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -138,7 +126,6 @@ prompt = ChatPromptTemplate.from_messages(
 # Create the LCEL runnable
 chain = prompt | ChatOpenAI()
 ```
-
 
 ```python
 chain_with_history = RunnableWithMessageHistory(
@@ -155,30 +142,22 @@ chain_with_history = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 # This is where we configure the session id
 config = {"configurable": {"session_id": "testing"}}
 ```
 
-
 ```python
 chain_with_history.invoke({"question": "Hi! I'm bob"}, config=config)
 ```
-
-
 
 ```output
 AIMessage(content='Hello Bob! How can I assist you today?', response_metadata={'token_usage': {'completion_tokens': 10, 'prompt_tokens': 22, 'total_tokens': 32}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-a0f8a29e-ddf4-4e06-a1fe-cf8c325a2b72-0', usage_metadata={'input_tokens': 22, 'output_tokens': 10, 'total_tokens': 32})
 ```
 
-
-
 ```python
 chain_with_history.invoke({"question": "Whats my name"}, config=config)
 ```
-
-
 
 ```output
 AIMessage(content='Your name is Bob.', response_metadata={'token_usage': {'completion_tokens': 5, 'prompt_tokens': 43, 'total_tokens': 48}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-f764a9eb-999e-4042-96b6-fe47b7ae4779-0', usage_metadata={'input_tokens': 43, 'output_tokens': 5, 'total_tokens': 48})

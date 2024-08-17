@@ -16,7 +16,6 @@ Tracking token usage to calculate cost is an important part of putting your app 
 
 This guide requires `langchain-openai >= 0.1.9`.
 
-
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
 ```
@@ -35,7 +34,6 @@ Examples:
 
 **OpenAI**:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to track token usage in ChatModels"}]-->
 # # !pip install -qU langchain-openai
@@ -47,15 +45,11 @@ openai_response = llm.invoke("hello")
 openai_response.usage_metadata
 ```
 
-
-
 ```output
 {'input_tokens': 8, 'output_tokens': 9, 'total_tokens': 17}
 ```
 
-
 **Anthropic**:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to track token usage in ChatModels"}]-->
@@ -68,17 +62,13 @@ anthropic_response = llm.invoke("hello")
 anthropic_response.usage_metadata
 ```
 
-
-
 ```output
 {'input_tokens': 8, 'output_tokens': 12, 'total_tokens': 20}
 ```
 
-
 ### Using AIMessage.response_metadata
 
 Metadata from the model response is also included in the AIMessage [response_metadata](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.response_metadata) attribute. These data are typically not standardized. Note that different providers adopt different conventions for representing token counts:
-
 
 ```python
 print(f'OpenAI: {openai_response.response_metadata["token_usage"]}\n')
@@ -100,7 +90,6 @@ For example, OpenAI will return a message [chunk](https://api.python.langchain.c
 :::note
 By default, the last message chunk in a stream will include a `"finish_reason"` in the message's `response_metadata` attribute. If we include token usage in streaming mode, an additional chunk containing usage metadata will be added to the end of the stream, such that `"finish_reason"` appears on the second to last message chunk.
 :::
-
 
 ```python
 llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
@@ -126,7 +115,6 @@ content='' id='run-adb20c31-60c7-43a2-99b2-d4a53ca5f623' usage_metadata={'input_
 ```
 Note that the usage metadata will be included in the sum of the individual message chunks:
 
-
 ```python
 print(aggregate.content)
 print(aggregate.usage_metadata)
@@ -136,7 +124,6 @@ Hello! How can I assist you today?
 {'input_tokens': 8, 'output_tokens': 9, 'total_tokens': 17}
 ```
 To disable streaming token counts for OpenAI, set `stream_usage` to False, or omit it from the parameters:
-
 
 ```python
 aggregate = None
@@ -159,7 +146,6 @@ content='' response_metadata={'finish_reason': 'stop', 'model_name': 'gpt-3.5-tu
 You can also enable streaming token usage by setting `stream_usage` when instantiating the chat model. This can be useful when incorporating chat models into LangChain [chains](/docs/concepts#langchain-expression-language-lcel): usage metadata can be monitored when [streaming intermediate steps](/docs/how_to/streaming#using-stream-events) or using tracing software such as [LangSmith](https://docs.smith.langchain.com/).
 
 See the below example, where we return output structured to a desired schema, but can still observe token usage streamed from intermediate steps.
-
 
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -203,7 +189,6 @@ There are also some API-specific callback context managers that allow you to tra
 
 Let's first look at an extremely simple example of tracking token usage for a single Chat model call.
 
-
 ```python
 <!--IMPORTS:[{"imported": "get_openai_callback", "source": "langchain_community.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.manager.get_openai_callback.html", "title": "How to track token usage in ChatModels"}]-->
 # !pip install -qU langchain-community wikipedia
@@ -228,7 +213,6 @@ Successful Requests: 1
 Total Cost (USD): $2.95e-05
 ```
 Anything inside the context manager will get tracked. Here's an example of using it to track multiple calls in sequence.
-
 
 ```python
 with get_openai_callback() as cb:
@@ -255,7 +239,6 @@ Total Cost (USD): $2.95e-05
 ```
 If a chain or agent with multiple steps in it is used, it will track all those steps.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to track token usage in ChatModels"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to track token usage in ChatModels"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "How to track token usage in ChatModels"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to track token usage in ChatModels"}]-->
 from langchain.agents import AgentExecutor, create_tool_calling_agent, load_tools
@@ -272,7 +255,6 @@ tools = load_tools(["wikipedia"])
 agent = create_tool_calling_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
-
 
 ```python
 with get_openai_callback() as cb:
@@ -334,7 +316,6 @@ Total Cost (USD): $0.0009745000000000001
 ### Bedrock Anthropic
 
 The `get_bedrock_anthropic_callback` works very similarly:
-
 
 ```python
 <!--IMPORTS:[{"imported": "get_bedrock_anthropic_callback", "source": "langchain_community.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.manager.get_bedrock_anthropic_callback.html", "title": "How to track token usage in ChatModels"}]-->

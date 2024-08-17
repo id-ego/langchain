@@ -21,7 +21,6 @@ And then one optional one:
 
 Below we go over the main type of output parser, the `PydanticOutputParser`.
 
-
 ```python
 <!--IMPORTS:[{"imported": "PydanticOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html", "title": "How to use output parsers to parse an LLM response into structured format"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to use output parsers to parse an LLM response into structured format"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "How to use output parsers to parse an LLM response into structured format"}]-->
 from langchain_core.output_parsers import PydanticOutputParser
@@ -60,12 +59,9 @@ output = prompt_and_model.invoke({"query": "Tell me a joke."})
 parser.invoke(output)
 ```
 
-
-
 ```output
 Joke(setup='Why did the chicken cross the road?', punchline='To get to the other side!')
 ```
-
 
 ## LCEL
 
@@ -73,37 +69,28 @@ Output parsers implement the [Runnable interface](/docs/concepts#interface), the
 
 Output parsers accept a string or `BaseMessage` as input and can return an arbitrary type.
 
-
 ```python
 parser.invoke(output)
 ```
-
-
 
 ```output
 Joke(setup='Why did the chicken cross the road?', punchline='To get to the other side!')
 ```
 
-
 Instead of manually invoking the parser, we also could've just added it to our `Runnable` sequence:
-
 
 ```python
 chain = prompt | model | parser
 chain.invoke({"query": "Tell me a joke."})
 ```
 
-
-
 ```output
 Joke(setup='Why did the chicken cross the road?', punchline='To get to the other side!')
 ```
 
-
 While all parsers support the streaming interface, only certain parsers can stream through partially parsed objects, since this is highly dependent on the output type. Parsers which cannot construct partial objects will simply yield the fully parsed output.
 
 The `SimpleJsonOutputParser` for example can stream through partial outputs:
-
 
 ```python
 <!--IMPORTS:[{"imported": "SimpleJsonOutputParser", "source": "langchain.output_parsers.json", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.SimpleJsonOutputParser.html", "title": "How to use output parsers to parse an LLM response into structured format"}]-->
@@ -116,12 +103,9 @@ json_parser = SimpleJsonOutputParser()
 json_chain = json_prompt | model | json_parser
 ```
 
-
 ```python
 list(json_chain.stream({"question": "Who invented the microscope?"}))
 ```
-
-
 
 ```output
 [{},
@@ -137,15 +121,11 @@ list(json_chain.stream({"question": "Who invented the microscope?"}))
  {'answer': 'Antonie van Leeuwenhoek'}]
 ```
 
-
 While the PydanticOutputParser cannot:
-
 
 ```python
 list(chain.stream({"query": "Tell me a joke."}))
 ```
-
-
 
 ```output
 [Joke(setup='Why did the chicken cross the road?', punchline='To get to the other side!')]

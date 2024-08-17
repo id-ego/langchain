@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Hippo
 
->[Transwarp Hippo](https://www.transwarp.cn/en/subproduct/hippo) is an enterprise-level cloud-native distributed vector database that supports storage, retrieval, and management of massive vector-based datasets. It efficiently solves problems such as vector similarity search and high-density vector clustering. `Hippo` features high availability, high performance, and easy scalability. It has many functions, such as multiple vector search indexes, data partitioning and sharding, data persistence, incremental data ingestion, vector scalar field filtering, and mixed queries. It can effectively meet the high real-time search demands of enterprises for massive vector data
+> [Transwarp Hippo](https://www.transwarp.cn/en/subproduct/hippo) is an enterprise-level cloud-native distributed vector database that supports storage, retrieval, and management of massive vector-based datasets. It efficiently solves problems such as vector similarity search and high-density vector clustering. `Hippo` features high availability, high performance, and easy scalability. It has many functions, such as multiple vector search indexes, data partitioning and sharding, data persistence, incremental data ingestion, vector scalar field filtering, and mixed queries. It can effectively meet the high real-time search demands of enterprises for massive vector data
 
 ## Getting Started
 
@@ -14,7 +14,6 @@ The only prerequisite here is an API key from the OpenAI website. Make sure you 
 ## Installing Dependencies
 
 Initially, we require the installation of certain dependencies, such as OpenAI, Langchain, and Hippo-API. Please note, that you should install the appropriate versions tailored to your environment.
-
 
 ```python
 %pip install --upgrade --quiet  langchain langchain_community tiktoken langchain-openai
@@ -29,7 +28,6 @@ Note: Python version needs to be >=3.8.
 ## Best Practices
 ### Importing Dependency Packages
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Hippo"}, {"imported": "Hippo", "source": "langchain_community.vectorstores.hippo", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.hippo.Hippo.html", "title": "Hippo"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Hippo"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Hippo"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Hippo"}]-->
 import os
@@ -42,7 +40,6 @@ from langchain_text_splitters import CharacterTextSplitter
 
 ### Loading Knowledge Documents
 
-
 ```python
 os.environ["OPENAI_API_KEY"] = "YOUR OPENAI KEY"
 loader = TextLoader("../../how_to/state_of_the_union.txt")
@@ -53,7 +50,6 @@ documents = loader.load()
 
 Here, we use Langchain's CharacterTextSplitter for segmentation. The delimiter is a period. After segmentation, the text segment does not exceed 1000 characters, and the number of repeated characters is 0.
 
-
 ```python
 text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
@@ -61,7 +57,6 @@ docs = text_splitter.split_documents(documents)
 
 ### Declaring the Embedding Model
 Below, we create the OpenAI or Azure embedding model using the OpenAIEmbeddings method from Langchain.
-
 
 ```python
 # openai
@@ -79,13 +74,11 @@ embeddings = OpenAIEmbeddings()
 
 ### Declaring Hippo Client
 
-
 ```python
 HIPPO_CONNECTION = {"host": "IP", "port": "PORT"}
 ```
 
 ### Storing the Document
-
 
 ```python
 print("input...")
@@ -106,7 +99,6 @@ success
 #### Creating a Large Language Question-Answering Model
 Below, we create the OpenAI or Azure large language question-answering model respectively using the AzureChatOpenAI and ChatOpenAI methods from Langchain.
 
-
 ```python
 # llm = AzureChatOpenAI(
 #     openai_api_base="x x x",
@@ -120,7 +112,6 @@ llm = ChatOpenAI(openai_api_key="YOUR OPENAI KEY", model_name="gpt-3.5-turbo-16k
 ```
 
 ### Acquiring Related Knowledge Based on the Question：
-
 
 ```python
 query = "Please introduce COVID-19"
@@ -137,7 +128,6 @@ text = "".join(content_list)
 
 ### Constructing a Prompt Template
 
-
 ```python
 prompt = f"""
 Please use the content of the following [Article] to answer my question. If you don't know, please say you don't know, and the answer should be concise."
@@ -147,7 +137,6 @@ Please answer this question in conjunction with the above article:{query}
 ```
 
 ### Waiting for the Large Language Model to Generate an Answer
-
 
 ```python
 response_with_hippo = llm.predict(prompt)

@@ -10,7 +10,6 @@ This template shows how to evaluate your chat bot without explicit user feedback
 
 Taking [Chat Langchain](https://chat.langchain.com/) as a case study, only about 0.04% of all queries receive explicit feedback. Yet, approximately 70% of the queries are follow-ups to previous questions. A significant portion of these follow-up queries continue useful information we can use to infer the quality of the previous AI response. 
 
-
 This template helps solve this "feedback scarcity" problem. Below is an example invocation of this chat bot:
 
 [](https://smith.langchain.com/public/3378daea-133c-4fe8-b4da-0a3044c5dbe8/r?runtab=1)
@@ -113,7 +112,6 @@ chat_history.extend([HumanMessage(content=text), AIMessage(content=response_mess
 ```
 
 This uses the  `tracing_v2_enabled` callback manager to get the run ID of the call, which we provide in subsequent calls in the same chat thread, so the evaluator can assign feedback to the appropriate trace.
-
 
 ## Conclusion
 

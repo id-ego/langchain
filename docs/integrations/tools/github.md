@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Github Toolkit
 
-The `Github` toolkit contains tools that enable an LLM agent to interact with a github repository. 
+The `Github` toolkit contains tools that enable an LLM agent to interact with a github repository.
 The tool is a wrapper for the [PyGitHub](https://github.com/PyGithub/PyGithub) library. 
 
 For detailed documentation of all GithubToolkit features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.github.toolkit.GitHubToolkit.html).
@@ -21,7 +21,6 @@ At a high-level, we will:
 
 If you want to get automated tracing from runs of individual tools, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -32,7 +31,6 @@ If you want to get automated tracing from runs of individual tools, you can also
 #### 1. Install dependencies
 
 This integration is implemented in `langchain-community`. We will also need the `pygithub` dependency:
-
 
 ```python
 %pip install --upgrade --quiet  pygithub langchain-community
@@ -50,7 +48,6 @@ This integration is implemented in `langchain-community`. We will also need the 
 
 Once the app has been registered, you must give your app permission to access each of the repositories you whish it to act upon. Use the App settings on [github.com here](https://github.com/settings/installations).
 
-
 #### 3. Set Environment Variables
 
 Before initializing your agent, the following environment variables need to be set:
@@ -60,7 +57,6 @@ Before initializing your agent, the following environment variables need to be s
 * **GITHUB_REPOSITORY**- The name of the Github repository you want your bot to act upon. Must follow the format {username}/{repo-name}. *Make sure the app has been added to this repository first!*
 * Optional: **GITHUB_BRANCH**- The branch where the bot will make its commits. Defaults to `repo.default_branch`.
 * Optional: **GITHUB_BASE_BRANCH**- The base branch of your repo upon which PRs will based from. Defaults to `repo.default_branch`.
-
 
 ```python
 import getpass
@@ -79,7 +75,6 @@ for env_var in [
 
 Now we can instantiate our toolkit:
 
-
 ```python
 <!--IMPORTS:[{"imported": "GitHubToolkit", "source": "langchain_community.agent_toolkits.github.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.github.toolkit.GitHubToolkit.html", "title": "Github Toolkit"}, {"imported": "GitHubAPIWrapper", "source": "langchain_community.utilities.github", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.github.GitHubAPIWrapper.html", "title": "Github Toolkit"}]-->
 from langchain_community.agent_toolkits.github.toolkit import GitHubToolkit
@@ -92,7 +87,6 @@ toolkit = GitHubToolkit.from_github_api_wrapper(github)
 ## Tools
 
 View available tools:
-
 
 ```python
 tools = toolkit.get_tools()
@@ -128,19 +122,12 @@ The purpose of these tools is as follows:
 Each of these steps will be explained in great detail below.
 
 1. **Get Issues**- fetches issues from the repository.
-
 2. **Get Issue**- fetches details about a specific issue.
-
 3. **Comment on Issue**- posts a comment on a specific issue.
-
 4. **Create Pull Request**- creates a pull request from the bot's working branch to the base branch.
-
 5. **Create File**- creates a new file in the repository.
-
 6. **Read File**- reads a file from the repository.
-
 7. **Update File**- updates a file in the repository.
-
 8. **Delete File**- deletes a file from the repository.
 
 ## Use within an agent
@@ -151,8 +138,8 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
-Initialize the agent with a subset of tools:
 
+Initialize the agent with a subset of tools:
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -165,7 +152,6 @@ agent_executor = create_react_agent(llm, tools)
 ```
 
 And issue it a query:
-
 
 ```python
 example_query = "What is the title of issue 24888?"
@@ -198,7 +184,6 @@ The title of issue 24888 is "Standardize KV-Store Docs".
 ## API reference
 
 For detailed documentation of all `GithubToolkit` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.github.toolkit.GitHubToolkit.html).
-
 
 ## Related
 

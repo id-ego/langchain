@@ -3,7 +3,7 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/self_q
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/self_query/vectara_self_query.ipynb
 ---
 
-# Vectara self-querying 
+# Vectara self-querying
 
 [Vectara](https://vectara.com/) provides a Trusted Generative AI platform, allowing organizations to rapidly create a ChatGPT-like experience (an AI assistant) which is grounded in the data, documents, and knowledge that they have (technically, it is Retrieval-Augmented-Generation-as-a-service). 
 
@@ -13,7 +13,7 @@ Vectara serverless RAG-as-a-service provides all the components of RAG behind an
 3. The [Boomerang](https://vectara.com/how-boomerang-takes-retrieval-augmented-generation-to-the-next-level-via-grounded-generation/) embeddings model.
 4. Its own internal vector database where text chunks and embedding vectors are stored.
 5. A query service that automatically encodes the query into embedding, and retrieves the most relevant text segments (including support for [Hybrid Search](https://docs.vectara.com/docs/api-reference/search-apis/lexical-matching) and [MMR](https://vectara.com/get-diverse-results-and-comprehensive-summaries-with-vectaras-mmr-reranker/))
-7. An LLM to for creating a [generative summary](https://docs.vectara.com/docs/learn/grounded-generation/grounded-generation-overview), based on the retrieved documents (context), including citations.
+6. An LLM to for creating a [generative summary](https://docs.vectara.com/docs/learn/grounded-generation/grounded-generation-overview), based on the retrieved documents (context), including citations.
 
 See the [Vectara API documentation](https://docs.vectara.com/docs/) for more information on how to use the API.
 
@@ -30,7 +30,7 @@ To use LangChain with Vectara, you'll need to have these three values: `customer
 You can provide those to LangChain in two ways:
 
 1. Include in your environment these three variables: `VECTARA_CUSTOMER_ID`, `VECTARA_CORPUS_ID` and `VECTARA_API_KEY`.
-
+   
    For example, you can set these variables using os.environ and getpass as follows:
 
 ```python
@@ -61,7 +61,6 @@ In this example, we assume that you've created an account and a corpus, and adde
 
 We further assume the corpus has 4 fields defined as filterable metadata attributes: `year`, `director`, `rating`, and `genre`
 
-
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Vectara self-querying "}, {"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "Vectara self-querying "}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "Vectara self-querying "}, {"imported": "Vectara", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.Vectara.html", "title": "Vectara self-querying "}, {"imported": "ChatOpenAI", "source": "langchain_openai.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Vectara self-querying "}]-->
 import os
@@ -81,7 +80,6 @@ from langchain_openai.chat_models import ChatOpenAI
 ## Dataset
 
 We first define an example dataset of movie, and upload those to the corpus, along with the metadata:
-
 
 ```python
 docs = [
@@ -126,7 +124,6 @@ Now we can instantiate our retriever. To do this we'll need to provide some info
 
 We then provide an llm (in this case OpenAI) and the `vectara` vectorstore as arguments:
 
-
 ```python
 metadata_field_info = [
     AttributeInfo(
@@ -158,13 +155,10 @@ retriever = SelfQueryRetriever.from_llm(
 ## Self-retrieval Queries
 And now we can try actually using our retriever!
 
-
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are movies about scientists")
 ```
-
-
 
 ```output
 [Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'lang': 'eng', 'offset': '0', 'len': '66', 'year': '1993', 'rating': '7.7', 'genre': 'science fiction', 'source': 'langchain'}),
@@ -175,48 +169,34 @@ retriever.invoke("What are movies about scientists")
  Document(page_content='Leo DiCaprio gets lost in a dream within a dream within a dream within a ...', metadata={'lang': 'eng', 'offset': '0', 'len': '76', 'year': '2010', 'director': 'Christopher Nolan', 'rating': '8.2', 'source': 'langchain'})]
 ```
 
-
-
 ```python
 # This example only specifies a filter
 retriever.invoke("I want to watch a movie rated higher than 8.5")
 ```
 
-
-
 ```output
 [Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'lang': 'eng', 'offset': '0', 'len': '116', 'year': '2006', 'director': 'Satoshi Kon', 'rating': '8.6', 'source': 'langchain'}),
  Document(page_content='Three men walk into the Zone, three men walk out of the Zone', metadata={'lang': 'eng', 'offset': '0', 'len': '60', 'year': '1979', 'rating': '9.9', 'director': 'Andrei Tarkovsky', 'genre': 'science fiction', 'source': 'langchain'})]
 ```
-
-
 
 ```python
 # This example specifies a query and a filter
 retriever.invoke("Has Greta Gerwig directed any movies about women")
 ```
 
-
-
 ```output
 [Document(page_content='A bunch of normal-sized women are supremely wholesome and some men pine after them', metadata={'lang': 'eng', 'offset': '0', 'len': '82', 'year': '2019', 'director': 'Greta Gerwig', 'rating': '8.3', 'source': 'langchain'})]
 ```
-
-
 
 ```python
 # This example specifies a composite filter
 retriever.invoke("What's a highly rated (above 8.5) science fiction film?")
 ```
 
-
-
 ```output
 [Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'lang': 'eng', 'offset': '0', 'len': '116', 'year': '2006', 'director': 'Satoshi Kon', 'rating': '8.6', 'source': 'langchain'}),
  Document(page_content='Three men walk into the Zone, three men walk out of the Zone', metadata={'lang': 'eng', 'offset': '0', 'len': '60', 'year': '1979', 'rating': '9.9', 'director': 'Andrei Tarkovsky', 'genre': 'science fiction', 'source': 'langchain'})]
 ```
-
-
 
 ```python
 # This example specifies a query and composite filter
@@ -225,20 +205,16 @@ retriever.invoke(
 )
 ```
 
-
-
 ```output
 [Document(page_content='Toys come alive and have a blast doing so', metadata={'lang': 'eng', 'offset': '0', 'len': '41', 'year': '1995', 'genre': 'animated', 'source': 'langchain'}),
  Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'lang': 'eng', 'offset': '0', 'len': '66', 'year': '1993', 'rating': '7.7', 'genre': 'science fiction', 'source': 'langchain'})]
 ```
-
 
 ## Filter k
 
 We can also use the self query retriever to specify `k`: the number of documents to fetch.
 
 We can do this by passing `enable_limit=True` to the constructor.
-
 
 ```python
 retriever = SelfQueryRetriever.from_llm(
@@ -253,13 +229,10 @@ retriever = SelfQueryRetriever.from_llm(
 
 This is cool, we can include the number of results we would like to see in the query and the self retriever would correctly understand it. For example, let's look for 
 
-
 ```python
 # This example only specifies a relevant query
 retriever.invoke("what are two movies with a rating above 8.5")
 ```
-
-
 
 ```output
 [Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'lang': 'eng', 'offset': '0', 'len': '116', 'year': '2006', 'director': 'Satoshi Kon', 'rating': '8.6', 'source': 'langchain'}),

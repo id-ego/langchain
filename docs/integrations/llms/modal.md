@@ -5,18 +5,16 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Modal
 
-The [Modal cloud platform](https://modal.com/docs/guide) provides convenient, on-demand access to serverless cloud compute from Python scripts on your local computer. 
+The [Modal cloud platform](https://modal.com/docs/guide) provides convenient, on-demand access to serverless cloud compute from Python scripts on your local computer.
 Use `modal` to run your own custom LLM models instead of depending on LLM APIs.
 
 This example goes over how to use LangChain to interact with a `modal` HTTPS [web endpoint](https://modal.com/docs/guide/webhooks).
 
-[_Question-answering with LangChain_](https://modal.com/docs/guide/ex/potus_speech_qanda) is another example of how to use LangChain alonside `Modal`. In that example, Modal runs the LangChain application end-to-end and uses OpenAI as its LLM API.
-
+[*Question-answering with LangChain*](https://modal.com/docs/guide/ex/potus_speech_qanda) is another example of how to use LangChain alonside `Modal`. In that example, Modal runs the LangChain application end-to-end and uses OpenAI as its LLM API.
 
 ```python
 %pip install --upgrade --quiet  modal
 ```
-
 
 ```python
 # Register an account with Modal and get a new token.
@@ -71,14 +69,12 @@ def web(request: Request):
 
 Once you have a deployed Modal web endpoint, you can pass its URL into the `langchain.llms.modal.Modal` LLM class. This class can then function as a building block in your chain.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Modal"}, {"imported": "Modal", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.modal.Modal.html", "title": "Modal"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Modal"}]-->
 from langchain.chains import LLMChain
 from langchain_community.llms import Modal
 from langchain_core.prompts import PromptTemplate
 ```
-
 
 ```python
 template = """Question: {question}
@@ -88,24 +84,20 @@ Answer: Let's think step by step."""
 prompt = PromptTemplate.from_template(template)
 ```
 
-
 ```python
 endpoint_url = "https://ecorp--custom-llm-endpoint.modal.run"  # REPLACE ME with your deployed Modal web endpoint's URL
 llm = Modal(endpoint_url=endpoint_url)
 ```
 
-
 ```python
 llm_chain = LLMChain(prompt=prompt, llm=llm)
 ```
-
 
 ```python
 question = "What NFL team won the Super Bowl in the year Justin Beiber was born?"
 
 llm_chain.run(question)
 ```
-
 
 ## Related
 

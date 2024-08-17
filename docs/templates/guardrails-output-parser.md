@@ -7,7 +7,7 @@ canonical: https://python.langchain.com/v0.2/docs/templates/guardrails-output-pa
 This template uses [guardrails-ai](https://github.com/guardrails-ai/guardrails) to validate LLM output. 
 
 The `GuardrailsOutputParser` is set in `chain.py`.
- 
+
 The default example protects against profanity.
 
 ## Environment Setup
@@ -41,11 +41,10 @@ from guardrails_output_parser.chain import chain as guardrails_output_parser_cha
 add_routes(app, guardrails_output_parser_chain, path="/guardrails-output-parser")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
-
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -59,7 +58,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

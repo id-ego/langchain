@@ -6,7 +6,6 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/providers/premai/
 
 [PremAI](https://premai.io/) is an all-in-one platform that simplifies the creation of robust, production-ready applications powered by Generative AI. By streamlining the development process, PremAI allows you to concentrate on enhancing user experience and driving overall growth for your application. You can quickly start using our platform [here](https://docs.premai.io/quick-start).
 
-
 ## ChatPremAI
 
 This example goes over how to use LangChain to interact with different chat models with `ChatPremAI`
@@ -34,7 +33,6 @@ Once we imported our required modules, let's setup our client. For now let's ass
 To use langchain with prem, you do not need to pass any model name or set any parameters with our chat-client. By default it will use the model name and parameters used in the [LaunchPad](https://docs.premai.io/get-started/launchpad). 
 
 > Note: If you change the `model` or any other parameters like `temperature`  or `max_tokens` while setting the client, it will override existing default configurations, that was used in LaunchPad.   
-
 
 ```python
 import os
@@ -81,14 +79,13 @@ chat.invoke(
 
 > You can find all the optional parameters [here](https://docs.premai.io/get-started/sdk#optional-parameters). Any parameters other than [these supported parameters](https://docs.premai.io/get-started/sdk#optional-parameters) will be automatically removed before calling the model.
 
-
 ### Native RAG Support with Prem Repositories
 
 Prem Repositories which allows users to upload documents (.txt, .pdf etc) and connect those repositories to the LLMs. You can think Prem repositories as native RAG, where each repository can be considered as a vector database. You can connect multiple repositories. You can learn more about repositories [here](https://docs.premai.io/get-started/repositories).
 
 Repositories are also supported in langchain premai. Here is how you can do it. 
 
-```python 
+```python
 
 query = "Which models are used for dense retrieval"
 repository_ids = [1985,]
@@ -105,7 +102,7 @@ First we start by defining our repository with some repository ids. Make sure th
 
 Now, we connect the repository with our chat object to invoke RAG based generations. 
 
-```python 
+```python
 import json
 
 response = chat.invoke(query, max_tokens=100, repositories=repositories)
@@ -170,12 +167,11 @@ This will stream tokens one after the other.
 
 > Please note: As of now, RAG with streaming is not supported. However we still support it with our API. You can learn more about that [here](https://docs.premai.io/get-started/chat-completion-sse). 
 
-
 ## Prem Templates
 
 Writing Prompt Templates can be super messy. Prompt templates are long, hard to manage, and must be continuously tweaked to improve and keep the same throughout the application. 
 
-With **Prem**, writing and managing prompts can be super easy. The **_Templates_** tab inside the [launchpad](https://docs.premai.io/get-started/launchpad) helps you write as many prompts you need and use it inside the SDK to make your application running using those prompts. You can read more about Prompt Templates [here](https://docs.premai.io/get-started/prem-templates). 
+With **Prem**, writing and managing prompts can be super easy. The ***Templates*** tab inside the [launchpad](https://docs.premai.io/get-started/launchpad) helps you write as many prompts you need and use it inside the SDK to make your application running using those prompts. You can read more about Prompt Templates [here](https://docs.premai.io/get-started/prem-templates). 
 
 To use Prem Templates natively with LangChain, you need to pass an id the `HumanMessage`. This id should be the name the variable of your prompt template. the `content` in `HumanMessage` should be the value of that variable. 
 
@@ -238,6 +234,7 @@ print(query_result[:5])
 Setting `model_name` argument in mandatory for PremAIEmbeddings unlike chat. 
 </Note>
 
+
 Finally, let's embed some sample document
 
 ```python
@@ -263,13 +260,13 @@ Dimension of embeddings: 3072
 ```python
 doc_result[:5]
 ```
->Result:
->
->[-0.02129288576543331,
- 0.0008162345038726926,
- -0.004556538071483374,
- 0.02918623760342598,
- -0.02547479420900345]
+> Result:
+> 
+> [-0.02129288576543331,
+0.0008162345038726926,
+-0.004556538071483374,
+0.02918623760342598,
+-0.02547479420900345]
 
 ## Tool/Function Calling
 
@@ -334,7 +331,7 @@ llm_with_tools = chat.bind_tools(tools)
 
 After this, we get the response from the model which is now binded with the tools. 
 
-```python 
+```python
 query = "What is 3 * 12? Also, what is 11 + 49?"
 
 messages = [HumanMessage(query)]
@@ -343,7 +340,7 @@ ai_msg = llm_with_tools.invoke(messages)
 
 As we can see, when our chat model is binded with tools, then based on the given prompt, it calls the correct set of the tools and sequentially. 
 
-```python 
+```python
 ai_msg.tool_calls
 ```
 **Output**
@@ -359,14 +356,13 @@ ai_msg.tool_calls
 
 We append this message shown above to the LLM which acts as a context and makes the LLM aware that what all functions it has called. 
 
-```python 
+```python
 messages.append(ai_msg)
 ```
 
 Since tool calling happens into two phases, where:
 
 1. in our first call, we gathered all the tools that the LLM decided to tool, so that it can get the result as an added context to give more accurate and hallucination free result. 
-
 2. in our second call, we will parse those set of tools decided by LLM and run them (in our case it will be the functions we defined, with the LLM's extracted arguments) and pass this result to the LLM
 
 ```python

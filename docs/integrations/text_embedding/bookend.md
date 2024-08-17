@@ -7,12 +7,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 Let's load the Bookend AI Embeddings class.
 
-
 ```python
 <!--IMPORTS:[{"imported": "BookendEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.bookend.BookendEmbeddings.html", "title": "Bookend AI"}]-->
 from langchain_community.embeddings import BookendEmbeddings
 ```
-
 
 ```python
 embeddings = BookendEmbeddings(
@@ -22,21 +20,17 @@ embeddings = BookendEmbeddings(
 )
 ```
 
-
 ```python
 text = "This is a test document."
 ```
-
 
 ```python
 query_result = embeddings.embed_query(text)
 ```
 
-
 ```python
 doc_result = embeddings.embed_documents([text])
 ```
-
 
 ## Related
 

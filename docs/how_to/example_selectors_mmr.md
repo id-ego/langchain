@@ -7,8 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 The `MaxMarginalRelevanceExampleSelector` selects examples based on a combination of which examples are most similar to the inputs, while also optimizing for diversity. It does this by finding the examples with the embeddings that have the greatest cosine similarity with the inputs, and then iteratively adding them while penalizing them for closeness to already selected examples.
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to select examples by maximal marginal relevance (MMR)"}, {"imported": "MaxMarginalRelevanceExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.MaxMarginalRelevanceExampleSelector.html", "title": "How to select examples by maximal marginal relevance (MMR)"}, {"imported": "SemanticSimilarityExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html", "title": "How to select examples by maximal marginal relevance (MMR)"}, {"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to select examples by maximal marginal relevance (MMR)"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to select examples by maximal marginal relevance (MMR)"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to select examples by maximal marginal relevance (MMR)"}]-->
 from langchain_community.vectorstores import FAISS
@@ -34,7 +32,6 @@ examples = [
 ]
 ```
 
-
 ```python
 example_selector = MaxMarginalRelevanceExampleSelector.from_examples(
     # The list of examples available to select from.
@@ -55,7 +52,6 @@ mmr_prompt = FewShotPromptTemplate(
     input_variables=["adjective"],
 )
 ```
-
 
 ```python
 # Input is a feeling, so should select the happy/sad example as the first one

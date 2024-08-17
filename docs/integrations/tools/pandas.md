@@ -9,14 +9,12 @@ This notebook shows how to use agents to interact with a `Pandas DataFrame`. It 
 
 **NOTE: this agent calls the `Python` agent under the hood, which executes LLM generated Python code - this can be bad if the LLM generated Python code is harmful. Use cautiously.**
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents.agent_types", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Pandas Dataframe"}, {"imported": "create_pandas_dataframe_agent", "source": "langchain_experimental.agents.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agents/langchain_experimental.agents.agent_toolkits.pandas.base.create_pandas_dataframe_agent.html", "title": "Pandas Dataframe"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Pandas Dataframe"}]-->
 from langchain.agents.agent_types import AgentType
 from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Pandas Dataframe"}]-->
@@ -32,7 +30,6 @@ df = pd.read_csv(
 
 This shows how to initialize the agent using the `ZERO_SHOT_REACT_DESCRIPTION` agent type.
 
-
 ```python
 agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=True)
 ```
@@ -40,7 +37,6 @@ agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=True)
 ## Using OpenAI Functions
 
 This shows how to initialize the agent using the OPENAI_FUNCTIONS agent type. Note that this is an alternative to the above.
-
 
 ```python
 agent = create_pandas_dataframe_agent(
@@ -50,7 +46,6 @@ agent = create_pandas_dataframe_agent(
     agent_type=AgentType.OPENAI_FUNCTIONS,
 )
 ```
-
 
 ```python
 agent.invoke("how many rows are there?")
@@ -68,12 +63,9 @@ Invoking: `python_repl_ast` with `df.shape[0]`
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'There are 891 rows in the dataframe.'
 ```
-
-
 
 ```python
 agent.invoke("how many people have more than 3 siblings")
@@ -92,12 +84,9 @@ Final Answer: 30 people have more than 3 siblings.[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 '30 people have more than 3 siblings.'
 ```
-
-
 
 ```python
 agent.invoke("whats the square root of the average age?")
@@ -128,22 +117,18 @@ Final Answer: The square root of the average age is 5.449689683556195.[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The square root of the average age is 5.449689683556195.'
 ```
-
 
 ## Multi DataFrame Example
 
 This next part shows how the agent can interact with multiple dataframes passed in as a list.
 
-
 ```python
 df1 = df.copy()
 df1["Age"] = df1["Age"].fillna(df1["Age"].mean())
 ```
-
 
 ```python
 agent = create_pandas_dataframe_agent(OpenAI(temperature=0), [df, df1], verbose=True)
@@ -163,12 +148,9 @@ Final Answer: 177 rows in the age column are different.[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 '177 rows in the age column are different.'
 ```
-
-
 
 ## Related
 

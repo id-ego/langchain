@@ -27,11 +27,9 @@ To get pipelines ready for LangChain Retriever, you need to create and configure
 
 ## Use LangChain Retriever
 
-
 ```python
 %pip install --upgrade --quiet langchain-milvus
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ZillizCloudPipelineRetriever", "source": "langchain_milvus", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_milvus.retrievers.zilliz_cloud_pipeline_retriever.ZillizCloudPipelineRetriever.html", "title": "Zilliz Cloud Pipeline"}]-->
@@ -52,12 +50,10 @@ retriever = ZillizCloudPipelineRetriever(
 To add documents, you can use the method `add_texts` or `add_doc_url`, which inserts documents from a list of texts or a presigned/public url with corresponding metadata into the store.
 
 - if using a **text ingestion pipeline**, you can use the method `add_texts`, which inserts a batch of texts with the corresponding metadata into the Zilliz Cloud storage.
-
-    **Arguments:**
-    - `texts`: A list of text strings.
-    - `metadata`: A key-value dictionary of metadata will be inserted as preserved fields required by ingestion pipeline. Defaults to None.
-
-
+  
+  **Arguments:**
+  - `texts`: A list of text strings.
+  - `metadata`: A key-value dictionary of metadata will be inserted as preserved fields required by ingestion pipeline. Defaults to None.
 
 ```python
 # retriever.add_texts(
@@ -67,13 +63,12 @@ To add documents, you can use the method `add_texts` or `add_doc_url`, which ins
 ```
 
 - if using a **document ingestion pipeline**, you can use the method `add_doc_url`, which inserts a document from url with the corresponding metadata into the Zilliz Cloud storage.
-
-    **Arguments:**
-    - `doc_url`: A document url.
-    - `metadata`: A key-value dictionary of metadata will be inserted as preserved fields required by ingestion pipeline. Defaults to None.
+  
+  **Arguments:**
+  - `doc_url`: A document url.
+  - `metadata`: A key-value dictionary of metadata will be inserted as preserved fields required by ingestion pipeline. Defaults to None.
 
 The following example works with a document ingestion pipeline, which requires milvus version as metadata. We will use an [example document](https://publicdataset.zillizcloud.com/milvus_doc.md) describing how to delete entities in Milvus v2.3.x. 
-
 
 ```python
 retriever.add_doc_url(
@@ -82,12 +77,9 @@ retriever.add_doc_url(
 )
 ```
 
-
-
 ```output
 {'token_usage': 1247, 'doc_name': 'milvus_doc.md', 'num_chunks': 6}
 ```
-
 
 ### Get relevant documents
 
@@ -101,14 +93,11 @@ To query the retriever, you can use the method `get_relevant_documents`, which r
 - `filter`: The Milvus expression to filter search results. Defaults to "".
 - `run_manager`: The callbacks handler to use.
 
-
 ```python
 retriever.get_relevant_documents(
     "Can users delete entities by complex boolean expressions?"
 )
 ```
-
-
 
 ```output
 [Document(page_content='# Delete Entities\nThis topic describes how to delete entities in Milvus.  \nMilvus supports deleting entities by primary key or complex boolean expressions. Deleting entities by primary key is much faster and lighter than deleting them by complex boolean expressions. This is because Milvus executes queries first when deleting data by complex boolean expressions.  \nDeleted entities can still be retrieved immediately after the deletion if the consistency level is set lower than Strong.\nEntities deleted beyond the pre-specified span of time for Time Travel cannot be retrieved again.\nFrequent deletion operations will impact the system performance.  \nBefore deleting entities by comlpex boolean expressions, make sure the collection has been loaded.\nDeleting entities by complex boolean expressions is not an atomic operation. Therefore, if it fails halfway through, some data may still be deleted.\nDeleting entities by complex boolean expressions is supported only when the consistency is set to Bounded. For details, see Consistency.\\\n\\\n# Delete Entities\n## Prepare boolean expression\nPrepare the boolean expression that filters the entities to delete.  \nMilvus supports deleting entities by primary key or complex boolean expressions. For more information on expression rules and supported operators, see Boolean Expression Rules.', metadata={'id': 448986959321277978, 'distance': 0.7871403694152832}),
@@ -118,8 +107,6 @@ retriever.get_relevant_documents(
  Document(page_content='# Upsert Entities\n## Prepare data\nFirst, prepare the data to upsert. The type of data to upsert must match the schema of the collection, otherwise Milvus will raise an exception.  \nMilvus supports default values for scalar fields, excluding a primary key field. This indicates that some fields can be left empty during data inserts or upserts. For more information, refer to Create a Collection.  \n```python\n# Generate data to upsert\n\nimport random\nnb = 3000\ndim = 8\nvectors = [[random.random() for _ in range(dim)] for _ in range(nb)]\ndata = [\n[i for i in range(nb)],\n[str(i) for i in range(nb)],\n[i for i in range(10000, 10000+nb)],\nvectors,\n[str("dy"*i) for i in range(nb)]\n]\n```', metadata={'id': 448986959321277981, 'distance': 0.5107149481773376}),
  Document(page_content='# Upsert Entities\n## Upsert data\nUpsert the data to the collection.  \n```python\nfrom pymilvus import Collection\ncollection = Collection("book") # Get an existing collection.\nmr = collection.upsert(data)\n```  \nParameter\tDescription\ndata\tData to upsert into Milvus.\npartition_name (optional)\tName of the partition to upsert data into.\ntimeout (optional)\tAn optional duration of time in seconds to allow for the RPC. If it is set to None, the client keeps waiting until the server responds or error occurs.\nAfter upserting entities into a collection that has previously been indexed, you do not need to re-index the collection, as Milvus will automatically create an index for the newly upserted data. For more information, refer to Can indexes be created after inserting vectors?', metadata={'id': 448986959321277982, 'distance': 0.4341375529766083})]
 ```
-
-
 
 ## Related
 

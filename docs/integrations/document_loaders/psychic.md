@@ -15,7 +15,6 @@ This notebook covers how to load documents from `Psychic`. See [here](/docs/inte
 
 Use the `PsychicLoader` class to load in documents from a connection. Each connection has a connector id (corresponding to the SaaS app that was connected) and a connection id (which you passed in to the frontend library).
 
-
 ```python
 # Uncomment this to install psychicapi if you don't already have it installed
 !poetry run pip -q install psychicapi langchain-chroma
@@ -42,10 +41,9 @@ google_drive_loader = PsychicLoader(
 documents = google_drive_loader.load()
 ```
 
-## Converting the docs to embeddings 
+## Converting the docs to embeddings
 
 We can now convert these documents into embeddings and store them in a vector database like Chroma
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQAWithSourcesChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.qa_with_sources.retrieval.RetrievalQAWithSourcesChain.html", "title": "Psychic"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Psychic"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Psychic"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Psychic"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Psychic"}]-->
@@ -54,7 +52,6 @@ from langchain_chroma import Chroma
 from langchain_openai import OpenAI, OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
@@ -67,7 +64,6 @@ chain = RetrievalQAWithSourcesChain.from_chain_type(
 )
 chain({"question": "what is psychic?"}, return_only_outputs=True)
 ```
-
 
 ## Related
 

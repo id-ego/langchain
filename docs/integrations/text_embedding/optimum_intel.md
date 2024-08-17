@@ -11,7 +11,6 @@ The embedders are based on optimized models, created by using [optimum-intel](ht
 
 Example text is based on [SBERT](https://www.sbert.net/docs/pretrained_cross-encoders.html).
 
-
 ```python
 <!--IMPORTS:[{"imported": "QuantizedBiEncoderEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.optimum_intel.QuantizedBiEncoderEmbeddings.html", "title": "Embedding Documents using Optimized and Quantized Embedders"}]-->
 from langchain_community.embeddings import QuantizedBiEncoderEmbeddings
@@ -47,11 +46,9 @@ Lets ask a question, and compare to 2 documents. The first contains the answer t
 
 We can check better suits our query.
 
-
 ```python
 question = "How many people live in Berlin?"
 ```
-
 
 ```python
 documents = [
@@ -59,7 +56,6 @@ documents = [
     "Berlin is well known for its museums.",
 ]
 ```
-
 
 ```python
 doc_vecs = model.embed_documents(documents)
@@ -72,35 +68,27 @@ Batches: 100%|██████████| 1/1 [00:00<00:00,  4.18it/s]
 query_vec = model.embed_query(question)
 ```
 
-
 ```python
 import torch
 ```
-
 
 ```python
 doc_vecs_torch = torch.tensor(doc_vecs)
 ```
 
-
 ```python
 query_vec_torch = torch.tensor(query_vec)
 ```
-
 
 ```python
 query_vec_torch @ doc_vecs_torch.T
 ```
 
-
-
 ```output
 tensor([0.7980, 0.6529])
 ```
 
-
 We can see that indeed the first one ranks higher.
-
 
 ## Related
 

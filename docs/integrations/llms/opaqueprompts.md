@@ -6,10 +6,8 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # OpaquePrompts
 
 [OpaquePrompts](https://opaqueprompts.readthedocs.io/en/latest/) is a service that enables applications to leverage the power of language models without compromising user privacy. Designed for composability and ease of integration into existing applications and services, OpaquePrompts is consumable via a simple Python library as well as through LangChain. Perhaps more importantly, OpaquePrompts leverages the power of [confidential computing](https://en.wikipedia.org/wiki/Confidential_computing) to ensure that even the OpaquePrompts service itself cannot access the data it is protecting.
- 
 
 This notebook goes over how to use LangChain to interact with `OpaquePrompts`.
-
 
 ```python
 # install the opaqueprompts and langchain packages
@@ -17,7 +15,6 @@ This notebook goes over how to use LangChain to interact with `OpaquePrompts`.
 ```
 
 Accessing the OpaquePrompts API requires an API key, which you can get by creating an account on [the OpaquePrompts website](https://opaqueprompts.opaque.co/). Once you have an account, you can find your API key on [the API Keys page](https:opaqueprompts.opaque.co/api-keys).
-
 
 ```python
 import os
@@ -31,7 +28,6 @@ os.environ["OPENAI_API_KEY"] = "<OPENAI_API_KEY>"
 # Use OpaquePrompts LLM Wrapper
 
 Applying OpaquePrompts to your application could be as simple as wrapping your LLM using the OpaquePrompts class by replace `llm=OpenAI()` with `llm=OpaquePrompts(base_llm=OpenAI())`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "OpaquePrompts"}, {"imported": "set_debug", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_debug.html", "title": "OpaquePrompts"}, {"imported": "set_verbose", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_verbose.html", "title": "OpaquePrompts"}, {"imported": "ConversationBufferWindowMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer_window.ConversationBufferWindowMemory.html", "title": "OpaquePrompts"}, {"imported": "OpaquePrompts", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.opaqueprompts.OpaquePrompts.html", "title": "OpaquePrompts"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "OpaquePrompts"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "OpaquePrompts"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "OpaquePrompts"}]-->
@@ -101,7 +97,7 @@ print(
 
 From the output, you can see the following context from user input has sensitive data.
 
-``` 
+```
 # Context from user input
 
 During our recent meeting on February 23, 2023, at 10:30 AM, John Doe provided me with his personal details. His email is johndoe@example.com and his contact number is 650-456-7890. He lives in New York City, USA, and belongs to the American nationality with Christian beliefs and a leaning towards the Democratic party. He mentioned that he recently made a transaction using his credit card 4111 1111 1111 1111 and transferred bitcoins to the wallet address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa. While discussing his European travels, he noted down his IBAN as GB29 NWBK 6016 1331 9268 19. Additionally, he provided his website as https://johndoeportfolio.com. John also discussed some of his US-specific details. He said his bank account number is 1234567890123456 and his drivers license is Y12345678. His ITIN is 987-65-4321, and he recently renewed his passport, the number for which is 123456789. He emphasized not to share his SSN, which is 669-45-6789. Furthermore, he mentioned that he accesses his work files remotely through the IP 192.168.1.1 and has a medical license number MED-123456.
@@ -135,7 +131,6 @@ Hey John, just wanted to remind you to do a password reset for your website http
 
 There are functions that can be used with LangChain expression as well if a drop-in replacement doesn't offer the flexibility you need. 
 
-
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "OpaquePrompts"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "OpaquePrompts"}]-->
 import langchain_community.utilities.opaqueprompts as op
@@ -159,7 +154,6 @@ pg_chain.invoke(
     }
 )
 ```
-
 
 ## Related
 

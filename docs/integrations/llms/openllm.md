@@ -11,7 +11,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 Install `openllm` through [PyPI](https://pypi.org/project/openllm/)
 
-
 ```python
 %pip install --upgrade --quiet  openllm
 ```
@@ -24,9 +23,7 @@ To start an LLM server, use `openllm start` command. For example, to start a dol
 openllm start dolly-v2
 ```
 
-
 ## Wrapper
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.openllm.OpenLLM.html", "title": "OpenLLM"}]-->
@@ -44,7 +41,6 @@ When moving LLM applications to production, we recommend deploying the OpenLLM s
 
 To load an LLM locally via the LangChain wrapper:
 
-
 ```python
 <!--IMPORTS:[{"imported": "OpenLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.openllm.OpenLLM.html", "title": "OpenLLM"}]-->
 from langchain_community.llms import OpenLLM
@@ -58,7 +54,6 @@ llm = OpenLLM(
 ```
 
 ### Integrate with a LLMChain
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "OpenLLM"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "OpenLLM"}]-->

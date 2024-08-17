@@ -13,12 +13,10 @@ It uses [Zephyr-7b](https://huggingface.co/HuggingFaceH4/zephyr-7b-alpha) via [O
 Before using this template, you need to set up Ollama and SQL database.
 
 1. Follow instructions [here](https://python.langchain.com/docs/integrations/chat/ollama) to download Ollama.
-
 2. Download your LLM of interest:
-
-    * This package uses `zephyr`: `ollama pull zephyr`
-    * You can choose from many LLMs [here](https://ollama.ai/library)
-
+   
+   * This package uses `zephyr`: `ollama pull zephyr`
+   * You can choose from many LLMs [here](https://ollama.ai/library)
 3. This package includes an example DB of 2023 NBA rosters. You can see instructions to build this DB [here](https://github.com/facebookresearch/llama-recipes/blob/main/demo_apps/StructuredLlama.ipynb).
 
 ## Usage
@@ -49,11 +47,10 @@ from sql_ollama import chain as sql_ollama_chain
 add_routes(app, sql_ollama_chain, path="/sql-ollama")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
-
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -67,7 +64,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

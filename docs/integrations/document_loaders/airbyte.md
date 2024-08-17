@@ -5,14 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # AirbyteLoader
 
->[Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs, databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
+> [Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs, databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
 
 This covers how to load any source from Airbyte into LangChain documents
 
 ## Installation
 
 In order to use `AirbyteLoader` you need to install the `langchain-airbyte` integration package.
-
 
 ```python
 % pip install -qU langchain-airbyte
@@ -26,7 +25,6 @@ Note: This package also currently requires Python 3.10+.
 ## Loading Documents
 
 By default, the `AirbyteLoader` will load any structured data from a stream and output yaml-formatted documents.
-
 
 ```python
 from langchain_airbyte import AirbyteLoader
@@ -68,7 +66,6 @@ weight: 6
 ```
 You can also specify a custom prompt template for formatting documents:
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "AirbyteLoader"}]-->
 from langchain_core.prompts import PromptTemplate
@@ -90,7 +87,6 @@ My name is Verdie and I am 1.73 meters tall.
 ## Lazy Loading Documents
 
 One of the powerful features of `AirbyteLoader` is its ability to load large documents from upstream sources. When working with large datasets, the default `.load()` behavior can be slow and memory-intensive. To avoid this, you can use the `.lazy_load()` method to load documents in a more memory-efficient manner.
-
 
 ```python
 import time
@@ -115,7 +111,6 @@ Just calling lazy load is quick! This took 0.0001 seconds
 ```
 And you can iterate over documents as they're yielded:
 
-
 ```python
 for doc in my_iterator:
     print(doc.page_content)
@@ -126,7 +121,6 @@ My name is Jody and I am 1.85 meters tall.
 My name is Zonia and I am 1.53 meters tall.
 ```
 You can also lazy load documents in an async manner with `.alazy_load()`:
-
 
 ```python
 loader = AirbyteLoader(
@@ -159,7 +153,6 @@ My name is Rochell and I am 1.83 meters tall.
 - `include_metadata` (bool, optional, default True): Whether to include all fields as metadata in the output documents
 
 The majority of the configuration will be in `config`, and you can find the specific configuration options in the "Config field reference" for each source in the [Airbyte documentation](https://docs.airbyte.com/integrations/).
-
 
 ## Related
 

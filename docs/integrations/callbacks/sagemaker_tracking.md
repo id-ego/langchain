@@ -5,9 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # SageMaker Tracking
 
->[Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a fully managed service that is used to quickly and easily build, train and deploy machine learning (ML) models. 
+> [Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a fully managed service that is used to quickly and easily build, train and deploy machine learning (ML) models. 
 
->[Amazon SageMaker Experiments](https://docs.aws.amazon.com/sagemaker/latest/dg/experiments.html) is a capability of `Amazon SageMaker` that lets you organize, track, compare and evaluate ML experiments and model versions.
+> [Amazon SageMaker Experiments](https://docs.aws.amazon.com/sagemaker/latest/dg/experiments.html) is a capability of `Amazon SageMaker` that lets you organize, track, compare and evaluate ML experiments and model versions.
 
 This notebook shows how LangChain Callback can be used to log and track prompts and other LLM hyperparameters into `SageMaker Experiments`. Here, we use different scenarios to showcase the capability:
 
@@ -15,11 +15,9 @@ This notebook shows how LangChain Callback can be used to log and track prompts 
 * **Scenario 2**: *Sequential Chain* - A case where a sequential chain of two LLM models is used.
 * **Scenario 3**: *Agent with Tools (Chain of Thought)* - A case where multiple tools (search and math) are used in addition to an LLM.
 
-
 In this notebook, we will create a single experiment to log the prompts from each scenario.
 
 ## Installation and Setup
-
 
 ```python
 %pip install --upgrade --quiet  sagemaker
@@ -32,7 +30,6 @@ First, setup the required API keys
 * OpenAI: https://platform.openai.com/account/api-keys (For OpenAI LLM model)
 * Google SERP API: https://serpapi.com/manage-api-key (For Google Search Tool)
 
-
 ```python
 import os
 
@@ -41,12 +38,10 @@ os.environ["OPENAI_API_KEY"] = "<ADD-KEY-HERE>"
 os.environ["SERPAPI_API_KEY"] = "<ADD-KEY-HERE>"
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "SageMakerCallbackHandler", "source": "langchain_community.callbacks.sagemaker_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.sagemaker_callback.SageMakerCallbackHandler.html", "title": "SageMaker Tracking"}]-->
 from langchain_community.callbacks.sagemaker_callback import SageMakerCallbackHandler
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "SageMaker Tracking"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "SageMaker Tracking"}, {"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "SageMaker Tracking"}, {"imported": "SimpleSequentialChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.sequential.SimpleSequentialChain.html", "title": "SageMaker Tracking"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "SageMaker Tracking"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "SageMaker Tracking"}]-->
@@ -60,7 +55,6 @@ from sagemaker.session import Session
 ```
 
 ## LLM Prompt Tracking
-
 
 ```python
 # LLM Hyperparameters
@@ -81,13 +75,11 @@ session = Session(default_bucket=BUCKET_NAME)
 
 ### Scenario 1 - LLM
 
-
 ```python
 RUN_NAME = "run-scenario-1"
 PROMPT_TEMPLATE = "tell me a joke about {topic}"
 INPUT_VARIABLES = {"topic": "fish"}
 ```
-
 
 ```python
 with Run(
@@ -114,7 +106,6 @@ with Run(
 
 ### Scenario 2 - Sequential Chain
 
-
 ```python
 RUN_NAME = "run-scenario-2"
 
@@ -129,7 +120,6 @@ INPUT_VARIABLES = {
     "input": "documentary about good video games that push the boundary of game design"
 }
 ```
-
 
 ```python
 with Run(
@@ -165,12 +155,10 @@ with Run(
 
 ### Scenario 3 - Agent with Tools
 
-
 ```python
 RUN_NAME = "run-scenario-3"
 PROMPT_TEMPLATE = "Who is the oldest person alive? And what is their current age raised to the power of 1.51?"
 ```
-
 
 ```python
 with Run(
@@ -200,7 +188,6 @@ with Run(
 ## Load Log Data
 
 Once the prompts are logged, we can easily load and convert them to Pandas DataFrame as follows.
-
 
 ```python
 # Load

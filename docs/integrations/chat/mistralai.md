@@ -22,14 +22,11 @@ This will help you getting started with Mistral [chat models](/docs/concepts/#ch
 
 ## Setup
 
-
 To access `ChatMistralAI` models you'll need to create a Mistral account, get an API key, and install the `langchain_mistralai` integration package.
 
 ### Credentials
 
-
 A valid [API key](https://console.mistral.ai/users/api-keys/) is needed to communicate with the API. Once you've done this set the MISTRAL_API_KEY environment variable:
-
 
 ```python
 import getpass
@@ -40,7 +37,6 @@ os.environ["MISTRAL_API_KEY"] = getpass.getpass("Enter your Mistral API key: ")
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -50,7 +46,6 @@ If you want to get automated tracing of your model calls you can also set your [
 
 The LangChain Mistral integration lives in the `langchain_mistralai` package:
 
-
 ```python
 %pip install -qU langchain_mistralai
 ```
@@ -58,7 +53,6 @@ The LangChain Mistral integration lives in the `langchain_mistralai` package:
 ## Instantiation
 
 Now we can instantiate our model object and generate chat completions:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMistralAI", "source": "langchain_mistralai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_mistralai.chat_models.ChatMistralAI.html", "title": "ChatMistralAI"}]-->
@@ -74,7 +68,6 @@ llm = ChatMistralAI(
 
 ## Invocation
 
-
 ```python
 messages = [
     (
@@ -87,13 +80,9 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-
-
 ```output
 AIMessage(content='Sure, I\'d be happy to help you translate that sentence into French! The English sentence "I love programming" translates to "J\'aime programmer" in French. Let me know if you have any other questions or need further assistance!', response_metadata={'token_usage': {'prompt_tokens': 32, 'total_tokens': 84, 'completion_tokens': 52}, 'model': 'mistral-small', 'finish_reason': 'stop'}, id='run-64bac156-7160-4b68-b67e-4161f63e021f-0', usage_metadata={'input_tokens': 32, 'output_tokens': 52, 'total_tokens': 84})
 ```
-
-
 
 ```python
 print(ai_msg.content)
@@ -104,7 +93,6 @@ Sure, I'd be happy to help you translate that sentence into French! The English 
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatMistralAI"}]-->
@@ -130,17 +118,13 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Ich liebe Programmierung. (German translation)', response_metadata={'token_usage': {'prompt_tokens': 26, 'total_tokens': 38, 'completion_tokens': 12}, 'model': 'mistral-small', 'finish_reason': 'stop'}, id='run-dfd4094f-e347-47b0-9056-8ebd7ea35fe7-0', usage_metadata={'input_tokens': 26, 'output_tokens': 12, 'total_tokens': 38})
 ```
 
-
 ## API reference
 
 Head to the [API reference](https://api.python.langchain.com/en/latest/chat_models/langchain_mistralai.chat_models.ChatMistralAI.html) for detailed documentation of all attributes and methods.
-
 
 ## Related
 

@@ -39,14 +39,12 @@ We'll use OpenAI embeddings and a Chroma vector store in this walkthrough, but e
 
 We'll use the following packages:
 
-
 ```python
 %%capture --no-stderr
 %pip install --upgrade --quiet  langchain langchain-community langchainhub langchain-chroma bs4
 ```
 
 We need to set environment variable `OPENAI_API_KEY`, which can be done directly or loaded from a `.env` file like so:
-
 
 ```python
 import getpass
@@ -65,7 +63,6 @@ if not os.environ.get("OPENAI_API_KEY"):
 Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls. As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent. The best way to do this is with [LangSmith](https://smith.langchain.com).
 
 Note that LangSmith is not needed, but it is helpful. If you do want to use LangSmith, after you sign up at the link above, make sure to set your environment variables to start logging traces:
-
 
 ```python
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -133,18 +130,14 @@ question_answer_chain = create_stuff_documents_chain(llm, prompt)
 rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 ```
 
-
 ```python
 response = rag_chain.invoke({"input": "What is Task Decomposition?"})
 response["answer"]
 ```
 
-
-
 ```output
 "Task decomposition involves breaking down complex tasks into smaller and simpler steps to make them more manageable for an agent or model. This process helps in guiding the agent through the various subgoals required to achieve the overall task efficiently. Different techniques like Chain of Thought and Tree of Thoughts can be used to decompose tasks into step-by-step processes, enhancing performance and understanding of the model's thinking process."
 ```
-
 
 Note that we have used the built-in chain constructors `create_stuff_documents_chain` and `create_retrieval_chain`, so that the basic ingredients to our solution are:
 
@@ -159,9 +152,9 @@ This will simplify the process of incorporating chat history.
 The chain we have built uses the input query directly to retrieve relevant context. But in a conversational setting, the user query might require conversational context to be understood. For example, consider this exchange:
 
 > Human: "What is Task Decomposition?"
->
+> 
 > AI: "Task decomposition involves breaking down complex tasks into smaller and simpler steps to make them more manageable for an agent or model."
->
+> 
 > Human: "What are common ways of doing it?"
 
 In order to answer the second question, our system needs to understand that "it" refers to "Task Decomposition."
@@ -170,8 +163,8 @@ We'll need to update two things about our existing app:
 
 1. **Prompt**: Update our prompt to support historical messages as an input.
 2. **Contextualizing questions**: Add a sub-chain that takes the latest user question and reformulates it in the context of the chat history. This can be thought of simply as building a new "history aware" retriever. Whereas before we had:
-   - `query` -> `retriever`  
-     Now we will have:
+   - `query` -> `retriever`\
+Now we will have:
    - `(query, conversation history)` -> `LLM` -> `rephrased query` -> `retriever`
 
 #### Contextualizing the question
@@ -183,7 +176,6 @@ We'll use a prompt that includes a `MessagesPlaceholder` variable under the name
 Note that we leverage a helper function [create_history_aware_retriever](https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html) for this step, which manages the case where `chat_history` is empty, and otherwise applies `prompt | llm | StrOutputParser() | retriever` in sequence.
 
 `create_history_aware_retriever` constructs a chain that accepts keys `input` and `chat_history` as input, and has the same output schema as a retriever.
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_history_aware_retriever", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html", "title": "Conversational RAG"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Conversational RAG"}]-->
@@ -218,7 +210,6 @@ Again, we will use [create_stuff_documents_chain](https://api.python.langchain.c
 
 We build our final `rag_chain` with [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html). This chain applies the `history_aware_retriever` and `question_answer_chain` in sequence, retaining intermediate outputs such as the retrieved context for convenience. It has input keys `input` and `chat_history`, and includes `input`, `chat_history`, `context`, and `answer` in its output.
 
-
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Conversational RAG"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Conversational RAG"}]-->
 from langchain.chains import create_retrieval_chain
@@ -239,7 +230,6 @@ rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chai
 ```
 
 Let's try this. Below we ask a question and a follow-up question that requires contextualization to return a sensible response. Because our chain includes a `"chat_history"` input, the caller needs to manage the chat history. We can achieve this by appending input and output messages to a list:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Conversational RAG"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Conversational RAG"}]-->
@@ -285,7 +275,6 @@ Below, we implement a simple example of the second option, in which chat histori
 
 Instances of `RunnableWithMessageHistory` manage the chat history for you. They accept a config with a key (`"session_id"` by default) that specifies what conversation history to fetch and prepend to the input, and append the output to the same conversation history. Below is an example:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "Conversational RAG"}, {"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "Conversational RAG"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "Conversational RAG"}]-->
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -310,7 +299,6 @@ conversational_rag_chain = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 conversational_rag_chain.invoke(
     {"input": "What is Task Decomposition?"},
@@ -320,13 +308,9 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
-
-
 ```output
 'Task decomposition involves breaking down complex tasks into smaller and simpler steps to make them more manageable. Techniques like Chain of Thought (CoT) and Tree of Thoughts help models decompose hard tasks into multiple manageable subtasks. This process allows agents to plan ahead and tackle intricate tasks effectively.'
 ```
-
-
 
 ```python
 conversational_rag_chain.invoke(
@@ -335,15 +319,11 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
-
-
 ```output
 'Task decomposition can be achieved through various methods such as using Language Model (LLM) with simple prompting, task-specific instructions tailored to the specific task at hand, or incorporating human inputs to break down the task into smaller components. These approaches help in guiding agents to think step by step and decompose complex tasks into more manageable subgoals.'
 ```
 
-
 The conversation history can be inspected in the `store` dict:
-
 
 ```python
 for message in store["abc123"].messages:
@@ -368,7 +348,6 @@ AI: Task decomposition can be achieved through various methods such as using Lan
 ![](../../static/img/conversational_retrieval_chain.png)
 
 For convenience, we tie together all of the necessary steps in a single code cell:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_history_aware_retriever", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html", "title": "Conversational RAG"}, {"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Conversational RAG"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Conversational RAG"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Conversational RAG"}, {"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "Conversational RAG"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Conversational RAG"}, {"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "Conversational RAG"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Conversational RAG"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Conversational RAG"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "Conversational RAG"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Conversational RAG"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Conversational RAG"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Conversational RAG"}]-->
@@ -465,7 +444,6 @@ conversational_rag_chain = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 conversational_rag_chain.invoke(
     {"input": "What is Task Decomposition?"},
@@ -475,13 +453,9 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
-
-
 ```output
 'Task decomposition is a technique used to break down complex tasks into smaller and simpler steps. It involves transforming big tasks into multiple manageable tasks to facilitate problem-solving. Different methods like Chain of Thought and Tree of Thoughts can be employed to decompose tasks effectively.'
 ```
-
-
 
 ```python
 conversational_rag_chain.invoke(
@@ -490,12 +464,9 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
-
-
 ```output
 'Task decomposition can be achieved through various methods such as using prompting techniques like "Steps for XYZ" or "What are the subgoals for achieving XYZ?", providing task-specific instructions like "Write a story outline," or incorporating human inputs to break down complex tasks into smaller components. These approaches help in organizing thoughts and planning ahead for successful task completion.'
 ```
-
 
 ## Agents {#agents}
 
@@ -507,7 +478,6 @@ Agents leverage the reasoning capabilities of LLMs to make decisions during exec
 ### Retrieval tool
 
 Agents can access "tools" and manage their execution. In this case, we will convert our retriever into a LangChain tool to be wielded by the agent:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retriever_tool", "source": "langchain.tools.retriever", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "Conversational RAG"}]-->
@@ -523,23 +493,18 @@ tools = [tool]
 
 Tools are LangChain [Runnables](/docs/concepts#langchain-expression-language-lcel), and implement the usual interface:
 
-
 ```python
 tool.invoke("task decomposition")
 ```
-
-
 
 ```output
 'Tree of Thoughts (Yao et al. 2023) extends CoT by exploring multiple reasoning possibilities at each step. It first decomposes the problem into multiple thought steps and generates multiple thoughts per step, creating a tree structure. The search process can be BFS (breadth-first search) or DFS (depth-first search) with each state evaluated by a classifier (via a prompt) or majority vote.\nTask decomposition can be done (1) by LLM with simple prompting like "Steps for XYZ.\\n1.", "What are the subgoals for achieving XYZ?", (2) by using task-specific instructions; e.g. "Write a story outline." for writing a novel, or (3) with human inputs.\n\nTree of Thoughts (Yao et al. 2023) extends CoT by exploring multiple reasoning possibilities at each step. It first decomposes the problem into multiple thought steps and generates multiple thoughts per step, creating a tree structure. The search process can be BFS (breadth-first search) or DFS (depth-first search) with each state evaluated by a classifier (via a prompt) or majority vote.\nTask decomposition can be done (1) by LLM with simple prompting like "Steps for XYZ.\\n1.", "What are the subgoals for achieving XYZ?", (2) by using task-specific instructions; e.g. "Write a story outline." for writing a novel, or (3) with human inputs.\n\nFig. 1. Overview of a LLM-powered autonomous agent system.\nComponent One: Planning#\nA complicated task usually involves many steps. An agent needs to know what they are and plan ahead.\nTask Decomposition#\nChain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks. The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.\n\nFig. 1. Overview of a LLM-powered autonomous agent system.\nComponent One: Planning#\nA complicated task usually involves many steps. An agent needs to know what they are and plan ahead.\nTask Decomposition#\nChain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks. The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.'
 ```
 
-
 ### Agent constructor
 
-Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent. 
+Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent.
 Currently we are using a high level interface to construct the agent, but the nice thing about LangGraph is that this high-level interface is backed by a low-level, highly controllable API in case you want to modify the agent logic.
-
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -548,7 +513,6 @@ agent_executor = create_react_agent(llm, tools)
 ```
 
 We can now try it out. Note that so far it is not stateful (we still need to add in memory)
-
 
 ```python
 query = "What is Task Decomposition?"
@@ -571,7 +535,6 @@ Error in LangChainTracer.on_tool_end callback: TracerException("Found chain run 
 ```
 LangGraph comes with built in persistence, so we don't need to use ChatMessageHistory! Rather, we can pass in a checkpointer to our LangGraph agent directly
 
-
 ```python
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -583,7 +546,6 @@ agent_executor = create_react_agent(llm, tools, checkpointer=memory)
 This is all we need to construct a conversational RAG agent.
 
 Let's observe its behavior. Note that if we input a query that does not require a retrieval step, the agent does not execute one:
-
 
 ```python
 config = {"configurable": {"thread_id": "abc123"}}
@@ -599,7 +561,6 @@ for s in agent_executor.stream(
 ----
 ```
 Further, if we input a query that does require a retrieval step, the agent generates the input to the tool:
-
 
 ```python
 query = "What is Task Decomposition?"
@@ -623,7 +584,6 @@ Above, instead of inserting our query verbatim into the tool, the agent stripped
 
 This same principle allows the agent to use the context of the conversation when necessary:
 
-
 ```python
 query = "What according to the blog post are common ways of doing it? redo the search"
 
@@ -646,7 +606,6 @@ Note that the agent was able to infer that "it" in our query refers to "task dec
 ### Tying it together
 
 For convenience, we tie together all of the necessary steps in a single code cell:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retriever_tool", "source": "langchain.tools.retriever", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "Conversational RAG"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Conversational RAG"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Conversational RAG"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Conversational RAG"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Conversational RAG"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Conversational RAG"}]-->

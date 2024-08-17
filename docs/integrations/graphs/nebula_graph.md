@@ -5,10 +5,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # NebulaGraph
 
->[NebulaGraph](https://www.nebula-graph.io/) is an open-source, distributed, scalable, lightning-fast
-> graph database built for super large-scale graphs with milliseconds of latency. It uses the `nGQL` graph query language.
->
->[nGQL](https://docs.nebula-graph.io/3.0.0/3.ngql-guide/1.nGQL-overview/1.overview/) is a declarative graph query language for `NebulaGraph`. It allows expressive and efficient graph patterns. `nGQL` is designed for both developers and operations professionals. `nGQL` is an SQL-like query language.
+> [NebulaGraph](https://www.nebula-graph.io/) is an open-source, distributed, scalable, lightning-fast
+graph database built for super large-scale graphs with milliseconds of latency. It uses the `nGQL` graph query language.
+> 
+> [nGQL](https://docs.nebula-graph.io/3.0.0/3.ngql-guide/1.nGQL-overview/1.overview/) is a declarative graph query language for `NebulaGraph`. It allows expressive and efficient graph patterns. `nGQL` is designed for both developers and operations professionals. `nGQL` is an SQL-like query language.
 
 This notebook shows how to use LLMs to provide a natural language interface to `NebulaGraph` database.
 
@@ -27,7 +27,6 @@ Other options are:
 
 Once the cluster is running, we could create the `SPACE` and `SCHEMA` for the database.
 
-
 ```python
 %pip install --upgrade --quiet  ipython-ngql
 %load_ext ngql
@@ -38,14 +37,12 @@ Once the cluster is running, we could create the `SPACE` and `SCHEMA` for the da
 %ngql CREATE SPACE IF NOT EXISTS langchain(partition_num=1, replica_factor=1, vid_type=fixed_string(128));
 ```
 
-
 ```python
 # Wait for a few seconds for the space to be created.
 %ngql USE langchain;
 ```
 
 Create the schema, for full dataset, refer [here](https://www.siwei.io/en/nebulagraph-etl-dbt/).
-
 
 ```python
 %%ngql
@@ -58,7 +55,6 @@ CREATE TAG INDEX IF NOT EXISTS movie_index ON movie(name(128));
 
 Wait for schema creation to complete, then we can insert some data.
 
-
 ```python
 %%ngql
 INSERT VERTEX person(name, birthdate) VALUES "Al Pacino":("Al Pacino", "1940-04-25");
@@ -68,14 +64,12 @@ INSERT EDGE acted_in() VALUES "Al Pacino"->"The Godfather II":();
 INSERT EDGE acted_in() VALUES "Al Pacino"->"The Godfather Coda: The Death of Michael Corleone":();
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "NebulaGraphQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.nebulagraph.NebulaGraphQAChain.html", "title": "NebulaGraph"}, {"imported": "NebulaGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.nebula_graph.NebulaGraph.html", "title": "NebulaGraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "NebulaGraph"}]-->
 from langchain.chains import NebulaGraphQAChain
 from langchain_community.graphs import NebulaGraph
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 graph = NebulaGraph(
@@ -92,11 +86,9 @@ graph = NebulaGraph(
 
 If the schema of database changes, you can refresh the schema information needed to generate nGQL statements.
 
-
 ```python
 # graph.refresh_schema()
 ```
-
 
 ```python
 print(graph.get_schema)
@@ -110,13 +102,11 @@ Relationships: ['(:person)-[:acted_in]->(:movie)']
 
 We can now use the graph cypher QA chain to ask question of the graph
 
-
 ```python
 chain = NebulaGraphQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True
 )
 ```
-
 
 ```python
 chain.run("Who played in The Godfather II?")
@@ -133,7 +123,6 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
-
 
 ```output
 'Al Pacino played in The Godfather II.'

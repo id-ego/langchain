@@ -18,7 +18,6 @@ Currently (2023/08/23) this loader best supports a zip directory of files in the
 
 We have an example in the LangChain repo.
 
-
 ```python
 import requests
 
@@ -32,12 +31,10 @@ with open("slack_dump.zip", "wb") as f:
 
 Provide the loader with the file path to the zip directory. You can optionally specify the user id that maps to an ai message as well an configure whether to merge message runs.
 
-
 ```python
 <!--IMPORTS:[{"imported": "SlackChatLoader", "source": "langchain_community.chat_loaders.slack", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.slack.SlackChatLoader.html", "title": "Slack"}]-->
 from langchain_community.chat_loaders.slack import SlackChatLoader
 ```
-
 
 ```python
 loader = SlackChatLoader(
@@ -48,7 +45,6 @@ loader = SlackChatLoader(
 ## 3. Load messages
 
 The `load()` (or `lazy_load`) methods return a list of "ChatSessions" that currently just contain a list of messages per loaded conversation.
-
 
 ```python
 <!--IMPORTS:[{"imported": "map_ai_messages", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.map_ai_messages.html", "title": "Slack"}, {"imported": "merge_chat_runs", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.merge_chat_runs.html", "title": "Slack"}, {"imported": "ChatSession", "source": "langchain_core.chat_sessions", "docs": "https://api.python.langchain.com/en/latest/chat_sessions/langchain_core.chat_sessions.ChatSession.html", "title": "Slack"}]-->
@@ -72,7 +68,6 @@ messages: List[ChatSession] = list(
 ### Next Steps
 
 You can then use these messages how you see fit, such as fine-tuning a model, few-shot example selection, or directly make predictions for the next message. 
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Slack"}]-->

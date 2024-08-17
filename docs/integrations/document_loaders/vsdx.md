@@ -11,12 +11,10 @@ A Visio file can contain multiple pages. Some of them may serve as the backgroun
 
 **WARNING** : Only Visio files with the **.vsdx** extension are compatible with this loader. Files with extensions such as .vsd, ... are not compatible because they cannot be converted to compressed XML.
 
-
 ```python
 <!--IMPORTS:[{"imported": "VsdxLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.vsdx.VsdxLoader.html", "title": "Vsdx"}]-->
 from langchain_community.document_loaders import VsdxLoader
 ```
-
 
 ```python
 loader = VsdxLoader(file_path="./example_data/fake.vsdx")
@@ -24,7 +22,6 @@ documents = loader.load()
 ```
 
 **Display loaded documents**
-
 
 ```python
 for i, doc in enumerate(documents):

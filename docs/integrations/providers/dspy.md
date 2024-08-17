@@ -15,17 +15,15 @@ Note: this was slightly modified from the original example Omar wrote for DSPy. 
 
 Let's take a look at an example. In this example we will make a simple RAG pipeline. We will use DSPy to "compile" our program and learn an optimized prompt.
 
-
 ## Install dependencies
 
-!pip install -U dspy-ai 
+!pip install -U dspy-ai
 !pip install -U openai jinja2
 !pip install -U langchain langchain-community langchain-openai langchain-core
 
 ## Setup
 
 We will be using OpenAI, so we should set an API key
-
 
 ```python
 import getpass
@@ -36,13 +34,11 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 
 We can now set up our retriever. For our retriever we will use a ColBERT retriever through DSPy, though this will work with any retriever.
 
-
 ```python
 import dspy
 
 colbertv2 = dspy.ColBERTv2(url="http://20.102.90.50:2017/wiki17_abstracts")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "set_llm_cache", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_llm_cache.html", "title": "DSPy"}, {"imported": "SQLiteCache", "source": "langchain_community.cache", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_community.cache.SQLiteCache.html", "title": "DSPy"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "DSPy"}]-->
@@ -59,12 +55,9 @@ def retrieve(inputs):
     return [doc["text"] for doc in colbertv2(inputs["question"], k=5)]
 ```
 
-
 ```python
 colbertv2("cycling")
 ```
-
-
 
 ```output
 [{'text': 'Cycling | Cycling, also called bicycling or biking, is the use of bicycles for transport, recreation, exercise or sport. Persons engaged in cycling are referred to as "cyclists", "bikers", or less commonly, as "bicyclists". Apart from two-wheeled bicycles, "cycling" also includes the riding of unicycles, tricycles, quadracycles, recumbent and similar human-powered vehicles (HPVs).',
@@ -129,7 +122,6 @@ colbertv2("cycling")
   'long_text': 'Cycling in the Netherlands | Cycling is a ubiquitous mode of transport in the Netherlands, with 36% of the people listing the bicycle as their most frequent mode of transport on a typical day as opposed to the car by 45% and public transport by 11%. Cycling has a modal share of 27% of all trips (urban and rural) nationwide. In cities this is even higher, such as Amsterdam which has 38%, though the smaller Dutch cities well exceed that: for instance Zwolle (pop. ~123,000) has 46% and the university town of Groningen (pop. ~198,000) has 31%. This high modal share for bicycle travel is enabled by excellent cycling infrastructure such as cycle paths, cycle tracks, protected intersections, ubiquitous bicycle parking and by making cycling routes shorter, quicker and more direct than car routes.'}]
 ```
 
-
 ## Normal LCEL
 
 First, let's create a simple RAG pipeline with LCEL like we would normally.
@@ -139,13 +131,11 @@ For illustration, let's tackle the following task.
 **Task:** Build a RAG system for generating informative tweets.
 
 - **Input:** A factual question, which may be fairly complex.
- 
 - **Output:** An engaging tweet that correctly answers the question from the retrieved info.
- 
+
 Let's use LangChain's expression language (LCEL) to illustrate this. Any prompt here will do, we will optimize the final prompt with DSPy.
 
 Considering that, let's just keep it to the barebones: **Given {context}, answer the question {question} as a tweet.**
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "DSPy"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "DSPy"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "DSPy"}]-->
@@ -179,7 +169,6 @@ This is a wrapper which will bind your prompt and llm together so you can optimi
 
 This is a wrapper which wraps your final LCEL chain so that DSPy can optimize the whole thing
 
-
 ```python
 # From DSPy, import the modules that know how to interact with LangChain LCEL.
 from dspy.predict.langchain import LangChainModule, LangChainPredict
@@ -201,19 +190,15 @@ zeroshot_chain = LangChainModule(
 
 After this, we can use it as both a LangChain runnable and a DSPy module!
 
-
 ```python
 question = "In what region was Eddy Mazzoleni born?"
 
 zeroshot_chain.invoke({"question": question})
 ```
 
-
-
 ```output
 ' Eddy Mazzoleni, born in Bergamo, Italy, is a professional road cyclist who rode for UCI ProTour Astana Team. #cyclist #Italy'
 ```
-
 
 Ah that sounds about right! (It's technically not perfect: we asked for the region not the city. We can do better below.)
 
@@ -228,7 +213,6 @@ Are there pre-defined metrics for good tweets? Should I label 100,000 tweets by 
 In order to compile our chain, we need a dataset to work with. This dataset just needs to be raw inputs and outputs. For our purposes, we will use HotPotQA dataset
 
 Note: Notice that our dataset doesn't actually include any tweets! It only has questions and answers. That's OK, our metric will take care of evaluating outputs in tweet form.
-
 
 ```python
 import dspy
@@ -256,7 +240,6 @@ valset, devset = devset[:50], devset[50:]
 ## Define a metric
 
 We now need to define a metric. This will be used to determine which runs were successful and we can learn from. Here we will use DSPy's metrics, though you can write your own.
-
 
 ```python
 # Define the signature for autoamtic assessments.
@@ -318,11 +301,9 @@ def metric(gold, pred, trace=None):
 
 Okay, let's evaluate the unoptimized "zero-shot" version of our chain, converted from our LangChain LCEL object.
 
-
 ```python
 from dspy.evaluate.evaluate import Evaluate
 ```
-
 
 ```python
 evaluate = Evaluate(
@@ -430,21 +411,16 @@ Average Metric: 62.99999999999998 / 150  (42.0%)
  
 ```
 
-
-
 ```output
 42.0
 ```
-
 
 Okay, cool. Our zeroshot_chain gets about 42.00% on the 150 questions from the devset.
 
 The table above shows some examples. For instance:
 
 - Question: Who was a producer who produced albums for both rock bands Juke Karten and Thirty Seconds to Mars?
-
 - Tweet: Brian Virtue, who has worked with bands like Jane's Addiction and Velvet Revolver, produced albums for both Juke Kartel and Thirty Seconds to Mars, showcasing... [truncated]
-
 - Metric: 1.0 (A tweet that is correct, faithful, and engaging!*)
 
 footnote: * At least according to our metric, which is just a DSPy program, so it too can be optimized if you'd like! Topic for another notebook, though.
@@ -453,11 +429,9 @@ footnote: * At least according to our metric, which is just a DSPy program, so i
 
 Now, let's optimize performance
 
-
 ```python
 from dspy.teleprompt import BootstrapFewShotWithRandomSearch
 ```
-
 
 ```python
 # Set up the optimizer. We'll use very minimal hyperparameters for this example.
@@ -578,7 +552,6 @@ Average of max per entry across top 9999 scores: 0.6133333333333334
 
 Well, how good is this? Let's do some proper evals!
 
-
 ```python
 evaluate(optimized_chain)
 ```
@@ -682,12 +655,9 @@ Average Metric: 74.66666666666666 / 150  (49.8%)
  
 ```
 
-
-
 ```output
 49.78
 ```
-
 
 Alright! We've improved our chain from 42% to nearly 50%!
 
@@ -699,11 +669,9 @@ So what actually happened to improve this? We can take a look at this by looking
 
 We can look at what prompt was actually used. We can do this by looking at `dspy.settings`.
 
-
 ```python
 prompt_used, output = dspy.settings.langchain_history[-1]
 ```
-
 
 ```python
 print(prompt_used)
@@ -745,7 +713,6 @@ Tweet Response:
 
 The way this was optimized was that we collected examples (or "demos") to put in the prompt. We can inspect the optmized_chain to get a sense for what those are.
 
-
 ```python
 demos = [
     eg
@@ -754,12 +721,9 @@ demos = [
 ]
 ```
 
-
 ```python
 demos
 ```
-
-
 
 ```output
 [Example({'augmented': True, 'question': 'What is the nickname for this United States drag racer who drove Brutus?', 'context': ['Brutus (Funny Car) | Brutus is a pioneering funny car driven by Jim Liberman and prepared by crew chief Lew Arrington in the middle 1960s.', 'USS Brutus (AC-15) | USS "Brutus", formerly the steamer "Peter Jebsen", was a collier in the United States Navy. She was built in 1894 at South Shields-on-Tyne, England, by John Readhead & Sons and was acquired by the U.S. Navy early in 1898 from L. F. Chapman & Company. She was renamed "Brutus" and commissioned at the Mare Island Navy Yard on 27 May 1898, with Lieutenant Vincendon L. Cottman, commanding officer and Lieutenant Randolph H. Miner, executive officer.', 'Brutus Beefcake | Ed Leslie is an American semi-retired professional wrestler, best known for his work in the World Wrestling Federation (WWF) under the ring name Brutus "The Barber" Beefcake. He later worked for World Championship Wrestling (WCW) under a variety of names.', 'Brutus Hamilton | Brutus Kerr Hamilton (July 19, 1900 – December 28, 1970) was an American track and field athlete, coach and athletics administrator.', 'Big Brutus | Big Brutus is the nickname of the Bucyrus-Erie model 1850B electric shovel, which was the second largest of its type in operation in the 1960s and 1970s. Big Brutus is the centerpiece of a mining museum in West Mineral, Kansas where it was used in coal strip mining operations. The shovel was designed to dig from 20 to in relatively shallow coal seams.'], 'tweet_response': ' Jim Liberman, also known as "Jungle Jim", drove the pioneering funny car Brutus in the 1960s. #Brutus #FunnyCar #DragRacing'}) (input_keys=None)]

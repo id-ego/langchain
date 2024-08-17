@@ -15,25 +15,21 @@ head over to the [Riza Code Interpreter API documentation](https://docs.riza.io)
 
 Make sure you have the necessary dependencies installed.
 
-
 ```python
 %pip install --upgrade --quiet langchain-community rizaio
 ```
 
 Set up your API keys as an environment variable.
 
-
 ```python
 %env ANTHROPIC_API_KEY=<your_anthropic_api_key_here>
 %env RIZA_API_KEY=<your_riza_api_key_here>
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "ExecPython", "source": "langchain_community.tools.riza.command", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.riza.command.ExecPython.html", "title": "Riza Code Interpreter"}]-->
 from langchain_community.tools.riza.command import ExecPython
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Riza Code Interpreter"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "Riza Code Interpreter"}, {"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "Riza Code Interpreter"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Riza Code Interpreter"}]-->
@@ -44,13 +40,11 @@ from langchain_core.prompts import ChatPromptTemplate
 
 Initialize the `ExecPython` tool.
 
-
 ```python
 tools = [ExecPython()]
 ```
 
 Initialize an agent using Anthropic's Claude Haiku model.
-
 
 ```python
 llm = ChatAnthropic(model="claude-3-haiku-20240307", temperature=0)
@@ -69,7 +63,6 @@ prompt_template = ChatPromptTemplate.from_messages(
 agent = create_tool_calling_agent(llm, tools, prompt_template)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
-
 
 ```python
 # Ask a tough question

@@ -23,7 +23,6 @@ To run this notebook, you will need to do the following:
 
 After confirmed access to database in the runtime environment of this notebook, filling the following values and run the cell before running example scripts.
 
-
 ```python
 # @markdown Please specify an endpoint associated with the instance and a key prefix for demo purpose.
 ENDPOINT = "redis://127.0.0.1:6379"  # @param {type:"string"}
@@ -34,13 +33,11 @@ KEY_PREFIX = "doc:"  # @param {type:"string"}
 
 The integration lives in its own `langchain-google-memorystore-redis` package, so we need to install it.
 
-
 ```python
 %pip install -upgrade --quiet langchain-google-memorystore-redis
 ```
 
 **Colab only**: Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
-
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -59,7 +56,6 @@ If you don't know your project ID, try the following:
 * Run `gcloud projects list`.
 * See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
 
-
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
 
@@ -76,7 +72,6 @@ Authenticate to Google Cloud as the IAM user logged into this notebook in order 
 - If you are using Colab to run this notebook, use the cell below and continue.
 - If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
 
-
 ```python
 from google.colab import auth
 
@@ -90,10 +85,9 @@ auth.authenticate_user()
 Save langchain documents with `MemorystoreDocumentSaver.add_documents(<documents>)`. To initialize `MemorystoreDocumentSaver` class you need to provide 2 things:
 
 1. `client` - A `redis.Redis` client object.
-1. `key_prefix` - A prefix for the keys to store Documents in Redis.
+2. `key_prefix` - A prefix for the keys to store Documents in Redis.
 
 The Documents will be stored into randomly generated keys with the specified prefix of `key_prefix`. Alternatively, you can designate the suffixes of the keys by specifying `ids` in the `add_documents` method.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google Memorystore for Redis"}]-->
@@ -133,8 +127,7 @@ Initialize a loader that loads all documents stored in the Memorystore for Redis
 Load langchain documents with `MemorystoreDocumentLoader.load()` or `MemorystoreDocumentLoader.lazy_load()`. `lazy_load` returns a generator that only queries database during the iteration. To initialize `MemorystoreDocumentLoader` class you need to provide:
 
 1. `client` - A `redis.Redis` client object.
-1. `key_prefix` - A prefix for the keys to store Documents in Redis.
-
+2. `key_prefix` - A prefix for the keys to store Documents in Redis.
 
 ```python
 import redis
@@ -153,7 +146,6 @@ for doc in loader.lazy_load():
 ### Delete documents
 
 Delete all of keys with the specified prefix in the Memorystore for Redis instance with `MemorystoreDocumentSaver.delete()`. You can also specify the suffixes of the keys if you know.
-
 
 ```python
 docs = loader.load()
@@ -174,7 +166,6 @@ When initializing a loader with more than 1 content field, the `page_content` of
 
 If the `metadata_fields` are specified, the `metadata` field of the loaded Documents will only have the top level fields equal to the specified `metadata_fields`. If any of the values of the metadata fields is stored as a JSON-encoded string, it will be decoded prior to being loaded to the metadata fields.
 
-
 ```python
 loader = MemorystoreDocumentLoader(
     client=redis_client,
@@ -183,7 +174,6 @@ loader = MemorystoreDocumentLoader(
     metadata_fields=set(["title", "author"]),
 )
 ```
-
 
 ## Related
 

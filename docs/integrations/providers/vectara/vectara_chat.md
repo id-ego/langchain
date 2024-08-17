@@ -13,7 +13,7 @@ Vectara serverless RAG-as-a-service provides all the components of RAG behind an
 3. The [Boomerang](https://vectara.com/how-boomerang-takes-retrieval-augmented-generation-to-the-next-level-via-grounded-generation/) embeddings model.
 4. Its own internal vector database where text chunks and embedding vectors are stored.
 5. A query service that automatically encodes the query into embedding, and retrieves the most relevant text segments (including support for [Hybrid Search](https://docs.vectara.com/docs/api-reference/search-apis/lexical-matching) and [MMR](https://vectara.com/get-diverse-results-and-comprehensive-summaries-with-vectaras-mmr-reranker/))
-7. An LLM to for creating a [generative summary](https://docs.vectara.com/docs/learn/grounded-generation/grounded-generation-overview), based on the retrieved documents (context), including citations.
+6. An LLM to for creating a [generative summary](https://docs.vectara.com/docs/learn/grounded-generation/grounded-generation-overview), based on the retrieved documents (context), including citations.
 
 See the [Vectara API documentation](https://docs.vectara.com/docs/) for more information on how to use the API.
 
@@ -30,7 +30,7 @@ To use LangChain with Vectara, you'll need to have these three values: `customer
 You can provide those to LangChain in two ways:
 
 1. Include in your environment these three variables: `VECTARA_CUSTOMER_ID`, `VECTARA_CORPUS_ID` and `VECTARA_API_KEY`.
-
+   
    For example, you can set these variables using os.environ and getpass as follows:
 
 ```python
@@ -52,7 +52,6 @@ vectara = Vectara(
             )
 ```
 In this notebook we assume they are provided in the environment.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Vectara", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.Vectara.html", "title": "Vectara Chat"}, {"imported": "RerankConfig", "source": "langchain_community.vectorstores.vectara", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.RerankConfig.html", "title": "Vectara Chat"}, {"imported": "SummaryConfig", "source": "langchain_community.vectorstores.vectara", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.SummaryConfig.html", "title": "Vectara Chat"}, {"imported": "VectaraQueryConfig", "source": "langchain_community.vectorstores.vectara", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.VectaraQueryConfig.html", "title": "Vectara Chat"}]-->
@@ -78,7 +77,6 @@ With Vectara Chat - all of that is performed in the backend by Vectara automatic
 
 Let's see an example. First we load the SOTU document (remember, text extraction and chunking all occurs automatically on the Vectara platform):
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Vectara Chat"}]-->
 from langchain_community.document_loaders import TextLoader
@@ -90,7 +88,6 @@ vectara = Vectara.from_documents(documents, embedding=None)
 ```
 
 And now we create a Chat Runnable using the `as_chat` method:
-
 
 ```python
 summary_config = SummaryConfig(is_enabled=True, max_results=7, response_lang="eng")
@@ -104,37 +101,28 @@ bot = vectara.as_chat(config)
 
 Here's an example of asking a question with no chat history
 
-
 ```python
 bot.invoke("What did the president say about Ketanji Brown Jackson?")["answer"]
 ```
-
-
 
 ```output
 'The President expressed gratitude to Justice Breyer and highlighted the significance of nominating Ketanji Brown Jackson to the Supreme Court, praising her legal expertise and commitment to upholding excellence [1]. The President also reassured the public about the situation with gas prices and the conflict in Ukraine, emphasizing unity with allies and the belief that the world will emerge stronger from these challenges [2][4]. Additionally, the President shared personal experiences related to economic struggles and the importance of passing the American Rescue Plan to support those in need [3]. The focus was also on job creation and economic growth, acknowledging the impact of inflation on families [5]. While addressing cancer as a significant issue, the President discussed plans to enhance cancer research and support for patients and families [7].'
 ```
 
-
 Here's an example of asking a question with some chat history
-
 
 ```python
 bot.invoke("Did he mention who she suceeded?")["answer"]
 ```
 
-
-
 ```output
 "In his remarks, the President specified that Ketanji Brown Jackson is succeeding Justice Breyer on the United States Supreme Court[1]. The President praised Jackson as a top legal mind who will continue Justice Breyer's legacy of excellence. The nomination of Jackson was highlighted as a significant constitutional responsibility of the President[1]. The President emphasized the importance of this nomination and the qualities that Jackson brings to the role. The focus was on the transition from Justice Breyer to Judge Ketanji Brown Jackson on the Supreme Court[1]."
 ```
-
 
 ## Chat with streaming
 
 Of course the chatbot interface also supports streaming.
 Instead of the `invoke` method you simply use `stream`:
-
 
 ```python
 output = {}

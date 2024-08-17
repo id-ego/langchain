@@ -16,10 +16,9 @@ Designed with developers in mind, Dappier simplifies the journey from data integ
 
 This example goes over how to use LangChain to interact with Dappier AI models
 
------------------------------------------------------------------------------------
+* * *
 
 To use one of our Dappier AI Data Models, you will need an API key. Please visit Dappier Platform (https://platform.dappier.com/) to log in and create an API key in your profile.
-
 
 You can find more details on the API reference : https://docs.dappier.com/introduction
 
@@ -30,14 +29,11 @@ or set as an environment variable.
 export DAPPIER_API_KEY="..."
 ```
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "ChatDappierAI", "source": "langchain_community.chat_models.dappier", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.dappier.ChatDappierAI.html", "title": "Dappier AI"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Dappier AI"}]-->
 from langchain_community.chat_models.dappier import ChatDappierAI
 from langchain_core.messages import HumanMessage
 ```
-
 
 ```python
 chat = ChatDappierAI(
@@ -47,31 +43,22 @@ chat = ChatDappierAI(
 )
 ```
 
-
 ```python
 messages = [HumanMessage(content="Who won the super bowl in 2024?")]
 chat.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='Hey there! The Kansas City Chiefs won Super Bowl LVIII in 2024. They beat the San Francisco 49ers in overtime with a final score of 25-22. It was quite the game! 🏈')
 ```
-
-
 
 ```python
 await chat.ainvoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='The Kansas City Chiefs won Super Bowl LVIII in 2024! 🏈')
 ```
-
-
 
 ## Related
 

@@ -15,7 +15,7 @@ The indexing API lets you load and keep in sync documents from any source into a
 
 All of which should save you time and money, as well as improve your vector search results.
 
-Crucially, the indexing API will work even with documents that have gone through several 
+Crucially, the indexing API will work even with documents that have gone through several
 transformation steps (e.g., via text chunking) with respect to the original source documents.
 
 ## How it works
@@ -38,7 +38,6 @@ When indexing documents into a vector store, it's possible that some existing do
 | Incremental | ✅                    | ✅            | ❌                               | ✅                                                 | Continuously       |
 | Full        | ✅                    | ❌            | ✅                               | ✅                                                 | At end of indexing |
 
-
 `None` does not do any automatic clean up, allowing the user to manually do clean up of old content. 
 
 `incremental` and `full` offer the following automated clean up:
@@ -59,7 +58,7 @@ When content is mutated (e.g., the source PDF file was revised) there will be a 
    * delete by id (`delete` method with `ids` argument)
 
 Compatible Vectorstores: `Aerospike`, `AnalyticDB`, `AstraDB`, `AwaDB`, `AzureCosmosDBNoSqlVectorSearch`, `AzureCosmosDBVectorSearch`, `Bagel`, `Cassandra`, `Chroma`, `CouchbaseVectorStore`, `DashVector`, `DatabricksVectorSearch`, `DeepLake`, `Dingo`, `ElasticVectorSearch`, `ElasticsearchStore`, `FAISS`, `HanaDB`, `Milvus`, `MongoDBAtlasVectorSearch`, `MyScale`, `OpenSearchVectorSearch`, `PGVector`, `Pinecone`, `Qdrant`, `Redis`, `Rockset`, `ScaNN`, `SingleStoreDB`, `SupabaseVectorStore`, `SurrealDBStore`, `TimescaleVector`, `Vald`, `VDMS`, `Vearch`, `VespaStore`, `Weaviate`, `Yellowbrick`, `ZepVectorStore`, `TencentVectorDB`, `OpenSearchVectorSearch`.
-  
+
 ## Caution
 
 The record manager relies on a time-based mechanism to determine what content can be cleaned up (when using `full` or `incremental` cleanup modes).
@@ -74,7 +73,6 @@ This is unlikely to be an issue in actual settings for the following reasons:
 
 ## Quickstart
 
-
 ```python
 <!--IMPORTS:[{"imported": "SQLRecordManager", "source": "langchain.indexes", "docs": "https://api.python.langchain.com/en/latest/indexes/langchain.indexes._sql_record_manager.SQLRecordManager.html", "title": "How to use the LangChain indexing API"}, {"imported": "index", "source": "langchain.indexes", "docs": "https://api.python.langchain.com/en/latest/indexing/langchain_core.indexing.api.index.html", "title": "How to use the LangChain indexing API"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to use the LangChain indexing API"}, {"imported": "ElasticsearchStore", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_elasticsearch.vectorstores.ElasticsearchStore.html", "title": "How to use the LangChain indexing API"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use the LangChain indexing API"}]-->
 from langchain.indexes import SQLRecordManager, index
@@ -84,7 +82,6 @@ from langchain_openai import OpenAIEmbeddings
 ```
 
 Initialize a vector store and set up the embeddings:
-
 
 ```python
 collection_name = "test_index"
@@ -100,7 +97,6 @@ Initialize a record manager with an appropriate namespace.
 
 **Suggestion:** Use a namespace that takes into account both the vector store and the collection name in the vector store; e.g., 'redis/my_docs', 'chromadb/my_docs' or 'postgres/my_docs'.
 
-
 ```python
 namespace = f"elasticsearch/{collection_name}"
 record_manager = SQLRecordManager(
@@ -110,13 +106,11 @@ record_manager = SQLRecordManager(
 
 Create a schema before using the record manager.
 
-
 ```python
 record_manager.create_schema()
 ```
 
 Let's index some test documents:
-
 
 ```python
 doc1 = Document(page_content="kitty", metadata={"source": "kitty.txt"})
@@ -125,22 +119,19 @@ doc2 = Document(page_content="doggy", metadata={"source": "doggy.txt"})
 
 Indexing into an empty vector store:
 
-
 ```python
 def _clear():
     """Hacky helper method to clear content. See the `full` mode section to to understand why it works."""
     index([], record_manager, vectorstore, cleanup="full", source_id_key="source")
 ```
 
-### ``None`` deletion mode
+### `None` deletion mode
 
 This mode does not do automatic clean up of old versions of content; however, it still takes care of content de-duplication.
-
 
 ```python
 _clear()
 ```
-
 
 ```python
 index(
@@ -152,52 +143,38 @@ index(
 )
 ```
 
-
-
 ```output
 {'num_added': 1, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 0}
 ```
 
-
-
 ```python
 _clear()
 ```
-
 
 ```python
 index([doc1, doc2], record_manager, vectorstore, cleanup=None, source_id_key="source")
 ```
 
-
-
 ```output
 {'num_added': 2, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 0}
 ```
-
 
 Second time around all content will be skipped:
 
-
 ```python
 index([doc1, doc2], record_manager, vectorstore, cleanup=None, source_id_key="source")
 ```
-
-
 
 ```output
 {'num_added': 0, 'num_updated': 0, 'num_skipped': 2, 'num_deleted': 0}
 ```
 
-
-### ``"incremental"`` deletion mode
-
+### `"incremental"` deletion mode
 
 ```python
 _clear()
 ```
 
-
 ```python
 index(
     [doc1, doc2],
@@ -207,16 +184,12 @@ index(
     source_id_key="source",
 )
 ```
-
-
 
 ```output
 {'num_added': 2, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 0}
 ```
 
-
 Indexing again should result in both documents getting **skipped** -- also skipping the embedding operation!
-
 
 ```python
 index(
@@ -228,34 +201,25 @@ index(
 )
 ```
 
-
-
 ```output
 {'num_added': 0, 'num_updated': 0, 'num_skipped': 2, 'num_deleted': 0}
 ```
 
-
 If we provide no documents with incremental indexing mode, nothing will change.
-
 
 ```python
 index([], record_manager, vectorstore, cleanup="incremental", source_id_key="source")
 ```
 
-
-
 ```output
 {'num_added': 0, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 0}
 ```
 
-
 If we mutate a document, the new version will be written and all old versions sharing the same source will be deleted.
-
 
 ```python
 changed_doc_2 = Document(page_content="puppy", metadata={"source": "doggy.txt"})
 ```
-
 
 ```python
 index(
@@ -267,14 +231,11 @@ index(
 )
 ```
 
-
-
 ```output
 {'num_added': 1, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 1}
 ```
 
-
-### ``"full"`` deletion mode
+### `"full"` deletion mode
 
 In `full` mode the user should pass the `full` universe of content that should be indexed into the indexing function.
 
@@ -282,62 +243,47 @@ Any documents that are not passed into the indexing function and are present in 
 
 This behavior is useful to handle deletions of source documents.
 
-
 ```python
 _clear()
 ```
-
 
 ```python
 all_docs = [doc1, doc2]
 ```
 
-
 ```python
 index(all_docs, record_manager, vectorstore, cleanup="full", source_id_key="source")
 ```
-
-
 
 ```output
 {'num_added': 2, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 0}
 ```
 
-
 Say someone deleted the first doc:
-
 
 ```python
 del all_docs[0]
 ```
 
-
 ```python
 all_docs
 ```
-
-
 
 ```output
 [Document(page_content='doggy', metadata={'source': 'doggy.txt'})]
 ```
 
-
 Using full mode will clean up the deleted content as well.
-
 
 ```python
 index(all_docs, record_manager, vectorstore, cleanup="full", source_id_key="source")
 ```
 
-
-
 ```output
 {'num_added': 0, 'num_updated': 0, 'num_skipped': 1, 'num_deleted': 1}
 ```
 
-
-## Source 
+## Source
 
 The metadata attribute contains a field called `source`. This source should be pointing at the *ultimate* provenance associated with the given document.
 
@@ -345,12 +291,10 @@ For example, if these documents are representing chunks of some parent document,
 
 In general, `source` should always be specified. Only use a `None`, if you **never** intend to use `incremental` mode, and for some reason can't specify the `source` field correctly.
 
-
 ```python
 <!--IMPORTS:[{"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to use the LangChain indexing API"}]-->
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 doc1 = Document(
@@ -359,15 +303,12 @@ doc1 = Document(
 doc2 = Document(page_content="doggy doggy the doggy", metadata={"source": "doggy.txt"})
 ```
 
-
 ```python
 new_docs = CharacterTextSplitter(
     separator="t", keep_separator=True, chunk_size=12, chunk_overlap=2
 ).split_documents([doc1, doc2])
 new_docs
 ```
-
-
 
 ```output
 [Document(page_content='kitty kit', metadata={'source': 'kitty.txt'}),
@@ -377,12 +318,9 @@ new_docs
  Document(page_content='the doggy', metadata={'source': 'doggy.txt'})]
 ```
 
-
-
 ```python
 _clear()
 ```
-
 
 ```python
 index(
@@ -394,13 +332,9 @@ index(
 )
 ```
 
-
-
 ```output
 {'num_added': 5, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 0}
 ```
-
-
 
 ```python
 changed_doggy_docs = [
@@ -410,7 +344,6 @@ changed_doggy_docs = [
 ```
 
 This should delete the old versions of documents associated with `doggy.txt` source and replace them with the new versions.
-
 
 ```python
 index(
@@ -422,19 +355,13 @@ index(
 )
 ```
 
-
-
 ```output
 {'num_added': 2, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 2}
 ```
 
-
-
 ```python
 vectorstore.similarity_search("dog", k=30)
 ```
-
-
 
 ```output
 [Document(page_content='woof woof', metadata={'source': 'doggy.txt'}),
@@ -444,13 +371,11 @@ vectorstore.similarity_search("dog", k=30)
  Document(page_content='kitty kit', metadata={'source': 'kitty.txt'})]
 ```
 
-
 ## Using with loaders
 
 Indexing can accept either an iterable of documents or else any loader.
 
 **Attention:** The loader **must** set source keys correctly.
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseLoader", "source": "langchain_core.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_core.document_loaders.base.BaseLoader.html", "title": "How to use the LangChain indexing API"}]-->
@@ -472,47 +397,34 @@ class MyCustomLoader(BaseLoader):
         return list(self.lazy_load())
 ```
 
-
 ```python
 _clear()
 ```
-
 
 ```python
 loader = MyCustomLoader()
 ```
 
-
 ```python
 loader.load()
 ```
-
-
 
 ```output
 [Document(page_content='woof woof', metadata={'source': 'doggy.txt'}),
  Document(page_content='woof woof woof', metadata={'source': 'doggy.txt'})]
 ```
 
-
-
 ```python
 index(loader, record_manager, vectorstore, cleanup="full", source_id_key="source")
 ```
-
-
 
 ```output
 {'num_added': 2, 'num_updated': 0, 'num_skipped': 0, 'num_deleted': 0}
 ```
 
-
-
 ```python
 vectorstore.similarity_search("dog", k=30)
 ```
-
-
 
 ```output
 [Document(page_content='woof woof', metadata={'source': 'doggy.txt'}),

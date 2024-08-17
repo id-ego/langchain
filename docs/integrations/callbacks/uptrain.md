@@ -7,6 +7,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
+
 # UpTrain
 
 > UpTrain [[github](https://github.com/uptrain-ai/uptrain) || [website](https://uptrain.ai/) || [docs](https://docs.uptrain.ai/getting-started/introduction)] is an open-source platform to evaluate and improve LLM applications. It provides grades for 20+ preconfigured checks (covering language, code, embedding use cases), performs root cause analyses on instances of failure cases and provides guidance for resolving them.
@@ -39,7 +40,6 @@ These evaluations collectively ensure the robustness and effectiveness of the RA
 
 ## Install Dependencies
 
-
 ```python
 %pip install -qU langchain langchain_openai langchain-community uptrain faiss-cpu flashrank
 ```
@@ -55,7 +55,6 @@ To disable this warning, you can either:
 NOTE: that you can also install `faiss-gpu` instead of `faiss-cpu` if you want to use the GPU enabled version of the library.
 
 ## Import Libraries
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "UpTrain"}, {"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "UpTrain"}, {"imported": "FlashrankRerank", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.flashrank_rerank.FlashrankRerank.html", "title": "UpTrain"}, {"imported": "MultiQueryRetriever", "source": "langchain.retrievers.multi_query", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.multi_query.MultiQueryRetriever.html", "title": "UpTrain"}, {"imported": "UpTrainCallbackHandler", "source": "langchain_community.callbacks.uptrain_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.uptrain_callback.UpTrainCallbackHandler.html", "title": "UpTrain"}, {"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "UpTrain"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "UpTrain"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers.string", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "UpTrain"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "UpTrain"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables.passthrough", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "UpTrain"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "UpTrain"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "UpTrain"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "UpTrain"}]-->
@@ -79,7 +78,6 @@ from langchain_text_splitters import (
 
 ## Load the documents
 
-
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
 documents = loader.load()
@@ -87,14 +85,12 @@ documents = loader.load()
 
 ## Split the document into chunks
 
-
 ```python
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 chunks = text_splitter.split_documents(documents)
 ```
 
 ## Create the retriever
-
 
 ```python
 embeddings = OpenAIEmbeddings()
@@ -104,7 +100,6 @@ retriever = db.as_retriever()
 
 ## Define the LLM
 
-
 ```python
 llm = ChatOpenAI(temperature=0, model="gpt-4")
 ```
@@ -113,12 +108,12 @@ llm = ChatOpenAI(temperature=0, model="gpt-4")
 
 UpTrain provides you with:
 1. Dashboards with advanced drill-down and filtering options
-1. Insights and common topics among failing cases
-1. Observability and real-time monitoring of production data
-1. Regression testing via seamless integration with your CI/CD pipelines
+2. Insights and common topics among failing cases
+3. Observability and real-time monitoring of production data
+4. Regression testing via seamless integration with your CI/CD pipelines
 
 You can choose between the following options for evaluating using UpTrain:
-### 1. **UpTrain's Open-Source Software (OSS)**: 
+### 1. **UpTrain's Open-Source Software (OSS)**:
 You can use the open-source evaluation service to evaluate your model. In this case, you will need to provie an OpenAI API key. UpTrain uses the GPT models to evaluate the responses generated by the LLM. You can get yours [here](https://platform.openai.com/account/api-keys).
 
 In order to view your evaluations in the UpTrain dashboard, you will need to set it up by running the following commands in your terminal:
@@ -136,13 +131,12 @@ Parameters:
 - api_key="OPENAI_API_KEY"
 - project_name="PROJECT_NAME"
 
-
 ### 2. **UpTrain Managed Service and Dashboards**:
 Alternatively, you can use UpTrain's managed service to evaluate your model. You can create a free UpTrain account [here](https://uptrain.ai/) and get free trial credits. If you want more trial credits, [book a call with the maintainers of UpTrain here](https://calendly.com/uptrain-sourabh/30min).
 
 The benefits of using the managed service are:
 1. No need to set up the UpTrain dashboard on your local machine.
-1. Access to many LLMs without needing their API keys.
+2. Access to many LLMs without needing their API keys.
 
 Once you perform the evaluations, you can view them in the UpTrain dashboard at `https://dashboard.uptrain.ai/dashboard`
 
@@ -151,13 +145,11 @@ Parameters:
 - api_key="UPTRAIN_API_KEY"
 - project_name="PROJECT_NAME"
 
-
 **Note:** The `project_name` will be the project name under which the evaluations performed will be shown in the UpTrain dashboard.
 
 ## Set the API key
 
 The notebook will prompt you to enter the API key. You can choose between the OpenAI API key or the UpTrain API key by changing the `key_type` parameter in the cell below.
-
 
 ```python
 KEY_TYPE = "openai"  # or "uptrain"
@@ -170,7 +162,6 @@ UpTrain callback handler will automatically capture the query, context and respo
 - **[Context Relevance](https://docs.uptrain.ai/predefined-evaluations/context-awareness/context-relevance)**: Check if the context extractedfrom the query is relevant to the response.
 - **[Factual Accuracy](https://docs.uptrain.ai/predefined-evaluations/context-awareness/factual-accuracy)**: Check how factually accurate the response is.
 - **[Response Completeness](https://docs.uptrain.ai/predefined-evaluations/response-quality/response-completeness)**: Check if the response contains all the information that the query is asking for.
-
 
 ```python
 # Create the RAG prompt
@@ -214,7 +205,6 @@ The **MultiQueryRetriever** is used to tackle the problem that the RAG pipeline 
 
 To evluate this retriever, UpTrain will run the following evaluation:
 - **[Multi Query Accuracy](https://docs.uptrain.ai/predefined-evaluations/query-quality/multi-query-accuracy)**: Checks if the multi-queries generated mean the same as the original query.
-
 
 ```python
 # Create the retriever
@@ -271,7 +261,6 @@ Response Completeness Score: 1.0
 The reranking process involves reordering nodes based on relevance to the query and choosing the top n nodes. Since the number of nodes can reduce once the reranking is complete, we perform the following evaluations:
 - **[Context Reranking](https://docs.uptrain.ai/predefined-evaluations/context-awareness/context-reranking)**: Check if the order of re-ranked nodes is more relevant to the query than the original order.
 - **[Context Conciseness](https://docs.uptrain.ai/predefined-evaluations/context-awareness/context-conciseness)**: Check if the reduced number of nodes still provides all the required information.
-
 
 ```python
 # Create the retriever

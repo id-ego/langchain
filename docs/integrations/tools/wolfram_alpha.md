@@ -16,11 +16,9 @@ First, you need to set up your Wolfram Alpha developer account and get your APP 
 Then we will need to set some environment variables:
 1. Save your APP ID into WOLFRAM_ALPHA_APPID env variable
 
-
 ```python
 pip install wolframalpha
 ```
-
 
 ```python
 import os
@@ -28,29 +26,22 @@ import os
 os.environ["WOLFRAM_ALPHA_APPID"] = ""
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "WolframAlphaAPIWrapper", "source": "langchain_community.utilities.wolfram_alpha", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wolfram_alpha.WolframAlphaAPIWrapper.html", "title": "Wolfram Alpha"}]-->
 from langchain_community.utilities.wolfram_alpha import WolframAlphaAPIWrapper
 ```
 
-
 ```python
 wolfram = WolframAlphaAPIWrapper()
 ```
-
 
 ```python
 wolfram.run("What is 2x+5 = -3x + 7?")
 ```
 
-
-
 ```output
 'x = 2/5'
 ```
-
-
 
 ## Related
 

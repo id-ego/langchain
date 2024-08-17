@@ -5,16 +5,14 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Dall-E Image Generator
 
->[OpenAI Dall-E](https://openai.com/dall-e-3) are text-to-image models developed by `OpenAI` using deep learning methodologies to generate digital images from natural language descriptions, called "prompts".
+> [OpenAI Dall-E](https://openai.com/dall-e-3) are text-to-image models developed by `OpenAI` using deep learning methodologies to generate digital images from natural language descriptions, called "prompts".
 
 This notebook shows how you can generate images from a prompt synthesized using an OpenAI LLM. The images are generated using `Dall-E`, which uses the same OpenAI API key as the LLM.
-
 
 ```python
 # Needed if you would like to display images in the notebook
 %pip install --upgrade --quiet  opencv-python scikit-image langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Dall-E Image Generator"}]-->
@@ -26,7 +24,6 @@ os.environ["OPENAI_API_KEY"] = "<your-key-here>"
 ```
 
 ## Run as a chain
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Dall-E Image Generator"}, {"imported": "DallEAPIWrapper", "source": "langchain_community.utilities.dalle_image_generator", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.dalle_image_generator.DallEAPIWrapper.html", "title": "Dall-E Image Generator"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Dall-E Image Generator"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Dall-E Image Generator"}]-->
@@ -43,23 +40,17 @@ prompt = PromptTemplate(
 chain = LLMChain(llm=llm, prompt=prompt)
 ```
 
-
 ```python
 image_url = DallEAPIWrapper().run(chain.run("halloween night at a haunted museum"))
 ```
-
 
 ```python
 image_url
 ```
 
-
-
 ```output
 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-i0zjYONU3PemzJ222esBaAzZ/user-f6uEIOFxoiUZivy567cDSWni/img-i7Z2ZxvJ4IbbdAiO6OXJgS3v.png?st=2023-08-11T14%3A03%3A14Z&se=2023-08-11T16%3A03%3A14Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-10T20%3A58%3A32Z&ske=2023-08-11T20%3A58%3A32Z&sks=b&skv=2021-08-06&sig=/sECe7C0EAq37ssgBm7g7JkVIM/Q1W3xOstd0Go6slA%3D'
 ```
-
-
 
 ```python
 # You can click on the link above to display the image
@@ -89,7 +80,6 @@ else:
 ```
 
 ## Run as a tool with an agent
-
 
 ```python
 <!--IMPORTS:[{"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Dall-E Image Generator"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Dall-E Image Generator"}]-->

@@ -7,7 +7,7 @@ sidebar_label: Wikipedia
 # WikipediaRetriever
 
 ## Overview
->[Wikipedia](https://wikipedia.org/) is a multilingual free online encyclopedia written and maintained by a community of volunteers, known as Wikipedians, through open collaboration and using a wiki-based editing system called MediaWiki. `Wikipedia` is the largest and most-read reference work in history.
+> [Wikipedia](https://wikipedia.org/) is a multilingual free online encyclopedia written and maintained by a community of volunteers, known as Wikipedians, through open collaboration and using a wiki-based editing system called MediaWiki. `Wikipedia` is the largest and most-read reference work in history.
 
 This notebook shows how to retrieve wiki pages from `wikipedia.org` into the [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) format that is used downstream.
 
@@ -17,9 +17,9 @@ import {ItemTable} from "@theme/FeatureTables";
 
 <ItemTable category="external_retrievers" item="WikipediaRetriever" />
 
+
 ## Setup
 If you want to get automated tracing from runs of individual tools, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -29,7 +29,6 @@ If you want to get automated tracing from runs of individual tools, you can also
 ### Installation
 
 The integration lives in the `langchain-community` package. We also need to install the `wikipedia` python package itself.
-
 
 ```python
 %pip install -qU langchain_community wikipedia
@@ -46,7 +45,6 @@ Now we can instantiate our retriever:
 
 `get_relevant_documents()` has one argument, `query`: free text which used to find documents in Wikipedia
 
-
 ```python
 <!--IMPORTS:[{"imported": "WikipediaRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.wikipedia.WikipediaRetriever.html", "title": "WikipediaRetriever"}]-->
 from langchain_community.retrievers import WikipediaRetriever
@@ -56,11 +54,9 @@ retriever = WikipediaRetriever()
 
 ## Usage
 
-
 ```python
 docs = retriever.invoke("TOKYO GHOUL")
 ```
-
 
 ```python
 print(docs[0].page_content[:400])
@@ -105,24 +101,19 @@ chain = (
 )
 ```
 
-
 ```python
 chain.invoke(
     "Who is the main character in `Tokyo Ghoul` and does he transform into a ghoul?"
 )
 ```
 
-
-
 ```output
 'The main character in Tokyo Ghoul is Ken Kaneki, who transforms into a ghoul after receiving an organ transplant from a ghoul named Rize.'
 ```
 
-
 ## API reference
 
 For detailed documentation of all `WikipediaRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.wikipedia.WikipediaRetriever.html#langchain-community-retrievers-wikipedia-wikipediaretriever).
-
 
 ## Related
 

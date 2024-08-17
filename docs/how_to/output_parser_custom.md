@@ -22,7 +22,6 @@ Here, we will make a simple parse that inverts the case of the output from the m
 
 For example, if the model outputs: "Meow", the parser will produce "mEOW".
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to create a custom Output Parser"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to create a custom Output Parser"}, {"imported": "AIMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html", "title": "How to create a custom Output Parser"}]-->
 from typing import Iterable
@@ -42,12 +41,9 @@ chain = model | parse
 chain.invoke("hello")
 ```
 
-
-
 ```output
 'hELLO!'
 ```
-
 
 :::tip
 
@@ -57,7 +53,6 @@ If you don't like that you can manually import `RunnableLambda` and then run`par
 :::
 
 Does streaming work?
-
 
 ```python
 for chunk in chain.stream("tell me about yourself in one sentence"):
@@ -70,7 +65,6 @@ No, it doesn't because the parser aggregates the input before parsing the output
 
 If we want to implement a streaming parser, we can have the parser accept an iterable over the input instead and yield
 the results as they're available.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableGenerator", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableGenerator.html", "title": "How to create a custom Output Parser"}]-->
@@ -90,21 +84,16 @@ streaming_parse = RunnableGenerator(streaming_parse)
 Please wrap the streaming parser in `RunnableGenerator` as we may stop automatically upgrading it with the `|` syntax.
 :::
 
-
 ```python
 chain = model | streaming_parse
 chain.invoke("hello")
 ```
 
-
-
 ```output
 'hELLO!'
 ```
 
-
 Let's confirm that streaming works!
-
 
 ```python
 for chunk in chain.stream("tell me about yourself in one sentence"):
@@ -131,11 +120,9 @@ When the output from the chat model or LLM is malformed, the can throw an `Outpu
 Because `BaseOutputParser` implements the `Runnable` interface, any custom parser you will create this way will become valid LangChain Runnables and will benefit from automatic async support, batch interface, logging support etc.
 :::
 
-
 ### Simple Parser
 
 Here's a simple parser that can parse a **string** representation of a booealn (e.g., `YES` or `NO`) and convert it into the corresponding `boolean` type.
-
 
 ```python
 <!--IMPORTS:[{"imported": "OutputParserException", "source": "langchain_core.exceptions", "docs": "https://api.python.langchain.com/en/latest/exceptions/langchain_core.exceptions.OutputParserException.html", "title": "How to create a custom Output Parser"}, {"imported": "BaseOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.base.BaseOutputParser.html", "title": "How to create a custom Output Parser"}]-->
@@ -167,19 +154,14 @@ class BooleanOutputParser(BaseOutputParser[bool]):
         return "boolean_output_parser"
 ```
 
-
 ```python
 parser = BooleanOutputParser()
 parser.invoke("YES")
 ```
 
-
-
 ```output
 True
 ```
-
-
 
 ```python
 try:
@@ -192,45 +174,32 @@ Triggered an exception of type: <class 'langchain_core.exceptions.OutputParserEx
 ```
 Let's test changing the parameterization
 
-
 ```python
 parser = BooleanOutputParser(true_val="OKAY")
 parser.invoke("OKAY")
 ```
 
-
-
 ```output
 True
 ```
 
-
 Let's confirm that other LCEL methods are present
-
 
 ```python
 parser.batch(["OKAY", "NO"])
 ```
 
-
-
 ```output
 [True, False]
 ```
-
-
 
 ```python
 await parser.abatch(["OKAY", "NO"])
 ```
 
-
-
 ```output
 [True, False]
 ```
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to create a custom Output Parser"}]-->
@@ -240,27 +209,20 @@ anthropic = ChatAnthropic(model_name="claude-2.1")
 anthropic.invoke("say OKAY or NO")
 ```
 
-
-
 ```output
 AIMessage(content='OKAY')
 ```
 
-
 Let's test that our parser works!
-
 
 ```python
 chain = anthropic | parser
 chain.invoke("say OKAY or NO")
 ```
 
-
-
 ```output
 True
 ```
-
 
 :::note
 The parser will work with either the output from an LLM (a string) or the output from a chat model (an `AIMessage`)!
@@ -273,7 +235,6 @@ Sometimes there is additional metadata on the model output that is important bes
 This class requires a single method `parse_result`. This method takes raw model output (e.g., list of `Generation` or `ChatGeneration`) and returns the parsed output.
 
 Supporting both `Generation` and `ChatGeneration` allows the parser to work with both regular LLMs as well as with Chat Models.
-
 
 ```python
 <!--IMPORTS:[{"imported": "OutputParserException", "source": "langchain_core.exceptions", "docs": "https://api.python.langchain.com/en/latest/exceptions/langchain_core.exceptions.OutputParserException.html", "title": "How to create a custom Output Parser"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to create a custom Output Parser"}, {"imported": "BaseGenerationOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.base.BaseGenerationOutputParser.html", "title": "How to create a custom Output Parser"}, {"imported": "ChatGeneration", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.chat_generation.ChatGeneration.html", "title": "How to create a custom Output Parser"}, {"imported": "Generation", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.generation.Generation.html", "title": "How to create a custom Output Parser"}]-->
@@ -321,12 +282,9 @@ chain = anthropic | StrInvertCase()
 
 Let's the new parser! It should be inverting the output from the model.
 
-
 ```python
 chain.invoke("Tell me a short sentence about yourself")
 ```
-
-
 
 ```output
 'hELLO! mY NAME IS cLAUDE.'

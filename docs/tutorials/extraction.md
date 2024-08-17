@@ -48,7 +48,6 @@ import CodeBlock from "@theme/CodeBlock";
 </Tabs>
 
 
-
 For more details, see our [Installation guide](/docs/how_to/installation).
 
 ### LangSmith
@@ -79,7 +78,6 @@ os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 First, we need to describe what information we want to extract from the text.
 
 We'll use Pydantic to define an example schema  to extract personal information.
-
 
 ```python
 from typing import Optional
@@ -120,7 +118,6 @@ For best performance, document the schema well and make sure the model isn't for
 
 Let's create an information extractor using the schema we defined above.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build an Extraction Chain"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Build an Extraction Chain"}]-->
 from typing import Optional
@@ -153,7 +150,6 @@ We need to use a model that supports function/tool calling.
 
 Please review [the documentation](/docs/concepts#function-tool-calling) for list of some models that can be used with this API.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatMistralAI", "source": "langchain_mistralai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_mistralai.chat_models.ChatMistralAI.html", "title": "Build an Extraction Chain"}]-->
 from langchain_mistralai import ChatMistralAI
@@ -168,18 +164,14 @@ runnable = prompt | llm.with_structured_output(schema=Person)
 ```
 Let's test it out
 
-
 ```python
 text = "Alan Smith is 6 feet tall and has blond hair."
 runnable.invoke({"text": text})
 ```
 
-
-
 ```output
 Person(name='Alan Smith', hair_color='blond', height_in_meters='1.83')
 ```
-
 
 :::important 
 
@@ -196,7 +188,6 @@ We can see the LangSmith trace here: https://smith.langchain.com/public/44b69a63
 In **most cases**, you should be extracting a list of entities rather than a single entity.
 
 This can be easily achieved using pydantic by nesting models inside one another.
-
 
 ```python
 from typing import List, Optional
@@ -235,19 +226,15 @@ class Data(BaseModel):
 Extraction might not be perfect here. Please continue to see how to use **Reference Examples** to improve the quality of extraction, and see the **guidelines** section!
 :::
 
-
 ```python
 runnable = prompt | llm.with_structured_output(schema=Data)
 text = "My name is Jeff, my hair is black and i am 6 feet tall. Anna has the same color hair as me."
 runnable.invoke({"text": text})
 ```
 
-
-
 ```output
 Data(people=[Person(name='Jeff', hair_color=None, height_in_meters=None), Person(name='Anna', hair_color=None, height_in_meters=None)])
 ```
-
 
 :::tip
 When the schema accommodates the extraction of **multiple entities**, it also allows the model to extract **no entities** if no relevant information

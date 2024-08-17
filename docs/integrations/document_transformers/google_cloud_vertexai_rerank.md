@@ -7,17 +7,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 > The [Vertex Search Ranking API](https://cloud.google.com/generative-ai-app-builder/docs/ranking) is one of the standalone APIs in [Vertex AI Agent Builder](https://cloud.google.com/generative-ai-app-builder/docs/builder-apis). It takes a list of documents and reranks those documents based on how relevant the documents are to a query. Compared to embeddings, which look only at the semantic similarity of a document and a query, the ranking API can give you precise scores for how well a document answers a given query. The ranking API can be used to improve the quality of search results after retrieving an initial set of candidate documents.
 
->The ranking API is stateless so there's no need to index documents before calling the API. All you need to do is pass in the query and documents. This makes the API well suited for reranking documents from any document retrievers.
+> The ranking API is stateless so there's no need to index documents before calling the API. All you need to do is pass in the query and documents. This makes the API well suited for reranking documents from any document retrievers.
 
->For more information, see [Rank and rerank documents](https://cloud.google.com/generative-ai-app-builder/docs/ranking).
-
+> For more information, see [Rank and rerank documents](https://cloud.google.com/generative-ai-app-builder/docs/ranking).
 
 ```python
 %pip install --upgrade --quiet langchain langchain-community langchain-google-community langchain-google-community[vertexaisearch] langchain-google-vertexai langchain-chroma langchain-text-splitters
 ```
 
 ### Setup
-
 
 ```python
 PROJECT_ID = ""
@@ -37,7 +35,6 @@ For this example, we will be using the [Google Wiki page](https://en.wikipedia.o
 We use a standard pipeline of `load -> split -> embed data`.
 
 The embeddings are created using the [Vertex Embeddings API](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings#supported_models) model - `textembedding-gecko@003`
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Google Cloud Vertex AI Reranker"}]-->
@@ -101,7 +98,6 @@ The ranking API is used to improve the quality of the ranking and determine a sc
 
 You can see the difference between the Unranked and the Ranked Documents. The Ranking API moves the most semantically relevant documents to the top of the context window of the LLM thus helping it form a better answer with reasoning.
 
-
 ```python
 import pandas as pd
 
@@ -124,8 +120,6 @@ comparison_df = pd.DataFrame(
 
 comparison_df
 ```
-
-
 
 ```html
 
@@ -448,9 +442,7 @@ comparison_df
  
 ```
 
-
 Let's inspect a couple of reranked documents. We observe that the retriever still returns the relevant Langchain type [documents](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) but as part of the metadata field, we also recieve the `relevance_score` from the Ranking API.
-
 
 ```python
 for i in range(2):
@@ -480,9 +472,6 @@ page_content='Eventually, they changed the name to Google; the name of the searc
 ### Putting it all together
 
 This shows an example of a complete RAG chain with a simple prompt template on how you can perform reranking using the Vertex Ranking API.
-
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Google Cloud Vertex AI Reranker"}]-->
@@ -542,7 +531,6 @@ chain = reranker_setup_and_retrieval | prompt | llm
  
 ```
 
-
 ```python
 query = "how did the name google originate?"
 ```
@@ -557,7 +545,6 @@ query = "how did the name google originate?"
  
 ```
 
-
 ```python
 chain.invoke(query)
 ```
@@ -571,8 +558,6 @@ chain.invoke(query)
 </style>
  
 ```
-
-
 
 ```output
 'The name "Google" originated as a misspelling of the word "googol," a mathematical term for the number 1 followed by 100 zeros. Larry Page and Sergey Brin, the founders of Google, chose the name because it reflected their goal of building a search engine that could handle massive amounts of information. \n'

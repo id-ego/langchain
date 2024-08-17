@@ -5,17 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Fleet AI Context
 
->[Fleet AI Context](https://www.fleet.so/context) is a dataset of high-quality embeddings of the top 1200 most popular & permissive Python Libraries & their documentation.
->
->The `Fleet AI` team is on a mission to embed the world's most important data. They've started by embedding the top 1200 Python libraries to enable code generation with up-to-date knowledge. They've been kind enough to share their embeddings of the [LangChain docs](/docs/introduction) and [API reference](https://api.python.langchain.com/en/latest/api_reference.html).
+> [Fleet AI Context](https://www.fleet.so/context) is a dataset of high-quality embeddings of the top 1200 most popular & permissive Python Libraries & their documentation.
+> 
+> The `Fleet AI` team is on a mission to embed the world's most important data. They've started by embedding the top 1200 Python libraries to enable code generation with up-to-date knowledge. They've been kind enough to share their embeddings of the [LangChain docs](/docs/introduction) and [API reference](https://api.python.langchain.com/en/latest/api_reference.html).
 
 Let's take a look at how we can use these embeddings to power a docs retrieval system and ultimately a simple code-generating chain!
-
 
 ```python
 %pip install --upgrade --quiet  langchain fleet-context langchain-openai pandas faiss-cpu # faiss-gpu for CUDA supported GPU
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "MultiVectorRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.multi_vector.MultiVectorRetriever.html", "title": "Fleet AI Context"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Fleet AI Context"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Fleet AI Context"}, {"imported": "BaseStore", "source": "langchain_core.stores", "docs": "https://api.python.langchain.com/en/latest/stores/langchain_core.stores.BaseStore.html", "title": "Fleet AI Context"}, {"imported": "VectorStore", "source": "langchain_core.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.base.VectorStore.html", "title": "Fleet AI Context"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Fleet AI Context"}]-->
@@ -93,14 +91,12 @@ As part of their embedding process, the Fleet AI team first chunked long documen
 
 We will be using Fleet Context's `download_embeddings()` to grab Langchain's documentation embeddings. You can view all supported libraries' documentation at https://fleet.so/context.
 
-
 ```python
 from context import download_embeddings
 
 df = download_embeddings("langchain")
 vecstore_retriever = load_fleet_retriever(df)
 ```
-
 
 ```python
 vecstore_retriever.invoke("How does the multi vector retriever work")
@@ -114,7 +110,6 @@ You can download and use other embeddings from [this Dropbox link](https://www.d
 
 The embeddings provided by Fleet AI contain metadata that indicates which embedding chunks correspond to the same original document page. If we'd like we can use this information to retrieve whole parent documents, and not just embedded chunks. Under the hood, we'll use a MultiVectorRetriever and a BaseStore object to search for relevant chunks and then map them to their parent document.
 
-
 ```python
 <!--IMPORTS:[{"imported": "InMemoryStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryStore.html", "title": "Fleet AI Context"}]-->
 from langchain.storage import InMemoryStore
@@ -125,7 +120,6 @@ parent_retriever = load_fleet_retriever(
 )
 ```
 
-
 ```python
 parent_retriever.invoke("How does the multi vector retriever work")
 ```
@@ -133,7 +127,6 @@ parent_retriever.invoke("How does the multi vector retriever work")
 ## Putting it in a chain
 
 Let's try using our retrieval systems in a simple chain!
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Fleet AI Context"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Fleet AI Context"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Fleet AI Context"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Fleet AI Context"}]-->
@@ -176,14 +169,12 @@ chain = (
 )
 ```
 
-
 ```python
 for chunk in chain.invoke(
     "How do I create a FAISS vector store retriever that returns 10 documents per search query"
 ):
     print(chunk, end="", flush=True)
 ```
-
 
 ## Related
 

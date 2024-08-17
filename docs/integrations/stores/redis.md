@@ -26,7 +26,6 @@ To create a Redis byte store, you'll need to set up a Redis instance. You can do
 
 The LangChain `RedisStore` integration lives in the `langchain_community` package:
 
-
 ```python
 %pip install -qU langchain_community redis
 ```
@@ -34,7 +33,6 @@ The LangChain `RedisStore` integration lives in the `langchain_community` packag
 ## Instantiation
 
 Now we can instantiate our byte store:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RedisStore", "source": "langchain_community.storage", "docs": "https://api.python.langchain.com/en/latest/storage/langchain_community.storage.redis.RedisStore.html", "title": "RedisStore"}]-->
@@ -46,7 +44,6 @@ kv_store = RedisStore(redis_url="redis://localhost:6379")
 ## Usage
 
 You can set data under keys like this using the `mset` method:
-
 
 ```python
 kv_store.mset(
@@ -64,15 +61,11 @@ kv_store.mget(
 )
 ```
 
-
-
 ```output
 [b'value1', b'value2']
 ```
 
-
 And you can delete data using the `mdelete` method:
-
 
 ```python
 kv_store.mdelete(
@@ -90,17 +83,13 @@ kv_store.mget(
 )
 ```
 
-
-
 ```output
 [None, None]
 ```
 
-
 ## API reference
 
 For detailed documentation of all `RedisStore` features and configurations, head to the API reference: https://api.python.langchain.com/en/latest/storage/langchain_community.storage.redis.RedisStore.html
-
 
 ## Related
 

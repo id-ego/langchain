@@ -32,7 +32,6 @@ This guide will cover:
 
 Below, we explicitly wrap our custom logic using the `RunnableLambda` constructor:
 
-
 ```python
 %pip install -qU langchain langchain_openai
 
@@ -41,7 +40,6 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to run custom functions"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to run custom functions"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to run custom functions"}]-->
@@ -83,17 +81,13 @@ chain = (
 chain.invoke({"foo": "bar", "bar": "gah"})
 ```
 
-
-
 ```output
 AIMessage(content='3 + 9 equals 12.', response_metadata={'token_usage': {'completion_tokens': 8, 'prompt_tokens': 14, 'total_tokens': 22}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-73728de3-e483-49e3-ad54-51bd9570e71a-0')
 ```
 
-
 ## The convenience `@chain` decorator
 
 You can also turn an arbitrary function into a chain by adding a `@chain` decorator. This is functionaly equivalent to wrapping the function in a `RunnableLambda` constructor as shown above. Here's an example:
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to run custom functions"}, {"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to run custom functions"}]-->
@@ -116,12 +110,9 @@ def custom_chain(text):
 custom_chain.invoke("bears")
 ```
 
-
-
 ```output
 'The subject of the joke is the bear and his girlfriend.'
 ```
-
 
 Above, the `@chain` decorator is used to convert `custom_chain` into a runnable, which we invoke with the `.invoke()` method.
 
@@ -130,7 +121,6 @@ If you are using a tracing with [LangSmith](https://docs.smith.langchain.com/), 
 ## Automatic coercion in chains
 
 When using custom functions in chains with the pipe operator (`|`), you can omit the `RunnableLambda` or `@chain` constructor and rely on coercion. Here's a simple example with a function that takes the output from the model and returns the first five letters of it:
-
 
 ```python
 prompt = ChatPromptTemplate.from_template("tell me a story about {topic}")
@@ -142,19 +132,15 @@ chain_with_coerced_function = prompt | model | (lambda x: x.content[:5])
 chain_with_coerced_function.invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 'Once '
 ```
-
 
 Note that we didn't need to wrap the custom function `(lambda x: x.content[:5])` in a `RunnableLambda` constructor because the `model` on the left of the pipe operator is already a Runnable. The custom function is **coerced** into a runnable. See [this section](/docs/how_to/sequence/#coercion) for more information.
 
 ## Passing run metadata
 
 Runnable lambdas can optionally accept a [RunnableConfig](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html#langchain_core.runnables.config.RunnableConfig) parameter, which they can use to pass callbacks, tags, and other configuration information to nested runs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to run custom functions"}]-->
@@ -233,7 +219,6 @@ These are useful for:
 
 Here's an example of a custom output parser for comma-separated lists. First, we create a chain that generates such a list as text:
 
-
 ```python
 from typing import Iterator, List
 
@@ -250,7 +235,6 @@ for chunk in str_chain.stream({"animal": "bear"}):
 lion, tiger, wolf, gorilla, panda
 ```
 Next, we define a custom function that will aggregate the currently streamed output and yield it when the model generates the next comma in the list:
-
 
 ```python
 # This is a custom parser that splits an iterator of llm tokens
@@ -287,22 +271,17 @@ for chunk in list_chain.stream({"animal": "bear"}):
 ```
 Invoking it gives a full array of values:
 
-
 ```python
 list_chain.invoke({"animal": "bear"})
 ```
-
-
 
 ```output
 ['lion', 'tiger', 'wolf', 'gorilla', 'raccoon']
 ```
 
-
 ## Async version
 
 If you are working in an `async` environment, here is an `async` version of the above example:
-
 
 ```python
 from typing import AsyncIterator
@@ -340,12 +319,9 @@ async for chunk in list_chain.astream({"animal": "bear"}):
 await list_chain.ainvoke({"animal": "bear"})
 ```
 
-
-
 ```output
 ['lion', 'tiger', 'wolf', 'gorilla', 'panda']
 ```
-
 
 ## Next steps
 

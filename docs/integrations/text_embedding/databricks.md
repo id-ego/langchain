@@ -9,17 +9,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook provides a quick overview for getting started with Databricks [embedding models](/docs/concepts/#embedding-models). For detailed documentation of all DatabricksEmbeddings features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.databricks.DatabricksEmbeddings.html).
 
-
-
 ## Overview
 
 `DatabricksEmbeddings` class wraps an embedding model endpoint hosted on [Databricks Model Serving](https://docs.databricks.com/en/machine-learning/model-serving/index.html). This example notebook shows how to wrap your serving endpoint and use it as a embedding model in your LangChain application.
 
-
 ### Supported Methods
 
 `DatabricksEmbeddings` supports all methods of `Embeddings` class including async APIs.
-
 
 ### Endpoint Requirement
 
@@ -30,7 +26,6 @@ The serving endpoint `DatabricksEmbeddings` wraps must have OpenAI-compatible em
 your choice of framework such as LangChain, Pytorch, Transformers, etc.
 3. External Models - Databricks endpoints can serve models that are hosted outside Databricks as a proxy, such as proprietary model service like OpenAI text-embedding-3.
 
-
 ## Setup
 
 To access Databricks models you'll need to create a Databricks account, set up credentials (only if you are outside Databricks workspace), and install required packages.
@@ -40,7 +35,6 @@ To access Databricks models you'll need to create a Databricks account, set up c
 If you are running LangChain app inside Databricks, you can skip this step.
 
 Otherwise, you need manually set the Databricks workspace hostname and personal access token to `DATABRICKS_HOST` and `DATABRICKS_TOKEN` environment variables, respectively. See [Authentication Documentation](https://docs.databricks.com/en/dev-tools/auth/index.html#databricks-personal-access-tokens) for how to get an access token.
-
 
 ```python
 import getpass
@@ -54,7 +48,6 @@ os.environ["DATABRICKS_TOKEN"] = getpass.getpass("Enter your Databricks access t
 
 The LangChain Databricks integration lives in the `langchain-community` package. Also, `mlflow >= 2.9 ` is required to run the code in this notebook.
 
-
 ```python
 %pip install -qU langchain-community mlflow>=2.9.0
 ```
@@ -64,7 +57,6 @@ We first demonstrates how to query BGE model hosted as Foundation Models endpoin
 For other type of endpoints, there are some difference in how to set up the endpoint itself, however, once the endpoint is ready, there is no difference in how to query it.
 
 ## Instantiation
-
 
 ```python
 <!--IMPORTS:[{"imported": "DatabricksEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.databricks.DatabricksEmbeddings.html", "title": "Databricks"}]-->
@@ -80,7 +72,6 @@ embeddings = DatabricksEmbeddings(
 
 ## Embed single text
 
-
 ```python
 embeddings.embed_query("hello")[:3]
 ```
@@ -88,7 +79,6 @@ embeddings.embed_query("hello")[:3]
 [0.051055908203125, 0.007221221923828125, 0.003879547119140625]
 ```
 ## Embed documents
-
 
 ```python
 documents = ["This is a dummy document.", "This is another dummy document."]
@@ -106,7 +96,6 @@ The example above uses an embedding model hosted as a Foundation Models API. To 
 ## API reference
 
 For detailed documentation of all ChatDatabricks features and configurations head to the API reference: https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.databricks.DatabricksEmbeddings.html
-
 
 ## Related
 

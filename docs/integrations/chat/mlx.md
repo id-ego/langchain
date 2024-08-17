@@ -12,8 +12,6 @@ In particular, we will:
 2. Utilize the `ChatMLX` class to enable any of these LLMs to interface with LangChain's [Chat Messages](https://python.langchain.com/docs/modules/model_io/chat/#messages) abstraction.
 3. Demonstrate how to use an open-source LLM to power an `ChatAgent` pipeline
 
-
-
 ```python
 %pip install --upgrade --quiet  mlx-lm transformers huggingface_hub
 ```
@@ -21,7 +19,6 @@ In particular, we will:
 ## 1. Instantiate an LLM
 
 There are three LLM options to choose from.
-
 
 ```python
 <!--IMPORTS:[{"imported": "MLXPipeline", "source": "langchain_community.llms.mlx_pipeline", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.mlx_pipeline.MLXPipeline.html", "title": "MLX"}]-->
@@ -36,7 +33,6 @@ llm = MLXPipeline.from_model_id(
 ## 2. Instantiate the `ChatMLX` to apply chat templates
 
 Instantiate the chat model and some messages to pass.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMLX", "source": "langchain_community.chat_models.mlx", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.mlx.ChatMLX.html", "title": "MLX"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "MLX"}]-->
@@ -54,13 +50,11 @@ chat_model = ChatMLX(llm=llm)
 
 Inspect how the chat messages are formatted for the LLM call.
 
-
 ```python
 chat_model._to_chat_prompt(messages)
 ```
 
 Call the model.
-
 
 ```python
 res = chat_model.invoke(messages)
@@ -72,7 +66,6 @@ print(res.content)
 Here we'll test out `gemma-2b-it` as a zero-shot `ReAct` Agent. The example below is taken from [here](https://python.langchain.com/docs/modules/agents/agent_types/react#using-chat-models).
 
 > Note: To run this section, you'll need to have a [SerpAPI Token](https://serpapi.com/) saved as an environment variable: `SERPAPI_API_KEY`
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "MLX"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "MLX"}, {"imported": "format_log_to_str", "source": "langchain.agents.format_scratchpad", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.format_scratchpad.log.format_log_to_str.html", "title": "MLX"}, {"imported": "ReActJsonSingleInputOutputParser", "source": "langchain.agents.output_parsers", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.output_parsers.react_json_single_input.ReActJsonSingleInputOutputParser.html", "title": "MLX"}, {"imported": "render_text_description", "source": "langchain.tools.render", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.render.render_text_description.html", "title": "MLX"}, {"imported": "SerpAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.serpapi.SerpAPIWrapper.html", "title": "MLX"}]-->
@@ -87,7 +80,6 @@ from langchain_community.utilities import SerpAPIWrapper
 ```
 
 Configure the agent with a `react-json` style prompt and access to a search engine and calculator.
-
 
 ```python
 # setup tools
@@ -116,7 +108,6 @@ agent = (
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
 
-
 ```python
 agent_executor.invoke(
     {
@@ -124,7 +115,6 @@ agent_executor.invoke(
     }
 )
 ```
-
 
 ## Related
 

@@ -9,9 +9,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to use Langchain with Embeddings of [Gradient](https://gradient.ai/).
 
-
 ## Imports
-
 
 ```python
 <!--IMPORTS:[{"imported": "GradientEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.gradient_ai.GradientEmbeddings.html", "title": "Gradient"}]-->
@@ -20,7 +18,6 @@ from langchain_community.embeddings import GradientEmbeddings
 
 ## Set the Environment API Key
 Make sure to get your API key from Gradient AI. You are given $10 in free credits to test and fine-tune different models.
-
 
 ```python
 import os
@@ -35,15 +32,13 @@ if not os.environ.get("GRADIENT_WORKSPACE_ID", None):
     os.environ["GRADIENT_WORKSPACE_ID"] = getpass("gradient.ai workspace id:")
 ```
 
-Optional: Validate your environment variables ```GRADIENT_ACCESS_TOKEN``` and ```GRADIENT_WORKSPACE_ID``` to get currently deployed models. Using the `gradientai` Python package.
-
+Optional: Validate your environment variables `GRADIENT_ACCESS_TOKEN` and `GRADIENT_WORKSPACE_ID` to get currently deployed models. Using the `gradientai` Python package.
 
 ```python
 %pip install --upgrade --quiet  gradientai
 ```
 
 ## Create the Gradient instance
-
 
 ```python
 documents = [
@@ -54,14 +49,12 @@ documents = [
 query = "Where is Paris?"
 ```
 
-
 ```python
 embeddings = GradientEmbeddings(model="bge-large")
 
 documents_embedded = embeddings.embed_documents(documents)
 query_result = embeddings.embed_query(query)
 ```
-
 
 ```python
 # (demo) compute similarity
@@ -70,7 +63,6 @@ import numpy as np
 scores = np.array(documents_embedded) @ np.array(query_result).T
 dict(zip(documents, scores))
 ```
-
 
 ## Related
 

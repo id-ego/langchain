@@ -5,21 +5,18 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Google BigQuery
 
->[Google BigQuery](https://cloud.google.com/bigquery) is a serverless and cost-effective enterprise data warehouse that works across clouds and scales with your data.
+> [Google BigQuery](https://cloud.google.com/bigquery) is a serverless and cost-effective enterprise data warehouse that works across clouds and scales with your data.
 `BigQuery` is a part of the `Google Cloud Platform`.
 
 Load a `BigQuery` query with one document per row.
-
 
 ```python
 %pip install --upgrade --quiet langchain-google-community[bigquery]
 ```
 
-
 ```python
 from langchain_google_community import BigQueryLoader
 ```
-
 
 ```python
 BASE_QUERY = """
@@ -44,13 +41,11 @@ FROM (
 
 ## Basic Usage
 
-
 ```python
 loader = BigQueryLoader(BASE_QUERY)
 
 data = loader.load()
 ```
-
 
 ```python
 print(data)
@@ -59,7 +54,6 @@ print(data)
 [Document(page_content='id: 1\ndna_sequence: ATTCGA\norganism: Lokiarchaeum sp. (strain GC14_75).', lookup_str='', metadata={}, lookup_index=0), Document(page_content='id: 2\ndna_sequence: AGGCGA\norganism: Heimdallarchaeota archaeon (strain LC_2).', lookup_str='', metadata={}, lookup_index=0), Document(page_content='id: 3\ndna_sequence: TCCGGA\norganism: Acidianus hospitalis (strain W1).', lookup_str='', metadata={}, lookup_index=0)]
 ```
 ## Specifying Which Columns are Content vs Metadata
-
 
 ```python
 loader = BigQueryLoader(
@@ -71,7 +65,6 @@ loader = BigQueryLoader(
 data = loader.load()
 ```
 
-
 ```python
 print(data)
 ```
@@ -79,7 +72,6 @@ print(data)
 [Document(page_content='dna_sequence: ATTCGA\norganism: Lokiarchaeum sp. (strain GC14_75).', lookup_str='', metadata={'id': 1}, lookup_index=0), Document(page_content='dna_sequence: AGGCGA\norganism: Heimdallarchaeota archaeon (strain LC_2).', lookup_str='', metadata={'id': 2}, lookup_index=0), Document(page_content='dna_sequence: TCCGGA\norganism: Acidianus hospitalis (strain W1).', lookup_str='', metadata={'id': 3}, lookup_index=0)]
 ```
 ## Adding Source to Metadata
-
 
 ```python
 # Note that the `id` column is being returned twice, with one instance aliased as `source`
@@ -104,13 +96,11 @@ FROM (
 """
 ```
 
-
 ```python
 loader = BigQueryLoader(ALIASED_QUERY, metadata_columns=["source"])
 
 data = loader.load()
 ```
-
 
 ```python
 print(data)

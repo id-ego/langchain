@@ -34,11 +34,9 @@ To access reference the active config object from your custom tool, you'll need 
 
 To illustrate this, define a custom tool that takes a two parameters - one typed as a string, the other typed as `RunnableConfig`:
 
-
 ```python
 %pip install -qU langchain_core
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to access the RunnableConfig from a tool"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to access the RunnableConfig from a tool"}]-->
@@ -54,19 +52,15 @@ async def reverse_tool(text: str, special_config_param: RunnableConfig) -> str:
 
 Then, if we invoke the tool with a `config` containing a `configurable` field, we can see that `additional_field` is passed through correctly:
 
-
 ```python
 await reverse_tool.ainvoke(
     {"text": "abc"}, config={"configurable": {"additional_field": "123"}}
 )
 ```
 
-
-
 ```output
 '321cba'
 ```
-
 
 ## Next steps
 

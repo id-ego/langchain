@@ -17,11 +17,9 @@ We will cover:
 
 First, get required packages and set environment variables:
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-experimental langchain-openai
 ```
-
 
 ```python
 # Uncomment the below to use LangSmith. Not required.
@@ -38,7 +36,6 @@ The below example will use a SQLite connection with Chinook database. Follow [th
 * Test `SELECT * FROM Artist LIMIT 10;`
 
 Now, `Chinhook.db` is in our directory and we can interface with it using the SQLAlchemy-driven `SQLDatabase` class:
-
 
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabase", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html", "title": "How to better prompt when doing SQL question-answering"}]-->
@@ -58,14 +55,11 @@ sqlite
 
 One of the simplest things we can do is make our prompt specific to the SQL dialect we're using. When using the built-in [create_sql_query_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.sql_database.query.create_sql_query_chain.html) and [SQLDatabase](https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html), this is handled for you for any of the following dialects:
 
-
 ```python
 from langchain.chains.sql_database.prompt import SQL_PROMPTS
 
 list(SQL_PROMPTS)
 ```
-
-
 
 ```output
 ['crate',
@@ -80,7 +74,6 @@ list(SQL_PROMPTS)
  'clickhouse',
  'prestodb']
 ```
-
 
 For example, using our current DB we can see that we'll get a SQLite-specific prompt.
 
@@ -120,7 +113,6 @@ Question: [33;1m[1;3m{input}[0m
 In most SQL chains, we'll need to feed the model at least part of the database schema. Without this it won't be able to write valid queries. Our database comes with some convenience methods to give us the relevant context. Specifically, we can get the table names, their schemas, and a sample of rows from each table.
 
 Here we will use `SQLDatabase.get_context`, which provides available tables and their schemas:
-
 
 ```python
 context = db.get_context()
@@ -349,7 +341,6 @@ TrackId	Name	AlbumId	MediaTypeId	GenreId	Composer	Milliseconds	Bytes	UnitPrice
 ```
 When we don't have too many, or too wide of, tables, we can just insert the entirety of this information in our prompt:
 
-
 ```python
 prompt_with_context = chain.get_prompts()[0].partial(table_info=context["table_info"])
 print(prompt_with_context.pretty_repr()[:1500])
@@ -399,7 +390,6 @@ Including examples of natural language questions being converted to valid SQL qu
 
 Let's say we have the following examples:
 
-
 ```python
 examples = [
     {"input": "List all artists.", "query": "SELECT * FROM Artist;"},
@@ -448,7 +438,6 @@ examples = [
 
 We can create a few-shot prompt with them like so:
 
-
 ```python
 <!--IMPORTS:[{"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to better prompt when doing SQL question-answering"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to better prompt when doing SQL question-answering"}]-->
 from langchain_core.prompts import FewShotPromptTemplate, PromptTemplate
@@ -462,7 +451,6 @@ prompt = FewShotPromptTemplate(
     input_variables=["input", "top_k", "table_info"],
 )
 ```
-
 
 ```python
 print(prompt.format(input="How many artists are there?", top_k=3, table_info="foo"))
@@ -500,7 +488,6 @@ We can do just this using an ExampleSelector. In this case we'll use a [Semantic
 
 We default to OpenAI embeddings here, but you can swap them out for the model provider of your choice.
 
-
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to better prompt when doing SQL question-answering"}, {"imported": "SemanticSimilarityExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html", "title": "How to better prompt when doing SQL question-answering"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to better prompt when doing SQL question-answering"}]-->
 from langchain_community.vectorstores import FAISS
@@ -516,12 +503,9 @@ example_selector = SemanticSimilarityExampleSelector.from_examples(
 )
 ```
 
-
 ```python
 example_selector.select_examples({"input": "how many artists are there?"})
 ```
-
-
 
 ```output
 [{'input': 'List all artists.', 'query': 'SELECT * FROM Artist;'},
@@ -535,9 +519,7 @@ example_selector.select_examples({"input": "how many artists are there?"})
   'query': "SELECT * FROM Track WHERE GenreId = (SELECT GenreId FROM Genre WHERE Name = 'Rock');"}]
 ```
 
-
 To use it, we can pass the ExampleSelector directly in to our FewShotPromptTemplate:
-
 
 ```python
 prompt = FewShotPromptTemplate(
@@ -548,7 +530,6 @@ prompt = FewShotPromptTemplate(
     input_variables=["input", "top_k", "table_info"],
 )
 ```
-
 
 ```python
 print(prompt.format(input="how many artists are there?", top_k=3, table_info="foo"))
@@ -580,13 +561,10 @@ SQL query:
 ```
 Trying it out, we see that the model identifies the relevant table:
 
-
 ```python
 chain = create_sql_query_chain(llm, db, prompt)
 chain.invoke({"question": "how many artists are there?"})
 ```
-
-
 
 ```output
 'SELECT COUNT(*) FROM Artist;'

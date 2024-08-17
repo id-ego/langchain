@@ -8,10 +8,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 When splitting documents for retrieval, there are often conflicting desires:
 
 1. You may want to have small documents, so that their embeddings can most
-    accurately reflect their meaning. If too long, then the embeddings can
-    lose meaning.
+accurately reflect their meaning. If too long, then the embeddings can
+lose meaning.
 2. You want to have long enough documents that the context of each chunk is
-    retained.
+retained.
 
 The `ParentDocumentRetriever` strikes that balance by splitting and storing
 small chunks of data. During retrieval, it first fetches the small chunks
@@ -22,12 +22,10 @@ Note that "parent document" refers to the document that a small chunk
 originated from. This can either be the whole raw document OR a larger
 chunk.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ParentDocumentRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.parent_document_retriever.ParentDocumentRetriever.html", "title": "How to use the Parent Document Retriever"}]-->
 from langchain.retrievers import ParentDocumentRetriever
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryStore.html", "title": "How to use the Parent Document Retriever"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to use the Parent Document Retriever"}, {"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "How to use the Parent Document Retriever"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use the Parent Document Retriever"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to use the Parent Document Retriever"}]-->
@@ -37,7 +35,6 @@ from langchain_community.document_loaders import TextLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 ```
-
 
 ```python
 loaders = [
@@ -52,7 +49,6 @@ for loader in loaders:
 ## Retrieving full documents
 
 In this mode, we want to retrieve the full documents. Therefore, we only specify a child splitter.
-
 
 ```python
 # This text splitter is used to create the child documents
@@ -70,33 +66,26 @@ retriever = ParentDocumentRetriever(
 )
 ```
 
-
 ```python
 retriever.add_documents(docs, ids=None)
 ```
 
 This should yield two keys, because we added two documents.
 
-
 ```python
 list(store.yield_keys())
 ```
-
-
 
 ```output
 ['9a63376c-58cc-42c9-b0f7-61f0e1a3a688',
  '40091598-e918-4a18-9be0-f46413a95ae4']
 ```
 
-
 Let's now call the vector store search functionality - we should see that it returns small chunks (since we're storing the small chunks).
-
 
 ```python
 sub_docs = vectorstore.similarity_search("justice breyer")
 ```
-
 
 ```python
 print(sub_docs[0].page_content)
@@ -108,27 +97,21 @@ One of the most serious constitutional responsibilities a President has is nomin
 ```
 Let's now retrieve from the overall retriever. This should return large documents - since it returns the documents where the smaller chunks are located.
 
-
 ```python
 retrieved_docs = retriever.invoke("justice breyer")
 ```
-
 
 ```python
 len(retrieved_docs[0].page_content)
 ```
 
-
-
 ```output
 38540
 ```
 
-
 ## Retrieving larger chunks
 
 Sometimes, the full documents can be too big to want to retrieve them as is. In that case, what we really want to do is to first split the raw documents into larger chunks, and then split it into smaller chunks. We then index the smaller chunks, but on retrieval we retrieve the larger chunks (but still not the full documents).
-
 
 ```python
 # This text splitter is used to create the parent documents
@@ -144,7 +127,6 @@ vectorstore = Chroma(
 store = InMemoryStore()
 ```
 
-
 ```python
 retriever = ParentDocumentRetriever(
     vectorstore=vectorstore,
@@ -154,32 +136,25 @@ retriever = ParentDocumentRetriever(
 )
 ```
 
-
 ```python
 retriever.add_documents(docs)
 ```
 
 We can see that there are much more than two documents now - these are the larger chunks.
 
-
 ```python
 len(list(store.yield_keys()))
 ```
-
-
 
 ```output
 66
 ```
 
-
 Let's make sure the underlying vector store still retrieves the small chunks.
-
 
 ```python
 sub_docs = vectorstore.similarity_search("justice breyer")
 ```
-
 
 ```python
 print(sub_docs[0].page_content)
@@ -194,18 +169,13 @@ One of the most serious constitutional responsibilities a President has is nomin
 retrieved_docs = retriever.invoke("justice breyer")
 ```
 
-
 ```python
 len(retrieved_docs[0].page_content)
 ```
 
-
-
 ```output
 1849
 ```
-
-
 
 ```python
 print(retrieved_docs[0].page_content)

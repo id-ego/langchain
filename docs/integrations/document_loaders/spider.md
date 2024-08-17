@@ -8,14 +8,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 ## Setup
 
-
 ```python
 pip install spider-client
 ```
 
 ## Usage
 To use spider you need to have an API key from [spider.cloud](https://spider.cloud/).
-
 
 ```python
 <!--IMPORTS:[{"imported": "SpiderLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.spider.SpiderLoader.html", "title": "Spider"}]-->
@@ -39,7 +37,6 @@ print(data)
 
 ## Crawler options
 The `params` parameter is a dictionary that can be passed to the loader. See the [Spider documentation](https://spider.cloud/docs/api) to see all available parameters
-
 
 ## Related
 

@@ -14,19 +14,15 @@ This notebook demonstrates the use of `langchain.chat_models.ChatOctoAI` for [Oc
 To run our example app, there are two simple steps to take:
 
 1. Get an API Token from [your OctoAI account page](https://octoai.cloud/settings).
-   
 2. Paste your API token in in the code cell below or use the `octoai_api_token` keyword argument.
 
 Note: If you want to use a different model than the [available models](https://octoai.cloud/text?selectedTags=Chat), you can containerize the model and make a custom OctoAI endpoint yourself, by following [Build a Container from Python](https://octo.ai/docs/bring-your-own-model/advanced-build-a-container-from-scratch-in-python) and [Create a Custom Endpoint from a Container](https://octo.ai/docs/bring-your-own-model/create-custom-endpoints-from-a-container/create-custom-endpoints-from-a-container) and then updating your `OCTOAI_API_BASE` environment variable.
-
-
 
 ```python
 import os
 
 os.environ["OCTOAI_API_TOKEN"] = "OCTOAI_API_TOKEN"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOctoAI", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.octoai.ChatOctoAI.html", "title": "ChatOctoAI"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatOctoAI"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "ChatOctoAI"}]-->
@@ -36,11 +32,9 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 ## Example
 
-
 ```python
 chat = ChatOctoAI(max_tokens=300, model_name="mixtral-8x7b-instruct")
 ```
-
 
 ```python
 messages = [
@@ -55,7 +49,6 @@ Leonardo da Vinci (1452-1519) was an Italian polymath who is often considered on
 Da Vinci is best known for his paintings such as the Mona Lisa, The Last Supper, and The Virgin of the Rocks. His scientific studies were ahead of his time, and his notebooks contain detailed drawings and descriptions of various machines, human anatomy, and natural phenomena.
 
 Despite never receiving a formal education, da Vinci's insatiable curiosity and observational skills made him a pioneer in many fields. His work continues to inspire and influence artists, scientists, and thinkers today.
-
 
 ## Related
 

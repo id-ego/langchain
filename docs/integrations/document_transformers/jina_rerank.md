@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook shows how to use Jina Reranker for document compression and retrieval.
 
-
 ```python
 %pip install -qU langchain langchain-openai langchain-community langchain-text-splitters langchainhub
 
@@ -17,7 +16,6 @@ This notebook shows how to use Jina Reranker for document compression and retrie
 
 %pip install --upgrade --quiet  faiss_cpu
 ```
-
 
 ```python
 # Helper function for printing docs
@@ -37,7 +35,6 @@ Let's start by initializing a simple vector store retriever and storing the 2023
 
 ##### Set the Jina and OpenAI API keys
 
-
 ```python
 import getpass
 import os
@@ -45,7 +42,6 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 os.environ["JINA_API_KEY"] = getpass.getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Jina Reranker"}, {"imported": "JinaEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.jina.JinaEmbeddings.html", "title": "Jina Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Jina Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Jina Reranker"}]-->
@@ -72,7 +68,6 @@ pretty_print_docs(docs)
 
 Now let's wrap our base retriever with a ContextualCompressionRetriever, using Jina Reranker as a compressor.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Jina Reranker"}, {"imported": "JinaRerank", "source": "langchain_community.document_compressors", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.jina_rerank.JinaRerank.html", "title": "Jina Reranker"}]-->
 from langchain.retrievers import ContextualCompressionRetriever
@@ -88,13 +83,11 @@ compressed_docs = compression_retriever.get_relevant_documents(
 )
 ```
 
-
 ```python
 pretty_print_docs(compressed_docs)
 ```
 
 ## QA reranking with Jina Reranker
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Jina Reranker"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Jina Reranker"}]-->
@@ -131,7 +124,6 @@ llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
 combine_docs_chain = create_stuff_documents_chain(llm, retrieval_qa_chat_prompt)
 chain = create_retrieval_chain(compression_retriever, combine_docs_chain)
 ```
-
 
 ```python
 chain.invoke({"input": query})

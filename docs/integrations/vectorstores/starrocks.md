@@ -5,22 +5,20 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # StarRocks
 
->[StarRocks](https://www.starrocks.io/) is a High-Performance Analytical Database.
+> [StarRocks](https://www.starrocks.io/) is a High-Performance Analytical Database.
 `StarRocks` is a next-gen sub-second MPP database for full analytics scenarios, including multi-dimensional analytics, real-time analytics and ad-hoc query.
 
->Usually `StarRocks` is categorized into OLAP, and it has showed excellent performance in [ClickBench — a Benchmark For Analytical DBMS](https://benchmark.clickhouse.com/). Since it has a super-fast vectorized execution engine, it could also be used as a fast vectordb.
+> Usually `StarRocks` is categorized into OLAP, and it has showed excellent performance in [ClickBench — a Benchmark For Analytical DBMS](https://benchmark.clickhouse.com/). Since it has a super-fast vectorized execution engine, it could also be used as a fast vectordb.
 
 Here we'll show how to use the StarRocks Vector Store.
 
 ## Setup
-
 
 ```python
 %pip install --upgrade --quiet  pymysql langchain-community
 ```
 
 Set `update_vectordb = False` at the beginning. If there is no docs updated, then we don't need to rebuild the embeddings of docs
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "StarRocks"}, {"imported": "DirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.directory.DirectoryLoader.html", "title": "StarRocks"}, {"imported": "UnstructuredMarkdownLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.markdown.UnstructuredMarkdownLoader.html", "title": "StarRocks"}, {"imported": "StarRocks", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.starrocks.StarRocks.html", "title": "StarRocks"}, {"imported": "StarRocksSettings", "source": "langchain_community.vectorstores.starrocks", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.starrocks.StarRocksSettings.html", "title": "StarRocks"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "StarRocks"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "StarRocks"}, {"imported": "TokenTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.TokenTextSplitter.html", "title": "StarRocks"}]-->
@@ -46,7 +44,6 @@ Load all markdown files under the `docs` directory
 
 for starrocks documents, you can clone repo from https://github.com/StarRocks/starrocks, and there is `docs` directory in it.
 
-
 ```python
 loader = DirectoryLoader(
     "./docs", glob="**/*.md", loader_cls=UnstructuredMarkdownLoader
@@ -55,7 +52,6 @@ documents = loader.load()
 ```
 
 Split docs into tokens, and set `update_vectordb = True` because there are new docs/tokens.
-
 
 ```python
 # load text splitter and split docs into snippets of text
@@ -66,18 +62,13 @@ split_docs = text_splitter.split_documents(documents)
 update_vectordb = True
 ```
 
-
 ```python
 split_docs[-20]
 ```
 
-
-
 ```output
 Document(page_content='Compile StarRocks with Docker\n\nThis topic describes how to compile StarRocks using Docker.\n\nOverview\n\nStarRocks provides development environment images for both Ubuntu 22.04 and CentOS 7.9. With the image, you can launch a Docker container and compile StarRocks in the container.\n\nStarRocks version and DEV ENV image\n\nDifferent branches of StarRocks correspond to different development environment images provided on StarRocks Docker Hub.\n\nFor Ubuntu 22.04:\n\n| Branch name | Image name              |\n  | --------------- | ----------------------------------- |\n  | main            | starrocks/dev-env-ubuntu:latest     |\n  | branch-3.0      | starrocks/dev-env-ubuntu:3.0-latest |\n  | branch-2.5      | starrocks/dev-env-ubuntu:2.5-latest |\n\nFor CentOS 7.9:\n\n| Branch name | Image name                       |\n  | --------------- | ------------------------------------ |\n  | main            | starrocks/dev-env-centos7:latest     |\n  | branch-3.0      | starrocks/dev-env-centos7:3.0-latest |\n  | branch-2.5      | starrocks/dev-env-centos7:2.5-latest |\n\nPrerequisites\n\nBefore compiling StarRocks, make sure the following requirements are satisfied:\n\nHardware\n\n', metadata={'source': 'docs/developers/build-starrocks/Build_in_docker.md'})
 ```
-
-
 
 ```python
 print("# docs  = %d, # splits = %d" % (len(documents), len(split_docs)))
@@ -88,7 +79,6 @@ print("# docs  = %d, # splits = %d" % (len(documents), len(split_docs)))
 ## Create vectordb instance
 
 ### Use StarRocks as vectordb
-
 
 ```python
 def gen_starrocks(update_vectordb, embeddings, settings):
@@ -109,7 +99,6 @@ Configuring StarRocks instance is pretty much like configuring mysql instance. Y
 3. password(default: '')
 4. database(default: 'default')
 5. table(default: 'langchain')
-
 
 ```python
 embeddings = OpenAIEmbeddings()
@@ -145,7 +134,6 @@ Table Schema:
 ----------------------------------------------------------------------------
 ```
 ## Build QA and ask question to it
-
 
 ```python
 llm = OpenAI()

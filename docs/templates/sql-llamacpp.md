@@ -65,7 +65,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server running locally at 
+This will start the FastAPI app with a server running locally at
 [http://localhost:8000](http://localhost:8000)
 
 You can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

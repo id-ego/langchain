@@ -5,24 +5,19 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # RankLLM Reranker
 
-
 [RankLLM](https://github.com/castorini/rank_llm) offers a suite of listwise rerankers, albeit with focus on open source LLMs finetuned for the task - RankVicuna and RankZephyr being two of them.
-
 
 ```python
 %pip install --upgrade --quiet  rank_llm
 ```
 
-
 ```python
 %pip install --upgrade --quiet  langchain_openai
 ```
 
-
 ```python
 %pip install --upgrade --quiet  faiss-cpu
 ```
-
 
 ```python
 import getpass
@@ -30,7 +25,6 @@ import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
-
 
 ```python
 # Helper function for printing docs
@@ -44,7 +38,6 @@ def pretty_print_docs(docs):
 
 ## Set up the base vector store retriever
 Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "RankLLM Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "RankLLM Reranker"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "RankLLM Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "RankLLM Reranker"}]-->
@@ -66,7 +59,6 @@ retriever = FAISS.from_documents(texts, embedding).as_retriever(search_kwargs={"
 # Retrieval + RankLLM Reranking (RankZephyr)
 
 Retrieval without reranking
-
 
 ```python
 query = "What was done to Russia?"
@@ -264,7 +256,6 @@ But to compete for the best jobs of the future, we also need to level the playin
 ```
 Retrieval + Reranking with RankZephyr
 
-
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers.contextual_compression", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "RankLLM Reranker"}, {"imported": "RankLLMRerank", "source": "langchain_community.document_compressors.rankllm_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.rankllm_rerank.RankLLMRerank.html", "title": "RankLLM Reranker"}]-->
 from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
@@ -275,7 +266,6 @@ compression_retriever = ContextualCompressionRetriever(
     base_compressor=compressor, base_retriever=retriever
 )
 ```
-
 
 ```python
 compressed_docs = compression_retriever.invoke(query)
@@ -312,7 +302,6 @@ Together with our allies –we are right now enforcing powerful economic sanctio
 ```
 Can be used within a QA pipeline
 
-
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "RankLLM Reranker"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "RankLLM Reranker"}]-->
 from langchain.chains import RetrievalQA
@@ -327,18 +316,14 @@ chain = RetrievalQA.from_chain_type(
 chain({"query": query})
 ```
 
-
-
 ```output
 {'query': 'What was done to Russia?',
  'result': 'Russia has been subjected to powerful economic sanctions, including cutting off its largest banks from the international financial system, preventing its central bank from defending the Russian Ruble, and choking off its access to technology. Additionally, American airspace has been closed to all Russian flights, further isolating Russia and adding pressure on its economy. These actions have led to a significant devaluation of the Ruble, a sharp decline in the Russian stock market, and overall economic turmoil in Russia.'}
 ```
 
-
 # Retrieval + RankLLM Reranking (RankGPT)
 
 Retrieval without reranking
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -549,7 +534,6 @@ May God bless you all. May God protect our troops.
 ```
 Retrieval + Reranking with RankGPT
 
-
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers.contextual_compression", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "RankLLM Reranker"}, {"imported": "RankLLMRerank", "source": "langchain_community.document_compressors.rankllm_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.rankllm_rerank.RankLLMRerank.html", "title": "RankLLM Reranker"}]-->
 from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
@@ -560,7 +544,6 @@ compression_retriever = ContextualCompressionRetriever(
     base_compressor=compressor, base_retriever=retriever
 )
 ```
-
 
 ```python
 compressed_docs = compression_retriever.invoke(query)
@@ -589,7 +572,6 @@ While it often appears that we never agree, that isn’t true. I signed 80 bipar
 ```
 You can use this retriever within a QA pipeline
 
-
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "RankLLM Reranker"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "RankLLM Reranker"}]-->
 from langchain.chains import RetrievalQA
@@ -603,8 +585,6 @@ chain = RetrievalQA.from_chain_type(
 
 chain({"query": query})
 ```
-
-
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',

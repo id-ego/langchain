@@ -15,14 +15,12 @@ This notebook shows how to use [YUAN2 API](https://github.com/IEIT-Yuan/Yuan-2.0
 First, Yuan2.0 provided an OpenAI compatible API, and we integrate ChatYuan2 into langchain chat model by using OpenAI client.
 Therefore, ensure the openai package is installed in your Python environment. Run the following command:
 
-
 ```python
 %pip install --upgrade --quiet openai
 ```
 
 ### Importing the Required Modules
 After installation, import the necessary modules to your Python script:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatYuan2", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.yuan2.ChatYuan2.html", "title": "Yuan2.0"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Yuan2.0"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Yuan2.0"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Yuan2.0"}]-->
@@ -35,7 +33,6 @@ Setting up your OpenAI compatible API server following [yuan2 openai api server]
 If you deployed api server locally, you can simply set `yuan2_api_key="EMPTY"` or anything you want.
 Just make sure, the `yuan2_api_base` is set correctly.
 
-
 ```python
 yuan2_api_key = "your_api_key"
 yuan2_api_base = "http://127.0.0.1:8001/v1"
@@ -43,7 +40,6 @@ yuan2_api_base = "http://127.0.0.1:8001/v1"
 
 ### Initialize the ChatYuan2 Model
 Here's how to initialize the chat model:
-
 
 ```python
 chat = ChatYuan2(
@@ -58,7 +54,6 @@ chat = ChatYuan2(
 ### Basic Usage
 Invoke the model with system and human messages like this:
 
-
 ```python
 messages = [
     SystemMessage(content="你是一个人工智能助手。"),
@@ -66,14 +61,12 @@ messages = [
 ]
 ```
 
-
 ```python
 print(chat.invoke(messages))
 ```
 
 ### Basic Usage with streaming
 For continuous interaction, use the streaming feature:
-
 
 ```python
 <!--IMPORTS:[{"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "Yuan2.0"}]-->
@@ -93,7 +86,6 @@ messages = [
 ]
 ```
 
-
 ```python
 chat.invoke(messages)
 ```
@@ -102,7 +94,6 @@ chat.invoke(messages)
 ### Usage with async calls
 
 Invoke the model with non-blocking calls, like this:
-
 
 ```python
 async def basic_agenerate():
@@ -123,7 +114,6 @@ async def basic_agenerate():
     print(result)
 ```
 
-
 ```python
 import asyncio
 
@@ -133,7 +123,6 @@ asyncio.run(basic_agenerate())
 ### Usage with prompt template
 
 Invoke the model with non-blocking calls and used chat template like this:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Yuan2.0"}]-->
@@ -159,14 +148,12 @@ async def ainvoke_with_prompt_template():
     print(f"type(result): {type(result)}; {result}")
 ```
 
-
 ```python
 asyncio.run(ainvoke_with_prompt_template())
 ```
 
 ### Usage with async calls in streaming
 For non-blocking calls with streaming output, use the astream method:
-
 
 ```python
 async def basic_astream():
@@ -185,13 +172,11 @@ async def basic_astream():
         print(chunk.content, end="", flush=True)
 ```
 
-
 ```python
 import asyncio
 
 asyncio.run(basic_astream())
 ```
-
 
 ## Related
 

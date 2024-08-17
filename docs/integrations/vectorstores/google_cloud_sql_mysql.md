@@ -17,22 +17,20 @@ Learn more about the package on [GitHub](https://github.com/googleapis/langchain
 
 To run this notebook, you will need to do the following:
 
- * [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
- * [Enable the Cloud SQL Admin API.](https://console.cloud.google.com/flows/enableapi?apiid=sqladmin.googleapis.com)
- * [Create a Cloud SQL instance.](https://cloud.google.com/sql/docs/mysql/connect-instance-auth-proxy#create-instance) (version must be >= **8.0.36** with **cloudsql_vector** database flag configured to "On")
- * [Create a Cloud SQL database.](https://cloud.google.com/sql/docs/mysql/create-manage-databases)
- * [Add a User to the database.](https://cloud.google.com/sql/docs/mysql/create-manage-users)
+* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
+* [Enable the Cloud SQL Admin API.](https://console.cloud.google.com/flows/enableapi?apiid=sqladmin.googleapis.com)
+* [Create a Cloud SQL instance.](https://cloud.google.com/sql/docs/mysql/connect-instance-auth-proxy#create-instance) (version must be >= **8.0.36** with **cloudsql_vector** database flag configured to "On")
+* [Create a Cloud SQL database.](https://cloud.google.com/sql/docs/mysql/create-manage-databases)
+* [Add a User to the database.](https://cloud.google.com/sql/docs/mysql/create-manage-users)
 
 ### 🦜🔗 Library Installation
 Install the integration library, `langchain-google-cloud-sql-mysql`, and the library for the embedding service, `langchain-google-vertexai`.
-
 
 ```python
 %pip install --upgrade --quiet langchain-google-cloud-sql-mysql langchain-google-vertexai
 ```
 
 **Colab only:** Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
-
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -48,7 +46,6 @@ Authenticate to Google Cloud as the IAM user logged into this notebook in order 
 * If you are using Colab to run this notebook, use the cell below and continue.
 * If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
 
-
 ```python
 from google.colab import auth
 
@@ -63,7 +60,6 @@ If you don't know your project ID, try the following:
 * Run `gcloud config list`.
 * Run `gcloud projects list`.
 * See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
-
 
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
@@ -83,7 +79,6 @@ Find your database values, in the [Cloud SQL Instances page](https://console.clo
 
 For existing instances, you may need to perform a [self-service maintenance update](https://cloud.google.com/sql/docs/mysql/self-service-maintenance) to update your maintenance version to **MYSQL_8_0_36.R20240401.03_00** or greater. Once updated, [configure your database flags](https://cloud.google.com/sql/docs/mysql/flags) to have the new **cloudsql_vector** flag to "On".
 
-
 ```python
 # @title Set Your Values Here { display-mode: "form" }
 REGION = "us-central1"  # @param {type: "string"}
@@ -99,9 +94,9 @@ One of the requirements and arguments to establish Cloud SQL as a vector store i
 To create a `MySQLEngine` using `MySQLEngine.from_instance()` you need to provide only 4 things:
 
 1. `project_id` : Project ID of the Google Cloud Project where the Cloud SQL instance is located.
-1. `region` : Region where the Cloud SQL instance is located.
-1. `instance` : The name of the Cloud SQL instance.
-1. `database` : The name of the database to connect to on the Cloud SQL instance.
+2. `region` : Region where the Cloud SQL instance is located.
+3. `instance` : The name of the Cloud SQL instance.
+4. `database` : The name of the database to connect to on the Cloud SQL instance.
 
 By default, [IAM database authentication](https://cloud.google.com/sql/docs/mysql/iam-authentication#iam-db-auth) will be used as the method of database authentication. This library uses the IAM principal belonging to the [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/application-default-credentials) sourced from the envionment.
 
@@ -115,8 +110,6 @@ Optionally, [built-in database authentication](https://cloud.google.com/sql/docs
 * `user` : Database user to use for built-in database authentication and login
 * `password` : Database password to use for built-in database authentication and login.
 
-
-
 ```python
 from langchain_google_cloud_sql_mysql import MySQLEngine
 
@@ -127,7 +120,6 @@ engine = MySQLEngine.from_instance(
 
 ### Initialize a table
 The `MySQLVectorStore` class requires a database table. The `MySQLEngine` class has a helper method `init_vectorstore_table()` that can be used to create a table with the proper schema for you.
-
 
 ```python
 engine.init_vectorstore_table(
@@ -143,12 +135,10 @@ You may need to enable the Vertex AI API to use `VertexAIEmbeddings`.
 
 We recommend pinning the embedding model's version for production, learn more about the [Text embeddings models](https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/text-embeddings).
 
-
 ```python
 # enable Vertex AI API
 !gcloud services enable aiplatform.googleapis.com
 ```
-
 
 ```python
 from langchain_google_vertexai import VertexAIEmbeddings
@@ -163,9 +153,8 @@ embedding = VertexAIEmbeddings(
 To initialize a `MySQLVectorStore` class you need to provide only 3 things:
 
 1. `engine` - An instance of a `MySQLEngine` engine.
-1. `embedding_service` - An instance of a LangChain embedding model.
-1. `table_name` : The name of the table within the Cloud SQL database to use as the vector store.
-
+2. `embedding_service` - An instance of a LangChain embedding model.
+3. `table_name` : The name of the table within the Cloud SQL database to use as the vector store.
 
 ```python
 from langchain_google_cloud_sql_mysql import MySQLVectorStore
@@ -178,7 +167,6 @@ store = MySQLVectorStore(
 ```
 
 ### Add texts
-
 
 ```python
 import uuid
@@ -194,13 +182,11 @@ store.add_texts(all_texts, metadatas=metadatas, ids=ids)
 
 Delete vectors from the vector store by ID.
 
-
 ```python
 store.delete([ids[1]])
 ```
 
 ### Search for documents
-
 
 ```python
 query = "I'd like a fruit."
@@ -213,7 +199,6 @@ Pineapple
 ### Search for documents by vector
 
 It is also possible to do a search for documents similar to a given embedding vector using `similarity_search_by_vector` which accepts an embedding vector as a parameter instead of a string.
-
 
 ```python
 query_vector = embedding.embed_query(query)
@@ -235,7 +220,6 @@ GRANT EXECUTE ON PROCEDURE mysql.drop_vector_index TO '<IAM_DB_USER>'@'%';
 GRANT SELECT ON mysql.vector_indexes TO '<IAM_DB_USER>'@'%';
 ```
 
-
 ```python
 from langchain_google_cloud_sql_mysql import VectorIndex
 
@@ -243,7 +227,6 @@ store.apply_vector_index(VectorIndex())
 ```
 
 ### Remove an index
-
 
 ```python
 store.drop_vector_index()
@@ -256,7 +239,6 @@ store.drop_vector_index()
 A vector store can take advantage of relational data to filter similarity searches.
 
 Create a table and `MySQLVectorStore` instance with custom metadata columns.
-
 
 ```python
 from langchain_google_cloud_sql_mysql import Column
@@ -289,7 +271,6 @@ custom_store = MySQLVectorStore(
 It can be helpful to narrow down the documents before working with them.
 
 For example, documents can be filtered on metadata using the `filter` argument.
-
 
 ```python
 import uuid

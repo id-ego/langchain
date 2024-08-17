@@ -11,23 +11,20 @@ It is designed and expected to be used to parse academic papers, where it works 
 
 This loader uses Grobid to parse PDFs into `Documents` that retain metadata associated with the section of text.
 
----
+* * *
 The best approach is to install Grobid via docker, see https://grobid.readthedocs.io/en/latest/Grobid-docker/. 
 
 (Note: additional instructions can be found [here](/docs/integrations/providers/grobid).)
 
 Once grobid is up-and-running you can interact as described below. 
 
-
 Now, we can use the data loader.
-
 
 ```python
 <!--IMPORTS:[{"imported": "GenericLoader", "source": "langchain_community.document_loaders.generic", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.generic.GenericLoader.html", "title": "Grobid"}, {"imported": "GrobidParser", "source": "langchain_community.document_loaders.parsers", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.parsers.grobid.GrobidParser.html", "title": "Grobid"}]-->
 from langchain_community.document_loaders.generic import GenericLoader
 from langchain_community.document_loaders.parsers import GrobidParser
 ```
-
 
 ```python
 loader = GenericLoader.from_filesystem(
@@ -39,24 +36,17 @@ loader = GenericLoader.from_filesystem(
 docs = loader.load()
 ```
 
-
 ```python
 docs[3].page_content
 ```
-
-
 
 ```output
 'Unlike Chinchilla, PaLM, or GPT-3, we only use publicly available data, making our work compatible with open-sourcing, while most existing models rely on data which is either not publicly available or undocumented (e.g."Books -2TB" or "Social media conversations").There exist some exceptions, notably OPT (Zhang et al., 2022), GPT-NeoX (Black et al., 2022), BLOOM (Scao et al., 2022) and GLM (Zeng et al., 2022), but none that are competitive with PaLM-62B or Chinchilla.'
 ```
 
-
-
 ```python
 docs[3].metadata
 ```
-
-
 
 ```output
 {'text': 'Unlike Chinchilla, PaLM, or GPT-3, we only use publicly available data, making our work compatible with open-sourcing, while most existing models rely on data which is either not publicly available or undocumented (e.g."Books -2TB" or "Social media conversations").There exist some exceptions, notably OPT (Zhang et al., 2022), GPT-NeoX (Black et al., 2022), BLOOM (Scao et al., 2022) and GLM (Zeng et al., 2022), but none that are competitive with PaLM-62B or Chinchilla.',
@@ -68,8 +58,6 @@ docs[3].metadata
  'paper_title': 'LLaMA: Open and Efficient Foundation Language Models',
  'file_path': '/Users/31treehaus/Desktop/Papers/2302.13971.pdf'}
 ```
-
-
 
 ## Related
 

@@ -26,8 +26,6 @@ In the examples below, we go over the motivations for both use cases as well as 
 
 One common use case for wanting to partial a prompt template is if you get access to some of the variables in a prompt before others. For example, suppose you have a prompt template that requires two variables, `foo` and `baz`. If you get the `foo` value early on in your chain, but the `baz` value later, it can be inconvenient to pass both variables all the way through the chain. Instead, you can partial the prompt template with the `foo` value, and then pass the partialed prompt template along and just use that. Below is an example of doing this:
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to partially format prompt templates"}]-->
 from langchain_core.prompts import PromptTemplate
@@ -41,8 +39,6 @@ foobaz
 ```
 You can also just initialize the prompt with the partialed variables.
 
-
-
 ```python
 prompt = PromptTemplate(
     template="{foo}{bar}", input_variables=["bar"], partial_variables={"foo": "foo"}
@@ -55,8 +51,6 @@ foobaz
 ## Partial with functions
 
 The other common use is to partial with a function. The use case for this is when you have a variable you know that you always want to fetch in a common way. A prime example of this is with date or time. Imagine you have a prompt which you always want to have the current date. You can't hard code it in the prompt, and passing it along with the other input variables is inconvenient. In this case, it's handy to be able to partial the prompt with a function that always returns the current date.
-
-
 
 ```python
 from datetime import datetime
@@ -78,8 +72,6 @@ print(partial_prompt.format(adjective="funny"))
 Tell me a funny joke about the day 04/21/2024, 19:43:57
 ```
 You can also just initialize the prompt with the partialed variables, which often makes more sense in this workflow.
-
-
 
 ```python
 prompt = PromptTemplate(

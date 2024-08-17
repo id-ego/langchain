@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 > [Databricks](https://www.databricks.com/) Lakehouse Platform unifies data, analytics, and AI on one platform.
 
-
 This notebook provides a quick overview for getting started with Databricks [LLM models](https://python.langchain.com/v0.2/docs/concepts/#llms). For detailed documentation of all features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/llms/langchain_community.llms.databricks.Databricks.html).
 
 ## Overview
@@ -28,7 +27,6 @@ The `Databricks` LLM class is *legacy* implementation and has several limitation
 
 To use those features, please use the new [ChatDatabricks](https://python.langchain.com/v0.2/docs/integrations/chat/databricks) class instead. `ChatDatabricks` supports all APIs of `ChatModel` including streaming, async, batch, etc.
 
-
 ## Setup
 
 To access Databricks models you'll need to create a Databricks account, set up credentials (only if you are outside Databricks workspace), and install required packages.
@@ -38,7 +36,6 @@ To access Databricks models you'll need to create a Databricks account, set up c
 If you are running LangChain app inside Databricks, you can skip this step.
 
 Otherwise, you need manually set the Databricks workspace hostname and personal access token to `DATABRICKS_HOST` and `DATABRICKS_TOKEN` environment variables, respectively. See [Authentication Documentation](https://docs.databricks.com/en/dev-tools/auth/index.html#databricks-personal-access-tokens) for how to get an access token.
-
 
 ```python
 import getpass
@@ -52,7 +49,6 @@ if "DATABRICKS_TOKEN" not in os.environ:
 ```
 
 Alternatively, you can pass those parameters when initializing the `Databricks` class.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Databricks", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.databricks.Databricks.html", "title": "Databricks"}]-->
@@ -71,7 +67,6 @@ databricks = Databricks(
 
 The LangChain Databricks integration lives in the `langchain-community` package. Also, `mlflow >= 2.9 ` is required to run the code in this notebook.
 
-
 ```python
 %pip install -qU langchain-community mlflow>=2.9.0
 ```
@@ -85,12 +80,10 @@ The LangChain Databricks integration lives in the `langchain-community` package.
 
 The expected MLflow model signature is:
 
-  * inputs: `[{"name": "prompt", "type": "string"}, {"name": "stop", "type": "list[string]"}]`
-  * outputs: `[{"type": "string"}]`
-
+* inputs: `[{"name": "prompt", "type": "string"}, {"name": "stop", "type": "list[string]"}]`
+* outputs: `[{"type": "string"}]`
 
 ### Invocation
-
 
 ```python
 <!--IMPORTS:[{"imported": "Databricks", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.databricks.Databricks.html", "title": "Databricks"}]-->
@@ -100,29 +93,21 @@ llm = Databricks(endpoint_name="YOUR_ENDPOINT_NAME")
 llm.invoke("How are you?")
 ```
 
-
-
 ```output
 'I am happy to hear that you are in good health and as always, you are appreciated.'
 ```
-
-
 
 ```python
 llm.invoke("How are you?", stop=["."])
 ```
 
-
-
 ```output
 'Good'
 ```
 
-
 ### Transform Input and Output
 
 Sometimes you may want to wrap a serving endpoint that has imcompatible model signature or you want to insert extra configs. You can use the `transform_input_fn` and `transform_output_fn` arguments to define additional pre/post process.
-
 
 ```python
 # Use `transform_input_fn` and `transform_output_fn` if the serving endpoint
@@ -151,13 +136,9 @@ llm = Databricks(
 llm.invoke("How are you?")
 ```
 
-
-
 ```output
 'I AM DOING GREAT THANK YOU.'
 ```
-
-
 
 ## Related
 

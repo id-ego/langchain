@@ -9,12 +9,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This example goes over how to use LangChain to interact with Moonshot.
 
-
 ```python
 <!--IMPORTS:[{"imported": "Moonshot", "source": "langchain_community.llms.moonshot", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.moonshot.Moonshot.html", "title": "MoonshotChat"}]-->
 from langchain_community.llms.moonshot import Moonshot
 ```
-
 
 ```python
 import os
@@ -23,7 +21,6 @@ import os
 os.environ["MOONSHOT_API_KEY"] = "MOONSHOT_API_KEY"
 ```
 
-
 ```python
 llm = Moonshot()
 # or use a specific model
@@ -31,12 +28,10 @@ llm = Moonshot()
 # llm = Moonshot(model="moonshot-v1-128k")
 ```
 
-
 ```python
 # Prompt the model
 llm.invoke("What is the difference between panda and bear?")
 ```
-
 
 ## Related
 

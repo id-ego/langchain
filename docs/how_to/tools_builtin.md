@@ -24,18 +24,16 @@ LangChain has a large collection of 3rd party tools. Please visit [Tool Integrat
 
 When using 3rd party tools, make sure that you understand how the tool works, what permissions
 it has. Read over its documentation and check if anything is required from you
-from a security point of view. Please see our [security](https://python.langchain.com/v0.2/docs/security/) 
+from a security point of view. Please see our [security](https://python.langchain.com/v0.2/docs/security/)
 guidelines for more information.
 
 :::
 
 Let's try out the [Wikipedia integration](/docs/integrations/tools/wikipedia/).
 
-
 ```python
 !pip install -qU wikipedia
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "WikipediaQueryRun", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.wikipedia.tool.WikipediaQueryRun.html", "title": "How to use built-in tools and toolkits"}, {"imported": "WikipediaAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wikipedia.WikipediaAPIWrapper.html", "title": "How to use built-in tools and toolkits"}]-->
@@ -53,7 +51,6 @@ Summary: LangChain is a framework designed to simplify the creation of applicati
 ```
 The tool has the following defaults associated with it:
 
-
 ```python
 print(f"Name: {tool.name}")
 print(f"Description: {tool.description}")
@@ -70,7 +67,6 @@ returns directly?: True
 We can also modify the built in name, description, and JSON schema of the arguments.
 
 When defining the JSON schema of the arguments, it is important that the inputs remain the same as the function, so you shouldn't change that. But you can define custom descriptions for each input easily.
-
 
 ```python
 <!--IMPORTS:[{"imported": "WikipediaQueryRun", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.wikipedia.tool.WikipediaQueryRun.html", "title": "How to use built-in tools and toolkits"}, {"imported": "WikipediaAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wikipedia.WikipediaAPIWrapper.html", "title": "How to use built-in tools and toolkits"}]-->

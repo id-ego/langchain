@@ -5,14 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Pinecone
 
->[Pinecone](https://docs.pinecone.io/docs/overview) is a vector database with broad functionality.
+> [Pinecone](https://docs.pinecone.io/docs/overview) is a vector database with broad functionality.
 
 This notebook shows how to use functionality related to the `Pinecone` vector database.
 
 ## Setup
 
 To use the `PineconeVectorStore` you first need to install the partner package, as well as the other packages used throughout this notebook.
-
 
 ```python
 %pip install -qU langchain-pinecone pinecone-notebooks
@@ -23,7 +22,6 @@ Migration note: if you are migrating from the `langchain_community.vectorstores`
 ### Credentials
 
 Create a new Pinecone account, or sign into your existing one, and create an API key to use in this notebook.
-
 
 ```python
 import getpass
@@ -42,7 +40,6 @@ pc = Pinecone(api_key=pinecone_api_key)
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -51,7 +48,6 @@ If you want to get automated tracing of your model calls you can also set your [
 ## Initialization
 
 Before initializing our vector store, let's connect to a Pinecone index. If one named `index_name` doesn't exist, it will be created.
-
 
 ```python
 import time
@@ -94,7 +90,6 @@ Once you have created your vector store, we can interact with it by adding and d
 ### Add items to vector store
 
 We can add items to our vector store by using the `add_documents` function.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Pinecone"}]-->
@@ -169,8 +164,6 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
-
-
 ```output
 ['167b8681-5974-467f-adcb-6e987a18df01',
  'd16010fd-41f8-4d49-9c22-c66d5555a3fe',
@@ -184,9 +177,7 @@ vector_store.add_documents(documents=documents, ids=uuids)
  'c446fc23-64e8-47e7-8c19-ecf985e9411e']
 ```
 
-
 ### Delete items from vector store
-
 
 ```python
 vector_store.delete(ids=[uuids[-1]])
@@ -199,7 +190,6 @@ Once your vector store has been created and the relevant documents have been add
 ### Query directly
 
 Performing a simple similarity search can be done as follows:
-
 
 ```python
 results = vector_store.similarity_search(
@@ -217,7 +207,6 @@ for res in results:
 #### Similarity search with score
 
 You can also search with score:
-
 
 ```python
 results = vector_store.similarity_search_with_score(
@@ -237,7 +226,6 @@ There are more search methods (such as MMR) not listed in this notebook, to find
 
 You can also transform the vector store into a retriever for easier usage in your chains.
 
-
 ```python
 retriever = vector_store.as_retriever(
     search_type="similarity_score_threshold",
@@ -246,12 +234,9 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime", filter={"source": "news"})
 ```
 
-
-
 ```output
 [Document(metadata={'source': 'news'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
-
 
 ## Usage for retrieval-augmented generation
 
@@ -264,7 +249,6 @@ For guides on how to use this vector store for retrieval-augmented generation (R
 ## API reference
 
 For detailed documentation of all __ModuleName__VectorStore features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html
-
 
 ## Related
 

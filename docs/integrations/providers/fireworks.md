@@ -10,11 +10,10 @@ Langchain.
 ## Installation and setup
 
 - Install the Fireworks integration package.
-
+  
   ```
   pip install langchain-fireworks
   ```
-
 - Get a Fireworks API key by signing up at [fireworks.ai](https://fireworks.ai).
 - Authenticate by setting the FIREWORKS_API_KEY environment variable.
 
@@ -22,17 +21,16 @@ Langchain.
 
 There are two ways to authenticate using your Fireworks API key:
 
-1.  Setting the `FIREWORKS_API_KEY` environment variable.
-
-    ```python
-    os.environ["FIREWORKS_API_KEY"] = "<KEY>"
-    ```
-
-2.  Setting `api_key` field in the Fireworks LLM module.
-
-    ```python
-    llm = Fireworks(api_key="<KEY>")
-    ```
+1. Setting the `FIREWORKS_API_KEY` environment variable.
+   
+   ```python
+   os.environ["FIREWORKS_API_KEY"] = "<KEY>"
+   ```
+2. Setting `api_key` field in the Fireworks LLM module.
+   
+   ```python
+   llm = Fireworks(api_key="<KEY>")
+   ```
 
 ## Using the Fireworks LLM module
 

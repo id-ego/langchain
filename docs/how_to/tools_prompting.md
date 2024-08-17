@@ -33,13 +33,11 @@ We'll do this by simply writing a prompt that will get the model to invoke the a
 
 We'll need to install the following packages:
 
-
 ```python
 %pip install --upgrade --quiet langchain langchain-community
 ```
 
 If you'd like to use LangSmith, uncomment the below:
-
 
 ```python
 import getpass
@@ -56,7 +54,6 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 To illustrate the idea, we'll use `phi3` via Ollama, which does **NOT** have native support for tool calling. If you'd like to use `Ollama` as well follow [these instructions](/docs/integrations/chat/ollama/).
 
-
 ```python
 <!--IMPORTS:[{"imported": "Ollama", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.ollama.Ollama.html", "title": "How to add ad-hoc tool calling capability to LLMs and Chat Models"}]-->
 from langchain_community.llms import Ollama
@@ -67,7 +64,6 @@ model = Ollama(model="phi3")
 ## Create a tool
 
 First, let's create an `add` and `multiply` tools. For more information on creating custom tools, please see [this guide](/docs/how_to/custom_tools).
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to add ad-hoc tool calling capability to LLMs and Chat Models"}]-->
@@ -110,17 +106,13 @@ Add two numbers.
 multiply.invoke({"x": 4, "y": 5})
 ```
 
-
-
 ```output
 20.0
 ```
 
-
 ## Creating our prompt
 
 We'll want to write a prompt that specifies the tools the model has access to, the arguments to those tools, and the desired output format of the model. In this case we'll instruct it to output a JSON blob of the form `{"name": "...", "arguments": {...}}`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "JsonOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.JsonOutputParser.html", "title": "How to add ad-hoc tool calling capability to LLMs and Chat Models"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add ad-hoc tool calling capability to LLMs and Chat Models"}, {"imported": "render_text_description", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.render.render_text_description.html", "title": "How to add ad-hoc tool calling capability to LLMs and Chat Models"}]-->
@@ -155,7 +147,6 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-
 ```python
 chain = prompt | model
 message = chain.invoke({"input": "what's 3 plus 1132"})
@@ -180,7 +171,6 @@ else:  # Otherwise it's a chat model
 
 We'll use the `JsonOutputParser` for parsing our models output to JSON.
 
-
 ```python
 <!--IMPORTS:[{"imported": "JsonOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.JsonOutputParser.html", "title": "How to add ad-hoc tool calling capability to LLMs and Chat Models"}]-->
 from langchain_core.output_parsers import JsonOutputParser
@@ -189,12 +179,9 @@ chain = prompt | model | JsonOutputParser()
 chain.invoke({"input": "what's thirteen times 4"})
 ```
 
-
-
 ```output
 {'name': 'multiply', 'arguments': {'x': 13.0, 'y': 4.0}}
 ```
-
 
 :::important
 
@@ -205,11 +192,10 @@ Now, let's create some logic to actually run the tool!
 
 ## Invoking the tool 🏃
 
-Now that the model can request that a tool be invoked, we need to write a function that can actually invoke 
+Now that the model can request that a tool be invoked, we need to write a function that can actually invoke
 the tool.
 
 The function will select the appropriate tool by name, and pass to it the arguments chosen by the model.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to add ad-hoc tool calling capability to LLMs and Chat Models"}]-->
@@ -248,39 +234,30 @@ def invoke_tool(
 
 Let's test this out 🧪!
 
-
 ```python
 invoke_tool({"name": "multiply", "arguments": {"x": 3, "y": 5}})
 ```
-
-
 
 ```output
 15.0
 ```
 
-
 ## Let's put it together
 
 Let's put it together into a chain that creates a calculator with add and multiplication capabilities.
-
 
 ```python
 chain = prompt | model | JsonOutputParser() | invoke_tool
 chain.invoke({"input": "what's thirteen times 4.14137281"})
 ```
 
-
-
 ```output
 53.83784653
 ```
 
-
 ## Returning tool inputs
 
 It can be helpful to return not only tool outputs but also tool inputs. We can easily do this with LCEL by `RunnablePassthrough.assign`-ing the tool output. This will take whatever the input is to the RunnablePassrthrough components (assumed to be a dictionary) and add a key to it while still passing through everything that's currently in the input:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add ad-hoc tool calling capability to LLMs and Chat Models"}]-->
@@ -292,14 +269,11 @@ chain = (
 chain.invoke({"input": "what's thirteen times 4.14137281"})
 ```
 
-
-
 ```output
 {'name': 'multiply',
  'arguments': {'x': 13, 'y': 4.14137281},
  'output': 53.83784653}
 ```
-
 
 ## What's next?
 

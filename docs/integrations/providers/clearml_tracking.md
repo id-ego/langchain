@@ -10,9 +10,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 > - `MLOps` - Orchestration, Automation & Pipelines solution for ML/DL jobs (K8s / Cloud / bare-metal)
 > - `Data-Management` - Fully differentiable data management & version control solution on top of object-storage (S3 / GS / Azure / NAS)
 > - `Model-Serving` - cloud-ready Scalable model serving solution!
-    Deploy new model endpoints in under 5 minutes
-    Includes optimized GPU serving support backed by Nvidia-Triton
-    with out-of-the-box Model Monitoring
+Deploy new model endpoints in under 5 minutes
+Includes optimized GPU serving support backed by Nvidia-Triton
+with out-of-the-box Model Monitoring
 > - `Fire Reports` - Create and share rich MarkDown documents supporting embeddable online content
 
 In order to properly keep track of your langchain experiments and their results, you can enable the `ClearML` integration. We use the `ClearML Experiment Manager` that neatly tracks and organizes all your experiment runs.
@@ -21,8 +21,8 @@ In order to properly keep track of your langchain experiments and their results,
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
-## Installation and Setup
 
+## Installation and Setup
 
 ```python
 %pip install --upgrade --quiet  clearml
@@ -40,7 +40,6 @@ We'll be using quite some APIs in this notebook, here is a list and where to get
 - OpenAI: https://platform.openai.com/account/api-keys
 - SerpAPI (google search): https://serpapi.com/dashboard
 
-
 ```python
 import os
 
@@ -53,12 +52,10 @@ os.environ["SERPAPI_API_KEY"] = ""
 
 ## Callbacks
 
-
 ```python
 <!--IMPORTS:[{"imported": "ClearMLCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.clearml_callback.ClearMLCallbackHandler.html", "title": "ClearML"}]-->
 from langchain_community.callbacks import ClearMLCallbackHandler
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "ClearML"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "ClearML"}]-->
@@ -86,7 +83,6 @@ The clearml callback is currently in beta and is subject to change based on upda
 ### Scenario 1: Just an LLM
 
 First, let's just run a single LLM a few times and capture the resulting prompt-answer conversation in ClearML
-
 
 ```python
 # SCENARIO 1 - LLM
@@ -325,7 +321,6 @@ To show a more advanced workflow, let's create an agent with access to tools. Th
 
 You can now also see the use of the `finish=True` keyword, which will fully close the ClearML Task, instead of just resetting the parameters and prompts for a new conversation.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "ClearML"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "ClearML"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "ClearML"}]-->
 from langchain.agents import AgentType, initialize_agent, load_tools
@@ -481,7 +476,5 @@ Could not update last created model in Task 988bd727b0e94a29a3ac0ee526813545, Ta
 ### Tips and Next Steps
 
 - Make sure you always use a unique `name` argument for the `clearml_callback.flush_tracker` function. If not, the model parameters used for a run will override the previous run!
-
 - If you close the ClearML Callback using `clearml_callback.flush_tracker(..., finish=True)` the Callback cannot be used anymore. Make a new one if you want to keep logging.
-
 - Check out the rest of the open-source ClearML ecosystem, there is a data version manager, a remote execution agent, automated pipelines and much more!

@@ -104,8 +104,6 @@ loader = SharePointLoader(document_library_id="YOUR DOCUMENT LIBRARY ID", object
 documents = loader.load()
 ```
 
-
-
 ## Related
 
 - Document loader [conceptual guide](/docs/concepts/#document-loaders)

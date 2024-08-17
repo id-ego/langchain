@@ -5,9 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Ontotext GraphDB
 
->[Ontotext GraphDB](https://graphdb.ontotext.com/) is a graph database and knowledge discovery tool compliant with [RDF](https://www.w3.org/RDF/) and [SPARQL](https://www.w3.org/TR/sparql11-query/).
+> [Ontotext GraphDB](https://graphdb.ontotext.com/) is a graph database and knowledge discovery tool compliant with [RDF](https://www.w3.org/RDF/) and [SPARQL](https://www.w3.org/TR/sparql11-query/).
 
->This notebook shows how to use LLMs to provide natural language querying (NLQ to SPARQL, also called `text2sparql`) for `Ontotext GraphDB`. 
+> This notebook shows how to use LLMs to provide natural language querying (NLQ to SPARQL, also called `text2sparql`) for `Ontotext GraphDB`. 
 
 ## GraphDB LLM Functionalities
 
@@ -41,9 +41,7 @@ Franvino:
 
 * A simple chatbot using a defined KG entity index
 
-
 For this tutorial, we won't use the GraphDB LLM integration, but `SPARQL` generation from NLQ. We'll use the `Star Wars API` (`SWAPI`) ontology and dataset that you can examine [here](https://github.com/Ontotext-AD/langchain-graphdb-qa-chain-demo/blob/main/starwars-data.trig).
-
 
 ## Setting up
 
@@ -52,13 +50,13 @@ You need a running GraphDB instance. This tutorial shows how to run the database
 * Install [Docker](https://docs.docker.com/get-docker/). This tutorial is created using Docker version `24.0.7` which bundles [Docker Compose](https://docs.docker.com/compose/). For earlier Docker versions you may need to install Docker Compose separately.
 * Clone [the GitHub repository langchain-graphdb-qa-chain-demo](https://github.com/Ontotext-AD/langchain-graphdb-qa-chain-demo) in a local folder on your machine.
 * Start GraphDB with the following script executed from the same folder
-  
+
 ```
 docker build --tag graphdb .
 docker compose up -d graphdb
 ```
 
-  You need to wait a couple of seconds for the database to start on `http://localhost:7200/`. The Star Wars dataset `starwars-data.trig` is automatically loaded into the `langchain` repository. The local SPARQL endpoint `http://localhost:7200/repositories/langchain` can be used to run queries against. You can also open the GraphDB Workbench from your favourite web browser `http://localhost:7200/sparql` where you can make queries interactively.
+You need to wait a couple of seconds for the database to start on `http://localhost:7200/`. The Star Wars dataset `starwars-data.trig` is automatically loaded into the `langchain` repository. The local SPARQL endpoint `http://localhost:7200/repositories/langchain` can be used to run queries against. You can also open the GraphDB Workbench from your favourite web browser `http://localhost:7200/sparql` where you can make queries interactively.
 * Set up working environment
 
 If you use `conda`, create and activate a new conda env (e.g. `conda create -n graph_ontotext_graphdb_qa python=3.9.18`).
@@ -90,7 +88,6 @@ In either case, the ontology dump should:
 * Include enough information about classes, properties, property attachment to classes (using rdfs:domain, schema:domainIncludes or OWL restrictions), and taxonomies (important individuals).
 * Not include overly verbose and irrelevant definitions and examples that do not help SPARQL construction.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OntotextGraphDBGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.ontotext_graphdb_graph.OntotextGraphDBGraph.html", "title": "Ontotext GraphDB"}]-->
 from langchain_community.graphs import OntotextGraphDBGraph
@@ -102,7 +99,6 @@ graph = OntotextGraphDBGraph(
     query_ontology="CONSTRUCT {?s ?p ?o} FROM <https://swapi.co/ontology/> WHERE {?s ?p ?o}",
 )
 ```
-
 
 ```python
 # feeding the schema using a local RDF file
@@ -116,7 +112,6 @@ graph = OntotextGraphDBGraph(
 Either way, the ontology (schema) is fed to the LLM as `Turtle` since `Turtle` with appropriate prefixes is most compact and easiest for the LLM to remember.
 
 The Star Wars ontology is a bit unusual in that it includes a lot of specific triples about classes, e.g. that the species `:Aleena` live on `<planet/38>`, they are a subclass of `:Reptile`, have certain typical characteristics (average height, average lifespan, skinColor), and specific individuals (characters) are representatives of that class:
-
 
 ```
 @prefix : <https://swapi.co/vocabulary/> .
@@ -138,8 +133,7 @@ The Star Wars ontology is a bit unusual in that it includes a lot of specific tr
 
     ...
 
- ```
-
+```
 
 In order to keep this tutorial simple, we use un-secured GraphDB. If GraphDB is secured, you should set the environment variables 'GRAPHDB_USERNAME' and 'GRAPHDB_PASSWORD' before the initialization of `OntotextGraphDBGraph`.
 
@@ -153,11 +147,9 @@ graph = OntotextGraphDBGraph(
 )
 ```
 
-
 ## Question Answering against the StarWars dataset
 
 We can now use the `OntotextGraphDBQAChain` to ask some questions.
-
 
 ```python
 <!--IMPORTS:[{"imported": "OntotextGraphDBQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.ontotext_graphdb.OntotextGraphDBQAChain.html", "title": "Ontotext GraphDB"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Ontotext GraphDB"}]-->
@@ -187,7 +179,6 @@ chain = OntotextGraphDBQAChain.from_llm(
 
 Let's ask a simple one.
 
-
 ```python
 chain.invoke({chain.input_key: "What is the climate on Tatooine?"})[chain.output_key]
 ```
@@ -208,14 +199,11 @@ WHERE {
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The climate on Tatooine is arid.'
 ```
 
-
 And a bit more complicated one.
-
 
 ```python
 chain.invoke({chain.input_key: "What is the climate on Luke Skywalker's home planet?"})[
@@ -241,14 +229,11 @@ WHERE {
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 "The climate on Luke Skywalker's home planet is arid."
 ```
 
-
 We can also ask more complicated questions like
-
 
 ```python
 chain.invoke(
@@ -278,25 +263,22 @@ WHERE {
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The average box office revenue for all the Star Wars movies is approximately 754.1 million dollars.'
 ```
 
-
 ## Chain modifiers
 
 The Ontotext GraphDB QA chain allows prompt refinement for further improvement of your QA chain and enhancing the overall user experience of your app.
-
 
 ### "SPARQL Generation" prompt
 
 The prompt is used for the SPARQL query generation based on the user question and the KG schema.
 
 - `sparql_generation_prompt`
-
-    Default value:
-  ````python
+  
+  Default value:
+  ```python
     GRAPHDB_SPARQL_GENERATION_TEMPLATE = """
     Write a SPARQL SELECT query for querying a graph database.
     The ontology schema delimited by triple backticks in Turtle format is:
@@ -318,16 +300,16 @@ The prompt is used for the SPARQL query generation based on the user question an
         input_variables=["schema", "prompt"],
         template=GRAPHDB_SPARQL_GENERATION_TEMPLATE,
     )
-  ````
+  ```
 
 ### "SPARQL Fix" prompt
 
 Sometimes, the LLM may generate a SPARQL query with syntactic errors or missing prefixes, etc. The chain will try to amend this by prompting the LLM to correct it a certain number of times.
 
 - `sparql_fix_prompt`
-
-    Default value:
-  ````python
+  
+  Default value:
+  ```python
     GRAPHDB_SPARQL_FIX_TEMPLATE = """
     This following SPARQL query delimited by triple backticks
     ```
@@ -353,11 +335,10 @@ Sometimes, the LLM may generate a SPARQL query with syntactic errors or missing 
         input_variables=["error_message", "generated_sparql", "schema"],
         template=GRAPHDB_SPARQL_FIX_TEMPLATE,
     )
-  ````
-
+  ```
 - `max_fix_retries`
   
-    Default value: `5`
+  Default value: `5`
 
 ### "Answering" prompt
 
@@ -366,7 +347,7 @@ The prompt is used for answering the question based on the results returned from
 - `qa_prompt`
   
   Default value:
-  ````python
+  ```python
     GRAPHDB_QA_TEMPLATE = """Task: Generate a natural language response from the results of a SPARQL query.
     You are an assistant that creates well-written and human understandable answers.
     The information part contains the information provided, which you can use to construct an answer.
@@ -381,10 +362,8 @@ The prompt is used for answering the question based on the results returned from
     GRAPHDB_QA_PROMPT = PromptTemplate(
         input_variables=["context", "prompt"], template=GRAPHDB_QA_TEMPLATE
     )
-  ````
+  ```
 
 Once you're finished playing with QA with GraphDB, you can shut down the Docker environment by running
-``
-docker compose down -v --remove-orphans
-``
+`docker compose down -v --remove-orphans`
 from the directory with the Docker compose file.

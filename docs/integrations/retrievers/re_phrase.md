@@ -15,7 +15,6 @@ It can be used to pre-process the user input in any way.
 
 Create a vector store.
 
-
 ```python
 <!--IMPORTS:[{"imported": "RePhraseQueryRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.re_phraser.RePhraseQueryRetriever.html", "title": "RePhraseQuery"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "RePhraseQuery"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "RePhraseQuery"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "RePhraseQuery"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "RePhraseQuery"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "RePhraseQuery"}]-->
 import logging
@@ -26,7 +25,6 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 ```
-
 
 ```python
 logging.basicConfig()
@@ -52,14 +50,12 @@ In this process, you strip out information that is not relevant for \
 the retrieval task. Here is the user query: {question}"""
 ```
 
-
 ```python
 llm = ChatOpenAI(temperature=0)
 retriever_from_llm = RePhraseQueryRetriever.from_llm(
     retriever=vectorstore.as_retriever(), llm=llm
 )
 ```
-
 
 ```python
 docs = retriever_from_llm.invoke(
@@ -82,7 +78,6 @@ INFO:langchain.retrievers.re_phraser:Re-phrased question: Query for vectorstore:
 ```
 ### Custom prompt
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "RePhraseQuery"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "RePhraseQuery"}]-->
 from langchain.chains import LLMChain
@@ -100,13 +95,11 @@ llm = ChatOpenAI(temperature=0)
 llm_chain = LLMChain(llm=llm, prompt=QUERY_PROMPT)
 ```
 
-
 ```python
 retriever_from_llm_chain = RePhraseQueryRetriever(
     retriever=vectorstore.as_retriever(), llm_chain=llm_chain
 )
 ```
-
 
 ```python
 docs = retriever_from_llm_chain.invoke(

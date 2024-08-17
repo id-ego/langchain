@@ -5,14 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Neo4j
 
->[Neo4j](https://neo4j.com/docs/getting-started/) is a graph database management system developed by `Neo4j, Inc`.
+> [Neo4j](https://neo4j.com/docs/getting-started/) is a graph database management system developed by `Neo4j, Inc`.
 
->The data elements `Neo4j` stores are nodes, edges connecting them, and attributes of nodes and edges. Described by its developers as an ACID-compliant transactional database with native graph storage and processing, `Neo4j` is available in a non-open-source "community edition" licensed with a modification of the GNU General Public License, with online backup and high availability extensions licensed under a closed-source commercial license. Neo also licenses `Neo4j` with these extensions under closed-source commercial terms.
+> The data elements `Neo4j` stores are nodes, edges connecting them, and attributes of nodes and edges. Described by its developers as an ACID-compliant transactional database with native graph storage and processing, `Neo4j` is available in a non-open-source "community edition" licensed with a modification of the GNU General Public License, with online backup and high availability extensions licensed under a closed-source commercial license. Neo also licenses `Neo4j` with these extensions under closed-source commercial terms.
 
->This notebook shows how to use LLMs to provide a natural language interface to a graph database you can query with the `Cypher` query language.
+> This notebook shows how to use LLMs to provide a natural language interface to a graph database you can query with the `Cypher` query language.
 
->[Cypher](https://en.wikipedia.org/wiki/Cypher_(query_language)) is a declarative graph query language that allows for expressive and efficient data querying in a property graph.
-
+> [Cypher](https://en.wikipedia.org/wiki/Cypher_(query_language)) is a declarative graph query language that allows for expressive and efficient data querying in a property graph.
 
 ## Setting up
 
@@ -31,14 +30,12 @@ docker run \
 
 If you are using the docker container, you need to wait a couple of second for the database to start.
 
-
 ```python
 <!--IMPORTS:[{"imported": "GraphCypherQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher.GraphCypherQAChain.html", "title": "Neo4j"}, {"imported": "Neo4jGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neo4j_graph.Neo4jGraph.html", "title": "Neo4j"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Neo4j"}]-->
 from langchain.chains import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 graph = Neo4jGraph(url="bolt://localhost:7687", username="neo4j", password="password")
@@ -47,7 +44,6 @@ graph = Neo4jGraph(url="bolt://localhost:7687", username="neo4j", password="pass
 ## Seeding the database
 
 Assuming your database is empty, you can populate it using Cypher query language. The following Cypher statement is idempotent, which means the database information will be the same if you run it one or multiple times.
-
 
 ```python
 graph.query(
@@ -61,21 +57,16 @@ MERGE (a)-[:ACTED_IN]->(m)
 )
 ```
 
-
-
 ```output
 []
 ```
 
-
 ## Refresh graph schema information
 If the schema of database changes, you can refresh the schema information needed to generate Cypher statements.
-
 
 ```python
 graph.refresh_schema()
 ```
-
 
 ```python
 print(graph.schema)
@@ -91,7 +82,6 @@ The relationships:
 ```
 ## Enhanced schema information
 Choosing the enhanced schema version enables the system to automatically scan for example values within the databases and calculate some distribution metrics. For example, if a node property has less than 10 distinct values, we return all possible values in the schema. Otherwise, return only a single example value per node and relationship property.
-
 
 ```python
 enhanced_graph = Neo4jGraph(
@@ -118,13 +108,11 @@ The relationships:
 
 We can now use the graph cypher QA chain to ask question of the graph
 
-
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True
 )
 ```
-
 
 ```python
 chain.invoke({"query": "Who played in Top Gun?"})
@@ -143,24 +131,20 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': 'Tom Cruise, Val Kilmer, Anthony Edwards, and Meg Ryan played in Top Gun.'}
 ```
 
-
 ## Limit the number of results
 You can limit the number of results from the Cypher QA Chain using the `top_k` parameter.
 The default is 10.
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, top_k=2
 )
 ```
-
 
 ```python
 chain.invoke({"query": "Who played in Top Gun?"})
@@ -179,23 +163,19 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': 'Tom Cruise, Val Kilmer played in Top Gun.'}
 ```
 
-
 ## Return intermediate results
 You can return intermediate steps from the Cypher QA Chain using the `return_intermediate_steps` parameter
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, return_intermediate_steps=True
 )
 ```
-
 
 ```python
 result = chain.invoke({"query": "Who played in Top Gun?"})
@@ -220,13 +200,11 @@ Final answer: Tom Cruise, Val Kilmer, Anthony Edwards, and Meg Ryan played in To
 ## Return direct results
 You can return direct results from the Cypher QA Chain using the `return_direct` parameter
 
-
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, return_direct=True
 )
 ```
-
 
 ```python
 chain.invoke({"query": "Who played in Top Gun?"})
@@ -243,7 +221,6 @@ RETURN a.name[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': [{'a.name': 'Tom Cruise'},
@@ -252,10 +229,8 @@ RETURN a.name[0m
   {'a.name': 'Meg Ryan'}]}
 ```
 
-
 ## Add examples in the Cypher generation prompt
 You can define the Cypher statement you want the LLM to generate for particular questions
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts.prompt", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Neo4j"}]-->
@@ -290,7 +265,6 @@ chain = GraphCypherQAChain.from_llm(
 )
 ```
 
-
 ```python
 chain.invoke({"query": "How many people played in Top Gun?"})
 ```
@@ -307,16 +281,13 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'How many people played in Top Gun?',
  'result': 'There were 4 actors in Top Gun.'}
 ```
 
-
 ## Use separate LLMs for Cypher and answer generation
 You can use the `cypher_llm` and `qa_llm` parameters to define different llms
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -326,7 +297,6 @@ chain = GraphCypherQAChain.from_llm(
     verbose=True,
 )
 ```
-
 
 ```python
 chain.invoke({"query": "Who played in Top Gun?"})
@@ -345,17 +315,14 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': 'Tom Cruise, Val Kilmer, Anthony Edwards, and Meg Ryan played in Top Gun.'}
 ```
 
-
 ## Ignore specified node and relationship types
 
 You can use `include_types` or `exclude_types` to ignore parts of the graph schema when generating Cypher statements.
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -366,7 +333,6 @@ chain = GraphCypherQAChain.from_llm(
     exclude_types=["Movie"],
 )
 ```
-
 
 ```python
 # Inspect graph schema
@@ -382,7 +348,6 @@ The relationships are the following:
 ## Validate generated Cypher statements
 You can use the `validate_cypher` parameter to validate and correct relationship directions in generated Cypher statements
 
-
 ```python
 chain = GraphCypherQAChain.from_llm(
     llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo"),
@@ -391,7 +356,6 @@ chain = GraphCypherQAChain.from_llm(
     validate_cypher=True,
 )
 ```
-
 
 ```python
 chain.invoke({"query": "Who played in Top Gun?"})
@@ -410,18 +374,15 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': 'Tom Cruise, Val Kilmer, Anthony Edwards, and Meg Ryan played in Top Gun.'}
 ```
 
-
 ## Provide context from database results as tool/function output
 
 You can use the `use_function_response` parameter to pass context from database results to an LLM as a tool/function output. This method improves the response accuracy and relevance of an answer as the LLM follows the provided context more closely.
-_You will need to use an LLM with native function calling support to use this feature_.
-
+*You will need to use an LLM with native function calling support to use this feature*.
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -446,17 +407,14 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': 'The main actors in Top Gun are Tom Cruise, Val Kilmer, Anthony Edwards, and Meg Ryan.'}
 ```
 
-
 You can provide custom system message when using the function response feature by providing `function_response_system` to instruct the model on how to generate answers.
 
-_Note that `qa_prompt` will have no effect when using `use_function_response`_
-
+*Note that `qa_prompt` will have no effect when using `use_function_response`*
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -481,7 +439,6 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
-
 
 ```output
 {'query': 'Who played in Top Gun?',

@@ -5,19 +5,17 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Bittensor
 
->[Bittensor](https://bittensor.com/) is a mining network, similar to Bitcoin, that includes built-in incentives designed to encourage miners to contribute compute + knowledge.
->
->`NIBittensorLLM` is developed by [Neural Internet](https://neuralinternet.ai/), powered by `Bittensor`.
+> [Bittensor](https://bittensor.com/) is a mining network, similar to Bitcoin, that includes built-in incentives designed to encourage miners to contribute compute + knowledge.
+> 
+> `NIBittensorLLM` is developed by [Neural Internet](https://neuralinternet.ai/), powered by `Bittensor`.
 
->This LLM showcases true potential of decentralized AI by giving you the best response(s) from the `Bittensor protocol`, which consist of various AI models such as `OpenAI`, `LLaMA2` etc.
+> This LLM showcases true potential of decentralized AI by giving you the best response(s) from the `Bittensor protocol`, which consist of various AI models such as `OpenAI`, `LLaMA2` etc.
 
 Users can view their logs, requests, and API keys on the [Validator Endpoint Frontend](https://api.neuralinternet.ai/). However, changes to the configuration are currently prohibited; otherwise, the user's queries will be blocked.
 
 If you encounter any difficulties or have any questions, please feel free to reach out to our developer on [GitHub](https://github.com/Kunj-2206), [Discord](https://discordapp.com/users/683542109248159777) or join our discord server for latest update and queries [Neural Internet](https://discord.gg/neuralinternet).
 
-
-## Different Parameter and response handling for NIBittensorLLM 
-
+## Different Parameter and response handling for NIBittensorLLM
 
 ```python
 <!--IMPORTS:[{"imported": "set_debug", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_debug.html", "title": "Bittensor"}, {"imported": "NIBittensorLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.bittensor.NIBittensorLLM.html", "title": "Bittensor"}]-->
@@ -58,8 +56,7 @@ json_multi_resp = json.loads(multi_resp)
 pprint(json_multi_resp)
 ```
 
-##  Using NIBittensorLLM with LLMChain and PromptTemplate
-
+## Using NIBittensorLLM with LLMChain and PromptTemplate
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Bittensor"}, {"imported": "set_debug", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_debug.html", "title": "Bittensor"}, {"imported": "NIBittensorLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.bittensor.NIBittensorLLM.html", "title": "Bittensor"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Bittensor"}]-->
@@ -88,8 +85,7 @@ question = "What is bittensor?"
 llm_chain.run(question)
 ```
 
-##  Using NIBittensorLLM with Conversational Agent and Google Search Tool
-
+## Using NIBittensorLLM with Conversational Agent and Google Search Tool
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleSearchAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_search.GoogleSearchAPIWrapper.html", "title": "Bittensor"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Bittensor"}]-->
@@ -104,7 +100,6 @@ tool = Tool(
     func=search.run,
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Bittensor"}, {"imported": "create_react_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.react.agent.create_react_agent.html", "title": "Bittensor"}, {"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "Bittensor"}, {"imported": "NIBittensorLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.bittensor.NIBittensorLLM.html", "title": "Bittensor"}]-->
@@ -132,7 +127,6 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory)
 
 response = agent_executor.invoke({"input": prompt})
 ```
-
 
 ## Related
 

@@ -5,16 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Office365 Toolkit
 
->[Microsoft 365](https://www.office.com/) is a product family of productivity software, collaboration and cloud-based services owned by `Microsoft`.
->
->Note: `Office 365` was rebranded as `Microsoft 365`.
+> [Microsoft 365](https://www.office.com/) is a product family of productivity software, collaboration and cloud-based services owned by `Microsoft`.
+> 
+> Note: `Office 365` was rebranded as `Microsoft 365`.
 
 This notebook walks through connecting LangChain to `Office365` email and calendar.
 
 To use this toolkit, you need to set up your credentials explained in the [Microsoft Graph authentication and authorization overview](https://learn.microsoft.com/en-us/graph/auth/). Once you've received a CLIENT_ID and CLIENT_SECRET, you can input them as environmental variables below.
 
 You can also use the [authentication instructions from here](https://o365.github.io/python-o365/latest/getting_started.html#oauth-setup-pre-requisite).
-
 
 ```python
 %pip install --upgrade --quiet  O365
@@ -26,7 +25,6 @@ You can also use the [authentication instructions from here](https://o365.github
 
 The toolkit will read the `CLIENT_ID` and `CLIENT_SECRET` environmental variables to authenticate the user so you need to set them here. You will also need to set your `OPENAI_API_KEY` to use the agent later.
 
-
 ```python
 # Set environmental variables here
 ```
@@ -34,7 +32,6 @@ The toolkit will read the `CLIENT_ID` and `CLIENT_SECRET` environmental variable
 ## Create the Toolkit and Get Tools
 
 To start, you need to create the toolkit, so you can access its tools later.
-
 
 ```python
 <!--IMPORTS:[{"imported": "O365Toolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.office365.toolkit.O365Toolkit.html", "title": "Office365 Toolkit"}]-->
@@ -45,8 +42,6 @@ tools = toolkit.get_tools()
 tools
 ```
 
-
-
 ```output
 [O365SearchEvents(name='events_search', description=" Use this tool to search for the user's calendar events. The input must be the start and end datetimes for the search query. The output is a JSON list of all the events in the user's calendar between the start and end times. You can assume that the user can  not schedule any meeting over existing meetings, and that the user is busy during meetings. Any times without events are free for the user. ", args_schema=<class 'langchain_community.tools.office365.events_search.SearchEventsInput'>, return_direct=False, verbose=False, callbacks=None, callback_manager=None, handle_tool_error=False, account=Account Client Id: f32a022c-3c4c-4d10-a9d8-f6a9a9055302),
  O365CreateDraftMessage(name='create_email_draft', description='Use this tool to create a draft email with the provided message fields.', args_schema=<class 'langchain_community.tools.office365.create_draft_message.CreateDraftMessageSchema'>, return_direct=False, verbose=False, callbacks=None, callback_manager=None, handle_tool_error=False, account=Account Client Id: f32a022c-3c4c-4d10-a9d8-f6a9a9055302),
@@ -55,16 +50,13 @@ tools
  O365SendMessage(name='send_email', description='Use this tool to send an email with the provided message fields.', args_schema=<class 'langchain_community.tools.office365.send_message.SendMessageSchema'>, return_direct=False, verbose=False, callbacks=None, callback_manager=None, handle_tool_error=False, account=Account Client Id: f32a022c-3c4c-4d10-a9d8-f6a9a9055302)]
 ```
 
-
 ## Use within an Agent
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Office365 Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Office365 Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Office365 Toolkit"}]-->
 from langchain.agents import AgentType, initialize_agent
 from langchain_openai import OpenAI
 ```
-
 
 ```python
 llm = OpenAI(temperature=0)
@@ -76,7 +68,6 @@ agent = initialize_agent(
 )
 ```
 
-
 ```python
 agent.run(
     "Create an email draft for me to edit of a letter from the perspective of a sentient parrot"
@@ -85,13 +76,9 @@ agent.run(
 )
 ```
 
-
-
 ```output
 'The draft email was created correctly.'
 ```
-
-
 
 ```python
 agent.run(
@@ -99,13 +86,9 @@ agent.run(
 )
 ```
 
-
-
 ```output
 "I found one draft in your drafts folder about collaboration. It was sent on 2023-06-16T18:22:17+0000 and the subject was 'Collaboration Request'."
 ```
-
-
 
 ```python
 agent.run(
@@ -119,12 +102,9 @@ agent.run(
   timezone = date_time.tzinfo.zone if date_time.tzinfo is not None else None
 ```
 
-
 ```output
 'I have scheduled a meeting with a sentient parrot to discuss research collaborations on October 3, 2023 at 2 pm Easter Time. Please let me know if you need to make any changes.'
 ```
-
-
 
 ```python
 agent.run(
@@ -132,13 +112,9 @@ agent.run(
 )
 ```
 
-
-
 ```output
 "Yes, you have an event on October 3, 2023 with a sentient parrot. The event is titled 'Meeting with sentient parrot' and is scheduled from 6:00 PM to 6:30 PM."
 ```
-
-
 
 ## Related
 

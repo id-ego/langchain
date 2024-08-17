@@ -15,16 +15,12 @@ As an bonus, your LLM will automatically become a LangChain `Runnable` and will 
 
 There are only two required things that a custom LLM needs to implement:
 
-
 | Method        | Description                                                               |
 |---------------|---------------------------------------------------------------------------|
 | `_call`       | Takes in a string and some optional stop words, and returns a string. Used by `invoke`. |
 | `_llm_type`   | A property that returns a string, used for logging purposes only.        
 
-
-
 Optional implementations: 
-
 
 | Method    | Description                                                                                               |
 |----------------------|-----------------------------------------------------------------------------------------------------------|
@@ -33,10 +29,7 @@ Optional implementations:
 | `_stream`             | Method to stream the output token by token.                                                               |
 | `_astream`            | Provides an async native implementation of `_stream`; in newer LangChain versions, defaults to `_stream`. |
 
-
-
 Let's implement a simple custom LLM that just returns the first n characters of the input.
-
 
 ```python
 <!--IMPORTS:[{"imported": "CallbackManagerForLLMRun", "source": "langchain_core.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForLLMRun.html", "title": "How to create a custom LLM class"}, {"imported": "LLM", "source": "langchain_core.language_models.llms", "docs": "https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.llms.LLM.html", "title": "How to create a custom LLM class"}, {"imported": "GenerationChunk", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.generation.GenerationChunk.html", "title": "How to create a custom LLM class"}]-->
@@ -149,7 +142,6 @@ class CustomLLM(LLM):
 
 This LLM will implement the standard `Runnable` interface of LangChain which many of the LangChain abstractions support!
 
-
 ```python
 llm = CustomLLM(n=5)
 print(llm)
@@ -163,49 +155,33 @@ Params: {'model_name': 'CustomChatModel'}
 llm.invoke("This is a foobar thing")
 ```
 
-
-
 ```output
 'This '
 ```
-
-
 
 ```python
 await llm.ainvoke("world")
 ```
 
-
-
 ```output
 'world'
 ```
-
-
 
 ```python
 llm.batch(["woof woof woof", "meow meow meow"])
 ```
 
-
-
 ```output
 ['woof ', 'meow ']
 ```
-
-
 
 ```python
 await llm.abatch(["woof woof woof", "meow meow meow"])
 ```
 
-
-
 ```output
 ['woof ', 'meow ']
 ```
-
-
 
 ```python
 async for token in llm.astream("hello"):
@@ -216,12 +192,10 @@ h|e|l|l|o|
 ```
 Let's confirm that in integrates nicely with other `LangChain` APIs.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to create a custom LLM class"}]-->
 from langchain_core.prompts import ChatPromptTemplate
 ```
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -229,12 +203,10 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-
 ```python
 llm = CustomLLM(n=7)
 chain = prompt | llm
 ```
-
 
 ```python
 idx = 0

@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Arthur
 
->[Arthur](https://arthur.ai) is a model monitoring and observability platform.
+> [Arthur](https://arthur.ai) is a model monitoring and observability platform.
 
 The following guide shows how to run a registered chat LLM with the Arthur callback handler to automatically log model inferences to Arthur.
 
@@ -15,7 +15,6 @@ If you do not have a model currently onboarded to Arthur, visit our [onboarding 
 
 Place Arthur credentials here
 
-
 ```python
 arthur_url = "https://app.arthur.ai"
 arthur_login = "your-arthur-login-username-here"
@@ -23,7 +22,6 @@ arthur_model_id = "your-arthur-model-id-here"
 ```
 
 ## Callback handler
-
 
 ```python
 <!--IMPORTS:[{"imported": "ArthurCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.arthur_callback.ArthurCallbackHandler.html", "title": "Arthur"}, {"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "Arthur"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Arthur"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Arthur"}]-->
@@ -34,7 +32,6 @@ from langchain_openai import ChatOpenAI
 ```
 
 Create Langchain LLM with Arthur callback handler
-
 
 ```python
 def make_langchain_chat_llm():
@@ -50,7 +47,6 @@ def make_langchain_chat_llm():
     )
 ```
 
-
 ```python
 chatgpt = make_langchain_chat_llm()
 ```
@@ -60,7 +56,6 @@ Please enter password for admin: ········
 Running the chat LLM with this `run` function will save the chat history in an ongoing list so that the conversation can reference earlier messages and log each response to the Arthur platform. You can view the history of this model's inferences on your [model dashboard page](https://app.arthur.ai/).
 
 Enter `q` to quit the run loop
-
 
 ```python
 def run(llm):
@@ -72,7 +67,6 @@ def run(llm):
         history.append(HumanMessage(content=user_input))
         history.append(llm(history))
 ```
-
 
 ```python
 run(chatgpt)

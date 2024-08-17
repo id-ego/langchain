@@ -5,16 +5,14 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # BGE on Hugging Face
 
->[BGE models on the HuggingFace](https://huggingface.co/BAAI/bge-large-en) are [the best open-source embedding models](https://huggingface.co/spaces/mteb/leaderboard).
->BGE model is created by the [Beijing Academy of Artificial Intelligence (BAAI)](https://en.wikipedia.org/wiki/Beijing_Academy_of_Artificial_Intelligence). `BAAI` is a private non-profit organization engaged in AI research and development.
+> [BGE models on the HuggingFace](https://huggingface.co/BAAI/bge-large-en) are [the best open-source embedding models](https://huggingface.co/spaces/mteb/leaderboard).
+BGE model is created by the [Beijing Academy of Artificial Intelligence (BAAI)](https://en.wikipedia.org/wiki/Beijing_Academy_of_Artificial_Intelligence). `BAAI` is a private non-profit organization engaged in AI research and development.
 
 This notebook shows how to use `BGE Embeddings` through `Hugging Face`
-
 
 ```python
 %pip install --upgrade --quiet  sentence_transformers
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceBgeEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.huggingface.HuggingFaceBgeEmbeddings.html", "title": "BGE on Hugging Face"}]-->
@@ -30,19 +28,14 @@ hf = HuggingFaceBgeEmbeddings(
 
 Note that you need to pass `query_instruction=""` for `model_name="BAAI/bge-m3"` see [FAQ BGE M3](https://huggingface.co/BAAI/bge-m3#faq). 
 
-
 ```python
 embedding = hf.embed_query("hi this is harrison")
 len(embedding)
 ```
 
-
-
 ```output
 384
 ```
-
-
 
 ## Related
 

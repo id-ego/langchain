@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Faiss
 
->[Facebook AI Similarity Search (FAISS)](https://engineering.fb.com/2017/03/29/data-infrastructure/faiss-a-library-for-efficient-similarity-search/) is a library for efficient similarity search and clustering of dense vectors. It contains algorithms that search in sets of vectors of any size, up to ones that possibly do not fit in RAM. It also contains supporting code for evaluation and parameter tuning.
+> [Facebook AI Similarity Search (FAISS)](https://engineering.fb.com/2017/03/29/data-infrastructure/faiss-a-library-for-efficient-similarity-search/) is a library for efficient similarity search and clustering of dense vectors. It contains algorithms that search in sets of vectors of any size, up to ones that possibly do not fit in RAM. It also contains supporting code for evaluation and parameter tuning.
 
 You can find the FAISS documentation at [this page](https://faiss.ai/).
 
@@ -17,13 +17,11 @@ The integration lives in the `langchain-community` package. We also need to inst
 
 Note that you can also install `faiss-gpu` if you want to use the GPU enabled version
 
-
 ```python
 pip install -qU langchain-community faiss-cpu
 ```
 
 If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -56,7 +54,6 @@ vector_store = FAISS(
 ## Manage vector store
 
 ### Add items to vector store
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Faiss"}]-->
@@ -131,8 +128,6 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
-
-
 ```output
 ['22f5ce99-cd6f-4e0c-8dab-664128307c72',
  'dc3f061b-5f88-4fa1-a966-413550c51891',
@@ -146,20 +141,15 @@ vector_store.add_documents(documents=documents, ids=uuids)
  '44e4be03-0a8d-4316-b3c4-f35f4bb2b532']
 ```
 
-
 ### Delete items from vector store
-
 
 ```python
 vector_store.delete(ids=[uuids[-1]])
 ```
 
-
-
 ```output
 True
 ```
-
 
 ## Query vector store
 
@@ -170,7 +160,6 @@ Once your vector store has been created and the relevant documents have been add
 #### Similarity search
 
 Performing a simple similarity search with filtering on metadata can be done as follows:
-
 
 ```python
 results = vector_store.similarity_search(
@@ -189,7 +178,6 @@ for res in results:
 
 You can also search with score:
 
-
 ```python
 results = vector_store.similarity_search_with_score(
     "Will it be hot tomorrow?", k=1, filter={"source": "news"}
@@ -202,25 +190,20 @@ for res, score in results:
 ```
 #### Other search methods
 
-
 There are a variety of other ways to search a FAISS vector store. For a complete list of those methods, please refer to the [API Reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html)
 
 ### Query by turning into retriever
 
 You can also transform the vector store into a retriever for easier usage in your chains. 
 
-
 ```python
 retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 1})
 retriever.invoke("Stealing from the bank is a crime", filter={"source": "news"})
 ```
 
-
-
 ```output
 [Document(metadata={'source': 'news'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
-
 
 ## Usage for retrieval-augmented generation
 
@@ -233,7 +216,6 @@ For guides on how to use this vector store for retrieval-augmented generation (R
 ## Saving and loading
 You can also save and load a FAISS index. This is useful so you don't have to recreate it everytime you use it.
 
-
 ```python
 vector_store.save_local("faiss_index")
 
@@ -244,21 +226,16 @@ new_vector_store = FAISS.load_local(
 docs = new_vector_store.similarity_search("qux")
 ```
 
-
 ```python
 docs[0]
 ```
-
-
 
 ```output
 Document(metadata={'source': 'tweet'}, page_content='Building an exciting new project with LangChain - come check it out!')
 ```
 
-
 ## Merging
 You can also merge two FAISS vectorstores
-
 
 ```python
 db1 = FAISS.from_texts(["foo"], embeddings)
@@ -267,47 +244,34 @@ db2 = FAISS.from_texts(["bar"], embeddings)
 db1.docstore._dict
 ```
 
-
-
 ```output
 {'b752e805-350e-4cf5-ba54-0883d46a3a44': Document(page_content='foo')}
 ```
-
-
 
 ```python
 db2.docstore._dict
 ```
 
-
-
 ```output
 {'08192d92-746d-4cd1-b681-bdfba411f459': Document(page_content='bar')}
 ```
-
-
 
 ```python
 db1.merge_from(db2)
 ```
 
-
 ```python
 db1.docstore._dict
 ```
-
-
 
 ```output
 {'b752e805-350e-4cf5-ba54-0883d46a3a44': Document(page_content='foo'),
  '08192d92-746d-4cd1-b681-bdfba411f459': Document(page_content='bar')}
 ```
 
-
 ## API reference
 
 For detailed documentation of all `FAISS` vector store features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html
-
 
 ## Related
 

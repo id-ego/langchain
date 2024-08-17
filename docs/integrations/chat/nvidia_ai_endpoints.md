@@ -9,17 +9,17 @@ sidebar_label: NVIDIA AI Endpoints
 This will help you getting started with NVIDIA [chat models](/docs/concepts/#chat-models). For detailed documentation of all `ChatNVIDIA` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html).
 
 ## Overview
-The `langchain-nvidia-ai-endpoints` package contains LangChain integrations building applications with models on 
-NVIDIA NIM inference microservice. NIM supports models across domains like chat, embedding, and re-ranking models 
-from the community as well as NVIDIA. These models are optimized by NVIDIA to deliver the best performance on NVIDIA 
-accelerated infrastructure and deployed as a NIM, an easy-to-use, prebuilt containers that deploy anywhere using a single 
+The `langchain-nvidia-ai-endpoints` package contains LangChain integrations building applications with models on
+NVIDIA NIM inference microservice. NIM supports models across domains like chat, embedding, and re-ranking models
+from the community as well as NVIDIA. These models are optimized by NVIDIA to deliver the best performance on NVIDIA
+accelerated infrastructure and deployed as a NIM, an easy-to-use, prebuilt containers that deploy anywhere using a single
 command on NVIDIA accelerated infrastructure.
 
-NVIDIA hosted deployments of NIMs are available to test on the [NVIDIA API catalog](https://build.nvidia.com/). After testing, 
-NIMs can be exported from NVIDIA’s API catalog using the NVIDIA AI Enterprise license and run on-premises or in the cloud, 
+NVIDIA hosted deployments of NIMs are available to test on the [NVIDIA API catalog](https://build.nvidia.com/). After testing,
+NIMs can be exported from NVIDIA’s API catalog using the NVIDIA AI Enterprise license and run on-premises or in the cloud,
 giving enterprises ownership and full control of their IP and AI application.
 
-NIMs are packaged as container images on a per model basis and are distributed as NGC container images through the NVIDIA NGC Catalog. 
+NIMs are packaged as container images on a per model basis and are distributed as NGC container images through the NVIDIA NGC Catalog.
 At their core, NIMs provide easy, consistent, and familiar APIs for running inference on an AI model.
 
 This example goes over how to use LangChain to interact with NVIDIA supported via the `ChatNVIDIA` class.
@@ -42,16 +42,11 @@ For more information on accessing the chat models through this api, check out th
 **To get started:**
 
 1. Create a free account with [NVIDIA](https://build.nvidia.com/), which hosts NVIDIA AI Foundation models.
-
 2. Click on your model of choice.
-
 3. Under `Input` select the `Python` tab, and click `Get API Key`. Then click `Generate Key`.
-
 4. Copy and save the generated key as `NVIDIA_API_KEY`. From there, you should have access to the endpoints.
 
 ### Credentials
-
-
 
 ```python
 import getpass
@@ -64,7 +59,6 @@ if not os.getenv("NVIDIA_API_KEY"):
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -74,7 +68,6 @@ If you want to get automated tracing of your model calls you can also set your [
 
 The LangChain NVIDIA AI Endpoints integration lives in the `langchain_nvidia_ai_endpoints` package:
 
-
 ```python
 %pip install --upgrade --quiet langchain-nvidia-ai-endpoints
 ```
@@ -82,7 +75,6 @@ The LangChain NVIDIA AI Endpoints integration lives in the `langchain_nvidia_ai_
 ## Instantiation
 
 Now we can access models in the NVIDIA API Catalog:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "ChatNVIDIA"}]-->
@@ -94,7 +86,6 @@ llm = ChatNVIDIA(model="mistralai/mixtral-8x7b-instruct-v0.1")
 
 ## Invocation
 
-
 ```python
 result = llm.invoke("Write a ballad about LangChain.")
 print(result.content)
@@ -104,8 +95,6 @@ print(result.content)
 When ready to deploy, you can self-host models with NVIDIA NIM—which is included with the NVIDIA AI Enterprise software license—and run them anywhere, giving you ownership of your customizations and full control of your intellectual property (IP) and AI applications.
 
 [Learn more about NIMs](https://developer.nvidia.com/blog/nvidia-nim-offers-optimized-inference-microservices-for-deploying-ai-models-at-scale/)
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "ChatNVIDIA"}]-->
@@ -119,20 +108,17 @@ llm = ChatNVIDIA(base_url="http://localhost:8000/v1", model="meta/llama3-8b-inst
 
 These models natively support streaming, and as is the case with all LangChain LLMs they expose a batch method to handle concurrent requests, as well as async methods for invoke, stream, and batch. Below are a few examples.
 
-
 ```python
 print(llm.batch(["What's 2*3?", "What's 2*6?"]))
 # Or via the async API
 # await llm.abatch(["What's 2*3?", "What's 2*6?"])
 ```
 
-
 ```python
 for chunk in llm.stream("How far can a seagull fly in one day?"):
     # Show the token separations
     print(chunk.content, end="|")
 ```
-
 
 ```python
 async for chunk in llm.astream(
@@ -146,7 +132,6 @@ async for chunk in llm.astream(
 Querying `available_models` will still give you all of the other models offered by your API credentials.
 
 The `playground_` prefix is optional.
-
 
 ```python
 ChatNVIDIA.get_available_models()
@@ -164,7 +149,6 @@ Some model types support unique prompting techniques and chat messages. We will 
 ### General Chat
 
 Models such as `meta/llama3-8b-instruct` and `mistralai/mixtral-8x22b-instruct-v0.1` are good all-around models that you can use for with any LangChain chat messages. Example below.
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "ChatNVIDIA"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatNVIDIA"}, {"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "ChatNVIDIA"}]-->
@@ -184,7 +168,6 @@ for txt in chain.stream({"input": "What's your name?"}):
 ### Code Generation
 
 These models accept the same arguments and input structure as regular chat models, but they tend to perform better on code-genreation and structured code tasks. An example of this is `meta/codellama-70b`.
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -208,7 +191,6 @@ NVIDIA also supports multimodal inputs, meaning you can provide both images and 
 
 Below is an example use:
 
-
 ```python
 import IPython
 import requests
@@ -219,7 +201,6 @@ image_content = requests.get(image_url).content
 IPython.display.Image(image_content)
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "ChatNVIDIA"}]-->
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
@@ -228,7 +209,6 @@ llm = ChatNVIDIA(model="nvidia/neva-22b")
 ```
 
 #### Passing an image as a URL
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatNVIDIA"}]-->
@@ -250,7 +230,6 @@ llm.invoke(
 
 At the moment, some extra processing happens client-side to support larger images like the one above. But for smaller images (and to better illustrate the process going on under the hood), we can directly pass in the image as shown below: 
 
-
 ```python
 import IPython
 import requests
@@ -260,7 +239,6 @@ image_content = requests.get(image_url).content
 
 IPython.display.Image(image_content)
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatNVIDIA"}]-->
@@ -290,7 +268,6 @@ llm.invoke(
 
 The NVIDIA API uniquely accepts images as base64 images inlined within `<img/>` HTML tags. While this isn't interoperable with other LLMs, you can directly prompt the model accordingly.
 
-
 ```python
 base64_with_mime_type = f"data:image/png;base64,{b64_string}"
 llm.invoke(f'What\'s in this image?\n<img src="{base64_with_mime_type}" />')
@@ -300,11 +277,9 @@ llm.invoke(f'What\'s in this image?\n<img src="{base64_with_mime_type}" />')
 
 Like any other integration, ChatNVIDIA is fine to support chat utilities like RunnableWithMessageHistory which is analogous to using `ConversationChain`. Below, we show the [LangChain RunnableWithMessageHistory](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html) example applied to the `mistralai/mixtral-8x22b-instruct-v0.1` model.
 
-
 ```python
 %pip install --upgrade --quiet langchain
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.InMemoryChatMessageHistory.html", "title": "ChatNVIDIA"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "ChatNVIDIA"}]-->
@@ -343,14 +318,12 @@ conversation.invoke(
 )
 ```
 
-
 ```python
 conversation.invoke(
     "I'm doing well! Just having a conversation with an AI.",
     config=config,
 )
 ```
-
 
 ```python
 conversation.invoke(
@@ -367,7 +340,6 @@ Starting in v0.2, `ChatNVIDIA` supports [bind_tools](https://api.python.langchai
 
 You can get a list of models that are known to support tool calling with,
 
-
 ```python
 tool_models = [
     model for model in ChatNVIDIA.get_available_models() if model.supports_tools
@@ -376,7 +348,6 @@ tool_models
 ```
 
 With a tool capable model,
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "ChatNVIDIA"}]-->
@@ -402,7 +373,6 @@ See [How to use chat models to call tools](https://python.langchain.com/v0.2/doc
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatNVIDIA"}]-->
@@ -431,7 +401,6 @@ chain.invoke(
 ## API reference
 
 For detailed documentation of all `ChatNVIDIA` features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html
-
 
 ## Related
 

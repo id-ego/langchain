@@ -24,8 +24,6 @@ This output parser allows users to specify an arbitrary schema and query LLMs fo
 Keep in mind that large language models are leaky abstractions! You'll have to use an LLM with sufficient capacity to generate well-formed YAML.
 :::
 
-
-
 ```python
 %pip install -qU langchain langchain-openai
 
@@ -36,7 +34,6 @@ os.environ["OPENAI_API_KEY"] = getpass()
 ```
 
 We use [Pydantic](https://docs.pydantic.dev) with the [`YamlOutputParser`](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.yaml.YamlOutputParser.html#langchain.output_parsers.yaml.YamlOutputParser) to declare our data model and give the model more context as to what type of YAML it should generate:
-
 
 ```python
 <!--IMPORTS:[{"imported": "YamlOutputParser", "source": "langchain.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.yaml.YamlOutputParser.html", "title": "How to parse YAML output"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to parse YAML output"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to parse YAML output"}]-->
@@ -71,26 +68,19 @@ chain = prompt | model | parser
 chain.invoke({"query": joke_query})
 ```
 
-
-
 ```output
 Joke(setup="Why couldn't the bicycle find its way home?", punchline='Because it lost its bearings!')
 ```
 
-
 The parser will automatically parse the output YAML and create a Pydantic model with the data. We can see the parser's `format_instructions`, which get added to the prompt:
-
 
 ```python
 parser.get_format_instructions()
 ```
 
-
-
 ```output
 'The output should be formatted as a YAML instance that conforms to the given JSON schema below.\n\n# Examples\n## Schema\n```\n{"title": "Players", "description": "A list of players", "type": "array", "items": {"$ref": "#/definitions/Player"}, "definitions": {"Player": {"title": "Player", "type": "object", "properties": {"name": {"title": "Name", "description": "Player name", "type": "string"}, "avg": {"title": "Avg", "description": "Batting average", "type": "number"}}, "required": ["name", "avg"]}}}\n```\n## Well formatted instance\n```\n- name: John Doe\n  avg: 0.3\n- name: Jane Maxfield\n  avg: 1.4\n```\n\n## Schema\n```\n{"properties": {"habit": { "description": "A common daily habit", "type": "string" }, "sustainable_alternative": { "description": "An environmentally friendly alternative to the habit", "type": "string"}}, "required": ["habit", "sustainable_alternative"]}\n```\n## Well formatted instance\n```\nhabit: Using disposable water bottles for daily hydration.\nsustainable_alternative: Switch to a reusable water bottle to reduce plastic waste and decrease your environmental footprint.\n``` \n\nPlease follow the standard YAML formatting conventions with an indent of 2 spaces and make sure that the data types adhere strictly to the following JSON schema: \n```\n{"properties": {"setup": {"title": "Setup", "description": "question to set up a joke", "type": "string"}, "punchline": {"title": "Punchline", "description": "answer to resolve the joke", "type": "string"}}, "required": ["setup", "punchline"]}\n```\n\nMake sure to always enclose the YAML output in triple backticks (```). Please do not add anything other than valid YAML output!'
 ```
-
 
 You can and should experiment with adding your own formatting hints in the other parts of your prompt to either augment or replace the default instructions.
 

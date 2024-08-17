@@ -5,7 +5,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Glue Catalog
 
-
 The [AWS Glue Data Catalog](https://docs.aws.amazon.com/en_en/glue/latest/dg/catalog-and-crawler.html) is a centralized metadata repository that allows you to manage, access, and share metadata about your data stored in AWS. It acts as a metadata store for your data assets, enabling various AWS services and your applications to query and connect to the data they need efficiently.
 
 When you define data sources, transformations, and targets in AWS Glue, the metadata about these elements is stored in the Data Catalog. This includes information about data locations, schema definitions, runtime metrics, and more. It supports various data store types, such as Amazon S3, Amazon RDS, Amazon Redshift, and external databases compatible with JDBC. It is also directly integrated with Amazon Athena, Amazon Redshift Spectrum, and Amazon EMR, allowing these services to directly access and query the data.
@@ -17,15 +16,12 @@ The Langchain GlueCatalogLoader will get the schema of all tables inside the giv
 - Follow [instructions to set up an AWS accoung](https://docs.aws.amazon.com/athena/latest/ug/setting-up.html).
 - Install the boto3 library: `pip install boto3`
 
-
 ## Example
-
 
 ```python
 <!--IMPORTS:[{"imported": "GlueCatalogLoader", "source": "langchain_community.document_loaders.glue_catalog", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.glue_catalog.GlueCatalogLoader.html", "title": "Glue Catalog"}]-->
 from langchain_community.document_loaders.glue_catalog import GlueCatalogLoader
 ```
-
 
 ```python
 database_name = "my_database"
@@ -44,12 +40,10 @@ print(schemas)
 
 Table filtering allows you to selectively retrieve schema information for a specific subset of tables within a Glue database. Instead of loading the schemas for all tables, you can use the `table_filter` argument to specify exactly which tables you're interested in.
 
-
 ```python
 <!--IMPORTS:[{"imported": "GlueCatalogLoader", "source": "langchain_community.document_loaders.glue_catalog", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.glue_catalog.GlueCatalogLoader.html", "title": "Glue Catalog"}]-->
 from langchain_community.document_loaders.glue_catalog import GlueCatalogLoader
 ```
-
 
 ```python
 database_name = "my_database"
@@ -63,7 +57,6 @@ loader = GlueCatalogLoader(
 schemas = loader.load()
 print(schemas)
 ```
-
 
 ## Related
 

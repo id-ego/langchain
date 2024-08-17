@@ -9,7 +9,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebooks goes over how to use an LLM hosted on a `SageMaker endpoint`.
 
-
 ```python
 !pip3 install langchain boto3
 ```
@@ -18,21 +17,19 @@ This notebooks goes over how to use an LLM hosted on a `SageMaker endpoint`.
 
 You have to set up following required parameters of the `SagemakerEndpoint` call:
 - `endpoint_name`: The name of the endpoint from the deployed Sagemaker model.
-    Must be unique within an AWS Region.
+Must be unique within an AWS Region.
 - `credentials_profile_name`: The name of the profile in the ~/.aws/credentials or ~/.aws/config files, which
-    has either access keys or role information specified.
-    If not specified, the default credential profile or, if on an EC2 instance,
-    credentials from IMDS will be used.
-    See: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
+has either access keys or role information specified.
+If not specified, the default credential profile or, if on an EC2 instance,
+credentials from IMDS will be used.
+See: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html
 
 ## Example
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "SageMakerEndpoint"}]-->
 from langchain_core.documents import Document
 ```
-
 
 ```python
 example_doc_1 = """
@@ -51,7 +48,6 @@ docs = [
 ## Example to initialize with external boto3 session
 
 ### for cross account scenarios
-
 
 ```python
 <!--IMPORTS:[{"imported": "load_qa_chain", "source": "langchain.chains.question_answering", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.question_answering.chain.load_qa_chain.html", "title": "SageMakerEndpoint"}, {"imported": "SagemakerEndpoint", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sagemaker_endpoint.SagemakerEndpoint.html", "title": "SageMakerEndpoint"}, {"imported": "LLMContentHandler", "source": "langchain_community.llms.sagemaker_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sagemaker_endpoint.LLMContentHandler.html", "title": "SageMakerEndpoint"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "SageMakerEndpoint"}]-->
@@ -120,7 +116,6 @@ chain = load_qa_chain(
 chain({"input_documents": docs, "question": query}, return_only_outputs=True)
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "load_qa_chain", "source": "langchain.chains.question_answering", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.question_answering.chain.load_qa_chain.html", "title": "SageMakerEndpoint"}, {"imported": "SagemakerEndpoint", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sagemaker_endpoint.SagemakerEndpoint.html", "title": "SageMakerEndpoint"}, {"imported": "LLMContentHandler", "source": "langchain_community.llms.sagemaker_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sagemaker_endpoint.LLMContentHandler.html", "title": "SageMakerEndpoint"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "SageMakerEndpoint"}]-->
 import json
@@ -173,7 +168,6 @@ chain = load_qa_chain(
 
 chain({"input_documents": docs, "question": query}, return_only_outputs=True)
 ```
-
 
 ## Related
 

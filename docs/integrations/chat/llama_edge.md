@@ -8,7 +8,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 [LlamaEdge](https://github.com/second-state/LlamaEdge) allows you to chat with LLMs of [GGUF](https://github.com/ggerganov/llama.cpp/blob/master/gguf-py/README.md) format both locally and via chat service.
 
 - `LlamaEdgeChatService` provides developers an OpenAI API compatible service to chat with LLMs via HTTP requests.
-
 - `LlamaEdgeChatLocal` enables developers to chat with LLMs locally (coming soon).
 
 Both `LlamaEdgeChatService` and `LlamaEdgeChatLocal` run on the infrastructure driven by [WasmEdge Runtime](https://wasmedge.org/), which provides a lightweight and portable WebAssembly container environment for LLM inference tasks.
@@ -17,7 +16,6 @@ Both `LlamaEdgeChatService` and `LlamaEdgeChatLocal` run on the infrastructure d
 
 `LlamaEdgeChatService` works on the `llama-api-server`. Following the steps in [llama-api-server quick-start](https://github.com/second-state/llama-utils/tree/main/api-server#readme), you can host your own API service so that you can chat with any models you like on any device you have anywhere as long as the internet is available.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LlamaEdgeChatService", "source": "langchain_community.chat_models.llama_edge", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.llama_edge.LlamaEdgeChatService.html", "title": "LlamaEdge"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "LlamaEdge"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "LlamaEdge"}]-->
 from langchain_community.chat_models.llama_edge import LlamaEdgeChatService
@@ -25,7 +23,6 @@ from langchain_core.messages import HumanMessage, SystemMessage
 ```
 
 ### Chat with LLMs in the non-streaming mode
-
 
 ```python
 # service url
@@ -48,7 +45,6 @@ print(f"[Bot] {response.content}")
 [Bot] Hello! The capital of France is Paris.
 ```
 ### Chat with LLMs in the streaming mode
-
 
 ```python
 # service url

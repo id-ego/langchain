@@ -26,13 +26,11 @@ Make sure to set the following environment variables:
 
 ## Usage
 
-
 ```python
 import os
 
 os.environ["UPSTAGE_API_KEY"] = "YOUR_API_KEY"
 ```
-
 
 ```python
 from langchain_upstage import UpstageLayoutAnalysisLoader

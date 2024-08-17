@@ -6,7 +6,7 @@ sidebar_label: IBM watsonx.ai
 
 # ChatWatsonx
 
->ChatWatsonx is a wrapper for IBM [watsonx.ai](https://www.ibm.com/products/watsonx-ai) foundation models.
+> ChatWatsonx is a wrapper for IBM [watsonx.ai](https://www.ibm.com/products/watsonx-ai) foundation models.
 
 The aim of these examples is to show how to communicate with `watsonx.ai` models using `LangChain` LLMs API.
 
@@ -33,7 +33,6 @@ The cell below defines the credentials required to work with watsonx Foundation 
 **Action:** Provide the IBM Cloud user API key. For details, see
 [Managing user API keys](https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui).
 
-
 ```python
 import os
 from getpass import getpass
@@ -43,7 +42,6 @@ os.environ["WATSONX_APIKEY"] = watsonx_api_key
 ```
 
 Additionally you are able to pass additional secrets as an environment variable. 
-
 
 ```python
 import os
@@ -59,7 +57,6 @@ os.environ["WATSONX_INSTANCE_ID"] = "your instance_id for accessing the CPD clus
 
 The LangChain IBM integration lives in the `langchain-ibm` package:
 
-
 ```python
 !pip install -qU langchain-ibm
 ```
@@ -67,7 +64,6 @@ The LangChain IBM integration lives in the `langchain-ibm` package:
 ## Instantiation
 
 You might need to adjust model `parameters` for different models or tasks. For details, refer to [Available MetaNames](https://ibm.github.io/watsonx-ai-python-sdk/fm_model.html#metanames.GenTextParamsMetaNames).
-
 
 ```python
 parameters = {
@@ -80,7 +76,6 @@ parameters = {
 
 Initialize the `WatsonxLLM` class with the previously set parameters.
 
-
 **Note**: 
 
 - To provide context for the API call, you must pass the `project_id` or `space_id`. To get your project or space ID, open your project or space, go to the **Manage** tab, and click **General**. For more information see: [Project documentation](https://www.ibm.com/docs/en/watsonx-as-a-service?topic=projects) or [Deployment space documentation](https://www.ibm.com/docs/en/watsonx/saas?topic=spaces-creating-deployment).
@@ -88,9 +83,7 @@ Initialize the `WatsonxLLM` class with the previously set parameters.
 
 In this example, we’ll use the `project_id` and Dallas URL.
 
-
 You need to specify the `model_id` that will be used for inferencing. You can find the list of all the available models in [Supported foundation models](https://ibm.github.io/watsonx-ai-python-sdk/fm_model.html#ibm_watsonx_ai.foundation_models.utils.enums.ModelTypes).
-
 
 ```python
 from langchain_ibm import ChatWatsonx
@@ -104,7 +97,6 @@ chat = ChatWatsonx(
 ```
 
 Alternatively, you can use Cloud Pak for Data credentials. For details, see [watsonx.ai software setup](https://ibm.github.io/watsonx-ai-python-sdk/setup_cpd.html).  
-
 
 ```python
 chat = ChatWatsonx(
@@ -121,7 +113,6 @@ chat = ChatWatsonx(
 
 Instead of `model_id`, you can also pass the `deployment_id` of the previously tuned model. The entire model tuning workflow is described in [Working with TuneExperiment and PromptTuner](https://ibm.github.io/watsonx-ai-python-sdk/pt_working_with_class_and_prompt_tuner.html).
 
-
 ```python
 chat = ChatWatsonx(
     deployment_id="PASTE YOUR DEPLOYMENT_ID HERE",
@@ -134,7 +125,6 @@ chat = ChatWatsonx(
 ## Invocation
 
 To obtain completions, you can call the model directly using a string prompt.
-
 
 ```python
 # Invocation
@@ -150,13 +140,9 @@ messages = [
 chat.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content="Je t'aime pour écouter la Rock.", response_metadata={'token_usage': {'generated_token_count': 12, 'input_token_count': 28}, 'model_name': 'ibm/granite-13b-chat-v2', 'system_fingerprint': '', 'finish_reason': 'stop_sequence'}, id='run-05b305ce-5401-4a10-b557-41a4b15c7f6f-0')
 ```
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatWatsonx"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "ChatWatsonx"}]-->
@@ -174,16 +160,12 @@ human_message = HumanMessage(content="horse")
 chat.invoke([system_message, human_message])
 ```
 
-
-
 ```output
 AIMessage(content='Sure, I can help you with that! Horses are large, powerful mammals that belong to the family Equidae.', response_metadata={'token_usage': {'generated_token_count': 24, 'input_token_count': 24}, 'model_name': 'ibm/granite-13b-chat-v2', 'system_fingerprint': '', 'finish_reason': 'stop_sequence'}, id='run-391776ff-3b38-4768-91e8-ff64177149e5-0')
 ```
 
-
 ## Chaining
 Create `ChatPromptTemplate` objects which will be responsible for creating a random question.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatWatsonx"}]-->
@@ -198,7 +180,6 @@ prompt = ChatPromptTemplate.from_messages([("system", system), ("human", human)]
 
 Provide a inputs and run the chain.
 
-
 ```python
 chain = prompt | chat
 chain.invoke(
@@ -210,17 +191,13 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Ich liebe Python.', response_metadata={'token_usage': {'generated_token_count': 5, 'input_token_count': 23}, 'model_name': 'ibm/granite-13b-chat-v2', 'system_fingerprint': '', 'finish_reason': 'stop_sequence'}, id='run-1b1ccf5d-0e33-46f2-a087-e2a136ba1fb7-0')
 ```
 
-
-## Streaming the Model output 
+## Streaming the Model output
 
 You can stream the model output.
-
 
 ```python
 system_message = SystemMessage(
@@ -234,10 +211,9 @@ for chunk in chat.stream([system_message, human_message]):
 ```output
 The moon is a natural satellite of the Earth, and it has been a source of fascination for humans for centuries.
 ```
-## Batch the Model output 
+## Batch the Model output
 
 You can batch the model output.
-
 
 ```python
 message_1 = [
@@ -256,13 +232,10 @@ message_2 = [
 chat.batch([message_1, message_2])
 ```
 
-
-
 ```output
 [AIMessage(content='Cats are domestic animals that belong to the Felidae family.', response_metadata={'token_usage': {'generated_token_count': 13, 'input_token_count': 24}, 'model_name': 'ibm/granite-13b-chat-v2', 'system_fingerprint': '', 'finish_reason': 'stop_sequence'}, id='run-71a8bd7a-a1aa-497b-9bdd-a4d6fe1d471a-0'),
  AIMessage(content='Dogs are domesticated mammals of the family Canidae, characterized by their adaptability to various environments and social structures.', response_metadata={'token_usage': {'generated_token_count': 24, 'input_token_count': 24}, 'model_name': 'ibm/granite-13b-chat-v2', 'system_fingerprint': '', 'finish_reason': 'stop_sequence'}, id='run-22b7a0cb-e44a-4b68-9921-872f82dcd82b-0')]
 ```
-
 
 ## Tool calling
 
@@ -271,7 +244,6 @@ chat.batch([message_1, message_2])
 Please note that `ChatWatsonx.bind_tools` is on beta state, so right now we only support `mistralai/mixtral-8x7b-instruct-v01` model.
 
 You should also redefine `max_new_tokens` parameter to get the entire model response. By default `max_new_tokens` is set to 20.
-
 
 ```python
 from langchain_ibm import ChatWatsonx
@@ -286,7 +258,6 @@ chat = ChatWatsonx(
 )
 ```
 
-
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
 
@@ -300,7 +271,6 @@ class GetWeather(BaseModel):
 llm_with_tools = chat.bind_tools([GetWeather])
 ```
 
-
 ```python
 ai_msg = llm_with_tools.invoke(
     "Which city is hotter today: LA or NY?",
@@ -308,33 +278,25 @@ ai_msg = llm_with_tools.invoke(
 ai_msg
 ```
 
-
-
 ```output
 AIMessage(content='', additional_kwargs={'function_call': {'type': 'function'}, 'tool_calls': [{'type': 'function', 'function': {'name': 'GetWeather', 'arguments': '{"location": "Los Angeles"}'}, 'id': None}, {'type': 'function', 'function': {'name': 'GetWeather', 'arguments': '{"location": "New York"}'}, 'id': None}]}, response_metadata={'token_usage': {'generated_token_count': 99, 'input_token_count': 320}, 'model_name': 'mistralai/mixtral-8x7b-instruct-v01', 'system_fingerprint': '', 'finish_reason': 'eos_token'}, id='run-38627104-f2ac-4edb-8390-d5425fb65979-0', tool_calls=[{'name': 'GetWeather', 'args': {'location': 'Los Angeles'}, 'id': None}, {'name': 'GetWeather', 'args': {'location': 'New York'}, 'id': None}])
 ```
 
-
 ### AIMessage.tool_calls
 Notice that the AIMessage has a `tool_calls` attribute. This contains in a standardized ToolCall format that is model-provider agnostic.
-
 
 ```python
 ai_msg.tool_calls
 ```
-
-
 
 ```output
 [{'name': 'GetWeather', 'args': {'location': 'Los Angeles'}, 'id': None},
  {'name': 'GetWeather', 'args': {'location': 'New York'}, 'id': None}]
 ```
 
-
 ## API reference
 
 For detailed documentation of all IBM watsonx.ai features and configurations head to the API reference: https://api.python.langchain.com/en/latest/ibm_api_reference.html
-
 
 ## Related
 

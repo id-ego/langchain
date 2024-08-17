@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 [Upstage](https://upstage.ai) is a leading artificial intelligence (AI) company specializing in delivering above-human-grade performance LLM components. 
 
-
 ## Solar LLM
 
 **Solar Mini Chat** is a fast yet powerful advanced large language model focusing on English and Korean. It has been specifically fine-tuned for multi-turn chat purposes, showing enhanced performance across a wide range of natural language processing tasks, like multi-turn conversation or tasks that require an understanding of long contexts, such as RAG (Retrieval-Augmented Generation), compared to other models of a similar size. This fine-tuning equips it with the ability to handle longer conversations more effectively, making it particularly adept for interactive applications.
@@ -39,17 +38,13 @@ See [documentations](https://developers.upstage.ai/) for more details about the 
 
 ### Environment Setup
 
-
 ```python
 import os
 
 os.environ["UPSTAGE_API_KEY"] = "YOUR_API_KEY"
 ```
 
-
 ### Chat
-
-
 
 ```python
 from langchain_upstage import ChatUpstage
@@ -59,12 +54,7 @@ response = chat.invoke("Hello, how are you?")
 print(response)
 ```
 
-
-
 ### Text embedding
-
-
-
 
 ```python
 from langchain_upstage import UpstageEmbeddings
@@ -81,7 +71,6 @@ print(query_result)
 
 ### Groundedness Check
 
-
 ```python
 from langchain_upstage import UpstageGroundednessCheck
 
@@ -96,7 +85,6 @@ print(response)
 ```
 
 ### Layout Analysis
-
 
 ```python
 from langchain_upstage import UpstageLayoutAnalysisLoader

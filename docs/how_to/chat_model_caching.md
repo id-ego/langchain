@@ -35,7 +35,6 @@ from langchain_core.globals import set_llm_cache
 
 This is an ephemeral cache that stores model calls in memory. It will be wiped when your environment restarts, and is not shared across processes.
 
-
 ```python
 <!--IMPORTS:[{"imported": "InMemoryCache", "source": "langchain_core.caches", "docs": "https://api.python.langchain.com/en/latest/caches/langchain_core.caches.InMemoryCache.html", "title": "How to cache chat model responses"}]-->
 %%time
@@ -51,12 +50,9 @@ CPU times: user 645 ms, sys: 214 ms, total: 859 ms
 Wall time: 829 ms
 ```
 
-
 ```output
 AIMessage(content="Why don't scientists trust atoms?\n\nBecause they make up everything!", response_metadata={'token_usage': {'completion_tokens': 13, 'prompt_tokens': 11, 'total_tokens': 24}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-b6836bdd-8c30-436b-828f-0ac5fc9ab50e-0')
 ```
-
-
 
 ```python
 %%time
@@ -68,21 +64,17 @@ CPU times: user 822 µs, sys: 288 µs, total: 1.11 ms
 Wall time: 1.06 ms
 ```
 
-
 ```output
 AIMessage(content="Why don't scientists trust atoms?\n\nBecause they make up everything!", response_metadata={'token_usage': {'completion_tokens': 13, 'prompt_tokens': 11, 'total_tokens': 24}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-b6836bdd-8c30-436b-828f-0ac5fc9ab50e-0')
 ```
-
 
 ## SQLite Cache
 
 This cache implementation uses a `SQLite` database to store responses, and will last across process restarts.
 
-
 ```python
 !rm .langchain.db
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "SQLiteCache", "source": "langchain_community.cache", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_community.cache.SQLiteCache.html", "title": "How to cache chat model responses"}]-->
@@ -91,7 +83,6 @@ from langchain_community.cache import SQLiteCache
 
 set_llm_cache(SQLiteCache(database_path=".langchain.db"))
 ```
-
 
 ```python
 %%time
@@ -103,12 +94,9 @@ CPU times: user 9.91 ms, sys: 7.68 ms, total: 17.6 ms
 Wall time: 657 ms
 ```
 
-
 ```output
 AIMessage(content='Why did the scarecrow win an award? Because he was outstanding in his field!', response_metadata={'token_usage': {'completion_tokens': 17, 'prompt_tokens': 11, 'total_tokens': 28}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-39d9e1e8-7766-4970-b1d8-f50213fd94c5-0')
 ```
-
-
 
 ```python
 %%time
@@ -120,11 +108,9 @@ CPU times: user 52.2 ms, sys: 60.5 ms, total: 113 ms
 Wall time: 127 ms
 ```
 
-
 ```output
 AIMessage(content='Why did the scarecrow win an award? Because he was outstanding in his field!', id='run-39d9e1e8-7766-4970-b1d8-f50213fd94c5-0')
 ```
-
 
 ## Next steps
 

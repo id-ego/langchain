@@ -5,12 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Apache AGE
 
->[Apache AGE](https://age.apache.org/) is a PostgreSQL extension that provides graph database functionality. AGE is an acronym for A Graph Extension, and is inspired by Bitnine’s fork of PostgreSQL 10, AgensGraph, which is a multi-model database. The goal of the project is to create single storage that can handle both relational and graph model data so that users can use standard ANSI SQL along with openCypher, the Graph query language. The data elements `Apache AGE` stores are nodes, edges connecting them, and attributes of nodes and edges.
+> [Apache AGE](https://age.apache.org/) is a PostgreSQL extension that provides graph database functionality. AGE is an acronym for A Graph Extension, and is inspired by Bitnine’s fork of PostgreSQL 10, AgensGraph, which is a multi-model database. The goal of the project is to create single storage that can handle both relational and graph model data so that users can use standard ANSI SQL along with openCypher, the Graph query language. The data elements `Apache AGE` stores are nodes, edges connecting them, and attributes of nodes and edges.
 
->This notebook shows how to use LLMs to provide a natural language interface to a graph database you can query with the `Cypher` query language.
+> This notebook shows how to use LLMs to provide a natural language interface to a graph database you can query with the `Cypher` query language.
 
->[Cypher](https://en.wikipedia.org/wiki/Cypher_(query_language)) is a declarative graph query language that allows for expressive and efficient data querying in a property graph.
-
+> [Cypher](https://en.wikipedia.org/wiki/Cypher_(query_language)) is a declarative graph query language that allows for expressive and efficient data querying in a property graph.
 
 ## Setting up
 
@@ -30,14 +29,12 @@ docker run \
 
 Additional instructions on running in docker can be found [here](https://hub.docker.com/r/apache/age).
 
-
 ```python
 <!--IMPORTS:[{"imported": "GraphCypherQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher.GraphCypherQAChain.html", "title": "Apache AGE"}, {"imported": "AGEGraph", "source": "langchain_community.graphs.age_graph", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.age_graph.AGEGraph.html", "title": "Apache AGE"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Apache AGE"}]-->
 from langchain.chains import GraphCypherQAChain
 from langchain_community.graphs.age_graph import AGEGraph
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 conf = {
@@ -55,7 +52,6 @@ graph = AGEGraph(graph_name="age_test", conf=conf)
 
 Assuming your database is empty, you can populate it using Cypher query language. The following Cypher statement is idempotent, which means the database information will be the same if you run it one or multiple times.
 
-
 ```python
 graph.query(
     """
@@ -68,21 +64,16 @@ MERGE (a)-[:ACTED_IN]->(m)
 )
 ```
 
-
-
 ```output
 []
 ```
 
-
 ## Refresh graph schema information
 If the schema of database changes, you can refresh the schema information needed to generate Cypher statements.
-
 
 ```python
 graph.refresh_schema()
 ```
-
 
 ```python
 print(graph.schema)
@@ -100,13 +91,11 @@ print(graph.schema)
 
 We can now use the graph cypher QA chain to ask question of the graph
 
-
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True
 )
 ```
-
 
 ```python
 chain.invoke("Who played in Top Gun?")
@@ -126,24 +115,20 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': 'Tom Cruise, Val Kilmer, Anthony Edwards, Meg Ryan played in Top Gun.'}
 ```
 
-
 ## Limit the number of results
 You can limit the number of results from the Cypher QA Chain using the `top_k` parameter.
 The default is 10.
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, top_k=2
 )
 ```
-
 
 ```python
 chain.invoke("Who played in Top Gun?")
@@ -161,23 +146,19 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': 'Tom Cruise, Val Kilmer played in Top Gun.'}
 ```
 
-
 ## Return intermediate results
 You can return intermediate steps from the Cypher QA Chain using the `return_intermediate_steps` parameter
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, return_intermediate_steps=True
 )
 ```
-
 
 ```python
 result = chain("Who played in Top Gun?")
@@ -202,13 +183,11 @@ Final answer: Tom Cruise, Val Kilmer, Anthony Edwards, Meg Ryan played in Top Gu
 ## Return direct results
 You can return direct results from the Cypher QA Chain using the `return_direct` parameter
 
-
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, return_direct=True
 )
 ```
-
 
 ```python
 chain.invoke("Who played in Top Gun?")
@@ -224,7 +203,6 @@ RETURN a.name[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': [{'name': 'Tom Cruise'},
@@ -233,10 +211,8 @@ RETURN a.name[0m
   {'name': 'Meg Ryan'}]}
 ```
 
-
 ## Add examples in the Cypher generation prompt
 You can define the Cypher statement you want the LLM to generate for particular questions
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts.prompt", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Apache AGE"}]-->
@@ -271,7 +247,6 @@ chain = GraphCypherQAChain.from_llm(
 )
 ```
 
-
 ```python
 chain.invoke("How many people played in Top Gun?")
 ```
@@ -289,16 +264,13 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'How many people played in Top Gun?',
  'result': "I don't know the answer."}
 ```
 
-
 ## Use separate LLMs for Cypher and answer generation
 You can use the `cypher_llm` and `qa_llm` parameters to define different llms
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -308,7 +280,6 @@ chain = GraphCypherQAChain.from_llm(
     verbose=True,
 )
 ```
-
 
 ```python
 chain.invoke("Who played in Top Gun?")
@@ -328,17 +299,14 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'Who played in Top Gun?',
  'result': 'Tom Cruise, Val Kilmer, Anthony Edwards, and Meg Ryan played in Top Gun.'}
 ```
 
-
 ## Ignore specified node and relationship types
 
 You can use `include_types` or `exclude_types` to ignore parts of the graph schema when generating Cypher statements.
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -349,7 +317,6 @@ chain = GraphCypherQAChain.from_llm(
     exclude_types=["Movie"],
 )
 ```
-
 
 ```python
 # Inspect graph schema
@@ -366,7 +333,6 @@ The relationships are the following:
 ## Validate generated Cypher statements
 You can use the `validate_cypher` parameter to validate and correct relationship directions in generated Cypher statements
 
-
 ```python
 chain = GraphCypherQAChain.from_llm(
     llm=ChatOpenAI(temperature=0, model="gpt-3.5-turbo"),
@@ -375,7 +341,6 @@ chain = GraphCypherQAChain.from_llm(
     validate_cypher=True,
 )
 ```
-
 
 ```python
 chain.invoke("Who played in Top Gun?")
@@ -393,7 +358,6 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
-
 
 ```output
 {'query': 'Who played in Top Gun?',

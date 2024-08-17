@@ -9,13 +9,11 @@ Connect to Google's generative AI embeddings service using the `GoogleGenerative
 
 ## Installation
 
-
 ```python
 %pip install --upgrade --quiet  langchain-google-genai
 ```
 
 ## Credentials
-
 
 ```python
 import getpass
@@ -27,7 +25,6 @@ if "GOOGLE_API_KEY" not in os.environ:
 
 ## Usage
 
-
 ```python
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
@@ -36,17 +33,13 @@ vector = embeddings.embed_query("hello, world!")
 vector[:5]
 ```
 
-
-
 ```output
 [0.05636945, 0.0048285457, -0.0762591, -0.023642512, 0.05329321]
 ```
 
-
 ## Batch
 
 You can also embed multiple strings at once for a processing speedup:
-
 
 ```python
 vectors = embeddings.embed_documents(
@@ -59,12 +52,9 @@ vectors = embeddings.embed_documents(
 len(vectors), len(vectors[0])
 ```
 
-
-
 ```output
 (3, 768)
 ```
-
 
 ## Task type
 `GoogleGenerativeAIEmbeddings` optionally support a `task_type`, which currently must be one of:
@@ -77,7 +67,6 @@ len(vectors), len(vectors[0])
 - clustering
 
 By default, we use `retrieval_document` in the `embed_documents` method and `retrieval_query` in the `embed_query` method. If you provide a task type, we will use that for all methods.
-
 
 ```python
 %pip install --upgrade --quiet  matplotlib scikit-learn
@@ -112,7 +101,6 @@ You can pass the following parameters to ChatGoogleGenerativeAI in order to cust
 
 - `client_options`: [Client Options](https://googleapis.dev/python/google-api-core/latest/client_options.html#module-google.api_core.client_options) to pass to the Google API Client, such as a custom `client_options["api_endpoint"]`
 - `transport`: The transport method to use, such as `rest`, `grpc`, or `grpc_asyncio`.
-
 
 ## Related
 

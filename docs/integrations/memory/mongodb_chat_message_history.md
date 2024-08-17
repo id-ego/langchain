@@ -5,12 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # MongoDB
 
->`MongoDB` is a source-available cross-platform document-oriented database program. Classified as a NoSQL database program, `MongoDB` uses `JSON`-like documents with optional schemas.
->
->`MongoDB` is developed by MongoDB Inc. and licensed under the Server Side Public License (SSPL). - [Wikipedia](https://en.wikipedia.org/wiki/MongoDB)
+> `MongoDB` is a source-available cross-platform document-oriented database program. Classified as a NoSQL database program, `MongoDB` uses `JSON`-like documents with optional schemas.
+> 
+> `MongoDB` is developed by MongoDB Inc. and licensed under the Server Side Public License (SSPL). - [Wikipedia](https://en.wikipedia.org/wiki/MongoDB)
 
 This notebook goes over how to use the `MongoDBChatMessageHistory` class to store chat message history in a Mongodb database.
-
 
 ## Setup
 
@@ -21,7 +20,6 @@ pip install -U --quiet langchain-mongodb
 ```
 
 It's also helpful (but not needed) to set up [LangSmith](https://smith.langchain.com/) for best-in-class observability
-
 
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -37,8 +35,7 @@ To use the storage you need to provide only 2 things:
 
 If you want to customize where the chat histories go, you can also pass:
 1. *database_name* - name of the database to use
-1. *collection_name* - collection to use within that database
-
+2. *collection_name* - collection to use within that database
 
 ```python
 <!--IMPORTS:[{"imported": "MongoDBChatMessageHistory", "source": "langchain_mongodb.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_mongodb.chat_message_histories.MongoDBChatMessageHistory.html", "title": "MongoDB"}]-->
@@ -55,25 +52,19 @@ chat_message_history.add_user_message("Hello")
 chat_message_history.add_ai_message("Hi")
 ```
 
-
 ```python
 chat_message_history.messages
 ```
 
-
-
 ```output
 [HumanMessage(content='Hello'), AIMessage(content='Hi')]
 ```
-
 
 ## Chaining
 
 We can easily combine this message history class with [LCEL Runnables](/docs/how_to/message_history)
 
 To do this we will want to use OpenAI, so we need to install that.  You will also need to set the OPENAI_API_KEY environment variable to your OpenAI key.
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "MongoDB"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "MongoDB"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "MongoDB"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "MongoDB"}]-->
@@ -82,7 +73,6 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_openai import ChatOpenAI
 ```
 
-
 ```python
 import os
 
@@ -90,7 +80,6 @@ assert os.environ[
     "OPENAI_API_KEY"
 ], "Set the OPENAI_API_KEY environment variable with your OpenAI API key."
 ```
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -103,7 +92,6 @@ prompt = ChatPromptTemplate.from_messages(
 
 chain = prompt | ChatOpenAI()
 ```
-
 
 ```python
 chain_with_history = RunnableWithMessageHistory(
@@ -119,30 +107,22 @@ chain_with_history = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 # This is where we configure the session id
 config = {"configurable": {"session_id": "<SESSION_ID>"}}
 ```
 
-
 ```python
 chain_with_history.invoke({"question": "Hi! I'm bob"}, config=config)
 ```
-
-
 
 ```output
 AIMessage(content='Hi Bob! How can I assist you today?')
 ```
 
-
-
 ```python
 chain_with_history.invoke({"question": "Whats my name"}, config=config)
 ```
-
-
 
 ```output
 AIMessage(content='Your name is Bob. Is there anything else I can help you with, Bob?')

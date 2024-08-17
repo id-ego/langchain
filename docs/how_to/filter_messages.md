@@ -11,7 +11,6 @@ The `filter_messages` utility makes it easy to filter messages by type, id, or n
 
 ## Basic usage
 
-
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to filter messages"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to filter messages"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to filter messages"}, {"imported": "filter_messages", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.utils.filter_messages.html", "title": "How to filter messages"}]-->
 from langchain_core.messages import (
@@ -32,20 +31,14 @@ messages = [
 filter_messages(messages, include_types="human")
 ```
 
-
-
 ```output
 [HumanMessage(content='example input', name='example_user', id='2'),
  HumanMessage(content='real input', name='bob', id='4')]
 ```
 
-
-
 ```python
 filter_messages(messages, exclude_names=["example_user", "example_assistant"])
 ```
-
-
 
 ```output
 [SystemMessage(content='you are a good assistant', id='1'),
@@ -53,13 +46,9 @@ filter_messages(messages, exclude_names=["example_user", "example_assistant"])
  AIMessage(content='real output', name='alice', id='5')]
 ```
 
-
-
 ```python
 filter_messages(messages, include_types=[HumanMessage, AIMessage], exclude_ids=["3"])
 ```
-
-
 
 ```output
 [HumanMessage(content='example input', name='example_user', id='2'),
@@ -67,11 +56,9 @@ filter_messages(messages, include_types=[HumanMessage, AIMessage], exclude_ids=[
  AIMessage(content='real output', name='alice', id='5')]
 ```
 
-
 ## Chaining
 
 `filter_messages` can be used in an imperatively (like above) or declaratively, making it easy to compose with other components in a chain:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to filter messages"}]-->
@@ -86,29 +73,22 @@ chain = filter_ | llm
 chain.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content=[], response_metadata={'id': 'msg_01Wz7gBHahAwkZ1KCBNtXmwA', 'model': 'claude-3-sonnet-20240229', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 16, 'output_tokens': 3}}, id='run-b5d8a3fe-004f-4502-a071-a6c025031827-0', usage_metadata={'input_tokens': 16, 'output_tokens': 3, 'total_tokens': 19})
 ```
-
 
 Looking at the LangSmith trace we can see that before the messages are passed to the model they are filtered: https://smith.langchain.com/public/f808a724-e072-438e-9991-657cc9e7e253/r
 
 Looking at just the filter_, we can see that it's a Runnable object that can be invoked like all Runnables:
 
-
 ```python
 filter_.invoke(messages)
 ```
-
-
 
 ```output
 [HumanMessage(content='real input', name='bob', id='4'),
  AIMessage(content='real output', name='alice', id='5')]
 ```
-
 
 ## API reference
 

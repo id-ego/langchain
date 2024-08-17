@@ -5,12 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Replicate
 
->[Replicate](https://replicate.com/blog/machine-learning-needs-better-tools) runs machine learning models in the cloud. We have a library of open-source models that you can run with a few lines of code. If you're building your own machine learning models, Replicate makes it easy to deploy them at scale.
+> [Replicate](https://replicate.com/blog/machine-learning-needs-better-tools) runs machine learning models in the cloud. We have a library of open-source models that you can run with a few lines of code. If you're building your own machine learning models, Replicate makes it easy to deploy them at scale.
 
 This example goes over how to use LangChain to interact with `Replicate` [models](https://replicate.com/explore)
 
 ## Setup
-
 
 ```python
 # magics to auto-reload external modules in case you are making changes to langchain while working on this notebook
@@ -19,7 +18,6 @@ This example goes over how to use LangChain to interact with `Replicate` [models
 ```
 
 To run this notebook, you'll need to create a [replicate](https://replicate.com) account and install the [replicate python client](https://github.com/replicate/replicate-python).
-
 
 ```python
 !poetry run pip install replicate
@@ -51,13 +49,11 @@ from getpass import getpass
 REPLICATE_API_TOKEN = getpass()
 ```
 
-
 ```python
 import os
 
 os.environ["REPLICATE_API_TOKEN"] = REPLICATE_API_TOKEN
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Replicate"}, {"imported": "Replicate", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.replicate.Replicate.html", "title": "Replicate"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Replicate"}]-->
@@ -72,7 +68,6 @@ Find a model on the [replicate explore page](https://replicate.com/explore), and
 
 For example, here is [`Meta Llama 3`](https://replicate.com/meta/meta-llama-3-8b-instruct).
 
-
 ```python
 llm = Replicate(
     model="meta/meta-llama-3-8b-instruct",
@@ -85,12 +80,9 @@ Assistant:
 llm(prompt)
 ```
 
-
-
 ```output
 "Let's break this down step by step:\n\n1. A dog is a living being, specifically a mammal.\n2. Dogs do not possess the cognitive abilities or physical characteristics necessary to operate a vehicle, such as a car.\n3. Operating a car requires complex mental and physical abilities, including:\n\t* Understanding of traffic laws and rules\n\t* Ability to read and comprehend road signs\n\t* Ability to make decisions quickly and accurately\n\t* Ability to physically manipulate the vehicle's controls (e.g., steering wheel, pedals)\n4. Dogs do not possess any of these abilities. They are unable to read or comprehend written language, let alone complex traffic laws.\n5. Dogs also lack the physical dexterity and coordination to operate a vehicle's controls. Their paws and claws are not adapted for grasping or manipulating small, precise objects like a steering wheel or pedals.\n6. Therefore, it is not possible for a dog to drive a car.\n\nAnswer: No."
 ```
-
 
 As another example, for this [dolly model](https://replicate.com/replicate/dolly-v2-12b), click on the API tab. The model name/version would be: `replicate/dolly-v2-12b:ef0e1aefc61f8e096ebe4db6b2bacc297daf2ef6899f0f7e001ec445893500e5`
 
@@ -101,16 +93,14 @@ For example, if we were running stable diffusion and wanted to change the image 
 ```
 Replicate(model="stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", input={'image_dimensions': '512x512'})
 ```
-                       
-*Note that only the first output of a model will be returned.*
 
+*Note that only the first output of a model will be returned.*
 
 ```python
 llm = Replicate(
     model="replicate/dolly-v2-12b:ef0e1aefc61f8e096ebe4db6b2bacc297daf2ef6899f0f7e001ec445893500e5"
 )
 ```
-
 
 ```python
 prompt = """
@@ -120,15 +110,11 @@ Can a dog drive a car?
 llm(prompt)
 ```
 
-
-
 ```output
 'No, dogs lack some of the brain functions required to operate a motor vehicle. They cannot focus and react in time to accelerate or brake correctly. Additionally, they do not have enough muscle control to properly operate a steering wheel.\n\n'
 ```
 
-
 We can call any replicate model using this syntax. For example, we can call stable diffusion.
-
 
 ```python
 text2image = Replicate(
@@ -137,21 +123,16 @@ text2image = Replicate(
 )
 ```
 
-
 ```python
 image_output = text2image("A cat riding a motorcycle by Picasso")
 image_output
 ```
 
-
-
 ```output
 'https://pbxt.replicate.delivery/bqQq4KtzwrrYL9Bub9e7NvMTDeEMm5E9VZueTXkLE7kWumIjA/out-0.png'
 ```
 
-
 The model spits out a URL. Let's render it.
-
 
 ```python
 !poetry run pip install Pillow
@@ -178,7 +159,6 @@ img
 ## Streaming Response
 You can optionally stream the response as it is produced, which is helpful to show interactivity to users for time-consuming generations. See detailed docs on [Streaming](/docs/how_to/streaming_llm) for more information.
 
-
 ```python
 <!--IMPORTS:[{"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "Replicate"}]-->
 from langchain_core.callbacks import StreamingStdOutCallbackHandler
@@ -200,7 +180,6 @@ _ = llm.invoke(prompt)
 ```
 # Stop Sequences
 You can also specify stop sequences. If you have a definite stop sequence for the generation that you are going to parse with anyway, it is better (cheaper and faster!) to just cancel the generation once one or more stop sequences are reached, rather than letting the model ramble on till the specified `max_length`. Stop sequences work regardless of whether you are in streaming mode or not, and Replicate only charges you for the generation up until the stop sequence.
-
 
 ```python
 import time
@@ -248,14 +227,12 @@ Stopped output runtime: 25.77039254200008 seconds
 ## Chaining Calls
 The whole point of langchain is to... chain! Here's an example of how do that.
 
-
 ```python
 <!--IMPORTS:[{"imported": "SimpleSequentialChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.sequential.SimpleSequentialChain.html", "title": "Replicate"}]-->
 from langchain.chains import SimpleSequentialChain
 ```
 
 First, let's define the LLM for this model as a flan-5, and text2image as a stable diffusion model.
-
 
 ```python
 dolly_llm = Replicate(
@@ -268,7 +245,6 @@ text2image = Replicate(
 
 First prompt in the chain
 
-
 ```python
 prompt = PromptTemplate(
     input_variables=["product"],
@@ -280,7 +256,6 @@ chain = LLMChain(llm=dolly_llm, prompt=prompt)
 
 Second prompt to get the logo for company description
 
-
 ```python
 second_prompt = PromptTemplate(
     input_variables=["company_name"],
@@ -291,7 +266,6 @@ chain_two = LLMChain(llm=dolly_llm, prompt=second_prompt)
 
 Third prompt, let's create the image based on the description output from prompt 2
 
-
 ```python
 third_prompt = PromptTemplate(
     input_variables=["company_logo_description"],
@@ -301,7 +275,6 @@ chain_three = LLMChain(llm=text2image, prompt=third_prompt)
 ```
 
 Now let's run it!
-
 
 ```python
 # Run the chain specifying only the input variable for the first chain.
@@ -334,7 +307,6 @@ response = requests.get(
 img = Image.open(BytesIO(response.content))
 img
 ```
-
 
 ## Related
 

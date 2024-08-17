@@ -13,7 +13,6 @@ This notebook provides a detailed guide on utilizing the TiDB Vector functionali
 
 Begin by installing the necessary packages.
 
-
 ```python
 %pip install langchain langchain-community
 %pip install langchain-openai
@@ -22,7 +21,6 @@ Begin by installing the necessary packages.
 ```
 
 Configure both the OpenAI and TiDB host settings that you will need. In this notebook, we will follow the standard connection method provided by TiDB Cloud to establish a secure and efficient database connection.
-
 
 ```python
 # Here we useimport getpass
@@ -41,7 +39,6 @@ tidb_connection_string = tidb_connection_string_template.replace(
 
 Prepare the following data
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "TiDB Vector"}, {"imported": "TiDBVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.tidb_vector.TiDBVectorStore.html", "title": "TiDB Vector"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "TiDB Vector"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "TiDB Vector"}]-->
 from langchain_community.document_loaders import TextLoader
@@ -49,7 +46,6 @@ from langchain_community.vectorstores import TiDBVectorStore
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
@@ -66,7 +62,6 @@ TiDB supports both cosine and Euclidean distances ('cosine', 'l2'), with 'cosine
 
 The code snippet below creates a table named `TABLE_NAME` in TiDB, optimized for vector searching. Upon successful execution of this code, you will be able to view and access the `TABLE_NAME` table directly within your TiDB database.
 
-
 ```python
 TABLE_NAME = "semantic_embeddings"
 db = TiDBVectorStore.from_documents(
@@ -78,14 +73,12 @@ db = TiDBVectorStore.from_documents(
 )
 ```
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db.similarity_search_with_score(query, k=3)
 ```
 
 Please note that a lower cosine distance indicates higher similarity.
-
 
 ```python
 for doc, score in docs_with_score:
@@ -135,7 +128,6 @@ First, beat the opioid epidemic.
 --------------------------------------------------------------------------------
 ```
 Additionally, the similarity_search_with_relevance_scores method can be used to obtain relevance scores, where a higher score indicates greater similarity.
-
 
 ```python
 docs_with_relevance_score = db.similarity_search_with_relevance_scores(query, k=2)
@@ -236,7 +228,6 @@ The following metadata filters will match the vector
 
 Please note that each key-value pair in the metadata filters is treated as a separate filter clause, and these clauses are combined using the AND logical operator.
 
-
 ```python
 db.add_texts(
     texts=[
@@ -250,14 +241,10 @@ db.add_texts(
 )
 ```
 
-
-
 ```output
 [UUID('c782cb02-8eec-45be-a31f-fdb78914f0a7'),
  UUID('08dcd2ba-9f16-4f29-a9b7-18141f8edae3')]
 ```
-
-
 
 ```python
 docs_with_score = db.similarity_search_with_score(
@@ -278,7 +265,6 @@ TiDB Vector offers advanced, high-speed vector processing capabilities, enhancin
 ### Using as a Retriever
 
 In Langchain, a retriever is an interface that retrieves documents in response to an unstructured query, offering a broader functionality than a vector store. The code below demonstrates how to utilize TiDB Vector as a retriever.
-
 
 ```python
 retriever = db.as_retriever(
@@ -309,7 +295,6 @@ Let's look a advanced use case - a travel agent is crafting a custom travel repo
 - A subsequent SQL query that joins these codes with route information, detailing airlines and destinations aligned with the clients' preferences.
 
 First, let's prepare some airpod related data
-
 
 ```python
 # create table to store airplan data
@@ -360,17 +345,13 @@ db.add_texts(
 )
 ```
 
-
-
 ```output
 [UUID('6dab390f-acd9-4c7d-b252-616606fbc89b'),
  UUID('9e811801-0e6b-4893-8886-60f4fb67ce69'),
  UUID('f426747c-0f7b-4c62-97ed-3eeb7c8dd76e')]
 ```
 
-
 Finding Airports with Clean Facilities and Vegetarian Options via Vector Search
-
 
 ```python
 retriever = db.as_retriever(
@@ -408,16 +389,12 @@ airport_details = db.tidb_vector_client.execute(search_query, params)
 airport_details.get("result")
 ```
 
-
-
 ```output
 [(1, 'JFK', 'DL', 'LAX', 'Non-stop from JFK to LAX.', datetime.timedelta(seconds=21600), 5, 'Boeing 777', Decimal('299.99'), 'None'),
  (2, 'LAX', 'AA', 'ORD', 'Direct LAX to ORD route.', datetime.timedelta(seconds=14400), 3, 'Airbus A320', Decimal('149.99'), 'None')]
 ```
 
-
 Alternatively, we can streamline the process by utilizing a single SQL query to accomplish the search in one step.
-
 
 ```python
 search_query = f"""
@@ -438,37 +415,28 @@ airport_details = db.tidb_vector_client.execute(search_query, params)
 airport_details.get("result")
 ```
 
-
-
 ```output
 [(0.1219207353407008, 1, 'JFK', 'DL', 'LAX', 'Non-stop from JFK to LAX.', datetime.timedelta(seconds=21600), 5, 'Boeing 777', Decimal('299.99'), 'None', 'Clean lounges and excellent vegetarian dining options. Highly recommended.'),
  (0.14613754359804654, 2, 'LAX', 'AA', 'ORD', 'Direct LAX to ORD route.', datetime.timedelta(seconds=14400), 3, 'Airbus A320', Decimal('149.99'), 'None', 'Comfortable seating in lounge areas and diverse food selections, including vegetarian.'),
  (0.19840519342700513, 3, 'EFGH', 'UA', 'SEA', 'Daily flights from SFO to SEA.', datetime.timedelta(seconds=9000), 7, 'Boeing 737', Decimal('129.99'), 'None', 'Small airport with basic facilities.')]
 ```
 
-
-
 ```python
 # clean up
 db.tidb_vector_client.execute("DROP TABLE airplan_routes")
 ```
 
-
-
 ```output
 {'success': True, 'result': 0, 'error': None}
 ```
-
 
 # Delete
 
 You can remove the TiDB Vector Store by using the `.drop_vectorstore()` method.
 
-
 ```python
 db.drop_vectorstore()
 ```
-
 
 ## Related
 

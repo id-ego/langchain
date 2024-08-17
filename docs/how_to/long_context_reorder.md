@@ -13,13 +13,11 @@ To mitigate the ["lost in the middle"](https://arxiv.org/abs/2307.03172) effect,
 
 The [LongContextReorder](https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.long_context_reorder.LongContextReorder.html) document transformer implements this re-ordering procedure. Below we demonstrate an example.
 
-
 ```python
 %pip install --upgrade --quiet  sentence-transformers langchain-chroma langchain langchain-openai langchain-huggingface > /dev/null
 ```
 
 First we embed some artificial documents and index them in an (in-memory) [Chroma](/docs/integrations/providers/chroma/) vector store. We will use [Hugging Face](/docs/integrations/text_embedding/huggingfacehub/) embeddings, but any LangChain vector store or embeddings model will suffice.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to reorder retrieved results to mitigate the \"lost in the middle\" effect"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "How to reorder retrieved results to mitigate the \"lost in the middle\" effect"}]-->
@@ -53,8 +51,6 @@ docs = retriever.invoke(query)
 docs
 ```
 
-
-
 ```output
 [Document(page_content='This is a document about the Boston Celtics'),
  Document(page_content='The Celtics are my favourite team.'),
@@ -68,9 +64,7 @@ docs
  Document(page_content='This is just a random text.')]
 ```
 
-
 Note that documents are returned in descending order of relevance to the query. The `LongContextReorder` document transformer will implement the re-ordering described above:
-
 
 ```python
 <!--IMPORTS:[{"imported": "LongContextReorder", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.long_context_reorder.LongContextReorder.html", "title": "How to reorder retrieved results to mitigate the \"lost in the middle\" effect"}]-->
@@ -86,8 +80,6 @@ reordered_docs = reordering.transform_documents(docs)
 reordered_docs
 ```
 
-
-
 ```output
 [Document(page_content='The Celtics are my favourite team.'),
  Document(page_content='The Boston Celtics won the game by 20 points'),
@@ -101,9 +93,7 @@ reordered_docs
  Document(page_content='This is a document about the Boston Celtics')]
 ```
 
-
 Below, we show how to incorporate the re-ordered documents into a simple question-answering chain:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to reorder retrieved results to mitigate the \"lost in the middle\" effect"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to reorder retrieved results to mitigate the \"lost in the middle\" effect"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "How to reorder retrieved results to mitigate the \"lost in the middle\" effect"}]-->

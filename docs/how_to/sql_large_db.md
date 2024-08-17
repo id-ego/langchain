@@ -12,16 +12,13 @@ In this guide we demonstrate methods for identifying such relevant information, 
 1. Identifying a relevant subset of tables;
 2. Identifying a relevant subset of column values.
 
-
 ## Setup
 
 First, get required packages and set environment variables:
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai
 ```
-
 
 ```python
 # Uncomment the below to use LangSmith. Not required.
@@ -38,7 +35,6 @@ The below example will use a SQLite connection with Chinook database. Follow [th
 * Test `SELECT * FROM Artist LIMIT 10;`
 
 Now, `Chinhook.db` is in our directory and we can interface with it using the SQLAlchemy-driven [SQLDatabase](https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html) class:
-
 
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabase", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -100,15 +96,11 @@ table_chain = prompt | llm_with_tools | output_parser
 table_chain.invoke({"input": "What are all the genres of Alanis Morisette songs"})
 ```
 
-
-
 ```output
 [Table(name='Genre')]
 ```
 
-
 This works pretty well! Except, as we'll see below, we actually need a few other tables as well. This would be pretty difficult for the model to know based just on the user question. In this case, we might think to simplify our model's job by grouping the tables together. We'll just ask the model to choose between categories "Music" and "Business", and then take care of selecting all the relevant tables from there:
-
 
 ```python
 system = """Return the names of any SQL tables that are relevant to the user question.
@@ -129,13 +121,9 @@ category_chain = prompt | llm_with_tools | output_parser
 category_chain.invoke({"input": "What are all the genres of Alanis Morisette songs"})
 ```
 
-
-
 ```output
 [Table(name='Music'), Table(name='Business')]
 ```
-
-
 
 ```python
 from typing import List
@@ -165,8 +153,6 @@ table_chain = category_chain | get_tables
 table_chain.invoke({"input": "What are all the genres of Alanis Morisette songs"})
 ```
 
-
-
 ```output
 ['Album',
  'Artist',
@@ -181,9 +167,7 @@ table_chain.invoke({"input": "What are all the genres of Alanis Morisette songs"
  'InvoiceLine']
 ```
 
-
 Now that we've got a chain that can output the relevant tables for any query we can combine this with our [create_sql_query_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.sql_database.query.create_sql_query_chain.html), which can accept a list of `table_names_to_use` to determine which table schemas are included in the prompt:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_sql_query_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.sql_database.query.create_sql_query_chain.html", "title": "How to deal with large databases when doing SQL question-answering"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -198,7 +182,6 @@ table_chain = {"input": itemgetter("question")} | table_chain
 # Set table_names_to_use using table_chain.
 full_chain = RunnablePassthrough.assign(table_names_to_use=table_chain) | query_chain
 ```
-
 
 ```python
 query = full_chain.invoke(
@@ -220,12 +203,9 @@ LIMIT 5;
 db.run(query)
 ```
 
-
-
 ```output
 "[('Rock',)]"
 ```
-
 
 We can see the LangSmith trace for this run [here](https://smith.langchain.com/public/4fbad408-3554-4f33-ab47-1e510a1b52a3/r).
 
@@ -238,7 +218,6 @@ In order to filter columns that contain proper nouns such as addresses, song nam
 One naive strategy it to create a vector store with all the distinct proper nouns that exist in the database. We can then query that vector store each user input and inject the most relevant proper nouns into the prompt.
 
 First we need the unique values for each entity we want, for which we define a function that parses the result into a list of elements:
-
 
 ```python
 import ast
@@ -259,15 +238,11 @@ len(proper_nouns)
 proper_nouns[:5]
 ```
 
-
-
 ```output
 ['AC/DC', 'Accept', 'Aerosmith', 'Alanis Morissette', 'Alice In Chains']
 ```
 
-
 Now we can embed and store all of our values in a vector database:
-
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to deal with large databases when doing SQL question-answering"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -279,7 +254,6 @@ retriever = vector_db.as_retriever(search_kwargs={"k": 15})
 ```
 
 And put together a query construction chain that first retrieves values from the database and inserts them into the prompt:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to deal with large databases when doing SQL question-answering"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -315,7 +289,6 @@ chain = RunnablePassthrough.assign(proper_nouns=retriever_chain) | query_chain
 
 To try out our chain, let's see what happens when we try filtering on "elenis moriset", a misspelling of Alanis Morissette, without and with retrieval:
 
-
 ```python
 # Without retrieval
 query = query_chain.invoke(
@@ -333,12 +306,9 @@ JOIN Genre g ON t.GenreId = g.GenreId
 WHERE ar.Name = 'Elenis Moriset';
 ```
 
-
 ```output
 ''
 ```
-
-
 
 ```python
 # Without retrieval
@@ -357,12 +327,9 @@ JOIN Artist ON Album.ArtistId = Artist.ArtistId
 WHERE Artist.Name = 'Elenis Moriset'
 ```
 
-
 ```output
 ''
 ```
-
-
 
 ```python
 # With retrieval
@@ -379,11 +346,9 @@ JOIN Artist ar ON a.ArtistId = ar.ArtistId
 WHERE ar.Name = 'Alanis Morissette';
 ```
 
-
 ```output
 "[('Rock',)]"
 ```
-
 
 We can see that with retrieval we're able to correct the spelling from "Elenis Moriset" to "Alanis Morissette" and get back a valid result.
 

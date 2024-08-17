@@ -18,11 +18,9 @@ To obtain the string content directly, use `.split_text`.
 
 To create LangChain [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) objects (e.g., for use in downstream tasks), use `.create_documents`.
 
-
 ```python
 %pip install -qU langchain-text-splitters
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to recursively split text by characters"}]-->
@@ -52,13 +50,10 @@ page_content='of Congress and the Cabinet. Justices of the Supreme Court. My fel
 text_splitter.split_text(state_of_the_union)[:2]
 ```
 
-
-
 ```output
 ['Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and',
  'of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.']
 ```
-
 
 Let's go through the parameters set above for `RecursiveCharacterTextSplitter`:
 - `chunk_size`: The maximum size of a chunk, where size is determined by the `length_function`.
@@ -73,7 +68,6 @@ Some writing systems do not have [word boundaries](https://en.wikipedia.org/wiki
 * Add ASCII full-stop "`.`", [Unicode fullwidth](https://en.wikipedia.org/wiki/Halfwidth_and_Fullwidth_Forms_(Unicode_block)) full stop "`．`" (used in Chinese text), and [ideographic full stop](https://en.wikipedia.org/wiki/CJK_Symbols_and_Punctuation) "`。`" (used in Japanese and Chinese)
 * Add [Zero-width space](https://en.wikipedia.org/wiki/Zero-width_space) used in Thai, Myanmar, Kmer, and Japanese.
 * Add ASCII comma "`,`", Unicode fullwidth comma "`，`", and Unicode ideographic comma "`、`"
-
 
 ```python
 text_splitter = RecursiveCharacterTextSplitter(

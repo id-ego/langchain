@@ -254,7 +254,7 @@ from langchain_google_cloud_sql_pg import PostgresEngine, PostgresLoader
 
 ### Cloud Storage
 
->[Cloud Storage](https://en.wikipedia.org/wiki/Google_Cloud_Storage) is a managed service for storing unstructured data in Google Cloud.
+> [Cloud Storage](https://en.wikipedia.org/wiki/Google_Cloud_Storage) is a managed service for storing unstructured data in Google Cloud.
 
 We need to install `langchain-google-community` with Google Cloud Storage dependencies.
 
@@ -293,7 +293,7 @@ from langchain_google_el_carro import ElCarroLoader
 
 ### Google Drive
 
->[Google Drive](https://en.wikipedia.org/wiki/Google_Drive) is a file storage and synchronization service developed by Google.
+> [Google Drive](https://en.wikipedia.org/wiki/Google_Drive) is a file storage and synchronization service developed by Google.
 
 Currently, only `Google Docs` are supported.
 
@@ -327,7 +327,7 @@ from langchain_google_firestore import FirestoreLoader
 ### Firestore (Datastore Mode)
 
 > [Google Cloud Firestore in Datastore mode](https://cloud.google.com/datastore/docs) is a NoSQL document database built for automatic scaling, high performance, and ease of application development.
-> Firestore is the newest version of Datastore and introduces several improvements over Datastore.
+Firestore is the newest version of Datastore and introduces several improvements over Datastore.
 Install the python package:
 
 ```bash
@@ -392,9 +392,9 @@ from langchain_google_community import SpeechToTextLoader
 
 ### Document AI
 
->[Google Cloud Document AI](https://cloud.google.com/document-ai/docs/overview) is a Google Cloud
-> service that transforms unstructured data from documents into structured data, making it easier
-> to understand, analyze, and consume.
+> [Google Cloud Document AI](https://cloud.google.com/document-ai/docs/overview) is a Google Cloud
+service that transforms unstructured data from documents into structured data, making it easier
+to understand, analyze, and consume.
 
 We need to set up a [`GCS` bucket and create your own OCR processor](https://cloud.google.com/document-ai/docs/create-processor)
 The `GCS_OUTPUT_PATH` should be a path to a folder on GCS (starting with `gs://`)
@@ -417,8 +417,8 @@ from langchain_google_community import DocAIParser
 ### Google Translate
 
 > [Google Translate](https://translate.google.com/) is a multilingual neural machine
-> translation service developed by Google to translate text, documents and websites
-> from one language into another.
+translation service developed by Google to translate text, documents and websites
+from one language into another.
 
 The `GoogleTranslateTransformer` allows you to translate text and HTML with the [Google Cloud Translation API](https://cloud.google.com/translate).
 
@@ -455,10 +455,10 @@ from langchain_google_alloydb_pg import AlloyDBEngine, AlloyDBVectorStore
 ### BigQuery Vector Search
 
 > [Google Cloud BigQuery](https://cloud.google.com/bigquery),
-> BigQuery is a serverless and cost-effective enterprise data warehouse in Google Cloud.
->
+BigQuery is a serverless and cost-effective enterprise data warehouse in Google Cloud.
+> 
 > [Google Cloud BigQuery Vector Search](https://cloud.google.com/bigquery/docs/vector-search-intro)
-> BigQuery vector search lets you use GoogleSQL to do semantic search, using vector indexes for fast but approximate results, or using brute force for exact results.
+BigQuery vector search lets you use GoogleSQL to do semantic search, using vector indexes for fast but approximate results, or using brute force for exact results.
 
 > It can calculate Euclidean or Cosine distance. With LangChain, we default to use Euclidean distance.
 
@@ -552,9 +552,9 @@ from langchain_google_cloud_sql_pg import PostgresEngine, PostgresVectorStore
 ### Vertex AI Vector Search
 
 > [Google Cloud Vertex AI Vector Search](https://cloud.google.com/vertex-ai/docs/vector-search/overview) from Google Cloud,
-> formerly known as `Vertex AI Matching Engine`, provides the industry's leading high-scale
-> low latency vector database. These vector databases are commonly
-> referred to as vector similarity-matching or an approximate nearest neighbor (ANN) service.
+formerly known as `Vertex AI Matching Engine`, provides the industry's leading high-scale
+low latency vector database. These vector databases are commonly
+referred to as vector similarity-matching or an approximate nearest neighbor (ANN) service.
 
 Install the python package:
 
@@ -570,16 +570,16 @@ from langchain_google_vertexai import VectorSearchVectorStore
 
 ### ScaNN
 
->[Google ScaNN](https://github.com/google-research/google-research/tree/master/scann)
-> (Scalable Nearest Neighbors) is a python package.
->
->`ScaNN` is a method for efficient vector similarity search at scale.
+> [Google ScaNN](https://github.com/google-research/google-research/tree/master/scann)
+(Scalable Nearest Neighbors) is a python package.
+> 
+> `ScaNN` is a method for efficient vector similarity search at scale.
 
->`ScaNN` includes search space pruning and quantization for Maximum Inner
-> Product Search and also supports other distance functions such as
-> Euclidean distance. The implementation is optimized for x86 processors
-> with AVX2 support. See its [Google Research github](https://github.com/google-research/google-research/tree/master/scann)
-> for more details.
+> `ScaNN` includes search space pruning and quantization for Maximum Inner
+Product Search and also supports other distance functions such as
+Euclidean distance. The implementation is optimized for x86 processors
+with AVX2 support. See its [Google Research github](https://github.com/google-research/google-research/tree/master/scann)
+for more details.
 
 We need to install `scann` python package.
 
@@ -613,7 +613,7 @@ from langchain_googledrive.retrievers import GoogleDriveRetriever
 ### Vertex AI Search
 
 > [Vertex AI Search](https://cloud.google.com/generative-ai-app-builder/docs/introduction)
-> from Google Cloud allows developers to quickly build generative AI powered search engines for customers and employees.
+from Google Cloud allows developers to quickly build generative AI powered search engines for customers and employees.
 
 We need to install the `google-cloud-discoveryengine` python package.
 
@@ -631,8 +631,8 @@ from langchain.retrievers import GoogleVertexAISearchRetriever
 ### Document AI Warehouse
 
 > [Document AI Warehouse](https://cloud.google.com/document-ai-warehouse)
-> from Google Cloud allows enterprises to search, store, govern, and manage documents and their AI-extracted
-> data and metadata in a single platform.
+from Google Cloud allows enterprises to search, store, govern, and manage documents and their AI-extracted
+data and metadata in a single platform.
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleDocumentAIWarehouseRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.google_cloud_documentai_warehouse.GoogleDocumentAIWarehouseRetriever.html", "title": "Google"}]-->
@@ -650,10 +650,10 @@ documents = docai_wh_retriever.invoke(
 
 ### Text-to-Speech
 
->[Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) is a Google Cloud service that enables developers to
-> synthesize natural-sounding speech with 100+ voices, available in multiple languages and variants.
-> It applies DeepMind’s groundbreaking research in WaveNet and Google’s powerful neural networks
-> to deliver the highest fidelity possible.
+> [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) is a Google Cloud service that enables developers to
+synthesize natural-sounding speech with 100+ voices, available in multiple languages and variants.
+It applies DeepMind’s groundbreaking research in WaveNet and Google’s powerful neural networks
+to deliver the highest fidelity possible.
 
 We need to install a python package.
 
@@ -839,7 +839,6 @@ pip install langchain-google-cloud-sql-pg
 
 See [usage example](/docs/integrations/memory/google_sql_pg).
 
-
 ```python
 from langchain_google_cloud_sql_pg import PostgresEngine, PostgresChatMessageHistory
 ```
@@ -937,7 +936,7 @@ from langchain_google_firestore import FirestoreChatMessageHistory
 ### Firestore (Datastore Mode)
 
 > [Google Cloud Firestore in Datastore mode](https://cloud.google.com/datastore/docs) is a NoSQL document database built for automatic scaling, high performance, and ease of application development.
-> Firestore is the newest version of Datastore and introduces several improvements over Datastore.
+Firestore is the newest version of Datastore and introduces several improvements over Datastore.
 Install the python package:
 
 ```bash
@@ -989,7 +988,7 @@ from langchain_google_community import GMailLoader
 
 ### SearchApi
 
->[SearchApi](https://www.searchapi.io/) provides a 3rd-party API to access Google search results, YouTube search & transcripts, and other Google-related engines.
+> [SearchApi](https://www.searchapi.io/) provides a 3rd-party API to access Google search results, YouTube search & transcripts, and other Google-related engines.
 
 See [usage examples and authorization instructions](/docs/integrations/tools/searchapi).
 
@@ -1000,7 +999,7 @@ from langchain_community.utilities import SearchApiAPIWrapper
 
 ### SerpApi
 
->[SerpApi](https://serpapi.com/) provides a 3rd-party API to access Google search results.
+> [SerpApi](https://serpapi.com/) provides a 3rd-party API to access Google search results.
 
 See a [usage example and authorization instructions](/docs/integrations/tools/serpapi).
 
@@ -1020,9 +1019,9 @@ from langchain_community.utilities import GoogleSerperAPIWrapper
 
 ### YouTube
 
->[YouTube Search](https://github.com/joetats/youtube_search) package searches `YouTube` videos avoiding using their heavily rate-limited API.
->
->It uses the form on the YouTube homepage and scrapes the resulting page.
+> [YouTube Search](https://github.com/joetats/youtube_search) package searches `YouTube` videos avoiding using their heavily rate-limited API.
+> 
+> It uses the form on the YouTube homepage and scrapes the resulting page.
 
 We need to install a python package.
 
@@ -1039,7 +1038,7 @@ from langchain.tools import YouTubeSearchTool
 
 ### YouTube audio
 
->[YouTube](https://www.youtube.com/) is an online video sharing and social media platform created by `Google`.
+> [YouTube](https://www.youtube.com/) is an online video sharing and social media platform created by `Google`.
 
 Use `YoutubeAudioLoader` to fetch / download the audio files.
 
@@ -1061,7 +1060,7 @@ from langchain_community.document_loaders.parsers import OpenAIWhisperParser, Op
 
 ### YouTube transcripts
 
->[YouTube](https://www.youtube.com/) is an online video sharing and social media platform created by `Google`.
+> [YouTube](https://www.youtube.com/) is an online video sharing and social media platform created by `Google`.
 
 We need to install `youtube-transcript-api` python package.
 

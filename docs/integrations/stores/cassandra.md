@@ -28,7 +28,6 @@ The store `bytes` values are mapped to the `body_blob` column of the Cassandra t
 
 The LangChain `CassandraByteStore` integration lives in the `langchain_community` package. You'll also need to install the `cassio` package or the `cassandra-driver` package as a peer dependency depending on which initialization method you're using:
 
-
 ```python
 %pip install -qU langchain_community
 %pip install -qU cassandra-driver
@@ -41,7 +40,6 @@ You'll also need to create a `cassandra.cluster.Session` object, as described in
 
 You'll first need to create a `cassandra.cluster.Session` object, as described in the [Cassandra driver documentation](https://docs.datastax.com/en/developer/python-driver/latest/api/cassandra/cluster/#module-cassandra.cluster). The details vary (e.g. with network settings and authentication), but this might be something like:
 
-
 ```python
 from cassandra.cluster import Cluster
 
@@ -50,7 +48,6 @@ session = cluster.connect()
 ```
 
 Then you can create your store! You'll also need to provide the name of an existing keyspace of the Cassandra instance:
-
 
 ```python
 <!--IMPORTS:[{"imported": "CassandraByteStore", "source": "langchain_community.storage", "docs": "https://api.python.langchain.com/en/latest/storage/langchain_community.storage.cassandra.CassandraByteStore.html", "title": "CassandraByteStore"}]-->
@@ -66,7 +63,6 @@ kv_store = CassandraByteStore(
 ## Usage
 
 You can set data under keys like this using the `mset` method:
-
 
 ```python
 kv_store.mset(
@@ -85,7 +81,6 @@ kv_store.mget(
 ```
 
 And you can delete data using the `mdelete` method:
-
 
 ```python
 kv_store.mdelete(
@@ -107,7 +102,6 @@ kv_store.mget(
 
 It's also possible to use cassio to configure the session and keyspace.
 
-
 ```python
 import cassio
 
@@ -124,7 +118,6 @@ print(store.mget(["k1", "k2"]))
 ## API reference
 
 For detailed documentation of all `CassandraByteStore` features and configurations, head to the API reference: https://api.python.langchain.com/en/latest/storage/langchain_community.storage.cassandra.CassandraByteStore.html
-
 
 ## Related
 

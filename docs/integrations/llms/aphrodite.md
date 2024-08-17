@@ -15,18 +15,15 @@ This notebooks goes over how to use a LLM with langchain and Aphrodite.
 
 To use, you should have the `aphrodite-engine` python package installed.
 
-
 ```python
 ##Installing the langchain packages needed to use the integration
 %pip install -qU langchain-community
 ```
 
-
 ```python
 %pip install --upgrade --quiet  aphrodite-engine==0.4.2
 # %pip list | grep aphrodite
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Aphrodite", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.aphrodite.Aphrodite.html", "title": "Aphrodite Engine"}]-->
@@ -73,7 +70,6 @@ I'm Ayumu "Osaka" Kasuga, and I'm an avid anime and manga fan! I'm pretty introv
 ```
 ## Integrate the model in an LLMChain
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Aphrodite Engine"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Aphrodite Engine"}]-->
 from langchain.chains import LLMChain
@@ -106,7 +102,6 @@ The first Pokémon game was released in Japan on February 27, 1996 (their releas
 Aphrodite supports distributed tensor-parallel inference and serving. 
 
 To run multi-GPU inference with the LLM class, set the `tensor_parallel_size` argument to the number of GPUs you want to use. For example, to run inference on 4 GPUs
-
 
 ```python
 <!--IMPORTS:[{"imported": "Aphrodite", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.aphrodite.Aphrodite.html", "title": "Aphrodite Engine"}]-->
@@ -141,12 +136,9 @@ llm("What is the future of AI?")
 Processed prompts: 100%|██████████| 1/1 [00:16<00:00, 16.09s/it]
 ```
 
-
 ```output
 "\n2 years ago StockBot101\nAI is becoming increasingly real and more and more powerful with every year. But what does the future hold for artificial intelligence?\nThere are many possibilities for how AI could evolve and change our world. Some believe that AI will become so advanced that it will take over human jobs, while others believe that AI will be used to augment and assist human workers. There is also the possibility that AI could develop its own consciousness and become self-aware.\nWhatever the future holds, it is clear that AI will continue to play an important role in our lives. Technologies such as machine learning and natural language processing are already transforming industries like healthcare, manufacturing, and transportation. And as AI continues to develop, we can expect even more disruption and innovation across all sectors of the economy.\nSo what exactly are we looking at? What's the future of AI?\nIn the next few years, we can expect AI to be used more and more in healthcare. With the power of machine learning, artificial intelligence can help doctors diagnose diseases earlier and more accurately. It can also be used to develop new treatments and personalize care plans for individual patients.\nManufacturing is another area where AI is already having a big impact. Companies are using robotics and automation to build products faster and with fewer errors. And as AI continues to advance, we can expect even more changes in manufacturing, such as the development of self-driving factories.\nTransportation is another industry that is being transformed by artificial intelligence. Self-driving cars are already being tested on public roads, and it's likely that they will become commonplace in the next decade or so. AI-powered drones are also being developed for use in delivery and even firefighting.\nFinally, artificial intelligence is also poised to have a big impact on customer service and sales. Chatbots and virtual assistants will become more sophisticated, making it easier for businesses to communicate with customers and sell their products.\nThis is just the beginning for artificial intelligence. As the technology continues to develop, we can expect even more amazing advances and innovations. The future of AI is truly limitless.\nWhat do you think the future of AI holds? Do you see any other major"
 ```
-
-
 
 ## Related
 

@@ -5,10 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # LOTR (Merger Retriever)
 
->`Lord of the Retrievers (LOTR)`, also known as `MergerRetriever`, takes a list of retrievers as input and merges the results of their get_relevant_documents() methods into a single list. The merged results will be a list of documents that are relevant to the query and that have been ranked by the different retrievers.
+> `Lord of the Retrievers (LOTR)`, also known as `MergerRetriever`, takes a list of retrievers as input and merges the results of their get_relevant_documents() methods into a single list. The merged results will be a list of documents that are relevant to the query and that have been ranked by the different retrievers.
 
 The `MergerRetriever` class can be used to improve the accuracy of document retrieval in a number of ways. First, it can combine the results of multiple retrievers, which can help to reduce the risk of bias in the results. Second, it can rank the results of the different retrievers, which can help to ensure that the most relevant documents are returned first.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "LOTR (Merger Retriever)"}, {"imported": "MergerRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.merger_retriever.MergerRetriever.html", "title": "LOTR (Merger Retriever)"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "LOTR (Merger Retriever)"}, {"imported": "EmbeddingsClusteringFilter", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.embeddings_redundant_filter.EmbeddingsClusteringFilter.html", "title": "LOTR (Merger Retriever)"}, {"imported": "EmbeddingsRedundantFilter", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.embeddings_redundant_filter.EmbeddingsRedundantFilter.html", "title": "LOTR (Merger Retriever)"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "LOTR (Merger Retriever)"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "LOTR (Merger Retriever)"}]-->
@@ -70,7 +69,6 @@ lotr = MergerRetriever(retrievers=[retriever_all, retriever_multi_qa])
 
 ## Remove redundant results from the merged retrievers.
 
-
 ```python
 # We can remove redundant results from both retrievers using yet another embedding.
 # Using multiples embeddings in diff steps could help reduce biases.
@@ -82,7 +80,6 @@ compression_retriever = ContextualCompressionRetriever(
 ```
 
 ## Pick a representative sample of documents from the merged retrievers.
-
 
 ```python
 # This filter will divide the documents vectors into clusters or "centers" of meaning.
@@ -114,7 +111,6 @@ No matter the architecture of your model, there is a substantial performance deg
 In brief: When models must access relevant information  in the middle of long contexts, then tend to ignore the provided documents.
 See: https://arxiv.org/abs//2307.03172
 
-
 ```python
 <!--IMPORTS:[{"imported": "LongContextReorder", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.long_context_reorder.LongContextReorder.html", "title": "LOTR (Merger Retriever)"}]-->
 # You can use an additional document transformer to reorder documents after removing redundancy.
@@ -127,7 +123,6 @@ compression_retriever_reordered = ContextualCompressionRetriever(
     base_compressor=pipeline, base_retriever=lotr
 )
 ```
-
 
 ## Related
 

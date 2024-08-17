@@ -10,8 +10,6 @@ Additionally, it features a conversational memory module that stores the dialogu
 The conversation memory is uniquely maintained for each user session, ensuring personalized interactions.
 To facilitate this, please supply both the `user_id` and `session_id` when using the conversation chain.
 
-
-
 ## Environment Setup
 
 Define the following environment variables:
@@ -65,9 +63,9 @@ from neo4j_cypher_memory import chain as neo4j_cypher_memory_chain
 add_routes(app, neo4j_cypher_memory_chain, path="/neo4j-cypher-memory")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -82,7 +80,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

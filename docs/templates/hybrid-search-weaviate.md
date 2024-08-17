@@ -7,7 +7,7 @@ This template shows you how to use the hybrid search feature in Weaviate. Hybrid
 
 Weaviate uses both sparse and dense vectors to represent the meaning and context of search queries and documents. The results use a combination of `bm25` and vector search ranking to return the top results. 
 
-##  Configurations
+## Configurations
 Connect to your hosted Weaviate Vectorstore by setting a few env variables in `chain.py`:
 
 * `WEAVIATE_ENVIRONMENT`
@@ -15,7 +15,7 @@ Connect to your hosted Weaviate Vectorstore by setting a few env variables in `c
 
 You will also need to set your `OPENAI_API_KEY` to use the OpenAI models.
 
-## Get Started 
+## Get Started
 To use this package, you should first have the LangChain CLI installed:
 
 ```shell
@@ -41,11 +41,10 @@ from hybrid_search_weaviate import chain as hybrid_search_weaviate_chain
 add_routes(app, hybrid_search_weaviate_chain, path="/hybrid-search-weaviate")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
-
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -59,7 +58,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

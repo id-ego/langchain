@@ -7,22 +7,22 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 > Recall, understand, and extract data from chat histories. Power personalized AI experiences.
 
 > [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-> With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-> while also reducing hallucinations, latency, and cost.
+With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
+while also reducing hallucinations, latency, and cost.
 
 > Interested in Zep Cloud? See [Zep Cloud Installation Guide](https://help.getzep.com/sdks) and [Zep Cloud Vector Store example](https://help.getzep.com/langchain/examples/vectorstore-example)
 
 ## Open Source Installation and Setup
 
 > Zep Open Source project: [https://github.com/getzep/zep](https://github.com/getzep/zep)
->
+> 
 > Zep Open Source Docs: [https://docs.getzep.com/](https://docs.getzep.com/)
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
 
 ## Usage
 
-In the examples below, we're using Zep's auto-embedding feature which automatically embeds documents on the Zep server 
+In the examples below, we're using Zep's auto-embedding feature which automatically embeds documents on the Zep server
 using low-latency embedding models.
 
 ## Note
@@ -32,7 +32,6 @@ You must also set your document collection to `isAutoEmbedded === false`.
 - If you set your collection to `isAutoEmbedded === false`, you must pass in an `Embeddings` instance.
 
 ## Load or create a Collection from documents
-
 
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Zep"}, {"imported": "ZepVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.zep.ZepVectorStore.html", "title": "Zep"}, {"imported": "CollectionConfig", "source": "langchain_community.vectorstores.zep", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.zep.CollectionConfig.html", "title": "Zep"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Zep"}]-->
@@ -77,7 +76,6 @@ vs = ZepVectorStore.from_documents(
 )
 ```
 
-
 ```python
 # wait for the collection embedding to complete
 
@@ -112,7 +110,6 @@ Embedding status: 0/401 documents embedded
 Embedding status: 401/401 documents embedded
 ```
 ## Simarility Search Query over the Collection
-
 
 ```python
 # query it
@@ -156,7 +153,6 @@ including the muscles, integuments, membranes, &c. the nature, motion,  ->  0.88
 
 Zep offers native, hardware-accelerated MMR re-ranking of search results.
 
-
 ```python
 query = "what is the structure of our solar system?"
 docs = await vs.asearch(query, search_type="mmr", k=3)
@@ -197,7 +193,6 @@ having attained the ends in view with an almost superfluous degree of
 
 Use a metadata filter to narrow down results. First, load another book: "Adventures of Sherlock Holmes"
 
-
 ```python
 # Let's add more content to the existing Collection
 article_url = "https://www.gutenberg.org/files/48320/48320-0.txt"
@@ -232,7 +227,6 @@ Embedding status: 1401/1691 documents embedded
 Embedding status: 1691/1691 documents embedded
 ```
 We see results from both books. Note the `source` metadata
-
 
 ```python
 query = "Was he interested in astronomy?"
@@ -270,7 +264,6 @@ observing becomes ineffectual for want of yet greater industry of  ->  {'source'
 ====
 ```
 Now, we set up a filter
-
 
 ```python
 filter = {

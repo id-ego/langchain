@@ -14,7 +14,7 @@ This notebook goes over how to run `llama-cpp-python` within LangChain.
 **Note: new versions of `llama-cpp-python` use GGUF model files (see [here](https://github.com/abetlen/llama-cpp-python/pull/633)).**
 
 This is a breaking change.
- 
+
 To convert existing GGML models to GGUF you can run the following in [llama.cpp](https://github.com/ggerganov/llama.cpp):
 
 ```
@@ -30,7 +30,6 @@ There are different options on how to install the llama-cpp package:
 
 ### CPU only installation
 
-
 ```python
 %pip install --upgrade --quiet  llama-cpp-python
 ```
@@ -41,13 +40,11 @@ There are different options on how to install the llama-cpp package:
 
 Example installation with cuBLAS backend:
 
-
 ```python
 !CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install llama-cpp-python
 ```
 
 **IMPORTANT**: If you have already installed the CPU only version of the package, you need to reinstall it from scratch. Consider the following command: 
-
 
 ```python
 !CMAKE_ARGS="-DLLAMA_CUBLAS=on" FORCE_CMAKE=1 pip install --upgrade --force-reinstall llama-cpp-python --no-cache-dir
@@ -59,13 +56,11 @@ Example installation with cuBLAS backend:
 
 Example installation with Metal Support:
 
-
 ```python
 !CMAKE_ARGS="-DLLAMA_METAL=on" FORCE_CMAKE=1 pip install llama-cpp-python
 ```
 
 **IMPORTANT**: If you have already installed a cpu only version of the package, you need to reinstall it from scratch: consider the following command: 
-
 
 ```python
 !CMAKE_ARGS="-DLLAMA_METAL=on" FORCE_CMAKE=1 pip install --upgrade --force-reinstall llama-cpp-python --no-cache-dir
@@ -81,9 +76,9 @@ Requirements to install the `llama-cpp-python`,
 - python
 - cmake
 - Visual Studio Community (make sure you install this with the following settings)
-    - Desktop development with C++
-    - Python development
-    - Linux embedded development with C++
+  - Desktop development with C++
+  - Python development
+  - Linux embedded development with C++
 
 1. Clone git repository recursively to get `llama.cpp` submodule as well 
 
@@ -92,7 +87,6 @@ git clone --recursive -j8 https://github.com/abetlen/llama-cpp-python.git
 ```
 
 2. Open up a command Prompt and set the following environment variables.
-
 
 ```
 set FORCE_CMAKE=1
@@ -110,7 +104,6 @@ python -m pip install -e .
 
 **IMPORTANT**: If you have already installed a cpu only version of the package, you need to reinstall it from scratch: consider the following command: 
 
-
 ```python
 !python -m pip install -e . --force-reinstall --no-cache-dir
 ```
@@ -127,7 +120,6 @@ It is worth understanding which models are suitable to be used on the desired ma
 
 This [github issue](https://github.com/facebookresearch/llama/issues/425) is also relevant to find the right model for your machine.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LlamaCpp", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.llamacpp.LlamaCpp.html", "title": "Llama.cpp"}, {"imported": "CallbackManager", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManager.html", "title": "Llama.cpp"}, {"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "Llama.cpp"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Llama.cpp"}]-->
 from langchain_community.llms import LlamaCpp
@@ -137,7 +129,6 @@ from langchain_core.prompts import PromptTemplate
 
 **Consider using a template that suits your model! Check the models page on Hugging Face etc. to get a correct prompting template.**
 
-
 ```python
 template = """Question: {question}
 
@@ -145,7 +136,6 @@ Answer: Let's work this out in a step by step way to be sure we have the right a
 
 prompt = PromptTemplate.from_template(template)
 ```
-
 
 ```python
 # Callbacks support token-wise streaming
@@ -155,7 +145,6 @@ callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
 ### CPU
 
 Example using a LLaMA 2 7B model
-
 
 ```python
 # Make sure the model path is correct for your system!
@@ -168,7 +157,6 @@ llm = LlamaCpp(
     verbose=True,  # Verbose is required to pass to the callback manager
 )
 ```
-
 
 ```python
 question = """
@@ -200,14 +188,11 @@ llama_print_timings:        eval time = 10151.17 ms /   255 runs   (   39.81 ms 
 llama_print_timings:       total time = 11332.41 ms
 ```
 
-
 ```output
 "\nStephen Colbert:\nYo, John, I heard you've been talkin' smack about me on your show.\nLet me tell you somethin', pal, I'm the king of late-night TV\nMy satire is sharp as a razor, it cuts deeper than a knife\nWhile you're just a british bloke tryin' to be funny with your accent and your wit.\nJohn Oliver:\nOh Stephen, don't be ridiculous, you may have the ratings but I got the real talk.\nMy show is the one that people actually watch and listen to, not just for the laughs but for the facts.\nWhile you're busy talkin' trash, I'm out here bringing the truth to light.\nStephen Colbert:\nTruth? Ha! You think your show is about truth? Please, it's all just a joke to you.\nYou're just a fancy-pants british guy tryin' to be funny with your news and your jokes.\nWhile I'm the one who's really makin' a difference, with my sat"
 ```
 
-
 Example using a LLaMA v1 model
-
 
 ```python
 # Make sure the model path is correct for your system!
@@ -216,11 +201,9 @@ llm = LlamaCpp(
 )
 ```
 
-
 ```python
 llm_chain = prompt | llm
 ```
-
 
 ```python
 question = "What NFL team won the Super Bowl in the year Justin Bieber was born?"
@@ -243,11 +226,9 @@ llama_print_timings:        eval time = 23971.57 ms /   121 runs   (  198.11 ms 
 llama_print_timings:       total time = 28945.95 ms
 ```
 
-
 ```output
 '\n\n1. First, find out when Justin Bieber was born.\n2. We know that Justin Bieber was born on March 1, 1994.\n3. Next, we need to look up when the Super Bowl was played in that year.\n4. The Super Bowl was played on January 28, 1995.\n5. Finally, we can use this information to answer the question. The NFL team that won the Super Bowl in the year Justin Bieber was born is the San Francisco 49ers.'
 ```
-
 
 ### GPU
 
@@ -259,7 +240,6 @@ Two of the most important parameters for use with GPU are:
 - `n_batch` - how many tokens are processed in parallel. 
 
 Setting these parameters correctly will dramatically improve the evaluation speed (see [wrapper code](https://github.com/langchain-ai/langchain/blob/master/libs/community/langchain_community/llms/llamacpp.py) for more details).
-
 
 ```python
 n_gpu_layers = -1  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU.
@@ -274,7 +254,6 @@ llm = LlamaCpp(
     verbose=True,  # Verbose is required to pass to the callback manager
 )
 ```
-
 
 ```python
 llm_chain = prompt | llm
@@ -300,11 +279,9 @@ llama_print_timings:        eval time =  4526.53 ms /   163 runs   (   27.77 ms 
 llama_print_timings:       total time =  5293.77 ms
 ```
 
-
 ```output
 "\n\n1. Identify Justin Bieber's birth date: Justin Bieber was born on March 1, 1994.\n\n2. Find the Super Bowl winner of that year: The NFL season of 1993 with the Super Bowl being played in January or of 1994.\n\n3. Determine which team won the game: The Dallas Cowboys faced the Buffalo Bills in Super Bowl XXVII on January 31, 1993 (as the year is mis-labelled due to a error). The Dallas Cowboys won this matchup.\n\nSo, Justin Bieber was born when the Dallas Cowboys were the reigning NFL Super Bowl."
 ```
-
 
 ### Metal
 
@@ -314,11 +291,9 @@ Two of the most important GPU parameters are:
 
 - `n_gpu_layers` - determines how many layers of the model are offloaded to your Metal GPU.
 - `n_batch` - how many tokens are processed in parallel, default is 8, set to bigger number.
-- `f16_kv` - for some reason, Metal only support `True`, otherwise you will get error such as `Asserting on type 0
-GGML_ASSERT: .../ggml-metal.m:706: false && "not implemented"`
+- `f16_kv` - for some reason, Metal only support `True`, otherwise you will get error such as `Asserting on type 0 GGML_ASSERT: .../ggml-metal.m:706: false && "not implemented"`
 
 Setting these parameters correctly will dramatically improve the evaluation speed (see [wrapper code](https://github.com/langchain-ai/langchain/blob/master/libs/community/langchain_community/llms/llamacpp.py) for more details).
-
 
 ```python
 n_gpu_layers = 1  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU.
@@ -358,7 +333,6 @@ Creating gbnf grammar files can be time-consuming, but if you have a use-case wh
 
 In the first example, supply the path to the specified `json.gbnf` file in order to produce JSON:
 
-
 ```python
 n_gpu_layers = 1  # The number of layers to put on the GPU. The rest will be on the CPU. If you don't know how many layers there are, you can use -1 to move all to GPU.
 n_batch = 512  # Should be between 1 and n_ctx, consider the amount of RAM of your Apple Silicon Chip.
@@ -373,7 +347,6 @@ llm = LlamaCpp(
     grammar_path="/Users/rlm/Desktop/Code/langchain-main/langchain/libs/langchain/langchain/llms/grammars/json.gbnf",
 )
 ```
-
 
 ```python
 %%capture captured --no-stdout
@@ -409,7 +382,6 @@ llama_print_timings:       total time =  5846.21 ms
 ```
 We can also supply `list.gbnf` to return a list:
 
-
 ```python
 n_gpu_layers = 1
 n_batch = 512
@@ -423,7 +395,6 @@ llm = LlamaCpp(
     grammar_path="/Users/rlm/Desktop/Code/langchain-main/langchain/libs/langchain/langchain/llms/grammars/list.gbnf",
 )
 ```
-
 
 ```python
 %%capture captured --no-stdout

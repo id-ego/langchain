@@ -4,12 +4,12 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/providers/promptl
 
 # PromptLayer
 
->[PromptLayer](https://docs.promptlayer.com/introduction) is a platform for prompt engineering. 
-> It also helps with the LLM observability to visualize requests, version prompts, and track usage.
->
->While `PromptLayer` does have LLMs that integrate directly with LangChain (e.g. 
-> [`PromptLayerOpenAI`](https://docs.promptlayer.com/languages/langchain)), 
-> using a callback is the recommended way to integrate `PromptLayer` with LangChain.
+> [PromptLayer](https://docs.promptlayer.com/introduction) is a platform for prompt engineering.
+It also helps with the LLM observability to visualize requests, version prompts, and track usage.
+> 
+> While `PromptLayer` does have LLMs that integrate directly with LangChain (e.g.
+[`PromptLayerOpenAI`](https://docs.promptlayer.com/languages/langchain)),
+using a callback is the recommended way to integrate `PromptLayer` with LangChain.
 
 ## Installation and Setup
 
@@ -23,7 +23,6 @@ Install a Python package:
 pip install promptlayer
 ```
 
-
 ## Callback
 
 See a [usage example](/docs/integrations/callbacks/promptlayer).
@@ -34,7 +33,6 @@ import promptlayer  # Don't forget this import!
 from langchain.callbacks import PromptLayerCallbackHandler
 ```
 
-
 ## LLM
 
 See a [usage example](/docs/integrations/llms/promptlayer_openai).
@@ -43,7 +41,6 @@ See a [usage example](/docs/integrations/llms/promptlayer_openai).
 <!--IMPORTS:[{"imported": "PromptLayerOpenAI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.promptlayer_openai.PromptLayerOpenAI.html", "title": "PromptLayer"}]-->
 from langchain_community.llms import PromptLayerOpenAI
 ```
-
 
 ## Chat Models
 

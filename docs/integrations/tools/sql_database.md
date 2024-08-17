@@ -19,7 +19,6 @@ Building Q&A systems of SQL databases requires executing model-generated SQL que
 
 If you want to get automated tracing from runs of individual tools, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -29,13 +28,11 @@ If you want to get automated tracing from runs of individual tools, you can also
 
 This toolkit lives in the `langchain-community` package:
 
-
 ```python
 %pip install --upgrade --quiet  langchain-community
 ```
 
 For demonstration purposes, we will access a prompt in the LangChain [Hub](https://smith.langchain.com/hub). We will also require `langgraph` to demonstrate the use of the toolkit with an agent. This is not required to use the toolkit.
-
 
 ```python
 %pip install --upgrade --quiet langchainhub langgraph
@@ -53,7 +50,6 @@ Below, we instantiate the toolkit with these objects. Let's first create a datab
 This guide uses the example `Chinook` database based on [these instructions](https://database.guide/2-sample-databases-sqlite/).
 
 Below we will use the `requests` library to pull the `.sql` file and create an in-memory SQLite database. Note that this approach is lightweight, but ephemeral and not thread-safe. If you'd prefer, you can follow the instructions to save the file locally as `Chinook.db` and instantiate the database via `db = SQLDatabase.from_uri("sqlite:///Chinook.db")`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabase", "source": "langchain_community.utilities.sql_database", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html", "title": "SQLDatabase Toolkit"}]-->
@@ -92,8 +88,8 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
-We can now instantiate the toolkit:
 
+We can now instantiate the toolkit:
 
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabaseToolkit", "source": "langchain_community.agent_toolkits.sql.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.sql.toolkit.SQLDatabaseToolkit.html", "title": "SQLDatabase Toolkit"}]-->
@@ -106,12 +102,9 @@ toolkit = SQLDatabaseToolkit(db=db, llm=llm)
 
 View available tools:
 
-
 ```python
 toolkit.get_tools()
 ```
-
-
 
 ```output
 [QuerySQLDataBaseTool(description="Input to this tool is a detailed and correct SQL query, output is a result from the database. If the query is not correct, an error message will be returned. If an error is returned, rewrite the query, check the query, and try again. If you encounter an issue with Unknown column 'xxxx' in 'field list', use sql_db_schema to query the correct table fields.", db=<langchain_community.utilities.sql_database.SQLDatabase object at 0x105e02860>),
@@ -119,7 +112,6 @@ toolkit.get_tools()
  ListSQLDatabaseTool(db=<langchain_community.utilities.sql_database.SQLDatabase object at 0x105e02860>),
  QuerySQLCheckerTool(description='Use this tool to double check if your query is correct before executing it. Always use this tool before executing a query with sql_db_query!', db=<langchain_community.utilities.sql_database.SQLDatabase object at 0x105e02860>, llm=ChatOpenAI(client=<openai.resources.chat.completions.Completions object at 0x1148a97b0>, async_client=<openai.resources.chat.completions.AsyncCompletions object at 0x1148aaec0>, temperature=0.0, openai_api_key=SecretStr('**********'), openai_proxy=''), llm_chain=LLMChain(prompt=PromptTemplate(input_variables=['dialect', 'query'], template='\n{query}\nDouble check the {dialect} query above for common mistakes, including:\n- Using NOT IN with NULL values\n- Using UNION when UNION ALL should have been used\n- Using BETWEEN for exclusive ranges\n- Data type mismatch in predicates\n- Properly quoting identifiers\n- Using the correct number of arguments for functions\n- Casting to the correct data type\n- Using the proper columns for joins\n\nIf there are any of the above mistakes, rewrite the query. If there are no mistakes, just reproduce the original query.\n\nOutput the final SQL query only.\n\nSQL Query: '), llm=ChatOpenAI(client=<openai.resources.chat.completions.Completions object at 0x1148a97b0>, async_client=<openai.resources.chat.completions.AsyncCompletions object at 0x1148aaec0>, temperature=0.0, openai_api_key=SecretStr('**********'), openai_proxy='')))]
 ```
-
 
 API references:
 
@@ -131,7 +123,6 @@ API references:
 ## Use within an agent
 
 Following the [SQL Q&A Tutorial](/docs/tutorials/sql_qa/#agents), below we equip a simple question-answering agent with the tools in our toolkit. First we pull a relevant prompt and populate it with its required parameters:
-
 
 ```python
 from langchain import hub
@@ -151,7 +142,6 @@ system_message = prompt_template.format(dialect="SQLite", top_k=5)
 
 We then instantiate the agent:
 
-
 ```python
 from langgraph.prebuilt import create_react_agent
 
@@ -161,7 +151,6 @@ agent_executor = create_react_agent(
 ```
 
 And issue it a query:
-
 
 ```python
 example_query = "Which country's customers spent the most?"
@@ -279,7 +268,6 @@ Name: sql_db_query
 Customers from the USA spent the most, with a total amount spent of $523.06.
 ```
 We can also observe the agent recover from an error:
-
 
 ```python
 example_query = "Who are the top 3 best selling artists?"
@@ -415,7 +403,6 @@ Most datawarehouse oriented databases support user-level quota, for limiting res
 ## API reference
 
 For detailed documentation of all SQLDatabaseToolkit features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.sql.toolkit.SQLDatabaseToolkit.html).
-
 
 ## Related
 

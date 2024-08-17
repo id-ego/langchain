@@ -5,21 +5,19 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Epsilla
 
->[Epsilla](https://www.epsilla.com) is an open-source vector database that leverages the advanced parallel graph traversal techniques for vector indexing. Epsilla is licensed under GPL-3.0.
+> [Epsilla](https://www.epsilla.com) is an open-source vector database that leverages the advanced parallel graph traversal techniques for vector indexing. Epsilla is licensed under GPL-3.0.
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
 
 This notebook shows how to use the functionalities related to the `Epsilla` vector database.
 
-As a prerequisite, you need to have a running Epsilla vector database (for example, through our docker image), and install the ``pyepsilla`` package. View full docs at [docs](https://epsilla-inc.gitbook.io/epsilladb/quick-start).
-
+As a prerequisite, you need to have a running Epsilla vector database (for example, through our docker image), and install the `pyepsilla` package. View full docs at [docs](https://epsilla-inc.gitbook.io/epsilladb/quick-start).
 
 ```python
 !pip/pip3 install pyepsilla
 ```
 
 We want to use OpenAIEmbeddings so we have to get the OpenAI API Key. 
-
 
 ```python
 import getpass
@@ -30,13 +28,11 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 
 OpenAI API Key: ········
 
-
 ```python
 <!--IMPORTS:[{"imported": "Epsilla", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.epsilla.Epsilla.html", "title": "Epsilla"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Epsilla"}]-->
 from langchain_community.vectorstores import Epsilla
 from langchain_openai import OpenAIEmbeddings
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Epsilla"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Epsilla"}]-->
@@ -55,7 +51,6 @@ embeddings = OpenAIEmbeddings()
 
 Epsilla vectordb is running with default host "localhost" and port "8888". We have a custom db path, db name and collection name instead of the default ones.
 
-
 ```python
 from pyepsilla import vectordb
 
@@ -69,7 +64,6 @@ vector_store = Epsilla.from_documents(
     collection_name="MyCollection",
 )
 ```
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -88,7 +82,6 @@ Tonight, I’d like to honor someone who has dedicated his life to serve this co
 One of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court.
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
-
 
 ## Related
 

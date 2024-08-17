@@ -13,7 +13,6 @@ This page provides a quickstart for using [Astra DB](https://docs.datastax.com/e
 
 Use of the integration requires the `langchain-astradb` partner package:
 
-
 ```python
 pip install -qU "langchain-astradb>=0.3.3"
 ```
@@ -27,7 +26,6 @@ Once the database has been initialized, you should [create an application token]
 You will also want to copy the `API Endpoint` from the `Database Details` and store that in the `ASTRA_DB_API_ENDPOINT` variable.
 
 You may optionally provide a namespace, which you can manage from the `Data Explorer` tab of your database dashboard. If you don't wish to set a namespace, you can leave the `getpass` prompt for `ASTRA_DB_NAMESPACE` empty.
-
 
 ```python
 import getpass
@@ -43,7 +41,6 @@ else:
 ```
 
 If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -93,7 +90,6 @@ Here it is assumed that you have
 
 For more details on how to do this, please consult the [documentation](https://docs.datastax.com/en/astra-db-serverless/integrations/embedding-providers/openai.html).
 
-
 ```python
 from astrapy.info import CollectionVectorServiceOptions
 
@@ -121,7 +117,6 @@ Once you have created your vector store, we can interact with it by adding and d
 ### Add items to vector store
 
 We can add items to our vector store by using the `add_documents` function.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Astra DB Vector Store"}]-->
@@ -196,8 +191,6 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
-
-
 ```output
 [UUID('89a5cea1-5f3d-47c1-89dc-7e36e12cf4de'),
  UUID('d4e78c48-f954-4612-8a38-af22923ba23b'),
@@ -211,22 +204,17 @@ vector_store.add_documents(documents=documents, ids=uuids)
  UUID('a9b84820-3445-4810-a46c-e77b76ab85bc')]
 ```
 
-
 ### Delete items from vector store
 
 We can delete items from our vector store by ID by using the `delete` function.
-
 
 ```python
 vector_store.delete(ids=uuids[-1])
 ```
 
-
-
 ```output
 True
 ```
-
 
 ## Query vector store
 
@@ -237,7 +225,6 @@ Once your vector store has been created and the relevant documents have been add
 #### Similarity search
 
 Performing a simple similarity search with filtering on metadata can be done as follows:
-
 
 ```python
 results = vector_store.similarity_search(
@@ -255,7 +242,6 @@ for res in results:
 #### Similarity search with score
 
 You can also search with score:
-
 
 ```python
 results = vector_store.similarity_search_with_score(
@@ -277,7 +263,6 @@ You can also transform the vector store into a retriever for easier usage in you
 
 Here is how to transform your vector store into a retriever and then invoke the retreiever with a simple query and filter.
 
-
 ```python
 retriever = vector_store.as_retriever(
     search_type="similarity_score_threshold",
@@ -286,12 +271,9 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime", filter={"source": "news"})
 ```
 
-
-
 ```output
 [Document(metadata={'source': 'news'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
-
 
 ## Usage for retrieval-augmented generation
 
@@ -307,8 +289,7 @@ For more, check out a complete RAG template using Astra DB [here](https://github
 
 If you want to completely delete the collection from your Astra DB instance, run this.
 
-_(You will lose the data you stored in it.)_
-
+*(You will lose the data you stored in it.)*
 
 ```python
 vector_store.delete_collection()
@@ -317,7 +298,6 @@ vector_store.delete_collection()
 ## API reference
 
 For detailed documentation of all `AstraDBVectorStore` features and configurations head to the API reference:https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html
-
 
 ## Related
 

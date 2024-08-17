@@ -11,13 +11,11 @@ This example goes over how to use LangChain to interact with `C Transformers` [m
 
 **Install**
 
-
 ```python
 %pip install --upgrade --quiet  ctransformers
 ```
 
 **Load Model**
-
 
 ```python
 <!--IMPORTS:[{"imported": "CTransformers", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.ctransformers.CTransformers.html", "title": "C Transformers"}]-->
@@ -28,13 +26,11 @@ llm = CTransformers(model="marella/gpt-2-ggml")
 
 **Generate Text**
 
-
 ```python
 print(llm.invoke("AI is going to"))
 ```
 
 **Streaming**
-
 
 ```python
 <!--IMPORTS:[{"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "C Transformers"}]-->
@@ -48,7 +44,6 @@ response = llm.invoke("AI is going to")
 ```
 
 **LLMChain**
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "C Transformers"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "C Transformers"}]-->
@@ -65,7 +60,6 @@ llm_chain = LLMChain(prompt=prompt, llm=llm)
 
 response = llm_chain.run("What is AI?")
 ```
-
 
 ## Related
 

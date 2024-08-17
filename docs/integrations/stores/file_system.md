@@ -22,7 +22,6 @@ The `LocalFileStore` is a persistent implementation of `ByteStore` that stores e
 
 The LangChain `LocalFileStore` integration lives in the `langchain` package:
 
-
 ```python
 %pip install -qU langchain
 ```
@@ -30,7 +29,6 @@ The LangChain `LocalFileStore` integration lives in the `langchain` package:
 ## Instantiation
 
 Now we can instantiate our byte store:
-
 
 ```python
 <!--IMPORTS:[{"imported": "LocalFileStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html", "title": "LocalFileStore"}]-->
@@ -46,7 +44,6 @@ kv_store = LocalFileStore(root_path)
 ## Usage
 
 You can set data under keys like this using the `mset` method:
-
 
 ```python
 kv_store.mset(
@@ -64,15 +61,11 @@ kv_store.mget(
 )
 ```
 
-
-
 ```output
 [b'value1', b'value2']
 ```
 
-
 You can see the created files in your `data` folder:
-
 
 ```python
 !ls {root_path}
@@ -81,7 +74,6 @@ You can see the created files in your `data` folder:
 key1 key2
 ```
 And you can delete data using the `mdelete` method:
-
 
 ```python
 kv_store.mdelete(
@@ -99,17 +91,13 @@ kv_store.mget(
 )
 ```
 
-
-
 ```output
 [None, None]
 ```
 
-
 ## API reference
 
 For detailed documentation of all `LocalFileStore` features and configurations, head to the API reference: https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html
-
 
 ## Related
 

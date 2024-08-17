@@ -3,7 +3,7 @@ canonical: https://python.langchain.com/v0.2/docs/how_to/split_by_token/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/split_by_token.ipynb
 ---
 
-# How to split text by tokens 
+# How to split text by tokens
 
 Language models have a token limit. You should not exceed the token limit. When you split your text into chunks it is therefore a good idea to count the number of tokens. There are many tokenizers. When you count tokens in your text you should use the same tokenizer as used in the language model. 
 
@@ -13,7 +13,6 @@ Language models have a token limit. You should not exceed the token limit. When 
 [tiktoken](https://github.com/openai/tiktoken) is a fast `BPE` tokenizer created by `OpenAI`.
 :::
 
-
 We can use `tiktoken` to estimate tokens used. It will probably be more accurate for the OpenAI models.
 
 1. How the text is split: by character passed in.
@@ -21,11 +20,9 @@ We can use `tiktoken` to estimate tokens used. It will probably be more accurate
 
 [CharacterTextSplitter](https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html), [RecursiveCharacterTextSplitter](https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html), and [TokenTextSplitter](https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.TokenTextSplitter.html) can be used with `tiktoken` directly.
 
-
 ```python
 %pip install --upgrade --quiet langchain-text-splitters tiktoken
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to split text by tokens "}]-->
@@ -40,14 +37,12 @@ To split with a [CharacterTextSplitter](https://api.python.langchain.com/en/late
 
 The `.from_tiktoken_encoder()` method takes either `encoding_name` as an argument (e.g. `cl100k_base`), or the `model_name` (e.g. `gpt-4`). All additional arguments like `chunk_size`, `chunk_overlap`, and `separators` are used to instantiate `CharacterTextSplitter`:
 
-
 ```python
 text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
     encoding_name="cl100k_base", chunk_size=100, chunk_overlap=0
 )
 texts = text_splitter.split_text(state_of_the_union)
 ```
-
 
 ```python
 print(texts[0])
@@ -63,7 +58,6 @@ With a duty to one another to the American people to the Constitution.
 ```
 To implement a hard constraint on the chunk size, we can use `RecursiveCharacterTextSplitter.from_tiktoken_encoder`, where each split will be recursively split if it has a larger size:
 
-
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to split text by tokens "}]-->
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -76,7 +70,6 @@ text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
 ```
 
 We can also load a `TokenTextSplitter` splitter, which works with `tiktoken` directly and will ensure each split is smaller than chunk size.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TokenTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.TokenTextSplitter.html", "title": "How to split text by tokens "}]-->
@@ -103,18 +96,15 @@ LangChain implements splitters based on the [spaCy tokenizer](https://spacy.io/a
 1. How the text is split: by `spaCy` tokenizer.
 2. How the chunk size is measured: by number of characters.
 
-
 ```python
 %pip install --upgrade --quiet  spacy
 ```
-
 
 ```python
 # This is a long document we can split up.
 with open("state_of_the_union.txt") as f:
     state_of_the_union = f.read()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "SpacyTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/spacy/langchain_text_splitters.spacy.SpacyTextSplitter.html", "title": "How to split text by tokens "}]-->
@@ -184,7 +174,6 @@ To split text and constrain token counts according to the sentence-transformers 
 - `model_name`: sentence-transformer model name, defaulting to `"sentence-transformers/all-mpnet-base-v2"`;
 - `tokens_per_chunk`: desired token count per chunk.
 
-
 ```python
 <!--IMPORTS:[{"imported": "SentenceTransformersTokenTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/sentence_transformers/langchain_text_splitters.sentence_transformers.SentenceTransformersTokenTextSplitter.html", "title": "How to split text by tokens "}]-->
 from langchain_text_splitters import SentenceTransformersTokenTextSplitter
@@ -226,17 +215,14 @@ lorem
 [The Natural Language Toolkit](https://en.wikipedia.org/wiki/Natural_Language_Toolkit), or more commonly [NLTK](https://www.nltk.org/), is a suite of libraries and programs for symbolic and statistical natural language processing (NLP) for English written in the Python programming language.
 :::
 
-
 Rather than just splitting on "\n\n", we can use `NLTK` to split based on [NLTK tokenizers](https://www.nltk.org/api/nltk.tokenize.html).
 
 1. How the text is split: by `NLTK` tokenizer.
 2. How the chunk size is measured: by number of characters.
 
-
 ```python
 # pip install nltk
 ```
-
 
 ```python
 # This is a long document we can split up.
@@ -244,14 +230,12 @@ with open("state_of_the_union.txt") as f:
     state_of_the_union = f.read()
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "NLTKTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/nltk/langchain_text_splitters.nltk.NLTKTextSplitter.html", "title": "How to split text by tokens "}]-->
 from langchain_text_splitters import NLTKTextSplitter
 
 text_splitter = NLTKTextSplitter(chunk_size=1000)
 ```
-
 
 ```python
 texts = text_splitter.split_text(state_of_the_union)
@@ -306,11 +290,9 @@ In case of Korean text, KoNLPY includes at morphological analyzer called `Kkma` 
 ### Usage Considerations
 While `Kkma` is renowned for its detailed analysis, it is important to note that this precision may impact processing speed. Thus, `Kkma` is best suited for applications where analytical depth is prioritized over rapid text processing.
 
-
 ```python
 # pip install konlpy
 ```
-
 
 ```python
 # This is a long Korean document that we want to split up into its component sentences.
@@ -318,14 +300,12 @@ with open("./your_korean_doc.txt") as f:
     korean_document = f.read()
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "KonlpyTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/konlpy/langchain_text_splitters.konlpy.KonlpyTextSplitter.html", "title": "How to split text by tokens "}]-->
 from langchain_text_splitters import KonlpyTextSplitter
 
 text_splitter = KonlpyTextSplitter()
 ```
-
 
 ```python
 texts = text_splitter.split_text(korean_document)
@@ -372,13 +352,11 @@ We use Hugging Face tokenizer, the [GPT2TokenizerFast](https://huggingface.co/Ra
 1. How the text is split: by character passed in.
 2. How the chunk size is measured: by number of tokens calculated by the `Hugging Face` tokenizer.
 
-
 ```python
 from transformers import GPT2TokenizerFast
 
 tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to split text by tokens "}]-->
@@ -388,14 +366,12 @@ with open("state_of_the_union.txt") as f:
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
-
 ```python
 text_splitter = CharacterTextSplitter.from_huggingface_tokenizer(
     tokenizer, chunk_size=100, chunk_overlap=0
 )
 texts = text_splitter.split_text(state_of_the_union)
 ```
-
 
 ```python
 print(texts[0])

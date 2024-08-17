@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # MLflow
 
->[MLflow](https://mlflow.org/) is a versatile, open-source platform for managing workflows and artifacts across the machine learning lifecycle. It has built-in integrations with many popular ML libraries, but can be used with any library, algorithm, or deployment tool. It is designed to be extensible, so you can write plugins to support new workflows, libraries, and tools.
+> [MLflow](https://mlflow.org/) is a versatile, open-source platform for managing workflows and artifacts across the machine learning lifecycle. It has built-in integrations with many popular ML libraries, but can be used with any library, algorithm, or deployment tool. It is designed to be extensible, so you can write plugins to support new workflows, libraries, and tools.
 
 In the context of LangChain integration, MLflow provides the following capabilities:
 
@@ -13,7 +13,6 @@ In the context of LangChain integration, MLflow provides the following capabilit
 - **Dependency Management**: MLflow automatically records model dependencies, ensuring consistency between development and production environments.
 - **Model Evaluation** MLflow offers native capabilities for evaluating LangChain applications.
 - **Tracing**: MLflow allows you to visually trace data flows through your LangChain chain, agent, retriever, or other components.
-
 
 **Note**: The tracing capability is only available in MLflow versions 2.14.0 and later.
 
@@ -23,11 +22,9 @@ This notebook demonstrates how to track your LangChain experiments using MLflow.
 
 Install MLflow Python package:
 
-
 ```python
 %pip install google-search-results num
 ```
-
 
 ```python
 %pip install mlflow -qU
@@ -35,11 +32,9 @@ Install MLflow Python package:
 
 This example utilizes the OpenAI LLM. Feel free to skip the command below and proceed with a different LLM if desired.
 
-
 ```python
 %pip install langchain-openai -qU
 ```
-
 
 ```python
 import os
@@ -50,7 +45,6 @@ os.environ["OPENAI_API_KEY"] = ""
 ```
 
 To begin, let's create a dedicated MLflow experiment in order track our model and artifacts. While you can opt to skip this step and use the default experiment, we strongly recommend organizing your runs and artifacts into separate experiments to avoid clutter and maintain a clean, structured workflow.
-
 
 ```python
 import mlflow
@@ -70,7 +64,6 @@ Integrate MLflow with your LangChain Application using one of the following meth
 
 To get started with autologging, simply call `mlflow.langchain.autolog()`. In this example, we set the `log_models` parameter to `True`, which allows the chain definition and its dependency libraries to be recorded as an MLflow model, providing a comprehensive tracking experience.
 
-
 ```python
 import mlflow
 
@@ -84,7 +77,6 @@ mlflow.langchain.autolog(
 ```
 
 ### Define a Chain
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "MLflow"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "MLflow"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "MLflow"}]-->
@@ -111,7 +103,6 @@ chain = prompt | llm | parser
 
 Note that this step may take a few seconds longer than usual, as MLflow runs several background tasks in the background to log models, traces, and artifacts to the tracking server.
 
-
 ```python
 test_input = {
     "input_language": "English",
@@ -122,17 +113,13 @@ test_input = {
 chain.invoke(test_input)
 ```
 
-
-
 ```output
 'Ich liebe das Programmieren.'
 ```
 
-
 Take a moment to explore the MLflow Tracking UI, where you can gain a deeper understanding of what information are being logged.
 * **Traces** -  Navigate to the "Traces" tab in the experiment and click the request ID link of the first row. The displayed trace tree visualizes the call stack of your chain invocation, providing you with a deep insight into how each component is executed within the chain.
 * **MLflow Model** - As we set `log_model=True`, MLflow automatically creates an MLflow Run to track your chain definition. Navigate to the newest Run page and open the "Artifacts" tab, which lists file artifacts logged as an MLflow Model, including dependencies, input examples, model signatures, and more.
-
 
 ### Invoke the Logged Chain
 
@@ -142,39 +129,30 @@ There are two ways to load the model
 1. `mlflow.langchain.load_model(MODEL_URI)` - This loads the model as the original LangChain object.
 2. `mlflow.pyfunc.load_model(MODEL_URI)` - This loads the model within the `PythonModel` wrapper and encapsulates the prediction logic with the `predict()` API, which contains additional logic such as schema enforcement.
 
-
 ```python
 # Replace YOUR_RUN_ID with the Run ID displayed on the MLflow UI
 loaded_model = mlflow.langchain.load_model("runs:/{YOUR_RUN_ID}/model")
 loaded_model.invoke(test_input)
 ```
 
-
-
 ```output
 'Ich liebe Programmieren.'
 ```
-
-
 
 ```python
 pyfunc_model = mlflow.pyfunc.load_model("runs:/{YOUR_RUN_ID}/model")
 pyfunc_model.predict(test_input)
 ```
 
-
-
 ```output
 ['Ich liebe das Programmieren.']
 ```
-
 
 ### Configure Autologging
 
 The `mlflow.langchain.autolog()` function offers several parameters that allow for fine-grained control over the artifacts logged to MLflow. For a comprehensive list of available configurations, please refer to the latest [MLflow LangChain Autologging Documentation](https://mlflow.org/docs/latest/llms/langchain/autologging.html).
 
 ## Scenario 2: Manually Logging an Agent from Code
-
 
 #### Prerequisites
 
@@ -186,7 +164,6 @@ To get started:
 * Create an account at [SerpAPI's Official Website](https://serpapi.com/) and retrieve an API key.
 * Set the API key in the environment variable: `os.environ["SERPAPI_API_KEY"] = "YOUR_API_KEY"`
 
-
 ### Define an Agent
 
 In this example, we will log the agent definition **as code**, rather than directly feeding the Python object and saving it in a serialized format. This approach offers several benefits:
@@ -194,11 +171,9 @@ In this example, we will log the agent definition **as code**, rather than direc
 1. **No serialization required**: By saving the model as code, we avoid the need for serialization, which can be problematic when working with components that don't natively support it. This approach also eliminates the risk of incompatibility issues when deserializing the model in a different environment.
 2. **Better transparency**: By inspecting the saved code file, you can gain valuable insights into what the model does. This is in contrast to serialized formats like pickle, where the model's behavior remains opaque until it's loaded back, potentially exposing security risks such as remote code execution.
 
-
 First, create a separate `.py` file that defines the agent instance.
 
 In the interest of time, you can run the following cell to generate a Python file `agent.py`, which contains the agent definition code. In actual dev scenario, you would define it in another notebook or hand-crafted python script.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "MLflow"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "MLflow"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "MLflow"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "MLflow"}]-->
@@ -223,8 +198,6 @@ with open("agent.py", "w") as f:
 
 Return to the original notebook and run the following cell to log the agent you've defined in the `agent.py` file.
 
-
-
 ```python
 question = "How long would it take to drive to the Moon with F1 racing cars?"
 
@@ -246,7 +219,6 @@ Now, open the MLflow UI and navigate to the "Artifacts" tab in the Run detail pa
 
 Now load the agent back and invoke it. There are two ways to load the model
 
-
 ```python
 # Let's turn on the autologging with default configuration, so we can see the trace for the agent invocation.
 mlflow.langchain.autolog()
@@ -261,11 +233,9 @@ agent.predict(question)
 Downloading artifacts: 100%|██████████| 10/10 [00:00<00:00, 331.57it/s]
 ```
 
-
 ```output
 ['It would take approximately 1194.5 hours to drive to the Moon with an F1 racing car.']
 ```
-
 
 Navigate to the **"Traces"** tab in the experiment and click the request ID link of the first row. The trace visualizes how the agent operate multiple tasks within the single prediction call:
 1. Determine what subtasks are required to answer the questions.
@@ -284,7 +254,6 @@ Navigate to the **"Traces"** tab in the experiment and click the request ID link
 
 When the chain or agent is invoked with the `MlflowLangchainTracer` callback, MLflow will automatically generate a trace for the call stack and log it to the MLflow tracking server.  The outcome is exactly same as `mlflow.langchain.autolog()`, but this is particularly useful when you want to only trace specific invocation. Autologging is applied to all invocation in the same notebook/script, on the other hand.
 
-
 ```python
 from mlflow.langchain.langchain_tracer import MlflowLangchainTracer
 
@@ -298,7 +267,7 @@ chain.invoke(test_input)
 ```
 
 #### Where to Pass the Callback
- LangChain supports two ways of passing callback instances: (1) Request time callbacks - pass them to the `invoke` method or bind with `with_config()` (2) Constructor callbacks - set them in the chain constructor. When using the `MlflowLangchainTracer` as a callback, you **must use request time callbacks**. Setting it in the constructor instead will only apply the callback to the top-level object, preventing it from being propagated to child components, resulting in incomplete traces. For more information on this behavior, please refer to [Callbacks Documentation](https://python.langchain.com/v0.2/docs/concepts/#callbacks) for more details.
+LangChain supports two ways of passing callback instances: (1) Request time callbacks - pass them to the `invoke` method or bind with `with_config()` (2) Constructor callbacks - set them in the chain constructor. When using the `MlflowLangchainTracer` as a callback, you **must use request time callbacks**. Setting it in the constructor instead will only apply the callback to the top-level object, preventing it from being propagated to child components, resulting in incomplete traces. For more information on this behavior, please refer to [Callbacks Documentation](https://python.langchain.com/v0.2/docs/concepts/#callbacks) for more details.
 
 ```python
 # OK
@@ -311,8 +280,8 @@ chain = TheNameOfSomeChain(callbacks=[mlflow_tracer])
 #### Supported Methods
 
 `MlflowLangchainTracer` supports the following invocation methods from the [Runnable Interfaces](https://python.langchain.com/v0.1/docs/expression_language/interface/).
--  Standard interfaces: `invoke`, `stream`, `batch`
--  Async interfaces: `astream`, `ainvoke`, `abatch`, `astream_log`, `astream_events`
+- Standard interfaces: `invoke`, `stream`, `batch`
+- Async interfaces: `astream`, `ainvoke`, `abatch`, `astream_log`, `astream_events`
 
 Other methods are not guaranteed to be fully compatible.
 
@@ -329,8 +298,6 @@ When a chain is invoked with the callback, it performs the following actions:
 3. Logs internal steps as a JSON file (this is a legacy version of traces).
 4. Logs chain input and output as a Pandas Dataframe.
 5. Calls the `flush_tracker()` method with a chain/agent instance, logging the chain/agent as an MLflow Model.
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "MlflowCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.mlflow_callback.MlflowCallbackHandler.html", "title": "MLflow"}]-->

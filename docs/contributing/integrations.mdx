@@ -28,7 +28,7 @@ from langchain_community.llms import ParrotLinkLLM
 from langchain_community.vectorstores import ParrotLinkVectorStore
 ```
 
-The `community` package relies on manually-installed dependent packages, so you will see errors 
+The `community` package relies on manually-installed dependent packages, so you will see errors
 if you try to import a package that is not installed. In our fake example, if you tried to import `ParrotLinkLLM` without installing `parrot-link-sdk`, you will see an `ImportError` telling you to install it when trying to use it.
 
 Let's say we wanted to implement a chat model for Parrot Link AI. We would create a new file in `libs/community/langchain_community/chat_models/parrot_link.py` with the following code:
@@ -68,11 +68,11 @@ Before starting a **partner** package, please confirm your intent with the LangC
 
 Partner packages can be hosted in the `LangChain` monorepo or in an external repo.
 
-Partner package in the `LangChain` repo is placed in `libs/partners/{partner}` 
+Partner package in the `LangChain` repo is placed in `libs/partners/{partner}`
 and the package source code is in `libs/partners/{partner}/langchain_{partner}`.
 
-A package is 
-installed by users with `pip install langchain-{partner}`, and the package members 
+A package is
+installed by users with `pip install langchain-{partner}`, and the package members
 can be imported with code like:
 
 ```python
@@ -149,11 +149,11 @@ to the relevant `docs/docs/integrations` directory in the monorepo root.
 
 ### (If Necessary) Deprecate community integration
 
-Note: this is only necessary if you're migrating an existing community integration into 
-a partner package. If the component you're integrating is net-new to LangChain (i.e. 
+Note: this is only necessary if you're migrating an existing community integration into
+a partner package. If the component you're integrating is net-new to LangChain (i.e.
 not already in the `community` package), you can skip this step.
 
-Let's pretend we migrated our `ChatParrotLink` chat model from the community package to 
+Let's pretend we migrated our `ChatParrotLink` chat model from the community package to
 the partner package. We would need to deprecate the old model in the community package.
 
 We would do that by adding a `@deprecated` decorator to the old model as follows, in

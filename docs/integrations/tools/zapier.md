@@ -6,23 +6,21 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # Zapier Natural Language Actions
 
 **Deprecated** This API will be sunset on 2023-11-17: https://nla.zapier.com/start/
- 
->[Zapier Natural Language Actions](https://nla.zapier.com/start/) gives you access to the 5k+ apps, 20k+ actions on Zapier's platform through a natural language API interface.
->
->NLA supports apps like `Gmail`, `Salesforce`, `Trello`, `Slack`, `Asana`, `HubSpot`, `Google Sheets`, `Microsoft Teams`, and thousands more apps: https://zapier.com/apps
->`Zapier NLA` handles ALL the underlying API auth and translation from natural language --> underlying API call --> return simplified output for LLMs. The key idea is you, or your users, expose a set of actions via an oauth-like setup window, which you can then query and execute via a REST API.
+
+> [Zapier Natural Language Actions](https://nla.zapier.com/start/) gives you access to the 5k+ apps, 20k+ actions on Zapier's platform through a natural language API interface.
+> 
+> NLA supports apps like `Gmail`, `Salesforce`, `Trello`, `Slack`, `Asana`, `HubSpot`, `Google Sheets`, `Microsoft Teams`, and thousands more apps: https://zapier.com/apps
+`Zapier NLA` handles ALL the underlying API auth and translation from natural language --> underlying API call --> return simplified output for LLMs. The key idea is you, or your users, expose a set of actions via an oauth-like setup window, which you can then query and execute via a REST API.
 
 NLA offers both API Key and OAuth for signing NLA API requests.
 
 1. Server-side (API Key): for quickly getting started, testing, and production scenarios where LangChain will only use actions exposed in the developer's Zapier account (and will use the developer's connected accounts on Zapier.com)
-
 2. User-facing (Oauth): for production scenarios where you are deploying an end-user facing application and LangChain needs access to end-user's exposed actions and connected accounts on Zapier.com
 
 This quick start focus mostly on the server-side use case for brevity. Jump to [Example Using OAuth Access Token](#oauth) to see a short example how to set up Zapier for user-facing situations. Review [full docs](https://nla.zapier.com/start/) for full user-facing oauth developer support.
 
 This example goes over how to use the Zapier integration with a `SimpleSequentialChain`, then an `Agent`.
 In code, below:
-
 
 ```python
 import os
@@ -37,7 +35,6 @@ os.environ["ZAPIER_NLA_API_KEY"] = os.environ.get("ZAPIER_NLA_API_KEY", "")
 ## Example with Agent
 Zapier tools can be used with an agent. See the example below.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Zapier Natural Language Actions"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Zapier Natural Language Actions"}, {"imported": "ZapierToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.zapier.toolkit.ZapierToolkit.html", "title": "Zapier Natural Language Actions"}, {"imported": "ZapierNLAWrapper", "source": "langchain_community.utilities.zapier", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.zapier.ZapierNLAWrapper.html", "title": "Zapier Natural Language Actions"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Zapier Natural Language Actions"}]-->
 from langchain.agents import AgentType, initialize_agent
@@ -46,14 +43,12 @@ from langchain_community.utilities.zapier import ZapierNLAWrapper
 from langchain_openai import OpenAI
 ```
 
-
 ```python
 ## step 0. expose gmail 'find email' and slack 'send channel message' actions
 
 # first go here, log in, expose (enable) the two actions: https://nla.zapier.com/demo/start -- for this example, can leave all fields "Have AI guess"
 # in an oauth scenario, you'd get your own <provider> id (instead of 'demo') which you route your users through first
 ```
-
 
 ```python
 llm = OpenAI(temperature=0)
@@ -63,7 +58,6 @@ agent = initialize_agent(
     toolkit.get_tools(), llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
 )
 ```
-
 
 ```python
 agent.run(
@@ -88,15 +82,12 @@ Final Answer: I have sent a summary of the last email from Silicon Valley Bank t
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'I have sent a summary of the last email from Silicon Valley Bank to the #test-zapier channel in Slack.'
 ```
 
-
 ## Example with SimpleSequentialChain
 If you need more explicit control, use a chain, like below.
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Zapier Natural Language Actions"}, {"imported": "SimpleSequentialChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.sequential.SimpleSequentialChain.html", "title": "Zapier Natural Language Actions"}, {"imported": "TransformChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.transform.TransformChain.html", "title": "Zapier Natural Language Actions"}, {"imported": "ZapierNLARunAction", "source": "langchain_community.tools.zapier.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.zapier.tool.ZapierNLARunAction.html", "title": "Zapier Natural Language Actions"}, {"imported": "ZapierNLAWrapper", "source": "langchain_community.utilities.zapier", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.zapier.ZapierNLAWrapper.html", "title": "Zapier Natural Language Actions"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Zapier Natural Language Actions"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Zapier Natural Language Actions"}]-->
@@ -107,7 +98,6 @@ from langchain_core.prompts import PromptTemplate
 from langchain_openai import OpenAI
 ```
 
-
 ```python
 ## step 0. expose gmail 'find email' and slack 'send direct message' actions
 
@@ -116,7 +106,6 @@ from langchain_openai import OpenAI
 
 actions = ZapierNLAWrapper().list()
 ```
-
 
 ```python
 ## step 1. gmail find email
@@ -144,7 +133,6 @@ gmail_chain = TransformChain(
 )
 ```
 
-
 ```python
 ## step 2. generate draft reply
 
@@ -158,7 +146,6 @@ Draft email reply:"""
 prompt_template = PromptTemplate(input_variables=["email_data"], template=template)
 reply_chain = LLMChain(llm=OpenAI(temperature=0.7), prompt=prompt_template)
 ```
-
 
 ```python
 ## step 3. send draft reply via a slack direct message
@@ -192,7 +179,6 @@ slack_chain = TransformChain(
 )
 ```
 
-
 ```python
 ## finally, execute
 
@@ -218,17 +204,14 @@ Best regards,
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 '{"message__text": "Dear Silicon Valley Bridge Bank, \\n\\nThank you for your email and the update regarding your new CEO Tim Mayopoulos. We appreciate your dedication to keeping your clients and partners informed and we look forward to continuing our relationship with you. \\n\\nBest regards, \\n[Your Name]", "message__permalink": "https://langchain.slack.com/archives/D04TKF5BBHU/p1678859968241629", "channel": "D04TKF5BBHU", "message__bot_profile__name": "Zapier", "message__team": "T04F8K3FZB5", "message__bot_id": "B04TRV4R74K", "message__bot_profile__deleted": "false", "message__bot_profile__app_id": "A024R9PQM", "ts_time": "2023-03-15T05:59:28Z", "message__blocks[]block_id": "p7i", "message__blocks[]elements[]elements[]type": "[[\'text\']]", "message__blocks[]elements[]type": "[\'rich_text_section\']"}'
 ```
-
 
 ## <a id="oauth">Example Using OAuth Access Token</a>
 The below snippet shows how to initialize the wrapper with a procured OAuth access token. Note the argument being passed in as opposed to setting an environment variable. Review the [authentication docs](https://nla.zapier.com/docs/authentication/#oauth-credentials) for full user-facing oauth developer support.
 
 The developer is tasked with handling the OAuth handshaking to procure and refresh the access token.
-
 
 ```python
 llm = OpenAI(temperature=0)
@@ -242,7 +225,6 @@ agent.run(
     "Summarize the last email I received regarding Silicon Valley Bank. Send the summary to the #test-zapier channel in slack."
 )
 ```
-
 
 ## Related
 

@@ -7,12 +7,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook covers how to get started with the `Chroma` vector store.
 
->[Chroma](https://docs.trychroma.com/getting-started) is a AI-native open-source vector database focused on developer productivity and happiness. Chroma is licensed under Apache 2.0. View the full docs of `Chroma` at [this page](https://docs.trychroma.com/reference/py-collection), and find the API reference for the LangChain integration at [this page](https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html).
+> [Chroma](https://docs.trychroma.com/getting-started) is a AI-native open-source vector database focused on developer productivity and happiness. Chroma is licensed under Apache 2.0. View the full docs of `Chroma` at [this page](https://docs.trychroma.com/reference/py-collection), and find the API reference for the LangChain integration at [this page](https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html).
 
 ## Setup
 
 To access `Chroma` vector stores you'll need to install the `langchain-chroma` integration package.
-
 
 ```python
 pip install -qU "langchain-chroma>=0.1.2"
@@ -24,7 +23,6 @@ You can use the `Chroma` vector store without any credentials, simply installing
 
 If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -32,7 +30,7 @@ If you want to get best in-class automated tracing of your model calls you can a
 
 ## Initialization
 
-### Basic Initialization 
+### Basic Initialization
 
 Below is a basic initialization, including the use of a directory to save the data locally.
 
@@ -56,7 +54,6 @@ vector_store = Chroma(
 
 You can also initialize from a `Chroma` client, which is particularly useful if you want easier access to the underlying database.
 
-
 ```python
 import chromadb
 
@@ -78,7 +75,6 @@ Once you have created your vector store, we can interact with it by adding and d
 ### Add items to vector store
 
 We can add items to our vector store by using the `add_documents` function.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Chroma"}]-->
@@ -163,8 +159,6 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
-
-
 ```output
 ['f22ed484-6db3-4b76-adb1-18a777426cd6',
  'e0d5bab4-6453-4511-9a37-023d9d288faa',
@@ -178,11 +172,9 @@ vector_store.add_documents(documents=documents, ids=uuids)
  '3b18e210-bb59-47a0-8e17-c8e51176ea5e']
 ```
 
-
 ### Update items in vector store
 
 Now that we have added documents to our vector store, we can update existing documents by using the `update_documents` function. 
-
 
 ```python
 updated_document_1 = Document(
@@ -208,7 +200,6 @@ vector_store.update_documents(
 
 We can also delete items from our vector store as follows:
 
-
 ```python
 vector_store.delete(ids=uuids[-1])
 ```
@@ -222,7 +213,6 @@ Once your vector store has been created and the relevant documents have been add
 #### Similarity search
 
 Performing a simple similarity search can be done as follows:
-
 
 ```python
 results = vector_store.similarity_search(
@@ -241,7 +231,6 @@ for res in results:
 
 If you want to execute a similarity search and receive the corresponding scores you can run:
 
-
 ```python
 results = vector_store.similarity_search_with_score(
     "Will it be hot tomorrow?", k=1, filter={"source": "news"}
@@ -255,7 +244,6 @@ for res, score in results:
 #### Search by vector
 
 You can also search by vector:
-
 
 ```python
 results = vector_store.similarity_search_by_vector(
@@ -275,7 +263,6 @@ There are a variety of other search methods that are not covered in this noteboo
 
 You can also transform the vector store into a retriever for easier usage in your chains. For more information on the different search types and kwargs you can pass, please visit the API reference [here](https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html#langchain_chroma.vectorstores.Chroma.as_retriever).
 
-
 ```python
 retriever = vector_store.as_retriever(
     search_type="mmr", search_kwargs={"k": 1, "fetch_k": 5}
@@ -283,12 +270,9 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime", filter={"source": "news"})
 ```
 
-
-
 ```output
 [Document(metadata={'source': 'news'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
-
 
 ## Usage for retrieval-augmented generation
 
@@ -301,7 +285,6 @@ For guides on how to use this vector store for retrieval-augmented generation (R
 ## API reference
 
 For detailed documentation of all `Chroma` vector store features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html
-
 
 ## Related
 

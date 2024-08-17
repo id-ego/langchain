@@ -16,11 +16,9 @@ This notebooks goes over how to use a LLM with langchain and vLLM.
 
 To use, you should have the `vllm` python package installed.
 
-
 ```python
 %pip install --upgrade --quiet  vllm -q
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "VLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.vllm.VLLM.html", "title": "vLLM"}]-->
@@ -49,7 +47,6 @@ What is the capital of France ? The capital of France is Paris.
 
 ```
 ## Integrate the model in an LLMChain
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "vLLM"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "vLLM"}]-->
@@ -85,7 +82,6 @@ vLLM supports distributed tensor-parallel inference and serving.
 
 To run multi-GPU inference with the LLM class, set the `tensor_parallel_size` argument to the number of GPUs you want to use. For example, to run inference on 4 GPUs
 
-
 ```python
 <!--IMPORTS:[{"imported": "VLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.vllm.VLLM.html", "title": "vLLM"}]-->
 from langchain_community.llms import VLLM
@@ -103,7 +99,6 @@ llm.invoke("What is the future of AI?")
 
 vLLM supports `awq` quantization. To enable it, pass `quantization` to `vllm_kwargs`.
 
-
 ```python
 llm_q = VLLM(
     model="TheBloke/Llama-2-7b-Chat-AWQ",
@@ -120,7 +115,6 @@ vLLM can be deployed as a server that mimics the OpenAI API protocol. This allow
 This server can be queried in the same format as OpenAI API.
 
 ### OpenAI-Compatible Completion
-
 
 ```python
 <!--IMPORTS:[{"imported": "VLLMOpenAI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.vllm.VLLMOpenAI.html", "title": "vLLM"}]-->

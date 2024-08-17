@@ -13,7 +13,6 @@ Twilio Messaging Channels facilitates integrations with 3rd party messaging apps
 
 To use this tool you need to install the Python Twilio package `twilio`
 
-
 ```python
 %pip install --upgrade --quiet  twilio
 ```
@@ -24,12 +23,10 @@ You can either pass these in to the TwilioAPIWrapper as named parameters `accoun
 
 ## Sending an SMS
 
-
 ```python
 <!--IMPORTS:[{"imported": "TwilioAPIWrapper", "source": "langchain_community.utilities.twilio", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.twilio.TwilioAPIWrapper.html", "title": "Twilio"}]-->
 from langchain_community.utilities.twilio import TwilioAPIWrapper
 ```
-
 
 ```python
 twilio = TwilioAPIWrapper(
@@ -39,7 +36,6 @@ twilio = TwilioAPIWrapper(
 )
 ```
 
-
 ```python
 twilio.run("hello world", "+16162904619")
 ```
@@ -48,12 +44,10 @@ twilio.run("hello world", "+16162904619")
 
 You'll need to link your WhatsApp Business Account with Twilio. You'll also need to make sure that the number to send messages from is configured as a WhatsApp Enabled Sender on Twilio and registered with WhatsApp.
 
-
 ```python
 <!--IMPORTS:[{"imported": "TwilioAPIWrapper", "source": "langchain_community.utilities.twilio", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.twilio.TwilioAPIWrapper.html", "title": "Twilio"}]-->
 from langchain_community.utilities.twilio import TwilioAPIWrapper
 ```
-
 
 ```python
 twilio = TwilioAPIWrapper(
@@ -63,11 +57,9 @@ twilio = TwilioAPIWrapper(
 )
 ```
 
-
 ```python
 twilio.run("hello world", "whatsapp: +16162904619")
 ```
-
 
 ## Related
 

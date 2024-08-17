@@ -8,8 +8,6 @@ Ever struggled to reach inbox zero?
 
 Using this template, you can create and customize your very own AI assistant to manage your Gmail account. Using the default Gmail tools, it can read, search through, and draft emails to respond on your behalf. It also has access to a Tavily search engine so it can search for relevant information about any topics or people in the email thread before writing, ensuring the drafts include all the relevant information needed to sound well-informed.
 
-
-
 ## The details
 
 This assistant uses OpenAI's [function calling](https://python.langchain.com/docs/modules/chains/how_to/openai_functions) support to reliably select and invoke the tools you've provided
@@ -26,10 +24,9 @@ Set the `TAVILY_API_KEY` environment variable to access Tavily search.
 
 Create a [`credentials.json`](https://developers.google.com/gmail/api/quickstart/python#authorize_credentials_for_a_desktop_application) file containing your OAuth client ID from Gmail. To customize authentication, see the [Customize Auth](#customize-auth) section below.
 
-_*Note:* The first time you run this app, it will force you to go through a user authentication flow._
+**Note:* The first time you run this app, it will force you to go through a user authentication flow.*
 
 (Optional): Set `GMAIL_AGENT_ENABLE_SEND`  to `true` (or modify the `agent.py` file in this template) to give it access to the "Send" tool. This will give your assistant permissions to send emails on your behalf without your explicit review, which is not recommended.
-
 
 ## Usage
 
@@ -58,9 +55,9 @@ from openai_functions_agent import agent_executor as openai_functions_agent_chai
 add_routes(app, openai_functions_agent_chain, path="/openai-functions-agent-gmail")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -75,7 +72,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

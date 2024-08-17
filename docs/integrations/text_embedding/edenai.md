@@ -9,8 +9,7 @@ Eden AI is revolutionizing the AI landscape by uniting the best AI providers, em
 
 This example goes over how to use LangChain to interact with Eden AI embedding models
 
------------------------------------------------------------------------------------
-
+* * *
 
 Accessing the EDENAI's API requires an API key, 
 
@@ -22,19 +21,14 @@ Once we have a key we'll want to set it as an environment variable by running:
 export EDENAI_API_KEY="..."
 ```
 
-
 If you'd prefer not to set an environment variable you can pass the key in directly via the edenai_api_key named parameter
 
- when initiating the EdenAI embedding class:
-
-
-
+when initiating the EdenAI embedding class:
 
 ```python
 <!--IMPORTS:[{"imported": "EdenAiEmbeddings", "source": "langchain_community.embeddings.edenai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.edenai.EdenAiEmbeddings.html", "title": "EDEN AI"}]-->
 from langchain_community.embeddings.edenai import EdenAiEmbeddings
 ```
-
 
 ```python
 embeddings = EdenAiEmbeddings(edenai_api_key="...", provider="...")
@@ -42,29 +36,23 @@ embeddings = EdenAiEmbeddings(edenai_api_key="...", provider="...")
 
 ## Calling a model
 
-
 The EdenAI API brings together various providers.
 
 To access a specific model, you can simply use the "provider" when calling.
 
-
-
 ```python
 embeddings = EdenAiEmbeddings(provider="openai")
 ```
-
 
 ```python
 docs = ["It's raining right now", "cats are cute"]
 document_result = embeddings.embed_documents(docs)
 ```
 
-
 ```python
 query = "my umbrella is broken"
 query_result = embeddings.embed_query(query)
 ```
-
 
 ```python
 import numpy as np

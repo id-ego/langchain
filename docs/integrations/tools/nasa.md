@@ -10,14 +10,12 @@ This notebook shows how to use agents to interact with the NASA toolkit. The too
 **Note: NASA Image and Video Library search queries can result in large responses when the number of desired media results is not specified. Consider this prior to using the agent with LLM token credits.**
 
 ## Example Use:
----
+* * *
 ### Initializing the agent
-
 
 ```python
 %pip install -qU langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "NASA Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "NASA Toolkit"}, {"imported": "NasaToolkit", "source": "langchain_community.agent_toolkits.nasa.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.nasa.toolkit.NasaToolkit.html", "title": "NASA Toolkit"}, {"imported": "NasaAPIWrapper", "source": "langchain_community.utilities.nasa", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.nasa.NasaAPIWrapper.html", "title": "NASA Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "NASA Toolkit"}]-->
@@ -36,7 +34,6 @@ agent = initialize_agent(
 
 ### Querying media assets
 
-
 ```python
 agent.run(
     "Can you find three pictures of the moon published between the years 2014 and 2020?"
@@ -45,14 +42,12 @@ agent.run(
 
 ### Querying details about media assets
 
-
 ```python
 output = agent.run(
     "I've just queried an image of the moon with the NASA id NHQ_2019_0311_Go Forward to the Moon."
     " Where can I find the metadata manifest for this asset?"
 )
 ```
-
 
 ## Related
 

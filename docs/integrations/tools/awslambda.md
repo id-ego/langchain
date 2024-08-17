@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # AWS Lambda
 
->[`Amazon AWS Lambda`](https://aws.amazon.com/pm/lambda/) is a serverless computing service provided by `Amazon Web Services` (`AWS`). It helps developers to build and run applications and services without provisioning or managing servers. This serverless architecture enables you to focus on writing and deploying code, while AWS automatically takes care of scaling, patching, and managing the infrastructure required to run your applications.
+> [`Amazon AWS Lambda`](https://aws.amazon.com/pm/lambda/) is a serverless computing service provided by `Amazon Web Services` (`AWS`). It helps developers to build and run applications and services without provisioning or managing servers. This serverless architecture enables you to focus on writing and deploying code, while AWS automatically takes care of scaling, patching, and managing the infrastructure required to run your applications.
 
 This notebook goes over how to use the `AWS Lambda` Tool.
 
@@ -14,7 +14,6 @@ By including the `AWS Lambda` in the list of tools provided to an Agent, you can
 When an Agent uses the `AWS Lambda` tool, it will provide an argument of type string which will in turn be passed into the Lambda function via the event parameter.
 
 First, you need to install `boto3` python package.
-
 
 ```python
 %pip install --upgrade --quiet  boto3 > /dev/null
@@ -26,7 +25,6 @@ In order for an agent to use the tool, you must provide it with the name and des
 You must also provide the name of your function. 
 
 Note that because this tool is effectively just a wrapper around the boto3 library, you will need to run `aws configure` in order to make use of the tool. For more detail, see [here](https://docs.aws.amazon.com/cli/index.html)
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "AWS Lambda"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "AWS Lambda"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "AWS Lambda"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "AWS Lambda"}]-->
@@ -48,7 +46,6 @@ agent = initialize_agent(
 
 agent.run("Send an email to test@testing123.com saying hello world.")
 ```
-
 
 ## Related
 

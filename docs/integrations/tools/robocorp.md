@@ -15,7 +15,6 @@ First, see the [Robocorp Quickstart](https://github.com/robocorp/robocorp#quicks
 
 In your LangChain application, install the `langchain-robocorp` package: 
 
-
 ```python
 # Install package
 %pip install --upgrade --quiet langchain-robocorp
@@ -71,7 +70,6 @@ Optionally you can set the following environment variables:
 
 We started the local action server, above, running on `http://localhost:8080`.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Robocorp Toolkit"}, {"imported": "OpenAIFunctionsAgent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.OpenAIFunctionsAgent.html", "title": "Robocorp Toolkit"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Robocorp Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Robocorp Toolkit"}, {"imported": "ActionServerToolkit", "source": "langchain_robocorp", "docs": "https://api.python.langchain.com/en/latest/toolkits/langchain_robocorp.toolkits.ActionServerToolkit.html", "title": "Robocorp Toolkit"}]-->
 from langchain.agents import AgentExecutor, OpenAIFunctionsAgent
@@ -108,12 +106,10 @@ Invoking: `robocorp_action_server_get_weather_forecast` with `{'city': 'San Fran
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'What is the current weather today in San Francisco in fahrenheit?',
  'output': 'The current weather today in San Francisco is 75F and sunny.'}
 ```
-
 
 ### Single input tools
 
@@ -121,13 +117,11 @@ By default `toolkit.get_tools()` will return the actions as Structured Tools.
 
 To return single input tools, pass a Chat model to be used for processing the inputs.
 
-
 ```python
 # Initialize single input Action Server Toolkit
 toolkit = ActionServerToolkit(url="http://localhost:8080")
 tools = toolkit.get_tools(llm=llm)
 ```
-
 
 ## Related
 

@@ -16,10 +16,7 @@ internal collaborations for enterprises, and public contributions for data DAOs.
 pip install betabageldb langchain-community
 ```
 
-
-
 ## Create VectorStore from texts
-
 
 ```python
 <!--IMPORTS:[{"imported": "Bagel", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.bagel.Bagel.html", "title": "BagelDB"}]-->
@@ -30,13 +27,10 @@ texts = ["hello bagel", "hello langchain", "I love salad", "my car", "a dog"]
 cluster = Bagel.from_texts(cluster_name="testing", texts=texts)
 ```
 
-
 ```python
 # similarity search
 cluster.similarity_search("bagel", k=3)
 ```
-
-
 
 ```output
 [Document(page_content='hello bagel', metadata={}),
@@ -44,14 +38,10 @@ cluster.similarity_search("bagel", k=3)
  Document(page_content='I love salad', metadata={})]
 ```
 
-
-
 ```python
 # the score is a distance metric, so lower is better
 cluster.similarity_search_with_score("bagel", k=3)
 ```
-
-
 
 ```output
 [(Document(page_content='hello bagel', metadata={}), 0.27392977476119995),
@@ -59,15 +49,12 @@ cluster.similarity_search_with_score("bagel", k=3)
  (Document(page_content='I love salad', metadata={}), 1.5342965126037598)]
 ```
 
-
-
 ```python
 # delete the cluster
 cluster.delete_cluster()
 ```
 
 ## Create VectorStore from docs
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "BagelDB"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "BagelDB"}]-->
@@ -80,12 +67,10 @@ text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)[:10]
 ```
 
-
 ```python
 # create cluster with docs
 cluster = Bagel.from_documents(cluster_name="testing_with_docs", documents=docs)
 ```
-
 
 ```python
 # similarity search
@@ -98,33 +83,25 @@ Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Member
 ```
 ## Get all text/doc from Cluster
 
-
 ```python
 texts = ["hello bagel", "this is langchain"]
 cluster = Bagel.from_texts(cluster_name="testing", texts=texts)
 cluster_data = cluster.get()
 ```
 
-
 ```python
 # all keys
 cluster_data.keys()
 ```
 
-
-
 ```output
 dict_keys(['ids', 'embeddings', 'metadatas', 'documents'])
 ```
-
-
 
 ```python
 # all values and keys
 cluster_data
 ```
-
-
 
 ```output
 {'ids': ['578c6d24-3763-11ee-a8ab-b7b7b34f99ba',
@@ -147,14 +124,11 @@ cluster_data
   'this is langchain']}
 ```
 
-
-
 ```python
 cluster.delete_cluster()
 ```
 
 ## Create cluster with metadata & filter using metadata
-
 
 ```python
 texts = ["hello bagel", "this is langchain"]
@@ -164,19 +138,14 @@ cluster = Bagel.from_texts(cluster_name="testing", texts=texts, metadatas=metada
 cluster.similarity_search_with_score("hello bagel", where={"source": "notion"})
 ```
 
-
-
 ```output
 [(Document(page_content='hello bagel', metadata={'source': 'notion'}), 0.0)]
 ```
-
-
 
 ```python
 # delete the cluster
 cluster.delete_cluster()
 ```
-
 
 ## Related
 

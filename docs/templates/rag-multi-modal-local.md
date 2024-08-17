@@ -5,16 +5,14 @@ canonical: https://python.langchain.com/v0.2/docs/templates/rag-multi-modal-loca
 # rag-multi-modal-local
 
 Visual search is a famililar application to many with iPhones or Android devices. It allows user to search photos using natural language.
-  
+
 With the release of open source, multi-modal LLMs it's possible to build this kind of application for yourself for your own private photo collection.
 
 This template demonstrates how to perform private visual search and question-answering over a collection of your photos.
 
 It uses [`nomic-embed-vision-v1`](https://huggingface.co/nomic-ai/nomic-embed-vision-v1) multi-modal embeddings to embed the images and `Ollama` for question-answering.
- 
-Given a question, relevant photos are retrieved and passed to an open source multi-modal LLM of your choice for answer synthesis.
- 
 
+Given a question, relevant photos are retrieved and passed to an open source multi-modal LLM of your choice for answer synthesis.
 
 ## Input
 
@@ -40,7 +38,6 @@ python ingest.py
 This template will use [nomic-embed-vision-v1](https://huggingface.co/nomic-ai/nomic-embed-vision-v1) multi-modal embeddings to embed the images.
 
 The first time you run the app, it will automatically download the multimodal embedding model.
-
 
 You can choose alternative models in `rag_chroma_multi_modal/ingest.py`, such as `OpenCLIPEmbeddings`.
 ```
@@ -98,9 +95,9 @@ from rag_chroma_multi_modal import chain as rag_chroma_multi_modal_chain
 add_routes(app, rag_chroma_multi_modal_chain, path="/rag-chroma-multi-modal")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -115,7 +112,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

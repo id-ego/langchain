@@ -5,14 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Elasticsearch
 
->[Elasticsearch](https://www.elastic.co/elasticsearch/) is a distributed, RESTful search and analytics engine, capable of performing both vector and lexical search. It is built on top of the Apache Lucene library. 
+> [Elasticsearch](https://www.elastic.co/elasticsearch/) is a distributed, RESTful search and analytics engine, capable of performing both vector and lexical search. It is built on top of the Apache Lucene library. 
 
 This notebook shows how to use functionality related to the `Elasticsearch` vector store.
 
 ## Setup
 
 In order to use the `Elasticsearch` vector search you must install the `langchain-elasticsearch` package.
-
 
 ```python
 %pip install -qU langchain-elasticsearch
@@ -30,15 +29,12 @@ embedding object to the constructor.
 
 2. Local Install Elasticsearch: Get started with Elasticsearch by running it locally. The easiest way is to use the official Elasticsearch Docker image. See the [Elasticsearch Docker documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html) for more information.
 
-
-### Running Elasticsearch via Docker 
+### Running Elasticsearch via Docker
 Example: Run a single-node Elasticsearch instance with security disabled. This is not recommended for production use.
-
 
 ```python
 %docker run -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -e "xpack.security.http.ssl.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:8.12.1
 ```
-
 
 ### Running with Authentication
 For production, we recommend you run with security enabled. To connect with login credentials, you can use the parameters `es_api_key` or `es_user` and `es_password`.
@@ -83,7 +79,6 @@ To obtain an API key:
 
 To connect to an Elasticsearch instance on Elastic Cloud, you can use either the `es_cloud_id` parameter or `es_url`.
 
-
 ```python
 elastic_vector_search = ElasticsearchStore(
     es_cloud_id="<cloud_id>",
@@ -96,7 +91,6 @@ elastic_vector_search = ElasticsearchStore(
 
 If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -105,8 +99,6 @@ If you want to get best in-class automated tracing of your model calls you can a
 ## Initialization
 
 Elasticsearch is running locally on localhost:9200 with [docker](#running-elasticsearch-via-docker). For more details on how to connect to Elasticsearch from Elastic Cloud, see [connecting with authentication](#running-with-authentication) above.
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticsearchStore", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_elasticsearch.vectorstores.ElasticsearchStore.html", "title": "Elasticsearch"}]-->
@@ -120,7 +112,6 @@ vector_store = ElasticsearchStore(
 ## Manage vector store
 
 ### Add items to vector store
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Elasticsearch"}]-->
@@ -195,8 +186,6 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
-
-
 ```output
 ['21cca03c-9089-42d2-b41c-3d156be2b519',
  'a6ceb967-b552-4802-bb06-c0e95fce386e',
@@ -210,20 +199,15 @@ vector_store.add_documents(documents=documents, ids=uuids)
  'ca182769-c4fc-4e25-8f0a-8dd0a525955c']
 ```
 
-
 ### Delete items from vector store
-
 
 ```python
 vector_store.delete(ids=[uuids[-1]])
 ```
 
-
-
 ```output
 True
 ```
-
 
 ## Query vector store
 
@@ -234,7 +218,6 @@ Once your vector store has been created and the relevant documents have been add
 #### Similarity search
 
 Performing a simple similarity search with filtering on metadata can be done as follows:
-
 
 ```python
 results = vector_store.similarity_search(
@@ -253,7 +236,6 @@ for res in results:
 
 If you want to execute a similarity search and receive the corresponding scores you can run:
 
-
 ```python
 results = vector_store.similarity_search_with_score(
     query="Will it be hot tomorrow",
@@ -270,7 +252,6 @@ for doc, score in results:
 
 You can also transform the vector store into a retriever for easier usage in your chains. 
 
-
 ```python
 retriever = vector_store.as_retriever(
     search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.2}
@@ -278,15 +259,12 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime")
 ```
 
-
-
 ```output
 [Document(metadata={'source': 'news'}, page_content='Robbers broke into the city bank and stole $1 million in cash.'),
  Document(metadata={'source': 'news'}, page_content='The stock market is down 500 points today due to fears of a recession.'),
  Document(metadata={'source': 'website'}, page_content='Is the new iPhone worth the price? Read this review to find out.'),
  Document(metadata={'source': 'tweet'}, page_content='Building an exciting new project with LangChain - come check it out!')]
 ```
-
 
 ## Usage for retrieval-augmented generation
 
@@ -406,7 +384,6 @@ db.client.indices.delete(
 ## API reference
 
 For detailed documentation of all `ElasticSearchStore` features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_elasticsearch.vectorstores.ElasticsearchStore.html
-
 
 ## Related
 

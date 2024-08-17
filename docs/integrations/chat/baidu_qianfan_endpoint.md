@@ -15,8 +15,7 @@ Basically, those model are split into the following type:
 - Completion
 
 In this notebook, we will introduce how to use langchain with [Qianfan](https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html) mainly in `Chat` corresponding
- to the package `langchain/chat_models` in langchain:
-
+to the package `langchain/chat_models` in langchain:
 
 ## API Initialization
 
@@ -44,7 +43,6 @@ export QIANFAN_SK=XXX
 
 ## Set up
 
-
 ```python
 <!--IMPORTS:[{"imported": "QianfanChatEndpoint", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.baidu_qianfan_endpoint.QianfanChatEndpoint.html", "title": "QianfanChatEndpoint"}, {"imported": "HumanMessage", "source": "langchain_core.language_models.chat_models", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "QianfanChatEndpoint"}]-->
 """For basic init and call"""
@@ -59,46 +57,33 @@ os.environ["QIANFAN_SK"] = "You_secret_Key"
 
 ## Usage
 
-
 ```python
 chat = QianfanChatEndpoint(streaming=True)
 messages = [HumanMessage(content="Hello")]
 chat.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='您好！请问您需要什么帮助？我将尽力回答您的问题。')
 ```
-
-
 
 ```python
 await chat.ainvoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='您好！有什么我可以帮助您的吗？')
 ```
-
-
 
 ```python
 chat.batch([messages])
 ```
 
-
-
 ```output
 [AIMessage(content='您好！有什么我可以帮助您的吗？')]
 ```
 
-
 ### Streaming
-
 
 ```python
 try:
@@ -117,7 +102,6 @@ The default model is ERNIE-Bot-turbo, in the case you want to deploy your own mo
 1. (Optional, if the model are included in the default models, skip it) Deploy your model in Qianfan Console, get your own customized deploy endpoint.
 2. Set up the field called `endpoint` in the initialization:
 
-
 ```python
 chatBot = QianfanChatEndpoint(
     streaming=True,
@@ -128,12 +112,9 @@ messages = [HumanMessage(content="Hello")]
 chatBot.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='Hello，可以回答问题了，我会竭尽全力为您解答，请问有什么问题吗？')
 ```
-
 
 ## Model Params:
 
@@ -143,8 +124,6 @@ For now, only `ERNIE-Bot` and `ERNIE-Bot-turbo` support model params below, we m
 - top_p
 - penalty_score
 
-
-
 ```python
 chat.invoke(
     [HumanMessage(content="Hello")],
@@ -152,13 +131,9 @@ chat.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='您好！有什么我可以帮助您的吗？')
 ```
-
-
 
 ## Related
 

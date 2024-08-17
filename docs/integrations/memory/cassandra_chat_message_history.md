@@ -3,27 +3,23 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/memory/cassandra_
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/cassandra_chat_message_history.ipynb
 ---
 
-# Cassandra 
+# Cassandra
 
->[Apache Cassandra®](https://cassandra.apache.org) is a `NoSQL`, row-oriented, highly scalable and highly available database, well suited for storing large amounts of data.
+> [Apache Cassandra®](https://cassandra.apache.org) is a `NoSQL`, row-oriented, highly scalable and highly available database, well suited for storing large amounts of data.
 
->`Cassandra` is a good choice for storing chat message history because it is easy to scale and can handle a large number of writes.
+> `Cassandra` is a good choice for storing chat message history because it is easy to scale and can handle a large number of writes.
 
 This notebook goes over how to use Cassandra to store chat message history.
-
-
 
 ## Setting up
 
 To run this notebook you need either a running `Cassandra` cluster or a `DataStax Astra DB` instance running in the cloud (you can get one for free at [datastax.com](https://astra.datastax.com)). Check [cassio.org](https://cassio.org/start_here/) for more information.
-
 
 ```python
 %pip install --upgrade --quiet  "cassio>=0.1.0 langchain-community"
 ```
 
 ### Set up the database connection parameters and secrets
-
 
 ```python
 import getpass
@@ -43,7 +39,6 @@ elif database_mode == "C":
 ```
 
 Depending on whether local or cloud-based Astra DB, create the corresponding database connection "Session" object.
-
 
 ```python
 from cassandra.auth import PlainTextAuthProvider
@@ -75,7 +70,6 @@ else:
 
 ## Example
 
-
 ```python
 <!--IMPORTS:[{"imported": "CassandraChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.cassandra.CassandraChatMessageHistory.html", "title": "Cassandra "}]-->
 from langchain_community.chat_message_histories import (
@@ -92,7 +86,6 @@ message_history.add_user_message("hi!")
 
 message_history.add_ai_message("whats up?")
 ```
-
 
 ```python
 message_history.messages

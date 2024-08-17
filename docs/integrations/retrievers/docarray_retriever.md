@@ -5,14 +5,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # DocArray
 
->[DocArray](https://github.com/docarray/docarray) is a versatile, open-source tool for managing your multi-modal data. It lets you shape your data however you want, and offers the flexibility to store and search it using various document index backends. Plus, it gets even better - you can utilize your `DocArray` document index to create a `DocArrayRetriever`, and build awesome Langchain apps!
+> [DocArray](https://github.com/docarray/docarray) is a versatile, open-source tool for managing your multi-modal data. It lets you shape your data however you want, and offers the flexibility to store and search it using various document index backends. Plus, it gets even better - you can utilize your `DocArray` document index to create a `DocArrayRetriever`, and build awesome Langchain apps!
 
-This notebook is split into two sections. The [first section](#document-index-backends) offers an introduction to all five supported document index backends. It provides guidance on setting up and indexing each backend and also instructs you on how to build a `DocArrayRetriever` for finding relevant documents. 
+This notebook is split into two sections. The [first section](#document-index-backends) offers an introduction to all five supported document index backends. It provides guidance on setting up and indexing each backend and also instructs you on how to build a `DocArrayRetriever` for finding relevant documents.
 In the [second section](#movie-retrieval-using-hnswdocumentindex), we'll select one of these backends and illustrate how to use it through a basic example.
 
-
 ## Document Index Backends
-
 
 ```python
 <!--IMPORTS:[{"imported": "FakeEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.fake.FakeEmbeddings.html", "title": "DocArray"}, {"imported": "DocArrayRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.docarray.DocArrayRetriever.html", "title": "DocArray"}]-->
@@ -30,7 +28,6 @@ Before you start building the index, it's important to define your document sche
 
 For this demonstration, we'll create a somewhat random schema containing 'title' (str), 'title_embedding' (numpy array), 'year' (int), and 'color' (str)
 
-
 ```python
 class MyDoc(BaseDoc):
     title: str
@@ -44,7 +41,6 @@ class MyDoc(BaseDoc):
 `InMemoryExactNNIndex` stores all Documents in memory. It is a great starting point for small datasets, where you may not want to launch a database server.
 
 Learn more here: https://docs.docarray.org/user_guide/storing/index_in_memory/
-
 
 ```python
 from docarray.index import InMemoryExactNNIndex
@@ -66,7 +62,6 @@ db.index(
 # optionally, you can create a filter query
 filter_query = {"year": {"$lte": 90}}
 ```
-
 
 ```python
 # create a retriever
@@ -91,7 +86,6 @@ print(doc)
 
 Learn more here: https://docs.docarray.org/user_guide/storing/index_hnswlib/
 
-
 ```python
 from docarray.index import HnswDocumentIndex
 
@@ -113,7 +107,6 @@ db.index(
 # optionally, you can create a filter query
 filter_query = {"year": {"$lte": 90}}
 ```
-
 
 ```python
 # create a retriever
@@ -138,7 +131,6 @@ print(doc)
 
 Learn more here: https://docs.docarray.org/user_guide/storing/index_weaviate/
 
-
 ```python
 # There's a small difference with the Weaviate backend compared to the others.
 # Here, you need to 'mark' the field used for vector search with 'is_embedding=True'.
@@ -153,7 +145,6 @@ class WeaviateDoc(BaseDoc):
     year: int
     color: str
 ```
-
 
 ```python
 from docarray.index import WeaviateDocumentIndex
@@ -178,7 +169,6 @@ db.index(
 filter_query = {"path": ["year"], "operator": "LessThanEqual", "valueInt": "90"}
 ```
 
-
 ```python
 # create a retriever
 retriever = DocArrayRetriever(
@@ -201,7 +191,6 @@ print(doc)
 `ElasticDocIndex` is a document index that is built upon [ElasticSearch](https://github.com/elastic/elasticsearch)
 
 Learn more [here](https://docs.docarray.org/user_guide/storing/index_elastic/)
-
 
 ```python
 from docarray.index import ElasticDocIndex
@@ -227,7 +216,6 @@ db.index(
 filter_query = {"range": {"year": {"lte": 90}}}
 ```
 
-
 ```python
 # create a retriever
 retriever = DocArrayRetriever(
@@ -250,7 +238,6 @@ print(doc)
 `QdrantDocumentIndex` is a document index that is built upon [Qdrant](https://qdrant.tech/) vector database
 
 Learn more [here](https://docs.docarray.org/user_guide/storing/index_qdrant/)
-
 
 ```python
 from docarray.index import QdrantDocumentIndex
@@ -308,7 +295,6 @@ print(doc)
 ```
 ## Movie Retrieval using HnswDocumentIndex
 
-
 ```python
 movies = [
     {
@@ -350,7 +336,6 @@ movies = [
 ]
 ```
 
-
 ```python
 import getpass
 import os
@@ -391,7 +376,6 @@ docs = DocList[MyDoc](
 )
 ```
 
-
 ```python
 from docarray.index import HnswDocumentIndex
 
@@ -403,7 +387,6 @@ db.index(docs)
 ```
 
 ### Normal Retriever
-
 
 ```python
 <!--IMPORTS:[{"imported": "DocArrayRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.docarray.DocArrayRetriever.html", "title": "DocArray"}]-->
@@ -425,7 +408,6 @@ print(doc)
 [Document(page_content='A thief who steals corporate secrets through the use of dream-sharing technology is given the task of planting an idea into the mind of a CEO.', metadata={'id': 'f1649d5b6776db04fec9a116bbb6bbe5', 'title': 'Inception', 'rating': 8.8, 'director': 'Christopher Nolan'})]
 ```
 ### Retriever with Filters
-
 
 ```python
 <!--IMPORTS:[{"imported": "DocArrayRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.docarray.DocArrayRetriever.html", "title": "DocArray"}]-->
@@ -449,7 +431,6 @@ print(docs)
 [Document(page_content='Interstellar explores the boundaries of human exploration as a group of astronauts venture through a wormhole in space. In their quest to ensure the survival of humanity, they confront the vastness of space-time and grapple with love and sacrifice.', metadata={'id': 'ab704cc7ae8573dc617f9a5e25df022a', 'title': 'Interstellar', 'rating': 8.6, 'director': 'Christopher Nolan'}), Document(page_content='A thief who steals corporate secrets through the use of dream-sharing technology is given the task of planting an idea into the mind of a CEO.', metadata={'id': 'f1649d5b6776db04fec9a116bbb6bbe5', 'title': 'Inception', 'rating': 8.8, 'director': 'Christopher Nolan'})]
 ```
 ### Retriever with MMR search
-
 
 ```python
 <!--IMPORTS:[{"imported": "DocArrayRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.docarray.DocArrayRetriever.html", "title": "DocArray"}]-->

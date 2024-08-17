@@ -14,11 +14,9 @@ To use it, you should have the `google-cloud-translate` python package installed
 - [Google Neural Machine Translation](https://en.wikipedia.org/wiki/Google_Neural_Machine_Translation)
 - [A Neural Network for Machine Translation, at Production Scale](https://blog.research.google/2016/09/a-neural-network-for-machine.html)
 
-
 ```python
 %pip install --upgrade --quiet  google-cloud-translate
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google Translate"}]-->
@@ -29,7 +27,6 @@ from langchain_google_community import GoogleTranslateTransformer
 ## Input
 
 This is the document we'll translate
-
 
 ```python
 sample_text = """[Generated with Google Bard]
@@ -77,7 +74,6 @@ When initializing the `GoogleTranslateTransformer`, you can include the followin
 [glossaries]: https://cloud.google.com/translate/docs/advanced/glossary
 [endpoints]: https://cloud.google.com/translate/docs/advanced/endpoints
 
-
 ```python
 documents = [Document(page_content=sample_text)]
 translator = GoogleTranslateTransformer(project_id="<YOUR_PROJECT_ID>")
@@ -90,23 +86,21 @@ After translating a document, the result will be returned as a new document with
 You can provide the following keyword parameters to the `transform_documents()` method:
 
 - `target_language_code`: [ISO 639][iso-639] language code of the output document.
-    - For supported languages, refer to [Language support][supported-languages].
+  - For supported languages, refer to [Language support][supported-languages].
 - `source_language_code`: (Optional) [ISO 639][iso-639] language code of the input document.
-    - If not provided, language will be auto-detected.
+  - If not provided, language will be auto-detected.
 - `mime_type`: (Optional) [Media Type][media-type] of the input text.
-    - Options: `text/plain` (Default), `text/html`.
+  - Options: `text/plain` (Default), `text/html`.
 
 [iso-639]: https://en.wikipedia.org/wiki/ISO_639
 [supported-languages]: https://cloud.google.com/translate/docs/languages
 [media-type]: https://en.wikipedia.org/wiki/Media_type
-
 
 ```python
 translated_documents = translator.transform_documents(
     documents, target_language_code="es"
 )
 ```
-
 
 ```python
 for doc in translated_documents:

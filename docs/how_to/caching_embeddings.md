@@ -23,7 +23,6 @@ The main supported way to initialize a `CacheBackedEmbeddings` is `from_bytes_st
 - Be sure to set the `namespace` parameter to avoid collisions of the same text embedded using different embeddings models.
 - `CacheBackedEmbeddings` does not cache query embeddings by default. To enable query caching, one need to specify a `query_embedding_cache`.
 
-
 ```python
 <!--IMPORTS:[{"imported": "CacheBackedEmbeddings", "source": "langchain.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain.embeddings.cache.CacheBackedEmbeddings.html", "title": "Caching"}]-->
 from langchain.embeddings import CacheBackedEmbeddings
@@ -33,11 +32,9 @@ from langchain.embeddings import CacheBackedEmbeddings
 
 First, let's see an example that uses the local file system for storing embeddings and uses FAISS vector store for retrieval.
 
-
 ```python
 %pip install --upgrade --quiet  langchain-openai faiss-cpu
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "LocalFileStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html", "title": "Caching"}, {"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Caching"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Caching"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Caching"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Caching"}]-->
@@ -58,20 +55,15 @@ cached_embedder = CacheBackedEmbeddings.from_bytes_store(
 
 The cache is empty prior to embedding:
 
-
 ```python
 list(store.yield_keys())
 ```
-
-
 
 ```output
 []
 ```
 
-
 Load the document, split it into chunks, embed each chunk and load it into the vector store.
-
 
 ```python
 raw_documents = TextLoader("state_of_the_union.txt").load()
@@ -80,7 +72,6 @@ documents = text_splitter.split_documents(raw_documents)
 ```
 
 Create the vector store:
-
 
 ```python
 %%time
@@ -92,7 +83,6 @@ Wall time: 1.02 s
 ```
 If we try to create the vector store again, it'll be much faster since it does not need to re-compute any embeddings.
 
-
 ```python
 %%time
 db2 = FAISS.from_documents(documents, cached_embedder)
@@ -103,12 +93,9 @@ Wall time: 17.2 ms
 ```
 And here are some of the embeddings that got created:
 
-
 ```python
 list(store.yield_keys())[:5]
 ```
-
-
 
 ```output
 ['text-embedding-ada-00217a6727d-8916-54eb-b196-ec9c9d6ca472',
@@ -118,11 +105,9 @@ list(store.yield_keys())[:5]
  'text-embedding-ada-0021297d37a-2bc1-5e19-bf13-6c950f075062']
 ```
 
-
 # Swapping the `ByteStore`
 
 In order to use a different `ByteStore`, just use it when creating your `CacheBackedEmbeddings`. Below, we create an equivalent cached embeddings object, except using the non-persistent `InMemoryByteStore` instead:
-
 
 ```python
 <!--IMPORTS:[{"imported": "CacheBackedEmbeddings", "source": "langchain.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain.embeddings.cache.CacheBackedEmbeddings.html", "title": "Caching"}, {"imported": "InMemoryByteStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryByteStore.html", "title": "Caching"}]-->

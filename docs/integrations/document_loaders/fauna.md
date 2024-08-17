@@ -5,17 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Fauna
 
->[Fauna](https://fauna.com/) is a Document Database.
+> [Fauna](https://fauna.com/) is a Document Database.
 
 Query `Fauna` documents
-
 
 ```python
 %pip install --upgrade --quiet  fauna
 ```
 
 ## Query data example
-
 
 ```python
 <!--IMPORTS:[{"imported": "FaunaLoader", "source": "langchain_community.document_loaders.fauna", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.fauna.FaunaLoader.html", "title": "Fauna"}]-->
@@ -37,7 +35,6 @@ You get a `after` value if there are more data. You can get values after the cur
 
 To learn more following [this link](https://fqlx-beta--fauna-docs.netlify.app/fqlx/beta/reference/schema_entities/set/static-paginate)
 
-
 ```python
 query = """
 Item.paginate("hs+DzoPOg ... aY1hOohozrV7A")
@@ -45,7 +42,6 @@ Item.all()
 """
 loader = FaunaLoader(query, field, secret)
 ```
-
 
 ## Related
 

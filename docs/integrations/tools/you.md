@@ -13,11 +13,9 @@ The tool lives in the `langchain-community` package.
 
 You also need to set your you.com API key.
 
-
 ```python
 %pip install --upgrade --quiet langchain-community
 ```
-
 
 ```python
 import os
@@ -36,14 +34,12 @@ os.environ["OPENAI_API_KEY"] = ""
 
 It's also helpful (but not needed) to set up [LangSmith](https://smith.langchain.com/) for best-in-class observability
 
-
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
 ## Tool Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "YouSearchTool", "source": "langchain_community.tools.you", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.you.tool.YouSearchTool.html", "title": "You.com Search"}, {"imported": "YouSearchAPIWrapper", "source": "langchain_community.utilities.you", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.you.YouSearchAPIWrapper.html", "title": "You.com Search"}]-->
@@ -56,13 +52,9 @@ tool = YouSearchTool(api_wrapper=api_wrapper)
 tool
 ```
 
-
-
 ```output
 YouSearchTool(api_wrapper=YouSearchAPIWrapper(ydc_api_key='054da371-e73b-47c1-a6d9-3b0cddf0fa3e<__>1Obt7EETU8N2v5f4MxaH0Zhx', num_web_results=1, safesearch=None, country=None, k=None, n_snippets_per_hit=None, endpoint_type='search', n_hits=None))
 ```
-
-
 
 ```python
 # .invoke wraps utility.results
@@ -88,12 +80,10 @@ page_content='- Humidity70%\n- UV Index1 of 11\n- Sunrise7:18 am\n- Sunset4:34 p
 
 We show here how to use it as part of an [agent](/docs/tutorials/agents). We use the OpenAI Functions Agent, so we will need to setup and install the required dependencies for that. We will also use [LangSmith Hub](https://smith.langchain.com/hub) to pull the prompt from, so we will need to install that.
 
-
 ```python
 # you need a model to use in the chain
 !pip install --upgrade --quiet langchain langchain-openai langchainhub langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "You.com Search"}, {"imported": "create_openai_functions_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.create_openai_functions_agent.html", "title": "You.com Search"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "You.com Search"}]-->
@@ -114,7 +104,6 @@ agent_executor = AgentExecutor(
     verbose=True,
 )
 ```
-
 
 ```python
 agent_executor.invoke({"input": "What is the weather in NY today?"})
@@ -143,13 +132,10 @@ For more details, you can visit [The Weather Channel](https://weather.com/weathe
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'What is the weather in NY today?',
  'output': 'The weather in New York City today is as follows:\n- Feels Like: 43°F\n- High/Low: --/39°F\n- Wind: 3 mph\n- Humidity: 63%\n- Dew Point: 31°F\n- Pressure: 30.44 in\n- UV Index: 0 of 11\n- Visibility: 10 mi\n- Moon Phase: Waxing Gibbous\n\nFor more details, you can visit [The Weather Channel](https://weather.com/weather/today/l/96f2f84af9a5f5d452eb0574d4e4d8a840c71b05e22264ebdc0056433a642c84).'}
 ```
-
-
 
 ## Related
 

@@ -5,8 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Label Studio
 
-
->[Label Studio](https://labelstud.io/guide/get_started) is an open-source data labeling platform that provides LangChain with flexibility when it comes to labeling data for fine-tuning large language models (LLMs). It also enables the preparation of custom training data and the collection and evaluation of responses through human feedback.
+> [Label Studio](https://labelstud.io/guide/get_started) is an open-source data labeling platform that provides LangChain with flexibility when it comes to labeling data for fine-tuning large language models (LLMs). It also enables the preparation of custom training data and the collection and evaluation of responses through human feedback.
 
 In this guide, you will learn how to connect a LangChain pipeline to `Label Studio` to:
 
@@ -17,7 +16,6 @@ In this guide, you will learn how to connect a LangChain pipeline to `Label Stud
 ## Installation and setup
 
 First install latest versions of Label Studio and Label Studio API client:
-
 
 ```python
 %pip install --upgrade --quiet langchain label-studio label-studio-sdk langchain-openai langchain-community
@@ -30,7 +28,6 @@ You'll need a token to make API calls.
 Open your LabelStudio instance in your browser, go to `Account & Settings > Access Token` and copy the key.
 
 Set environment variables with your LabelStudio URL, API key and OpenAI API key:
-
 
 ```python
 import os
@@ -75,14 +72,12 @@ Create a project that takes human input in text format and outputs an editable L
 
 You can collect input LLM prompts and output responses in a LabelStudio project, connecting it via `LabelStudioCallbackHandler`:
 
-
 ```python
 <!--IMPORTS:[{"imported": "LabelStudioCallbackHandler", "source": "langchain_community.callbacks.labelstudio_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.labelstudio_callback.LabelStudioCallbackHandler.html", "title": "Label Studio"}]-->
 from langchain_community.callbacks.labelstudio_callback import (
     LabelStudioCallbackHandler,
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Label Studio"}]-->
@@ -123,7 +118,6 @@ You can also track and display full chat dialogues in LabelStudio, with the abil
 </View>
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Label Studio"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Label Studio"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Label Studio"}]-->
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -155,7 +149,6 @@ New labeling configuration can be added from UI: go to `Settings > Labeling Inte
 
 Alternatively, you can specify the labeling configuration on the initial call before project creation:
 
-
 ```python
 ls = LabelStudioCallbackHandler(
     project_config="""
@@ -185,5 +178,5 @@ The `LabelStudioCallbackHandler` accepts several optional parameters:
 - **project_name** - Project name if project ID not specified. Creates a new project. Default is `"LangChain-%Y-%m-%d"` formatted with the current date.
 - **project_config** - [custom labeling configuration](#custom-labeling-configuration)
 - **mode**: use this shortcut to create target configuration from scratch:
-   - `"prompt"` - Single prompt, single response. Default.
-   - `"chat"` - Multi-turn chat mode.
+  - `"prompt"` - Single prompt, single response. Default.
+  - `"chat"` - Multi-turn chat mode.

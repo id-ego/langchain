@@ -19,13 +19,11 @@ Both approaches mentioned above carry significant risks. Using SQL requires exec
 ## Setup
 Dependencies for this guide:
 
-
 ```python
 %pip install -qU langchain langchain-openai langchain-community langchain-experimental pandas
 ```
 
 Set required environment variables:
-
 
 ```python
 # Using LangSmith is recommended but not required. Uncomment below lines to use.
@@ -36,11 +34,9 @@ Set required environment variables:
 
 Download the [Titanic dataset](https://www.kaggle.com/datasets/yasserh/titanic-dataset) if you don't already have it:
 
-
 ```python
 !wget https://web.stanford.edu/class/archive/cs/cs109/cs109.1166/stuff/titanic.csv -O titanic.csv
 ```
-
 
 ```python
 import pandas as pd
@@ -59,7 +55,6 @@ Using SQL to interact with CSV data is the recommended approach because it is ea
 
 Most SQL databases make it easy to load a CSV file in as a table ([DuckDB](https://duckdb.org/docs/data/csv/overview.html), [SQLite](https://www.sqlite.org/csv.html), etc.). Once you've done this you can use all of the chain and agent-creating techniques outlined in the [SQL tutorial](/docs/tutorials/sql_qa). Here's a quick example of how we might do this with SQLite:
 
-
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabase", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html", "title": "How to do question answering over CSVs"}]-->
 from langchain_community.utilities import SQLDatabase
@@ -69,13 +64,9 @@ engine = create_engine("sqlite:///titanic.db")
 df.to_sql("titanic", engine, index=False)
 ```
 
-
-
 ```output
 887
 ```
-
-
 
 ```python
 db = SQLDatabase(engine=engine)
@@ -101,7 +92,6 @@ from langchain_community.agent_toolkits import create_sql_agent
 
 agent_executor = create_sql_agent(llm, db=db, agent_type="openai-tools", verbose=True)
 ```
-
 
 ```python
 agent_executor.invoke({"input": "what's the average age of survivors"})
@@ -145,12 +135,10 @@ Invoking: `sql_db_query` with `{'query': 'SELECT AVG(Age) AS Average_Age FROM ti
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': "what's the average age of survivors",
  'output': 'The average age of survivors in the Titanic dataset is approximately 28.41 years.'}
 ```
-
 
 This approach easily generalizes to multiple CSVs, since we can just load each of them into our database as its own table. See the [Multiple CSVs](/docs/how_to/sql_csv#multiple-csvs) section below.
 
@@ -161,7 +149,6 @@ Instead of SQL we can also use data analysis libraries like pandas and the code 
 ### Chain
 
 Most LLMs have been trained on enough pandas Python code that they can generate it just by being asked to:
-
 
 ```python
 ai_msg = llm.invoke(
@@ -189,15 +176,11 @@ tool = PythonAstREPLTool(locals={"df": df})
 tool.invoke("df['Fare'].mean()")
 ```
 
-
-
 ```output
 32.30542018038331
 ```
 
-
 To help enforce proper use of our Python tool, we'll using [tool calling](/docs/how_to/tool_calling):
-
 
 ```python
 llm_with_tools = llm.bind_tools([tool], tool_choice=tool.name)
@@ -207,19 +190,13 @@ response = llm_with_tools.invoke(
 response
 ```
 
-
-
 ```output
 AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_SBrK246yUbdnJemXFC8Iod05', 'function': {'arguments': '{"query":"df.corr()[\'Age\'][\'Fare\']"}', 'name': 'python_repl_ast'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 13, 'prompt_tokens': 125, 'total_tokens': 138}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_3b956da36b', 'finish_reason': 'stop', 'logprobs': None}, id='run-1fd332ba-fa72-4351-8182-d464e7368311-0', tool_calls=[{'name': 'python_repl_ast', 'args': {'query': "df.corr()['Age']['Fare']"}, 'id': 'call_SBrK246yUbdnJemXFC8Iod05'}])
 ```
 
-
-
 ```python
 response.tool_calls
 ```
-
-
 
 ```output
 [{'name': 'python_repl_ast',
@@ -227,9 +204,7 @@ response.tool_calls
   'id': 'call_SBrK246yUbdnJemXFC8Iod05'}]
 ```
 
-
 We'll add a tools output parser to extract the function call as a dict:
-
 
 ```python
 <!--IMPORTS:[{"imported": "JsonOutputKeyToolsParser", "source": "langchain_core.output_parsers.openai_tools", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.JsonOutputKeyToolsParser.html", "title": "How to do question answering over CSVs"}]-->
@@ -241,15 +216,11 @@ parser = JsonOutputKeyToolsParser(key_name=tool.name, first_tool_only=True)
 )
 ```
 
-
-
 ```output
 {'query': "df[['Age', 'Fare']].corr()"}
 ```
 
-
 And combine with a prompt so that we can just specify a question without needing to specify the dataframe info every invocation:
-
 
 ```python
 system = f"""You have access to a pandas dataframe `df`. \
@@ -267,32 +238,24 @@ code_chain = prompt | llm_with_tools | parser
 code_chain.invoke({"question": "What's the correlation between age and fare"})
 ```
 
-
-
 ```output
 {'query': "df[['Age', 'Fare']].corr()"}
 ```
 
-
 And lastly we'll add our Python tool so that the generated code is actually executed:
-
 
 ```python
 chain = prompt | llm_with_tools | parser | tool
 chain.invoke({"question": "What's the correlation between age and fare"})
 ```
 
-
-
 ```output
 0.11232863699941621
 ```
 
-
 And just like that we have a simple data analysis chain. We can take a peak at the intermediate steps by looking at the LangSmith trace: https://smith.langchain.com/public/b1309290-7212-49b7-bde2-75b39a32b49a/r
 
 We could add an additional LLM call at the end to generate a conversational response, so that we're not just responding with the tool output. For this we'll want to add a chat history `MessagesPlaceholder` to our prompt:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to do question answering over CSVs"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to do question answering over CSVs"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to do question answering over CSVs"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to do question answering over CSVs"}]-->
@@ -344,25 +307,20 @@ chain = (
 )
 ```
 
-
 ```python
 chain.invoke({"question": "What's the correlation between age and fare"})
 ```
-
-
 
 ```output
 {'tool_output': 0.11232863699941616,
  'response': 'The correlation between age and fare is approximately 0.1123.'}
 ```
 
-
 Here's the LangSmith trace for this run: https://smith.langchain.com/public/14e38d70-45b1-4b81-8477-9fd2b7c07ea6/r
 
 ### Agent
 
 For complex questions it can be helpful for an LLM to be able to iteratively execute code while maintaining the inputs and outputs of its previous executions. This is where Agents come into play. They allow an LLM to decide how many times a tool needs to be invoked and keep track of the executions it's made so far. The [create_pandas_dataframe_agent](https://api.python.langchain.com/en/latest/agents/langchain_experimental.agents.agent_toolkits.pandas.base.create_pandas_dataframe_agent.html) is a built-in agent that makes it easy to work with dataframes:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_pandas_dataframe_agent", "source": "langchain_experimental.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain_experimental.agents.agent_toolkits.pandas.base.create_pandas_dataframe_agent.html", "title": "How to do question answering over CSVs"}]-->
@@ -394,19 +352,16 @@ Therefore, the correlation between Fare and Survival (0.256) is greater than the
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': "What's the correlation between age and fare? is that greater than the correlation between fare and survival?",
  'output': 'The correlation between Age and Fare is approximately 0.112, and the correlation between Fare and Survival is approximately 0.256.\n\nTherefore, the correlation between Fare and Survival (0.256) is greater than the correlation between Age and Fare (0.112).'}
 ```
-
 
 Here's the LangSmith trace for this run: https://smith.langchain.com/public/6a86aee2-4f22-474a-9264-bd4c7283e665/r
 
 ### Multiple CSVs {#multiple-csvs}
 
 To handle multiple CSVs (or dataframes) we just need to pass multiple dataframes to our Python tool. Our `create_pandas_dataframe_agent` constructor can do this out of the box, we can pass in a list of dataframes instead of just one. If we're constructing a chain ourselves, we can do something like:
-
 
 ```python
 df_1 = df[["Age", "Fare"]]
@@ -441,12 +396,9 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 0.14384991262954416
 ```
-
 
 Here's the LangSmith trace for this run: https://smith.langchain.com/public/cc2a7d7f-7c5a-4e77-a10c-7b5420fcd07f/r
 

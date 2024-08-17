@@ -4,13 +4,13 @@ canonical: https://python.langchain.com/v0.2/docs/templates/research-assistant/
 
 # research-assistant
 
-This template implements a version of  
+This template implements a version of\
 [GPT Researcher](https://github.com/assafelovic/gpt-researcher) that you can use
 as a starting point for a research agent.
 
 ## Environment Setup
 
-The default template relies on ChatOpenAI and DuckDuckGo, so you will need the 
+The default template relies on ChatOpenAI and DuckDuckGo, so you will need the
 following environment variable:
 
 - `OPENAI_API_KEY`
@@ -46,11 +46,10 @@ from research_assistant import chain as research_assistant_chain
 add_routes(app, research_assistant_chain, path="/research-assistant")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
-
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -64,7 +63,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

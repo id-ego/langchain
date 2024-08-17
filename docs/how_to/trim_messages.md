@@ -26,7 +26,6 @@ The `trim_messages` util provides some basic strategies for trimming a list of m
 
 To get the last `max_tokens` in the list of Messages we can set `strategy="last"`. Notice that for our `token_counter` we can pass in a function (more on that below) or a language model (since language models have a message token counting method). It makes sense to pass in a model when you're trimming your messages to fit into the context window of that specific model:
 
-
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to trim messages"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to trim messages"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to trim messages"}, {"imported": "trim_messages", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.utils.trim_messages.html", "title": "How to trim messages"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to trim messages"}]-->
 # pip install -U langchain-openai
@@ -59,16 +58,12 @@ trim_messages(
 )
 ```
 
-
-
 ```output
 [AIMessage(content="Hmmm let me think.\n\nWhy, he's probably chasing after the last cup of coffee in the office!"),
  HumanMessage(content='what do you call a speechless parrot')]
 ```
 
-
 If we want to always keep the initial system message we can specify `include_system=True`:
-
 
 ```python
 trim_messages(
@@ -80,16 +75,12 @@ trim_messages(
 )
 ```
 
-
-
 ```output
 [SystemMessage(content="you're a good assistant, you always respond with a joke."),
  HumanMessage(content='what do you call a speechless parrot')]
 ```
 
-
 If we want to allow splitting up the contents of a message we can specify `allow_partial=True`:
-
 
 ```python
 trim_messages(
@@ -102,17 +93,13 @@ trim_messages(
 )
 ```
 
-
-
 ```output
 [SystemMessage(content="you're a good assistant, you always respond with a joke."),
  AIMessage(content="\nWhy, he's probably chasing after the last cup of coffee in the office!"),
  HumanMessage(content='what do you call a speechless parrot')]
 ```
 
-
 If we need to make sure that our first message (excluding the system message) is always of a specific type, we can specify `start_on`:
-
 
 ```python
 trim_messages(
@@ -125,18 +112,14 @@ trim_messages(
 )
 ```
 
-
-
 ```output
 [SystemMessage(content="you're a good assistant, you always respond with a joke."),
  HumanMessage(content='what do you call a speechless parrot')]
 ```
 
-
 ## Getting the first `max_tokens` tokens
 
 We can perform the flipped operation of getting the *first* `max_tokens` by specifying `strategy="first"`:
-
 
 ```python
 trim_messages(
@@ -147,18 +130,14 @@ trim_messages(
 )
 ```
 
-
-
 ```output
 [SystemMessage(content="you're a good assistant, you always respond with a joke."),
  HumanMessage(content="i wonder why it's called langchain")]
 ```
 
-
 ## Writing a custom token counter
 
 We can write a custom token counter function that takes in a list of messages and returns an int.
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.base.BaseMessage.html", "title": "How to trim messages"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to trim messages"}]-->
@@ -211,18 +190,14 @@ trim_messages(
 )
 ```
 
-
-
 ```output
 [AIMessage(content="Hmmm let me think.\n\nWhy, he's probably chasing after the last cup of coffee in the office!"),
  HumanMessage(content='what do you call a speechless parrot')]
 ```
 
-
 ## Chaining
 
 `trim_messages` can be used in an imperatively (like above) or declaratively, making it easy to compose with other components in a chain
-
 
 ```python
 llm = ChatOpenAI(model="gpt-4o")
@@ -240,34 +215,26 @@ chain = trimmer | llm
 chain.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='A: A "Polly-gone"!', response_metadata={'token_usage': {'completion_tokens': 9, 'prompt_tokens': 32, 'total_tokens': 41}, 'model_name': 'gpt-4o-2024-05-13', 'system_fingerprint': 'fp_66b29dffce', 'finish_reason': 'stop', 'logprobs': None}, id='run-83e96ddf-bcaa-4f63-824c-98b0f8a0d474-0', usage_metadata={'input_tokens': 32, 'output_tokens': 9, 'total_tokens': 41})
 ```
-
 
 Looking at the LangSmith trace we can see that before the messages are passed to the model they are first trimmed: https://smith.langchain.com/public/65af12c4-c24d-4824-90f0-6547566e59bb/r
 
 Looking at just the trimmer, we can see that it's a Runnable object that can be invoked like all Runnables:
 
-
 ```python
 trimmer.invoke(messages)
 ```
-
-
 
 ```output
 [SystemMessage(content="you're a good assistant, you always respond with a joke."),
  HumanMessage(content='what do you call a speechless parrot')]
 ```
 
-
 ## Using with ChatMessageHistory
 
 Trimming messages is especially useful when [working with chat histories](/docs/how_to/message_history/), which can get arbitrarily long:
-
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.InMemoryChatMessageHistory.html", "title": "How to trim messages"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to trim messages"}]-->
@@ -300,12 +267,9 @@ chain_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='A "polly-no-wanna-cracker"!', response_metadata={'token_usage': {'completion_tokens': 10, 'prompt_tokens': 32, 'total_tokens': 42}, 'model_name': 'gpt-4o-2024-05-13', 'system_fingerprint': 'fp_5bf7397cd3', 'finish_reason': 'stop', 'logprobs': None}, id='run-054dd309-3497-4e7b-b22a-c1859f11d32e-0', usage_metadata={'input_tokens': 32, 'output_tokens': 10, 'total_tokens': 42})
 ```
-
 
 Looking at the LangSmith trace we can see that we retrieve all of our messages but before the messages are passed to the model they are trimmed to be just the system message and last human message: https://smith.langchain.com/public/17dd700b-9994-44ca-930c-116e00997315/r
 

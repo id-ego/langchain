@@ -13,11 +13,9 @@ In `ConstitutionalChain`, this structure of critique requests and associated rev
 - Delegation of instructions to [message roles](/docs/concepts/#messages) (e.g., chat models can understand what a `ToolMessage` represents without the need for additional prompting);
 - Support for streaming, both of individual tokens and chain steps.
 
-
 ```python
 %pip install --upgrade --quiet langchain-openai
 ```
-
 
 ```python
 import os
@@ -61,12 +59,9 @@ constitutional_chain = ConstitutionalChain.from_llm(
 result = constitutional_chain.invoke("What is the meaning of life?")
 ```
 
-
 ```python
 result
 ```
-
-
 
 ```output
 {'question': 'What is the meaning of life?',
@@ -75,7 +70,6 @@ result
  'critiques_and_revisions': [('This answer is good in that it recognizes and acknowledges the subjective nature of the question and provides a valid and thoughtful response. However, it could have also mentioned that the meaning of life is a complex and deeply personal concept that can also change and evolve over time for each individual. Critique Needed.',
    'The meaning of life is a deeply personal and ever-evolving concept. It is a journey of self-discovery and growth, and can be different for each individual. Some may find meaning in relationships, others in achieving their goals, and some may never find a concrete answer. Ultimately, the meaning of life is what we make of it.')]}
 ```
-
 
 Above, we've returned intermediate steps showing:
 
@@ -86,14 +80,15 @@ Above, we've returned intermediate steps showing:
 
 </details>
 
+
 ## LangGraph
 
 <details open>
 
+
 Below, we use the [.with_structured_output](/docs/how_to/structured_output/) method to simultaneously generate (1) a judgment of whether a critique is needed, and (2) the critique. We surface all prompts involved for clarity and ease of customizability.
 
 Note that we are also able to stream intermediate steps with this implementation, so we can monitor and if needed intervene during its execution.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ConstitutionalPrinciple", "source": "langchain.chains.constitutional_ai.models", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.constitutional_ai.models.ConstitutionalPrinciple.html", "title": "# Legacy"}, {"imported": "CRITIQUE_PROMPT", "source": "langchain.chains.constitutional_ai.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.CRITIQUE_PROMPT.html", "title": "# Legacy"}, {"imported": "REVISION_PROMPT", "source": "langchain.chains.constitutional_ai.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.REVISION_PROMPT.html", "title": "# Legacy"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "# Legacy"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "# Legacy"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "# Legacy"}]-->
@@ -202,7 +197,6 @@ graph.add_edge("critique_and_revise", END)
 app = graph.compile()
 ```
 
-
 ```python
 constitutional_principles = [
     ConstitutionalPrinciple(
@@ -226,6 +220,7 @@ async for step in app.astream(
 {'initial_response': 'Finding purpose, connection, and joy in our experiences and relationships.', 'critiques_and_revisions': [("The response exceeds the 10-word limit, providing a more elaborate answer than requested. A concise response, such as 'To seek purpose and joy in life,' would better align with the query.", 'To seek purpose and joy in life.')], 'response': 'To seek purpose and joy in life.'}
 ```
 </details>
+
 
 ## Next steps
 

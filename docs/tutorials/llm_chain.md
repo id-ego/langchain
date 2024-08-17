@@ -11,13 +11,9 @@ In this quickstart we'll show you how to build a simple LLM application with Lan
 After reading this tutorial, you'll have a high level overview of:
 
 - Using [language models](/docs/concepts/#chat-models)
-
 - Using [PromptTemplates](/docs/concepts/#prompt-templates) and [OutputParsers](/docs/concepts/#output-parsers)
-
 - Using [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language-lcel) to chain components together
-
 - Debugging and tracing your application using [LangSmith](/docs/concepts/#langsmith)
-
 - Deploying your application with [LangServe](/docs/concepts/#langserve)
 
 Let's dive in!
@@ -46,7 +42,6 @@ import CodeBlock from "@theme/CodeBlock";
     <CodeBlock language="bash">conda install langchain -c conda-forge</CodeBlock>
   </TabItem>
 </Tabs>
-
 
 
 For more details, see our [Installation guide](/docs/how_to/installation).
@@ -84,7 +79,6 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 Let's first use the model directly. `ChatModel`s are instances of LangChain "Runnables", which means they expose a standard interface for interacting with them. To just simply call the model, we can pass in a list of messages to the `.invoke` method.
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Build a Simple LLM Application with LCEL"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Build a Simple LLM Application with LCEL"}]-->
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -97,12 +91,9 @@ messages = [
 model.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='ciao!', response_metadata={'token_usage': {'completion_tokens': 3, 'prompt_tokens': 20, 'total_tokens': 23}, 'model_name': 'gpt-4', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-fc5d7c88-9615-48ab-a3c7-425232b562c5-0')
 ```
-
 
 If we've enable LangSmith, we can see that this run is logged to LangSmith, and can see the [LangSmith trace](https://smith.langchain.com/public/88baa0b2-7c1a-4d09-ba30-a47985dde2ea/r)
 
@@ -111,7 +102,6 @@ If we've enable LangSmith, we can see that this run is logged to LangSmith, and 
 Notice that the response from the model is an `AIMessage`. This contains a string response along with other metadata about the response. Oftentimes we may just want to work with the string response. We can parse out just this response by using a simple output parser.
 
 We first import the simple output parser.
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Build a Simple LLM Application with LCEL"}]-->
@@ -122,45 +112,35 @@ parser = StrOutputParser()
 
 One way to use it is to use it by itself. For example, we could save the result of the language model call and then pass it to the parser.
 
-
 ```python
 result = model.invoke(messages)
 ```
-
 
 ```python
 parser.invoke(result)
 ```
 
-
-
 ```output
 'Ciao!'
 ```
-
 
 More commonly, we can "chain" the model with this output parser. This means this output parser will get called every time in this chain. This chain takes on the input type of the language model (string or list of message) and returns the output type of the output parser (string).
 
 We can easily create the chain using the `|` operator. The `|` operator is used in LangChain to combine two elements together.
 
-
 ```python
 chain = model | parser
 ```
-
 
 ```python
 chain.invoke(messages)
 ```
 
-
-
 ```output
 'Ciao!'
 ```
 
-
-If we now look at LangSmith, we can see that the chain has two steps: first the language model is called, then the result of that is passed to the output parser. We can see the [LangSmith trace]( https://smith.langchain.com/public/f1bdf656-2739-42f7-ac7f-0f1dd712322f/r)
+If we now look at LangSmith, we can see that the chain has two steps: first the language model is called, then the result of that is passed to the output parser. We can see the [LangSmith trace](https://smith.langchain.com/public/f1bdf656-2739-42f7-ac7f-0f1dd712322f/r)
 
 ## Prompt Templates
 
@@ -173,7 +153,6 @@ Let's create a PromptTemplate here. It will take in two user variables:
 - `language`: The language to translate text into
 - `text`: The text to translate
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a Simple LLM Application with LCEL"}]-->
 from langchain_core.prompts import ChatPromptTemplate
@@ -181,13 +160,11 @@ from langchain_core.prompts import ChatPromptTemplate
 
 First, let's create a string that we will format to be the system message:
 
-
 ```python
 system_template = "Translate the following into {language}:"
 ```
 
 Next, we can create the PromptTemplate. This will be a combination of the `system_template` as well as a simpler template for where to put the text to be translated
-
 
 ```python
 prompt_template = ChatPromptTemplate.from_messages(
@@ -197,55 +174,42 @@ prompt_template = ChatPromptTemplate.from_messages(
 
 The input to this prompt template is a dictionary. We can play around with this prompt template by itself to see what it does by itself
 
-
 ```python
 result = prompt_template.invoke({"language": "italian", "text": "hi"})
 
 result
 ```
 
-
-
 ```output
 ChatPromptValue(messages=[SystemMessage(content='Translate the following into italian:'), HumanMessage(content='hi')])
 ```
 
-
 We can see that it returns a `ChatPromptValue` that consists of two messages. If we want to access the messages directly we do:
-
 
 ```python
 result.to_messages()
 ```
-
-
 
 ```output
 [SystemMessage(content='Translate the following into italian:'),
  HumanMessage(content='hi')]
 ```
 
-
 ## Chaining together components with LCEL
 
 We can now combine this with the model and the output parser from above using the pipe (`|`) operator:
-
 
 ```python
 chain = prompt_template | model | parser
 ```
 
-
 ```python
 chain.invoke({"language": "italian", "text": "hi"})
 ```
 
-
-
 ```output
 'ciao'
 ```
-
 
 This is a simple example of using [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language-lcel) to chain together LangChain modules. There are several benefits to this approach, including optimized streaming and tracing support.
 
@@ -269,7 +233,6 @@ To create a server for our application we'll make a `serve.py` file. This will c
 1. The definition of our chain that we just built above
 2. Our FastAPI app
 3. A definition of a route from which to serve the chain, which is done with `langserve.add_routes`
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a Simple LLM Application with LCEL"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Build a Simple LLM Application with LCEL"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Build a Simple LLM Application with LCEL"}]-->
@@ -336,7 +299,6 @@ Head to [http://localhost:8000/chain/playground/](http://localhost:8000/chain/pl
 Now let's set up a client for programmatically interacting with our service. We can easily do this with the [langserve.RemoteRunnable](/docs/langserve/#client).
 Using this, we can interact with the served chain as if it were running client-side.
 
-
 ```python
 from langserve import RemoteRunnable
 
@@ -344,12 +306,9 @@ remote_chain = RemoteRunnable("http://localhost:8000/chain/")
 remote_chain.invoke({"language": "italian", "text": "hi"})
 ```
 
-
-
 ```output
 'Ciao'
 ```
-
 
 To learn more about the many other features of LangServe [head here](/docs/langserve).
 

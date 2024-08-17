@@ -14,23 +14,23 @@ of creating and using a chain as opposed to the capabilities of the LLM.
 
 With the Kinetica LLM workflow you create an LLM context in the database that provides
 information needed for infefencing that includes tables, annotations, rules, and
-samples. Invoking ``ChatKinetica.load_messages_from_context()`` will retrieve the
+samples. Invoking `ChatKinetica.load_messages_from_context()` will retrieve the
 context information from the database so that it can be used to create a chat prompt.
 
-The chat prompt consists of a ``SystemMessage`` and pairs of
-``HumanMessage``/``AIMessage`` that contain the samples which are question/SQL
+The chat prompt consists of a `SystemMessage` and pairs of
+`HumanMessage`/`AIMessage` that contain the samples which are question/SQL
 pairs. You can append pairs samples to this list but it is not intended to
 facilitate a typical natural language conversation.
 
 When you create a chain from the chat prompt and execute it, the Kinetica LLM will
-generate SQL from the input. Optionally you can use ``KineticaSqlOutputParser`` to
+generate SQL from the input. Optionally you can use `KineticaSqlOutputParser` to
 execute the SQL and return the result as a dataframe.
 
 Currently, 2 LLM's are supported for SQL generation: 
 
 1. **Kinetica SQL-GPT**: This LLM is based on OpenAI ChatGPT API.
 2. **Kinetica SqlAssist**: This LLM is purpose built to integrate with the Kinetica
-   database and it can run in a secure customer premise.
+database and it can run in a secure customer premise.
 
 For this demo we will be using **SqlAssist**. See the [Kinetica Documentation
 site](https://docs.kinetica.com/7.1/sql-gpt/concepts/) for more information.
@@ -41,7 +41,6 @@ To get started you will need a Kinetica DB instance. If you don't have one you c
 obtain a [free development instance](https://cloud.kinetica.com/trynow).
 
 You will need to install the following packages...
-
 
 ```python
 # Install Langchain community and core packages
@@ -63,7 +62,6 @@ You must set the database connection in the following environment variables. If 
 
 If you can create an instance of `KineticaChatLLM` then you are successfully connected.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatKinetica", "source": "langchain_community.chat_models.kinetica", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.kinetica.ChatKinetica.html", "title": "Kinetica Language To SQL Chat Model"}]-->
 from langchain_community.chat_models.kinetica import ChatKinetica
@@ -84,7 +82,6 @@ Before we can generate SQL we will need to create a Kinetica table and an LLM co
 ### Create some fake user profiles
 
 We will use the `faker` package to create a dataframe with 100 fake profiles.
-
 
 ```python
 from typing import Generator
@@ -133,7 +130,6 @@ id
 ```
 ### Create a Kinetica table from the Dataframe
 
-
 ```python
 from gpudb import GPUdbTable
 
@@ -162,7 +158,6 @@ print(gpudb_table.type_as_df())
 You can create an LLM Context using the Kinetica Workbench UI or you can manually create it with the `CREATE OR REPLACE CONTEXT` syntax. 
 
 Here we create a context from the SQL syntax referencing the table we created.
-
 
 ```python
 from gpudb import GPUdbSamplesClause, GPUdbSqlContext, GPUdbTableClause
@@ -203,11 +198,9 @@ CREATE OR REPLACE CONTEXT "demo"."test_llm_ctx" (
 )
 ```
 
-
 ```output
 1
 ```
-
 
 ## Use Langchain for inferencing
 
@@ -215,8 +208,7 @@ In the example below we will create a chain from the previously created table an
 
 ### Load the chat prompt from the Kinetica DB
 
-The `load_messages_from_context()` function will retrieve a context from the DB and convert it into a list of chat messages that we use to create a ``ChatPromptTemplate``.
-
+The `load_messages_from_context()` function will retrieve a context from the DB and convert it into a list of chat messages that we use to create a `ChatPromptTemplate`.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Kinetica Language To SQL Chat Model"}]-->
@@ -264,7 +256,6 @@ select count(1) as num_users
 
 The last element of this chain is `KineticaSqlOutputParser` that will execute the SQL and return a dataframe. This is optional and if we left it out then only SQL would be returned.
 
-
 ```python
 <!--IMPORTS:[{"imported": "KineticaSqlOutputParser", "source": "langchain_community.chat_models.kinetica", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.kinetica.KineticaSqlOutputParser.html", "title": "Kinetica Language To SQL Chat Model"}, {"imported": "KineticaSqlResponse", "source": "langchain_community.chat_models.kinetica", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.kinetica.KineticaSqlResponse.html", "title": "Kinetica Language To SQL Chat Model"}]-->
 from langchain_community.chat_models.kinetica import (
@@ -277,8 +268,7 @@ chain = prompt_template | kinetica_llm | KineticaSqlOutputParser(kdbc=kinetica_l
 
 ### Generate the SQL
 
-The chain we created will take a question as input and return a ``KineticaSqlResponse`` containing the generated SQL and data. The question must be relevant to the to LLM context we used to create the prompt.
-
+The chain we created will take a question as input and return a `KineticaSqlResponse` containing the generated SQL and data. The question must be relevant to the to LLM context we used to create the prompt.
 
 ```python
 # Here you must ask a question relevant to the LLM context provided in the prompt template.

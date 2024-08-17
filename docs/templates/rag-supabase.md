@@ -18,7 +18,6 @@ To find your `SUPABASE_URL` and `SUPABASE_SERVICE_KEY`, head to your Supabase pr
 - `SUPABASE_URL` corresponds to the Project URL
 - `SUPABASE_SERVICE_KEY` corresponds to the `service_role` API key
 
-
 ```shell
 export SUPABASE_URL=
 export SUPABASE_SERVICE_KEY=
@@ -31,11 +30,11 @@ Use these steps to setup your Supabase database if you haven't already.
 
 1. Head over to https://database.new to provision your Supabase database.
 2. In the studio, jump to the [SQL editor](https://supabase.com/dashboard/project/_/sql/new) and run the following script to enable `pgvector` and setup your database as a vector store:
-
+   
    ```sql
    -- Enable the pgvector extension to work with embedding vectors
    create extension if not exists vector;
-
+   
    -- Create a table to store your documents
    create table
      documents (
@@ -44,7 +43,7 @@ Use these steps to setup your Supabase database if you haven't already.
        metadata jsonb, -- corresponds to Document.metadata
        embedding vector (1536) -- 1536 works for OpenAI embeddings, change as needed
      );
-
+   
    -- Create a function to search for documents
    create function match_documents (
      query_embedding vector (1536),
@@ -102,9 +101,9 @@ from rag_supabase.chain import chain as rag_supabase_chain
 add_routes(app, rag_supabase_chain, path="/rag-supabase")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -119,7 +118,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

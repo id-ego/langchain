@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook provides you with a guide on how to load the Volcano Embedding class.
 
-
 ## API Initialization
 
 To use the LLM services based on [VolcEngine](https://www.volcengine.com/docs/82379/1099455), you have to initialize these parameters:
@@ -18,7 +17,6 @@ You could either choose to init the AK,SK in environment variables or init param
 export VOLC_ACCESSKEY=XXX
 export VOLC_SECRETKEY=XXX
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "VolcanoEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.volcengine.VolcanoEmbeddings.html", "title": "Volc Engine"}]-->

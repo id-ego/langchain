@@ -11,8 +11,7 @@ The [MLX Community](https://huggingface.co/mlx-community) hosts over 150 models,
 
 These can be called from LangChain either through this local pipeline wrapper or by calling their hosted inference endpoints through the MlXPipeline class. For more information on mlx, see the [examples repo](https://github.com/ml-explore/mlx-examples/tree/main/llms) notebook.
 
-To use, you should have the ``mlx-lm`` python [package installed](https://pypi.org/project/mlx-lm/), as well as [transformers](https://pypi.org/project/transformers/). You can also install `huggingface_hub`.
-
+To use, you should have the `mlx-lm` python [package installed](https://pypi.org/project/mlx-lm/), as well as [transformers](https://pypi.org/project/transformers/). You can also install `huggingface_hub`.
 
 ```python
 %pip install --upgrade --quiet  mlx-lm transformers huggingface_hub
@@ -21,7 +20,6 @@ To use, you should have the ``mlx-lm`` python [package installed](https://pypi.o
 ### Model Loading
 
 Models can be loaded by specifying the model parameters using the `from_model_id` method.
-
 
 ```python
 <!--IMPORTS:[{"imported": "MLXPipeline", "source": "langchain_community.llms.mlx_pipeline", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.mlx_pipeline.MLXPipeline.html", "title": "MLX Local Pipelines"}]-->
@@ -35,7 +33,6 @@ pipe = MLXPipeline.from_model_id(
 
 They can also be loaded by passing in an existing `transformers` pipeline directly
 
-
 ```python
 from mlx_lm import load
 
@@ -47,7 +44,6 @@ pipe = MLXPipeline(model=model, tokenizer=tokenizer)
 
 With the model loaded into memory, you can compose it with a prompt to
 form a chain.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "MLX Local Pipelines"}]-->
@@ -64,7 +60,6 @@ question = "What is electroencephalography?"
 
 print(chain.invoke({"question": question}))
 ```
-
 
 ## Related
 

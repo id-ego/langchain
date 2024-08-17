@@ -5,27 +5,23 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # LanceDB
 
->[LanceDB](https://lancedb.com/) is an open-source database for vector-search built with persistent storage, which greatly simplifies retrevial, filtering and management of embeddings. Fully open source.
+> [LanceDB](https://lancedb.com/) is an open-source database for vector-search built with persistent storage, which greatly simplifies retrevial, filtering and management of embeddings. Fully open source.
 
 This notebook shows how to use functionality related to the `LanceDB` vector database based on the Lance data format.
-
 
 ```python
 ! pip install tantivy
 ```
 
-
 ```python
 ! pip install -U langchain-openai langchain-community
 ```
-
 
 ```python
 ! pip install lancedb
 ```
 
 We want to use OpenAIEmbeddings so we have to get the OpenAI API Key. 
-
 
 ```python
 import getpass
@@ -34,11 +30,9 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
-
 ```python
 ! rm -rf /tmp/lancedb
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "LanceDB"}, {"imported": "LanceDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.lancedb.LanceDB.html", "title": "LanceDB"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "LanceDB"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "LanceDB"}]-->
@@ -56,7 +50,6 @@ embeddings = OpenAIEmbeddings()
 
 ##### For LanceDB cloud, you can invoke the vector store as follows :
 
-
 ```python
 db_url = "db://lang_test" # url of db you created
 api_key = "xxxxx" # your API key
@@ -73,8 +66,6 @@ vector_store = LanceDB(
 
 You can also add `region`, `api_key`, `uri` to `from_documents()` classmethod
 
-
-
 ```python
 from lancedb.rerankers import LinearCombinationReranker
 
@@ -83,7 +74,6 @@ reranker = LinearCombinationReranker(weight=0.3)
 docsearch = LanceDB.from_documents(documents, embeddings, reranker=reranker)
 query = "What did the president say about Ketanji Brown Jackson"
 ```
-
 
 ```python
 docs = docsearch.similarity_search_with_relevance_scores(query)
@@ -168,7 +158,6 @@ pd_df = tbl.to_pandas()
 vector_store = LanceDB(connection=tbl, embedding=embeddings)
 ```
 
-
 ```python
 docs = docsearch.similarity_search(
     query=query, filter={"metadata.source": "../../how_to/state_of_the_union.txt"}
@@ -247,29 +236,24 @@ We’ve set up joint patrols with Mexico and Guatemala to catch more human traff
 
 We’re putting in place dedicated immigration judges so families fleeing persecution and violence can have their cases heard faster.
 ```
-## Adding images 
-
+## Adding images
 
 ```python
 ! pip install -U langchain-experimental
 ```
 
-
 ```python
 ! pip install open_clip_torch torch
 ```
-
 
 ```python
 ! rm -rf '/tmp/multimmodal_lance'
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "OpenCLIPEmbeddings", "source": "langchain_experimental.open_clip", "docs": "https://api.python.langchain.com/en/latest/open_clip/langchain_experimental.open_clip.open_clip.OpenCLIPEmbeddings.html", "title": "LanceDB"}]-->
 from langchain_experimental.open_clip import OpenCLIPEmbeddings
 ```
-
 
 ```python
 import os
@@ -300,7 +284,6 @@ for i, url in enumerate(image_urls, start=1):
         f.write(response.content)
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "LanceDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.lancedb.LanceDB.html", "title": "LanceDB"}]-->
 from langchain_community.vectorstores import LanceDB
@@ -311,61 +294,43 @@ vec_store = LanceDB(
 )
 ```
 
-
 ```python
 vec_store.add_images(uris=image_uris)
 ```
-
-
 
 ```output
 ['b673620b-01f0-42ca-a92e-d033bb92c0a6',
  '99c3a5b0-b577-417a-8177-92f4a655dbfb']
 ```
 
-
-
 ```python
 vec_store.add_texts(texts)
 ```
-
-
 
 ```output
 ['f7adde5d-a4a3-402b-9e73-088b230722c3',
  'cbed59da-0aec-4bff-8820-9e59d81a2140']
 ```
 
-
-
 ```python
 img_embed = vec_store._embedding.embed_query("bird")
 ```
-
 
 ```python
 vec_store.similarity_search_by_vector(img_embed)[0]
 ```
 
-
-
 ```output
 Document(page_content='bird', metadata={'id': 'f7adde5d-a4a3-402b-9e73-088b230722c3'})
 ```
-
-
 
 ```python
 vec_store._table
 ```
 
-
-
 ```output
 LanceTable(connection=LanceDBConnection(/tmp/lancedb), name="multimodal_test")
 ```
-
-
 
 ## Related
 

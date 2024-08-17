@@ -7,11 +7,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to use the `yahoo_finance_news` tool with an agent. 
 
-
 ## Setting up
 
 First, you need to install `yfinance` python package.
-
 
 ```python
 %pip install --upgrade --quiet  yfinance
@@ -19,13 +17,11 @@ First, you need to install `yfinance` python package.
 
 ## Example with Chain
 
-
 ```python
 import os
 
 os.environ["OPENAI_API_KEY"] = "..."
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Yahoo Finance News"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Yahoo Finance News"}, {"imported": "YahooFinanceNewsTool", "source": "langchain_community.tools.yahoo_finance_news", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.yahoo_finance_news.YahooFinanceNewsTool.html", "title": "Yahoo Finance News"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Yahoo Finance News"}]-->
@@ -42,7 +38,6 @@ agent_chain = initialize_agent(
     verbose=True,
 )
 ```
-
 
 ```python
 agent_chain.invoke(
@@ -64,12 +59,9 @@ Final Answer: Microsoft (MSFT) closed at $328.79, with a +0.12% move from the pr
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Microsoft (MSFT) closed at $328.79, with a +0.12% move from the previous day.'
 ```
-
-
 
 ```python
 agent_chain.invoke(
@@ -95,31 +87,23 @@ Final Answer: I cannot compare the sentiment of Microsoft and Nvidia as I only h
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'I cannot compare the sentiment of Microsoft and Nvidia as I only have information about Microsoft.'
 ```
 
-
 # How YahooFinanceNewsTool works?
-
 
 ```python
 tool = YahooFinanceNewsTool()
 ```
 
-
 ```python
 tool.invoke("NVDA")
 ```
 
-
-
 ```output
 'No news found for company that searched with NVDA ticker.'
 ```
-
-
 
 ```python
 res = tool.invoke("AAPL")

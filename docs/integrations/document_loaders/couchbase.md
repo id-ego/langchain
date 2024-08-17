@@ -5,11 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Couchbase
 
->[Couchbase](http://couchbase.com/) is an award-winning distributed NoSQL cloud database that delivers unmatched versatility, performance, scalability, and financial value for all of your cloud, mobile, AI, and edge computing applications.
-
+> [Couchbase](http://couchbase.com/) is an award-winning distributed NoSQL cloud database that delivers unmatched versatility, performance, scalability, and financial value for all of your cloud, mobile, AI, and edge computing applications.
 
 ## Installation
-
 
 ```python
 %pip install --upgrade --quiet  couchbase
@@ -19,7 +17,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 For more details on connecting to a Couchbase cluster, please check the [Python SDK documentation](https://docs.couchbase.com/python-sdk/current/howtos/managing-connections.html#connection-strings).
 
 For help with querying for documents using SQL++ (SQL for JSON), please check the [documentation](https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/index.html).
-
 
 ```python
 <!--IMPORTS:[{"imported": "CouchbaseLoader", "source": "langchain_community.document_loaders.couchbase", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.couchbase.CouchbaseLoader.html", "title": "Couchbase"}]-->
@@ -41,7 +38,6 @@ query = """
 
 ## Create the Loader
 
-
 ```python
 loader = CouchbaseLoader(
     connection_string,
@@ -52,7 +48,6 @@ loader = CouchbaseLoader(
 ```
 
 You can fetch the documents by calling the `load` method of the loader. It will return a list with all the documents. If you want to avoid this blocking call, you can call `lazy_load` method that returns an Iterator.
-
 
 ```python
 docs = loader.load()
@@ -74,7 +69,6 @@ page_content='address: 8301 Hollister Ave\nalias: None\ncheckin: 12PM\ncheckout:
 ## Specifying Fields with Content and Metadata
 The fields that are part of the Document content can be specified using the `page_content_fields` parameter.
 The metadata fields for the Document can be specified using the `metadata_fields` parameter.
-
 
 ```python
 loader_with_selected_fields = CouchbaseLoader(

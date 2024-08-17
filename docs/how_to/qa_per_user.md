@@ -29,7 +29,6 @@ To configure Pinecone, set the following environment variable:
 
 - `PINECONE_API_KEY`: Your Pinecone API key
 
-
 ```python
 <!--IMPORTS:[{"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to do per-user retrieval"}, {"imported": "PineconeVectorStore", "source": "langchain_pinecone", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html", "title": "How to do per-user retrieval"}]-->
 from langchain_openai import OpenAIEmbeddings
@@ -42,15 +41,11 @@ vectorstore.add_texts(["i worked at kensho"], namespace="harrison")
 vectorstore.add_texts(["i worked at facebook"], namespace="ankush")
 ```
 
-
-
 ```output
 ['ce15571e-4e2f-44c9-98df-7e83f6f63095']
 ```
 
-
 The pinecone kwarg for `namespace` can be used to separate documents
-
 
 ```python
 # This will only get documents for Ankush
@@ -59,13 +54,9 @@ vectorstore.as_retriever(search_kwargs={"namespace": "ankush"}).get_relevant_doc
 )
 ```
 
-
-
 ```output
 [Document(page_content='i worked at facebook')]
 ```
-
-
 
 ```python
 # This will only get documents for Harrison
@@ -74,12 +65,9 @@ vectorstore.as_retriever(
 ).get_relevant_documents("where did i work?")
 ```
 
-
-
 ```output
 [Document(page_content='i worked at kensho')]
 ```
-
 
 We can now create the chain that we will use to do question-answering over.
 
@@ -88,8 +76,8 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
-This is basic question-answering chain set up.
 
+This is basic question-answering chain set up.
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to do per-user retrieval"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to do per-user retrieval"}, {"imported": "ConfigurableField", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableField.html", "title": "How to do per-user retrieval"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to do per-user retrieval"}]-->
@@ -113,7 +101,6 @@ Here we mark the retriever as having a configurable field. All vectorstore retri
 
 This will let us pass in a value for `search_kwargs` when invoking the chain.
 
-
 ```python
 configurable_retriever = retriever.configurable_fields(
     search_kwargs=ConfigurableField(
@@ -126,7 +113,6 @@ configurable_retriever = retriever.configurable_fields(
 
 We can now create the chain using our configurable retriever
 
-
 ```python
 chain = (
     {"context": configurable_retriever, "question": RunnablePassthrough()}
@@ -138,7 +124,6 @@ chain = (
 
 We can now invoke the chain with configurable options. `search_kwargs` is the id of the configurable field. The value is the search kwargs to use for Pinecone
 
-
 ```python
 chain.invoke(
     "where did the user work?",
@@ -146,13 +131,9 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 'The user worked at Kensho.'
 ```
-
-
 
 ```python
 chain.invoke(
@@ -161,11 +142,8 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 'The user worked at Facebook.'
 ```
-
 
 For more vectorstore implementations for multi-user, please refer to specific pages, such as [Milvus](/docs/integrations/vectorstores/milvus).

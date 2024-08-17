@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Quip
 
->[Quip](https://quip.com) is a collaborative productivity software suite for mobile and Web. It allows groups of people to create and edit documents and spreadsheets as a group, typically for business purposes.
+> [Quip](https://quip.com) is a collaborative productivity software suite for mobile and Web. It allows groups of people to create and edit documents and spreadsheets as a group, typically for business purposes.
 
 A loader for `Quip` docs.
 
@@ -13,17 +13,15 @@ Please refer [here](https://quip.com/dev/automation/documentation/current#sectio
 
 Specify a list `folder_ids` and/or `thread_ids` to load in the corresponding docs into Document objects, if both are specified, loader will get all `thread_ids` belong to this folder based on `folder_ids`, combine with passed `thread_ids`, the union of both sets will be returned.
 
-* How to know folder_id ? 
-  go to quip folder, right click folder and copy link, extract suffix from link as folder_id. Hint:  `https://example.quip.com/<folder_id>`
-* How to know thread_id ? 
-  thread_id is the document id. Go to quip doc, right click doc and copy link, extract suffix from link as thread_id. Hint: `https://exmaple.quip.com/<thread_id>`
-  
-You can also set `include_all_folders` as `True` will fetch group_folder_ids and 
+* How to know folder_id ?
+go to quip folder, right click folder and copy link, extract suffix from link as folder_id. Hint:  `https://example.quip.com/<folder_id>`
+* How to know thread_id ?
+thread_id is the document id. Go to quip doc, right click doc and copy link, extract suffix from link as thread_id. Hint: `https://exmaple.quip.com/<thread_id>`
+
+You can also set `include_all_folders` as `True` will fetch group_folder_ids and
 You can also specify a boolean `include_attachments` to include attachments, this is set to False by default, if set to True all attachments will be downloaded and QuipLoader will extract the text from the attachments and add it to the Document object. Currently supported attachment types are: `PDF`, `PNG`, `JPEG/JPG`, `SVG`, `Word` and `Excel`. Also you can sepcify a boolean `include_comments` to include comments in document, this is set to False by default, if set to True all comments in document will be fetched and QuipLoader will add them to Document objec.
 
-
 Before using QuipLoader make sure you have the latest version of the quip-api package installed:
-
 
 ```python
 %pip install --upgrade --quiet  quip-api
@@ -32,7 +30,6 @@ Before using QuipLoader make sure you have the latest version of the quip-api pa
 ## Examples
 
 ### Personal Access Token
-
 
 ```python
 <!--IMPORTS:[{"imported": "QuipLoader", "source": "langchain_community.document_loaders.quip", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.quip.QuipLoader.html", "title": "Quip"}]-->
@@ -48,7 +45,6 @@ documents = loader.load(
     include_comments=False,
 )
 ```
-
 
 ## Related
 

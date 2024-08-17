@@ -15,7 +15,6 @@ Portkey brings production readiness to Langchain. With Portkey, you can
 - [x] Implement automatic **retries & fallbacks** for failed requests, 
 - [x] Add **custom tags** to requests for better tracking and analysis and [more](https://portkey.ai/docs).
 
-
 ## Quickstart - Portkey & Langchain
 Since Portkey is fully compatible with the OpenAI signature, you can connect to the Portkey AI Gateway through the `ChatOpenAI` interface.
 
@@ -169,7 +168,6 @@ agent_executor.invoke({
 
 **You can see the requests' logs along with the trace id on Portkey dashboard:**
 ![Langchain Agent Logs on Portkey](https://assets.portkey.ai/docs/agent_tracing.gif)
-
 
 Additional Docs are available here:
 - Observability - https://portkey.ai/docs/product/observability-modern-monitoring-for-llms

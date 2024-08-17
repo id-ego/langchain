@@ -13,13 +13,11 @@ This notebook introduces how to use `TiDBLoader` to load data from TiDB in langc
 
 Before using the `TiDBLoader`, we will install the following dependencies:
 
-
 ```python
 %pip install --upgrade --quiet langchain
 ```
 
 Then, we will configure the connection to a TiDB. In this notebook, we will follow the standard connection method provided by TiDB Cloud to establish a secure and efficient database connection.
-
 
 ```python
 import getpass
@@ -36,15 +34,12 @@ tidb_connection_string = tidb_connection_string_template.replace(
 
 Here's a breakdown of some key arguments you can use to customize the behavior of the `TiDBLoader`:
 
-- `query` (str): This is the SQL query to be executed against the TiDB database. The query should select the data you want to load into your `Document` objects. 
-    For instance, you might use a query like `"SELECT * FROM my_table"` to fetch all data from `my_table`.
-
-- `page_content_columns` (Optional[List[str]]): Specifies the list of column names whose values should be included in the `page_content` of each `Document` object. 
-    If set to `None` (the default), all columns returned by the query are included in `page_content`. This allows you to tailor the content of each document based on specific columns of your data.
-
-- `metadata_columns` (Optional[List[str]]): Specifies the list of column names whose values should be included in the `metadata` of each `Document` object. 
-    By default, this list is empty, meaning no metadata will be included unless explicitly specified. This is useful for including additional information about each document that doesn't form part of the main content but is still valuable for processing or analysis.
-
+- `query` (str): This is the SQL query to be executed against the TiDB database. The query should select the data you want to load into your `Document` objects.
+For instance, you might use a query like `"SELECT * FROM my_table"` to fetch all data from `my_table`.
+- `page_content_columns` (Optional[List[str]]): Specifies the list of column names whose values should be included in the `page_content` of each `Document` object.
+If set to `None` (the default), all columns returned by the query are included in `page_content`. This allows you to tailor the content of each document based on specific columns of your data.
+- `metadata_columns` (Optional[List[str]]): Specifies the list of column names whose values should be included in the `metadata` of each `Document` object.
+By default, this list is empty, meaning no metadata will be included unless explicitly specified. This is useful for including additional information about each document that doesn't form part of the main content but is still valuable for processing or analysis.
 
 ```python
 from sqlalchemy import Column, Integer, MetaData, String, Table, create_engine
@@ -81,7 +76,6 @@ with engine.connect() as connection:
         transaction.rollback()
         raise
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TiDBLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.tidb.TiDBLoader.html", "title": "TiDB"}]-->
@@ -121,7 +115,6 @@ metada: {'id': 3}
 ```python
 test_table.drop(bind=engine)
 ```
-
 
 ## Related
 

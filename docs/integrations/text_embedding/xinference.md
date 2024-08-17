@@ -11,7 +11,6 @@ This notebook goes over how to use Xinference embeddings within LangChain
 
 Install `Xinference` through PyPI:
 
-
 ```python
 %pip install --upgrade --quiet  "xinference[all]"
 ```
@@ -30,7 +29,6 @@ You can consult the README file from [Xinference](https://github.com/xorbitsai/i
 
 To use Xinference with LangChain, you need to first launch a model. You can use command line interface (CLI) to do so:
 
-
 ```python
 !xinference launch -n vicuna-v1.3 -f ggmlv3 -q q4_0
 ```
@@ -38,7 +36,6 @@ To use Xinference with LangChain, you need to first launch a model. You can use 
 Model uid: 915845ee-2a04-11ee-8ed4-d29396a3f064
 ```
 A model UID is returned for you to use. Now you can use Xinference embeddings with LangChain:
-
 
 ```python
 <!--IMPORTS:[{"imported": "XinferenceEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.xinference.XinferenceEmbeddings.html", "title": "Xorbits inference (Xinference)"}]-->
@@ -49,11 +46,9 @@ xinference = XinferenceEmbeddings(
 )
 ```
 
-
 ```python
 query_result = xinference.embed_query("This is a test query")
 ```
-
 
 ```python
 doc_result = xinference.embed_documents(["text A", "text B"])
@@ -61,11 +56,9 @@ doc_result = xinference.embed_documents(["text A", "text B"])
 
 Lastly, terminate the model when you do not need to use it:
 
-
 ```python
 !xinference terminate --model-uid "915845ee-2a04-11ee-8ed4-d29396a3f064"
 ```
-
 
 ## Related
 

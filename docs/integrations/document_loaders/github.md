@@ -9,8 +9,7 @@ This notebooks shows how you can load issues and pull requests (PRs) for a given
 
 ## Setup access token
 
-To access the GitHub API, you need a personal access token - you can set up yours here: https://github.com/settings/tokens?type=beta. You can either set this token as the environment variable ``GITHUB_PERSONAL_ACCESS_TOKEN`` and it will be automatically pulled in, or you can pass it in directly at initialization as the ``access_token`` named parameter.
-
+To access the GitHub API, you need a personal access token - you can set up yours here: https://github.com/settings/tokens?type=beta. You can either set this token as the environment variable `GITHUB_PERSONAL_ACCESS_TOKEN` and it will be automatically pulled in, or you can pass it in directly at initialization as the `access_token` named parameter.
 
 ```python
 # If you haven't set your access token as an environment variable, pass it in here.
@@ -21,12 +20,10 @@ ACCESS_TOKEN = getpass()
 
 ## Load Issues and PRs
 
-
 ```python
 <!--IMPORTS:[{"imported": "GitHubIssuesLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.github.GitHubIssuesLoader.html", "title": "GitHub"}]-->
 from langchain_community.document_loaders import GitHubIssuesLoader
 ```
-
 
 ```python
 loader = GitHubIssuesLoader(
@@ -52,11 +49,9 @@ Here's a list of all filters you can use:
 
 For more info, see https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues.
 
-
 ```python
 docs = loader.load()
 ```
-
 
 ```python
 print(docs[0].page_content)
@@ -66,7 +61,6 @@ print(docs[0].metadata)
 ## Only load issues
 
 By default, the GitHub API returns considers pull requests to also be issues. To only get 'pure' issues (i.e., no pull requests), use `include_prs=False`
-
 
 ```python
 loader = GitHubIssuesLoader(
@@ -78,7 +72,6 @@ loader = GitHubIssuesLoader(
 docs = loader.load()
 ```
 
-
 ```python
 print(docs[0].page_content)
 print(docs[0].metadata)
@@ -88,12 +81,10 @@ print(docs[0].metadata)
 
 For below code, loads all markdown file in rpeo `langchain-ai/langchain`
 
-
 ```python
 <!--IMPORTS:[{"imported": "GithubFileLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.github.GithubFileLoader.html", "title": "GitHub"}]-->
 from langchain_community.document_loaders import GithubFileLoader
 ```
-
 
 ```python
 loader = GithubFileLoader(
@@ -119,7 +110,6 @@ documents.metadata:
 documents.content:
     mock content
 ```
-
 
 ## Related
 

@@ -23,20 +23,16 @@ Get your OpenAI API key and [E2B API key here](https://e2b.dev/docs/getting-star
 
 You can find the full API documentation [here](https://e2b.dev/docs).
 
-
 You'll need to install `e2b` to get started:
-
 
 ```python
 %pip install --upgrade --quiet  langchain e2b langchain-community
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "E2BDataAnalysisTool", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.e2b_data_analysis.tool.E2BDataAnalysisTool.html", "title": "E2B Data Analysis"}]-->
 from langchain_community.tools import E2BDataAnalysisTool
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "E2B Data Analysis"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "E2B Data Analysis"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "E2B Data Analysis"}]-->
@@ -50,7 +46,6 @@ os.environ["OPENAI_API_KEY"] = "<OPENAI_API_KEY>"
 ```
 
 When creating an instance of the `E2BDataAnalysisTool`, you can pass callbacks to listen to the output of the sandbox. This is useful, for example, when creating more responsive UI. Especially with the combination of streaming output from LLMs.
-
 
 ```python
 # Artifacts are charts created by matplotlib when `plt.show()` is called
@@ -76,7 +71,6 @@ e2b_data_analysis_tool = E2BDataAnalysisTool(
 
 Upload an example CSV data file to the sandbox so we can analyze it with our agent. You can use for example [this file](https://storage.googleapis.com/e2b-examples/netflix.csv) about Netflix tv shows.
 
-
 ```python
 with open("./netflix.csv") as f:
     remote_path = e2b_data_analysis_tool.upload_file(
@@ -89,7 +83,6 @@ with open("./netflix.csv") as f:
 name='netflix.csv' remote_path='/home/user/netflix.csv' description='Data about Netflix tv shows including their title, category, director, release date, casting, age rating, etc.'
 ```
 Create a `Tool` object and initialize the Langchain agent.
-
 
 ```python
 tools = [e2b_data_analysis_tool.as_tool()]
@@ -105,7 +98,6 @@ agent = initialize_agent(
 ```
 
 Now we can ask the agent questions about the CSV file we uploaded earlier.
-
 
 ```python
 agent.run(
@@ -141,14 +133,11 @@ Here is the chart showing their lengths:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 "The 5 longest movies on Netflix released between 2000 and 2010 are:\n\n1. Lagaan - 224 minutes\n2. Jodhaa Akbar - 214 minutes\n3. Kabhi Khushi Kabhie Gham - 209 minutes\n4. No Direction Home: Bob Dylan - 208 minutes\n5. What's Your Raashee? - 203 minutes\n\nHere is the chart showing their lengths:\n\n![Longest Movies](sandbox:/home/user/longest_movies.png)"
 ```
 
-
 E2B also allows you to install both Python and system (via `apt`) packages dynamically during runtime like this:
-
 
 ```python
 # Install Python package
@@ -164,14 +153,12 @@ stdout: Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.10/dis
 ```
 Additionally, you can download any file from the sandbox like this:
 
-
 ```python
 # The path is a remote path in the sandbox
 files_in_bytes = e2b_data_analysis_tool.download_file("/home/user/netflix.csv")
 ```
 
 Lastly, you can run any shell command inside the sandbox via `run_command`.
-
 
 ```python
 # Install SQLite
@@ -221,11 +208,9 @@ exit code:  0
 ```
 When your agent is finished, don't forget to close the sandbox
 
-
 ```python
 e2b_data_analysis_tool.close()
 ```
-
 
 ## Related
 

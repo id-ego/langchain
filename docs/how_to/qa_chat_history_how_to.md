@@ -25,14 +25,12 @@ We'll use OpenAI embeddings and a Chroma vector store in this walkthrough, but e
 
 We'll use the following packages:
 
-
 ```python
 %%capture --no-stderr
 %pip install --upgrade --quiet  langchain langchain-community langchain-chroma bs4
 ```
 
 We need to set environment variable `OPENAI_API_KEY`, which can be done directly or loaded from a `.env` file like so:
-
 
 ```python
 import getpass
@@ -51,7 +49,6 @@ if not os.environ.get("OPENAI_API_KEY"):
 Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls. As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent. The best way to do this is with [LangSmith](https://smith.langchain.com).
 
 Note that LangSmith is not needed, but it is helpful. If you do want to use LangSmith, after you sign up at the link above, make sure to set your environment variables to start logging traces:
-
 
 ```python
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -77,10 +74,10 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
+
 ### Retriever
 
 For the retriever, we will use [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html) to load the content of a web page. Here we instantiate a `Chroma` vectorstore and then use its [.as_retriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html#langchain_core.vectorstores.VectorStore.as_retriever) method to build a retriever that can be incorporated into [LCEL](/docs/concepts/#langchain-expression-language) chains.
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "How to add chat history"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to add chat history"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to add chat history"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to add chat history"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to add chat history"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add chat history"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add chat history"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add chat history"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add chat history"}]-->
@@ -115,7 +112,6 @@ retriever = vectorstore.as_retriever()
 
 We'll use a prompt that includes a `MessagesPlaceholder` variable under the name "chat_history". This allows us to pass in a list of Messages to the prompt using the "chat_history" input key, and these messages will be inserted after the system message and before the human message containing the latest question.
 
-
 ```python
 <!--IMPORTS:[{"imported": "create_history_aware_retriever", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html", "title": "How to add chat history"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add chat history"}]-->
 from langchain.chains import create_history_aware_retriever
@@ -142,7 +138,6 @@ contextualize_q_prompt = ChatPromptTemplate.from_messages(
 
 We can then instantiate the history-aware retriever:
 
-
 ```python
 history_aware_retriever = create_history_aware_retriever(
     llm, retriever, contextualize_q_prompt
@@ -156,7 +151,6 @@ Now we can build our full QA chain.
 As in the [RAG tutorial](/docs/tutorials/rag), we will use [create_stuff_documents_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html) to generate a `question_answer_chain`, with input keys `context`, `chat_history`, and `input`-- it accepts the retrieved context alongside the conversation history and query to generate an answer.
 
 We build our final `rag_chain` with [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html). This chain applies the `history_aware_retriever` and `question_answer_chain` in sequence, retaining intermediate outputs such as the retrieved context for convenience. It has input keys `input` and `chat_history`, and includes `input`, `chat_history`, `context`, and `answer` in its output.
-
 
 ```python
 system_prompt = (
@@ -195,7 +189,6 @@ Below, we implement a simple example of the second option, in which chat histori
 
 Instances of `RunnableWithMessageHistory` manage the chat history for you. They accept a config with a key (`"session_id"` by default) that specifies what conversation history to fetch and prepend to the input, and append the output to the same conversation history. Below is an example:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "How to add chat history"}, {"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "How to add chat history"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to add chat history"}]-->
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -220,7 +213,6 @@ conversational_rag_chain = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 conversational_rag_chain.invoke(
     {"input": "What is Task Decomposition?"},
@@ -230,13 +222,9 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
-
-
 ```output
 'Task decomposition involves breaking down a complex task into smaller and simpler steps to make it more manageable and easier to accomplish. This process can be done using techniques like Chain of Thought (CoT) or Tree of Thoughts to guide the model in breaking down tasks effectively. Task decomposition can be facilitated by providing simple prompts to a language model, task-specific instructions, or human inputs.'
 ```
-
-
 
 ```python
 conversational_rag_chain.invoke(
@@ -245,15 +233,11 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
-
-
 ```output
 'Task decomposition can be achieved through various methods, including using techniques like Chain of Thought (CoT) or Tree of Thoughts to guide the model in breaking down tasks effectively. Common ways of task decomposition include providing simple prompts to a language model, task-specific instructions, or human inputs to break down complex tasks into smaller and more manageable steps. Additionally, task decomposition can involve utilizing resources like internet access for information gathering, long-term memory management, and GPT-3.5 powered agents for delegation of simple tasks.'
 ```
 
-
 The conversation history can be inspected in the `store` dict:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to add chat history"}]-->
@@ -281,7 +265,6 @@ AI: Task decomposition can be achieved through various methods, including using 
 ![](../../static/img/conversational_retrieval_chain.png)
 
 For convenience, we tie together all of the necessary steps in a single code cell:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_history_aware_retriever", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html", "title": "How to add chat history"}, {"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "How to add chat history"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to add chat history"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to add chat history"}, {"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "How to add chat history"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to add chat history"}, {"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "How to add chat history"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add chat history"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add chat history"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to add chat history"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add chat history"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add chat history"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add chat history"}]-->
@@ -378,7 +361,6 @@ conversational_rag_chain = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 conversational_rag_chain.invoke(
     {"input": "What is Task Decomposition?"},
@@ -388,13 +370,9 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
-
-
 ```output
 'Task decomposition involves breaking down a complex task into smaller and simpler steps to make it more manageable. Techniques like Chain of Thought (CoT) and Tree of Thoughts help in decomposing hard tasks into multiple manageable tasks by instructing models to think step by step and explore multiple reasoning possibilities at each step. Task decomposition can be achieved through various methods such as using prompting techniques, task-specific instructions, or human inputs.'
 ```
-
-
 
 ```python
 conversational_rag_chain.invoke(
@@ -403,12 +381,9 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
-
-
 ```output
 'Task decomposition can be done in common ways such as using prompting techniques like Chain of Thought (CoT) or Tree of Thoughts, which instruct models to think step by step and explore multiple reasoning possibilities at each step. Another way is to provide task-specific instructions, such as asking to "Write a story outline" for writing a novel, to guide the decomposition process. Additionally, task decomposition can also involve human inputs to break down complex tasks into smaller and simpler steps.'
 ```
-
 
 ## Agents {#agents}
 
@@ -419,7 +394,6 @@ Agents leverage the reasoning capabilities of LLMs to make decisions during exec
 ### Retrieval tool
 
 Agents can access "tools" and manage their execution. In this case, we will convert our retriever into a LangChain tool to be wielded by the agent:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retriever_tool", "source": "langchain.tools.retriever", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "How to add chat history"}]-->
@@ -435,9 +409,8 @@ tools = [tool]
 
 ### Agent constructor
 
-Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent. 
+Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent.
 Currently we are using a high level interface to construct the agent, but the nice thing about LangGraph is that this high-level interface is backed by a low-level, highly controllable API in case you want to modify the agent logic.
-
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -446,7 +419,6 @@ agent_executor = create_react_agent(llm, tools)
 ```
 
 We can now try it out. Note that so far it is not stateful (we still need to add in memory)
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add chat history"}]-->
@@ -474,7 +446,6 @@ LangGraph comes with built in persistence, so we don't need to use ChatMessageHi
 
 Distinct conversations are managed by specifying a key for a conversation thread in the config dict, as shown below.
 
-
 ```python
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -486,7 +457,6 @@ agent_executor = create_react_agent(llm, tools, checkpointer=memory)
 This is all we need to construct a conversational RAG agent.
 
 Let's observe its behavior. Note that if we input a query that does not require a retrieval step, the agent does not execute one:
-
 
 ```python
 config = {"configurable": {"thread_id": "abc123"}}
@@ -502,7 +472,6 @@ for s in agent_executor.stream(
 ----
 ```
 Further, if we input a query that does require a retrieval step, the agent generates the input to the tool:
-
 
 ```python
 query = "What is Task Decomposition?"
@@ -526,7 +495,6 @@ Error in LangChainTracer.on_tool_end callback: TracerException("Found chain run 
 Above, instead of inserting our query verbatim into the tool, the agent stripped unnecessary words like "what" and "is".
 
 This same principle allows the agent to use the context of the conversation when necessary:
-
 
 ```python
 query = "What according to the blog post are common ways of doing it? redo the search"
@@ -553,7 +521,6 @@ Note that the agent was able to infer that "it" in our query refers to "task dec
 ### Tying it together
 
 For convenience, we tie together all of the necessary steps in a single code cell:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retriever_tool", "source": "langchain.tools.retriever", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "How to add chat history"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to add chat history"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to add chat history"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add chat history"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add chat history"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add chat history"}]-->

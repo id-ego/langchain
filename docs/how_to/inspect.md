@@ -19,11 +19,9 @@ This guide shows some ways you can programmatically introspect the internal step
 
 First, let's create an example chain. We will create one that does retrieval:
 
-
 ```python
 %pip install -qU langchain langchain-openai faiss-cpu tiktoken
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to inspect runnables"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to inspect runnables"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to inspect runnables"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to inspect runnables"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to inspect runnables"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to inspect runnables"}]-->
@@ -59,7 +57,6 @@ chain = (
 
 You can use the `get_graph()` method to get a graph representation of the runnable:
 
-
 ```python
 chain.get_graph()
 ```
@@ -67,7 +64,6 @@ chain.get_graph()
 ## Print a graph
 
 While that is not super legible, you can use the `print_ascii()` method to show that graph in a way that's easier to understand:
-
 
 ```python
 chain.get_graph().print_ascii()
@@ -117,17 +113,13 @@ chain.get_graph().print_ascii()
 
 You may want to see just the prompts that are used in a chain with the `get_prompts()` method:
 
-
 ```python
 chain.get_prompts()
 ```
 
-
-
 ```output
 [ChatPromptTemplate(input_variables=['context', 'question'], messages=[HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['context', 'question'], template='Answer the question based only on the following context:\n{context}\n\nQuestion: {question}\n'))])]
 ```
-
 
 ## Next steps
 

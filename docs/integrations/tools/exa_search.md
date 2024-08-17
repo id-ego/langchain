@@ -13,7 +13,6 @@ This notebook goes over how to use Exa Search with LangChain.
 
 First, get an Exa API key and add it as an environment variable. Get $10 free credit (plus more by completing certain actions like making your first search) by [signing up here](https://dashboard.exa.ai/).
 
-
 ```python
 import os
 
@@ -21,7 +20,6 @@ api_key = os.getenv("EXA_API_KEY")  # Set your API key as an environment variabl
 ```
 
 And install the integration package
-
 
 ```python
 %pip install --upgrade --quiet langchain-exa 
@@ -57,11 +55,9 @@ We can use the `@tool` decorator and docstrings to create LangChain Tool wrapper
 
 Before writing code, ensure you have `langchain-exa` installed
 
-
 ```python
 %pip install --upgrade --quiet  langchain-exa
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "Exa Search"}]-->
@@ -98,7 +94,6 @@ tools = [search_and_contents, find_similar_and_contents]
 
 We can provide the Exa tools we just created to a LangChain `OpenAIFunctionsAgent`. When asked to `Summarize for me a fascinating article about cats`, the agent uses the `search` tool to perform a Exa search with an appropriate search query, uses the `get_contents` tool to perform Exa content retrieval, and then returns a summary of the retrieved content.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Exa Search"}, {"imported": "OpenAIFunctionsAgent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.OpenAIFunctionsAgent.html", "title": "Exa Search"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Exa Search"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Exa Search"}]-->
 from langchain.agents import AgentExecutor, OpenAIFunctionsAgent
@@ -115,7 +110,6 @@ agent_prompt = OpenAIFunctionsAgent.create_prompt(system_message)
 agent = OpenAIFunctionsAgent(llm=llm, tools=tools, prompt=agent_prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
-
 
 ```python
 agent_executor.run("Summarize for me a fascinating article about cats.")
@@ -263,18 +257,15 @@ For more details, you can read the full article [here](https://www.mcsweeneys.ne
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Here is a fascinating article about cats:\n\n### The Feline Mystique\n\n**Source:** [McSweeney\'s](https://www.mcsweeneys.net/articles/the-feline-mystique)\n\n**Summary:**\nThe article humorously explores the existential dilemmas faced by American house cats. It delves into the "house cat\'s syndrome," a term coined to describe the dissatisfaction and yearning for something more than the comforts of domestic life. Despite having on-demand petting, free healthcare, and viral video fame, cats seem to crave freedom and adventure. The piece also touches on the psychological struggles of cats, such as feeling hollow or ashamed after chasing a laser pointer. Ultimately, it suggests that cats desire more than just luxury—they want total world domination, but only after a two-hour nap.\n\n**Key Points:**\n- American house cats experience a sense of dissatisfaction and yearning.\n- The "house cat\'s syndrome" describes their existential dilemmas.\n- Despite their luxurious lives, cats crave freedom and adventure.\n- The article humorously suggests that cats aim for world domination.\n\nFor more details, you can read the full article [here](https://www.mcsweeneys.net/articles/the-feline-mystique).'
 ```
-
 
 ## Advanced Exa Features
 
 Exa supports powerful filters by domain and date. We can provide a more powerful `search` tool to the agent that lets it decide to apply filters if they are useful for the objective. See all of Exa's search features [here](https://github.com/metaphorsystems/metaphor-python/).
 
 [//]: # "TODO(erick): switch metaphor github link to exa github link when sdk published"
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "Exa Search"}]-->
@@ -358,7 +349,6 @@ Now we ask the agent to summarize an article with constraints on domain and publ
 
 The agent correctly uses the search filters to find an article with the desired constraints, and once again retrieves the content and returns a summary.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Exa Search"}, {"imported": "OpenAIFunctionsAgent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.OpenAIFunctionsAgent.html", "title": "Exa Search"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Exa Search"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Exa Search"}]-->
 from langchain.agents import AgentExecutor, OpenAIFunctionsAgent
@@ -375,7 +365,6 @@ agent_prompt = OpenAIFunctionsAgent.create_prompt(system_message)
 agent = OpenAIFunctionsAgent(llm=llm, tools=tools, prompt=agent_prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
-
 
 ```python
 agent_executor.run(
@@ -515,12 +504,9 @@ Source: [LessWrong](https://www.lesswrong.com/posts/8SjnKxjLniCAmcjnG/openai-dee
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'I found an interesting article on LessWrong.com titled "OpenAI, DeepMind, Anthropic, etc. should shut down" by Tamsin Leake, published on December 17, 2023. The article argues that major AI organizations like OpenAI, DeepMind, and Anthropic should cease their capabilities development and focus solely on alignment to prevent catastrophic outcomes from powerful AI (PAI).\n\nKey points from the article include:\n\n1. **Definition of PAI**: The author defines PAI as an AI system capable of steering the world towards its goals without being stopped or causing mass destruction, such as creating a supervirus.\n\n2. **Alignment Challenges**: The article emphasizes that current AI organizations do not know how to create a PAI that does not pose existential risks. The author argues that these organizations should halt their capabilities progress and focus entirely on solving alignment issues.\n\n3. **Critique of Current Strategies**: The author criticizes the strategies of these organizations, stating that they are progressing too quickly on capabilities without adequate focus on alignment, which could lead to catastrophic outcomes before alignment solutions are found.\n\n4. **Global Perspective**: The article dismisses the argument that halting AI development in the West would allow countries like China to gain an advantage, asserting that no country currently knows how to build a safe PAI.\n\n5. **Call to Action**: The author urges individuals working in these organizations to either slow down their progress through advocating for more safety checks or to quit their jobs to prevent contributing to potential global catastrophe.\n\nThe article concludes with a call for a collective effort to prioritize alignment over capabilities to ensure the safe development of AI.\n\nFor more details, you can read the full article [here](https://www.lesswrong.com/posts/8SjnKxjLniCAmcjnG/openai-deepmind-anthropic-etc-should-shut-down).\n\nSource: [LessWrong](https://www.lesswrong.com/posts/8SjnKxjLniCAmcjnG/openai-deepmind-anthropic-etc-should-shut-down)'
 ```
-
-
 
 ## Related
 

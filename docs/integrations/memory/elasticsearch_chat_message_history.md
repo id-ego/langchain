@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Elasticsearch
 
->[Elasticsearch](https://www.elastic.co/elasticsearch/) is a distributed, RESTful search and analytics engine, capable of performing both vector and lexical search. It is built on top of the Apache Lucene library.
+> [Elasticsearch](https://www.elastic.co/elasticsearch/) is a distributed, RESTful search and analytics engine, capable of performing both vector and lexical search. It is built on top of the Apache Lucene library.
 
 This notebook shows how to use chat message history functionality with `Elasticsearch`.
 
@@ -14,11 +14,9 @@ This notebook shows how to use chat message history functionality with `Elastics
 There are two main ways to set up an Elasticsearch instance:
 
 1. **Elastic Cloud.** Elastic Cloud is a managed Elasticsearch service. Sign up for a [free trial](https://cloud.elastic.co/registration?storm=langchain-notebook).
-
 2. **Local Elasticsearch installation.** Get started with Elasticsearch by running it locally. The easiest way is to use the official Elasticsearch Docker image. See the [Elasticsearch Docker documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html) for more information.
 
 ## Install dependencies
-
 
 ```python
 %pip install --upgrade --quiet  elasticsearch langchain langchain-community
@@ -34,7 +32,6 @@ To obtain your Elastic Cloud password for the default "elastic" user:
 3. Locate the "elastic" user and click "Edit"
 4. Click "Reset password"
 5. Follow the prompts to reset the password
-
 
 ### Use the Username/password
 
@@ -71,9 +68,7 @@ history = ElasticsearchChatMessageHistory(
 )
 ```
 
-
 ## Initialize Elasticsearch client and chat message history
-
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticsearchChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.elasticsearch.ElasticsearchChatMessageHistory.html", "title": "Elasticsearch"}]-->
@@ -96,7 +91,6 @@ history = ElasticsearchChatMessageHistory(
 ```
 
 ## Use the chat message history
-
 
 ```python
 history.add_user_message("hi!")

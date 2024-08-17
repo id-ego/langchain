@@ -5,12 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # LarkSuite (FeiShu)
 
->[LarkSuite](https://www.larksuite.com/) is an enterprise collaboration platform developed by ByteDance.
+> [LarkSuite](https://www.larksuite.com/) is an enterprise collaboration platform developed by ByteDance.
 
 This notebook covers how to load data from the `LarkSuite` REST API into a format that can be ingested into LangChain, along with example usage for text summarization.
 
 The LarkSuite API requires an access token (tenant_access_token or user_access_token), checkout [LarkSuite open platform document](https://open.larksuite.com/document) for API details.
-
 
 ```python
 <!--IMPORTS:[{"imported": "LarkSuiteDocLoader", "source": "langchain_community.document_loaders.larksuite", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.larksuite.LarkSuiteDocLoader.html", "title": "LarkSuite (FeiShu)"}, {"imported": "LarkSuiteWikiLoader", "source": "langchain_community.document_loaders.larksuite", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.larksuite.LarkSuiteWikiLoader.html", "title": "LarkSuite (FeiShu)"}]-->
@@ -28,7 +27,6 @@ DOCUMENT_ID = input("larksuite document id")
 
 ## Load From Document
 
-
 ```python
 from pprint import pprint
 
@@ -41,7 +39,6 @@ pprint(docs)
 [Document(page_content='Test Doc\nThis is a Test Doc\n\n1\n2\n3\n\n', metadata={'document_id': 'V76kdbd2HoBbYJxdiNNccajunPf', 'revision_id': 11, 'title': 'Test Doc'})]
 ```
 ## Load From Wiki
-
 
 ```python
 from pprint import pprint
@@ -66,7 +63,6 @@ llm = FakeListLLM()
 chain = load_summarize_chain(llm, chain_type="map_reduce")
 chain.run(docs)
 ```
-
 
 ## Related
 

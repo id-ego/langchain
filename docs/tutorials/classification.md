@@ -30,7 +30,6 @@ Tagging has a few components:
 
 Let's see a very straightforward example of how we can use OpenAI tool calling for tagging in LangChain. We'll use the [`with_structured_output`](/docs/how_to/structured_output) method supported by OpenAI models:
 
-
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
 
@@ -40,7 +39,6 @@ Let's see a very straightforward example of how we can use OpenAI tool calling f
 ```
 
 Let's specify a Pydantic model with a few properties and their expected type in our schema.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Classify Text into Labels"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Classify Text into Labels"}]-->
@@ -76,21 +74,16 @@ llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0125").with_structured_outp
 tagging_chain = tagging_prompt | llm
 ```
 
-
 ```python
 inp = "Estoy increiblemente contento de haberte conocido! Creo que seremos muy buenos amigos!"
 tagging_chain.invoke({"input": inp})
 ```
 
-
-
 ```output
 Classification(sentiment='positive', aggressiveness=1, language='Spanish')
 ```
 
-
 If we want JSON output, we can just call `.dict()`
-
 
 ```python
 inp = "Estoy muy enojado con vos! Te voy a dar tu merecido!"
@@ -98,12 +91,9 @@ res = tagging_chain.invoke({"input": inp})
 res.dict()
 ```
 
-
-
 ```output
 {'sentiment': 'negative', 'aggressiveness': 8, 'language': 'Spanish'}
 ```
-
 
 As we can see in the examples, it correctly interprets what we want.
 
@@ -123,7 +113,6 @@ Specifically, we can define:
 
 Let's redeclare our Pydantic model to control for each of the previously mentioned aspects using enums:
 
-
 ```python
 class Classification(BaseModel):
     sentiment: str = Field(..., enum=["happy", "neutral", "sad"])
@@ -136,7 +125,6 @@ class Classification(BaseModel):
         ..., enum=["spanish", "english", "french", "german", "italian"]
     )
 ```
-
 
 ```python
 tagging_prompt = ChatPromptTemplate.from_template(
@@ -159,44 +147,32 @@ chain = tagging_prompt | llm
 
 Now the answers will be restricted in a way we expect!
 
-
 ```python
 inp = "Estoy increiblemente contento de haberte conocido! Creo que seremos muy buenos amigos!"
 chain.invoke({"input": inp})
 ```
 
-
-
 ```output
 Classification(sentiment='happy', aggressiveness=1, language='spanish')
 ```
-
-
 
 ```python
 inp = "Estoy muy enojado con vos! Te voy a dar tu merecido!"
 chain.invoke({"input": inp})
 ```
 
-
-
 ```output
 Classification(sentiment='sad', aggressiveness=5, language='spanish')
 ```
-
-
 
 ```python
 inp = "Weather is ok here, I can go outside without much more than a coat"
 chain.invoke({"input": inp})
 ```
 
-
-
 ```output
 Classification(sentiment='neutral', aggressiveness=2, language='english')
 ```
-
 
 The [LangSmith trace](https://smith.langchain.com/public/38294e04-33d8-4c5a-ae92-c2fe68be8332/r) lets us peek under the hood:
 

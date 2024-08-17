@@ -5,12 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Dria
 
->[Dria](https://dria.co/) is a hub of public RAG models for developers to both contribute and utilize a shared embedding lake. This notebook demonstrates how to use the `Dria API` for data retrieval tasks.
+> [Dria](https://dria.co/) is a hub of public RAG models for developers to both contribute and utilize a shared embedding lake. This notebook demonstrates how to use the `Dria API` for data retrieval tasks.
 
 # Installation
 
 Ensure you have the `dria` package installed. You can install it using pip:
-
 
 ```python
 %pip install --upgrade --quiet dria
@@ -19,7 +18,6 @@ Ensure you have the `dria` package installed. You can install it using pip:
 # Configure API Key
 
 Set up your Dria API key for access.
-
 
 ```python
 import os
@@ -30,7 +28,6 @@ os.environ["DRIA_API_KEY"] = "DRIA_API_KEY"
 # Initialize Dria Retriever
 
 Create an instance of `DriaRetriever`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "DriaRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.dria_index.DriaRetriever.html", "title": "Dria"}]-->
@@ -44,7 +41,6 @@ retriever = DriaRetriever(api_key=api_key)
 
 Create a knowledge on [Dria's Knowledge Hub](https://dria.co/knowledge)
 
-
 ```python
 contract_id = retriever.create_knowledge_base(
     name="France's AI Development",
@@ -57,7 +53,6 @@ contract_id = retriever.create_knowledge_base(
 # Add Data
 
 Load data into your Dria knowledge base.
-
 
 ```python
 texts = [
@@ -74,14 +69,12 @@ print("Data added with IDs:", ids)
 
 Use the retriever to find relevant documents given a query.
 
-
 ```python
 query = "Find information about Dria."
 result = retriever.invoke(query)
 for doc in result:
     print(doc)
 ```
-
 
 ## Related
 

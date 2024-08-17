@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Faiss (Async)
 
->[Facebook AI Similarity Search (Faiss)](https://engineering.fb.com/2017/03/29/data-infrastructure/faiss-a-library-for-efficient-similarity-search/) is a library for efficient similarity search and clustering of dense vectors. It contains algorithms that search in sets of vectors of any size, up to ones that possibly do not fit in RAM. It also contains supporting code for evaluation and parameter tuning.
+> [Facebook AI Similarity Search (Faiss)](https://engineering.fb.com/2017/03/29/data-infrastructure/faiss-a-library-for-efficient-similarity-search/) is a library for efficient similarity search and clustering of dense vectors. It contains algorithms that search in sets of vectors of any size, up to ones that possibly do not fit in RAM. It also contains supporting code for evaluation and parameter tuning.
 
 [Faiss documentation](https://faiss.ai/).
 
@@ -16,7 +16,6 @@ LangChain implemented the synchronous and asynchronous vector store functions.
 
 See `synchronous` version [here](/docs/integrations/vectorstores/faiss).
 
-
 ```python
 %pip install --upgrade --quiet  faiss-gpu # For CUDA 7.5+ Supported GPU's.
 # OR
@@ -24,7 +23,6 @@ See `synchronous` version [here](/docs/integrations/vectorstores/faiss).
 ```
 
 We want to use OpenAIEmbeddings so we have to get the OpenAI API Key. 
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Faiss (Async)"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Faiss (Async)"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Faiss (Async)"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Faiss (Async)"}]-->
@@ -59,7 +57,6 @@ print(docs[0].page_content)
 ## Similarity Search with score
 There are some FAISS specific methods. One of them is `similarity_search_with_score`, which allows you to return not only the documents but also the distance score of the query to them. The returned distance score is L2 distance. Therefore, a lower score is better.
 
-
 ```python
 docs_and_scores = await db.asimilarity_search_with_score(query)
 
@@ -68,7 +65,6 @@ docs_and_scores[0]
 
 It is also possible to do a search for documents similar to a given embedding vector using `similarity_search_by_vector` which accepts an embedding vector as a parameter instead of a string.
 
-
 ```python
 embedding_vector = await embeddings.aembed_query(query)
 docs_and_scores = await db.asimilarity_search_by_vector(embedding_vector)
@@ -76,7 +72,6 @@ docs_and_scores = await db.asimilarity_search_by_vector(embedding_vector)
 
 ## Saving and loading
 You can also save and load a FAISS index. This is useful so you don't have to recreate it everytime you use it.
-
 
 ```python
 db.save_local("faiss_index")
@@ -92,7 +87,6 @@ docs[0]
 
 you can pickle the FAISS Index by these functions. If you use embeddings model which is of 90 mb (sentence-transformers/all-MiniLM-L6-v2 or any other model), the resultant pickle size would be more than 90 mb. the size of the model is also included in the overall size. To overcome this, use the below functions. These functions only serializes FAISS index and size would be much lesser. this can be helpful if you wish to store the index in database like sql.
 
-
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Faiss (Async)"}]-->
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -107,57 +101,42 @@ db = FAISS.deserialize_from_bytes(
 ## Merging
 You can also merge two FAISS vectorstores
 
-
 ```python
 db1 = await FAISS.afrom_texts(["foo"], embeddings)
 db2 = await FAISS.afrom_texts(["bar"], embeddings)
 ```
 
-
 ```python
 db1.docstore._dict
 ```
-
-
 
 ```output
 {'8164a453-9643-4959-87f7-9ba79f9e8fb0': Document(page_content='foo')}
 ```
 
-
-
 ```python
 db2.docstore._dict
 ```
-
-
 
 ```output
 {'4fbcf8a2-e80f-4f65-9308-2f4cb27cb6e7': Document(page_content='bar')}
 ```
 
-
-
 ```python
 db1.merge_from(db2)
 ```
 
-
 ```python
 db1.docstore._dict
 ```
-
-
 
 ```output
 {'8164a453-9643-4959-87f7-9ba79f9e8fb0': Document(page_content='foo'),
  '4fbcf8a2-e80f-4f65-9308-2f4cb27cb6e7': Document(page_content='bar')}
 ```
 
-
 ## Similarity Search with filtering
 FAISS vectorstore can also support filtering, since the FAISS does not natively support filtering we have to do it manually. This is done by first fetching more results than `k` and then filtering them. You can filter the documents based on metadata. You can also set the `fetch_k` parameter when calling any search method to set how many documents you want to fetch before filtering. Here is a small example:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Faiss (Async)"}]-->
@@ -186,7 +165,6 @@ Content: foo, Metadata: {'page': 4}, Score: 5.159960813797904e-15
 ```
 Now we make the same query call but we filter for only `page = 1` 
 
-
 ```python
 results_with_scores = await db.asimilarity_search_with_score("foo", filter=dict(page=1))
 for doc, score in results_with_scores:
@@ -198,7 +176,6 @@ Content: bar, Metadata: {'page': 1}, Score: 0.3131446838378906
 ```
 Same thing can be done with the `max_marginal_relevance_search` as well.
 
-
 ```python
 results = await db.amax_marginal_relevance_search("foo", filter=dict(page=1))
 for doc in results:
@@ -209,7 +186,6 @@ Content: foo, Metadata: {'page': 1}
 Content: bar, Metadata: {'page': 1}
 ```
 Here is an example of how to set `fetch_k` parameter when calling `similarity_search`. Usually you would want the `fetch_k` parameter >> `k` parameter. This is because the `fetch_k` parameter is the number of documents that will be fetched before filtering. If you set `fetch_k` to a low number, you might not get enough documents to filter from.
-
 
 ```python
 results = await db.asimilarity_search("foo", filter=dict(page=1), k=1, fetch_k=4)
@@ -223,31 +199,22 @@ Content: foo, Metadata: {'page': 1}
 
 You can also delete ids. Note that the ids to delete should be the ids in the docstore.
 
-
 ```python
 db.delete([db.index_to_docstore_id[0]])
 ```
 
-
-
 ```output
 True
 ```
-
-
 
 ```python
 # Is now missing
 0 in db.index_to_docstore_id
 ```
 
-
-
 ```output
 False
 ```
-
-
 
 ## Related
 

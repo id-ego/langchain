@@ -20,7 +20,6 @@ This notebook demonstrates how to use MariTalk with LangChain through two exampl
 ## Installation
 First, install the LangChain library (and all its dependencies) using the following command:
 
-
 ```python
 !pip install langchain langchain-core langchain-community httpx
 ```
@@ -28,11 +27,9 @@ First, install the LangChain library (and all its dependencies) using the follow
 ## API Key
 You will need an API key that can be obtained from chat.maritaca.ai ("Chaves da API" section).
 
-
 ### Example 1 - Pet Name Suggestions
 
 Let's define our language model, ChatMaritalk, and configure it with your API key.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMaritalk", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.maritalk.ChatMaritalk.html", "title": "Maritalk"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Maritalk"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Maritalk"}]-->
@@ -71,7 +68,6 @@ For tasks involving the generation of long text, such as creating an extensive a
 
 #### Synchronous:
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Maritalk"}]-->
 from langchain_core.messages import HumanMessage
@@ -83,7 +79,6 @@ for chunk in llm.stream(messages):
 ```
 
 #### Asynchronous:
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Maritalk"}]-->
@@ -102,7 +97,6 @@ await async_invoke_chain("dog")
 ### Example 2 - RAG + LLM: UNICAMP 2024 Entrance Exam Question Answering System
 For this example, we need to install some extra libraries:
 
-
 ```python
 !pip install unstructured rank_bm25 pdf2image pdfminer-six pikepdf pypdf unstructured_inference fastapi kaleido uvicorn "pillow<10.1.0" pillow_heif -q
 ```
@@ -110,7 +104,6 @@ For this example, we need to install some extra libraries:
 #### Loading the database
 
 The first step is to create a database with the information from the notice. For this, we will download the notice from the COMVEST website and segment the extracted text into 500-character windows.
-
 
 ```python
 <!--IMPORTS:[{"imported": "OnlinePDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.OnlinePDFLoader.html", "title": "Maritalk"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Maritalk"}]-->
@@ -132,7 +125,6 @@ texts = text_splitter.split_documents(data)
 #### Creating a Searcher
 Now that we have our database, we need a searcher. For this example, we will use a simple BM25 as a search system, but this could be replaced by any other searcher (such as search via embeddings).
 
-
 ```python
 <!--IMPORTS:[{"imported": "BM25Retriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.bm25.BM25Retriever.html", "title": "Maritalk"}]-->
 from langchain_community.retrievers import BM25Retriever
@@ -142,7 +134,6 @@ retriever = BM25Retriever.from_documents(texts)
 
 #### Combining Search System + LLM
 Now that we have our searcher, we just need to implement a prompt specifying the task and invoke the chain.
-
 
 ```python
 <!--IMPORTS:[{"imported": "load_qa_chain", "source": "langchain.chains.question_answering", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.question_answering.chain.load_qa_chain.html", "title": "Maritalk"}]-->
@@ -167,7 +158,6 @@ chain.invoke(
     {"input_documents": docs, "query": query}
 )  # Should output something like: "O tempo máximo para realização da prova é de 5 horas."
 ```
-
 
 ## Related
 

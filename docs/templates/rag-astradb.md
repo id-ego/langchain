@@ -13,7 +13,7 @@ An [Astra DB](https://astra.datastax.com) database is required; free tier is fin
 - You need the database **API endpoint** (such as `https://0123...-us-east1.apps.astra.datastax.com`) ...
 - ... and a **token** (`AstraCS:...`).
 
-Also, an **OpenAI API Key** is required. _Note that out-of-the-box this demo supports OpenAI only, unless you tinker with the code._
+Also, an **OpenAI API Key** is required. *Note that out-of-the-box this demo supports OpenAI only, unless you tinker with the code.*
 
 Provide the connection parameters and secrets through environment variables. Please refer to `.env.template` for the variable names.
 
@@ -44,11 +44,10 @@ from astradb_entomology_rag import chain as astradb_entomology_rag_chain
 add_routes(app, astradb_entomology_rag_chain, path="/rag-astradb")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
-
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -62,7 +61,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

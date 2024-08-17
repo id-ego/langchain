@@ -24,7 +24,6 @@ Sometimes we want to invoke a [`Runnable`](https://api.python.langchain.com/en/l
 
 Suppose we have a simple prompt + model chain:
 
-
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to add default invocation args to a Runnable"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add default invocation args to a Runnable"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add default invocation args to a Runnable"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add default invocation args to a Runnable"}]-->
 from langchain_core.output_parsers import StrOutputParser
@@ -62,7 +61,6 @@ x = ∛5
 ```
 and want to call the model with certain `stop` words so that we shorten the output as is useful in certain types of prompting techniques. While we can pass some arguments into the constructor, other runtime args use the `.bind()` method as follows:
 
-
 ```python
 runnable = (
     {"equation_statement": RunnablePassthrough()}
@@ -81,7 +79,6 @@ What you can bind to a Runnable will depend on the extra parameters you can pass
 ## Attaching OpenAI tools
 
 Another common use-case is tool calling. While you should generally use the [`.bind_tools()`](/docs/how_to/tool_calling) method for tool-calling models, you can also bind provider-specific args directly if you want lower level control:
-
 
 ```python
 tools = [
@@ -106,18 +103,14 @@ tools = [
 ]
 ```
 
-
 ```python
 model = ChatOpenAI(model="gpt-3.5-turbo-1106").bind(tools=tools)
 model.invoke("What's the weather in SF, NYC and LA?")
 ```
 
-
-
 ```output
 AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_z0OU2CytqENVrRTI6T8DkI3u', 'function': {'arguments': '{"location": "San Francisco, CA", "unit": "celsius"}', 'name': 'get_current_weather'}, 'type': 'function'}, {'id': 'call_ft96IJBh0cMKkQWrZjNg4bsw', 'function': {'arguments': '{"location": "New York, NY", "unit": "celsius"}', 'name': 'get_current_weather'}, 'type': 'function'}, {'id': 'call_tfbtGgCLmuBuWgZLvpPwvUMH', 'function': {'arguments': '{"location": "Los Angeles, CA", "unit": "celsius"}', 'name': 'get_current_weather'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 84, 'prompt_tokens': 85, 'total_tokens': 169}, 'model_name': 'gpt-3.5-turbo-1106', 'system_fingerprint': 'fp_77a673219d', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-d57ad5fa-b52a-4822-bc3e-74f838697e18-0', tool_calls=[{'name': 'get_current_weather', 'args': {'location': 'San Francisco, CA', 'unit': 'celsius'}, 'id': 'call_z0OU2CytqENVrRTI6T8DkI3u'}, {'name': 'get_current_weather', 'args': {'location': 'New York, NY', 'unit': 'celsius'}, 'id': 'call_ft96IJBh0cMKkQWrZjNg4bsw'}, {'name': 'get_current_weather', 'args': {'location': 'Los Angeles, CA', 'unit': 'celsius'}, 'id': 'call_tfbtGgCLmuBuWgZLvpPwvUMH'}])
 ```
-
 
 ## Next steps
 

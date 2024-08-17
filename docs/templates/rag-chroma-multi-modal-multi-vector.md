@@ -9,10 +9,8 @@ Multi-modal LLMs enable visual assistants that can perform question-answering ab
 This template create a visual assistant for slide decks, which often contain visuals such as graphs or figures.
 
 It uses GPT-4V to create image summaries for each slide, embeds the summaries, and stores them in Chroma.
- 
+
 Given a question, relevant slides are retrieved and passed to GPT-4V for answer synthesis.
-
-
 
 ## Input
 
@@ -58,7 +56,7 @@ This will give you a REST API with:
 
 * `UPSTASH_URL`
 * `UPSTASH_TOKEN`
- 
+
 Set `UPSTASH_URL` and `UPSTASH_TOKEN` as environment variables to access your database.
 
 We will use Chroma to store and index the image summaries, which will be created locally in the template directory.
@@ -100,9 +98,9 @@ from rag_chroma_multi_modal_multi_vector import chain as rag_chroma_multi_modal_
 add_routes(app, rag_chroma_multi_modal_chain_mv, path="/rag-chroma-multi-modal-multi-vector")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -117,7 +115,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

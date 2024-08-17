@@ -11,17 +11,17 @@ The intention of this notebook is to provide a means of testing functionality in
 
 Initially this Loader supports:
 
-*   Loading NFTs as Documents from NFT Smart Contracts (ERC721 and ERC1155)
-*   Ethereum Mainnnet, Ethereum Testnet, Polygon Mainnet, Polygon Testnet (default is eth-mainnet)
-*   Alchemy's getNFTsForCollection API
+* Loading NFTs as Documents from NFT Smart Contracts (ERC721 and ERC1155)
+* Ethereum Mainnnet, Ethereum Testnet, Polygon Mainnet, Polygon Testnet (default is eth-mainnet)
+* Alchemy's getNFTsForCollection API
 
 It can be extended if the community finds value in this loader.  Specifically:
 
-*   Additional APIs can be added (e.g. Tranction-related APIs)
+* Additional APIs can be added (e.g. Tranction-related APIs)
 
 This Document Loader Requires:
 
-*   A free [Alchemy API Key](https://www.alchemy.com/)
+* A free [Alchemy API Key](https://www.alchemy.com/)
 
 The output takes the following format:
 
@@ -30,7 +30,6 @@ The output takes the following format:
 
 ## Load NFTs into Document Loader
 
-
 ```python
 # get ALCHEMY_API_KEY from https://www.alchemy.com/
 
@@ -38,7 +37,6 @@ alchemyApiKey = "..."
 ```
 
 ### Option 1: Ethereum Mainnet (default BlockchainType)
-
 
 ```python
 <!--IMPORTS:[{"imported": "BlockchainDocumentLoader", "source": "langchain_community.document_loaders.blockchain", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.blockchain.BlockchainDocumentLoader.html", "title": "Blockchain"}, {"imported": "BlockchainType", "source": "langchain_community.document_loaders.blockchain", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.blockchain.BlockchainType.html", "title": "Blockchain"}]-->
@@ -62,7 +60,6 @@ nfts[:2]
 
 ### Option 2: Polygon Mainnet
 
-
 ```python
 contractAddress = (
     "0x448676ffCd0aDf2D85C1f0565e8dde6924A9A7D9"  # Polygon Mainnet contract address
@@ -80,7 +77,6 @@ nfts = blockchainLoader.load()
 
 nfts[:2]
 ```
-
 
 ## Related
 

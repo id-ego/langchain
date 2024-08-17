@@ -5,13 +5,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Xorbits Inference (Xinference)
 
-[Xinference](https://github.com/xorbitsai/inference) is a powerful and versatile library designed to serve LLMs, 
+[Xinference](https://github.com/xorbitsai/inference) is a powerful and versatile library designed to serve LLMs,
 speech recognition models, and multimodal models, even on your laptop. It supports a variety of models compatible with GGML, such as chatglm, baichuan, whisper, vicuna, orca, and many others. This notebook demonstrates how to use Xinference with LangChain.
 
 ## Installation
 
 Install `Xinference` through PyPI:
-
 
 ```python
 %pip install --upgrade --quiet  "xinference[all]"
@@ -30,7 +29,6 @@ You can consult the README file from [Xinference](https://github.com/xorbitsai/i
 
 To use Xinference with LangChain, you need to first launch a model. You can use command line interface (CLI) to do so:
 
-
 ```python
 !xinference launch -n vicuna-v1.3 -f ggmlv3 -q q4_0
 ```
@@ -38,7 +36,6 @@ To use Xinference with LangChain, you need to first launch a model. You can use 
 Model uid: 7167b2b0-2a04-11ee-83f0-d29396a3f064
 ```
 A model UID is returned for you to use. Now you can use Xinference with LangChain:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Xinference", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.xinference.Xinference.html", "title": "Xorbits Inference (Xinference)"}]-->
@@ -54,15 +51,11 @@ llm(
 )
 ```
 
-
-
 ```output
 ' You can visit the Eiffel Tower, Notre-Dame Cathedral, the Louvre Museum, and many other historical sites in Paris, the capital of France.'
 ```
 
-
 ### Integrate with a LLMChain
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Xorbits Inference (Xinference)"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Xorbits Inference (Xinference)"}]-->
@@ -84,11 +77,9 @@ A: You can visit many places in Paris, such as the Eiffel Tower, the Louvre Muse
 ```
 Lastly, terminate the model when you do not need to use it:
 
-
 ```python
 !xinference terminate --model-uid "7167b2b0-2a04-11ee-83f0-d29396a3f064"
 ```
-
 
 ## Related
 

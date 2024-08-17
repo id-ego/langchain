@@ -15,7 +15,6 @@ This guide assumes familiarity with the following concepts:
 
 In order to force our LLM to spelect a specific tool, we can use the `tool_choice` parameter to ensure certain behavior. First, let's define our model and tools:
 
-
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to force models to call a tool"}]-->
 from langchain_core.tools import tool
@@ -38,7 +37,6 @@ tools = [add, multiply]
 
 For example, we can force our tool to call the multiply tool by using the following code:
 
-
 ```python
 llm_forced_to_multiply = llm.bind_tools(tools, tool_choice="Multiply")
 llm_forced_to_multiply.invoke("what is 2 + 4")
@@ -51,7 +49,6 @@ AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_9cViskmLvPn
 Even if we pass it something that doesn't require multiplcation - it will still call the tool!
 
 We can also just force our tool to select at least one of our tools by passing in the "any" (or "required" which is OpenAI specific) keyword to the `tool_choice` parameter.
-
 
 ```python
 llm_forced_to_use_tool = llm.bind_tools(tools, tool_choice="any")

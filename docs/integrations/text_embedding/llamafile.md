@@ -17,7 +17,6 @@ First, the are 3 setup steps:
 
 You can run the following bash script to do all this:
 
-
 ```bash
 %%bash
 # llamafile setup
@@ -40,17 +39,14 @@ echo "${pid}" > .llamafile_pid  # write the process pid to a file so we can term
 
 Now, we can use the `LlamafileEmbeddings` class to interact with the llamafile server that's currently serving our TinyLlama model at http://localhost:8080.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LlamafileEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.llamafile.LlamafileEmbeddings.html", "title": "llamafile"}]-->
 from langchain_community.embeddings import LlamafileEmbeddings
 ```
 
-
 ```python
 embedder = LlamafileEmbeddings()
 ```
-
 
 ```python
 text = "This is a test document."
@@ -58,18 +54,15 @@ text = "This is a test document."
 
 To generate embeddings, you can either query an invidivual text, or you can query a list of texts.
 
-
 ```python
 query_result = embedder.embed_query(text)
 query_result[:5]
 ```
 
-
 ```python
 doc_result = embedder.embed_documents([text])
 doc_result[0][:5]
 ```
-
 
 ```bash
 %%bash
@@ -77,7 +70,6 @@ doc_result[0][:5]
 kill $(cat .llamafile_pid)
 rm .llamafile_pid
 ```
-
 
 ## Related
 

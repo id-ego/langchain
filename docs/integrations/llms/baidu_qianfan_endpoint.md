@@ -14,9 +14,7 @@ Basically, those model are split into the following type:
 - Completion
 
 In this notebook, we will introduce how to use langchain with [Qianfan](https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html) mainly in `Completion` corresponding
- to the package `langchain/llms` in langchain:
-
-
+to the package `langchain/llms` in langchain:
 
 ## API Initialization
 
@@ -42,12 +40,10 @@ export QIANFAN_SK=XXX
 - ChatGLM2-6B-32K
 - AquilaChat-7B
 
-
 ```python
 ##Installing the langchain packages needed to use the integration
 %pip install -qU langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "QianfanLLMEndpoint", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.baidu_qianfan_endpoint.QianfanLLMEndpoint.html", "title": "Baidu Qianfan"}]-->
@@ -124,7 +120,6 @@ In the case you want to deploy your own model based on EB or serval open sources
 - 1. （Optional, if the model are included in the default models, skip it）Deploy your model in Qianfan Console, get your own customized deploy endpoint.
 - 2. Set up the field called `endpoint` in the initialization:
 
-
 ```python
 llm = QianfanLLMEndpoint(
     streaming=True,
@@ -143,8 +138,6 @@ For now, only `ERNIE-Bot` and `ERNIE-Bot-turbo` support model params below, we m
 - temperature
 - top_p
 - penalty_score
-
-
 
 ```python
 res = llm.generate(

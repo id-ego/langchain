@@ -17,7 +17,6 @@ Then we will need to set some environment variables:
 
 ## Use the wrapper
 
-
 ```python
 <!--IMPORTS:[{"imported": "OpenWeatherMapAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.openweathermap.OpenWeatherMapAPIWrapper.html", "title": "OpenWeatherMap"}]-->
 import os
@@ -28,7 +27,6 @@ os.environ["OPENWEATHERMAP_API_KEY"] = ""
 
 weather = OpenWeatherMapAPIWrapper()
 ```
-
 
 ```python
 weather_data = weather.run("London,GB")
@@ -50,7 +48,6 @@ Cloud cover: 75%
 ```
 ## Use the tool
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "OpenWeatherMap"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "OpenWeatherMap"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "OpenWeatherMap"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "OpenWeatherMap"}]-->
 import os
@@ -69,7 +66,6 @@ agent_chain = initialize_agent(
     tools=tools, llm=llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
 )
 ```
-
 
 ```python
 agent_chain.run("What's the weather like in London?")
@@ -99,12 +95,9 @@ Final Answer: The current weather in London is broken clouds, with a wind speed 
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The current weather in London is broken clouds, with a wind speed of 2.57 m/s, direction 240°, humidity of 56%, temperature of 20.11°C, high of 21.75°C, low of 18.68°C, and a heat index of None.'
 ```
-
-
 
 ## Related
 

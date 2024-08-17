@@ -21,7 +21,6 @@ Here we will demonstrate how to convert a LangChain `Runnable` into a tool that 
 
 **Note**: this guide requires `langchain-core` >= 0.2.13. We will also use [OpenAI](/docs/integrations/platforms/openai/) for embeddings, but any LangChain embeddings should suffice. We will use a simple [LangGraph](https://langchain-ai.github.io/langgraph/) agent for demonstration purposes.
 
-
 ```python
 %%capture --no-stderr
 %pip install -U langchain-core langchain-openai langgraph
@@ -40,7 +39,6 @@ Runnables that accept string or `dict` input can be converted to tools using the
 ## Basic usage
 
 With typed `dict` input:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to convert Runnables as Tools"}]-->
@@ -66,7 +64,6 @@ as_tool = runnable.as_tool(
 )
 ```
 
-
 ```python
 print(as_tool.description)
 
@@ -76,7 +73,6 @@ as_tool.args_schema.schema()
 Explanation of when to use tool.
 ```
 
-
 ```output
 {'title': 'My tool',
  'type': 'object',
@@ -85,21 +81,15 @@ Explanation of when to use tool.
  'required': ['a', 'b']}
 ```
 
-
-
 ```python
 as_tool.invoke({"a": 3, "b": [1, 2]})
 ```
-
-
 
 ```output
 '6'
 ```
 
-
 Without typing information, arg types can be specified via `arg_types`:
-
 
 ```python
 from typing import Any, Dict
@@ -119,7 +109,6 @@ as_tool = runnable.as_tool(
 
 Alternatively, the schema can be fully specified by directly passing the desired [args_schema](https://api.python.langchain.com/en/latest/tools/langchain_core.tools.BaseTool.html#langchain_core.tools.BaseTool.args_schema) for the tool:
 
-
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
 
@@ -137,7 +126,6 @@ as_tool = runnable.as_tool(GSchema)
 
 String input is also supported:
 
-
 ```python
 def f(x: str) -> str:
     return x + "a"
@@ -151,17 +139,13 @@ runnable = RunnableLambda(f) | g
 as_tool = runnable.as_tool()
 ```
 
-
 ```python
 as_tool.invoke("b")
 ```
 
-
-
 ```output
 'baz'
 ```
-
 
 ## In agents
 
@@ -176,8 +160,8 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
-Following the [RAG tutorial](/docs/tutorials/rag/), let's first construct a retriever:
 
+Following the [RAG tutorial](/docs/tutorials/rag/), let's first construct a retriever:
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to convert Runnables as Tools"}, {"imported": "InMemoryVectorStore", "source": "langchain_core.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.in_memory.InMemoryVectorStore.html", "title": "How to convert Runnables as Tools"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to convert Runnables as Tools"}]-->
@@ -206,7 +190,6 @@ retriever = vectorstore.as_retriever(
 
 We next create use a simple pre-built [LangGraph agent](https://python.langchain.com/v0.2/docs/tutorials/agents/) and provide it the tool:
 
-
 ```python
 from langgraph.prebuilt import create_react_agent
 
@@ -218,7 +201,6 @@ tools = [
 ]
 agent = create_react_agent(llm, tools)
 ```
-
 
 ```python
 for chunk in agent.stream({"messages": [("human", "What are dogs known for?")]}):
@@ -236,7 +218,6 @@ for chunk in agent.stream({"messages": [("human", "What are dogs known for?")]})
 See [LangSmith trace](https://smith.langchain.com/public/44e438e3-2faf-45bd-b397-5510fc145eb9/r) for the above run.
 
 Going further, we can create a simple [RAG](/docs/tutorials/rag/) chain that takes an additional parameter-- here, the "style" of the answer.
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to convert Runnables as Tools"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to convert Runnables as Tools"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to convert Runnables as Tools"}]-->
@@ -276,12 +257,9 @@ rag_chain = (
 
 Note that the input schema for our chain contains the required arguments, so it converts to a tool without further specification:
 
-
 ```python
 rag_chain.input_schema.schema()
 ```
-
-
 
 ```output
 {'title': 'RunnableParallel<context,question,answer_style>Input',
@@ -289,8 +267,6 @@ rag_chain.input_schema.schema()
  'properties': {'question': {'title': 'Question'},
   'answer_style': {'title': 'Answer Style'}}}
 ```
-
-
 
 ```python
 rag_tool = rag_chain.as_tool(
@@ -300,7 +276,6 @@ rag_tool = rag_chain.as_tool(
 ```
 
 Below we again invoke the agent. Note that the agent populates the required parameters in its `tool_calls`:
-
 
 ```python
 agent = create_react_agent(llm, [rag_tool])

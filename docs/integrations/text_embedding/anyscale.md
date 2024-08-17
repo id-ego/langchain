@@ -7,12 +7,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 Let's load the Anyscale Embedding class.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AnyscaleEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.anyscale.AnyscaleEmbeddings.html", "title": "Anyscale"}]-->
 from langchain_community.embeddings import AnyscaleEmbeddings
 ```
-
 
 ```python
 embeddings = AnyscaleEmbeddings(
@@ -20,11 +18,9 @@ embeddings = AnyscaleEmbeddings(
 )
 ```
 
-
 ```python
 text = "This is a test document."
 ```
-
 
 ```python
 query_result = embeddings.embed_query(text)

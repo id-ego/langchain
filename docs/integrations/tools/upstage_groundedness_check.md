@@ -8,7 +8,7 @@ sidebar_label: Upstage
 
 This notebook covers how to get started with Upstage groundedness check models.
 
-## Installation  
+## Installation
 
 Install `langchain-upstage` package.
 
@@ -22,7 +22,6 @@ Make sure to set the following environment variables:
 
 - `UPSTAGE_API_KEY`: Your Upstage API key from [Upstage developers document](https://developers.upstage.ai/docs/getting-started/quick-start).
 
-
 ```python
 import os
 
@@ -33,7 +32,6 @@ os.environ["UPSTAGE_API_KEY"] = "YOUR_API_KEY"
 
 Initialize `UpstageGroundednessCheck` class.
 
-
 ```python
 from langchain_upstage import UpstageGroundednessCheck
 
@@ -41,7 +39,6 @@ groundedness_check = UpstageGroundednessCheck()
 ```
 
 Use the `run` method to check the groundedness of the input text.
-
 
 ```python
 request_input = {
@@ -52,7 +49,6 @@ request_input = {
 response = groundedness_check.invoke(request_input)
 print(response)
 ```
-
 
 ## Related
 

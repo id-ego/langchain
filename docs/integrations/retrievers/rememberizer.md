@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Rememberizer
 
->[Rememberizer](https://rememberizer.ai/) is a knowledge enhancement service for AI applications created by  SkyDeck AI Inc.
+> [Rememberizer](https://rememberizer.ai/) is a knowledge enhancement service for AI applications created by  SkyDeck AI Inc.
 
 This notebook shows how to retrieve documents from `Rememberizer` into the Document format that is used downstream.
 
@@ -23,14 +23,12 @@ You will need an API key: you can get one after creating a common knowledge at [
 
 ## Basic usage
 
-
 ```python
 # Setup API key
 from getpass import getpass
 
 REMEMBERIZER_API_KEY = getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RememberizerRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.rememberizer.RememberizerRetriever.html", "title": "Rememberizer"}]-->
@@ -42,17 +40,13 @@ os.environ["REMEMBERIZER_API_KEY"] = REMEMBERIZER_API_KEY
 retriever = RememberizerRetriever(top_k_results=5)
 ```
 
-
 ```python
 docs = retriever.get_relevant_documents(query="How does Large Language Models works?")
 ```
 
-
 ```python
 docs[0].metadata  # meta-information of the Document
 ```
-
-
 
 ```output
 {'id': 13646493,
@@ -68,8 +62,6 @@ docs[0].metadata  # meta-information of the Document
  'integration': {'id': 347, 'integration_type': 'google_drive'}}
 ```
 
-
-
 ```python
 print(docs[0].page_content[:400])  # a content of the Document
 ```
@@ -78,16 +70,13 @@ before, or contextualized in new ways. on some level they " understand " semanti
 ```
 # Usage in a chain
 
-
 ```python
 OPENAI_API_KEY = getpass()
 ```
 
-
 ```python
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ConversationalRetrievalChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.conversational_retrieval.base.ConversationalRetrievalChain.html", "title": "Rememberizer"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Rememberizer"}]-->
@@ -97,7 +86,6 @@ from langchain_openai import ChatOpenAI
 model = ChatOpenAI(model_name="gpt-3.5-turbo")
 qa = ConversationalRetrievalChain.from_llm(model, retriever=retriever)
 ```
-
 
 ```python
 questions = [

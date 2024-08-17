@@ -7,43 +7,34 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook shows examples of how to use SearchApi to search the web. Go to [https://www.searchapi.io/](https://www.searchapi.io/) to sign up for a free account and get API key.
 
-
 ```python
 import os
 
 os.environ["SEARCHAPI_API_KEY"] = ""
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "SearchApiAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.searchapi.SearchApiAPIWrapper.html", "title": "SearchApi"}]-->
 from langchain_community.utilities import SearchApiAPIWrapper
 ```
 
-
 ```python
 search = SearchApiAPIWrapper()
 ```
-
 
 ```python
 search.run("Obama's first name?")
 ```
 
-
-
 ```output
 'Barack Hussein Obama II'
 ```
 
-
 ## Using as part of a Self Ask With Search Chain
-
 
 ```python
 os.environ["OPENAI_API_KEY"] = ""
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "SearchApi"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "SearchApi"}, {"imported": "SearchApiAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.searchapi.SearchApiAPIWrapper.html", "title": "SearchApi"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "SearchApi"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "SearchApi"}]-->
@@ -89,40 +80,31 @@ Intermediate answer: [36;1m[1;3m62 years[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Plato'
 ```
-
 
 ## Custom parameters
 
 SearchApi wrapper can be customized to use different engines like [Google News](https://www.searchapi.io/docs/google-news), [Google Jobs](https://www.searchapi.io/docs/google-jobs), [Google Scholar](https://www.searchapi.io/docs/google-scholar), or others which can be found in [SearchApi](https://www.searchapi.io/docs/google) documentation. All parameters supported by SearchApi can be passed when executing the query. 
 
-
 ```python
 search = SearchApiAPIWrapper(engine="google_jobs")
 ```
-
 
 ```python
 search.run("AI Engineer", location="Portugal", gl="pt")[0:500]
 ```
 
-
-
 ```output
 'Azure AI Engineer Be an XpanderCandidatar-meCandidatar-meCandidatar-me\n\nShare:\n\nAzure AI Engineer\n\nA área Digital Xperience da Xpand IT é uma equipa tecnológica de rápido crescimento que se concentra em tecnologias Microsoft e Mobile. A sua principal missão é fornecer soluções de software de alta qualidade que atendam às necessidades do utilizador final, num mundo tecnológico continuamente exigente e em ritmo acelerado, proporcionando a melhor experiência em termos de personalização, performance'
 ```
 
-
 ## Getting results with metadata
-
 
 ```python
 import pprint
 ```
-
 
 ```python
 search = SearchApiAPIWrapper(engine="google_scholar")

@@ -5,26 +5,24 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Baidu Cloud ElasticSearch VectorSearch
 
->[Baidu Cloud VectorSearch](https://cloud.baidu.com/doc/BES/index.html?from=productToDoc) is a fully managed, enterprise-level distributed search and analysis service which is 100% compatible to open source. Baidu Cloud VectorSearch provides low-cost, high-performance, and reliable retrieval and analysis platform level product services for structured/unstructured data. As a vector database , it supports multiple index types and similarity distance methods. 
+> [Baidu Cloud VectorSearch](https://cloud.baidu.com/doc/BES/index.html?from=productToDoc) is a fully managed, enterprise-level distributed search and analysis service which is 100% compatible to open source. Baidu Cloud VectorSearch provides low-cost, high-performance, and reliable retrieval and analysis platform level product services for structured/unstructured data. As a vector database , it supports multiple index types and similarity distance methods. 
 
->`Baidu Cloud ElasticSearch` provides a privilege management mechanism, for you to  configure the cluster privileges freely, so as to further ensure data security.
+> `Baidu Cloud ElasticSearch` provides a privilege management mechanism, for you to  configure the cluster privileges freely, so as to further ensure data security.
 
 This notebook shows how to use functionality related to the `Baidu Cloud ElasticSearch VectorStore`.
 To run, you should have an [Baidu Cloud ElasticSearch](https://cloud.baidu.com/product/bes.html) instance up and running:
 
-Read the [help document](https://cloud.baidu.com/doc/BES/s/8llyn0hh4 ) to quickly familiarize and configure Baidu Cloud ElasticSearch instance.
+Read the [help document](https://cloud.baidu.com/doc/BES/s/8llyn0hh4) to quickly familiarize and configure Baidu Cloud ElasticSearch instance.
 
 After the instance is up and running, follow these steps to split documents, get embeddings, connect to the baidu cloud elasticsearch instance, index documents, and perform vector retrieval.
 
 We need to install the following Python packages first.
-
 
 ```python
 %pip install --upgrade --quiet langchain-community elasticsearch == 7.11.0
 ```
 
 First, we want to use `QianfanEmbeddings` so we have to get the Qianfan AK and SK. Details for QianFan is related to [Baidu Qianfan Workshop](https://cloud.baidu.com/product/wenxinworkshop)
-
 
 ```python
 import getpass
@@ -35,7 +33,6 @@ os.environ["QIANFAN_SK"] = getpass.getpass("Your Qianfan SK:")
 ```
 
 Secondly, split documents and get embeddings.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Baidu Cloud ElasticSearch VectorSearch"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Baidu Cloud ElasticSearch VectorSearch"}, {"imported": "QianfanEmbeddingsEndpoint", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.baidu_qianfan_endpoint.QianfanEmbeddingsEndpoint.html", "title": "Baidu Cloud ElasticSearch VectorSearch"}]-->
@@ -54,7 +51,6 @@ embeddings = QianfanEmbeddingsEndpoint()
 
 Then, create a Baidu ElasticeSearch accessable instance.
 
-
 ```python
 <!--IMPORTS:[{"imported": "BESVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.baiducloud_vector_search.BESVectorStore.html", "title": "Baidu Cloud ElasticSearch VectorSearch"}]-->
 # Create a bes instance and index docs.
@@ -71,15 +67,13 @@ bes.client.indices.refresh(index="your vector index")
 
 Finally, Query and retrive data
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = bes.similarity_search(query)
 print(docs[0].page_content)
 ```
 
-Please feel free to contact <liuboyao@baidu.com> or <chenweixu01@baidu.com> if you encounter any problems during use, and we will do our best to support you.
-
+Please feel free to contact <mailto:liuboyao@baidu.com> or <mailto:chenweixu01@baidu.com> if you encounter any problems during use, and we will do our best to support you.
 
 ## Related
 

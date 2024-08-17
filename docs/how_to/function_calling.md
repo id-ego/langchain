@@ -9,36 +9,36 @@ sidebar_position: 2
 :::info
 We use the term tool calling interchangeably with function calling. Although
 function calling is sometimes meant to refer to invocations of a single function,
-we treat all models as though they can return multiple tool or function calls in 
+we treat all models as though they can return multiple tool or function calls in
 each message.
 :::
 
-Tool calling allows a model to respond to a given prompt by generating output that 
-matches a user-defined schema. While the name implies that the model is performing 
-some action, this is actually not the case! The model is coming up with the 
-arguments to a tool, and actually running the tool (or not) is up to the user - 
-for example, if you want to [extract output matching some schema](/docs/tutorials/extraction) 
-from unstructured text, you could give the model an "extraction" tool that takes 
-parameters matching the desired schema, then treat the generated output as your final 
+Tool calling allows a model to respond to a given prompt by generating output that
+matches a user-defined schema. While the name implies that the model is performing
+some action, this is actually not the case! The model is coming up with the
+arguments to a tool, and actually running the tool (or not) is up to the user -
+for example, if you want to [extract output matching some schema](/docs/tutorials/extraction)
+from unstructured text, you could give the model an "extraction" tool that takes
+parameters matching the desired schema, then treat the generated output as your final
 result.
 
-A tool call includes a name, arguments dict, and an optional identifier. The 
+A tool call includes a name, arguments dict, and an optional identifier. The
 arguments dict is structured `{argument_name: argument_value}`.
 
-Many LLM providers, including [Anthropic](https://www.anthropic.com/), 
-[Cohere](https://cohere.com/), [Google](https://cloud.google.com/vertex-ai), 
-[Mistral](https://mistral.ai/), [OpenAI](https://openai.com/), and others, 
-support variants of a tool calling feature. These features typically allow requests 
-to the LLM to include available tools and their schemas, and for responses to include 
-calls to these tools. For instance, given a search engine tool, an LLM might handle a 
-query by first issuing a call to the search engine. The system calling the LLM can 
-receive the tool call, execute it, and return the output to the LLM to inform its 
-response. LangChain includes a suite of [built-in tools](/docs/integrations/tools/) 
-and supports several methods for defining your own [custom tools](/docs/how_to/custom_tools). 
-Tool-calling is extremely useful for building [tool-using chains and agents](/docs/how_to#tools), 
+Many LLM providers, including [Anthropic](https://www.anthropic.com/),
+[Cohere](https://cohere.com/), [Google](https://cloud.google.com/vertex-ai),
+[Mistral](https://mistral.ai/), [OpenAI](https://openai.com/), and others,
+support variants of a tool calling feature. These features typically allow requests
+to the LLM to include available tools and their schemas, and for responses to include
+calls to these tools. For instance, given a search engine tool, an LLM might handle a
+query by first issuing a call to the search engine. The system calling the LLM can
+receive the tool call, execute it, and return the output to the LLM to inform its
+response. LangChain includes a suite of [built-in tools](/docs/integrations/tools/)
+and supports several methods for defining your own [custom tools](/docs/how_to/custom_tools).
+Tool-calling is extremely useful for building [tool-using chains and agents](/docs/how_to#tools),
 and for getting structured outputs from models more generally.
 
-Providers adopt different conventions for formatting tool schemas and tool calls. 
+Providers adopt different conventions for formatting tool schemas and tool calls.
 For instance, Anthropic returns tool calls as parsed structures within a larger content block:
 ```python
 [
@@ -69,19 +69,18 @@ whereas OpenAI separates tool calls into a distinct parameter, with arguments as
   ]
 }
 ```
-LangChain implements standard interfaces for defining tools, passing them to LLMs, 
+LangChain implements standard interfaces for defining tools, passing them to LLMs,
 and representing tool calls.
 
 ## Passing tools to LLMs
 
-Chat models supporting tool calling features implement a `.bind_tools` method, which 
-receives a list of LangChain [tool objects](https://api.python.langchain.com/en/latest/tools/langchain_core.tools.BaseTool.html#langchain_core.tools.BaseTool) 
-and binds them to the chat model in its expected format. Subsequent invocations of the 
+Chat models supporting tool calling features implement a `.bind_tools` method, which
+receives a list of LangChain [tool objects](https://api.python.langchain.com/en/latest/tools/langchain_core.tools.BaseTool.html#langchain_core.tools.BaseTool)
+and binds them to the chat model in its expected format. Subsequent invocations of the
 chat model will include tool schemas in its calls to the LLM.
 
-For example, we can define the schema for custom tools using the `@tool` decorator 
+For example, we can define the schema for custom tools using the `@tool` decorator
 on Python functions:
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to do tool/function calling"}]-->
@@ -104,8 +103,6 @@ tools = [add, multiply]
 ```
 
 Or below, we define the schema using Pydantic:
-
-
 
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -135,14 +132,13 @@ We can bind them to chat models as follows:
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="llm"
-  fireworksParams={`model="accounts/fireworks/models/firefunction-v1", temperature=0`}
+customVarName="llm"
+fireworksParams={`model="accounts/fireworks/models/firefunction-v1", temperature=0`}
 />
 
 We can use the `bind_tools()` method to handle converting
 `Multiply` to a "tool" and binding it to the model (i.e.,
 passing it in each time the model is invoked).
-
 
 ```python
 llm_with_tools = llm.bind_tools(tools)
@@ -150,24 +146,21 @@ llm_with_tools = llm.bind_tools(tools)
 
 ## Tool calls
 
-If tool calls are included in a LLM response, they are attached to the corresponding 
-[message](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage) 
-or [message chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk) 
-as a list of [tool call](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCall.html#langchain_core.messages.tool.ToolCall) 
-objects in the `.tool_calls` attribute. A `ToolCall` is a typed dict that includes a 
-tool name, dict of argument values, and (optionally) an identifier. Messages with no 
+If tool calls are included in a LLM response, they are attached to the corresponding
+[message](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage)
+or [message chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk)
+as a list of [tool call](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCall.html#langchain_core.messages.tool.ToolCall)
+objects in the `.tool_calls` attribute. A `ToolCall` is a typed dict that includes a
+tool name, dict of argument values, and (optionally) an identifier. Messages with no
 tool calls default to an empty list for this attribute.
 
 Example:
-
 
 ```python
 query = "What is 3 * 12? Also, what is 11 + 49?"
 
 llm_with_tools.invoke(query).tool_calls
 ```
-
-
 
 ```output
 [{'name': 'Multiply',
@@ -178,17 +171,15 @@ llm_with_tools.invoke(query).tool_calls
   'id': 'call_k9v09vYioS3X0Qg35zESuUKI'}]
 ```
 
-
-The `.tool_calls` attribute should contain valid tool calls. Note that on occasion, 
-model providers may output malformed tool calls (e.g., arguments that are not 
-valid JSON). When parsing fails in these cases, instances 
-of [InvalidToolCall](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.InvalidToolCall.html#langchain_core.messages.tool.InvalidToolCall) 
-are populated in the `.invalid_tool_calls` attribute. An `InvalidToolCall` can have 
+The `.tool_calls` attribute should contain valid tool calls. Note that on occasion,
+model providers may output malformed tool calls (e.g., arguments that are not
+valid JSON). When parsing fails in these cases, instances
+of [InvalidToolCall](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.InvalidToolCall.html#langchain_core.messages.tool.InvalidToolCall)
+are populated in the `.invalid_tool_calls` attribute. An `InvalidToolCall` can have
 a name, string arguments, identifier, and error message.
 
-If desired, [output parsers](/docs/how_to#output-parsers) can further 
+If desired, [output parsers](/docs/how_to#output-parsers) can further
 process the output. For example, we can convert back to the original Pydantic class:
-
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticToolsParser", "source": "langchain_core.output_parsers.openai_tools", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html", "title": "How to do tool/function calling"}]-->
@@ -198,33 +189,29 @@ chain = llm_with_tools | PydanticToolsParser(tools=[Multiply, Add])
 chain.invoke(query)
 ```
 
-
-
 ```output
 [Multiply(a=3, b=12), Add(a=11, b=49)]
 ```
 
-
 ### Streaming
 
-When tools are called in a streaming context, 
-[message chunks](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk) 
-will be populated with [tool call chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCallChunk.html#langchain_core.messages.tool.ToolCallChunk) 
-objects in a list via the `.tool_call_chunks` attribute. A `ToolCallChunk` includes 
-optional string fields for the tool `name`, `args`, and `id`, and includes an optional 
-integer field `index` that can be used to join chunks together. Fields are optional 
-because portions of a tool call may be streamed across different chunks (e.g., a chunk 
+When tools are called in a streaming context,
+[message chunks](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk)
+will be populated with [tool call chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCallChunk.html#langchain_core.messages.tool.ToolCallChunk)
+objects in a list via the `.tool_call_chunks` attribute. A `ToolCallChunk` includes
+optional string fields for the tool `name`, `args`, and `id`, and includes an optional
+integer field `index` that can be used to join chunks together. Fields are optional
+because portions of a tool call may be streamed across different chunks (e.g., a chunk
 that includes a substring of the arguments may have null values for the tool name and id).
 
-Because message chunks inherit from their parent message class, an 
-[AIMessageChunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk) 
-with tool call chunks will also include `.tool_calls` and `.invalid_tool_calls` fields. 
+Because message chunks inherit from their parent message class, an
+[AIMessageChunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk)
+with tool call chunks will also include `.tool_calls` and `.invalid_tool_calls` fields.
 These fields are parsed best-effort from the message's tool call chunks.
 
 Note that not all providers currently support streaming for tool calls.
 
 Example:
-
 
 ```python
 async for chunk in llm_with_tools.astream(query):
@@ -247,7 +234,6 @@ async for chunk in llm_with_tools.astream(query):
 Note that adding message chunks will merge their corresponding tool call chunks. This is the principle by which LangChain's various [tool output parsers](/docs/how_to/output_parser_structured) support streaming.
 
 For example, below we accumulate tool call chunks:
-
 
 ```python
 first = True
@@ -282,7 +268,6 @@ print(type(gathered.tool_call_chunks[0]["args"]))
 <class 'str'>
 ```
 And below we accumulate tool calls to demonstrate partial parsing:
-
 
 ```python
 first = True
@@ -320,7 +305,6 @@ print(type(gathered.tool_calls[0]["args"]))
 
 If we're using the model-generated tool invocations to actually call tools and want to pass the tool results back to the model, we can do so using `ToolMessage`s.
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to do tool/function calling"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to do tool/function calling"}]-->
 from langchain_core.messages import HumanMessage, ToolMessage
@@ -335,8 +319,6 @@ for tool_call in ai_msg.tool_calls:
 messages
 ```
 
-
-
 ```output
 [HumanMessage(content='What is 3 * 12? Also, what is 11 + 49?'),
  AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_K5DsWEmgt6D08EI9AFu9NaL1', 'function': {'arguments': '{"a": 3, "b": 12}', 'name': 'Multiply'}, 'type': 'function'}, {'id': 'call_qywVrsplg0ZMv7LHYYMjyG81', 'function': {'arguments': '{"a": 11, "b": 49}', 'name': 'Add'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 50, 'prompt_tokens': 105, 'total_tokens': 155}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_b28b39ffa8', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-1a0b8cdd-9221-4d94-b2ed-5701f67ce9fe-0', tool_calls=[{'name': 'Multiply', 'args': {'a': 3, 'b': 12}, 'id': 'call_K5DsWEmgt6D08EI9AFu9NaL1'}, {'name': 'Add', 'args': {'a': 11, 'b': 49}, 'id': 'call_qywVrsplg0ZMv7LHYYMjyG81'}]),
@@ -344,18 +326,13 @@ messages
  ToolMessage(content='60', tool_call_id='call_qywVrsplg0ZMv7LHYYMjyG81')]
 ```
 
-
-
 ```python
 llm_with_tools.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='3 * 12 is 36 and 11 + 49 is 60.', response_metadata={'token_usage': {'completion_tokens': 18, 'prompt_tokens': 171, 'total_tokens': 189}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_b28b39ffa8', 'finish_reason': 'stop', 'logprobs': None}, id='run-a6c8093c-b16a-4c92-8308-7c9ac998118c-0')
 ```
-
 
 ## Few-shot prompting
 
@@ -363,14 +340,11 @@ For more complex tool use it's very useful to add few-shot examples to the promp
 
 For example, even with some special instructions our model can get tripped up by order of operations:
 
-
 ```python
 llm_with_tools.invoke(
     "Whats 119 times 8 minus 20. Don't do any math yourself, only use tools for math. Respect order of operations"
 ).tool_calls
 ```
-
-
 
 ```output
 [{'name': 'Multiply',
@@ -381,11 +355,9 @@ llm_with_tools.invoke(
   'id': 'call_n03l4hmka7VZTCiP387Wud2C'}]
 ```
 
-
 The model shouldn't be trying to add anything yet, since it technically can't know the results of 119 * 8 yet.
 
 By adding a prompt with some examples we can correct this behavior:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to do tool/function calling"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to do tool/function calling"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to do tool/function calling"}]-->
@@ -432,14 +404,11 @@ chain = {"query": RunnablePassthrough()} | few_shot_prompt | llm_with_tools
 chain.invoke("Whats 119 times 8 minus 20").tool_calls
 ```
 
-
-
 ```output
 [{'name': 'Multiply',
   'args': {'a': 119, 'b': 8},
   'id': 'call_MoSgwzIhPxhclfygkYaKIsGZ'}]
 ```
-
 
 Seems like we get the correct output this time.
 
@@ -448,11 +417,11 @@ Here's what the [LangSmith trace](https://smith.langchain.com/public/f70550a1-58
 ## Next steps
 
 - **Output parsing**: See [OpenAI Tools output
-    parsers](/docs/how_to/output_parser_structured)
-    to learn about extracting the function calling API responses into
-    various formats.
+parsers](/docs/how_to/output_parser_structured)
+to learn about extracting the function calling API responses into
+various formats.
 - **Structured output chains**: [Some models have constructors](/docs/how_to/structured_output) that
-    handle creating a structured output chain for you.
+handle creating a structured output chain for you.
 - **Tool use**: See how to construct chains and agents that
-    call the invoked tools in [these
-    guides](/docs/how_to#tools).
+call the invoked tools in [these
+guides](/docs/how_to#tools).

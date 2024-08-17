@@ -12,7 +12,6 @@ In this guide we'll go over the basic ways to create a Q&A chain over a graph da
 
 Building Q&A systems of graph databases requires executing model-generated graph queries. There are inherent risks in doing this. Make sure that your database connection permissions are always scoped as narrowly as possible for your chain/agent's needs. This will mitigate though not eliminate the risks of building a model-driven system. For more on general security best practices, [see here](/docs/security).
 
-
 ## Architecture
 
 At a high-level, the steps of most graph chains are:
@@ -21,7 +20,6 @@ At a high-level, the steps of most graph chains are:
 2. **Execute graph database query**: Execute the graph database query.
 3. **Answer the question**: Model responds to user input using the query results.
 
-
 ![sql_usecase.png](../../static/img/graph_usecase.png)
 
 ## Setup
@@ -29,13 +27,11 @@ At a high-level, the steps of most graph chains are:
 First, get required packages and set environment variables.
 In this example, we will be using Neo4j graph database.
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai neo4j
 ```
 
 We default to OpenAI models in this guide.
-
 
 ```python
 import getpass
@@ -53,7 +49,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 Next, we need to define Neo4j credentials.
 Follow [these installation steps](https://neo4j.com/docs/operations-manual/current/installation/) to set up a Neo4j database.
 
-
 ```python
 os.environ["NEO4J_URI"] = "bolt://localhost:7687"
 os.environ["NEO4J_USERNAME"] = "neo4j"
@@ -61,7 +56,6 @@ os.environ["NEO4J_PASSWORD"] = "password"
 ```
 
 The below example will create a connection with a Neo4j database and will populate it with example data about movies and their actors.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Neo4jGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neo4j_graph.Neo4jGraph.html", "title": "Build a Question Answering application over a Graph Database"}]-->
@@ -93,17 +87,13 @@ FOREACH (genre in split(row.genres, '|') |
 graph.query(movies_query)
 ```
 
-
-
 ```output
 []
 ```
 
-
 ## Graph schema
 
 In order for an LLM to be able to generate a Cypher statement, it needs information about the graph schema. When you instantiate a graph object, it retrieves the information about the graph schema. If you later make any changes to the graph, you can run the `refresh_schema` method to refresh the schema information.
-
 
 ```python
 graph.refresh_schema()
@@ -125,9 +115,7 @@ Let's use a simple chain that takes a question, turns it into a Cypher query, ex
 
 ![graph_chain.webp](../../static/img/graph_chain.webp)
 
-
 LangChain comes with a built-in chain for this workflow that is designed to work with Neo4j: [GraphCypherQAChain](/docs/integrations/graphs/neo4j_cypher)
-
 
 ```python
 <!--IMPORTS:[{"imported": "GraphCypherQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher.GraphCypherQAChain.html", "title": "Build a Question Answering application over a Graph Database"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Build a Question Answering application over a Graph Database"}]-->
@@ -152,17 +140,14 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'What was the cast of the Casino?',
  'result': 'The cast of Casino included Joe Pesci, Robert De Niro, Sharon Stone, and James Woods.'}
 ```
 
-
 # Validating relationship direction
 
 LLMs can struggle with relationship directions in generated Cypher statement. Since the graph schema is predefined, we can validate and optionally correct relationship directions in the generated Cypher statements by using the `validate_cypher` parameter.
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -184,12 +169,10 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'query': 'What was the cast of the Casino?',
  'result': 'The cast of Casino included Joe Pesci, Robert De Niro, Sharon Stone, and James Woods.'}
 ```
-
 
 ### Next steps
 

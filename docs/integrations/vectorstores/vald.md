@@ -14,13 +14,11 @@ Check [Get Started](https://github.com/vdaas/vald#get-started) for more informat
 
 See the [installation instructions](https://github.com/vdaas/vald-client-python#install).
 
-
 ```python
 %pip install --upgrade --quiet  vald-client-python langchain-community
 ```
 
 ## Basic Example
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Vald"}, {"imported": "Vald", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vald.Vald.html", "title": "Vald"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Vald"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Vald"}]-->
@@ -36,7 +34,6 @@ embeddings = HuggingFaceEmbeddings()
 db = Vald.from_documents(documents, embeddings, host="localhost", port=8080)
 ```
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = db.similarity_search(query)
@@ -45,7 +42,6 @@ docs[0].page_content
 
 ### Similarity search by vector
 
-
 ```python
 embedding_vector = embeddings.embed_query(query)
 docs = db.similarity_search_by_vector(embedding_vector)
@@ -53,7 +49,6 @@ docs[0].page_content
 ```
 
 ### Similarity search with score
-
 
 ```python
 docs_and_scores = db.similarity_search_with_score(query)
@@ -64,14 +59,12 @@ docs_and_scores[0]
 
 In addition to using similarity search in the retriever object, you can also use `mmr` as retriever.
 
-
 ```python
 retriever = db.as_retriever(search_type="mmr")
 retriever.invoke(query)
 ```
 
 Or use `max_marginal_relevance_search` directly:
-
 
 ```python
 db.max_marginal_relevance_search(query, k=2, fetch_k=10)
@@ -83,7 +76,6 @@ In order to run this notebook, it is necessary to run a Vald cluster with secure
 Here is an example of a Vald cluster with the following configuration using [Athenz](https://github.com/AthenZ/athenz) authentication.
 
 ingress(TLS) -> [authorization-proxy](https://github.com/AthenZ/authorization-proxy)(Check athenz-role-auth in grpc metadata) -> vald-lb-gateway
-
 
 ```python
 import grpc
@@ -97,7 +89,6 @@ with open(".ztoken", "rb") as ztoken:
 
 metadata = [(b"athenz-role-auth", token)]
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Vald"}, {"imported": "Vald", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vald.Vald.html", "title": "Vald"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Vald"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Vald"}]-->
@@ -122,7 +113,6 @@ db = Vald.from_documents(
 )
 ```
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = db.similarity_search(query, grpc_metadata=metadata)
@@ -130,7 +120,6 @@ docs[0].page_content
 ```
 
 ### Similarity search by vector
-
 
 ```python
 embedding_vector = embeddings.embed_query(query)
@@ -140,14 +129,12 @@ docs[0].page_content
 
 ### Similarity search with score
 
-
 ```python
 docs_and_scores = db.similarity_search_with_score(query, grpc_metadata=metadata)
 docs_and_scores[0]
 ```
 
 ### Maximal Marginal Relevance Search (MMR)
-
 
 ```python
 retriever = db.as_retriever(
@@ -158,11 +145,9 @@ retriever.invoke(query, grpc_metadata=metadata)
 
 Or:
 
-
 ```python
 db.max_marginal_relevance_search(query, k=2, fetch_k=10, grpc_metadata=metadata)
 ```
-
 
 ## Related
 

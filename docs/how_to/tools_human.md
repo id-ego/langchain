@@ -16,18 +16,15 @@ To build a production application, you will need to do more work to keep track o
 We recommend using `langgraph` for powering such a capability. For more details, please see this [guide](https://langchain-ai.github.io/langgraph/how-tos/human-in-the-loop/).
 :::
 
-
 ## Setup
 
 We'll need to install the following packages:
-
 
 ```python
 %pip install --upgrade --quiet langchain
 ```
 
 And set these environment variables:
-
 
 ```python
 import getpass
@@ -85,8 +82,6 @@ chain = llm_with_tools | call_tools
 chain.invoke("how many emails did i get in the last 5 days?")
 ```
 
-
-
 ```output
 [{'name': 'count_emails',
   'args': {'last_n_days': 5},
@@ -94,13 +89,11 @@ chain.invoke("how many emails did i get in the last 5 days?")
   'output': 10}]
 ```
 
-
 ## Adding human approval
 
 Let's add a step in the chain that will ask a person to approve or reject the tall call request.
 
 On rejection, the step will raise an exception which will stop execution of the rest of the chain.
-
 
 ```python
 import json
@@ -132,7 +125,6 @@ def human_approval(msg: AIMessage) -> AIMessage:
     return msg
 ```
 
-
 ```python
 chain = llm_with_tools | human_approval | call_tools
 chain.invoke("how many emails did i get in the last 5 days?")
@@ -152,15 +144,12 @@ Anything except 'Y'/'Yes' (case-insensitive) will be treated as a no.
  >>> yes
 ```
 
-
 ```output
 [{'name': 'count_emails',
   'args': {'last_n_days': 5},
   'id': 'toolu_01WbD8XeMoQaRFtsZezfsHor',
   'output': 10}]
 ```
-
-
 
 ```python
 try:

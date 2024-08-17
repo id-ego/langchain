@@ -5,16 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # WhyLabs
 
->[WhyLabs](https://docs.whylabs.ai/docs/) is an observability platform designed to monitor data pipelines and ML applications for data quality regressions, data drift, and model performance degradation. Built on top of an open-source package called `whylogs`, the platform enables Data Scientists and Engineers to:
->- Set up in minutes: Begin generating statistical profiles of any dataset using whylogs, the lightweight open-source library.
->- Upload dataset profiles to the WhyLabs platform for centralized and customizable monitoring/alerting of dataset features as well as model inputs, outputs, and performance.
->- Integrate seamlessly: interoperable with any data pipeline, ML infrastructure, or framework. Generate real-time insights into your existing data flow. See more about our integrations here.
->- Scale to terabytes: handle your large-scale data, keeping compute requirements low. Integrate with either batch or streaming data pipelines.
->- Maintain data privacy: WhyLabs relies statistical profiles created via whylogs so your actual data never leaves your environment!
+> [WhyLabs](https://docs.whylabs.ai/docs/) is an observability platform designed to monitor data pipelines and ML applications for data quality regressions, data drift, and model performance degradation. Built on top of an open-source package called `whylogs`, the platform enables Data Scientists and Engineers to:
+> - Set up in minutes: Begin generating statistical profiles of any dataset using whylogs, the lightweight open-source library.
+> - Upload dataset profiles to the WhyLabs platform for centralized and customizable monitoring/alerting of dataset features as well as model inputs, outputs, and performance.
+> - Integrate seamlessly: interoperable with any data pipeline, ML infrastructure, or framework. Generate real-time insights into your existing data flow. See more about our integrations here.
+> - Scale to terabytes: handle your large-scale data, keeping compute requirements low. Integrate with either batch or streaming data pipelines.
+> - Maintain data privacy: WhyLabs relies statistical profiles created via whylogs so your actual data never leaves your environment!
 Enable observability to detect inputs and LLM issues faster, deliver continuous improvements, and avoid costly incidents.
 
 ## Installation and Setup
-
 
 ```python
 %pip install --upgrade --quiet  langkit langchain-openai langchain
@@ -38,17 +37,14 @@ os.environ["WHYLABS_API_KEY"] = ""
 ```
 > *Note*: the callback supports directly passing in these variables to the callback, when no auth is directly passed in it will default to the environment. Passing in auth directly allows for writing profiles to multiple projects or organizations in WhyLabs.
 
-
 ## Callbacks
 
 Here's a single LLM integration with OpenAI, which will log various out of the box metrics and send telemetry to WhyLabs for monitoring.
-
 
 ```python
 <!--IMPORTS:[{"imported": "WhyLabsCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.whylabs_callback.WhyLabsCallbackHandler.html", "title": "WhyLabs"}]-->
 from langchain_community.callbacks import WhyLabsCallbackHandler
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "WhyLabs"}]-->

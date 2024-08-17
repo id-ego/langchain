@@ -76,7 +76,7 @@ credential = ChainedTokenCredential(
 ## Deployments
 With Azure OpenAI, you set up your own deployments of the common GPT-3 and Codex models.  When calling the API, you need to specify the deployment you want to use.
 
-_**Note**: These docs are for the Azure text completion models. Models like GPT-4 are chat models. They have a slightly different interface, and can be accessed via the `AzureChatOpenAI` class. For docs on Azure chat see [Azure Chat OpenAI documentation](/docs/integrations/chat/azure_chat_openai)._
+***Note**: These docs are for the Azure text completion models. Models like GPT-4 are chat models. They have a slightly different interface, and can be accessed via the `AzureChatOpenAI` class. For docs on Azure chat see [Azure Chat OpenAI documentation](/docs/integrations/chat/azure_chat_openai).*
 
 Let's say your deployment name is `gpt-35-turbo-instruct-prod`.  In the `openai` Python API, you can specify this deployment with the `engine` parameter.  For example:
 
@@ -93,12 +93,9 @@ response = client.completions.create(
 )
 ```
 
-
-
 ```python
 %pip install --upgrade --quiet  langchain-openai
 ```
-
 
 ```python
 import os
@@ -108,13 +105,11 @@ os.environ["AZURE_OPENAI_ENDPOINT"] = "..."
 os.environ["AZURE_OPENAI_API_KEY"] = "..."
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "AzureOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.azure.AzureOpenAI.html", "title": "Azure OpenAI"}]-->
 # Import Azure OpenAI
 from langchain_openai import AzureOpenAI
 ```
-
 
 ```python
 # Create an instance of Azure OpenAI
@@ -124,21 +119,16 @@ llm = AzureOpenAI(
 )
 ```
 
-
 ```python
 # Run the LLM
 llm.invoke("Tell me a joke")
 ```
 
-
-
 ```output
 " Why couldn't the bicycle stand up by itself?\n\nBecause it was two-tired!"
 ```
 
-
 We can also print the LLM and see its custom print.
-
 
 ```python
 print(llm)

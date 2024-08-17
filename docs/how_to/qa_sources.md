@@ -24,13 +24,11 @@ We'll use OpenAI embeddings and a Chroma vector store in this walkthrough, but e
 
 We'll use the following packages:
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchainhub langchain-openai langchain-chroma bs4
 ```
 
 We need to set environment variable `OPENAI_API_KEY`, which can be done directly or loaded from a `.env` file like so:
-
 
 ```python
 import getpass
@@ -49,7 +47,6 @@ Many of the applications you build with LangChain will contain multiple steps wi
 
 Note that LangSmith is not needed, but it is helpful. If you do want to use LangSmith, after you sign up at the link above, make sure to set your environment variables to start logging traces:
 
-
 ```python
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
@@ -63,8 +60,8 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
-Here is Q&A app with sources we built over the [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng in the [RAG tutorial](/docs/tutorials/rag):
 
+Here is Q&A app with sources we built over the [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng in the [RAG tutorial](/docs/tutorials/rag):
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "How to get your RAG application to return sources"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to get your RAG application to return sources"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to get your RAG application to return sources"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to get your RAG application to return sources"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to get your RAG application to return sources"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to get your RAG application to return sources"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to get your RAG application to return sources"}]-->
@@ -116,19 +113,15 @@ question_answer_chain = create_stuff_documents_chain(llm, prompt)
 rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 ```
 
-
 ```python
 result = rag_chain.invoke({"input": "What is Task Decomposition?"})
 ```
 
 Note that `result` is a dict with keys `"input"`, `"context"`, and `"answer"`:
 
-
 ```python
 result
 ```
-
-
 
 ```output
 {'input': 'What is Task Decomposition?',
@@ -139,7 +132,6 @@ result
  'answer': 'Task decomposition involves breaking down a complex task into smaller and more manageable steps. This process helps agents or models tackle difficult tasks by dividing them into simpler subtasks or components. Task decomposition can be achieved through techniques like Chain of Thought or Tree of Thoughts, which guide the agent in breaking down tasks into sequential or branching steps.'}
 ```
 
-
 Here, `"context"` contains the sources that the LLM used in generating the response in `"answer"`.
 
 ## Custom LCEL implementation
@@ -148,7 +140,6 @@ Below we construct a chain similar to those built by `create_retrieval_chain`. I
 
 1. Starting with a dict with the input query, add the retrieved docs in the `"context"` key;
 2. Feed both the query and context into a RAG chain and add the result to the dict.
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to get your RAG application to return sources"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to get your RAG application to return sources"}]-->
@@ -186,8 +177,6 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 chain.invoke({"input": "What is Task Decomposition"})
 ```
 
-
-
 ```output
 {'input': 'What is Task Decomposition',
  'context': [Document(metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}, page_content='Fig. 1. Overview of a LLM-powered autonomous agent system.\nComponent One: Planning#\nA complicated task usually involves many steps. An agent needs to know what they are and plan ahead.\nTask Decomposition#\nChain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks. The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.'),
@@ -196,7 +185,6 @@ chain.invoke({"input": "What is Task Decomposition"})
   Document(metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}, page_content='Fig. 11. Illustration of how HuggingGPT works. (Image source: Shen et al. 2023)\nThe system comprises of 4 stages:\n(1) Task planning: LLM works as the brain and parses the user requests into multiple tasks. There are four attributes associated with each task: task type, ID, dependencies, and arguments. They use few-shot examples to guide LLM to do task parsing and planning.\nInstruction:')],
  'answer': 'Task decomposition is a technique used in artificial intelligence to break down complex tasks into smaller and more manageable subtasks. This approach helps agents or models to tackle difficult problems by dividing them into simpler steps, improving performance and interpretability. Different methods like Chain of Thought and Tree of Thoughts have been developed to enhance task decomposition in AI systems.'}
 ```
-
 
 :::tip
 
@@ -212,7 +200,6 @@ Because the above LCEL implementation is composed of [Runnable](/docs/concepts/#
 
 - We use the model's tool-calling features to generate [structured output](/docs/how_to/structured_output/), consisting of an answer and list of sources. The schema for the response is represented in the `AnswerWithSources` TypedDict, below.
 - We remove the `StrOutputParser()`, as we expect `dict` output in this scenario.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to get your RAG application to return sources"}]-->
@@ -254,7 +241,6 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 
 response = chain.invoke({"input": "What is Chain of Thought?"})
 ```
-
 
 ```python
 import json

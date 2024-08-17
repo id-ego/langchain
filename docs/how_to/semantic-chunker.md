@@ -17,13 +17,11 @@ sentences, and then merges one that are similar in the embedding space.
 
 ## Install Dependencies
 
-
 ```python
 !pip install --quiet langchain_experimental langchain_openai
 ```
 
 ## Load Example Data
-
 
 ```python
 # This is a long document we can split up.
@@ -34,7 +32,6 @@ with open("state_of_the_union.txt") as f:
 ## Create Text Splitter
 
 To instantiate a [SemanticChunker](https://api.python.langchain.com/en/latest/text_splitter/langchain_experimental.text_splitter.SemanticChunker.html), we must specify an embedding model. Below we will use [OpenAIEmbeddings](https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.openai.OpenAIEmbeddings.html). 
-
 
 ```python
 <!--IMPORTS:[{"imported": "SemanticChunker", "source": "langchain_experimental.text_splitter", "docs": "https://api.python.langchain.com/en/latest/text_splitter/langchain_experimental.text_splitter.SemanticChunker.html", "title": "How to split text based on semantic similarity"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to split text based on semantic similarity"}]-->
@@ -47,7 +44,6 @@ text_splitter = SemanticChunker(OpenAIEmbeddings())
 ## Split Text
 
 We split text in the usual way, e.g., by invoking `.create_documents` to create LangChain [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) objects:
-
 
 ```python
 docs = text_splitter.create_documents([state_of_the_union])
@@ -66,13 +62,11 @@ There are a few ways to determine what that threshold is, which are controlled b
 
 The default way to split is based on percentile. In this method, all differences between sentences are calculated, and then any difference greater than the X percentile is split.
 
-
 ```python
 text_splitter = SemanticChunker(
     OpenAIEmbeddings(), breakpoint_threshold_type="percentile"
 )
 ```
-
 
 ```python
 docs = text_splitter.create_documents([state_of_the_union])
@@ -92,13 +86,11 @@ print(len(docs))
 
 In this method, any difference greater than X standard deviations is split.
 
-
 ```python
 text_splitter = SemanticChunker(
     OpenAIEmbeddings(), breakpoint_threshold_type="standard_deviation"
 )
 ```
-
 
 ```python
 docs = text_splitter.create_documents([state_of_the_union])
@@ -118,13 +110,11 @@ print(len(docs))
 
 In this method, the interquartile distance is used to split chunks.
 
-
 ```python
 text_splitter = SemanticChunker(
     OpenAIEmbeddings(), breakpoint_threshold_type="interquartile"
 )
 ```
-
 
 ```python
 docs = text_splitter.create_documents([state_of_the_union])
@@ -145,13 +135,11 @@ print(len(docs))
 In this method, the gradient of distance is used to split chunks along with the percentile method.
 This method is useful when chunks are highly correlated with each other or specific to a domain e.g. legal or medical. The idea is to apply anomaly detection on gradient array so that the distribution become wider and easy to identify boundaries in highly semantic data.
 
-
 ```python
 text_splitter = SemanticChunker(
     OpenAIEmbeddings(), breakpoint_threshold_type="gradient"
 )
 ```
-
 
 ```python
 docs = text_splitter.create_documents([state_of_the_union])

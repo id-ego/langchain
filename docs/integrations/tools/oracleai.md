@@ -11,19 +11,19 @@ This is not only powerful but also significantly more effective because you don'
 
 In addition, your vectors can benefit from all of Oracle Database’s most powerful features, like the following:
 
- * [Partitioning Support](https://www.oracle.com/database/technologies/partitioning.html)
- * [Real Application Clusters scalability](https://www.oracle.com/database/real-application-clusters/)
- * [Exadata smart scans](https://www.oracle.com/database/technologies/exadata/software/smartscan/)
- * [Shard processing across geographically distributed databases](https://www.oracle.com/database/distributed-database/)
- * [Transactions](https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/transactions.html)
- * [Parallel SQL](https://docs.oracle.com/en/database/oracle/oracle-database/21/vldbg/parallel-exec-intro.html#GUID-D28717E4-0F77-44F5-BB4E-234C31D4E4BA)
- * [Disaster recovery](https://www.oracle.com/database/data-guard/)
- * [Security](https://www.oracle.com/security/database-security/)
- * [Oracle Machine Learning](https://www.oracle.com/artificial-intelligence/database-machine-learning/)
- * [Oracle Graph Database](https://www.oracle.com/database/integrated-graph-database/)
- * [Oracle Spatial and Graph](https://www.oracle.com/database/spatial/)
- * [Oracle Blockchain](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_blockchain_table.html#GUID-B469E277-978E-4378-A8C1-26D3FF96C9A6)
- * [JSON](https://docs.oracle.com/en/database/oracle/oracle-database/23/adjsn/json-in-oracle-database.html)
+* [Partitioning Support](https://www.oracle.com/database/technologies/partitioning.html)
+* [Real Application Clusters scalability](https://www.oracle.com/database/real-application-clusters/)
+* [Exadata smart scans](https://www.oracle.com/database/technologies/exadata/software/smartscan/)
+* [Shard processing across geographically distributed databases](https://www.oracle.com/database/distributed-database/)
+* [Transactions](https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/transactions.html)
+* [Parallel SQL](https://docs.oracle.com/en/database/oracle/oracle-database/21/vldbg/parallel-exec-intro.html#GUID-D28717E4-0F77-44F5-BB4E-234C31D4E4BA)
+* [Disaster recovery](https://www.oracle.com/database/data-guard/)
+* [Security](https://www.oracle.com/security/database-security/)
+* [Oracle Machine Learning](https://www.oracle.com/artificial-intelligence/database-machine-learning/)
+* [Oracle Graph Database](https://www.oracle.com/database/integrated-graph-database/)
+* [Oracle Spatial and Graph](https://www.oracle.com/database/spatial/)
+* [Oracle Blockchain](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_blockchain_table.html#GUID-B469E277-978E-4378-A8C1-26D3FF96C9A6)
+* [JSON](https://docs.oracle.com/en/database/oracle/oracle-database/23/adjsn/json-in-oracle-database.html)
 
 The guide demonstrates how to use Summary Capabilities within Oracle AI Vector Search to generate summary for your documents using OracleSummary.
 
@@ -33,14 +33,12 @@ If you are just starting with Oracle Database, consider exploring the [free Orac
 
 Please install Oracle Python Client driver to use Langchain with Oracle AI Vector Search. 
 
-
 ```python
 # pip install oracledb
 ```
 
 ### Connect to Oracle Database
 The following sample code will show how to connect to Oracle Database. By default, python-oracledb runs in a ‘Thin’ mode which connects directly to Oracle Database. This mode does not need Oracle Client libraries. However, some additional functionality is available when python-oracledb uses them. Python-oracledb is said to be in ‘Thick’ mode when Oracle Client libraries are used. Both modes have comprehensive functionality supporting the Python Database API v2.0 Specification. See the following [guide](https://python-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html#featuresummary) that talks about features supported in each mode. You might want to switch to thick-mode if you are unable to use thin-mode.
-
 
 ```python
 import sys
@@ -65,14 +63,12 @@ The Oracle AI Vector Search Langchain library offers a suite of APIs designed fo
 
 ***Note:*** The users may need to set proxy if they want to use some 3rd party summary generation providers other than Oracle's in-house and default provider: 'database'. If you don't have proxy, please remove the proxy parameter when you instantiate the OracleSummary.
 
-
 ```python
 # proxy to be used when we instantiate summary and embedder object
 proxy = "<proxy>"
 ```
 
 The following sample code will show how to generate summary:
-
 
 ```python
 <!--IMPORTS:[{"imported": "OracleSummary", "source": "langchain_community.utilities.oracleai", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.oracleai.OracleSummary.html", "title": "Oracle AI Vector Search: Generate Summary"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Oracle AI Vector Search: Generate Summary"}]-->
@@ -122,8 +118,6 @@ print(f"Summary generated by OracleSummary: {summary}")
 
 ### End to End Demo
 Please refer to our complete demo guide [Oracle AI Vector Search End-to-End Demo Guide](https://github.com/langchain-ai/langchain/tree/master/cookbook/oracleai_demo.ipynb) to build an end to end RAG pipeline with the help of Oracle AI Vector Search.
-
-
 
 ## Related
 

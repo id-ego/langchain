@@ -5,22 +5,21 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # How to stream tool calls
 
-When tools are called in a streaming context, 
-[message chunks](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk) 
-will be populated with [tool call chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCallChunk.html#langchain_core.messages.tool.ToolCallChunk) 
-objects in a list via the `.tool_call_chunks` attribute. A `ToolCallChunk` includes 
-optional string fields for the tool `name`, `args`, and `id`, and includes an optional 
-integer field `index` that can be used to join chunks together. Fields are optional 
-because portions of a tool call may be streamed across different chunks (e.g., a chunk 
+When tools are called in a streaming context,
+[message chunks](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk)
+will be populated with [tool call chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCallChunk.html#langchain_core.messages.tool.ToolCallChunk)
+objects in a list via the `.tool_call_chunks` attribute. A `ToolCallChunk` includes
+optional string fields for the tool `name`, `args`, and `id`, and includes an optional
+integer field `index` that can be used to join chunks together. Fields are optional
+because portions of a tool call may be streamed across different chunks (e.g., a chunk
 that includes a substring of the arguments may have null values for the tool name and id).
 
-Because message chunks inherit from their parent message class, an 
-[AIMessageChunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk) 
-with tool call chunks will also include `.tool_calls` and `.invalid_tool_calls` fields. 
+Because message chunks inherit from their parent message class, an
+[AIMessageChunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk)
+with tool call chunks will also include `.tool_calls` and `.invalid_tool_calls` fields.
 These fields are parsed best-effort from the message's tool call chunks.
 
 Note that not all providers currently support streaming for tool calls. Before we start let's define our tools and our model.
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to stream tool calls"}]-->
@@ -42,7 +41,6 @@ def multiply(a: int, b: int) -> int:
 tools = [add, multiply]
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to stream tool calls"}]-->
 import os
@@ -57,7 +55,6 @@ llm_with_tools = llm.bind_tools(tools)
 ```
 
 Now let's define our query and stream our output:
-
 
 ```python
 query = "What is 3 * 12? Also, what is 11 + 49?"
@@ -82,7 +79,6 @@ async for chunk in llm_with_tools.astream(query):
 Note that adding message chunks will merge their corresponding tool call chunks. This is the principle by which LangChain's various [tool output parsers](/docs/how_to/output_parser_structured) support streaming.
 
 For example, below we accumulate tool call chunks:
-
 
 ```python
 first = True
@@ -117,7 +113,6 @@ print(type(gathered.tool_call_chunks[0]["args"]))
 <class 'str'>
 ```
 And below we accumulate tool calls to demonstrate partial parsing:
-
 
 ```python
 first = True

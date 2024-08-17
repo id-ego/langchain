@@ -19,7 +19,6 @@ To find your `LANTERN_URL` and `LANTERN_SERVICE_KEY`, head to your Lantern proje
 - `LANTERN_URL` corresponds to the Project URL
 - `LANTERN_SERVICE_KEY` corresponds to the `service_role` API key
 
-
 ```shell
 export LANTERN_URL=
 export LANTERN_SERVICE_KEY=
@@ -32,7 +31,7 @@ Use these steps to setup your Lantern database if you haven't already.
 
 1. Head to [https://lantern.dev](https://lantern.dev) to create your Lantern database.
 2. In your favorite SQL client, jump to the SQL editor and run the following script to setup your database as a vector store:
-
+   
    ```sql
    -- Create a table to store your documents
    create table
@@ -42,7 +41,7 @@ Use these steps to setup your Lantern database if you haven't already.
        metadata jsonb, -- corresponds to Document.metadata
        embedding REAL[1536] -- 1536 works for OpenAI embeddings, change as needed
      );
-
+   
    -- Create a function to search for documents
    create function match_documents (
      query_embedding REAL[1536],
@@ -100,9 +99,9 @@ from rag_lantern.chain import chain as rag_lantern_chain
 add_routes(app, rag_lantern_chain, path="/rag-lantern")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -117,7 +116,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

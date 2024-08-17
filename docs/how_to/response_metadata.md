@@ -11,7 +11,6 @@ Here's what the response metadata looks like for a few different providers:
 
 ## OpenAI
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Response metadata"}]-->
 from langchain_openai import ChatOpenAI
@@ -20,8 +19,6 @@ llm = ChatOpenAI(model="gpt-4-turbo")
 msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
-
-
 
 ```output
 {'token_usage': {'completion_tokens': 164,
@@ -33,9 +30,7 @@ msg.response_metadata
  'logprobs': None}
 ```
 
-
 ## Anthropic
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "Response metadata"}]-->
@@ -46,8 +41,6 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
-
-
 ```output
 {'id': 'msg_01CzQyD7BX8nkhDNfT1QqvEp',
  'model': 'claude-3-sonnet-20240229',
@@ -56,9 +49,7 @@ msg.response_metadata
  'usage': {'input_tokens': 17, 'output_tokens': 296}}
 ```
 
-
 ## Google VertexAI
-
 
 ```python
 from langchain_google_vertexai import ChatVertexAI
@@ -67,8 +58,6 @@ llm = ChatVertexAI(model="gemini-pro")
 msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
-
-
 
 ```output
 {'is_blocked': False,
@@ -90,9 +79,7 @@ msg.response_metadata
   'total_token_count': 40}}
 ```
 
-
 ## Bedrock (Anthropic)
-
 
 ```python
 from langchain_aws import ChatBedrock
@@ -102,16 +89,12 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
-
-
 ```output
 {'model_id': 'anthropic.claude-v2',
  'usage': {'prompt_tokens': 19, 'completion_tokens': 371, 'total_tokens': 390}}
 ```
 
-
 ## MistralAI
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMistralAI", "source": "langchain_mistralai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_mistralai.chat_models.ChatMistralAI.html", "title": "Response metadata"}]-->
@@ -122,8 +105,6 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
-
-
 ```output
 {'token_usage': {'prompt_tokens': 19,
   'total_tokens': 141,
@@ -132,9 +113,7 @@ msg.response_metadata
  'finish_reason': 'stop'}
 ```
 
-
 ## Groq
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatGroq", "source": "langchain_groq", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_groq.chat_models.ChatGroq.html", "title": "Response metadata"}]-->
@@ -144,8 +123,6 @@ llm = ChatGroq()
 msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
-
-
 
 ```output
 {'token_usage': {'completion_time': 0.243,
@@ -161,9 +138,7 @@ msg.response_metadata
  'logprobs': None}
 ```
 
-
 ## TogetherAI
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Response metadata"}]-->
@@ -180,8 +155,6 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
-
-
 ```output
 {'token_usage': {'completion_tokens': 208,
   'prompt_tokens': 20,
@@ -192,9 +165,7 @@ msg.response_metadata
  'logprobs': None}
 ```
 
-
 ## FireworksAI
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatFireworks", "source": "langchain_fireworks", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_fireworks.chat_models.ChatFireworks.html", "title": "Response metadata"}]-->
@@ -204,8 +175,6 @@ llm = ChatFireworks(model="accounts/fireworks/models/mixtral-8x7b-instruct")
 msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
-
-
 
 ```output
 {'token_usage': {'prompt_tokens': 19,

@@ -9,9 +9,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 It works by generating tokens one at a time. At each step, it masks tokens that don't conform to the provided partial regular expression.
 
-
 **Warning - this module is still experimental**
-
 
 ```python
 %pip install --upgrade --quiet  rellm langchain-huggingface > /dev/null
@@ -20,7 +18,6 @@ It works by generating tokens one at a time. At each step, it masks tokens that 
 ### Hugging Face Baseline
 
 First, let's establish a qualitative baseline by checking the output of the model without structured decoding.
-
 
 ```python
 import logging
@@ -44,7 +41,6 @@ AI Assistant:{
 Human: 'What's the capital of Maryland?'
 AI Assistant:"""
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFacePipeline", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "RELLM"}]-->
@@ -71,7 +67,6 @@ generations=[[Generation(text=' "What\'s the capital of Maryland?"\n', generatio
 
 Let's try that again, now providing a regex to match the JSON structured format.
 
-
 ```python
 import regex  # Note this is the regex library NOT python's re stdlib module
 
@@ -84,7 +79,6 @@ pattern = regex.compile(
     r'\{\s*"action":\s*"Final Answer",\s*"action_input":\s*(\{.*\}|"[^"]*")\s*\}\nHuman:'
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RELLM", "source": "langchain_experimental.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_experimental.llms.rellm_decoder.RELLM.html", "title": "RELLM"}]-->
@@ -101,7 +95,6 @@ print(generated)
 }
 ```
 **Voila! Free of parsing errors.**
-
 
 ## Related
 

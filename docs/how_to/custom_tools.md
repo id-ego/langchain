@@ -35,7 +35,6 @@ Models will perform better if the tools have well chosen names, descriptions and
 
 This `@tool` decorator is the simplest way to define a custom tool. The decorator uses the function name as the tool name by default, but this can be overridden by passing a string as the first argument. Additionally, the decorator will use the function's docstring as the tool's description - so a docstring MUST be provided. 
 
-
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to create tools"}]-->
 from langchain_core.tools import tool
@@ -59,7 +58,6 @@ Multiply two numbers.
 ```
 Or create an **async** implementation, like this:
 
-
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to create tools"}]-->
 from langchain_core.tools import tool
@@ -72,7 +70,6 @@ async def amultiply(a: int, b: int) -> int:
 ```
 
 Note that `@tool` supports parsing of annotations, nested schemas, and other features:
-
 
 ```python
 from typing import Annotated, List
@@ -90,8 +87,6 @@ def multiply_by_max(
 multiply_by_max.args_schema.schema()
 ```
 
-
-
 ```output
 {'title': 'multiply_by_maxSchema',
  'description': 'Multiply a by the maximum of b.',
@@ -106,9 +101,7 @@ multiply_by_max.args_schema.schema()
  'required': ['a', 'b']}
 ```
 
-
 You can also customize the tool name and JSON args by passing them into the tool decorator.
-
 
 ```python
 from langchain.pydantic_v1 import BaseModel, Field
@@ -141,7 +134,6 @@ True
 
 `@tool` can optionally parse [Google Style docstrings](https://google.github.io/styleguide/pyguide.html#383-functions-and-methods) and associate the docstring components (such as arg descriptions) to the relevant parts of the tool schema. To toggle this behavior, specify `parse_docstring`:
 
-
 ```python
 @tool(parse_docstring=True)
 def foo(bar: str, baz: int) -> str:
@@ -157,8 +149,6 @@ def foo(bar: str, baz: int) -> str:
 foo.args_schema.schema()
 ```
 
-
-
 ```output
 {'title': 'fooSchema',
  'description': 'The foo.',
@@ -170,7 +160,6 @@ foo.args_schema.schema()
  'required': ['bar', 'baz']}
 ```
 
-
 :::caution
 By default, `@tool(parse_docstring=True)` will raise `ValueError` if the docstring does not parse correctly. See [API Reference](https://api.python.langchain.com/en/latest/tools/langchain_core.tools.tool.html) for detail and examples.
 :::
@@ -178,7 +167,6 @@ By default, `@tool(parse_docstring=True)` will raise `ValueError` if the docstri
 ### StructuredTool
 
 The `StructuredTool.from_function` class method provides a bit more configurability than the `@tool` decorator, without requiring much additional code.
-
 
 ```python
 <!--IMPORTS:[{"imported": "StructuredTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.structured.StructuredTool.html", "title": "How to create tools"}]-->
@@ -205,7 +193,6 @@ print(await calculator.ainvoke({"a": 2, "b": 5}))
 10
 ```
 To configure it:
-
 
 ```python
 class CalculatorInput(BaseModel):
@@ -244,7 +231,6 @@ LangChain [Runnables](/docs/concepts#runnable-interface) that accept string or `
 
 Example usage:
 
-
 ```python
 <!--IMPORTS:[{"imported": "GenericFakeChatModel", "source": "langchain_core.language_models", "docs": "https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.fake_chat_models.GenericFakeChatModel.html", "title": "How to create tools"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to create tools"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to create tools"}]-->
 from langchain_core.language_models import GenericFakeChatModel
@@ -266,19 +252,15 @@ as_tool = chain.as_tool(
 as_tool.args
 ```
 
-
-
 ```output
 {'answer_style': {'title': 'Answer Style', 'type': 'string'}}
 ```
-
 
 See [this guide](/docs/how_to/convert_runnable_to_tool) for more detail.
 
 ## Subclass BaseTool
 
 You can define a custom tool by sub-classing from `BaseTool`. This provides maximal control over the tool definition, but requires writing more code.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncCallbackManagerForToolRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun.html", "title": "How to create tools"}, {"imported": "CallbackManagerForToolRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForToolRun.html", "title": "How to create tools"}, {"imported": "BaseTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.base.BaseTool.html", "title": "How to create tools"}]-->
@@ -324,7 +306,6 @@ class CustomCalculatorTool(BaseTool):
         return self._run(a, b, run_manager=run_manager.get_sync())
 ```
 
-
 ```python
 multiply = CustomCalculatorTool()
 print(multiply.name)
@@ -357,7 +338,6 @@ are some important things to know:
 * If you need both sync and async implementations, use `StructuredTool.from_function` or sub-class from `BaseTool`.
 * If implementing both sync and async, and the sync code is fast to run, override the default LangChain async implementation and simply call the sync code.
 * You CANNOT and SHOULD NOT use the sync `invoke` with an `async` tool.
-
 
 ```python
 <!--IMPORTS:[{"imported": "StructuredTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.structured.StructuredTool.html", "title": "How to create tools"}]-->
@@ -409,7 +389,6 @@ print(
 ```
 You should not and cannot use `.invoke` when providing only an async definition.
 
-
 ```python
 @tool
 async def multiply(a: int, b: int) -> int:
@@ -425,7 +404,7 @@ except NotImplementedError:
 ```output
 Raised not implemented error. You should not be doing this.
 ```
-## Handling Tool Errors 
+## Handling Tool Errors
 
 If you're using tools with agents, you will likely need an error handling strategy, so the agent can recover from the error and continue execution.
 
@@ -436,7 +415,6 @@ When the error handler is specified, the exception will be caught and the error 
 You can set `handle_tool_error` to `True`, a string value, or a function. If it's a function, the function should take a `ToolException` as a parameter and return a value.
 
 Please note that only raising a `ToolException` won't be effective. You need to first set the `handle_tool_error` of the tool because its default value is `False`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ToolException", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.base.ToolException.html", "title": "How to create tools"}]-->
@@ -450,7 +428,6 @@ def get_weather(city: str) -> int:
 
 Here's an example with the default `handle_tool_error=True` behavior.
 
-
 ```python
 get_weather_tool = StructuredTool.from_function(
     func=get_weather,
@@ -460,15 +437,11 @@ get_weather_tool = StructuredTool.from_function(
 get_weather_tool.invoke({"city": "foobar"})
 ```
 
-
-
 ```output
 'Error: There is no city by the name of foobar.'
 ```
 
-
 We can set `handle_tool_error` to a string that will always be returned.
-
 
 ```python
 get_weather_tool = StructuredTool.from_function(
@@ -479,15 +452,11 @@ get_weather_tool = StructuredTool.from_function(
 get_weather_tool.invoke({"city": "foobar"})
 ```
 
-
-
 ```output
 "There is no such city, but it's probably above 0K there!"
 ```
 
-
 Handling the error using a function:
-
 
 ```python
 def _handle_error(error: ToolException) -> str:
@@ -502,12 +471,9 @@ get_weather_tool = StructuredTool.from_function(
 get_weather_tool.invoke({"city": "foobar"})
 ```
 
-
-
 ```output
 'The following errors occurred during tool execution: `Error: There is no city by the name of foobar.`'
 ```
-
 
 ## Returning artifacts of Tool execution
 
@@ -515,14 +481,13 @@ Sometimes there are artifacts of a tool's execution that we want to make accessi
 
 The Tool and [ToolMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html) interfaces make it possible to distinguish between the parts of the tool output meant for the model (this is the ToolMessage.content) and those parts which are meant for use outside the model (ToolMessage.artifact).
 
-:::info Requires ``langchain-core >= 0.2.19``
+:::info Requires `langchain-core >= 0.2.19`
 
-This functionality was added in ``langchain-core == 0.2.19``. Please make sure your package is up to date.
+This functionality was added in `langchain-core == 0.2.19`. Please make sure your package is up to date.
 
 :::
 
 If we want our tool to distinguish between message content and other artifacts, we need to specify `response_format="content_and_artifact"` when defining our tool and make sure that we return a tuple of (content, artifact):
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to create tools"}]-->
@@ -542,20 +507,15 @@ def generate_random_ints(min: int, max: int, size: int) -> Tuple[str, List[int]]
 
 If we invoke our tool directly with the tool arguments, we'll get back just the content part of the output:
 
-
 ```python
 generate_random_ints.invoke({"min": 0, "max": 9, "size": 10})
 ```
-
-
 
 ```output
 'Successfully generated array of 10 random ints in [0, 9].'
 ```
 
-
 If we invoke our tool with a ToolCall (like the ones generated by tool-calling models), we'll get back a ToolMessage that contains both the content and artifact generated by the Tool:
-
 
 ```python
 generate_random_ints.invoke(
@@ -568,15 +528,11 @@ generate_random_ints.invoke(
 )
 ```
 
-
-
 ```output
 ToolMessage(content='Successfully generated array of 10 random ints in [0, 9].', name='generate_random_ints', tool_call_id='123', artifact=[1, 4, 2, 5, 3, 9, 0, 4, 7, 7])
 ```
 
-
 We can do the same when subclassing BaseTool:
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.base.BaseTool.html", "title": "How to create tools"}]-->
@@ -605,7 +561,6 @@ class GenerateRandomFloats(BaseTool):
     #     ...
 ```
 
-
 ```python
 rand_gen = GenerateRandomFloats(ndigits=4)
 
@@ -618,8 +573,6 @@ rand_gen.invoke(
     }
 )
 ```
-
-
 
 ```output
 ToolMessage(content='Generated 3 floats in [0.1, 3.3333], rounded to 4 decimals.', name='generate_random_floats', tool_call_id='123', artifact=[1.4277, 0.7578, 2.4871])

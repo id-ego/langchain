@@ -5,16 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Azure Cosmos DB for Apache Gremlin
 
->[Azure Cosmos DB for Apache Gremlin](https://learn.microsoft.com/en-us/azure/cosmos-db/gremlin/introduction) is a graph database service that can be used to store massive graphs with billions of vertices and edges. You can query the graphs with millisecond latency and evolve the graph structure easily.
->
->[Gremlin](https://en.wikipedia.org/wiki/Gremlin_(query_language)) is a graph traversal language and virtual machine developed by `Apache TinkerPop` of the `Apache Software Foundation`.
+> [Azure Cosmos DB for Apache Gremlin](https://learn.microsoft.com/en-us/azure/cosmos-db/gremlin/introduction) is a graph database service that can be used to store massive graphs with billions of vertices and edges. You can query the graphs with millisecond latency and evolve the graph structure easily.
+> 
+> [Gremlin](https://en.wikipedia.org/wiki/Gremlin_(query_language)) is a graph traversal language and virtual machine developed by `Apache TinkerPop` of the `Apache Software Foundation`.
 
 This notebook shows how to use LLMs to provide a natural language interface to a graph database you can query with the `Gremlin` query language.
 
 ## Setting up
 
 Install a library:
-
 
 ```python
 !pip3 install gremlinpython
@@ -24,14 +23,12 @@ You will need an Azure CosmosDB Graph database instance. One option is to create
 
 When you create your Cosmos DB account and Graph, use `/type` as a partition key.
 
-
 ```python
 cosmosdb_name = "mycosmosdb"
 cosmosdb_db_id = "graphtesting"
 cosmosdb_db_graph_id = "mygraph"
 cosmosdb_access_Key = "longstring=="
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "GremlinQAChain", "source": "langchain_community.chains.graph_qa.gremlin", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.gremlin.GremlinQAChain.html", "title": "Azure Cosmos DB for Apache Gremlin"}, {"imported": "GremlinGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.gremlin_graph.GremlinGraph.html", "title": "Azure Cosmos DB for Apache Gremlin"}, {"imported": "GraphDocument", "source": "langchain_community.graphs.graph_document", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.graph_document.GraphDocument.html", "title": "Azure Cosmos DB for Apache Gremlin"}, {"imported": "Node", "source": "langchain_community.graphs.graph_document", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.graph_document.Node.html", "title": "Azure Cosmos DB for Apache Gremlin"}, {"imported": "Relationship", "source": "langchain_community.graphs.graph_document", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.graph_document.Relationship.html", "title": "Azure Cosmos DB for Apache Gremlin"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Azure Cosmos DB for Apache Gremlin"}, {"imported": "AzureChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.azure.AzureChatOpenAI.html", "title": "Azure Cosmos DB for Apache Gremlin"}]-->
@@ -42,7 +39,6 @@ from langchain_community.graphs.graph_document import GraphDocument, Node, Relat
 from langchain_core.documents import Document
 from langchain_openai import AzureChatOpenAI
 ```
-
 
 ```python
 graph = GremlinGraph(
@@ -59,7 +55,6 @@ Assuming your database is empty, you can populate it using the GraphDocuments
 For Gremlin, always add property called 'label' for each Node.
 If no label is set, Node.type is used as a label.
 For cosmos using natural id's make sense, as they are visible in the graph explorer.
-
 
 ```python
 source_doc = Document(
@@ -110,7 +105,6 @@ graph_doc = GraphDocument(
 )
 ```
 
-
 ```python
 # The underlying python-gremlin has a problem when running in notebook
 # The following line is a workaround to fix the problem
@@ -123,12 +117,9 @@ graph.add_graph_documents([graph_doc])
 ## Refresh graph schema information
 If the schema of database changes (after updates), you can refresh the schema information.
 
-
-
 ```python
 graph.refresh_schema()
 ```
-
 
 ```python
 print(graph.schema)
@@ -137,7 +128,6 @@ print(graph.schema)
 ## Querying the graph
 
 We can now use the gremlin QA chain to ask question of the graph
-
 
 ```python
 chain = GremlinQAChain.from_llm(
@@ -150,11 +140,9 @@ chain = GremlinQAChain.from_llm(
 )
 ```
 
-
 ```python
 chain.invoke("Who played in The Matrix?")
 ```
-
 
 ```python
 chain.run("How many people played in The Matrix?")

@@ -17,7 +17,6 @@ This example goes over how to use LangChain to interact with `Anthropic` models.
 
 ## Installation
 
-
 ```python
 %pip install -qU langchain-anthropic
 ```
@@ -25,7 +24,6 @@ This example goes over how to use LangChain to interact with `Anthropic` models.
 ## Environment Setup
 
 We'll need to get an [Anthropic](https://console.anthropic.com/settings/keys) API key and set the `ANTHROPIC_API_KEY` environment variable:
-
 
 ```python
 import os
@@ -35,7 +33,6 @@ os.environ["ANTHROPIC_API_KEY"] = getpass()
 ```
 
 ## Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "AnthropicLLM", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_anthropic.llms.AnthropicLLM.html", "title": "AnthropicLLM"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "AnthropicLLM"}]-->
@@ -55,13 +52,9 @@ chain = prompt | model
 chain.invoke({"question": "What is LangChain?"})
 ```
 
-
-
 ```output
 '\nLangChain is a decentralized blockchain network that leverages AI and machine learning to provide language translation services.'
 ```
-
-
 
 ## Related
 

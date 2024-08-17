@@ -11,18 +11,15 @@ Specifically, `gradio-tools` is a Python library for converting `Gradio` apps in
 
 It's very easy to create you own tool if you want to use a space that's not one of the pre-built tools. Please see this section of the gradio-tools documentation for information on how to do that. All contributions are welcome!
 
-
 ```python
 %pip install --upgrade --quiet  gradio_tools langchain-community
 ```
 
 ## Using a tool
 
-
 ```python
 from gradio_tools.tools import StableDiffusionTool
 ```
-
 
 ```python
 local_file_path = StableDiffusionTool().langchain.run(
@@ -36,22 +33,17 @@ Loaded as API: https://gradio-client-demos-stable-diffusion.hf.space ✔
 Job Status: Status.STARTING eta: None
 ```
 
-
 ```output
 '/Users/harrisonchase/workplace/langchain/docs/modules/agents/tools/integrations/b61c1dd9-47e2-46f1-a47c-20d27640993d/tmp4ap48vnm.jpg'
 ```
-
-
 
 ```python
 from PIL import Image
 ```
 
-
 ```python
 im = Image.open(local_file_path)
 ```
-
 
 ```python
 from IPython.display import display
@@ -60,7 +52,6 @@ display(im)
 ```
 
 ## Using within an agent
-
 
 ```python
 <!--IMPORTS:[{"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Gradio"}, {"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "Gradio"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Gradio"}]-->

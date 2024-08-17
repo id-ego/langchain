@@ -22,9 +22,7 @@ In this walkthrough we'll go over how to summarize content from multiple documen
 Concepts we will cover are:
 
 - Using [language models](/docs/concepts/#chat-models).
-
 - Using [document loaders](/docs/concepts/#document-loaders), specifically the [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html) to load content from an HTML webpage.
-
 - Three ways to summarize or otherwise combine documents.
   1. [Stuff](/docs/tutorials/summarization#stuff), which simply concatenates documents into a prompt;
   2. [Map-reduce](/docs/tutorials/summarization#map-reduce), which splits documents into batches, summarizes those, and then summarizes the summaries;
@@ -58,7 +56,6 @@ import CodeBlock from "@theme/CodeBlock";
 </Tabs>
 
 
-
 For more details, see our [Installation guide](/docs/how_to/installation).
 
 ### LangSmith
@@ -89,12 +86,8 @@ os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 A central question for building a summarizer is how to pass your documents into the LLM's context window. Three common approaches for this are:
 
 1. `Stuff`: Simply "stuff" all your documents into a single prompt. This is the simplest approach (see [here](/docs/tutorials/rag#built-in-chains) for more on the `create_stuff_documents_chain` constructor, which is used for this method).
-
 2. `Map-reduce`: Summarize each document on its own in a "map" step and then "reduce" the summaries into a final summary (see [here](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.map_reduce.MapReduceDocumentsChain.html) for more on the `MapReduceDocumentsChain`, which is used for this method).
-
 3. `Refine`: Update a rolling summary be iterating over the documents in a sequence.
-   
-   
 
 ![Image description](../../static/img/summarization_use_case_2.png)
 
@@ -105,7 +98,6 @@ To give you a sneak preview, either pipeline can be wrapped in a single object: 
 Suppose we want to summarize a blog post. We can create this in a few lines of code.
 
 First set environment variables and install packages:
-
 
 ```python
 %pip install --upgrade --quiet  langchain-openai tiktoken chromadb langchain
@@ -125,13 +117,11 @@ We can also supply `chain_type="map_reduce"` or `chain_type="refine"`.
 
 First we load in our documents. We will use [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html) to load a blog post:
 
-
 ```python
 import os
 
 os.environ["LANGCHAIN_TRACING_V2"] = "True"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "load_summarize_chain", "source": "langchain.chains.summarize", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.summarize.chain.load_summarize_chain.html", "title": "Summarize Text"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Summarize Text"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Summarize Text"}]-->
@@ -157,7 +147,6 @@ The article discusses the concept of LLM-powered autonomous agents, with a focus
 When we use `load_summarize_chain` with `chain_type="stuff"`, we will use the [StuffDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.StuffDocumentsChain.html#langchain.chains.combine_documents.stuff.StuffDocumentsChain).
 
 The chain will take a list of documents, insert them all into a prompt, and pass that prompt to an LLM:
-
 
 ```python
 <!--IMPORTS:[{"imported": "StuffDocumentsChain", "source": "langchain.chains.combine_documents.stuff", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.StuffDocumentsChain.html", "title": "Summarize Text"}, {"imported": "LLMChain", "source": "langchain.chains.llm", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Summarize Text"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Summarize Text"}]-->
@@ -194,9 +183,8 @@ Great! We can see that we reproduce the earlier result using the `load_summarize
 ## Option 2. Map-Reduce {#map-reduce}
 
 Let's unpack the map reduce approach. For this, we'll first map each document to an individual summary using an `LLMChain`. Then we'll use a `ReduceDocumentsChain` to combine those summaries into a single global summary.
- 
-First, we specify the LLMChain to use for mapping each document to an individual summary:
 
+First, we specify the LLMChain to use for mapping each document to an individual summary:
 
 ```python
 <!--IMPORTS:[{"imported": "MapReduceDocumentsChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.map_reduce.MapReduceDocumentsChain.html", "title": "Summarize Text"}, {"imported": "ReduceDocumentsChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.reduce.ReduceDocumentsChain.html", "title": "Summarize Text"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Summarize Text"}]-->
@@ -220,7 +208,6 @@ This will work with your [LangSmith API key](https://docs.smith.langchain.com/).
 
 For example, see the map prompt [here](https://smith.langchain.com/hub/rlm/map-prompt).
 
-
 ```python
 from langchain import hub
 
@@ -232,7 +219,6 @@ The `ReduceDocumentsChain` handles taking the document mapping results and reduc
 
 So if the cumulative number of tokens in our mapped documents exceeds 4000 tokens, then we'll recursively pass in the documents in batches of < 4000 tokens to our `StuffDocumentsChain` to create batched summaries. And once those batched summaries are cumulatively less than 4000 tokens, we'll pass them all one last time to the `StuffDocumentsChain` to create the final summary.
 
-
 ```python
 # Reduce
 reduce_template = """The following is set of summaries:
@@ -242,24 +228,18 @@ Helpful Answer:"""
 reduce_prompt = PromptTemplate.from_template(reduce_template)
 ```
 
-
 ```python
 # Note we can also get this from the prompt hub, as noted above
 reduce_prompt = hub.pull("rlm/reduce-prompt")
 ```
 
-
 ```python
 reduce_prompt
 ```
 
-
-
 ```output
 ChatPromptTemplate(input_variables=['docs'], metadata={'lc_hub_owner': 'rlm', 'lc_hub_repo': 'map-prompt', 'lc_hub_commit_hash': 'de4fba345f211a462584fc25b7077e69c1ba6cdcf4e21b7ec9abe457ddb16c87'}, messages=[HumanMessagePromptTemplate(prompt=PromptTemplate(input_variables=['docs'], template='The following is a set of documents:\n{docs}\nBased on this list of docs, please identify the main themes \nHelpful Answer:'))])
 ```
-
-
 
 ```python
 # Run chain
@@ -282,7 +262,6 @@ reduce_documents_chain = ReduceDocumentsChain(
 ```
 
 Combining our map and reduce chains into one:
-
 
 ```python
 # Combining documents by mapping a chain over them, then combining results
@@ -317,7 +296,7 @@ The main themes identified in the list of documents provided are related to larg
 If we follow the [Langsmith Trace](https://smith.langchain.com/public/3a1a6d51-68e5-4805-8d90-78920ce60a51/r), we can see the the individual LLM summarizations, including the [final call](https://smith.langchain.com/public/69482813-f0b7-46b0-a99f-86d56fc9644a/r) that summarizes the summaries.
 
 ### Go deeper
- 
+
 **Customization** 
 
 * As shown above, you can customize the LLMs and prompts for map and reduce stages.
@@ -331,13 +310,12 @@ If we follow the [Langsmith Trace](https://smith.langchain.com/public/3a1a6d51-6
 ![Image description](../../static/img/summarization_use_case_3.png)
 
 ## Option 3. Refine {#refine}
- 
+
 [RefineDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.refine.RefineDocumentsChain.html) is similar to map-reduce:
 
 > The refine documents chain constructs a response by looping over the input documents and iteratively updating its answer. For each document, it passes all non-document inputs, the current document, and the latest intermediate answer to an LLM chain to get a new answer.
 
 This can be easily run with the `chain_type="refine"` specified.
-
 
 ```python
 chain = load_summarize_chain(llm, chain_type="refine")
@@ -351,7 +329,6 @@ The existing summary provides detailed instructions for implementing a project's
 Following the [Langsmith trace](https://smith.langchain.com/public/38017fa7-b190-4635-992c-e8554227a4bb/r), we can see the summaries iteratively updated with new information.
 
 It's also possible to supply a prompt and return intermediate steps.
-
 
 ```python
 prompt_template = """Write a concise summary of the following:
@@ -383,7 +360,6 @@ chain = load_summarize_chain(
 result = chain.invoke({"input_documents": split_docs}, return_only_outputs=True)
 ```
 
-
 ```python
 print(result["output_text"])
 ```
@@ -403,7 +379,6 @@ Questo articolo discute del concetto di costruire agenti autonomi utilizzando LL
 ```
 ## Splitting and summarizing in a single chain
 For convenience, we can wrap both the text splitting of our long document and summarizing in a single [chain](/docs/how_to/sequence):
-
 
 ```python
 def split_text(text: str):

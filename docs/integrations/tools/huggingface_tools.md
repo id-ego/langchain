@@ -5,20 +5,17 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # HuggingFace Hub Tools
 
->[Huggingface Tools](https://huggingface.co/docs/transformers/v4.29.0/en/custom_tools) that supporting text I/O can be
+> [Huggingface Tools](https://huggingface.co/docs/transformers/v4.29.0/en/custom_tools) that supporting text I/O can be
 loaded directly using the `load_huggingface_tool` function.
-
 
 ```python
 # Requires transformers>=4.29.0 and huggingface_hub>=0.14.1
 %pip install --upgrade --quiet  transformers huggingface_hub > /dev/null
 ```
 
-
 ```python
 %pip install --upgrade --quiet  langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "load_huggingface_tool", "source": "langchain_community.agent_toolkits.load_tools", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_huggingface_tool.html", "title": "HuggingFace Hub Tools"}]-->
@@ -36,13 +33,9 @@ model_download_counter: This is a tool that returns the most downloaded model of
 tool.run("text-classification")
 ```
 
-
-
 ```output
 'facebook/bart-large-mnli'
 ```
-
-
 
 ## Related
 

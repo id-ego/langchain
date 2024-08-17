@@ -19,7 +19,6 @@ LangChain provides a user friendly interface for composing different parts of pr
 
 When working with string prompts, each template is joined together. You can work with either prompts directly or strings (the first element in the list needs to be a prompt).
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to compose prompts together"}]-->
 from langchain_core.prompts import PromptTemplate
@@ -33,31 +32,23 @@ prompt = (
 prompt
 ```
 
-
-
 ```output
 PromptTemplate(input_variables=['language', 'topic'], template='Tell me a joke about {topic}, make it funny\n\nand in {language}')
 ```
-
-
 
 ```python
 prompt.format(topic="sports", language="spanish")
 ```
 
-
-
 ```output
 'Tell me a joke about sports, make it funny\n\nand in spanish'
 ```
-
 
 ## Chat prompt composition
 
 A chat prompt is made up a of a list of messages. Similarly to the above example, we can concatenate chat prompt templates. Each new element is a new message in the final prompt.
 
 First, let's initialize the a [`ChatPromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html) with a [`SystemMessage`](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html).
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to compose prompts together"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to compose prompts together"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to compose prompts together"}]-->
@@ -69,7 +60,6 @@ prompt = SystemMessage(content="You are a nice pirate")
 You can then easily create a pipeline combining it with other messages *or* message templates.
 Use a `Message` when there is no variables to be formatted, use a `MessageTemplate` when there are variables to be formatted. You can also use just a string (note: this will automatically get inferred as a [`HumanMessagePromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.HumanMessagePromptTemplate.html).)
 
-
 ```python
 new_prompt = (
     prompt + HumanMessage(content="hi") + AIMessage(content="what?") + "{input}"
@@ -78,12 +68,9 @@ new_prompt = (
 
 Under the hood, this creates an instance of the ChatPromptTemplate class, so you can use it just as you did before!
 
-
 ```python
 new_prompt.format_messages(input="i said hi")
 ```
-
-
 
 ```output
 [SystemMessage(content='You are a nice pirate'),
@@ -92,14 +79,12 @@ new_prompt.format_messages(input="i said hi")
  HumanMessage(content='i said hi')]
 ```
 
-
 ## Using PipelinePrompt
 
 LangChain includes a class called [`PipelinePromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.pipeline.PipelinePromptTemplate.html), which can be useful when you want to reuse parts of prompts. A PipelinePrompt consists of two main parts:
 
 - Final prompt: The final prompt that is returned
 - Pipeline prompts: A list of tuples, consisting of a string name and a prompt template. Each prompt template will be formatted and then passed to future prompt templates as a variable with the same name.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PipelinePromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.pipeline.PipelinePromptTemplate.html", "title": "How to compose prompts together"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to compose prompts together"}]-->
@@ -139,13 +124,9 @@ pipeline_prompt = PipelinePromptTemplate(
 pipeline_prompt.input_variables
 ```
 
-
-
 ```output
 ['person', 'example_a', 'example_q', 'input']
 ```
-
-
 
 ```python
 print(

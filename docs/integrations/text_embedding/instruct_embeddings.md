@@ -5,16 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Instruct Embeddings on Hugging Face
 
->[Hugging Face sentence-transformers](https://huggingface.co/sentence-transformers) is a Python framework for state-of-the-art sentence, text and image embeddings.
->One of the instruct embedding models is used in the `HuggingFaceInstructEmbeddings` class.
-
-
+> [Hugging Face sentence-transformers](https://huggingface.co/sentence-transformers) is a Python framework for state-of-the-art sentence, text and image embeddings.
+One of the instruct embedding models is used in the `HuggingFaceInstructEmbeddings` class.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceInstructEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.huggingface.HuggingFaceInstructEmbeddings.html", "title": "Instruct Embeddings on Hugging Face"}]-->
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 ```
-
 
 ```python
 embeddings = HuggingFaceInstructEmbeddings(
@@ -30,11 +27,9 @@ max_seq_length  512
 text = "This is a test document."
 ```
 
-
 ```python
 query_result = embeddings.embed_query(text)
 ```
-
 
 ## Related
 

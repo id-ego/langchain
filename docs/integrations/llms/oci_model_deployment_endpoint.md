@@ -11,7 +11,6 @@ This notebooks goes over how to use an LLM hosted on a [OCI Data Science Model D
 
 To authenticate, [oracle-ads](https://accelerated-data-science.readthedocs.io/en/latest/user_guide/cli/authentication.html) has been used to automatically load credentials for invoking endpoint.
 
-
 ```python
 !pip3 install oracle-ads
 ```
@@ -43,7 +42,6 @@ You can set authentication through either ads or environment variables. When you
 
 ## Example
 
-
 ```python
 <!--IMPORTS:[{"imported": "OCIModelDeploymentVLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.oci_data_science_model_deployment_endpoint.OCIModelDeploymentVLLM.html", "title": "OCI Data Science Model Deployment Endpoint"}]-->
 import ads
@@ -62,7 +60,6 @@ llm = OCIModelDeploymentVLLM(endpoint="https://<MD_OCID>/predict", model="model_
 # Run the LLM
 llm.invoke("Who is the first president of United States?")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "OCIModelDeploymentTGI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.oci_data_science_model_deployment_endpoint.OCIModelDeploymentTGI.html", "title": "OCI Data Science Model Deployment Endpoint"}]-->
@@ -88,7 +85,6 @@ llm = OCIModelDeploymentTGI()
 # Run the LLM
 llm.invoke("Who is the first president of United States?")
 ```
-
 
 ## Related
 

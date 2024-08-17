@@ -7,21 +7,17 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to load data from a [xorbits.pandas](https://doc.xorbits.io/en/latest/reference/pandas/frame.html) DataFrame.
 
-
 ```python
 %pip install --upgrade --quiet  xorbits
 ```
-
 
 ```python
 import xorbits.pandas as pd
 ```
 
-
 ```python
 df = pd.read_csv("example_data/mlb_teams_2012.csv")
 ```
-
 
 ```python
 df.head()
@@ -30,8 +26,6 @@ df.head()
 ```output
   0%|          |   0.00/100 [00:00<?, ?it/s]
 ```
-
-
 
 ```html
 <div>
@@ -93,18 +87,14 @@ df.head()
 </div> 
 ```
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "XorbitsLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.xorbits.XorbitsLoader.html", "title": "Xorbits Pandas DataFrame"}]-->
 from langchain_community.document_loaders import XorbitsLoader
 ```
 
-
 ```python
 loader = XorbitsLoader(df, page_content_column="Team")
 ```
-
 
 ```python
 loader.load()
@@ -113,8 +103,6 @@ loader.load()
 ```output
   0%|          |   0.00/100 [00:00<?, ?it/s]
 ```
-
-
 
 ```output
 [Document(page_content='Nationals', metadata={' "Payroll (millions)"': 81.34, ' "Wins"': 98}),
@@ -148,8 +136,6 @@ loader.load()
  Document(page_content='Cubs', metadata={' "Payroll (millions)"': 88.19, ' "Wins"': 61}),
  Document(page_content='Astros', metadata={' "Payroll (millions)"': 60.65, ' "Wins"': 55})]
 ```
-
-
 
 ```python
 # Use lazy load for larger table, which won't read the full table into memory

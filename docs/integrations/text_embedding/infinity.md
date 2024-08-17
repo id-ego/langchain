@@ -9,9 +9,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to use Langchain with Embeddings with the [Infinity Github Project](https://github.com/michaelfeil/infinity).
 
-
 ## Imports
-
 
 ```python
 <!--IMPORTS:[{"imported": "InfinityEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.infinity.InfinityEmbeddings.html", "title": "Infinity"}, {"imported": "InfinityEmbeddingsLocal", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.infinity_local.InfinityEmbeddingsLocal.html", "title": "Infinity"}]-->
@@ -29,7 +27,6 @@ Install the torch and onnx dependencies.
 pip install infinity_emb[torch,optimum]
 ```
 
-
 ```python
 documents = [
     "Baguette is a dish.",
@@ -39,7 +36,6 @@ documents = [
 ]
 query = "Where is Paris?"
 ```
-
 
 ```python
 embeddings = InfinityEmbeddingsLocal(
@@ -83,7 +79,6 @@ The BetterTransformer implementation does not support padding during training, a
 documents_embedded, query_result = await embed()
 ```
 
-
 ```python
 # (demo) compute similarity
 import numpy as np
@@ -119,8 +114,7 @@ port=7797
 docker run -it --gpus all -p $port:$port michaelf34/infinity:latest --model-name-or-path $model --port $port
 ```
 
-## Embed your documents using your Infinity instance 
-
+## Embed your documents using your Infinity instance
 
 ```python
 documents = [
@@ -131,7 +125,6 @@ documents = [
 ]
 query = "Where is Paris?"
 ```
-
 
 ```python
 #
@@ -162,16 +155,12 @@ scores = np.array(documents_embedded) @ np.array(query_result).T
 dict(zip(documents, scores))
 ```
 
-
-
 ```output
 {'Baguette is a dish.': 0.31344215908661155,
  'Paris is the capital of France.': 0.8148670296896388,
  'numpy is a lib for linear algebra': 0.004429399861302009,
  "You escaped what I've escaped - You'd be in Paris getting fucked up too": 0.5088476180154582}
 ```
-
-
 
 ## Related
 

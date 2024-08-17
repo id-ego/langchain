@@ -14,11 +14,9 @@ Some advantages of switching to the LCEL implementation are:
 
 `RunnableWithMessageHistory` implements sessions via configuration parameters. It should be instantiated with a callable that returns a [chat message history](https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html). By default, it expects this function to take a single argument `session_id`.
 
-
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
 ```
-
 
 ```python
 import os
@@ -58,16 +56,14 @@ chain = ConversationChain(
 chain({"input": "how are you?"})
 ```
 
-
-
 ```output
 {'input': 'how are you?',
  'history': '',
  'response': "Arr matey, I be doin' well on the high seas, plunderin' and pillagin' as usual. How be ye?"}
 ```
 
-
 </details>
+
 
 ## LCEL
 
@@ -108,15 +104,11 @@ wrapped_chain = RunnableWithMessageHistory(
 wrapped_chain.invoke({"input": "how are you?"})
 ```
 
-
-
 ```output
 "Arr, me matey! I be doin' well, sailin' the high seas and searchin' for treasure. How be ye?"
 ```
 
-
 The above example uses the same `history` for all sessions. The example below shows how to use a different chat history for each session.
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "# Legacy"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "# Legacy"}]-->
@@ -146,14 +138,12 @@ wrapped_chain.invoke(
 )
 ```
 
-
-
 ```output
 'Ahoy there, me hearty! What can this old pirate do for ye today?'
 ```
 
-
 </details>
+
 
 ## Next steps
 

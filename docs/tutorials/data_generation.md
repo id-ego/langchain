@@ -31,7 +31,6 @@ In this notebook, we'll dive deep into generating synthetic medical billing reco
 ### Setup
 First, you'll need to have the langchain library installed, along with its dependencies. Since we're using the OpenAI generator chain, we'll install that as well. Since this is an experimental lib, we'll need to include `langchain_experimental` in our installs. We'll then import the necessary modules.
 
-
 ```python
 <!--IMPORTS:[{"imported": "FewShotPromptTemplate", "source": "langchain.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "Generate Synthetic Data"}, {"imported": "PromptTemplate", "source": "langchain.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Generate Synthetic Data"}, {"imported": "OPENAI_TEMPLATE", "source": "langchain_experimental.tabular_synthetic_data.openai", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.OPENAI_TEMPLATE.html", "title": "Generate Synthetic Data"}, {"imported": "create_openai_data_generator", "source": "langchain_experimental.tabular_synthetic_data.openai", "docs": "https://api.python.langchain.com/en/latest/tabular_synthetic_data/langchain_experimental.tabular_synthetic_data.openai.create_openai_data_generator.html", "title": "Generate Synthetic Data"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Generate Synthetic Data"}]-->
 %pip install --upgrade --quiet  langchain langchain_experimental langchain-openai
@@ -55,7 +54,6 @@ from langchain_openai import ChatOpenAI
 ## 1. Define Your Data Model
 Every dataset has a structure or a "schema". The MedicalBilling class below serves as our schema for the synthetic data. By defining this, we're informing our synthetic data generator about the shape and nature of data we expect.
 
-
 ```python
 class MedicalBilling(BaseModel):
     patient_id: int
@@ -72,7 +70,6 @@ For instance, every record will have a `patient_id` that's an integer, a `patien
 To guide the synthetic data generator, it's useful to provide it with a few real-world-like examples. These examples serve as a "seed" - they're representative of the kind of data you want, and the generator will use them to create more data that looks similar.
 
 Here are some fictional medical billing records:
-
 
 ```python
 examples = [
@@ -93,7 +90,6 @@ examples = [
 
 ## 3. Craft a Prompt Template
 The generator doesn't magically know how to create our data; we need to guide it. We do this by creating a prompt template. This template helps instruct the underlying language model on how to produce synthetic data in the desired format.
-
 
 ```python
 OPENAI_TEMPLATE = PromptTemplate(input_variables=["example"], template="{example}")
@@ -117,7 +113,6 @@ The `FewShotPromptTemplate` includes:
 ## 4. Creating the Data Generator
 With the schema and the prompt ready, the next step is to create the data generator. This object knows how to communicate with the underlying language model to get synthetic data.
 
-
 ```python
 synthetic_data_generator = create_openai_data_generator(
     output_schema=MedicalBilling,
@@ -131,7 +126,6 @@ synthetic_data_generator = create_openai_data_generator(
 ## 5. Generate Synthetic Data
 Finally, let's get our synthetic data!
 
-
 ```python
 synthetic_results = synthetic_data_generator.generate(
     subject="medical_billing",
@@ -144,8 +138,6 @@ This command asks the generator to produce 10 synthetic medical billing records.
 
 ### Other implementations
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "DatasetGenerator", "source": "langchain_experimental.synthetic_data", "docs": "https://api.python.langchain.com/en/latest/synthetic_data/langchain_experimental.synthetic_data.DatasetGenerator.html", "title": "Generate Synthetic Data"}, {"imported": "create_data_generation_chain", "source": "langchain_experimental.synthetic_data", "docs": "https://api.python.langchain.com/en/latest/synthetic_data/langchain_experimental.synthetic_data.create_data_generation_chain.html", "title": "Generate Synthetic Data"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Generate Synthetic Data"}]-->
 from langchain_experimental.synthetic_data import (
@@ -155,27 +147,21 @@ from langchain_experimental.synthetic_data import (
 from langchain_openai import ChatOpenAI
 ```
 
-
 ```python
 # LLM
 model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
 chain = create_data_generation_chain(model)
 ```
 
-
 ```python
 chain({"fields": ["blue", "yellow"], "preferences": {}})
 ```
-
-
 
 ```output
 {'fields': ['blue', 'yellow'],
  'preferences': {},
  'text': 'The vibrant blue sky contrasted beautifully with the bright yellow sun, creating a stunning display of colors that instantly lifted the spirits of all who gazed upon it.'}
 ```
-
-
 
 ```python
 chain(
@@ -186,15 +172,11 @@ chain(
 )
 ```
 
-
-
 ```output
 {'fields': {'colors': ['blue', 'yellow']},
  'preferences': {'style': 'Make it in a style of a weather forecast.'},
  'text': "Good morning! Today's weather forecast brings a beautiful combination of colors to the sky, with hues of blue and yellow gently blending together like a mesmerizing painting."}
 ```
-
-
 
 ```python
 chain(
@@ -205,15 +187,11 @@ chain(
 )
 ```
 
-
-
 ```output
 {'fields': {'actor': 'Tom Hanks', 'movies': ['Forrest Gump', 'Green Mile']},
  'preferences': None,
  'text': 'Tom Hanks, the renowned actor known for his incredible versatility and charm, has graced the silver screen in unforgettable movies such as "Forrest Gump" and "Green Mile".'}
 ```
-
-
 
 ```python
 chain(
@@ -227,8 +205,6 @@ chain(
 )
 ```
 
-
-
 ```output
 {'fields': [{'actor': 'Tom Hanks', 'movies': ['Forrest Gump', 'Green Mile']},
   {'actor': 'Mads Mikkelsen', 'movies': ['Hannibal', 'Another round']}],
@@ -236,11 +212,9 @@ chain(
  'text': 'Did you know that Tom Hanks, the beloved Hollywood actor known for his roles in "Forrest Gump" and "Green Mile", has shared the screen with the talented Mads Mikkelsen, who gained international acclaim for his performances in "Hannibal" and "Another round"? These two incredible actors have brought their exceptional skills and captivating charisma to the big screen, delivering unforgettable performances that have enthralled audiences around the world. Whether it\'s Hanks\' endearing portrayal of Forrest Gump or Mikkelsen\'s chilling depiction of Hannibal Lecter, these movies have solidified their places in cinematic history, leaving a lasting impact on viewers and cementing their status as true icons of the silver screen.'}
 ```
 
-
 As we can see created examples are diversified and possess information we wanted them to have. Also, their style reflects the given preferences quite well.
 
 ## Generating exemplary dataset for extraction benchmarking purposes
-
 
 ```python
 inp = [
@@ -270,12 +244,9 @@ generator = DatasetGenerator(model, {"style": "informal", "minimal length": 500}
 dataset = generator(inp)
 ```
 
-
 ```python
 dataset
 ```
-
-
 
 ```output
 [{'fields': {'Actor': 'Tom Hanks',
@@ -296,10 +267,8 @@ dataset
   'text': 'Tom Hardy, the versatile actor known for his intense performances, has graced the silver screen in numerous iconic films, including "Inception," "The Dark Knight Rises," "Mad Max: Fury Road," "The Revenant," and "Dunkirk." Whether he\'s delving into the depths of the subconscious mind, donning the mask of the infamous Bane, or navigating the treacherous wasteland as the enigmatic Max Rockatansky, Hardy\'s commitment to his craft is always evident. From his breathtaking portrayal of the ruthless Eames in "Inception" to his captivating transformation into the ferocious Max in "Mad Max: Fury Road," Hardy\'s dynamic range and magnetic presence captivate audiences and leave an indelible mark on the world of cinema. In his most physically demanding role to date, he endured the harsh conditions of the freezing wilderness as he portrayed the rugged frontiersman John Fitzgerald in "The Revenant," earning him critical acclaim and an Academy Award nomination. In Christopher Nolan\'s war epic "Dunkirk," Hardy\'s stoic and heroic portrayal of Royal Air Force pilot Farrier showcases his ability to convey deep emotion through nuanced performances. With his chameleon-like ability to inhabit a wide range of characters and his unwavering commitment to his craft, Tom Hardy has undoubtedly solidified his place as one of the most talented and sought-after actors of his generation.'}]
 ```
 
-
 ## Extraction from generated examples
 Okay, let's see if we can now extract output from this generated data and how it compares with our case!
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_extraction_chain_pydantic", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.openai_functions.extraction.create_extraction_chain_pydantic.html", "title": "Generate Synthetic Data"}, {"imported": "PydanticOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html", "title": "Generate Synthetic Data"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Generate Synthetic Data"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Generate Synthetic Data"}]-->
@@ -312,7 +281,6 @@ from langchain_openai import OpenAI
 from pydantic import BaseModel, Field
 ```
 
-
 ```python
 class Actor(BaseModel):
     Actor: str = Field(description="name of an actor")
@@ -320,7 +288,6 @@ class Actor(BaseModel):
 ```
 
 ### Parsers
-
 
 ```python
 llm = OpenAI()
@@ -339,27 +306,19 @@ parsed = parser.parse(output)
 parsed
 ```
 
-
-
 ```output
 Actor(Actor='Tom Hanks', Film=['Forrest Gump', 'Saving Private Ryan', 'The Green Mile', 'Toy Story', 'Catch Me If You Can'])
 ```
-
-
 
 ```python
 (parsed.Actor == inp[0]["Actor"]) & (parsed.Film == inp[0]["Film"])
 ```
 
-
-
 ```output
 True
 ```
 
-
 ### Extractors
-
 
 ```python
 extractor = create_extraction_chain_pydantic(pydantic_schema=Actor, llm=model)
@@ -367,19 +326,13 @@ extracted = extractor.run(dataset[1]["text"])
 extracted
 ```
 
-
-
 ```output
 [Actor(Actor='Tom Hardy', Film=['Inception', 'The Dark Knight Rises', 'Mad Max: Fury Road', 'The Revenant', 'Dunkirk'])]
 ```
 
-
-
 ```python
 (extracted[0].Actor == inp[1]["Actor"]) & (extracted[0].Film == inp[1]["Film"])
 ```
-
-
 
 ```output
 True

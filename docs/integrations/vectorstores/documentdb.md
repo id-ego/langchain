@@ -5,23 +5,19 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Amazon Document DB
 
->[Amazon DocumentDB (with MongoDB Compatibility)](https://docs.aws.amazon.com/documentdb/) makes it easy to set up, operate, and scale MongoDB-compatible databases in the cloud.
-> With Amazon DocumentDB, you can run the same application code and use the same drivers and tools that you use with MongoDB.
-> Vector search for Amazon DocumentDB combines the flexibility and rich querying capability of a JSON-based document database with the power of vector search.
-
+> [Amazon DocumentDB (with MongoDB Compatibility)](https://docs.aws.amazon.com/documentdb/) makes it easy to set up, operate, and scale MongoDB-compatible databases in the cloud.
+With Amazon DocumentDB, you can run the same application code and use the same drivers and tools that you use with MongoDB.
+Vector search for Amazon DocumentDB combines the flexibility and rich querying capability of a JSON-based document database with the power of vector search.
 
 This notebook shows you how to use [Amazon Document DB Vector Search](https://docs.aws.amazon.com/documentdb/latest/developerguide/vector-search.html) to store documents in collections, create indicies and perform vector search queries using approximate nearest neighbor algorithms such "cosine", "euclidean", and "dotProduct". By default, DocumentDB creates Hierarchical Navigable Small World (HNSW) indexes. To learn about other supported vector index types, please refer to the document linked above.
 
 To use DocumentDB, you must first deploy a cluster. Please refer to the [Developer Guide](https://docs.aws.amazon.com/documentdb/latest/developerguide/what-is.html) for more details.
 
 [Sign Up](https://aws.amazon.com/free/) for free to get started today.
-        
-
 
 ```python
 !pip install pymongo
 ```
-
 
 ```python
 import getpass
@@ -36,7 +32,6 @@ DB_NAME, COLLECTION_NAME = NAMESPACE.split(".")
 ```
 
 We want to use `OpenAIEmbeddings` so we need to set up our OpenAI environment variables. 
-
 
 ```python
 import getpass
@@ -53,7 +48,6 @@ os.environ["OPENAI_EMBEDDINGS_MODEL_NAME"] = "text-embedding-ada-002"  # the mod
 Now, we will load the documents into the collection, create the index, and then perform queries against the index.
 
 Please refer to the [documentation](https://docs.aws.amazon.com/documentdb/latest/developerguide/vector-search.html) if you have questions about certain parameters
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Amazon Document DB"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Amazon Document DB"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Amazon Document DB"}]-->
@@ -83,7 +77,6 @@ openai_embeddings: OpenAIEmbeddings = OpenAIEmbeddings(
     deployment=model_deployment, model=model_name
 )
 ```
-
 
 ```python
 from pymongo import MongoClient
@@ -117,8 +110,6 @@ similarity_algorithm = DocumentDBSimilarityType.COS
 vectorstore.create_index(dimensions, similarity_algorithm)
 ```
 
-
-
 ```output
 { 'createdCollectionAutomatically' : false,
    'numIndexesBefore' : 1,
@@ -127,14 +118,11 @@ vectorstore.create_index(dimensions, similarity_algorithm)
    'operationTime' : Timestamp(1703656982, 1)}
 ```
 
-
-
 ```python
 # perform a similarity search between the embedding of the query and the embeddings of the documents
 query = "What did the President say about Ketanji Brown Jackson"
 docs = vectorstore.similarity_search(query)
 ```
-
 
 ```python
 print(docs[0].page_content)
@@ -150,7 +138,6 @@ And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketan
 ```
 Once the documents have been loaded and the index has been created, you can now instantiate the vector store directly and run queries against the index
 
-
 ```python
 vectorstore = DocumentDBVectorSearch.from_connection_string(
     connection_string=CONNECTION_STRING,
@@ -163,7 +150,6 @@ vectorstore = DocumentDBVectorSearch.from_connection_string(
 query = "What did the president say about Ketanji Brown Jackson"
 docs = vectorstore.similarity_search(query)
 ```
-
 
 ```python
 print(docs[0].page_content)
@@ -184,7 +170,6 @@ query = "Which stats did the President share about the U.S. economy"
 docs = vectorstore.similarity_search(query)
 ```
 
-
 ```python
 print(docs[0].page_content)
 ```
@@ -204,14 +189,12 @@ But that trickle-down theory led to weaker economic growth, lower wages, bigger 
 ```
 ## Question Answering
 
-
 ```python
 qa_retriever = vectorstore.as_retriever(
     search_type="similarity",
     search_kwargs={"k": 25},
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Amazon Document DB"}]-->
@@ -227,7 +210,6 @@ PROMPT = PromptTemplate(
     template=prompt_template, input_variables=["context", "question"]
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Amazon Document DB"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Amazon Document DB"}]-->
@@ -247,7 +229,6 @@ docs = qa({"query": "gpt-4 compute requirements"})
 print(docs["result"])
 print(docs["source_documents"])
 ```
-
 
 ## Related
 

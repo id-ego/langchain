@@ -41,18 +41,14 @@ service, and you're ready to start receiving data and triggering actions 🎉
 - Copy the IFTTT key value from there. The URL is of the form
 https://maker.ifttt.com/use/YOUR_IFTTT_KEY. Grab the YOUR_IFTTT_KEY value.
 
-
-
 ```python
 %pip install --upgrade --quiet  langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "IFTTTWebhook", "source": "langchain_community.tools.ifttt", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.ifttt.IFTTTWebhook.html", "title": "IFTTT WebHooks"}]-->
 from langchain_community.tools.ifttt import IFTTTWebhook
 ```
-
 
 ```python
 import os
@@ -64,18 +60,13 @@ tool = IFTTTWebhook(
 )
 ```
 
-
 ```python
 tool.run("taylor swift")
 ```
 
-
-
 ```output
 "Congratulations! You've fired the spotify JSON event"
 ```
-
-
 
 ## Related
 

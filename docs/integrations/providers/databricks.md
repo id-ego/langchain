@@ -2,8 +2,7 @@
 canonical: https://python.langchain.com/v0.2/docs/integrations/providers/databricks/
 ---
 
-Databricks
-==========
+# Databricks
 
 > [Databricks](https://www.databricks.com/) Intelligence Platform is the world's first data intelligence platform powered by generative AI. Infuse AI into every facet of your business.
 
@@ -15,8 +14,7 @@ Databricks embraces the LangChain ecosystem in various ways:
 4. 🌐 **SQL Database** - [Databricks SQL](https://www.databricks.com/product/databricks-sql) is integrated with `SQLDatabase` in LangChain, allowing you to access the auto-optimizing, exceptionally performant data warehouse.
 5. 💡 **Open Models** - Databricks open sources models, such as [DBRX](https://www.databricks.com/blog/introducing-dbrx-new-state-art-open-llm), which are available through the [Hugging Face Hub](https://huggingface.co/databricks/dbrx-instruct). These models can be directly utilized with LangChain, leveraging its integration with the `transformers` library.
 
-Chat Model
-----------
+## Chat Model
 
 `ChatDatabricks` is a Chat Model class to access chat endpoints hosted on Databricks, including state-of-the-art models such as Llama3, Mixtral, and DBRX, as well as your own fine-tuned models.
 
@@ -28,8 +26,7 @@ chat_model = ChatDatabricks(endpoint="databricks-meta-llama-3-70b-instruct")
 
 See the [usage example](/docs/integrations/chat/databricks) for more guidance on how to use it within your LangChain application.
 
-LLM
----
+## LLM
 
 `Databricks` is an LLM class to access completion endpoints hosted on Databricks.
 
@@ -41,9 +38,7 @@ llm = Databricks(endpoint="your-completion-endpoint")
 
 See the [usage example](/docs/integrations/llms/databricks) for more guidance on how to use it within your LangChain application.
 
-
-Embeddings
-----------
+## Embeddings
 
 `DatabricksEmbeddings` is an Embeddings class to access text-embedding endpoints hosted on Databricks, including state-of-the-art models such as BGE, as well as your own fine-tuned models.
 
@@ -55,9 +50,7 @@ embeddings = DatabricksEmbeddings(endpoint="databricks-bge-large-en")
 
 See the [usage example](/docs/integrations/text_embedding/databricks) for more guidance on how to use it within your LangChain application.
 
-
-Vector Search
--------------
+## Vector Search
 
 Databricks Vector Search is a serverless similarity search engine that allows you to store a vector representation of your data, including metadata, in a vector database. With Vector Search, you can create auto-updating vector search indexes from [Delta](https://docs.databricks.com/en/introduction/delta-comparison.html) tables managed by [Unity Catalog](https://www.databricks.com/product/unity-catalog) and query them with a simple API to return the most similar vectors.
 
@@ -72,9 +65,7 @@ docs = dvs.similarity_search("What is vector search?)
 
 See the [usage example](/docs/integrations/vectorstores/databricks_vector_search) for how to set up vector indices and integrate them with LangChain.
 
-
-MLflow Integration
-------------------
+## MLflow Integration
 
 In the context of LangChain integration, MLflow provides the following capabilities:
 
@@ -85,8 +76,7 @@ In the context of LangChain integration, MLflow provides the following capabilit
 
 See [MLflow LangChain Integration](/docs/integrations/providers/mlflow_tracking) to learn about the full capabilities of using MLflow with LangChain through extensive code examples and guides.
 
-SQLDatabase
------------
+## SQLDatabase
 You can connect to Databricks SQL using the SQLDatabase wrapper of LangChain.
 ```
 from langchain.sql_database import SQLDatabase
@@ -96,8 +86,7 @@ db = SQLDatabase.from_databricks(catalog="samples", schema="nyctaxi")
 
 See [Databricks SQL Agent](https://docs.databricks.com/en/large-language-models/langchain.html#databricks-sql-agent) for how to connect Databricks SQL with your LangChain Agent as a powerful querying tool.
 
-Open Models
------------
+## Open Models
 
 To directly integrate Databricks's open models hosted on HuggingFace, you can use the [HuggingFace Integration](/docs/integrations/platforms/huggingface) of LangChain.
 

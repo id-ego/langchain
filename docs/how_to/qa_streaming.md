@@ -17,13 +17,11 @@ We'll use OpenAI embeddings and a Chroma vector store in this walkthrough, but e
 
 We'll use the following packages:
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchainhub langchain-openai langchain-chroma bs4
 ```
 
 We need to set environment variable `OPENAI_API_KEY`, which can be done directly or loaded from a `.env` file like so:
-
 
 ```python
 import getpass
@@ -42,7 +40,6 @@ Many of the applications you build with LangChain will contain multiple steps wi
 
 Note that LangSmith is not needed, but it is helpful. If you do want to use LangSmith, after you sign up at the link above, make sure to set your environment variables to start logging traces:
 
-
 ```python
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
@@ -56,8 +53,8 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
-Here is Q&A app with sources we built over the [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng in the [RAG tutorial](/docs/tutorials/rag):
 
+Here is Q&A app with sources we built over the [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng in the [RAG tutorial](/docs/tutorials/rag):
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "How to stream results from your RAG application"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to stream results from your RAG application"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to stream results from your RAG application"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to stream results from your RAG application"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to stream results from your RAG application"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to stream results from your RAG application"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to stream results from your RAG application"}]-->
@@ -114,7 +111,6 @@ rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 The chain constructed by `create_retrieval_chain` returns a dict with keys `"input"`, `"context"`, and `"answer"`. The `.stream` method will by default stream each key in a sequence.
 
 Note that here only the `"answer"` key is streamed token-by-token, as the other components-- such as retrieval-- do not support token-level streaming.
-
 
 ```python
 for chunk in rag_chain.stream({"input": "What is Task Decomposition?"}):
@@ -211,7 +207,6 @@ for chunk in rag_chain.stream({"input": "What is Task Decomposition?"}):
 ```
 We are free to process chunks as they are streamed out. If we just want to stream the answer tokens, for example, we can select chunks with the corresponding key:
 
-
 ```python
 for chunk in rag_chain.stream({"input": "What is Task Decomposition?"}):
     if answer_chunk := chunk.get("answer"):
@@ -221,7 +216,6 @@ for chunk in rag_chain.stream({"input": "What is Task Decomposition?"}):
 Task| decomposition| is| a| technique| used| to| break| down| complex| tasks| into| smaller| and| more| manageable| steps|.| This| process| helps| agents| or| models| handle| intricate| tasks| by| dividing| them| into| simpler| sub|tasks|.| By| decom|posing| tasks|,| the| model| can| effectively| plan| and| execute| each| step| towards| achieving| the| overall| goal|.|
 ```
 More simply, we can use the [.pick](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.pick) method to select only the desired key:
-
 
 ```python
 chain = rag_chain.pick("answer")
@@ -235,7 +229,6 @@ for chunk in chain.stream({"input": "What is Task Decomposition?"}):
 ## Streaming intermediate steps
 
 Suppose we want to stream not only the final outputs of the chain, but also some intermediate steps. As an example let's take our [Conversational RAG](/docs/tutorials/qa_chat_history) chain. Here we reformulate the user question before passing it to the retriever. This reformulated question is not returned as part of the final output. We could modify our chain to return the new question, but for demonstration purposes we'll leave it as is.
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_history_aware_retriever", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html", "title": "How to stream results from your RAG application"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to stream results from your RAG application"}]-->
@@ -299,7 +292,6 @@ To stream intermediate output, we recommend use of the async `.astream_events` m
 
 Below we show a typical `.astream_events` loop, where we pass in the chain input and emit desired results. See the [API reference](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream_events) and [streaming guide](/docs/how_to/streaming) for more detail.
 
-
 ```python
 first_question = "What is task decomposition?"
 first_answer = (
@@ -335,7 +327,6 @@ async for event in rag_chain.astream_events(
 Here we recover, token-by-token, the query that is passed into the retriever given our question "What are some common ways of doing it?"
 
 If we wanted to get our retrieved docs, we could filter on name "Retriever":
-
 
 ```python
 async for event in rag_chain.astream_events(

@@ -18,19 +18,14 @@ We will load documents with authorization and semantic metadata into an in-memor
 
 > **Note:** It is recommended to use [PebbloSafeLoader](https://daxa-ai.github.io/pebblo/rag) as the counterpart for loading documents with authentication and semantic metadata on the ingestion side. `PebbloSafeLoader` guarantees the secure and efficient loading of documents while maintaining the integrity of the metadata.
 
-
-
 2. **Testing Enforcement Mechanisms**:
-   We will test Identity and Semantic Enforcement separately. For each use case, we will define a specific "ask" function with the required contexts (*auth_context* and *semantic_context*) and then pose our questions.
-
+We will test Identity and Semantic Enforcement separately. For each use case, we will define a specific "ask" function with the required contexts (*auth_context* and *semantic_context*) and then pose our questions.
 
 ## Setup
 
 ### Dependencies
 
 We'll use an OpenAI LLM, OpenAI embeddings and a Qdrant vector store in this walkthrough.
-
-
 
 ```python
 %pip install --upgrade --quiet langchain langchain_core langchain-community langchain-openai qdrant_client
@@ -45,14 +40,11 @@ Here we are using Qdrant as a vector database; however, you can use any of the s
 - Pinecone
 - Postgres(utilizing the pgvector extension)
 
-
 **Load vector database with authorization and semantic information in metadata:**
 
 In this step, we capture the authorization and semantic information of the source document into the `authorized_identities`, `pebblo_semantic_topics`, and `pebblo_semantic_entities` fields within the metadata of the VectorDB entry for each chunk. 
 
-
 *NOTE: To use the PebbloRetrievalQA chain, you must always place authorization and semantic metadata in the specified fields. These fields must contain a list of strings.*
-
 
 ```python
 <!--IMPORTS:[{"imported": "Qdrant", "source": "langchain_community.vectorstores.qdrant", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.qdrant.Qdrant.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}, {"imported": "OpenAI", "source": "langchain_openai.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}]-->
@@ -120,14 +112,12 @@ Vectordb loaded.
 ```
 ## Retrieval with Identity Enforcement
 
-PebbloRetrievalQA chain uses a SafeRetrieval to enforce that the snippets used for in-context are retrieved only from the documents authorized for the user. 
-To achieve this, the Gen-AI application needs to provide an authorization context for this retrieval chain. 
+PebbloRetrievalQA chain uses a SafeRetrieval to enforce that the snippets used for in-context are retrieved only from the documents authorized for the user.
+To achieve this, the Gen-AI application needs to provide an authorization context for this retrieval chain.
 This *auth_context* should be filled with the identity and authorization groups of the user accessing the Gen-AI app.
 
-
-Here is the sample code for the `PebbloRetrievalQA` with `user_auth`(List of user authorizations, which may include their User ID and 
-    the groups they are part of) from the user accessing the RAG application, passed in `auth_context`.
-
+Here is the sample code for the `PebbloRetrievalQA` with `user_auth`(List of user authorizations, which may include their User ID and
+the groups they are part of) from the user accessing the RAG application, passed in `auth_context`.
 
 ```python
 <!--IMPORTS:[{"imported": "PebbloRetrievalQA", "source": "langchain_community.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.pebblo_retrieval.base.PebbloRetrievalQA.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}, {"imported": "AuthContext", "source": "langchain_community.chains.pebblo_retrieval.models", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.pebblo_retrieval.models.AuthContext.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}, {"imported": "ChainInput", "source": "langchain_community.chains.pebblo_retrieval.models", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.pebblo_retrieval.models.ChainInput.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}]-->
@@ -157,7 +147,6 @@ def ask(question: str, auth_context: dict):
 
 We ingested data for authorized identities `["finance-team", "exec-leadership"]`, so a user with the authorized identity/group `finance-team` should receive the correct answer.
 
-
 ```python
 auth = {
     "user_id": "finance-user@acme.org",
@@ -183,7 +172,6 @@ Debt-to-equity ratio: 0.5
 
 Since the user's authorized identity/group `eng-support` is not included in the authorized identities `["finance-team", "exec-leadership"]`, we should not receive an answer.
 
-
 ```python
 auth = {
     "user_id": "eng-user@acme.org",
@@ -204,7 +192,6 @@ Answer:  I don't know.
 ### 3. Using PromptTemplate to provide additional instructions
 You can use PromptTemplate to provide additional instructions to the LLM for generating a custom response.
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}]-->
 from langchain_core.prompts import PromptTemplate
@@ -224,7 +211,6 @@ prompt = prompt_template.format(question=question)
 
 #### 3.1 Questions by Authorized User
 
-
 ```python
 auth = {
     "user_id": "finance-user@acme.org",
@@ -242,7 +228,6 @@ Answer:
 Revenue soared to $50 million, marking a 15% increase from the previous year, and net profit reached $12 million, showcasing a healthy margin of 24%. Total assets also grew by 20% to $80 million, and the company maintained a conservative debt-to-equity ratio of 0.5.
 ```
 #### 3.2 Questions by Unauthorized Users
-
 
 ```python
 auth = {
@@ -268,7 +253,6 @@ To achieve this, the Gen-AI application must provide a semantic context for this
 This `semantic_context` should include the topics and entities that should be denied for the user accessing the Gen-AI app.
 
 Below is a sample code for PebbloRetrievalQA with `topics_to_deny` and `entities_to_deny`. These are passed in `semantic_context` to the chain input.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PebbloRetrievalQA", "source": "langchain_community.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.pebblo_retrieval.base.PebbloRetrievalQA.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}, {"imported": "ChainInput", "source": "langchain_community.chains.pebblo_retrieval.models", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.pebblo_retrieval.models.ChainInput.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}, {"imported": "SemanticContext", "source": "langchain_community.chains.pebblo_retrieval.models", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.pebblo_retrieval.models.SemanticContext.html", "title": "Identity-enabled RAG using PebbloRetrievalQA"}]-->
@@ -315,8 +299,6 @@ def ask(
 
 Since no semantic enforcement is applied, the system should return the answer without excluding any context due to the semantic labels associated with the context.
 
-
-
 ```python
 topic_to_deny = []
 entities_to_deny = []
@@ -339,7 +321,6 @@ Revenue for ACME Corp increased by 15% to $50 million in 2020, with a net profit
 Data has been ingested with the topics: `["financial-report"]`.
 Therefore, an app that denies the `financial-report` topic should not receive an answer.
 
-
 ```python
 topic_to_deny = ["financial-report"]
 entities_to_deny = []
@@ -360,7 +341,6 @@ Unfortunately, I do not have access to the financial performance of ACME Corp fo
 ```
 ### 3. Deny us-bank-account-number entity
 Since the entity `us-bank-account-number` is denied, the system should not return the answer.
-
 
 ```python
 topic_to_deny = []

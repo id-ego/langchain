@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Notion DB 1/2
 
->[Notion](https://www.notion.so/) is a collaboration platform with modified Markdown support that integrates kanban boards, tasks, wikis and databases. It is an all-in-one workspace for notetaking, knowledge and data management, and project and task management.
+> [Notion](https://www.notion.so/) is a collaboration platform with modified Markdown support that integrates kanban boards, tasks, wikis and databases. It is an all-in-one workspace for notetaking, knowledge and data management, and project and task management.
 
 This notebook covers how to load documents from a Notion database dump.
 
@@ -27,22 +27,18 @@ unzip Export-d3adfe0f-3131-4bf3-8987-a52017fc1bae.zip -d Notion_DB
 
 Run the following command to ingest the data.
 
-
 ```python
 <!--IMPORTS:[{"imported": "NotionDirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.notion.NotionDirectoryLoader.html", "title": "Notion DB 1/2"}]-->
 from langchain_community.document_loaders import NotionDirectoryLoader
 ```
 
-
 ```python
 loader = NotionDirectoryLoader("Notion_DB")
 ```
 
-
 ```python
 docs = loader.load()
 ```
-
 
 ## Related
 

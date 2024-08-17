@@ -11,13 +11,11 @@ This notebook shows how to use LangChain with Databricks Vector Search.
 
 Install `databricks-vectorsearch` and related Python packages used in this notebook.
 
-
 ```python
 %pip install --upgrade --quiet  langchain-core databricks-vectorsearch langchain-openai tiktoken
 ```
 
 Use `OpenAIEmbeddings` for the embeddings.
-
 
 ```python
 import getpass
@@ -27,7 +25,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
 Split documents and get embeddings.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Databricks Vector Search"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Databricks Vector Search"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Databricks Vector Search"}]-->
@@ -46,7 +43,6 @@ emb_dim = len(embeddings.embed_query("hello"))
 
 ## Setup Databricks Vector Search client
 
-
 ```python
 from databricks.vector_search.client import VectorSearchClient
 
@@ -56,14 +52,12 @@ vsc = VectorSearchClient()
 ## Create a Vector Search Endpoint
 This endpoint is used to create and access vector search indexes.
 
-
 ```python
 vsc.create_endpoint(name="vector_search_demo_endpoint", endpoint_type="STANDARD")
 ```
 
 ## Create Direct Vector Access Index
 Direct Vector Access Index supports direct read and write of embedding vectors and metadata through a REST API or an SDK. For this index, you manage embedding vectors and index updates yourself.
-
 
 ```python
 vector_search_endpoint_name = "vector_search_demo_endpoint"
@@ -86,7 +80,6 @@ index = vsc.create_direct_access_index(
 index.describe()
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "DatabricksVectorSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.databricks_vector_search.DatabricksVectorSearch.html", "title": "Databricks Vector Search"}]-->
 from langchain_community.vectorstores import DatabricksVectorSearch
@@ -98,16 +91,14 @@ dvs = DatabricksVectorSearch(
 
 ## Add docs to the index
 
-
 ```python
 dvs.add_documents(docs)
 ```
 
 ## Similarity search
-Optional keyword arguments to similarity_search include specifying k number of documents to retrive, 
+Optional keyword arguments to similarity_search include specifying k number of documents to retrive,
 a filters dictionary for metadata filtering based on [this syntax](https://docs.databricks.com/en/generative-ai/create-query-vector-search.html#use-filters-on-queries),
 as well as the [query_type](https://api-docs.databricks.com/python/vector-search/databricks.vector_search.html#databricks.vector_search.index.VectorSearchIndex.similarity_search) which can be ANN or HYBRID 
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -119,12 +110,10 @@ print(docs[0].page_content)
 
 You can also use `DatabricksVectorSearch` to search in a Delta Sync Index. Delta Sync Index automatically syncs from a Delta table. You don't need to call `add_text`/`add_documents` manually. See [Databricks documentation page](https://docs.databricks.com/en/generative-ai/vector-search.html#delta-sync-index-with-managed-embeddings) for more details.
 
-
 ```python
 dvs_delta_sync = DatabricksVectorSearch("catalog_name.schema_name.delta_sync_index")
 dvs_delta_sync.similarity_search(query)
 ```
-
 
 ## Related
 

@@ -12,7 +12,6 @@ Retrieval is a common technique chatbots use to augment their responses with dat
 
 You'll need to install a few packages, and have your OpenAI API key set as an environment variable named `OPENAI_API_KEY`:
 
-
 ```python
 %pip install -qU langchain langchain-openai langchain-chroma beautifulsoup4
 
@@ -27,14 +26,11 @@ You should consider upgrading via the '/Users/jacoblee/.pyenv/versions/3.10.5/bi
 [0mNote: you may need to restart the kernel to use updated packages.
 ```
 
-
 ```output
 True
 ```
 
-
 Let's also set up a chat model that we'll use for the below examples.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add retrieval to chatbots"}]-->
@@ -49,7 +45,6 @@ We'll use [the LangSmith documentation](https://docs.smith.langchain.com/overvie
 
 Let's use a document loader to pull text from the docs:
 
-
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to add retrieval to chatbots"}]-->
 from langchain_community.document_loaders import WebBaseLoader
@@ -59,7 +54,6 @@ data = loader.load()
 ```
 
 Next, we split it into smaller chunks that the LLM's context window can handle and store it in a vector database:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add retrieval to chatbots"}]-->
@@ -71,7 +65,6 @@ all_splits = text_splitter.split_documents(data)
 
 Then we embed and store those chunks in a vector database:
 
-
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to add retrieval to chatbots"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add retrieval to chatbots"}]-->
 from langchain_chroma import Chroma
@@ -82,7 +75,6 @@ vectorstore = Chroma.from_documents(documents=all_splits, embedding=OpenAIEmbedd
 
 And finally, let's create a retriever from our initialized vectorstore:
 
-
 ```python
 # k is the number of chunks to retrieve
 retriever = vectorstore.as_retriever(k=4)
@@ -92,15 +84,12 @@ docs = retriever.invoke("Can LangSmith help test my LLM applications?")
 docs
 ```
 
-
-
 ```output
 [Document(page_content='Skip to main content🦜️🛠️ LangSmith DocsPython DocsJS/TS DocsSearchGo to AppLangSmithOverviewTracingTesting & EvaluationOrganizationsHubLangSmith CookbookOverviewOn this pageLangSmith Overview and User GuideBuilding reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.Over the past two months, we at LangChain', metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'}),
  Document(page_content='LangSmith Overview and User Guide | 🦜️🛠️ LangSmith', metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'}),
  Document(page_content='You can also quickly edit examples and add them to datasets to expand the surface area of your evaluation sets or to fine-tune a model for improved quality or reduced costs.Monitoring\u200bAfter all this, your app might finally ready to go in production. LangSmith can also be used to monitor your application in much the same way that you used for debugging. You can log all traces, visualize latency and token usage statistics, and troubleshoot specific issues as they arise. Each run can also be', metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'}),
  Document(page_content="does that affect the output?\u200bSo you notice a bad output, and you go into LangSmith to see what's going on. You find the faulty LLM call and are now looking at the exact input. You want to try changing a word or a phrase to see what happens -- what do you do?We constantly ran into this issue. Initially, we copied the prompt to a playground of sorts. But this got annoying, so we built a playground of our own! When examining an LLM call, you can click the Open in Playground button to access this", metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'})]
 ```
-
 
 We can see that invoking the retriever above results in some parts of the LangSmith docs that contain information about testing that our chatbot can use as context when answering questions. And now we've got a retriever that can return related data from the LangSmith docs!
 
@@ -109,7 +98,6 @@ We can see that invoking the retriever above results in some parts of the LangSm
 Now that we have a retriever that can return LangChain docs, let's create a chain that can use them as context to answer questions. We'll use a `create_stuff_documents_chain` helper function to "stuff" all of the input documents into the prompt. It will also handle formatting the docs as strings.
 
 In addition to a chat model, the function also expects a prompt that has a `context` variables, as well as a placeholder for chat history messages named `messages`. We'll create an appropriate prompt and pass it as shown below:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to add retrieval to chatbots"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add retrieval to chatbots"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add retrieval to chatbots"}]-->
@@ -140,7 +128,6 @@ document_chain = create_stuff_documents_chain(chat, question_answering_prompt)
 
 We can invoke this `document_chain` by itself to answer questions. Let's use the docs we retrieved above and the same question, `how can langsmith help with testing?`:
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add retrieval to chatbots"}]-->
 from langchain_core.messages import HumanMessage
@@ -155,15 +142,11 @@ document_chain.invoke(
 )
 ```
 
-
-
 ```output
 'Yes, LangSmith can help test and evaluate your LLM applications. It simplifies the initial setup, and you can use it to monitor your application, log all traces, visualize latency and token usage statistics, and troubleshoot specific issues as they arise.'
 ```
 
-
 Looks good! For comparison, we can try it with no context docs and compare the result:
-
 
 ```python
 document_chain.invoke(
@@ -176,19 +159,15 @@ document_chain.invoke(
 )
 ```
 
-
-
 ```output
 "I don't know about LangSmith's specific capabilities for testing LLM applications. It's best to reach out to LangSmith directly to inquire about their services and how they can assist with testing your LLM applications."
 ```
-
 
 We can see that the LLM does not return any results.
 
 ## Retrieval chains
 
 Let's combine this document chain with the retriever. Here's one way this can look:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add retrieval to chatbots"}]-->
@@ -212,7 +191,6 @@ Given a list of input messages, we extract the content of the last message in th
 
 Invoking this chain combines both steps outlined above:
 
-
 ```python
 retrieval_chain.invoke(
     {
@@ -223,8 +201,6 @@ retrieval_chain.invoke(
 )
 ```
 
-
-
 ```output
 {'messages': [HumanMessage(content='Can LangSmith help test my LLM applications?')],
  'context': [Document(page_content='Skip to main content🦜️🛠️ LangSmith DocsPython DocsJS/TS DocsSearchGo to AppLangSmithOverviewTracingTesting & EvaluationOrganizationsHubLangSmith CookbookOverviewOn this pageLangSmith Overview and User GuideBuilding reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.Over the past two months, we at LangChain', metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'}),
@@ -234,7 +210,6 @@ retrieval_chain.invoke(
  'answer': 'Yes, LangSmith can help test and evaluate your LLM applications. It simplifies the initial setup, and you can use it to monitor your application, log all traces, visualize latency and token usage statistics, and troubleshoot specific issues as they arise.'}
 ```
 
-
 Looks good!
 
 ## Query transformation
@@ -243,12 +218,9 @@ Our retrieval chain is capable of answering questions about LangSmith, but there
 
 The chain in its current form will struggle with this. Consider a followup question to our original question like `Tell me more!`. If we invoke our retriever with that query directly, we get documents irrelevant to LLM application testing:
 
-
 ```python
 retriever.invoke("Tell me more!")
 ```
-
-
 
 ```output
 [Document(page_content='You can also quickly edit examples and add them to datasets to expand the surface area of your evaluation sets or to fine-tune a model for improved quality or reduced costs.Monitoring\u200bAfter all this, your app might finally ready to go in production. LangSmith can also be used to monitor your application in much the same way that you used for debugging. You can log all traces, visualize latency and token usage statistics, and troubleshoot specific issues as they arise. Each run can also be', metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'}),
@@ -257,11 +229,9 @@ retriever.invoke("Tell me more!")
  Document(page_content='Skip to main content🦜️🛠️ LangSmith DocsPython DocsJS/TS DocsSearchGo to AppLangSmithOverviewTracingTesting & EvaluationOrganizationsHubLangSmith CookbookOverviewOn this pageLangSmith Overview and User GuideBuilding reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.Over the past two months, we at LangChain', metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'})]
 ```
 
-
 This is because the retriever has no innate concept of state, and will only pull documents most similar to the query given. To solve this, we can transform the query into a standalone query without any external references an LLM.
 
 Here's an example:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to add retrieval to chatbots"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add retrieval to chatbots"}]-->
@@ -292,17 +262,13 @@ query_transformation_chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='"LangSmith LLM application testing and evaluation"')
 ```
 
-
 Awesome! That transformed query would pull up context documents related to LLM application testing.
 
 Let's add this to our retrieval chain. We can wrap our retriever as follows:
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to add retrieval to chatbots"}, {"imported": "RunnableBranch", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.branch.RunnableBranch.html", "title": "How to add retrieval to chatbots"}]-->
@@ -321,7 +287,6 @@ query_transforming_retriever_chain = RunnableBranch(
 ```
 
 Then, we can use this query transformation chain to make our retrieval chain better able to handle such followup questions:
-
 
 ```python
 SYSTEM_TEMPLATE = """
@@ -354,7 +319,6 @@ conversational_retrieval_chain = RunnablePassthrough.assign(
 
 Awesome! Let's invoke this new chain with the same inputs as earlier:
 
-
 ```python
 conversational_retrieval_chain.invoke(
     {
@@ -365,8 +329,6 @@ conversational_retrieval_chain.invoke(
 )
 ```
 
-
-
 ```output
 {'messages': [HumanMessage(content='Can LangSmith help test my LLM applications?')],
  'context': [Document(page_content='Skip to main content🦜️🛠️ LangSmith DocsPython DocsJS/TS DocsSearchGo to AppLangSmithOverviewTracingTesting & EvaluationOrganizationsHubLangSmith CookbookOverviewOn this pageLangSmith Overview and User GuideBuilding reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.Over the past two months, we at LangChain', metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'}),
@@ -375,8 +337,6 @@ conversational_retrieval_chain.invoke(
   Document(page_content="does that affect the output?\u200bSo you notice a bad output, and you go into LangSmith to see what's going on. You find the faulty LLM call and are now looking at the exact input. You want to try changing a word or a phrase to see what happens -- what do you do?We constantly ran into this issue. Initially, we copied the prompt to a playground of sorts. But this got annoying, so we built a playground of our own! When examining an LLM call, you can click the Open in Playground button to access this", metadata={'description': 'Building reliable LLM applications can be challenging. LangChain simplifies the initial setup, but there is still work needed to bring the performance of prompts, chains and agents up the level where they are reliable enough to be used in production.', 'language': 'en', 'source': 'https://docs.smith.langchain.com/overview', 'title': 'LangSmith Overview and User Guide | 🦜️🛠️ LangSmith'})],
  'answer': 'Yes, LangSmith can help test and evaluate LLM (Language Model) applications. It simplifies the initial setup, and you can use it to monitor your application, log all traces, visualize latency and token usage statistics, and troubleshoot specific issues as they arise.'}
 ```
-
-
 
 ```python
 conversational_retrieval_chain.invoke(
@@ -392,8 +352,6 @@ conversational_retrieval_chain.invoke(
 )
 ```
 
-
-
 ```output
 {'messages': [HumanMessage(content='Can LangSmith help test my LLM applications?'),
   AIMessage(content='Yes, LangSmith can help test and evaluate your LLM applications. It allows you to quickly edit examples and add them to datasets to expand the surface area of your evaluation sets or to fine-tune a model for improved quality or reduced costs. Additionally, LangSmith can be used to monitor your application, log all traces, visualize latency and token usage statistics, and troubleshoot specific issues as they arise.'),
@@ -405,13 +363,11 @@ conversational_retrieval_chain.invoke(
  'answer': 'LangSmith simplifies the initial setup for building reliable LLM applications, but it acknowledges that there is still work needed to bring the performance of prompts, chains, and agents up to the level where they are reliable enough to be used in production. It also provides the capability to manually review and annotate runs through annotation queues, allowing you to select runs based on criteria like model type or automatic evaluation scores for human review. This feature is particularly useful for assessing subjective qualities that automatic evaluators struggle with.'}
 ```
 
-
 You can check out [this LangSmith trace](https://smith.langchain.com/public/bb329a3b-e92a-4063-ad78-43f720fbb5a2/r) to see the internal query transformation step for yourself.
 
 ## Streaming
 
 Because this chain is constructed with LCEL, you can use familiar methods like `.stream()` with it:
-
 
 ```python
 stream = conversational_retrieval_chain.stream(

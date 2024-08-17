@@ -17,7 +17,7 @@ Please see [this guide](../../integrations/providers/unstructured.mdx) for more 
 | [UnstructuredLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html) | [langchain_community](https://api.python.langchain.com/en/latest/unstructured_api_reference.html) | ✅ | ❌ | ✅ | 
 ### Loader features
 | Source | Document Lazy Loading | Native Async Support
-| :---: | :---: | :---: | 
+| :---: | :---: | :---: |
 | UnstructuredLoader | ✅ | ❌ | 
 
 ## Setup
@@ -25,7 +25,6 @@ Please see [this guide](../../integrations/providers/unstructured.mdx) for more 
 ### Credentials
 
 By default, `langchain-unstructured` installs a smaller footprint that requires offloading of the partitioning logic to the Unstructured API, which requires an API key. If you use the local installation, you do not need an API key. To get your API key, head over to [this site](https://unstructured.io) and get an API key, and then set it in the cell below:
-
 
 ```python
 import getpass
@@ -41,7 +40,6 @@ os.environ["UNSTRUCTURED_API_KEY"] = getpass.getpass(
 #### Normal Installation
 
 The following packages are required to run the rest of this notebook.
-
 
 ```python
 # Install package, compatible with API partitioning
@@ -72,7 +70,6 @@ pip install "langchain-unstructured[local]"
 
 The `UnstructuredLoader` allows loading from a variety of different file types. To read all about the `unstructured` package please refer to their [documentation](https://docs.unstructured.io/open-source/introduction/overview)/. In this example, we show loading from both a text file and a PDF file.
 
-
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
 from langchain_unstructured import UnstructuredLoader
@@ -88,7 +85,6 @@ loader = UnstructuredLoader(file_paths)
 
 ## Load
 
-
 ```python
 docs = loader.load()
 
@@ -99,12 +95,9 @@ INFO: NumExpr defaulting to 12 threads.
 INFO: pikepdf C++ to Python logger bridge initialized
 ```
 
-
 ```output
 Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((16.34, 213.36), (16.34, 253.36), (36.34, 253.36), (36.34, 213.36)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-07-25T21:28:58', 'page_number': 1, 'filetype': 'application/pdf', 'category': 'UncategorizedText', 'element_id': 'd3ce55f220dfb75891b4394a18bcb973'}, page_content='1 2 0 2')
 ```
-
-
 
 ```python
 print(docs[0].metadata)
@@ -114,7 +107,6 @@ print(docs[0].metadata)
 ```
 ## Lazy Load
 
-
 ```python
 pages = []
 for doc in loader.lazy_load():
@@ -123,18 +115,14 @@ for doc in loader.lazy_load():
 pages[0]
 ```
 
-
-
 ```output
 Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((16.34, 213.36), (16.34, 253.36), (36.34, 253.36), (36.34, 213.36)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-07-25T21:28:58', 'page_number': 1, 'filetype': 'application/pdf', 'category': 'UncategorizedText', 'element_id': 'd3ce55f220dfb75891b4394a18bcb973'}, page_content='1 2 0 2')
 ```
-
 
 ## Post Processing
 
 If you need to post process the `unstructured` elements after extraction, you can pass in a list of
 `str` -> `str` functions to the `post_processors` kwarg when you instantiate the `UnstructuredLoader`. This applies to other Unstructured loaders as well. Below is an example.
-
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
@@ -151,8 +139,6 @@ docs = loader.load()
 docs[5:10]
 ```
 
-
-
 ```output
 [Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((16.34, 393.9), (16.34, 560.0), (36.34, 560.0), (36.34, 393.9)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-02-27T15:49:27', 'page_number': 1, 'parent_id': '89565df026a24279aaea20dc08cedbec', 'filetype': 'application/pdf', 'category': 'UncategorizedText', 'element_id': 'e9fa370aef7ee5c05744eb7bb7d9981b'}, page_content='2 v 8 4 3 5 1 . 3 0 1 2 : v i X r a'),
  Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((157.62199999999999, 114.23496279999995), (157.62199999999999, 146.5141628), (457.7358962799999, 146.5141628), (457.7358962799999, 114.23496279999995)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-02-27T15:49:27', 'page_number': 1, 'filetype': 'application/pdf', 'category': 'Title', 'element_id': 'bde0b230a1aa488e3ce837d33015181b'}, page_content='LayoutParser: A Uniﬁed Toolkit for Deep Learning Based Document Image Analysis'),
@@ -161,11 +147,9 @@ docs[5:10]
  Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((162.779, 338.45008160000003), (162.779, 566.8455408), (454.0372021523199, 566.8455408), (454.0372021523199, 338.45008160000003)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-02-27T15:49:27', 'links': [{'text': ':// layout - parser . github . io', 'url': 'https://layout-parser.github.io', 'start_index': 1477}], 'page_number': 1, 'parent_id': 'bde0b230a1aa488e3ce837d33015181b', 'filetype': 'application/pdf', 'category': 'NarrativeText', 'element_id': 'cfc957c94fe63c8fd7c7f4bcb56e75a7'}, page_content='Abstract. Recent advances in document image analysis (DIA) have been primarily driven by the application of neural networks. Ideally, research outcomes could be easily deployed in production and extended for further investigation. However, various factors like loosely organized codebases and sophisticated model conﬁgurations complicate the easy reuse of im- portant innovations by a wide audience. Though there have been on-going eﬀorts to improve reusability and simplify deep learning (DL) model development in disciplines like natural language processing and computer vision, none of them are optimized for challenges in the domain of DIA. This represents a major gap in the existing toolkit, as DIA is central to academic research across a wide range of disciplines in the social sciences and humanities. This paper introduces LayoutParser, an open-source library for streamlining the usage of DL in DIA research and applica- tions. The core LayoutParser library comes with a set of simple and intuitive interfaces for applying and customizing DL models for layout de- tection, character recognition, and many other document processing tasks. To promote extensibility, LayoutParser also incorporates a community platform for sharing both pre-trained models and full document digiti- zation pipelines. We demonstrate that LayoutParser is helpful for both lightweight and large-scale digitization pipelines in real-word use cases. The library is publicly available at https://layout-parser.github.io.')]
 ```
 
-
 ## Unstructured API
 
-If you want to get up and running with smaller packages and get the most up-to-date partitioning you can `pip install
-unstructured-client` and `pip install langchain-unstructured`. For
+If you want to get up and running with smaller packages and get the most up-to-date partitioning you can `pip install unstructured-client` and `pip install langchain-unstructured`. For
 more information about the `UnstructuredLoader`, refer to the
 [Unstructured provider page](https://python.langchain.com/v0.1/docs/integrations/document_loaders/unstructured_file/).
 
@@ -175,7 +159,6 @@ Unstructured API key [here](https://unstructured.io/api-key/).
 
 Check out the instructions [here](https://github.com/Unstructured-IO/unstructured-api#dizzy-instructions-for-using-the-docker-image)
 if you’d like to self-host the Unstructured API or run it locally.
-
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
@@ -197,14 +180,11 @@ INFO: Partitioning without split.
 INFO: Successfully partitioned the document.
 ```
 
-
 ```output
 Document(metadata={'source': 'example_data/fake.docx', 'category_depth': 0, 'filename': 'fake.docx', 'languages': ['por', 'cat'], 'filetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'category': 'Title', 'element_id': '56d531394823d81787d77a04462ed096'}, page_content='Lorem ipsum dolor sit amet.')
 ```
 
-
 You can also batch multiple files through the Unstructured API in a single API using `UnstructuredLoader`.
-
 
 ```python
 loader = UnstructuredLoader(
@@ -239,7 +219,6 @@ Client](https://docs.unstructured.io/api-reference/api-services/sdk).
 Below is an example showing how you can customize some features of the client and use your own `requests.Session()`, pass in an alternative `server_url`, or customize the `RetryConfig` object for more control over how failed requests are handled.
 
 Note that the example below may not use the latest version of the UnstructuredClient and there could be breaking changes in future releases. For the latest examples, refer to the [Unstructured Python SDK](https://docs.unstructured.io/api-reference/api-services/sdk-python) docs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
@@ -314,7 +293,6 @@ See this [page](https://docs.unstructured.io/open-source/core-functionality/chun
 details about chunking options, but to reproduce the same behavior as `mode="single"`, you can set
 `chunking_strategy="basic"`, `max_characters=<some-really-big-number>`, and `include_orig_elements=False`.
 
-
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
 from langchain_unstructured import UnstructuredLoader
@@ -340,7 +318,6 @@ Length of text in the document: 42772
 ## API reference
 
 For detailed documentation of all `UnstructuredLoader` features and configurations head to the API reference: https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html
-
 
 ## Related
 

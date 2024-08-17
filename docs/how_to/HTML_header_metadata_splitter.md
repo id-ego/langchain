@@ -3,7 +3,7 @@ canonical: https://python.langchain.com/v0.2/docs/how_to/HTML_header_metadata_sp
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/HTML_header_metadata_splitter.ipynb
 ---
 
-# How to split by HTML header 
+# How to split by HTML header
 ## Description and motivation
 
 [HTMLHeaderTextSplitter](https://api.python.langchain.com/en/latest/html/langchain_text_splitters.html.HTMLHeaderTextSplitter.html) is a "structure-aware" chunker that splits text at the HTML element level and adds metadata for each header "relevant" to any given chunk. It can return chunks element by element or combine elements with the same metadata, with the objectives of (a) keeping related text grouped (more or less) semantically and (b) preserving context-rich information encoded in document structures. It can be used with other text splitters as part of a chunking pipeline.
@@ -15,11 +15,9 @@ To specify what headers to split on, specify `headers_to_split_on` when instanti
 ## Usage examples
 ### 1) How to split HTML strings:
 
-
 ```python
 %pip install -qU langchain-text-splitters
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "HTMLHeaderTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/html/langchain_text_splitters.html.HTMLHeaderTextSplitter.html", "title": "How to split by HTML header "}]-->
@@ -62,8 +60,6 @@ html_header_splits = html_splitter.split_text(html_string)
 html_header_splits
 ```
 
-
-
 ```output
 [Document(page_content='Foo'),
  Document(page_content='Some intro text about Foo.  \nBar main section Bar subsection 1 Bar subsection 2', metadata={'Header 1': 'Foo'}),
@@ -75,9 +71,7 @@ html_header_splits
  Document(page_content='Some concluding text about Foo', metadata={'Header 1': 'Foo'})]
 ```
 
-
 To return each element together with their associated headers, specify `return_each_element=True` when instantiating `HTMLHeaderTextSplitter`:
-
 
 ```python
 html_splitter = HTMLHeaderTextSplitter(
@@ -89,7 +83,6 @@ html_header_splits_elements = html_splitter.split_text(html_string)
 
 Comparing with the above, where elements are aggregated by their headers:
 
-
 ```python
 for element in html_header_splits[:2]:
     print(element)
@@ -99,7 +92,6 @@ page_content='Foo'
 page_content='Some intro text about Foo.  \nBar main section Bar subsection 1 Bar subsection 2' metadata={'Header 1': 'Foo'}
 ```
 Now each element is returned as a distinct `Document`:
-
 
 ```python
 for element in html_header_splits_elements[:3]:
@@ -115,7 +107,6 @@ page_content='Bar main section Bar subsection 1 Bar subsection 2' metadata={'Hea
 To read directly from a URL, pass the URL string into the `split_text_from_url` method.
 
 Similarly, a local HTML file can be passed to the `split_text_from_file` method.
-
 
 ```python
 url = "https://plato.stanford.edu/entries/goedel/"
@@ -139,7 +130,6 @@ html_header_splits = html_splitter.split_text_from_url(url)
 
 This can be done using the `.split_documents` method of the second splitter:
 
-
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to split by HTML header "}]-->
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -155,8 +145,6 @@ splits = text_splitter.split_documents(html_header_splits)
 splits[80:85]
 ```
 
-
-
 ```output
 [Document(page_content='We see that Gödel first tried to reduce the consistency problem for analysis to that of arithmetic. This seemed to require a truth definition for arithmetic, which in turn led to paradoxes, such as the Liar paradox (“This sentence is false”) and Berry’s paradox (“The least number not defined by an expression consisting of just fourteen English words”). Gödel then noticed that such paradoxes would not necessarily arise if truth were replaced by provability. But this means that arithmetic truth', metadata={'Header 1': 'Kurt Gödel', 'Header 2': '2. Gödel’s Mathematical Work', 'Header 3': '2.2 The Incompleteness Theorems', 'Header 4': '2.2.1 The First Incompleteness Theorem'}),
  Document(page_content='means that arithmetic truth and arithmetic provability are not co-extensive — whence the First Incompleteness Theorem.', metadata={'Header 1': 'Kurt Gödel', 'Header 2': '2. Gödel’s Mathematical Work', 'Header 3': '2.2 The Incompleteness Theorems', 'Header 4': '2.2.1 The First Incompleteness Theorem'}),
@@ -165,12 +153,9 @@ splits[80:85]
  Document(page_content='We now describe the proof of the two theorems, formulating Gödel’s results in Peano arithmetic. Gödel himself used a system related to that defined in Principia Mathematica, but containing Peano arithmetic. In our presentation of the First and Second Incompleteness Theorems we refer to Peano arithmetic as P, following Gödel’s notation.', metadata={'Header 1': 'Kurt Gödel', 'Header 2': '2. Gödel’s Mathematical Work', 'Header 3': '2.2 The Incompleteness Theorems', 'Header 4': '2.2.2 The proof of the First Incompleteness Theorem'})]
 ```
 
-
 ## Limitations
 
 There can be quite a bit of structural variation from one HTML document to another, and while `HTMLHeaderTextSplitter` will attempt to attach all "relevant" headers to any given chunk, it can sometimes miss certain headers. For example, the algorithm assumes an informational hierarchy in which headers are always at nodes "above" associated text, i.e. prior siblings, ancestors, and combinations thereof. In the following news article (as of the writing of this document), the document is structured such that the text of the top-level headline, while tagged "h1", is in a *distinct* subtree from the text elements that we'd expect it to be *"above"*&mdash;so we can observe that the "h1" element and its associated text do not show up in the chunk metadata (but, where applicable, we do see "h2" and its associated text):   
-
-
 
 ```python
 url = "https://www.cnn.com/2023/09/25/weather/el-nino-winter-us-climate/index.html"

@@ -12,11 +12,9 @@ Some advantages of switching to the LCEL implementation are:
 - Easier streaming. `LLMChain` only supports streaming via callbacks.
 - Easier access to raw message outputs if desired. `LLMChain` only exposes these via a parameter or via callback.
 
-
 ```python
 %pip install --upgrade --quiet langchain-openai
 ```
-
 
 ```python
 import os
@@ -45,15 +43,13 @@ chain = LLMChain(llm=ChatOpenAI(), prompt=prompt)
 chain({"adjective": "funny"})
 ```
 
-
-
 ```output
 {'adjective': 'funny',
  'text': "Why couldn't the bicycle stand up by itself?\n\nBecause it was two tired!"}
 ```
 
-
 </details>
+
 
 ## LCEL
 
@@ -75,15 +71,11 @@ chain = prompt | ChatOpenAI() | StrOutputParser()
 chain.invoke({"adjective": "funny"})
 ```
 
-
-
 ```output
 'Why was the math book sad?\n\nBecause it had too many problems.'
 ```
 
-
 Note that `LLMChain` by default returns a `dict` containing both the input and the output. If this behavior is desired, we can replicate it using another LCEL primitive, [`RunnablePassthrough`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html):
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "# Legacy"}]-->
@@ -94,15 +86,13 @@ outer_chain = RunnablePassthrough().assign(text=chain)
 outer_chain.invoke({"adjective": "funny"})
 ```
 
-
-
 ```output
 {'adjective': 'funny',
  'text': 'Why did the scarecrow win an award? Because he was outstanding in his field!'}
 ```
 
-
 </details>
+
 
 ## Next steps
 

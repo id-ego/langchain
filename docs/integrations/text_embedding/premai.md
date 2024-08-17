@@ -21,7 +21,6 @@ Before proceeding further, please make sure that you have made an account on Pre
 
 In this section we are going to dicuss how we can get access to different embedding model using `PremEmbeddings` with LangChain. Lets start by importing our modules and setting our API Key. 
 
-
 ```python
 <!--IMPORTS:[{"imported": "PremAIEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.premai.PremAIEmbeddings.html", "title": "PremAI"}]-->
 # Let's start by doing some imports and define our embedding object
@@ -33,7 +32,6 @@ Once we imported our required modules, let's setup our client. For now let's ass
 
 > Note: Setting `model_name` argument in mandatory for PremAIEmbeddings unlike [ChatPremAI.](https://python.langchain.com/v0.1/docs/integrations/chat/premai/)
 
-
 ```python
 import getpass
 import os
@@ -42,14 +40,12 @@ if os.environ.get("PREMAI_API_KEY") is None:
     os.environ["PREMAI_API_KEY"] = getpass.getpass("PremAI API Key:")
 ```
 
-
 ```python
 model = "text-embedding-3-large"
 embedder = PremAIEmbeddings(project_id=8, model=model)
 ```
 
 We support lots of state of the art embedding models. You can view our list of supported LLMs and embedding models [here](https://docs.premai.io/get-started/supported-models). For now let's go for `text-embedding-3-large` model for this example.
-
 
 ```python
 query = "Hello, this is a test query"
@@ -63,7 +59,6 @@ print(query_result[:5])
 [-0.02129288576543331, 0.0008162345038726926, -0.004556538071483374, 0.02918623760342598, -0.02547479420900345]
 ```
 Finally let's embed a document
-
 
 ```python
 documents = ["This is document1", "This is document2", "This is document3"]

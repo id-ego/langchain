@@ -36,7 +36,6 @@ You are now ready to add rate limiting to your chain!
 
 Let's imagine that we want to allow our users to invoke our chain 10 times per minute. Achieving this is as simple as:
 
-
 ```python
 <!--IMPORTS:[{"imported": "UpstashRatelimitError", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.upstash_ratelimit_callback.UpstashRatelimitError.html", "title": "Upstash Ratelimit Callback"}, {"imported": "UpstashRatelimitHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.upstash_ratelimit_callback.UpstashRatelimitHandler.html", "title": "Upstash Ratelimit Callback"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "Upstash Ratelimit Callback"}]-->
 # set env variables
@@ -99,7 +98,6 @@ After LLM is called, token usage information will be used to subtracted from the
 
 For the first configuration, simply initialize the handler like this:
 
-
 ```python
 ratelimit = Ratelimit(
     redis=Redis.from_env(),
@@ -111,7 +109,6 @@ handler = UpstashRatelimitHandler(identifier=user_id, token_ratelimit=ratelimit)
 ```
 
 For the second configuration, here is how to initialize the handler:
-
 
 ```python
 ratelimit = Ratelimit(
@@ -130,7 +127,6 @@ handler = UpstashRatelimitHandler(
 You can also employ ratelimiting based on requests and tokens at the same time, simply by passing both `request_ratelimit` and `token_ratelimit` parameters.
 
 Here is an example with a chain utilizing an LLM:
-
 
 ```python
 <!--IMPORTS:[{"imported": "UpstashRatelimitError", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.upstash_ratelimit_callback.UpstashRatelimitError.html", "title": "Upstash Ratelimit Callback"}, {"imported": "UpstashRatelimitHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.upstash_ratelimit_callback.UpstashRatelimitHandler.html", "title": "Upstash Ratelimit Callback"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "Upstash Ratelimit Callback"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Upstash Ratelimit Callback"}]-->

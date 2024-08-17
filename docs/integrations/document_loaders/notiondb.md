@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Notion DB 2/2
 
->[Notion](https://www.notion.so/) is a collaboration platform with modified Markdown support that integrates kanban boards, tasks, wikis and databases. It is an all-in-one workspace for notetaking, knowledge and data management, and project and task management.
+> [Notion](https://www.notion.so/) is a collaboration platform with modified Markdown support that integrates kanban boards, tasks, wikis and databases. It is an all-in-one workspace for notetaking, knowledge and data management, and project and task management.
 
 `NotionDBLoader` is a Python class for loading content from a `Notion` database. It retrieves pages from the database, reads their content, and returns a list of Document objects.
 
@@ -44,7 +44,6 @@ To connect your integration to the database, follow these steps:
 4. Find your integration, you may need to start typing its name in the search box.
 5. Click on the "Connect" button to connect the integration to the database.
 
-
 ### 4. Get the Database ID
 To get the database ID, follow these steps:
 
@@ -57,7 +56,6 @@ With the database properly set up and the integration token and database ID in h
 
 ## Usage
 NotionDBLoader is part of the langchain package's document loaders. You can use it as follows:
-
 
 ```python
 from getpass import getpass
@@ -75,7 +73,6 @@ DATABASE_ID = getpass()
 from langchain_community.document_loaders import NotionDBLoader
 ```
 
-
 ```python
 loader = NotionDBLoader(
     integration_token=NOTION_TOKEN,
@@ -84,11 +81,9 @@ loader = NotionDBLoader(
 )
 ```
 
-
 ```python
 docs = loader.load()
 ```
-
 
 ```python
 print(docs)

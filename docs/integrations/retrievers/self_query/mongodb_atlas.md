@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # MongoDB Atlas
 
->[MongoDB Atlas](https://www.mongodb.com/) is a document database that can be 
+> [MongoDB Atlas](https://www.mongodb.com/) is a document database that can be
 used as a vector database.
 
 In the walkthrough, we'll demo the `SelfQueryRetriever` with a `MongoDB Atlas` vector store.
@@ -15,13 +15,11 @@ First we'll want to create a MongoDB Atlas VectorStore and seed it with some dat
 
 NOTE: The self-query retriever requires you to have `lark` installed (`pip install lark`). We also need the `pymongo` package.
 
-
 ```python
 %pip install --upgrade --quiet  lark pymongo
 ```
 
 We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
-
 
 ```python
 import os
@@ -30,7 +28,6 @@ OPENAI_API_KEY = "Use your OpenAI key"
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "MongoDBAtlasVectorSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.mongodb_atlas.MongoDBAtlasVectorSearch.html", "title": "MongoDB Atlas"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "MongoDB Atlas"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "MongoDB Atlas"}]-->
@@ -49,7 +46,6 @@ collection = MongoClient[DB_NAME][COLLECTION_NAME]
 
 embeddings = OpenAIEmbeddings()
 ```
-
 
 ```python
 docs = [
@@ -117,7 +113,6 @@ You can name the index `{COLLECTION_NAME}` and create the index on the namespace
 ## Creating our self-querying retriever
 Now we can instantiate our retriever. To do this we'll need to provide some information upfront about the metadata fields that our documents support and a short description of the document contents.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "MongoDB Atlas"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "MongoDB Atlas"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "MongoDB Atlas"}]-->
 from langchain.chains.query_constructor.base import AttributeInfo
@@ -142,7 +137,6 @@ metadata_field_info = [
 document_content_description = "Brief summary of a movie"
 ```
 
-
 ```python
 llm = OpenAI(temperature=0)
 retriever = SelfQueryRetriever.from_llm(
@@ -153,30 +147,25 @@ retriever = SelfQueryRetriever.from_llm(
 ## Testing it out
 And now we can try actually using our retriever!
 
-
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are some movies about dinosaurs")
 ```
-
 
 ```python
 # This example specifies a filter
 retriever.invoke("What are some highly rated movies (above 9)?")
 ```
 
-
 ```python
 # This example only specifies a query and a filter
 retriever.invoke("I want to watch a movie about toys rated higher than 9")
 ```
 
-
 ```python
 # This example specifies a composite filter
 retriever.invoke("What's a highly rated (above or equal 9) thriller film?")
 ```
-
 
 ```python
 # This example specifies a query and composite filter
@@ -192,7 +181,6 @@ We can also use the self query retriever to specify `k`: the number of documents
 
 We can do this by passing `enable_limit=True` to the constructor.
 
-
 ```python
 retriever = SelfQueryRetriever.from_llm(
     llm,
@@ -203,7 +191,6 @@ retriever = SelfQueryRetriever.from_llm(
     enable_limit=True,
 )
 ```
-
 
 ```python
 # This example only specifies a relevant query

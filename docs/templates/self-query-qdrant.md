@@ -4,7 +4,7 @@ canonical: https://python.langchain.com/v0.2/docs/templates/self-query-qdrant/
 
 # self-query-qdrant
 
-This template performs [self-querying](https://python.langchain.com/docs/modules/data_connection/retrievers/self_query/) 
+This template performs [self-querying](https://python.langchain.com/docs/modules/data_connection/retrievers/self_query/)
 using Qdrant and OpenAI. By default, it uses an artificial dataset of 10 documents, but you can replace it with your own dataset.
 
 ## Environment Setup
@@ -152,7 +152,7 @@ langchain serve
 
 ### Local Server
 
-This will start the FastAPI app with a server running locally at 
+This will start the FastAPI app with a server running locally at
 [http://localhost:8000](http://localhost:8000)
 
 You can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

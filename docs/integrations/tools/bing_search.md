@@ -12,11 +12,9 @@ Following the [instruction](https://learn.microsoft.com/en-us/bing/search-apis/b
 
 The integration lives in the `langchain-community` package.
 
-
 ```python
 %pip install -U langchain-community
 ```
-
 
 ```python
 import getpass
@@ -26,48 +24,37 @@ os.environ["BING_SUBSCRIPTION_KEY"] = getpass.getpass()
 os.environ["BING_SEARCH_URL"] = "https://api.bing.microsoft.com/v7.0/search"
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "BingSearchAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.bing_search.BingSearchAPIWrapper.html", "title": "Bing Search"}]-->
 from langchain_community.utilities import BingSearchAPIWrapper
 ```
 
-
 ```python
 search = BingSearchAPIWrapper(k=4)
 ```
 
-
 ```python
 search.run("python")
 ```
-
-
 
 ```output
 '<b>Python is a</b> versatile and powerful language that lets you work quickly and integrate systems more effectively. Learn how to get started, download the latest version, access documentation, find jobs, and join the Python community. <b>Python is a</b> popular programming language for various purposes. Find the latest version of Python for different operating systems, download release notes, and learn about the development process. Learn <b>Python,</b> a popular programming language for web applications, with examples, exercises, and references. Get certified by completing the PYTHON <b>course</b> at W3Schools. Learn the basic concepts and features of <b>Python,</b> a powerful and easy to learn programming language. The tutorial covers topics such as data structures, modules, classes, exceptions, input and output, and more. Learn why and how to use <b>Python,</b> a popular and easy-to-learn programming language. Find installation guides, tutorials, documentation, resources and FAQs for beginners and experienced programmers. Learn about <b>Python,</b> a high-level, general-purpose programming language with a focus on code readability and multiple paradigms. Find out its history, design, features, libraries, implementations, popularity, uses, and influences. Real <b>Python</b> offers tutorials, books, courses, and news for <b>Python</b> developers of all skill levels. Whether you want to learn <b>Python</b> basics, web development, data science, or machine learning, you can find useful articles and code examples here. Learn how to install, use, and extend <b>Python</b> 3.12.3, a popular programming language. Find tutorials, library references, API guides, FAQs, and more. <b>Python</b> is a powerful, fast, friendly and open-source language that runs everywhere. Learn how to get started, explore applications, join the community and access the latest news and events. Learn the basics of <b>Python</b> programming language with examples of numbers, text, variables, and operators. This tutorial covers the syntax, types, and features of <b>Python</b> for beginners.'
 ```
 
-
 ## Number of results
 You can use the `k` parameter to set the number of results
-
 
 ```python
 search = BingSearchAPIWrapper(k=1)
 ```
 
-
 ```python
 search.run("python")
 ```
 
-
-
 ```output
 '<b>Python</b> is a versatile and powerful language that lets you work quickly and integrate systems more effectively. Learn how to get started, download the latest version, access documentation, find jobs, and join the Python community.'
 ```
-
 
 ## Metadata Results
 
@@ -77,17 +64,13 @@ Run query through BingSearch and return snippet, title, and link metadata.
 - Title: The title of the result.
 - Link: The link to the result.
 
-
 ```python
 search = BingSearchAPIWrapper()
 ```
 
-
 ```python
 search.results("apples", 5)
 ```
-
-
 
 ```output
 [{'snippet': 'Learn about the nutrients, antioxidants, and potential health effects of<b> apples.</b> Find out how<b> apples</b> may help with weight loss, diabetes, heart disease, and cancer.',
@@ -107,9 +90,7 @@ search.results("apples", 5)
   'link': 'https://www.liveeatlearn.com/types-of-apples/'}]
 ```
 
-
 ## Tool Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "BingSearchResults", "source": "langchain_community.tools.bing_search", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.bing_search.tool.BingSearchResults.html", "title": "Bing Search"}, {"imported": "BingSearchAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.bing_search.BingSearchAPIWrapper.html", "title": "Bing Search"}]-->
@@ -123,13 +104,9 @@ tool = BingSearchResults(api_wrapper=api_wrapper)
 tool
 ```
 
-
-
 ```output
 BingSearchResults(api_wrapper=BingSearchAPIWrapper(bing_subscription_key='<your subscription key>', bing_search_url='https://api.bing.microsoft.com/v7.0/search', k=10, search_kwargs={}))
 ```
-
-
 
 ```python
 import json
@@ -150,12 +127,10 @@ for item in response:
 
 We show here how to use it as part of an [agent](/docs/tutorials/agents). We use the OpenAI Functions Agent, so we will need to setup and install the required dependencies for that. We will also use [LangSmith Hub](https://smith.langchain.com/hub) to pull the prompt from, so we will need to install that.
 
-
 ```python
 # you need a model to use in the chain
 %pip install --upgrade --quiet langchain langchain-openai langchainhub langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Bing Search"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "Bing Search"}, {"imported": "AzureChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.azure.AzureChatOpenAI.html", "title": "Bing Search"}]-->
@@ -203,13 +178,10 @@ Invoking: `bing_search_results_json` with `{'query': 'latest burning man floods'
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'What happened in the latest burning man floods?',
  'output': 'In the latest Burning Man festival, heavy rains caused flooding and resulted in thousands of attendees being stranded. The festival took place in Black Rock Forest, Nevada, and around 70,000 people were gathered for the event. The excessive rainfall led to flash flooding in some parts of the area. As a result, camp sites were filled with ankle-deep mud, making it difficult for people to leave. Authorities were investigating a death at the festival site, which was affected by the flooding. However, in the following days, thousands of Burning Man attendees were able to make a mass exodus after the rain subsided.'}
 ```
-
-
 
 ## Related
 

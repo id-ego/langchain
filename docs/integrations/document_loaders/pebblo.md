@@ -10,7 +10,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 Pebblo has two components.
 
 1. Pebblo Safe DocumentLoader for Langchain
-1. Pebblo Server
+2. Pebblo Server
 
 This document describes how to augment your existing Langchain DocumentLoader with Pebblo Safe DocumentLoader to get deep data visibility on the types of Topics and Entities ingested into the Gen-AI Langchain application. For details on `Pebblo Server` see this [pebblo server](https://daxa-ai.github.io/pebblo/daemon) document.
 
@@ -24,7 +24,6 @@ Assume a Langchain RAG application snippet using `CSVLoader` to read a CSV docum
 
 Here is the snippet of Document loading using `CSVLoader`.
 
-
 ```python
 <!--IMPORTS:[{"imported": "CSVLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.CSVLoader.html", "title": "Pebblo Safe DocumentLoader"}]-->
 from langchain_community.document_loaders import CSVLoader
@@ -35,7 +34,6 @@ print(documents)
 ```
 
 The Pebblo SafeLoader can be enabled with few lines of code change to the above snippet.
-
 
 ```python
 <!--IMPORTS:[{"imported": "CSVLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.CSVLoader.html", "title": "Pebblo Safe DocumentLoader"}, {"imported": "PebbloSafeLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pebblo.PebbloSafeLoader.html", "title": "Pebblo Safe DocumentLoader"}]-->
@@ -54,7 +52,6 @@ print(documents)
 ### Send semantic topics and identities to Pebblo cloud server
 
 To send semantic data to pebblo-cloud, pass api-key to PebbloSafeLoader as an argument or alternatively, put the api-key in `PEBBLO_API_KEY` environment variable.
-
 
 ```python
 <!--IMPORTS:[{"imported": "CSVLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.CSVLoader.html", "title": "Pebblo Safe DocumentLoader"}, {"imported": "PebbloSafeLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pebblo.PebbloSafeLoader.html", "title": "Pebblo Safe DocumentLoader"}]-->
@@ -75,7 +72,6 @@ print(documents)
 
 To add semantic topics and sematic entities to metadata of loaded documents, set load_semantic to True as an argument or alternatively, define a new environment variable `PEBBLO_LOAD_SEMANTIC`, and setting it to True.
 
-
 ```python
 <!--IMPORTS:[{"imported": "CSVLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.CSVLoader.html", "title": "Pebblo Safe DocumentLoader"}, {"imported": "PebbloSafeLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pebblo.PebbloSafeLoader.html", "title": "Pebblo Safe DocumentLoader"}]-->
 from langchain_community.document_loaders import CSVLoader, PebbloSafeLoader
@@ -91,7 +87,6 @@ loader = PebbloSafeLoader(
 documents = loader.load()
 print(documents[0].metadata)
 ```
-
 
 ## Related
 

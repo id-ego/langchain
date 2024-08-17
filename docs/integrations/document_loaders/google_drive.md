@@ -5,16 +5,16 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Google Drive
 
->[Google Drive](https://en.wikipedia.org/wiki/Google_Drive) is a file storage and synchronization service developed by Google.
+> [Google Drive](https://en.wikipedia.org/wiki/Google_Drive) is a file storage and synchronization service developed by Google.
 
 This notebook covers how to load documents from `Google Drive`. Currently, only `Google Docs` are supported.
 
 ## Prerequisites
 
 1. Create a Google Cloud project or use an existing project
-1. Enable the [Google Drive API](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com)
-1. [Authorize credentials for desktop app](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)
-1. `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`
+2. Enable the [Google Drive API](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com)
+3. [Authorize credentials for desktop app](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)
+4. `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`
 
 ## 🧑 Instructions for ingesting your Google Docs data
 Set the environmental variable `GOOGLE_APPLICATION_CREDENTIALS` to an empty string (`""`).
@@ -28,16 +28,13 @@ The first time you use GoogleDriveLoader, you will be displayed with the consent
 * Folder: https://drive.google.com/drive/u/0/folders/1yucgL9WGgWZdM1TOuKkeghlPizuzMYb5 -> folder id is `"1yucgL9WGgWZdM1TOuKkeghlPizuzMYb5"`
 * Document: https://docs.google.com/document/d/1bfaMQ18_i56204VaQDVeAFpqEijJTgvurupdEDiaUQw/edit -> document id is `"1bfaMQ18_i56204VaQDVeAFpqEijJTgvurupdEDiaUQw"`
 
-
 ```python
 %pip install --upgrade --quiet langchain-google-community[drive]
 ```
 
-
 ```python
 from langchain_google_community import GoogleDriveLoader
 ```
-
 
 ```python
 loader = GoogleDriveLoader(
@@ -48,13 +45,11 @@ loader = GoogleDriveLoader(
 )
 ```
 
-
 ```python
 docs = loader.load()
 ```
 
 When you pass a `folder_id` by default all files of type document, sheet and pdf are loaded. You can modify this behaviour by passing a `file_types` argument 
-
 
 ```python
 loader = GoogleDriveLoader(
@@ -68,13 +63,11 @@ loader = GoogleDriveLoader(
 
 When processing files other than Google Docs and Google Sheets, it can be helpful to pass an optional file loader to `GoogleDriveLoader`. If you pass in a file loader, that file loader will be used on documents that do not have a Google Docs or Google Sheets MIME type. Here is an example of how to load an Excel document from Google Drive using a file loader. 
 
-
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredFileIOLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.unstructured.UnstructuredFileIOLoader.html", "title": "Google Drive"}]-->
 from langchain_community.document_loaders import UnstructuredFileIOLoader
 from langchain_google_community import GoogleDriveLoader
 ```
-
 
 ```python
 file_id = "1x9WBtFPWMEAdjcJzPScRsjpjQvpSo_kz"
@@ -85,18 +78,15 @@ loader = GoogleDriveLoader(
 )
 ```
 
-
 ```python
 docs = loader.load()
 ```
-
 
 ```python
 docs[0]
 ```
 
 You can also process a folder with a mix of files and Google Docs/Sheets using the following pattern:
-
 
 ```python
 folder_id = "1asMOHY1BqBS84JcRbOag5LOJac74gpmD"
@@ -107,11 +97,9 @@ loader = GoogleDriveLoader(
 )
 ```
 
-
 ```python
 docs = loader.load()
 ```
-
 
 ```python
 docs[0]
@@ -124,23 +112,19 @@ in its place.
 
 To be compatible with containers, the authentication uses an environment variable `̀GOOGLE_ACCOUNT_FILE` to credential file (for user or service).
 
-
 ```python
 %pip install --upgrade --quiet  langchain-googledrive
 ```
-
 
 ```python
 folder_id = "root"
 # folder_id='1yucgL9WGgWZdM1TOuKkeghlPizuzMYb5'
 ```
 
-
 ```python
 # Use the advanced version.
 from langchain_googledrive.document_loaders import GoogleDriveLoader
 ```
-
 
 ```python
 loader = GoogleDriveLoader(
@@ -172,11 +156,9 @@ It's possible to update or customize this. See the documentation of `GDriveLoade
 
 But, the corresponding packages must be installed.
 
-
 ```python
 %pip install --upgrade --quiet  unstructured
 ```
-
 
 ```python
 for doc in loader.load():
@@ -187,7 +169,6 @@ for doc in loader.load():
 ### Loading auth Identities
 
 Authorized identities for each file ingested by Google Drive Loader can be loaded along with metadata per Document.
-
 
 ```python
 from langchain_google_community import GoogleDriveLoader
@@ -203,17 +184,15 @@ doc = loader.load()
 
 You can pass load_auth=True, to add Google Drive document access identities to metadata.
 
-
 ```python
 doc[0].metadata
 ```
 
 ### Loading extended metadata
 Following extra fields can also be fetched within metadata of each Document:
- - full_path - Full path of the file/s in google drive.
- - owner - owner of the file/s.
- - size - size of the file/s.
-
+- full_path - Full path of the file/s in google drive.
+- owner - owner of the file/s.
+- size - size of the file/s.
 
 ```python
 from langchain_google_community import GoogleDriveLoader
@@ -228,7 +207,6 @@ doc = loader.load()
 ```
 
 You can pass load_extended_matadata=True, to add Google Drive document extended details to metadata.
-
 
 ```python
 doc[0].metadata
@@ -256,8 +234,6 @@ You can customize the criteria to select the files. A set of predefined filter a
 | gdrive-query-with-mime-type            | Search `query` with a specific `mime_type`                            |
 | gdrive-query-with-mime-type-and-folder | Search `query` with a specific `mime_type` and in `folder_id`         |
 
-
-
 ```python
 loader = GoogleDriveLoader(
     folder_id=folder_id,
@@ -273,7 +249,6 @@ for doc in loader.load():
 ```
 
 You can customize your pattern.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts.prompt", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Google Drive"}]-->
@@ -309,14 +284,11 @@ The parameter mode accepts different values:
 - "document": return the body of each document
 - "snippets": return the description of each file (set in metadata of Google Drive files).
 
-
 The parameter `gslide_mode` accepts different values:
 
 - "single" : one document with &lt;PAGE BREAK&gt;
 - "slide" : one document by slide
 - "elements" : one document for each elements.
-
-
 
 ```python
 loader = GoogleDriveLoader(
@@ -333,7 +305,6 @@ for doc in loader.load():
 The parameter `gsheet_mode` accepts different values:
 - `"single"`: Generate one document by line
 - `"elements"` : one document with markdown array and &lt;PAGE BREAK&gt; tags.
-
 
 ```python
 loader = GoogleDriveLoader(
@@ -356,7 +327,6 @@ Sometime, a specific filter can be used to extract some information from the fil
 
 Sometimes, many documents are returned. It's not necessary to have all documents in memory at the same time. You can use the lazy versions of methods, to get one document at a time. It's better to use a complex query in place of a recursive search. For each folder, a query must be applied if you activate `recursive=True`.
 
-
 ```python
 import os
 
@@ -372,7 +342,6 @@ for doc in loader.load():
     print("---")
     print(doc.page_content.strip()[:60] + "...")
 ```
-
 
 ## Related
 

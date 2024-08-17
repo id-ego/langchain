@@ -6,7 +6,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # Tigris
 
 > [Tigris](https://tigrisdata.com) is an open-source Serverless NoSQL Database and Search Platform designed to simplify building high-performance vector search applications.
-> `Tigris` eliminates the infrastructure complexity of managing, operating, and synchronizing multiple tools, allowing you to focus on building great applications instead.
+`Tigris` eliminates the infrastructure complexity of managing, operating, and synchronizing multiple tools, allowing you to focus on building great applications instead.
 
 This notebook guides you how to use Tigris as your VectorStore
 
@@ -16,13 +16,11 @@ This notebook guides you how to use Tigris as your VectorStore
 
 Let's first install our dependencies:
 
-
 ```python
 %pip install --upgrade --quiet  tigrisdb openapi-schema-pydantic langchain-openai langchain-community tiktoken
 ```
 
 We will load the `OpenAI` api key and `Tigris` credentials in our environment
-
 
 ```python
 import getpass
@@ -33,7 +31,6 @@ os.environ["TIGRIS_PROJECT"] = getpass.getpass("Tigris Project Name:")
 os.environ["TIGRIS_CLIENT_ID"] = getpass.getpass("Tigris Client Id:")
 os.environ["TIGRIS_CLIENT_SECRET"] = getpass.getpass("Tigris Client Secret:")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Tigris"}, {"imported": "Tigris", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.tigris.Tigris.html", "title": "Tigris"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Tigris"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Tigris"}]-->
@@ -46,7 +43,6 @@ from langchain_text_splitters import CharacterTextSplitter
 ### Initialize Tigris vector store
 Let's import our test dataset:
 
-
 ```python
 loader = TextLoader("../../../state_of_the_union.txt")
 documents = loader.load()
@@ -56,13 +52,11 @@ docs = text_splitter.split_documents(documents)
 embeddings = OpenAIEmbeddings()
 ```
 
-
 ```python
 vector_store = Tigris.from_documents(docs, embeddings, index_name="my_embeddings")
 ```
 
 ### Similarity Search
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -72,14 +66,12 @@ print(found_docs)
 
 ### Similarity Search with score (vector distance)
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 result = vector_store.similarity_search_with_score(query)
 for doc, score in result:
     print(f"document={doc}, score={score}")
 ```
-
 
 ## Related
 

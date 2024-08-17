@@ -32,14 +32,13 @@ You can make sure that the API is working by issuing a curl request to the API e
 
 This should return a JSON object with the results.
 
-
 ## Wrappers
 
 ### Utility
 
 To use the wrapper we need to pass the host of the SearxNG instance to the wrapper with:
-    1. the named parameter `searx_host` when creating the instance.
-    2. exporting the environment variable `SEARXNG_HOST`.
+1. the named parameter `searx_host` when creating the instance.
+2. exporting the environment variable `SEARXNG_HOST`.
 
 You can use the wrapper to get results from a SearxNG instance. 
 
@@ -64,7 +63,7 @@ tools = load_tools(["searx-search"],
                     engines=["github"])
 ```
 
-Note that we could _optionally_ pass custom engines to use.
+Note that we could *optionally* pass custom engines to use.
 
 If you want to obtain results with metadata as *json* you can use:
 ```python

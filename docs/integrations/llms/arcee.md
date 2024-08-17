@@ -6,7 +6,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # Arcee
 This notebook demonstrates how to use the `Arcee` class for generating text using Arcee's Domain Adapted Language Models (DALMs).
 
-
 ```python
 ##Installing the langchain packages needed to use the integration
 %pip install -qU langchain-community
@@ -15,7 +14,6 @@ This notebook demonstrates how to use the `Arcee` class for generating text usin
 ### Setup
 
 Before using Arcee, make sure the Arcee API key is set as `ARCEE_API_KEY` environment variable. You can also pass the api key as a named parameter.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Arcee", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.arcee.Arcee.html", "title": "Arcee"}]-->
@@ -32,7 +30,6 @@ arcee = Arcee(
 
 You can also configure Arcee's parameters such as `arcee_api_url`, `arcee_app_url`, and `model_kwargs` as needed.
 Setting the `model_kwargs` at the object initialization uses the parameters as default for all the subsequent calls to the generate response.
-
 
 ```python
 arcee = Arcee(
@@ -57,7 +54,6 @@ arcee = Arcee(
 
 You can generate text from Arcee by providing a prompt. Here's an example:
 
-
 ```python
 # Generate text
 prompt = "Can AI-driven music therapy contribute to the rehabilitation of patients with disorders of consciousness?"
@@ -67,10 +63,6 @@ response = arcee(prompt)
 ### Additional parameters
 
 Arcee allows you to apply `filters` and set the `size` (in terms of count) of retrieved document(s) to aid text generation. Filters help narrow down the results. Here's how to use these parameters:
-
-
-
-
 
 ```python
 # Define filters
@@ -82,7 +74,6 @@ filters = [
 # Generate text with filters and size params
 response = arcee(prompt, size=5, filters=filters)
 ```
-
 
 ## Related
 

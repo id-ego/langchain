@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 [Yellowbrick](https://yellowbrick.com/yellowbrick-data-warehouse/) is an elastic, massively parallel processing (MPP) SQL database that runs in the cloud and on-premises, using kubernetes for scale, resilience and cloud portability. Yellowbrick is designed to address the largest and most complex business-critical data warehousing use cases. The efficiency at scale that Yellowbrick provides also enables it to be used as a high performance and scalable vector database to store and search vectors with SQL. 
 
-
 ## Using Yellowbrick as the vector store for ChatGpt
 
 This tutorial demonstrates how to create a simple chatbot backed by ChatGpt that uses Yellowbrick as a vector store to support Retrieval Augmented Generation (RAG). What you'll need:
@@ -16,8 +15,6 @@ This tutorial demonstrates how to create a simple chatbot backed by ChatGpt that
 2. An api key from [OpenAI](https://platform.openai.com/)
 
 The tutorial is divided into five parts. First we'll use langchain to create a baseline chatbot to interact with ChatGpt without a vector store. Second, we'll create an embeddings table in Yellowbrick that will represent the vector store. Third, we'll load a series of documents (the Administration chapter of the Yellowbrick Manual). Fourth, we'll create the vector representation of those documents and store in a Yellowbrick table.  Lastly, we'll send the same queries to the improved chatbox to see the results.
-
-
 
 ```python
 # Install all needed libraries
@@ -38,9 +35,7 @@ To get an api key for OpenAI:
 
 You'll also need your Username, Password, and Database name from the welcome email when you sign up for the Yellowbrick Sandbox Account.
 
-
 The following should be modified to include the information for your Yellowbrick database and OpenAPI Key
-
 
 ```python
 # Modify these values to match your Yellowbrick Sandbox and OpenAI API Key
@@ -51,7 +46,6 @@ YBHOST = "trialsandbox.sandbox.aws.yellowbrickcloud.com"
 
 OPENAI_API_KEY = "[OPENAI API KEY]"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Yellowbrick"}, {"imported": "RetrievalQAWithSourcesChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.qa_with_sources.retrieval.RetrievalQAWithSourcesChain.html", "title": "Yellowbrick"}, {"imported": "Yellowbrick", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.yellowbrick.Yellowbrick.html", "title": "Yellowbrick"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Yellowbrick"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Yellowbrick"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Yellowbrick"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Yellowbrick"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Yellowbrick"}, {"imported": "HumanMessagePromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.HumanMessagePromptTemplate.html", "title": "Yellowbrick"}, {"imported": "SystemMessagePromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.SystemMessagePromptTemplate.html", "title": "Yellowbrick"}]-->
@@ -94,8 +88,6 @@ from langchain_core.prompts.chat import (
 
 We will use langchain to query ChatGPT.  As there is no Vector Store, ChatGPT will have no context in which to answer the question.
 
-
-
 ```python
 # Set up the chat model and specific prompt
 system_template = """If you don't know the answer, Make up your best guess."""
@@ -137,12 +129,10 @@ print_result_simple("What's an easy way to add users in bulk to Yellowbrick?")
 
 ## Part 2: Connect to Yellowbrick and create the embedding tables
 
-To load your document embeddings into Yellowbrick, you should create your own table for storing them in. Note that the 
+To load your document embeddings into Yellowbrick, you should create your own table for storing them in. Note that the
 Yellowbrick database that the table is in has to be UTF-8 encoded. 
 
 Create a table in a UTF-8 database with the following schema, providing a table name of your choice:
-
-
 
 ```python
 # Establish a connection to the Yellowbrick database
@@ -183,11 +173,6 @@ conn.close()
 ## Part 3: Extract the documents to index from an existing table in Yellowbrick
 Extract document paths and contents from an existing Yellowbrick table. We'll use these documents to create embeddings from in the next step.
 
-
-
-
-
-
 ```python
 yellowbrick_doc_connection_string = (
     f"postgres://{urlparse.quote(YBUSER)}:{YBPASSWORD}@{YBHOST}:5432/{YB_DOC_DATABASE}"
@@ -219,8 +204,6 @@ conn.close()
 
 ## Part 4: Load the Yellowbrick Vector Store with Documents
 Go through documents, split them into digestable chunks, create the embedding and insert into the Yellowbrick table. This takes around 5 minutes.
-
-
 
 ```python
 # Split documents into chunks for conversion to embeddings
@@ -264,8 +247,6 @@ print(f"Created vector store with {len(documents)} documents")
 Next, we add Yellowbrick as a vector store. The vector store has been populated with embeddings representing the administrative chapter of the Yellowbrick product documentation.
 
 We'll send the same queries as above to see the impoved responses.
-
-
 
 ```python
 system_template = """Use the following pieces of context to answer the users question.
@@ -329,7 +310,6 @@ Yellowbrick also supports indexing using the Locality-Sensitive Hashing approach
 - The Hamming distance, an integer representing the breadth of the search. Smaller Hamming distances result in faster retreival but lower accuracy.
 
 Here's how you can create an index on the embeddings we loaded into Yellowbrick. We'll also re-run the previous chat session, but this time the retrieval will use the index. Note that for such a small number of documents, you won't see the benefit of indexing in terms of performance.
-
 
 ```python
 system_template = """Use the following pieces of context to answer the users question.
@@ -397,7 +377,6 @@ print_result_sources("Whats an easy way to add users in bulk to Yellowbrick?")
 This code can be modified to ask different questions. You can also load your own documents into the vector store. The langchain module is very flexible and can parse a large variety of files (including HTML, PDF, etc).
 
 You can also modify this to use Huggingface embeddings models and Meta's Llama 2 LLM for a completely private chatbox experience.
-
 
 ## Related
 

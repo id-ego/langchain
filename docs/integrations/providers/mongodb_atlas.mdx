@@ -4,9 +4,9 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/providers/mongodb
 
 # MongoDB Atlas
 
->[MongoDB Atlas](https://www.mongodb.com/docs/atlas/) is a fully-managed cloud
-> database available in AWS, Azure, and GCP.  It now has support for native 
-> Vector Search on the MongoDB document data.
+> [MongoDB Atlas](https://www.mongodb.com/docs/atlas/) is a fully-managed cloud
+database available in AWS, Azure, and GCP.  It now has support for native
+Vector Search on the MongoDB document data.
 
 ## Installation and Setup
 
@@ -26,7 +26,6 @@ See a [usage example](/docs/integrations/vectorstores/mongodb_atlas).
 <!--IMPORTS:[{"imported": "MongoDBAtlasVectorSearch", "source": "langchain_mongodb", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_mongodb.vectorstores.MongoDBAtlasVectorSearch.html", "title": "MongoDB Atlas"}]-->
 from langchain_mongodb import MongoDBAtlasVectorSearch
 ```
-
 
 ## LLM Caches
 
@@ -57,7 +56,6 @@ set_llm_cache(MongoDBCache(
     database_name=DATABASE_NAME,
 ))
 ```
-
 
 ### MongoDBAtlasSemanticCache
 Semantic caching allows users to retrieve cached prompts based on semantic similarity between the user input and previously cached results. Under the hood it blends MongoDBAtlas as both a cache and a vectorstore.

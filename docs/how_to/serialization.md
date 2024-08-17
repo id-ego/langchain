@@ -23,7 +23,6 @@ De-serialization using `load` and `loads` can instantiate any serializable LangC
 De-serialization is a beta feature and is subject to change.
 :::
 
-
 ```python
 <!--IMPORTS:[{"imported": "dumpd", "source": "langchain_core.load", "docs": "https://api.python.langchain.com/en/latest/load/langchain_core.load.dump.dumpd.html", "title": "How to save and load LangChain objects"}, {"imported": "dumps", "source": "langchain_core.load", "docs": "https://api.python.langchain.com/en/latest/load/langchain_core.load.dump.dumps.html", "title": "How to save and load LangChain objects"}, {"imported": "load", "source": "langchain_core.load", "docs": "https://api.python.langchain.com/en/latest/load/langchain_core.load.load.load.html", "title": "How to save and load LangChain objects"}, {"imported": "loads", "source": "langchain_core.load", "docs": "https://api.python.langchain.com/en/latest/load/langchain_core.load.load.loads.html", "title": "How to save and load LangChain objects"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to save and load LangChain objects"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to save and load LangChain objects"}]-->
 from langchain_core.load import dumpd, dumps, load, loads
@@ -45,7 +44,6 @@ chain = prompt | llm
 ## Saving objects
 
 ### To json
-
 
 ```python
 string_representation = dumps(chain, pretty=True)
@@ -83,7 +81,6 @@ print(string_representation[:500])
 ```
 ### To a json-serializable Python dict
 
-
 ```python
 dict_representation = dumpd(chain)
 
@@ -94,7 +91,6 @@ print(type(dict_representation))
 ```
 ### To disk
 
-
 ```python
 import json
 
@@ -104,17 +100,13 @@ with open("/tmp/chain.json", "w") as fp:
 
 Note that the API key is withheld from the serialized representations. Parameters that are considered secret are specified by the `.lc_secrets` attribute of the LangChain object:
 
-
 ```python
 chain.last.lc_secrets
 ```
 
-
-
 ```output
 {'openai_api_key': 'OPENAI_API_KEY'}
 ```
-
 
 ## Loading objects
 
@@ -122,20 +114,17 @@ Specifying `secrets_map` in `load` and `loads` will load the corresponding secre
 
 ### From string
 
-
 ```python
 chain = loads(string_representation, secrets_map={"OPENAI_API_KEY": "llm-api-key"})
 ```
 
 ### From dict
 
-
 ```python
 chain = load(dict_representation, secrets_map={"OPENAI_API_KEY": "llm-api-key"})
 ```
 
 ### From disk
-
 
 ```python
 with open("/tmp/chain.json", "r") as fp:
@@ -144,12 +133,9 @@ with open("/tmp/chain.json", "r") as fp:
 
 Note that we recover the API key specified at the start of the guide:
 
-
 ```python
 chain.last.openai_api_key.get_secret_value()
 ```
-
-
 
 ```output
 'llm-api-key'

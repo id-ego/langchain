@@ -9,7 +9,6 @@ Here we demonstrate how to use prompt templates to format multimodal inputs to m
 
 In this example we will ask a model to describe an image.
 
-
 ```python
 import base64
 
@@ -19,7 +18,6 @@ image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisco
 image_data = base64.b64encode(httpx.get(image_url).content).decode("utf-8")
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use multimodal prompts"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use multimodal prompts"}]-->
 from langchain_core.prompts import ChatPromptTemplate
@@ -27,7 +25,6 @@ from langchain_openai import ChatOpenAI
 
 model = ChatOpenAI(model="gpt-4o")
 ```
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -46,11 +43,9 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-
 ```python
 chain = prompt | model
 ```
-
 
 ```python
 response = chain.invoke({"image_data": image_data})
@@ -60,7 +55,6 @@ print(response.content)
 The image depicts a sunny day with a beautiful blue sky filled with scattered white clouds. The sky has varying shades of blue, ranging from a deeper hue near the horizon to a lighter, almost pale blue higher up. The white clouds are fluffy and scattered across the expanse of the sky, creating a peaceful and serene atmosphere. The lighting and cloud patterns suggest pleasant weather conditions, likely during the daytime hours on a mild, sunny day in an outdoor natural setting.
 ```
 We can also pass in multiple images.
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -83,11 +77,9 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-
 ```python
 chain = prompt | model
 ```
-
 
 ```python
 response = chain.invoke({"image_data1": image_data, "image_data2": image_data})

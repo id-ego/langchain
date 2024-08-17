@@ -25,7 +25,6 @@ For the purpose of this example, we will do retrieval over the LangChain YouTube
 ## Setup
 #### Install dependencies
 
-
 ```python
 # %pip install -qU langchain langchain-community langchain-openai youtube-transcript-api pytube langchain-chroma
 ```
@@ -33,7 +32,6 @@ For the purpose of this example, we will do retrieval over the LangChain YouTube
 #### Set environment variables
 
 We'll use OpenAI in this example:
-
 
 ```python
 import getpass
@@ -49,7 +47,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ### Load documents
 
 We can use the `YouTubeLoader` to load transcripts of a few LangChain videos:
-
 
 ```python
 <!--IMPORTS:[{"imported": "YoutubeLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.youtube.YoutubeLoader.html", "title": "Build a Query Analysis System"}]-->
@@ -75,7 +72,6 @@ for url in urls:
     docs.extend(YoutubeLoader.from_youtube_url(url, add_video_info=True).load())
 ```
 
-
 ```python
 import datetime
 
@@ -90,12 +86,9 @@ for doc in docs:
 
 Here are the titles of the videos we've loaded:
 
-
 ```python
 [doc.metadata["title"] for doc in docs]
 ```
-
-
 
 ```output
 ['OpenGPTs',
@@ -113,15 +106,11 @@ Here are the titles of the videos we've loaded:
  'LangServe and LangChain Templates Webinar']
 ```
 
-
 Here's the metadata associated with each video. We can see that each document also has a title, view count, publication date, and length:
-
 
 ```python
 docs[0].metadata
 ```
-
-
 
 ```output
 {'source': 'HAn9vnJy6S4',
@@ -135,25 +124,19 @@ docs[0].metadata
  'publish_year': 2024}
 ```
 
-
 And here's a sample from a document's contents:
-
 
 ```python
 docs[0].page_content[:500]
 ```
 
-
-
 ```output
 "hello today I want to talk about open gpts open gpts is a project that we built here at linkchain uh that replicates the GPT store in a few ways so it creates uh end user-facing friendly interface to create different Bots and these Bots can have access to different tools and they can uh be given files to retrieve things over and basically it's a way to create a variety of bots and expose the configuration of these Bots to end users it's all open source um it can be used with open AI it can be us"
 ```
 
-
 ### Indexing documents
 
 Whenever we perform retrieval we need to create an index of documents that we can query. We'll use a vector store to index our documents, and we'll chunk them first to make our retrievals more concise and precise:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Build a Query Analysis System"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Build a Query Analysis System"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Build a Query Analysis System"}]-->
@@ -174,7 +157,6 @@ vectorstore = Chroma.from_documents(
 
 We can perform similarity search on a user question directly to find chunks relevant to the question:
 
-
 ```python
 search_results = vectorstore.similarity_search("how do I build a RAG agent")
 print(search_results[0].metadata["title"])
@@ -186,9 +168,7 @@ hi this is Lance from the Lang chain team and today we're going to be building a
 ```
 This works pretty well! Our first result is quite relevant to the question.
 
-
 What if we wanted to search for results from a specific time period?
-
 
 ```python
 search_results = vectorstore.similarity_search("videos on RAG published in 2023")
@@ -212,7 +192,6 @@ We can use query analysis to improve the results of retrieval. This will involve
 ### Query schema
 In this case we'll have explicit min and max attributes for publication date so that it can be filtered on.
 
-
 ```python
 from typing import Optional
 
@@ -232,7 +211,6 @@ class Search(BaseModel):
 ### Query generation
 
 To convert user questions to structured queries we'll make use of OpenAI's tool-calling API. Specifically we'll use the new [ChatModel.with_structured_output()](/docs/how_to/structured_output) constructor to handle passing the schema to the model and parsing the output.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a Query Analysis System"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Build a Query Analysis System"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Build a Query Analysis System"}]-->
@@ -261,29 +239,21 @@ query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
 Let's see what queries our analyzer generates for the questions we searched earlier:
 
-
 ```python
 query_analyzer.invoke("how do I build a RAG agent")
 ```
-
-
 
 ```output
 Search(query='build RAG agent', publish_year=None)
 ```
 
-
-
 ```python
 query_analyzer.invoke("videos on RAG published in 2023")
 ```
 
-
-
 ```output
 Search(query='RAG', publish_year=2023)
 ```
-
 
 ## Retrieval with query analysis
 
@@ -291,14 +261,12 @@ Our query analysis looks pretty good; now let's try using our generated queries 
 
 **Note:** in our example, we specified `tool_choice="Search"`. This will force the LLM to call one - and only one - tool, meaning that we will always have one optimized query to look up. Note that this is not always the case - see other guides for how to deal with situations when no - or multiple - optmized queries are returned.
 
-
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Build a Query Analysis System"}]-->
 from typing import List
 
 from langchain_core.documents import Document
 ```
-
 
 ```python
 def retrieval(search: Search) -> List[Document]:
@@ -311,24 +279,19 @@ def retrieval(search: Search) -> List[Document]:
     return vectorstore.similarity_search(search.query, filter=_filter)
 ```
 
-
 ```python
 retrieval_chain = query_analyzer | retrieval
 ```
 
 We can now run this chain on the problematic input from before, and see that it yields only results from that year!
 
-
 ```python
 results = retrieval_chain.invoke("RAG tutorial published in 2023")
 ```
 
-
 ```python
 [(doc.metadata["title"], doc.metadata["publish_date"]) for doc in results]
 ```
-
-
 
 ```output
 [('Getting Started with Multi-Modal LLMs', '2023-12-20 00:00:00'),

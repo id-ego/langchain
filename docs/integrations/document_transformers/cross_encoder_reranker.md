@@ -11,7 +11,6 @@ This builds on top of ideas in the [ContextualCompressionRetriever](/docs/how_to
 
 For more about why cross encoder can be used as reranking mechanism in conjunction with embeddings for better retrieval, refer to [Hugging Face Cross-Encoders documentation](https://www.sbert.net/examples/applications/cross-encoder/README.html).
 
-
 ```python
 #!pip install faiss sentence_transformers
 
@@ -19,7 +18,6 @@ For more about why cross encoder can be used as reranking mechanism in conjuncti
 
 #!pip install faiss-cpu sentence_transformers
 ```
-
 
 ```python
 # Helper function for printing docs
@@ -35,7 +33,6 @@ def pretty_print_docs(docs):
 
 ## Set up the base vector store retriever
 Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Cross Encoder Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Cross Encoder Reranker"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Cross Encoder Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Cross Encoder Reranker"}]-->
@@ -61,7 +58,6 @@ pretty_print_docs(docs)
 
 ## Doing reranking with CrossEncoderReranker
 Now let's wrap our base retriever with a `ContextualCompressionRetriever`. `CrossEncoderReranker` uses `HuggingFaceCrossEncoder` to rerank the returned results.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Cross Encoder Reranker"}, {"imported": "CrossEncoderReranker", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.cross_encoder_rerank.CrossEncoderReranker.html", "title": "Cross Encoder Reranker"}, {"imported": "HuggingFaceCrossEncoder", "source": "langchain_community.cross_encoders", "docs": "https://api.python.langchain.com/en/latest/cross_encoders/langchain_community.cross_encoders.huggingface.HuggingFaceCrossEncoder.html", "title": "Cross Encoder Reranker"}]-->
@@ -128,7 +124,6 @@ More goods moving faster and cheaper in America.
 Here is a sample `inference.py` for creating an endpoint that works with `SagemakerEndpointCrossEncoder`. For more details with step-by-step guidance, refer to [this article](https://huggingface.co/blog/kchoe/deploy-any-huggingface-model-to-sagemaker). 
 
 It downloads Hugging Face model on the fly, so you do not need to keep the model artifacts such as `pytorch_model.bin` in your `model.tar.gz`.
-
 
 ```python
 import json

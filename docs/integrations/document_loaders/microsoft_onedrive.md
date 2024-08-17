@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Microsoft OneDrive
 
->[Microsoft OneDrive](https://en.wikipedia.org/wiki/OneDrive) (formerly `SkyDrive`) is a file hosting service operated by Microsoft.
+> [Microsoft OneDrive](https://en.wikipedia.org/wiki/OneDrive) (formerly `SkyDrive`) is a file hosting service operated by Microsoft.
 
 This notebook covers how to load documents from `OneDrive`. Currently, only docx, doc, and pdf files are supported.
 
@@ -35,7 +35,6 @@ os.environ['O365_CLIENT_SECRET'] = "YOUR CLIENT SECRET"
 
 This loader uses an authentication called [*on behalf of a user*](https://learn.microsoft.com/en-us/graph/auth-v2-user?context=graph%2Fapi%2F1.0&view=graph-rest-1.0). It is a 2 step authentication with user consent. When you instantiate the loader, it will call will print a url that the user must visit to give consent to the app on the required permissions. The user must then visit this url and give consent to the application. Then the user must copy the resulting page url and paste it back on the console. The method will then return True if the login attempt was successful.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OneDriveLoader", "source": "langchain_community.document_loaders.onedrive", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onedrive.OneDriveLoader.html", "title": "Microsoft OneDrive"}]-->
 from langchain_community.document_loaders.onedrive import OneDriveLoader
@@ -58,7 +57,6 @@ loader = OneDriveLoader(drive_id="YOUR DRIVE ID", auth_with_token=True)
 
 `OneDriveLoader` can load documents from a specific folder within your OneDrive. For instance, you want to load all documents that are stored at `Documents/clients` folder within your OneDrive.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OneDriveLoader", "source": "langchain_community.document_loaders.onedrive", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onedrive.OneDriveLoader.html", "title": "Microsoft OneDrive"}]-->
 from langchain_community.document_loaders.onedrive import OneDriveLoader
@@ -73,7 +71,6 @@ Another possibility is to provide a list of `object_id` for each document you wa
 
 For instance, to retrieve information about all objects that are stored at the root of the Documents folder, you need make a request to: `https://graph.microsoft.com/v1.0/drives/{YOUR DRIVE ID}/root/children`. Once you have the list of IDs that you are interested in, then you can instantiate the loader with the following parameters.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OneDriveLoader", "source": "langchain_community.document_loaders.onedrive", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onedrive.OneDriveLoader.html", "title": "Microsoft OneDrive"}]-->
 from langchain_community.document_loaders.onedrive import OneDriveLoader
@@ -81,8 +78,6 @@ from langchain_community.document_loaders.onedrive import OneDriveLoader
 loader = OneDriveLoader(drive_id="YOUR DRIVE ID", object_ids=["ID_1", "ID_2"], auth_with_token=True)
 documents = loader.load()
 ```
-
-
 
 ## Related
 

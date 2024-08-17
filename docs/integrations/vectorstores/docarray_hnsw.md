@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # DocArray HnswSearch
 
->[DocArrayHnswSearch](https://docs.docarray.org/user_guide/storing/index_hnswlib/) is a lightweight Document Index implementation provided by [Docarray](https://github.com/docarray/docarray) that runs fully locally and is best suited for small- to medium-sized datasets. It stores vectors on disk in [hnswlib](https://github.com/nmslib/hnswlib), and stores all other data in [SQLite](https://www.sqlite.org/index.html).
+> [DocArrayHnswSearch](https://docs.docarray.org/user_guide/storing/index_hnswlib/) is a lightweight Document Index implementation provided by [Docarray](https://github.com/docarray/docarray) that runs fully locally and is best suited for small- to medium-sized datasets. It stores vectors on disk in [hnswlib](https://github.com/nmslib/hnswlib), and stores all other data in [SQLite](https://www.sqlite.org/index.html).
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
 
@@ -15,11 +15,9 @@ This notebook shows how to use functionality related to the `DocArrayHnswSearch`
 
 Uncomment the below cells to install docarray and get/set your OpenAI api key if you haven't already done so.
 
-
 ```python
 %pip install --upgrade --quiet  "docarray[hnswlib]"
 ```
-
 
 ```python
 # Get an OpenAI token: https://platform.openai.com/account/api-keys
@@ -34,7 +32,6 @@ Uncomment the below cells to install docarray and get/set your OpenAI api key if
 
 ## Using DocArrayHnswSearch
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "DocArray HnswSearch"}, {"imported": "DocArrayHnswSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.docarray.hnsw.DocArrayHnswSearch.html", "title": "DocArray HnswSearch"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "DocArray HnswSearch"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "DocArray HnswSearch"}]-->
 from langchain_community.document_loaders import TextLoader
@@ -42,7 +39,6 @@ from langchain_community.vectorstores import DocArrayHnswSearch
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 documents = TextLoader("../../how_to/state_of_the_union.txt").load()
@@ -58,12 +54,10 @@ db = DocArrayHnswSearch.from_documents(
 
 ### Similarity search
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = db.similarity_search(query)
 ```
-
 
 ```python
 print(docs[0].page_content)
@@ -81,24 +75,18 @@ And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketan
 
 The returned distance score is cosine distance. Therefore, a lower score is better.
 
-
 ```python
 docs = db.similarity_search_with_score(query)
 ```
-
 
 ```python
 docs[0]
 ```
 
-
-
 ```output
 (Document(page_content='Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. \n\nTonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. \n\nOne of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court. \n\nAnd I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.', metadata={}),
  0.36962226)
 ```
-
-
 
 ```python
 import shutil
@@ -106,7 +94,6 @@ import shutil
 # delete the dir
 shutil.rmtree("hnswlib_store")
 ```
-
 
 ## Related
 

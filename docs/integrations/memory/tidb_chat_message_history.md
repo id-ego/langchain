@@ -13,13 +13,11 @@ This notebook introduces how to use TiDB to store chat message history.
 
 Firstly, we will install the following dependencies:
 
-
 ```python
 %pip install --upgrade --quiet langchain langchain_openai langchain-community
 ```
 
 Configuring your OpenAI Key
-
 
 ```python
 import getpass
@@ -29,7 +27,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass("Input your OpenAI API key:")
 ```
 
 Finally, we will configure the connection to a TiDB. In this notebook, we will follow the standard connection method provided by TiDB Cloud to establish a secure and efficient database connection.
-
 
 ```python
 # copy from tidb cloud console
@@ -43,7 +40,6 @@ tidb_connection_string = tidb_connection_string_template.replace(
 ## Generating historical data
 
 Creating a set of historical data, which will serve as the foundation for our upcoming demonstrations.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TiDBChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.tidb.TiDBChatMessageHistory.html", "title": "TiDB"}]-->
@@ -63,25 +59,20 @@ history.add_ai_message(
 )
 ```
 
-
 ```python
 history.messages
 ```
-
-
 
 ```output
 [HumanMessage(content="How's our feature going?"),
  AIMessage(content="It's going well. We are working on testing now. It will be released in Feb.")]
 ```
 
-
 ## Chatting with historical data
 
 Let’s build upon the historical data generated earlier to create a dynamic chat interaction.  
 
 Firstly, Creating a Chat Chain with LangChain:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "TiDB"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "TiDB"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "TiDB"}]-->
@@ -103,7 +94,6 @@ chain = prompt | ChatOpenAI()
 
 Building a Runnable on History:
 
-
 ```python
 <!--IMPORTS:[{"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "TiDB"}]-->
 from langchain_core.runnables.history import RunnableWithMessageHistory
@@ -120,7 +110,6 @@ chain_with_history = RunnableWithMessageHistory(
 
 Initiating the Chat:
 
-
 ```python
 response = chain_with_history.invoke(
     {"question": "Today is Jan 1st. How many days until our feature is released?"},
@@ -129,22 +118,16 @@ response = chain_with_history.invoke(
 response
 ```
 
-
-
 ```output
 AIMessage(content='There are 31 days in January, so there are 30 days until our feature is released in February.')
 ```
 
-
 ## Checking the history data
-
 
 ```python
 history.reload_cache()
 history.messages
 ```
-
-
 
 ```output
 [HumanMessage(content="How's our feature going?"),

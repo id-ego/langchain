@@ -6,9 +6,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # Zep Cloud Memory
 > Recall, understand, and extract data from chat histories. Power personalized AI experiences.
 
->[Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-> With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-> while also reducing hallucinations, latency, and cost.
+> [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
+With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
+while also reducing hallucinations, latency, and cost.
 
 > See [Zep Cloud Installation Guide](https://help.getzep.com/sdks) and more [Zep Cloud Langchain Examples](https://github.com/getzep/zep-python/tree/main/examples)
 
@@ -22,7 +22,6 @@ We'll demonstrate:
 2. Running an agent and having message automatically added to the store.
 3. Viewing the enriched messages.
 4. Vector search over the conversation history.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Zep Cloud Memory"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Zep Cloud Memory"}, {"imported": "ZepCloudMemory", "source": "langchain_community.memory.zep_cloud_memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain_community.memory.zep_cloud_memory.ZepCloudMemory.html", "title": "Zep Cloud Memory"}, {"imported": "ZepCloudRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.zep_cloud.ZepCloudRetriever.html", "title": "Zep Cloud Memory"}, {"imported": "WikipediaAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wikipedia.WikipediaAPIWrapper.html", "title": "Zep Cloud Memory"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Zep Cloud Memory"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Zep Cloud Memory"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Zep Cloud Memory"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Zep Cloud Memory"}]-->
@@ -238,14 +237,12 @@ File ~/job/zep-proprietary/venv/lib/python3.11/site-packages/pydantic/_internal/
 AttributeError: 'FieldInfo' object has no attribute 'deprecated'
 ```
 
-
 ```python
 # Provide your OpenAI key
 import getpass
 
 openai_key = getpass.getpass()
 ```
-
 
 ```python
 # Provide your Zep API key. See https://help.getzep.com/projects#api-keys
@@ -254,8 +251,6 @@ zep_api_key = getpass.getpass()
 ```
 
 ### Initialize the Zep Chat Message History Class and initialize the Agent
-
-
 
 ```python
 search = WikipediaAPIWrapper()
@@ -290,8 +285,6 @@ agent_chain = initialize_agent(
 ```
 
 ### Add some history data
-
-
 
 ```python
 # Preload some messages into the memory. The default message window is 12 messages. We want to push beyond this to demonstrate auto-summarization.
@@ -370,8 +363,6 @@ for msg in test_history:
 
 Doing so will automatically add the input and response to the Zep memory.
 
-
-
 ```python
 agent_chain.invoke(
     input="What is the book's relevance to the challenges facing contemporary society?",
@@ -387,21 +378,17 @@ AI: Parable of the Sower is highly relevant to contemporary society as it explor
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': "What is the book's relevance to the challenges facing contemporary society?",
  'chat_history': [HumanMessage(content="Octavia Butler's contemporaries included Ursula K. Le Guin, Samuel R. Delany, and Joanna Russ.\nOctavia Butler won the Hugo Award, the Nebula Award, and the MacArthur Fellowship.\nUrsula K. Le Guin is known for novels like The Left Hand of Darkness and The Dispossessed.\nJoanna Russ is the author of the influential feminist science fiction novel The Female Man.\nMargaret Atwood is known for works like The Handmaid's Tale and the MaddAddam trilogy.\nConnie Willis is an award-winning author of science fiction and fantasy, known for novels like Doomsday Book.\nOctavia Butler is a pioneering black female science fiction author, known for Kindred and the Parable series.\nOctavia Estelle Butler was an acclaimed American science fiction author. While none of her books were directly adapted into movies, her novel Kindred was adapted into a TV series on FX. Butler was part of a generation of prominent science fiction writers in the 20th century, including contemporaries such as Ursula K. Le Guin, Samuel R. Delany, Chip Delany, and Nalo Hopkinson.\nhuman: What awards did she win?\nai: Octavia Butler won the Hugo Award, the Nebula Award, and the MacArthur Fellowship.\nhuman: Which other women sci-fi writers might I want to read?\nai: You might want to read Ursula K. Le Guin or Joanna Russ.\nhuman: Write a short synopsis of Butler's book, Parable of the Sower. What is it about?\nai: Parable of the Sower is a science fiction novel by Octavia Butler, published in 1993. It follows the story of Lauren Olamina, a young woman living in a dystopian future where society has collapsed due to environmental disasters, poverty, and violence.")],
  'output': 'Parable of the Sower is highly relevant to contemporary society as it explores themes of environmental degradation, social and economic inequality, and the struggle for survival in a chaotic world. It also delves into issues of race, gender, and religion, making it a thought-provoking and timely read.'}
 ```
 
-
 ### Inspect the Zep memory
 
 Note the summary, and that the history has been enriched with token counts, UUIDs, and timestamps.
 
 Summaries are biased towards the most recent messages.
-
-
 
 ```python
 def print_messages(messages):
@@ -452,8 +439,6 @@ human :
 Zep provides native vector search over historical conversation memory via the `ZepRetriever`.
 
 You can use the `ZepRetriever` with chains that support passing in a Langchain `Retriever` object.
-
-
 
 ```python
 retriever = ZepCloudRetriever(

@@ -18,7 +18,6 @@ We'll go into more detail on a few techniques below!
 
 You'll need to install a few packages, and have your OpenAI API key set as an environment variable named `OPENAI_API_KEY`:
 
-
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
 
@@ -33,14 +32,11 @@ You should consider upgrading via the '/Users/jacoblee/.pyenv/versions/3.10.5/bi
 [0mNote: you may need to restart the kernel to use updated packages.
 ```
 
-
 ```output
 True
 ```
 
-
 Let's also set up a chat model that we'll use for the below examples.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add memory to chatbots"}]-->
@@ -52,7 +48,6 @@ chat = ChatOpenAI(model="gpt-3.5-turbo-0125")
 ## Message passing
 
 The simplest form of memory is simply passing chat history messages into a chain. Here's an example:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add memory to chatbots"}]-->
@@ -95,7 +90,6 @@ It's perfectly fine to store and pass messages directly as an array, but we can 
 
 Here's an example of the API:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "How to add memory to chatbots"}]-->
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -111,16 +105,12 @@ demo_ephemeral_chat_history.add_ai_message("J'adore la programmation.")
 demo_ephemeral_chat_history.messages
 ```
 
-
-
 ```output
 [HumanMessage(content='Translate this sentence from English to French: I love programming.'),
  AIMessage(content="J'adore la programmation.")]
 ```
 
-
 We can use it directly to store conversation turns for our chain:
-
 
 ```python
 demo_ephemeral_chat_history = ChatMessageHistory()
@@ -148,19 +138,15 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='You just asked me to translate the sentence "I love programming" from English to French.', response_metadata={'token_usage': {'completion_tokens': 18, 'prompt_tokens': 61, 'total_tokens': 79}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-5cbb21c2-9c30-4031-8ea8-bfc497989535-0', usage_metadata={'input_tokens': 61, 'output_tokens': 18, 'total_tokens': 79})
 ```
-
 
 ## Automatic history management
 
 The previous examples pass messages to the chain explicitly. This is a completely acceptable approach, but it does require external management of new messages. LangChain also includes an wrapper for LCEL chains that can handle this process automatically called `RunnableWithMessageHistory`.
 
 To show how it works, let's slightly modify the above prompt to take a final `input` variable that populates a `HumanMessage` template after the chat history. This means that we will expect a `chat_history` parameter that contains all messages BEFORE the current messages instead of all messages:
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -177,10 +163,9 @@ prompt = ChatPromptTemplate.from_messages(
 chain = prompt | chat
 ```
 
- We'll pass the latest input to the conversation here and let the `RunnableWithMessageHistory` class wrap our chain and do the work of appending that `input` variable to the chat history.
- 
- Next, let's declare our wrapped chain:
+We'll pass the latest input to the conversation here and let the `RunnableWithMessageHistory` class wrap our chain and do the work of appending that `input` variable to the chat history.
 
+Next, let's declare our wrapped chain:
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to add memory to chatbots"}]-->
@@ -205,7 +190,6 @@ This class takes a few parameters in addition to the chain that we want to wrap:
 
 We can invoke this new chain as normal, with an additional `configurable` field that specifies the particular `session_id` to pass to the factory function. This is unused for the demo, but in real-world chains, you'll want to return a chat history corresponding to the passed session:
 
-
 ```python
 chain_with_message_history.invoke(
     {"input": "Translate this sentence from English to French: I love programming."},
@@ -216,12 +200,9 @@ chain_with_message_history.invoke(
 Parent run dc4e2f79-4bcd-4a36-9506-55ace9040588 not found for run 34b5773e-3ced-46a6-8daf-4d464c15c940. Treating as a root run.
 ```
 
-
 ```output
 AIMessage(content='"J\'adore la programmation."', response_metadata={'token_usage': {'completion_tokens': 9, 'prompt_tokens': 39, 'total_tokens': 48}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-648b0822-b0bb-47a2-8e7d-7d34744be8f2-0', usage_metadata={'input_tokens': 39, 'output_tokens': 9, 'total_tokens': 48})
 ```
-
-
 
 ```python
 chain_with_message_history.invoke(
@@ -232,11 +213,9 @@ chain_with_message_history.invoke(
 Parent run cc14b9d8-c59e-40db-a523-d6ab3fc2fa4f not found for run 5b75e25c-131e-46ee-9982-68569db04330. Treating as a root run.
 ```
 
-
 ```output
 AIMessage(content='You asked me to translate the sentence "I love programming" from English to French.', response_metadata={'token_usage': {'completion_tokens': 17, 'prompt_tokens': 63, 'total_tokens': 80}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-5950435c-1dc2-43a6-836f-f989fd62c95e-0', usage_metadata={'input_tokens': 63, 'output_tokens': 17, 'total_tokens': 80})
 ```
-
 
 ## Modifying chat history
 
@@ -245,7 +224,6 @@ Modifying stored chat messages can help your chatbot handle a variety of situati
 ### Trimming messages
 
 LLMs and chat models have limited context windows, and even if you're not directly hitting limits, you may want to limit the amount of distraction the model has to deal with. One solution is trim the historic messages before passing them to the model. Let's use an example history with some preloaded messages:
-
 
 ```python
 demo_ephemeral_chat_history = ChatMessageHistory()
@@ -258,8 +236,6 @@ demo_ephemeral_chat_history.add_ai_message("Fine thanks!")
 demo_ephemeral_chat_history.messages
 ```
 
-
-
 ```output
 [HumanMessage(content="Hey there! I'm Nemo."),
  AIMessage(content='Hello!'),
@@ -267,9 +243,7 @@ demo_ephemeral_chat_history.messages
  AIMessage(content='Fine thanks!')]
 ```
 
-
 Let's use this message history with the `RunnableWithMessageHistory` chain we declared above:
-
 
 ```python
 chain_with_message_history = RunnableWithMessageHistory(
@@ -288,16 +262,13 @@ chain_with_message_history.invoke(
 Parent run 7ff2d8ec-65e2-4f67-8961-e498e2c4a591 not found for run 3881e990-6596-4326-84f6-2b76949e0657. Treating as a root run.
 ```
 
-
 ```output
 AIMessage(content='Your name is Nemo.', response_metadata={'token_usage': {'completion_tokens': 6, 'prompt_tokens': 66, 'total_tokens': 72}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-f8aabef8-631a-4238-a39b-701e881fbe47-0', usage_metadata={'input_tokens': 66, 'output_tokens': 6, 'total_tokens': 72})
 ```
 
-
 We can see the chain remembers the preloaded name.
 
 But let's say we have a very small context window, and we want to trim the number of messages passed to the chain to only the 2 most recent ones. We can use the built in [trim_messages](/docs/how_to/trim_messages/) util to trim messages based on their token count before they reach our prompt. In this case we'll count each message as 1 "token" and keep only the last two messages:
-
 
 ```python
 <!--IMPORTS:[{"imported": "trim_messages", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.utils.trim_messages.html", "title": "How to add memory to chatbots"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add memory to chatbots"}]-->
@@ -324,7 +295,6 @@ chain_with_trimmed_history = RunnableWithMessageHistory(
 
 Let's call this new chain and check the messages afterwards:
 
-
 ```python
 chain_with_trimmed_history.invoke(
     {"input": "Where does P. Sherman live?"},
@@ -335,18 +305,13 @@ chain_with_trimmed_history.invoke(
 Parent run 775cde65-8d22-4c44-80bb-f0b9811c32ca not found for run 5cf71d0e-4663-41cd-8dbe-e9752689cfac. Treating as a root run.
 ```
 
-
 ```output
 AIMessage(content='P. Sherman is a fictional character from the animated movie "Finding Nemo" who lives at 42 Wallaby Way, Sydney.', response_metadata={'token_usage': {'completion_tokens': 27, 'prompt_tokens': 53, 'total_tokens': 80}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-5642ef3a-fdbe-43cf-a575-d1785976a1b9-0', usage_metadata={'input_tokens': 53, 'output_tokens': 27, 'total_tokens': 80})
 ```
 
-
-
 ```python
 demo_ephemeral_chat_history.messages
 ```
-
-
 
 ```output
 [HumanMessage(content="Hey there! I'm Nemo."),
@@ -359,9 +324,7 @@ demo_ephemeral_chat_history.messages
  AIMessage(content='P. Sherman is a fictional character from the animated movie "Finding Nemo" who lives at 42 Wallaby Way, Sydney.', response_metadata={'token_usage': {'completion_tokens': 27, 'prompt_tokens': 53, 'total_tokens': 80}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-5642ef3a-fdbe-43cf-a575-d1785976a1b9-0', usage_metadata={'input_tokens': 53, 'output_tokens': 27, 'total_tokens': 80})]
 ```
 
-
 And we can see that our history has removed the two oldest messages while still adding the most recent conversation at the end. The next time the chain is called, `trim_messages` will be called again, and only the two most recent messages will be passed to the model. In this case, this means that the model will forget the name we gave it the next time we invoke it:
-
 
 ```python
 chain_with_trimmed_history.invoke(
@@ -373,18 +336,15 @@ chain_with_trimmed_history.invoke(
 Parent run fde7123f-6fd3-421a-a3fc-2fb37dead119 not found for run 061a4563-2394-470d-a3ed-9bf1388ca431. Treating as a root run.
 ```
 
-
 ```output
 AIMessage(content="I'm sorry, but I don't have access to your personal information, so I don't know your name. How else may I assist you today?", response_metadata={'token_usage': {'completion_tokens': 31, 'prompt_tokens': 74, 'total_tokens': 105}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-0ab03495-1f7c-4151-9070-56d2d1c565ff-0', usage_metadata={'input_tokens': 74, 'output_tokens': 31, 'total_tokens': 105})
 ```
-
 
 Check out our [how to guide on trimming messages](/docs/how_to/trim_messages/) for more.
 
 ### Summary memory
 
 We can use this same pattern in other ways too. For example, we could use an additional LLM call to generate a summary of the conversation before calling our chain. Let's recreate our chat history and chatbot chain:
-
 
 ```python
 demo_ephemeral_chat_history = ChatMessageHistory()
@@ -397,8 +357,6 @@ demo_ephemeral_chat_history.add_ai_message("Fine thanks!")
 demo_ephemeral_chat_history.messages
 ```
 
-
-
 ```output
 [HumanMessage(content="Hey there! I'm Nemo."),
  AIMessage(content='Hello!'),
@@ -406,9 +364,7 @@ demo_ephemeral_chat_history.messages
  AIMessage(content='Fine thanks!')]
 ```
 
-
 We'll slightly modify the prompt to make the LLM aware that will receive a condensed summary instead of a chat history:
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -433,7 +389,6 @@ chain_with_message_history = RunnableWithMessageHistory(
 ```
 
 And now, let's create a function that will distill previous interactions into a summary. We can add this one to the front of the chain too:
-
 
 ```python
 def summarize_messages(chain_input):
@@ -468,7 +423,6 @@ chain_with_summarization = (
 
 Let's see if it remembers the name we gave it:
 
-
 ```python
 chain_with_summarization.invoke(
     {"input": "What did I say my name was?"},
@@ -476,25 +430,18 @@ chain_with_summarization.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='You introduced yourself as Nemo. How can I assist you today, Nemo?')
 ```
 
-
-
 ```python
 demo_ephemeral_chat_history.messages
 ```
-
-
 
 ```output
 [AIMessage(content='The conversation is between Nemo and an AI. Nemo introduces himself and the AI responds with a greeting. Nemo then asks the AI how it is doing, and the AI responds that it is fine.'),
  HumanMessage(content='What did I say my name was?'),
  AIMessage(content='You introduced yourself as Nemo. How can I assist you today, Nemo?')]
 ```
-
 
 Note that invoking the chain again will generate another summary generated from the initial summary plus new messages and so on. You could also design a hybrid approach where a certain number of messages are retained in chat history while others are summarized.

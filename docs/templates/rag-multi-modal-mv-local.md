@@ -5,16 +5,14 @@ canonical: https://python.langchain.com/v0.2/docs/templates/rag-multi-modal-mv-l
 # rag-multi-modal-mv-local
 
 Visual search is a famililar application to many with iPhones or Android devices. It allows user to search photos using natural language.
-  
+
 With the release of open source, multi-modal LLMs it's possible to build this kind of application for yourself for your own private photo collection.
 
 This template demonstrates how to perform private visual search and question-answering over a collection of your photos.
 
 It uses an open source multi-modal LLM of your choice to create image summaries for each photos, embeds the summaries, and stores them in Chroma.
- 
+
 Given a question, relevant photos are retrieved and passed to the multi-modal LLM for answer synthesis.
-
-
 
 ## Input
 
@@ -93,9 +91,9 @@ from rag_multi_modal_mv_local import chain as rag_multi_modal_mv_local_chain
 add_routes(app, rag_multi_modal_mv_local_chain, path="/rag-multi-modal-mv-local")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -110,7 +108,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

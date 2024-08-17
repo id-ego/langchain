@@ -5,8 +5,8 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # MyScale
 
->[MyScale](https://docs.myscale.com/en/) is an integrated vector database. You can access your database in SQL and also from here, LangChain.
->`MyScale` can make use of [various data types and functions for filters](https://blog.myscale.com/2023/06/06/why-integrated-database-solution-can-boost-your-llm-apps/#filter-on-anything-without-constraints). It will boost up your LLM app no matter if you are scaling up your data or expand your system to broader application.
+> [MyScale](https://docs.myscale.com/en/) is an integrated vector database. You can access your database in SQL and also from here, LangChain.
+`MyScale` can make use of [various data types and functions for filters](https://blog.myscale.com/2023/06/06/why-integrated-database-solution-can-boost-your-llm-apps/#filter-on-anything-without-constraints). It will boost up your LLM app no matter if you are scaling up your data or expand your system to broader application.
 
 In the notebook, we'll demo the `SelfQueryRetriever` wrapped around a `MyScale` vector store with some extra pieces we contributed to LangChain. 
 
@@ -21,13 +21,11 @@ MyScale has already been integrated to LangChain for a while. So you can follow 
 
 **Note:** All self-query retrievers requires you to have `lark` installed (`pip install lark`). We use `lark` for grammar definition. Before you proceed to the next step, we also want to remind you that `clickhouse-connect` is also needed to interact with your MyScale backend.
 
-
 ```python
 %pip install --upgrade --quiet  lark clickhouse-connect
 ```
 
 In this tutorial we follow other example's setting and use `OpenAIEmbeddings`. Remember to get an OpenAI API Key for valid access to LLMs.
-
 
 ```python
 import getpass
@@ -39,7 +37,6 @@ os.environ["MYSCALE_PORT"] = getpass.getpass("MyScale Port:")
 os.environ["MYSCALE_USERNAME"] = getpass.getpass("MyScale Username:")
 os.environ["MYSCALE_PASSWORD"] = getpass.getpass("MyScale Password:")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "MyScale", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.myscale.MyScale.html", "title": "MyScale"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "MyScale"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "MyScale"}]-->
@@ -54,7 +51,6 @@ embeddings = OpenAIEmbeddings()
 As you can see, the data we created has some differences compared to other self-query retrievers. We replaced the keyword `year` with `date` which gives you finer control on timestamps. We also changed the type of the keyword `gerne` to a list of strings, where an LLM can use a new `contain` comparator to construct filters. We also provide the `like` comparator and arbitrary function support to filters, which will be introduced in next few cells.
 
 Now let's look at the data first.
-
 
 ```python
 docs = [
@@ -96,7 +92,6 @@ vectorstore = MyScale.from_documents(
 
 ## Creating our self-querying retriever
 Just like other retrievers... simple and nice.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "MyScale"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "MyScale"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "MyScale"}]-->
@@ -144,30 +139,25 @@ retriever = SelfQueryRetriever.from_llm(
 ## Testing it out with self-query retriever's existing functionalities
 And now we can try actually using our retriever!
 
-
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are some movies about dinosaurs")
 ```
-
 
 ```python
 # This example only specifies a filter
 retriever.invoke("I want to watch a movie rated higher than 8.5")
 ```
 
-
 ```python
 # This example specifies a query and a filter
 retriever.invoke("Has Greta Gerwig directed any movies about women")
 ```
 
-
 ```python
 # This example specifies a composite filter
 retriever.invoke("What's a highly rated (above 8.5) science fiction film?")
 ```
-
 
 ```python
 # This example specifies a query and composite filter
@@ -180,24 +170,20 @@ retriever.invoke(
 
 Self-query retriever with MyScale can do more! Let's find out.
 
-
 ```python
 # You can use length(genres) to do anything you want
 retriever.invoke("What's a movie that have more than 1 genres?")
 ```
-
 
 ```python
 # Fine-grained datetime? You got it already.
 retriever.invoke("What's a movie that release after feb 1995?")
 ```
 
-
 ```python
 # Don't know what your exact filter should be? Use string pattern match!
 retriever.invoke("What's a movie whose name is like Andrei?")
 ```
-
 
 ```python
 # Contain works for lists: so you can match a list with contain comparator!
@@ -210,7 +196,6 @@ We can also use the self query retriever to specify `k`: the number of documents
 
 We can do this by passing `enable_limit=True` to the constructor.
 
-
 ```python
 retriever = SelfQueryRetriever.from_llm(
     llm,
@@ -221,7 +206,6 @@ retriever = SelfQueryRetriever.from_llm(
     verbose=True,
 )
 ```
-
 
 ```python
 # This example only specifies a relevant query

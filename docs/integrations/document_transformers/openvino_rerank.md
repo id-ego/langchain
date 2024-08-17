@@ -7,14 +7,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 [OpenVINO™](https://github.com/openvinotoolkit/openvino) is an open-source toolkit for optimizing and deploying AI inference. The OpenVINO™ Runtime supports various hardware [devices](https://github.com/openvinotoolkit/openvino?tab=readme-ov-file#supported-hardware-matrix) including x86 and ARM CPUs, and Intel GPUs. It can help to boost deep learning performance in Computer Vision, Automatic Speech Recognition, Natural Language Processing and other common tasks.
 
-Hugging Face rerank model can be supported by OpenVINO through ``OpenVINOReranker`` class. If you have an Intel GPU, you can specify `model_kwargs={"device": "GPU"}` to run inference on it.
-
+Hugging Face rerank model can be supported by OpenVINO through `OpenVINOReranker` class. If you have an Intel GPU, you can specify `model_kwargs={"device": "GPU"}` to run inference on it.
 
 ```python
 %pip install --upgrade-strategy eager "optimum[openvino,nncf]" --quiet
 %pip install --upgrade --quiet  faiss-cpu
 ```
-
 
 ```python
 # Helper function for printing docs
@@ -33,7 +31,6 @@ def pretty_print_docs(docs):
 
 ## Set up the base vector store retriever
 Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "OpenVINO Reranker"}, {"imported": "OpenVINOEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.openvino.OpenVINOEmbeddings.html", "title": "OpenVINO Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "OpenVINO Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "OpenVINO Reranker"}]-->
@@ -290,7 +287,6 @@ Metadata: {'source': '../../how_to/state_of_the_union.txt', 'id': 40}
 ## Reranking with OpenVINO
 Now let's wrap our base retriever with a `ContextualCompressionRetriever`, using `OpenVINOReranker` as a compressor.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "OpenVINO Reranker"}, {"imported": "OpenVINOReranker", "source": "langchain_community.document_compressors.openvino_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.openvino_rerank.OpenVINOReranker.html", "title": "OpenVINO Reranker"}]-->
 from langchain.retrievers import ContextualCompressionRetriever
@@ -310,7 +306,6 @@ print([doc.metadata["id"] for doc in compressed_docs])
 ```
 
 After reranking, the top 4 documents are different from the top 4 documents retrieved by the base retriever.
-
 
 ```python
 pretty_print_docs(compressed_docs)
@@ -353,8 +348,7 @@ Tonight, I can announce that the United States has worked with 30 other countrie
 Metadata: {'id': 6, 'relevance_score': tensor(0.0098)}
 ```
 ## Export IR model
-It is possible to export your rerank model to the OpenVINO IR format with ``OVModelForSequenceClassification``, and load the model from local folder.
-
+It is possible to export your rerank model to the OpenVINO IR format with `OVModelForSequenceClassification`, and load the model from local folder.
 
 ```python
 from pathlib import Path
@@ -363,7 +357,6 @@ ov_model_dir = "bge-reranker-large-ov"
 if not Path(ov_model_dir).exists():
     ov_compressor.save_model(ov_model_dir)
 ```
-
 
 ```python
 ov_compressor = OpenVINOReranker(model_name_or_path=ov_model_dir)
@@ -374,9 +367,6 @@ Compiling the model to CPU ...
 For more information refer to:
 
 * [OpenVINO LLM guide](https://docs.openvino.ai/2024/learn-openvino/llm_inference_guide.html).
-
 * [OpenVINO Documentation](https://docs.openvino.ai/2024/home.html).
-
 * [OpenVINO Get Started Guide](https://www.intel.com/content/www/us/en/content-details/819067/openvino-get-started-guide.html).
-
 * [RAG Notebook with LangChain](https://github.com/openvinotoolkit/openvino_notebooks/tree/latest/notebooks/llm-rag-langchain).

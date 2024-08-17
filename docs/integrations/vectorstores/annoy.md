@@ -16,13 +16,11 @@ NOTE: Annoy is read-only - once the index is built you cannot add any more embed
 If you want to progressively add new entries to your VectorStore then better choose an alternative!
 ```
 
-
 ```python
 %pip install --upgrade --quiet  annoy
 ```
 
 ## Create VectorStore from texts
-
 
 ```python
 <!--IMPORTS:[{"imported": "Annoy", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.annoy.Annoy.html", "title": "Annoy"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Annoy"}]-->
@@ -32,14 +30,12 @@ from langchain_huggingface import HuggingFaceEmbeddings
 embeddings_func = HuggingFaceEmbeddings()
 ```
 
-
 ```python
 texts = ["pizza is great", "I love salad", "my car", "a dog"]
 
 # default metric is angular
 vector_store = Annoy.from_texts(texts, embeddings_func)
 ```
-
 
 ```python
 # allows for custom annoy parameters, defaults are n_trees=100, n_jobs=-1, metric="angular"
@@ -48,12 +44,9 @@ vector_store_v2 = Annoy.from_texts(
 )
 ```
 
-
 ```python
 vector_store.similarity_search("food", k=3)
 ```
-
-
 
 ```output
 [Document(page_content='pizza is great', metadata={}),
@@ -61,14 +54,10 @@ vector_store.similarity_search("food", k=3)
  Document(page_content='my car', metadata={})]
 ```
 
-
-
 ```python
 # the score is a distance metric, so lower is better
 vector_store.similarity_search_with_score("food", k=3)
 ```
-
-
 
 ```output
 [(Document(page_content='pizza is great', metadata={}), 1.0944390296936035),
@@ -76,9 +65,7 @@ vector_store.similarity_search_with_score("food", k=3)
  (Document(page_content='my car', metadata={}), 1.1580758094787598)]
 ```
 
-
 ## Create VectorStore from docs
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Annoy"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Annoy"}]-->
@@ -91,12 +78,9 @@ text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 ```
 
-
 ```python
 docs[:5]
 ```
-
-
 
 ```output
 [Document(page_content='Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  \n\nLast year COVID-19 kept us apart. This year we are finally together again. \n\nTonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. \n\nWith a duty to one another to the American people to the Constitution. \n\nAnd with an unwavering resolve that freedom will always triumph over tyranny. \n\nSix days ago, Russia’s Vladimir Putin sought to shake the foundations of the free world thinking he could make it bend to his menacing ways. But he badly miscalculated. \n\nHe thought he could roll into Ukraine and the world would roll over. Instead he met a wall of strength he never imagined. \n\nHe met the Ukrainian people. \n\nFrom President Zelenskyy to every Ukrainian, their fearlessness, their courage, their determination, inspires the world.', metadata={'source': '../../../state_of_the_union.txt'}),
@@ -106,18 +90,14 @@ docs[:5]
  Document(page_content='And tonight I am announcing that we will join our allies in closing off American air space to all Russian flights – further isolating Russia – and adding an additional squeeze –on their economy. The Ruble has lost 30% of its value. \n\nThe Russian stock market has lost 40% of its value and trading remains suspended. Russia’s economy is reeling and Putin alone is to blame. \n\nTogether with our allies we are providing support to the Ukrainians in their fight for freedom. Military assistance. Economic assistance. Humanitarian assistance. \n\nWe are giving more than $1 Billion in direct assistance to Ukraine. \n\nAnd we will continue to aid the Ukrainian people as they defend their country and to help ease their suffering.  \n\nLet me be clear, our forces are not engaged and will not engage in conflict with Russian forces in Ukraine.  \n\nOur forces are not going to Europe to fight in Ukraine, but to defend our NATO Allies – in the event that Putin decides to keep moving west.', metadata={'source': '../../../state_of_the_union.txt'})]
 ```
 
-
-
 ```python
 vector_store_from_docs = Annoy.from_documents(docs, embeddings_func)
 ```
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = vector_store_from_docs.similarity_search(query)
 ```
-
 
 ```python
 print(docs[0].page_content[:100])
@@ -127,11 +107,9 @@ Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Le
 ```
 ## Create VectorStore via existing embeddings
 
-
 ```python
 embs = embeddings_func.embed_documents(texts)
 ```
-
 
 ```python
 data = list(zip(texts, embs))
@@ -139,12 +117,9 @@ data = list(zip(texts, embs))
 vector_store_from_embeddings = Annoy.from_embeddings(data, embeddings_func)
 ```
 
-
 ```python
 vector_store_from_embeddings.similarity_search_with_score("food", k=3)
 ```
-
-
 
 ```output
 [(Document(page_content='pizza is great', metadata={}), 1.0944390296936035),
@@ -152,20 +127,15 @@ vector_store_from_embeddings.similarity_search_with_score("food", k=3)
  (Document(page_content='my car', metadata={}), 1.1580758094787598)]
 ```
 
-
 ## Search via embeddings
-
 
 ```python
 motorbike_emb = embeddings_func.embed_query("motorbike")
 ```
 
-
 ```python
 vector_store.similarity_search_by_vector(motorbike_emb, k=3)
 ```
-
-
 
 ```output
 [Document(page_content='my car', metadata={}),
@@ -173,13 +143,9 @@ vector_store.similarity_search_by_vector(motorbike_emb, k=3)
  Document(page_content='pizza is great', metadata={})]
 ```
 
-
-
 ```python
 vector_store.similarity_search_with_score_by_vector(motorbike_emb, k=3)
 ```
-
-
 
 ```output
 [(Document(page_content='my car', metadata={}), 1.0870471000671387),
@@ -187,15 +153,11 @@ vector_store.similarity_search_with_score_by_vector(motorbike_emb, k=3)
  (Document(page_content='pizza is great', metadata={}), 1.3254905939102173)]
 ```
 
-
 ## Search via docstore id
-
 
 ```python
 vector_store.index_to_docstore_id
 ```
-
-
 
 ```output
 {0: '2d1498a8-a37c-4798-acb9-0016504ed798',
@@ -204,28 +166,20 @@ vector_store.index_to_docstore_id
  3: '3056ddcf-a62f-48c8-bd98-b9e57a3dfcae'}
 ```
 
-
-
 ```python
 some_docstore_id = 0  # texts[0]
 
 vector_store.docstore._dict[vector_store.index_to_docstore_id[some_docstore_id]]
 ```
 
-
-
 ```output
 Document(page_content='pizza is great', metadata={})
 ```
-
-
 
 ```python
 # same document has distance 0
 vector_store.similarity_search_with_score_by_index(some_docstore_id, k=3)
 ```
-
-
 
 ```output
 [(Document(page_content='pizza is great', metadata={}), 0.0),
@@ -233,9 +187,7 @@ vector_store.similarity_search_with_score_by_index(some_docstore_id, k=3)
  (Document(page_content='my car', metadata={}), 1.2895267009735107)]
 ```
 
-
 ## Save and load
-
 
 ```python
 vector_store.save_local("my_annoy_index_and_docstore")
@@ -250,13 +202,10 @@ loaded_vector_store = Annoy.load_local(
 )
 ```
 
-
 ```python
 # same document has distance 0
 loaded_vector_store.similarity_search_with_score_by_index(some_docstore_id, k=3)
 ```
-
-
 
 ```output
 [(Document(page_content='pizza is great', metadata={}), 0.0),
@@ -264,9 +213,7 @@ loaded_vector_store.similarity_search_with_score_by_index(some_docstore_id, k=3)
  (Document(page_content='my car', metadata={}), 1.2895267009735107)]
 ```
 
-
 ## Construct from scratch
-
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryDocstore", "source": "langchain_community.docstore.in_memory", "docs": "https://api.python.langchain.com/en/latest/docstore/langchain_community.docstore.in_memory.InMemoryDocstore.html", "title": "Annoy"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Annoy"}]-->
@@ -306,12 +253,9 @@ db_manually = Annoy(
 )
 ```
 
-
 ```python
 db_manually.similarity_search_with_score("eating!", k=3)
 ```
-
-
 
 ```output
 [(Document(page_content='pizza is great', metadata={'x': 'food'}),
@@ -320,8 +264,6 @@ db_manually.similarity_search_with_score("eating!", k=3)
   1.1668788194656372),
  (Document(page_content='my car', metadata={'x': 'stuff'}), 1.226445198059082)]
 ```
-
-
 
 ## Related
 

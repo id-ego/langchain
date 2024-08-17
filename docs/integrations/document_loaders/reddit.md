@@ -5,24 +5,20 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Reddit
 
->[Reddit](https://www.reddit.com) is an American social news aggregation, content rating, and discussion website.
-
+> [Reddit](https://www.reddit.com) is an American social news aggregation, content rating, and discussion website.
 
 This loader fetches the text from the Posts of Subreddits or Reddit users, using the `praw` Python package.
 
 Make a [Reddit Application](https://www.reddit.com/prefs/apps/) and initialize the loader with with your Reddit API credentials.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RedditPostsLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.reddit.RedditPostsLoader.html", "title": "Reddit"}]-->
 from langchain_community.document_loaders import RedditPostsLoader
 ```
 
-
 ```python
 %pip install --upgrade --quiet  praw
 ```
-
 
 ```python
 # load using 'subreddit' mode
@@ -53,13 +49,10 @@ loader = RedditPostsLoader(
 # Note: Categories can be only of following value - "controversial" "hot" "new" "rising" "top"
 ```
 
-
 ```python
 documents = loader.load()
 documents[:5]
 ```
-
-
 
 ```output
 [Document(page_content='Hello, I am not looking for investment advice. I will apply my own due diligence. However, I am interested if anyone knows as a UK resident how fees and exchange rate differences would impact performance?\n\nI am planning to create a pie of index funds (perhaps UK, US, europe) or find a fund with a good track record of long term growth at low rates. \n\nDoes anyone have any ideas?', metadata={'post_subreddit': 'r/investing', 'post_category': 'new', 'post_title': 'Long term retirement funds fees/exchange rate query', 'post_score': 1, 'post_id': '130pa6m', 'post_url': 'https://www.reddit.com/r/investing/comments/130pa6m/long_term_retirement_funds_feesexchange_rate_query/', 'post_author': Redditor(name='Badmanshiz')}),
@@ -68,8 +61,6 @@ documents[:5]
  Document(page_content="Based on recent news about salt battery advancements and the overall issues of lithium, I was wondering what would be feasible ways to invest into non-lithium based battery technologies? CATL is of course a choice, but the selection of brokers I currently have in my disposal don't provide HK stocks at all.", metadata={'post_subreddit': 'r/investing', 'post_category': 'new', 'post_title': 'Investing in non-lithium battery technologies?', 'post_score': 2, 'post_id': '130d6qp', 'post_url': 'https://www.reddit.com/r/investing/comments/130d6qp/investing_in_nonlithium_battery_technologies/', 'post_author': Redditor(name='-manabreak')}),
  Document(page_content='Hello everyone,\n\nI would really like to invest in an ETF that follows spy or another big index, as I think this form of investment suits me best. \n\nThe problem is, that I live in Denmark where ETFs and funds are taxed annually on unrealised gains at quite a steep rate. This means that an ETF growing say 10% per year will only grow about 6%, which really ruins the long term effects of compounding interest.\n\nHowever stocks are only taxed on realised gains which is why they look more interesting to hold long term.\n\nI do not like the lack of diversification this brings, as I am looking to spend tonnes of time picking the right long term stocks.\n\nIt would be ideal to find a few stocks that over the long term somewhat follows the indexes. Does anyone have suggestions?\n\nI have looked at Nasdaq Inc. which quite closely follows Nasdaq 100. \n\nI really appreciate any help.', metadata={'post_subreddit': 'r/investing', 'post_category': 'new', 'post_title': 'Stocks that track an index', 'post_score': 7, 'post_id': '130auvj', 'post_url': 'https://www.reddit.com/r/investing/comments/130auvj/stocks_that_track_an_index/', 'post_author': Redditor(name='LeAlbertP')})]
 ```
-
-
 
 ## Related
 

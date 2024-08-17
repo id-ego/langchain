@@ -5,20 +5,18 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # JSON Toolkit
 
-This notebook showcases an agent interacting with large `JSON/dict` objects. 
+This notebook showcases an agent interacting with large `JSON/dict` objects.
 This is useful when you want to answer questions about a JSON blob that's too large to fit in the context window of an LLM. The agent is able to iteratively explore the blob to find what it needs to answer the user's question.
 
 In the below example, we are using the OpenAPI spec for the OpenAI API, which you can find [here](https://github.com/openai/openai-openapi/blob/master/openapi.yaml).
 
 We will use the JSON agent to answer some questions about the API spec.
 
-
 ```python
 %pip install -qU langchain-community
 ```
 
 ## Initialization
-
 
 ```python
 <!--IMPORTS:[{"imported": "JsonToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.json.toolkit.JsonToolkit.html", "title": "JSON Toolkit"}, {"imported": "create_json_agent", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.json.base.create_json_agent.html", "title": "JSON Toolkit"}, {"imported": "JsonSpec", "source": "langchain_community.tools.json.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.json.tool.JsonSpec.html", "title": "JSON Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "JSON Toolkit"}]-->
@@ -27,7 +25,6 @@ from langchain_community.agent_toolkits import JsonToolkit, create_json_agent
 from langchain_community.tools.json.tool import JsonSpec
 from langchain_openai import OpenAI
 ```
-
 
 ```python
 with open("openai_openapi.yml") as f:
@@ -41,7 +38,6 @@ json_agent_executor = create_json_agent(
 ```
 
 ## Example: getting the required POST parameters for a request
-
 
 ```python
 json_agent_executor.run(
@@ -105,12 +101,9 @@ Final Answer: The required parameters in the request body to the /completions en
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 "The required parameters in the request body to the /completions endpoint are 'model'."
 ```
-
-
 
 ## Related
 

@@ -40,7 +40,6 @@ Read the [client authentication guide](https://weaviate.io/developers/weaviate/c
 
 ## Installation
 
-
 ```python
 # install package
 # %pip install -Uqq langchain-weaviate
@@ -63,14 +62,12 @@ Here is an example of how to find objects by similarity to a query, from data im
 
 First, we will create data to add to `Weaviate` by loading and chunking the contents of a long text file. 
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Weaviate"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Weaviate"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Weaviate"}]-->
 from langchain_community.document_loaders import TextLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 loader = TextLoader("state_of_the_union.txt")
@@ -88,12 +85,10 @@ Now, we can import the data.
 
 To do so, connect to the Weaviate instance and use the resulting `weaviate_client` object. For example, we can import the documents as shown below:
 
-
 ```python
 import weaviate
 from langchain_weaviate.vectorstores import WeaviateVectorStore
 ```
-
 
 ```python
 weaviate_client = weaviate.connect_to_local()
@@ -106,7 +101,6 @@ db = WeaviateVectorStore.from_documents(docs, embeddings, client=weaviate_client
 ### Step 2: Perform the search
 
 We can now perform a similarity search. This will return the most similar documents to the query text, based on the embeddings stored in Weaviate and an equivalent embedding generated from the query text.
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -135,7 +129,6 @@ A former top litigator in private practice. A former federal public defender. An
 ```
 You can also add filters, which will either include or exclude results based on the filter conditions. (See [more filter examples](https://weaviate.io/developers/weaviate/search/filters).)
 
-
 ```python
 from weaviate.classes.query import Filter
 
@@ -154,7 +147,6 @@ for filter_str in ["blah.txt", "state_of_the_union.txt"]:
 ```
 It is also possible to provide `k`, which is the upper limit of the number of results to return.
 
-
 ```python
 search_filter = Filter.by_property("source").equal("state_of_the_union.txt")
 filtered_search_results = db.similarity_search(query, filters=search_filter, k=3)
@@ -166,7 +158,6 @@ assert len(filtered_search_results) <= 3
 You can optionally retrieve a relevance "score". This is a relative score that indicates how good the particular search results is, amongst the pool of search results. 
 
 Note that this is relative score, meaning that it should not be used to determine thresholds for relevance. However, it can be used to compare the relevance of different search results within the entire search result set.
-
 
 ```python
 docs = db.similarity_search_with_score("country", k=5)
@@ -193,18 +184,14 @@ A hybrid search combines a vector and a keyword search, with `alpha` as the weig
 
 So, you can perform a pure keyword search by adding `alpha=0` as shown below:
 
-
 ```python
 docs = db.similarity_search(query, alpha=0)
 docs[0]
 ```
 
-
-
 ```output
 Document(page_content='Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. \n\nTonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. \n\nOne of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court. \n\nAnd I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.', metadata={'source': 'state_of_the_union.txt'})
 ```
-
 
 ## Persistence
 
@@ -220,7 +207,6 @@ To use multi-tenancy, the vector store need to be aware of the `tenant` paramete
 
 So when adding any data, provide the `tenant` parameter as shown below.
 
-
 ```python
 db_with_mt = WeaviateVectorStore.from_documents(
     docs, embeddings, client=weaviate_client, tenant="Foo"
@@ -231,12 +217,9 @@ db_with_mt = WeaviateVectorStore.from_documents(
 ```
 And when performing queries, provide the `tenant` parameter also.
 
-
 ```python
 db_with_mt.similarity_search(query, tenant="Foo")
 ```
-
-
 
 ```output
 [Document(page_content='Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. \n\nTonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. \n\nOne of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court. \n\nAnd I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.', metadata={'source': 'state_of_the_union.txt'}),
@@ -245,7 +228,6 @@ db_with_mt.similarity_search(query, tenant="Foo")
  Document(page_content='Putin’s latest attack on Ukraine was premeditated and unprovoked. \n\nHe rejected repeated efforts at diplomacy. \n\nHe thought the West and NATO wouldn’t respond. And he thought he could divide us at home. Putin was wrong. We were ready.  Here is what we did.   \n\nWe prepared extensively and carefully. \n\nWe spent months building a coalition of other freedom-loving nations from Europe and the Americas to Asia and Africa to confront Putin. \n\nI spent countless hours unifying our European allies. We shared with the world in advance what we knew Putin was planning and precisely how he would try to falsely justify his aggression.  \n\nWe countered Russia’s lies with truth.   \n\nAnd now that he has acted the free world is holding him accountable. \n\nAlong with twenty-seven members of the European Union including France, Germany, Italy, as well as countries like the United Kingdom, Canada, Japan, Korea, Australia, New Zealand, and many others, even Switzerland.', metadata={'source': 'state_of_the_union.txt'})]
 ```
 
-
 ## Retriever options
 
 Weaviate can also be used as a retriever
@@ -253,7 +235,6 @@ Weaviate can also be used as a retriever
 ### Maximal marginal relevance search (MMR)
 
 In addition to using similaritysearch  in the retriever object, you can also use `mmr`.
-
 
 ```python
 retriever = db.as_retriever(search_type="mmr")
@@ -264,18 +245,15 @@ retriever.invoke(query)[0]
   warnings.warn('The `dict` method is deprecated; use `model_dump` instead.', category=PydanticDeprecatedSince20)
 ```
 
-
 ```output
 Document(page_content='Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. \n\nTonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. \n\nOne of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court. \n\nAnd I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.', metadata={'source': 'state_of_the_union.txt'})
 ```
-
 
 # Use with LangChain
 
 A known limitation of large languag models (LLMs) is that their training data can be outdated, or not include the specific domain knowledge that you require.
 
 Take a look at the example below:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Weaviate"}]-->
@@ -293,11 +271,9 @@ llm.predict("What did the president say about Justice Breyer")
   warnings.warn('The `dict` method is deprecated; use `model_dump` instead.', category=PydanticDeprecatedSince20)
 ```
 
-
 ```output
 "I'm sorry, I cannot provide real-time information as my responses are generated based on a mixture of licensed data, data created by human trainers, and publicly available data. The last update was in October 2021."
 ```
-
 
 Vector stores complement LLMs by providing a way to store and retrieve relevant information. This allow you to combine the strengths of LLMs and vector stores, by using LLM's reasoning and linguistic capabilities with vector stores' ability to retrieve relevant information.
 
@@ -313,13 +289,11 @@ This section uses the `RetrievalQAWithSourcesChain`, which does the lookup of th
 
 First, we will chunk the text again and import them into the Weaviate vector store.
 
-
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQAWithSourcesChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.qa_with_sources.retrieval.RetrievalQAWithSourcesChain.html", "title": "Weaviate"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Weaviate"}]-->
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain_openai import OpenAI
 ```
-
 
 ```python
 with open("state_of_the_union.txt") as f:
@@ -327,7 +301,6 @@ with open("state_of_the_union.txt") as f:
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 texts = text_splitter.split_text(state_of_the_union)
 ```
-
 
 ```python
 docsearch = WeaviateVectorStore.from_texts(
@@ -340,7 +313,6 @@ docsearch = WeaviateVectorStore.from_texts(
 
 Now we can construct the chain, with the retriever specified:
 
-
 ```python
 chain = RetrievalQAWithSourcesChain.from_chain_type(
     OpenAI(temperature=0), chain_type="stuff", retriever=docsearch.as_retriever()
@@ -351,7 +323,6 @@ chain = RetrievalQAWithSourcesChain.from_chain_type(
   warn_deprecated(
 ```
 And run the chain, to ask the question:
-
 
 ```python
 chain(
@@ -368,12 +339,10 @@ chain(
   warnings.warn('The `dict` method is deprecated; use `model_dump` instead.', category=PydanticDeprecatedSince20)
 ```
 
-
 ```output
 {'answer': ' The president thanked Justice Stephen Breyer for his service and announced his nomination of Judge Ketanji Brown Jackson to the Supreme Court.\n',
  'sources': '31-pl'}
 ```
-
 
 ### Retrieval-Augmented Generation
 
@@ -381,14 +350,12 @@ Another very popular application of combining LLMs and vector stores is retrieva
 
 We begin with a similar setup:
 
-
 ```python
 with open("state_of_the_union.txt") as f:
     state_of_the_union = f.read()
 text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 texts = text_splitter.split_text(state_of_the_union)
 ```
-
 
 ```python
 docsearch = WeaviateVectorStore.from_texts(
@@ -402,7 +369,6 @@ retriever = docsearch.as_retriever()
 ```
 
 We need to construct a template for the RAG model so that the retrieved information will be populated in the template.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Weaviate"}]-->
@@ -430,7 +396,6 @@ llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 And running the cell, we get a very similar output.
 
-
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Weaviate"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Weaviate"}]-->
 from langchain_core.output_parsers import StrOutputParser
@@ -452,11 +417,9 @@ rag_chain.invoke("What did the president say about Justice Breyer")
   warnings.warn('The `dict` method is deprecated; use `model_dump` instead.', category=PydanticDeprecatedSince20)
 ```
 
-
 ```output
 "The president honored Justice Stephen Breyer for his service to the country as an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. The president also mentioned nominating Circuit Court of Appeals Judge Ketanji Brown Jackson to continue Justice Breyer's legacy of excellence. The president expressed gratitude towards Justice Breyer and highlighted the importance of nominating someone to serve on the United States Supreme Court."
 ```
-
 
 But note that since the template is upto you to construct, you can customize it to your needs. 
 
@@ -465,7 +428,6 @@ But note that since the template is upto you to construct, you can customize it 
 Weaviate is a scalable, production-ready vector store. 
 
 This integration allows Weaviate to be used with LangChain to enhance the capabilities of large language models with a robust data store. Its scalability and production-readiness make it a great choice as a vector store for your LangChain applications, and it will reduce your time to production.
-
 
 ## Related
 

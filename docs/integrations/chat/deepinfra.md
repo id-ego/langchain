@@ -13,7 +13,6 @@ Make sure to get your API key from DeepInfra. You have to [Login](https://deepin
 You are given a 1 hour free of serverless GPU compute to test different models. (see [here](https://github.com/deepinfra/deepctl#deepctl))
 You can print your token with `deepctl auth token`
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatDeepInfra", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.deepinfra.ChatDeepInfra.html", "title": "DeepInfra"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "DeepInfra"}]-->
 # get a new token: https://deepinfra.com/login?from=%2Fdash
@@ -41,17 +40,14 @@ chat.invoke(messages)
 
 ## `ChatDeepInfra` also supports async and streaming functionality:
 
-
 ```python
 <!--IMPORTS:[{"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "DeepInfra"}]-->
 from langchain_core.callbacks import StreamingStdOutCallbackHandler
 ```
 
-
 ```python
 await chat.agenerate([messages])
 ```
-
 
 ```python
 chat = ChatDeepInfra(
@@ -67,7 +63,6 @@ chat.invoke(messages)
 DeepInfra currently supports only invoke and async invoke tool calling.
 
 For a complete list of models that support tool calling, please refer to our [tool calling documentation](https://deepinfra.com/docs/advanced/function_calling).
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatDeepInfra", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.deepinfra.ChatDeepInfra.html", "title": "DeepInfra"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "DeepInfra"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "DeepInfra"}]-->
@@ -123,7 +118,6 @@ async def call_ainvoke():
 asyncio.run(call_ainvoke())
 # [{'name': 'foo', 'args': {'something': None}, 'id': 'call_ZH7FetmgSot4LHcMU6CEb8tI'}, {'name': 'Bar', 'args': {}, 'id': 'call_2MQhDifAJVoijZEvH8PeFSVB'}]
 ```
-
 
 ## Related
 

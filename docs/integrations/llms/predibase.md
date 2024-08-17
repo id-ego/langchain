@@ -15,7 +15,6 @@ To run this notebook, you'll need a [Predibase account](https://predibase.com/fr
 
 You'll also need to install the Predibase Python package:
 
-
 ```python
 %pip install --upgrade --quiet  predibase
 import os
@@ -24,7 +23,6 @@ os.environ["PREDIBASE_API_TOKEN"] = "{PREDIBASE_API_TOKEN}"
 ```
 
 ## Initial Call
-
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -35,7 +33,6 @@ model = Predibase(
     predibase_api_key=os.environ.get("PREDIBASE_API_TOKEN"),
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -50,7 +47,6 @@ model = Predibase(
     adapter_version=1,
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -65,14 +61,12 @@ model = Predibase(
 )
 ```
 
-
 ```python
 response = model.invoke("Can you recommend me a nice dry wine?")
 print(response)
 ```
 
 ## Chain Call Setup
-
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -85,7 +79,6 @@ model = Predibase(
 )
 ```
 
-
 ```python
 # With a fine-tuned adapter hosted at Predibase (adapter_version must be specified).
 model = Predibase(
@@ -96,7 +89,6 @@ model = Predibase(
     adapter_version=1,
 )
 ```
-
 
 ```python
 # With a fine-tuned adapter hosted at HuggingFace (adapter_version does not apply and will be ignored).
@@ -108,15 +100,13 @@ llm = Predibase(
 )
 ```
 
-##  SequentialChain
-
+## SequentialChain
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Predibase"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Predibase"}]-->
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 ```
-
 
 ```python
 # This is an LLMChain to write a synopsis given a title of a play.
@@ -127,7 +117,6 @@ Playwright: This is a synopsis for the above play:"""
 prompt_template = PromptTemplate(input_variables=["title"], template=template)
 synopsis_chain = LLMChain(llm=llm, prompt=prompt_template)
 ```
-
 
 ```python
 # This is an LLMChain to write a review of a play given a synopsis.
@@ -140,7 +129,6 @@ prompt_template = PromptTemplate(input_variables=["synopsis"], template=template
 review_chain = LLMChain(llm=llm, prompt=prompt_template)
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "SimpleSequentialChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.sequential.SimpleSequentialChain.html", "title": "Predibase"}]-->
 # This is the overall chain where we run these two chains in sequence.
@@ -151,13 +139,11 @@ overall_chain = SimpleSequentialChain(
 )
 ```
 
-
 ```python
 review = overall_chain.run("Tragedy at sunset on the beach")
 ```
 
 ## Fine-tuned LLM (Use your own fine-tuned LLM from Predibase)
-
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -175,11 +161,9 @@ model = Predibase(
 # replace my-base-LLM with the name of your choice of a serverless base model in Predibase
 ```
 
-
 ```python
 # response = model.invoke("Can you help categorize the following emails into positive, negative, and neutral?")
 ```
-
 
 ## Related
 

@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 The `UnstructuredXMLLoader` is used to load `XML` files. The loader works with `.xml` files. The page content will be the text extracted from the XML tags.
 
-
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredXMLLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.xml.UnstructuredXMLLoader.html", "title": "XML"}]-->
 from langchain_community.document_loaders import UnstructuredXMLLoader
@@ -18,7 +17,6 @@ loader = UnstructuredXMLLoader(
 docs = loader.load()
 docs[0]
 ```
-
 
 ## Related
 

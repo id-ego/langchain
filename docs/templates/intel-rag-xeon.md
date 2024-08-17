@@ -9,7 +9,6 @@ Intel® Xeon® Scalable processors feature built-in accelerators for more perfor
 ## Environment Setup
 To use [🤗 text-generation-inference](https://github.com/huggingface/text-generation-inference) on Intel® Xeon® Scalable Processors, please follow these steps:
 
-
 ### Launch a local server instance on Intel Xeon Server:
 ```bash
 model=Intel/neural-chat-7b-v3-3
@@ -33,7 +32,6 @@ curl localhost:8080/generate -X POST -d '{"inputs":"Which NFL team won the Super
 ```
 
 More details please refer to [text-generation-inference](https://github.com/huggingface/text-generation-inference).
-
 
 ## Populating with data
 
@@ -86,7 +84,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

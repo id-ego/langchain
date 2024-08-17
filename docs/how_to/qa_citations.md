@@ -23,11 +23,9 @@ Let's first create a simple RAG chain. To start we'll just retrieve from Wikiped
 
 First we'll need to install some dependencies and set environment vars for the models we'll be using.
 
-
 ```python
 %pip install -qU langchain langchain-openai langchain-anthropic langchain-community wikipedia
 ```
-
 
 ```python
 import getpass
@@ -84,7 +82,6 @@ Here are the Wikipedia articles: [33;1m[1;3m{context}[0m
 ```
 Now that we've got a model, retriver and prompt, let's chain them all together. We'll need to add some logic for formatting our retrieved Documents to a string that can be passed to our prompt. Following the how-to guide on [adding citations](/docs/how_to/qa_citations) to a RAG application, we'll make it so our chain returns both the answer and the retrieved Documents.
 
-
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to get a RAG application to add citations"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to get a RAG application to add citations"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to get a RAG application to add citations"}]-->
 from typing import List
@@ -112,11 +109,9 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 )
 ```
 
-
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
-
 
 ```python
 print(result.keys())
@@ -150,7 +145,6 @@ To cite documents using an identifier, we format the identifiers into the prompt
 
 First we define a schema for the output. The `.with_structured_output` supports multiple formats, including JSON schema and Pydantic. Here we will use Pydantic:
 
-
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
 
@@ -170,7 +164,6 @@ class CitedAnswer(BaseModel):
 
 Let's see what the model output is like when we pass in our functions and a user input:
 
-
 ```python
 structured_llm = llm.with_structured_output(CitedAnswer)
 
@@ -189,33 +182,25 @@ result = structured_llm.invoke(example_q)
 result
 ```
 
-
-
 ```output
 CitedAnswer(answer='Brian\'s height is 5\'11".', citations=[1, 3])
 ```
 
-
 Or as a dict:
-
 
 ```python
 result.dict()
 ```
 
-
-
 ```output
 {'answer': 'Brian\'s height is 5\'11".', 'citations': [1, 3]}
 ```
-
 
 Now we structure the source identifiers into the prompt to replicate with our chain. We will make three changes:
 
 1. Update the prompt to include source identifiers;
 2. Use the `structured_llm` (i.e., `llm.with_structured_output(CitedAnswer));
 3. Remove the `StrOutputParser`, to retain the Pydantic object in the output.
-
 
 ```python
 def format_docs_with_id(docs: List[Document]) -> str:
@@ -239,11 +224,9 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 )
 ```
 
-
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
-
 
 ```python
 print(result["answer"])
@@ -252,7 +235,6 @@ print(result["answer"])
 answer='Cheetahs can run at speeds of 93 to 104 km/h (58 to 65 mph). They are known as the fastest land animals.' citations=[0]
 ```
 We can inspect the document at index 0, which the model cited:
-
 
 ```python
 print(result["context"][0])
@@ -267,7 +249,6 @@ LangSmith trace: https://smith.langchain.com/public/aff39dc7-3e09-4d64-8083-8702
 To return text spans (perhaps in addition to source identifiers), we can use the same approach. The only change will be to build a more complex output schema, here using Pydantic, that includes a "quote" alongside a source identifier.
 
 *Aside: Note that if we break up our documents so that we have many documents with only a sentence or two instead of a few long documents, citing documents becomes roughly equivalent to citing snippets, and may be easier for the model because the model just needs to return an identifier for each snippet instead of the actual text. Probably worth trying both approaches and evaluating.*
-
 
 ```python
 class Citation(BaseModel):
@@ -293,7 +274,6 @@ class QuotedAnswer(BaseModel):
     )
 ```
 
-
 ```python
 rag_chain_from_docs = (
     RunnablePassthrough.assign(context=(lambda x: format_docs_with_id(x["context"])))
@@ -308,31 +288,25 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 )
 ```
 
-
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
 
 Here we see that the model has extracted a relevant snippet of text from source 0:
 
-
 ```python
 result["answer"]
 ```
 
-
-
 ```output
 QuotedAnswer(answer='Cheetahs can run at speeds of 93 to 104 km/h (58 to 65 mph).', citations=[Citation(source_id=0, quote='The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.')])
 ```
-
 
 LangSmith trace: https://smith.langchain.com/public/0f638cc9-8409-4a53-9010-86ac28144129/r
 
 ## Direct prompting
 
 Many models don't support function-calling. We can achieve similar results with direct prompting. Let's try instructing a model to generate structured XML for its output:
-
 
 ```python
 xml_system = """You're a helpful AI assistant. Given a user question and some Wikipedia article snippets, \
@@ -362,7 +336,6 @@ We now make similar small updates to our chain:
 1. We update the formatting function to wrap the retrieved context in XML tags;
 2. We do not use `.with_structured_output` (e.g., because it does not exist for a model);
 3. We use [XMLOutputParser](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.xml.XMLOutputParser.html) in place of `StrOutputParser` to parse the answer into a dict.
-
 
 ```python
 <!--IMPORTS:[{"imported": "XMLOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.xml.XMLOutputParser.html", "title": "How to get a RAG application to add citations"}]-->
@@ -395,26 +368,21 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 )
 ```
 
-
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
 
 Note that citations are again structured into the answer:
 
-
 ```python
 result["answer"]
 ```
-
-
 
 ```output
 {'cited_answer': [{'answer': 'Cheetahs are capable of running at 93 to 104 km/h (58 to 65 mph).'},
   {'citations': [{'citation': [{'source_id': '0'},
       {'quote': 'The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.'}]}]}]}
 ```
-
 
 LangSmith trace: https://smith.langchain.com/public/a3636c70-39c6-4c8f-bc83-1c7a174c237e/r
 
@@ -423,7 +391,6 @@ LangSmith trace: https://smith.langchain.com/public/a3636c70-39c6-4c8f-bc83-1c7a
 Another approach is to post-process our retrieved documents to compress the content, so that the source content is already minimal enough that we don't need the model to cite specific sources or spans. For example, we could break up each document into a sentence or two, embed those and keep only the most relevant ones. LangChain has some built-in components for this. Here we'll use a [RecursiveCharacterTextSplitter](https://api.python.langchain.com/en/latest/text_splitter/langchain_text_splitters.RecursiveCharacterTextSplitter.html#langchain_text_splitters.RecursiveCharacterTextSplitter), which creates chunks of a sepacified size by splitting on separator substrings, and an [EmbeddingsFilter](https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter.html#langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter), which keeps only the texts with the most relevant embeddings.
 
 This approach effectively swaps our original retriever with an updated one that compresses the documents. To start, we build the retriever:
-
 
 ```python
 <!--IMPORTS:[{"imported": "EmbeddingsFilter", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter.html", "title": "How to get a RAG application to add citations"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "How to get a RAG application to add citations"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to get a RAG application to add citations"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to get a RAG application to add citations"}]-->
@@ -499,7 +466,6 @@ Acinonyx rex proposed in 1927 by Reginald Innes Pocock on basis of a specimen fr
 ```
 Next, we assemble it into our chain as before:
 
-
 ```python
 rag_chain_from_docs = (
     RunnablePassthrough.assign(context=(lambda x: format_docs(x["context"])))
@@ -513,7 +479,6 @@ chain = RunnablePassthrough.assign(
 ).assign(answer=rag_chain_from_docs)
 ```
 
-
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 
@@ -524,29 +489,21 @@ Cheetahs are capable of running at speeds between 93 to 104 km/h (58 to 65 mph),
 ```
 Note that the document content is now compressed, although the document objects retain the original content in a "summary" key in their metadata. These summaries are not passed to the model; only the condensed content is.
 
-
 ```python
 result["context"][0].page_content  # passed to model
 ```
-
-
 
 ```output
 'Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail'
 ```
 
-
-
 ```python
 result["context"][0].metadata["summary"]  # original document
 ```
 
-
-
 ```output
 'The cheetah (Acinonyx jubatus) is a large cat and the fastest land animal. It has a tawny to creamy white or pale buff fur that is marked with evenly spaced, solid black spots. The head is small and rounded, with a short snout and black tear-like facial streaks. It reaches 67–94 cm (26–37 in) at the shoulder, and the head-and-body length is between 1.1 and 1.5 m (3 ft 7 in and 4 ft 11 in). Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.\nThe cheetah was first described in the late 18th century. Four subspecies are recognised today that are native to Africa and central Iran. An African subspecies was introduced to India in 2022. It is now distributed mainly in small, fragmented populations in northwestern, eastern and southern Africa and central Iran. It lives in a variety of habitats such as savannahs in the Serengeti, arid mountain ranges in the Sahara, and hilly desert terrain.\nThe cheetah lives in three main social groups: females and their cubs, male "coalitions", and solitary males. While females lead a nomadic life searching for prey in large home ranges, males are more sedentary and instead establish much smaller territories in areas with plentiful prey and access to females. The cheetah is active during the day, with peaks during dawn and dusk. It feeds on small- to medium-sized prey, mostly weighing under 40 kg (88 lb), and prefers medium-sized ungulates such as impala, springbok and Thomson\'s gazelles. The cheetah typically stalks its prey within 60–100 m (200–330 ft) before charging towards it, trips it during the chase and bites its throat to suffocate it to death. It breeds throughout the year. After a gestation of nearly three months, females give birth to a litter of three or four cubs. Cheetah cubs are highly vulnerable to predation by other large carnivores. They are weaned at around four months and are independent by around 20 months of age.\nThe cheetah is threatened by habitat loss, conflict with humans, poaching and high susceptibility to diseases. In 2016, the global cheetah population was estimated at 7,100 individuals in the wild; it is listed as Vulnerable on the IUCN Red List. It has been widely depicted in art, literature, advertising, and animation. It was tamed in ancient Egypt and trained for hunting ungulates in the Arabian Peninsula and India. It has been kept in zoos since the early 19th century.'
 ```
-
 
 LangSmith trace: https://smith.langchain.com/public/a61304fa-e5a5-4c64-a268-b0aef1130d53/r
 
@@ -555,7 +512,6 @@ LangSmith trace: https://smith.langchain.com/public/a61304fa-e5a5-4c64-a268-b0ae
 Another approach is to post-process our model generation. In this example we'll first generate just an answer, and then we'll ask the model to annotate it's own answer with citations. The downside of this approach is of course that it is slower and more expensive, because two model calls need to be made.
 
 Let's apply this to our initial chain.
-
 
 ```python
 class Citation(BaseModel):
@@ -579,7 +535,6 @@ class AnnotatedAnswer(BaseModel):
 
 structured_llm = llm.with_structured_output(AnnotatedAnswer)
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to get a RAG application to add citations"}]-->
@@ -610,11 +565,9 @@ chain = (
 )
 ```
 
-
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
-
 
 ```python
 print(result["answer"])
@@ -627,11 +580,8 @@ Cheetahs are capable of running at speeds between 93 to 104 km/h (58 to 65 mph).
 result["annotations"]
 ```
 
-
-
 ```output
 AnnotatedAnswer(citations=[Citation(source_id=0, quote='The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.')])
 ```
-
 
 LangSmith trace: https://smith.langchain.com/public/bf5e8856-193b-4ff2-af8d-c0f4fbd1d9cb/r

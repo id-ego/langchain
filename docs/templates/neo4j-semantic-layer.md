@@ -8,8 +8,6 @@ This template is designed to implement an agent capable of interacting with a gr
 The semantic layer equips the agent with a suite of robust tools, allowing it to interact with the graph database based on the user's intent.
 Learn more about the semantic layer template in the [corresponding blog post](https://medium.com/towards-data-science/enhancing-interaction-between-language-models-and-graph-databases-via-a-semantic-layer-0a78ad3eba49).
 
-
-
 ## Tools
 
 The agent utilizes several tools to interact with the Neo4j graph database effectively:
@@ -65,9 +63,9 @@ from neo4j_semantic_layer import agent_executor as neo4j_semantic_agent
 add_routes(app, neo4j_semantic_agent, path="/neo4j-semantic-layer")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -82,7 +80,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

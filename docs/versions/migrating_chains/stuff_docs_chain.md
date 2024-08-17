@@ -16,10 +16,10 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
+
 ## Example
 
 Let's go through an example where we analyze a set of documents. We first generate some simple documents for illustrative purposes:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "# Example"}]-->
@@ -36,8 +36,8 @@ documents = [
 
 <details open>
 
-Below we show an implementation with `StuffDocumentsChain`. We define the prompt template for a summarization task and instantiate a [LLMChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html) object for this purpose. We define how documents are formatted into the prompt and ensure consistency among the keys in the various prompts.
 
+Below we show an implementation with `StuffDocumentsChain`. We define the prompt template for a summarization task and instantiate a [LLMChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html) object for this purpose. We define how documents are formatted into the prompt and ensure consistency among the keys in the various prompts.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "# Example"}, {"imported": "StuffDocumentsChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.StuffDocumentsChain.html", "title": "# Example"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "# Example"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "# Example"}]-->
@@ -65,19 +65,14 @@ chain = StuffDocumentsChain(
 
 We can now invoke our chain:
 
-
 ```python
 result = chain.invoke(documents)
 result["output_text"]
 ```
 
-
-
 ```output
 'This content describes the colors of different fruits: apples are red, blueberries are blue, and bananas are yellow.'
 ```
-
-
 
 ```python
 for chunk in chain.stream(documents):
@@ -88,12 +83,13 @@ for chunk in chain.stream(documents):
 ```
 </details>
 
+
 ### LCEL
 
 <details open>
 
-Below we show an implementation using `create_stuff_documents_chain`:
 
+Below we show an implementation using `create_stuff_documents_chain`:
 
 ```python
 <!--IMPORTS:[{"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "# Example"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "# Example"}]-->
@@ -106,21 +102,16 @@ chain = create_stuff_documents_chain(llm, prompt)
 
 Invoking the chain, we obtain a similar result as before:
 
-
 ```python
 result = chain.invoke({"context": documents})
 result
 ```
 
-
-
 ```output
 'This content describes the colors of different fruits: apples are red, blueberries are blue, and bananas are yellow.'
 ```
 
-
 Note that this implementation supports streaming of output tokens:
-
 
 ```python
 for chunk in chain.stream({"context": documents}):
@@ -130,6 +121,7 @@ for chunk in chain.stream({"context": documents}):
  | This |  content |  describes |  the |  colors |  of |  different |  fruits | : |  apples |  are |  red | , |  blue | berries |  are |  blue | , |  and |  bananas |  are |  yellow | . |  |
 ```
 </details>
+
 
 ## Next steps
 

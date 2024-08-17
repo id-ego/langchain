@@ -5,14 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Redis
 
->[Redis vector database](https://redis.io/docs/get-started/vector-database/) introduction and langchain integration guide.
+> [Redis vector database](https://redis.io/docs/get-started/vector-database/) introduction and langchain integration guide.
 
 ## What is Redis?
 
 Most developers from a web services background are familiar with `Redis`. At its core, `Redis` is an open-source key-value store that is used as a cache, message broker, and database. Developers choose `Redis` because it is fast, has a large ecosystem of client libraries, and has been deployed by major enterprises for years.
 
 On top of these traditional use cases, `Redis` provides additional capabilities like the Search and Query capability that allows users to create secondary index structures within `Redis`. This allows `Redis` to be a Vector Database, at the speed of a cache. 
-
 
 ## Redis as a Vector Database
 
@@ -37,19 +36,17 @@ On top of these traditional use cases, `Redis` provides additional capabilities 
 * Retrieve full documents, selected fields, or only the document IDs
 * Sorting results (for example, by creation date)
 
-
-
 ## Clients
 
 Since `Redis` is much more than just a vector database, there are often use cases that demand the usage of a `Redis` client besides just the `LangChain` integration. You can use any standard `Redis` client library to run Search and Query commands, but it's easiest to use a library that wraps the Search and Query API. Below are a few examples, but you can find more client libraries [here](https://redis.io/resources/clients/).
 
 | Project | Language | License | Author | Stars |
 |----------|---------|--------|---------|-------|
-| [jedis][jedis-url] | Java | MIT | [Redis][redis-url] | ![Stars][jedis-stars] |
-| [redisvl][redisvl-url] | Python | MIT | [Redis][redis-url] | ![Stars][redisvl-stars] |
-| [redis-py][redis-py-url] | Python | MIT | [Redis][redis-url] | ![Stars][redis-py-stars] |
-| [node-redis][node-redis-url] | Node.js | MIT | [Redis][redis-url] | ![Stars][node-redis-stars] |
-| [nredisstack][nredisstack-url] | .NET | MIT | [Redis][redis-url] | ![Stars][nredisstack-stars] |
+| [jedis][jedis-url] | Java | MIT | [Redis][redis-url] | ![Stars](https://img.shields.io/github/stars/redis/jedis.svg?style=social&amp;label=Star&amp;maxAge=2592000) |
+| [redisvl][redisvl-url] | Python | MIT | [Redis][redis-url] | ![Stars](https://img.shields.io/github/stars/RedisVentures/redisvl.svg?style=social&amp;label=Star&amp;maxAge=2592000) |
+| [redis-py][redis-py-url] | Python | MIT | [Redis][redis-url] | ![Stars](https://img.shields.io/github/stars/redis/redis-py.svg?style=social&amp;label=Star&amp;maxAge=2592000) |
+| [node-redis][node-redis-url] | Node.js | MIT | [Redis][redis-url] | ![Stars](https://img.shields.io/github/stars/redis/node-redis.svg?style=social&amp;label=Star&amp;maxAge=2592000) |
+| [nredisstack][nredisstack-url] | .NET | MIT | [Redis][redis-url] | ![Stars](https://img.shields.io/github/stars/redis/nredisstack.svg?style=social&amp;label=Star&amp;maxAge=2592000) |
 
 [redis-url]: https://redis.com
 
@@ -63,7 +60,7 @@ Since `Redis` is much more than just a vector database, there are often use case
 
 [jedis-url]: https://github.com/redis/jedis
 [jedis-stars]: https://img.shields.io/github/stars/redis/jedis.svg?style=social&amp;label=Star&amp;maxAge=2592000
-[Jedis-package]: https://search.maven.org/artifact/redis.clients/jedis
+[jedis-package]: https://search.maven.org/artifact/redis.clients/jedis
 
 [nredisstack-url]: https://github.com/redis/nredisstack
 [nredisstack-stars]: https://img.shields.io/github/stars/redis/nredisstack.svg?style=social&amp;label=Star&amp;maxAge=2592000
@@ -85,7 +82,6 @@ Since `Redis` is much more than just a vector database, there are often use case
 [redisearch-api-rs-author]: https://redis.com
 [redisearch-api-rs-stars]: https://img.shields.io/github/stars/RediSearch/redisearch-api-rs.svg?style=social&amp;label=Star&amp;maxAge=2592000
 
-
 ## Deployment options
 
 There are many ways to deploy Redis with RediSearch. The easiest way to get started is to use Docker, but there are are many potential options for deployment such as
@@ -96,7 +92,6 @@ There are many ways to deploy Redis with RediSearch. The easiest way to get star
 - On-premise: [Redis Enterprise Software](https://redis.com/redis-enterprise-software/overview/)
 - Kubernetes: [Redis Enterprise Software on Kubernetes](https://docs.redis.com/latest/kubernetes/)
 
-
 ## Additional examples
 
 Many examples can be found in the [Redis AI team's GitHub](https://github.com/RedisVentures/)
@@ -105,7 +100,6 @@ Many examples can be found in the [Redis AI team's GitHub](https://github.com/Re
 - [Azure OpenAI Embeddings Q&A](https://github.com/ruoccofabrizio/azure-open-ai-embeddings-qna) - OpenAI and Redis as a Q&A service on Azure.
 - [ArXiv Paper Search](https://github.com/RedisVentures/redis-arXiv-search) - Semantic search over arXiv scholarly papers
 - [Vector Search on Azure](https://learn.microsoft.com/azure/azure-cache-for-redis/cache-tutorial-vector-similarity) - Vector search on Azure using Azure Cache for Redis and Azure OpenAI
-
 
 ## More resources
 
@@ -119,7 +113,6 @@ For more information on how to use Redis as a vector database, check out the fol
 ## Setup
 
 `Redis-py` is the officially supported client by Redis. Recently released is the `RedisVL` client which is purpose-built for the Vector Database use cases. Both can be installed with pip.
-
 
 ```python
 %pip install -qU redis redisvl langchain-community
@@ -143,7 +136,6 @@ Valid Redis Url schemas are:
 4. `rediss+sentinel://` - Connection to Redis server via Redis Sentinel, booth connections with TLS encryption
 
 More information about additional connection parameters can be found in the [redis-py documentation](https://redis-py.readthedocs.io/en/stable/connections.html).
-
 
 ```python
 # connection to redis standalone at localhost, db 0, no password
@@ -169,7 +161,6 @@ redis_url = "rediss+sentinel://localhost"
 
 If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -179,13 +170,13 @@ If you want to get best in-class automated tracing of your model calls you can a
 
 The Redis VectorStore instance can be initialized in a number of ways. There are multiple class methods that can be used to initialize a Redis VectorStore instance.
 
-- ``Redis.__init__`` - Initialize directly
-- ``Redis.from_documents`` - Initialize from a list of ``Langchain.docstore.Document`` objects
-- ``Redis.from_texts`` - Initialize from a list of texts (optionally with metadata)
-- ``Redis.from_texts_return_keys`` - Initialize from a list of texts (optionally with metadata) and return the keys
-- ``Redis.from_existing_index`` - Initialize from an existing Redis index
+- `Redis.__init__` - Initialize directly
+- `Redis.from_documents` - Initialize from a list of `Langchain.docstore.Document` objects
+- `Redis.from_texts` - Initialize from a list of texts (optionally with metadata)
+- `Redis.from_texts_return_keys` - Initialize from a list of texts (optionally with metadata) and return the keys
+- `Redis.from_existing_index` - Initialize from an existing Redis index
 
-Below we will use the ``Redis.__init__`` method. 
+Below we will use the `Redis.__init__` method. 
 
 import EmbeddingTabs from "@theme/EmbeddingTabs";
 
@@ -210,7 +201,6 @@ Once you have created your vector store, we can interact with it by adding and d
 ### Add items to vector store
 
 We can add items to our vector store by using the `add_documents` function.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Redis"}]-->
@@ -285,8 +275,6 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
-
-
 ```output
 ['doc:users:622f5f19-9b4b-4896-9a16-e1e95f19db4b',
  'doc:users:032b489f-d37e-4bf1-85ec-4c2275be48ef',
@@ -300,25 +288,19 @@ vector_store.add_documents(documents=documents, ids=uuids)
  'doc:users:cc20438f-741a-40fd-bed8-4f1cee113680']
 ```
 
-
 ### Delete items from vector store
-
 
 ```python
 vector_store.delete(ids=[uuids[-1]])
 ```
 
-
-
 ```output
 True
 ```
 
-
 ### Inspecting the created Index
 
-Once the ``Redis`` VectorStore object has been constructed, an index will have been created in Redis if it did not already exist. The index can be inspected with both the ``rvl``and the ``redis-cli`` command line tool. If you installed ``redisvl`` above, you can use the ``rvl`` command line tool to inspect the index.
-
+Once the `Redis` VectorStore object has been constructed, an index will have been created in Redis if it did not already exist. The index can be inspected with both the `rvl`and the `redis-cli` command line tool. If you installed `redisvl` above, you can use the `rvl` command line tool to inspect the index.
 
 ```python
 # assumes you're running Redis locally (use --host, --port, --password, --username, to change this)
@@ -328,11 +310,10 @@ Once the ``Redis`` VectorStore object has been constructed, an index will have b
 [32m17:24:03[0m [34m[RedisVL][0m [1;30mINFO[0m   Indices:
 [32m17:24:03[0m [34m[RedisVL][0m [1;30mINFO[0m   1. users
 ```
-The ``Redis`` VectorStore implementation will attempt to generate index schema (fields for filtering) for any metadata passed through the ``from_texts``, ``from_texts_return_keys``, and ``from_documents`` methods. This way, whatever metadata is passed will be indexed into the Redis search index allowing
+The `Redis` VectorStore implementation will attempt to generate index schema (fields for filtering) for any metadata passed through the `from_texts`, `from_texts_return_keys`, and `from_documents` methods. This way, whatever metadata is passed will be indexed into the Redis search index allowing
 for filtering on those fields.
 
 Below we show what fields were created from the metadata we defined above
-
 
 ```python
 !rvl index info -i users --port 6379
@@ -385,7 +366,7 @@ Statistics:
 │ vector_index_sz_mb          │ 12.0086     │
 ╰─────────────────────────────┴─────────────╯
 ```
-It's important to note that we have not specified that the ``user``, ``job``, ``credit_score`` and ``age`` in the metadata should be fields within the index, this is because the ``Redis`` VectorStore object automatically generate the index schema from the passed metadata. For more information on the generation of index fields, see the API documentation.
+It's important to note that we have not specified that the `user`, `job`, `credit_score` and `age` in the metadata should be fields within the index, this is because the `Redis` VectorStore object automatically generate the index schema from the passed metadata. For more information on the generation of index fields, see the API documentation.
 
 ## Query vector store
 
@@ -396,7 +377,6 @@ Once your vector store has been created and the relevant documents have been add
 #### Similarity search
 
 Performing a simple similarity search can be done as follows:
-
 
 ```python
 results = vector_store.similarity_search(
@@ -413,7 +393,6 @@ for res in results:
 
 You can also search with score:
 
-
 ```python
 results = vector_store.similarity_search_with_score("Will it be hot tomorrow?", k=1)
 for res, score in results:
@@ -428,14 +407,12 @@ For a list of all the search functions available to the `Redis` vector store, pl
 
 ## Connect to an existing Index
 
-In order to have the same metadata indexed when using the ``Redis`` VectorStore. You will need to have the same ``index_schema`` passed in either as a path to a yaml file or as a dictionary. The following shows how to obtain the schema from an index and connect to an existing index.
-
+In order to have the same metadata indexed when using the `Redis` VectorStore. You will need to have the same `index_schema` passed in either as a path to a yaml file or as a dictionary. The following shows how to obtain the schema from an index and connect to an existing index.
 
 ```python
 # write the schema to a yaml file
 vector_store.write_schema("redis_schema.yaml")
 ```
-
 
 ```python
 # now we can connect to our existing index as follows
@@ -458,20 +435,17 @@ print(results[0].metadata)
 new_rds.schema == vector_store.schema
 ```
 
-
-
 ```output
 True
 ```
 
-
 ## Custom metadata indexing
 
-In some cases, you may want to control what fields the metadata maps to. For example, you may want the ``credit_score`` field to be a categorical field instead of a text field (which is the default behavior for all string fields). In this case, you can use the ``index_schema`` parameter in each of the initialization methods above to specify the schema for the index. Custom index schema can either be passed as a dictionary or as a path to a YAML file.
+In some cases, you may want to control what fields the metadata maps to. For example, you may want the `credit_score` field to be a categorical field instead of a text field (which is the default behavior for all string fields). In this case, you can use the `index_schema` parameter in each of the initialization methods above to specify the schema for the index. Custom index schema can either be passed as a dictionary or as a path to a YAML file.
 
-All arguments in the schema have defaults besides the name, so you can specify only the fields you want to change. All the names correspond to the snake/lowercase versions of the arguments you would use on the command line with ``redis-cli`` or in ``redis-py``. For more on the arguments for each field, see the [documentation](https://redis.io/docs/interact/search-and-query/basic-constructs/field-and-type-options/)
+All arguments in the schema have defaults besides the name, so you can specify only the fields you want to change. All the names correspond to the snake/lowercase versions of the arguments you would use on the command line with `redis-cli` or in `redis-py`. For more on the arguments for each field, see the [documentation](https://redis.io/docs/interact/search-and-query/basic-constructs/field-and-type-options/)
 
-The below example shows how to specify the schema for the ``credit_score`` field as a Tag (categorical) field instead of a text field. 
+The below example shows how to specify the schema for the `credit_score` field as a Tag (categorical) field instead of a text field. 
 
 ```yaml
 # index_schema.yml
@@ -496,8 +470,7 @@ index_schema = {
 
 ```
 
-Notice that only the ``name`` field needs to be specified. All other fields have defaults.
-
+Notice that only the `name` field needs to be specified. All other fields have defaults.
 
 ```python
 # create a new index with the new schema defined above
@@ -533,9 +506,9 @@ that can be used to filter your search results. The expression language is deriv
 and is designed to be easy to use and understand.
 
 The following are the available filter types:
-- ``RedisText``: Filter by full-text search against metadata fields. Supports exact, fuzzy, and wildcard matching.
-- ``RedisNum``: Filter by numeric range against metadata fields.
-- ``RedisTag``: Filter by the exact match against string-based categorical metadata fields. Multiple tags can be specified like "tag1,tag2,tag3".
+- `RedisText`: Filter by full-text search against metadata fields. Supports exact, fuzzy, and wildcard matching.
+- `RedisNum`: Filter by numeric range against metadata fields.
+- `RedisTag`: Filter by the exact match against string-based categorical metadata fields. Multiple tags can be specified like "tag1,tag2,tag3".
 
 The following are examples of utilizing these filters.
 
@@ -563,7 +536,7 @@ age_is_less_than_or_equal_to_18 = RedisNum("age") <= 18
 
 ```
 
-The ``RedisFilter`` class can be used to simplify the import of these filters as follows
+The `RedisFilter` class can be used to simplify the import of these filters as follows
 
 ```python
 <!--IMPORTS:[{"imported": "RedisFilter", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.filters.RedisFilter.html", "title": "Redis"}]-->
@@ -577,7 +550,6 @@ job_starts_with_eng = RedisFilter.text("job") % "eng*"
 ```
 
 The following are examples of using a hybrid filter for search
-
 
 ```python
 <!--IMPORTS:[{"imported": "RedisText", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.filters.RedisText.html", "title": "Redis"}]-->
@@ -647,7 +619,6 @@ You can also transform the vector store into a retriever for easier usage in you
 
 There are three different search methods we can use to do retrieval. By default, it will use semantic similarity. To see all the options, please refer to the [API reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html#langchain_community.vectorstores.redis.base.Redis.as_retriever)
 
-
 ```python
 retriever = vector_store.as_retriever(
     search_type="similarity_score_threshold",
@@ -656,12 +627,9 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime")
 ```
 
-
-
 ```output
 [Document(metadata={'id': 'doc:users:b9204897-190b-4dd9-af2b-081ed4e9cbb0'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
-
 
 ## Usage for retrieval-augmented generation
 
@@ -674,7 +642,6 @@ For guides on how to use this vector store for retrieval-augmented generation (R
 ## API reference
 
 For detailed documentation of all `Redis` vector store features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html
-
 
 ## Related
 

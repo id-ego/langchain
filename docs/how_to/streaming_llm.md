@@ -13,8 +13,6 @@ The ability to stream the output token-by-token depends on whether the provider 
 
 See which [integrations support token-by-token streaming here](/docs/integrations/llms/).
 
-
-
 :::note
 
 The **default** implementation does **not** provide support for token-by-token streaming, but it ensures that the model can be swapped in for any other model as it supports the same standard interface.
@@ -24,7 +22,6 @@ The **default** implementation does **not** provide support for token-by-token s
 ## Sync stream
 
 Below we use a `|` to help visualize the delimiter between tokens.
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "How to stream responses from an LLM"}]-->
@@ -46,7 +43,6 @@ for chunk in llm.stream("Write me a 1 verse song about sparkling water."):
 
 Let's see how to stream in an async setting using `astream`.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "How to stream responses from an LLM"}]-->
 from langchain_openai import OpenAI
@@ -65,14 +61,12 @@ async for chunk in llm.astream("Write me a 1 verse song about sparkling water.")
 ```
 ## Async event streaming
 
-
 LLMs also support the standard [astream events](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream_events) method.
 
 :::tip
 
 `astream_events` is most useful when implementing streaming in a larger LLM application that contains multiple steps (e.g., an application that involves an `agent`).
 :::
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "How to stream responses from an LLM"}]-->

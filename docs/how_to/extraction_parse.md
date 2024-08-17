@@ -20,6 +20,7 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="model" />
 
+
 :::tip
 This tutorial is meant to be simple, but generally should really include reference examples to squeeze out performance!
 :::
@@ -27,7 +28,6 @@ This tutorial is meant to be simple, but generally should really include referen
 ## Using PydanticOutputParser
 
 The following example uses the built-in `PydanticOutputParser` to parse the output of a chat model.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html", "title": "How to use prompting alone (no tool calling) to do extraction"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use prompting alone (no tool calling) to do extraction"}]-->
@@ -70,11 +70,9 @@ prompt = ChatPromptTemplate.from_messages(
 
 Let's take a look at what information is sent to the model
 
-
 ```python
 query = "Anna is 23 years old and she is 6 feet tall"
 ```
-
 
 ```python
 print(prompt.format_prompt(query=query).to_string())
@@ -94,18 +92,14 @@ Human: Anna is 23 years old and she is 6 feet tall
 ```
 Having defined our prompt, we simply chain together the prompt, model and output parser:
 
-
 ```python
 chain = prompt | model | parser
 chain.invoke({"query": query})
 ```
 
-
-
 ```output
 People(people=[Person(name='Anna', height_in_meters=1.83)])
 ```
-
 
 Check out the associated [Langsmith trace](https://smith.langchain.com/public/92ed52a3-92b9-45af-a663-0a9c00e5e396/r).
 
@@ -121,7 +115,6 @@ If desired, it's easy to create a custom prompt and parser with `LangChain` and 
 To create a custom parser, define a function to parse the output from the model (typically an [AIMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html)) into an object of your choice.
 
 See below for a simple implementation of a JSON parser.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to use prompting alone (no tool calling) to do extraction"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to use prompting alone (no tool calling) to do extraction"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use prompting alone (no tool calling) to do extraction"}]-->
@@ -188,7 +181,6 @@ def extract_json(message: AIMessage) -> List[dict]:
         raise ValueError(f"Failed to parse: {message}")
 ```
 
-
 ```python
 query = "Anna is 23 years old and she is 6 feet tall"
 print(prompt.format_prompt(query=query).to_string())
@@ -205,12 +197,9 @@ chain = prompt | model | extract_json
 chain.invoke({"query": query})
 ```
 
-
-
 ```output
 [{'people': [{'name': 'Anna', 'height_in_meters': 1.83}]}]
 ```
-
 
 ## Other Libraries
 

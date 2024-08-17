@@ -12,7 +12,6 @@ Infobip provides many services, but this notebook will focus on SMS and Email se
 
 To use this tool you need to have an Infobip account. You can create [free trial account](https://www.infobip.com/docs/essentials/free-trial).
 
-
 `InfobipAPIWrapper` uses name parameters where you can provide credentials:
 
 - `infobip_api_key` - [API Key](https://www.infobip.com/docs/essentials/api-authentication#api-key-header) that you can find in your [developer tools](https://portal.infobip.com/dev/api-keys)
@@ -21,7 +20,6 @@ To use this tool you need to have an Infobip account. You can create [free trial
 You can also provide `infobip_api_key` and `infobip_base_url` as environment variables `INFOBIP_API_KEY` and `INFOBIP_BASE_URL`.
 
 ## Sending a SMS
-
 
 ```python
 <!--IMPORTS:[{"imported": "InfobipAPIWrapper", "source": "langchain_community.utilities.infobip", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.infobip.InfobipAPIWrapper.html", "title": "Infobip"}]-->
@@ -39,7 +37,6 @@ infobip.run(
 
 ## Sending an Email
 
-
 ```python
 <!--IMPORTS:[{"imported": "InfobipAPIWrapper", "source": "langchain_community.utilities.infobip", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.infobip.InfobipAPIWrapper.html", "title": "Infobip"}]-->
 from langchain_community.utilities.infobip import InfobipAPIWrapper
@@ -55,8 +52,7 @@ infobip.run(
 )
 ```
 
-# How to use it inside an Agent 
-
+# How to use it inside an Agent
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Infobip"}, {"imported": "create_openai_functions_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.create_openai_functions_agent.html", "title": "Infobip"}, {"imported": "InfobipAPIWrapper", "source": "langchain_community.utilities.infobip", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.infobip.InfobipAPIWrapper.html", "title": "Infobip"}, {"imported": "StructuredTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.structured.StructuredTool.html", "title": "Infobip"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Infobip"}]-->
@@ -116,7 +112,6 @@ I have sent an example of Python recursion to your email. Please check your inbo
 
 > Finished chain.
 ```
-
 
 ## Related
 

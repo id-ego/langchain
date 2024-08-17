@@ -19,7 +19,6 @@ This guide demonstrates how to implement strategies 2 and 3.
 
 We need some example data! Let's download an article about [cars from wikipedia](https://en.wikipedia.org/wiki/Car) and load it as a LangChain [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html).
 
-
 ```python
 <!--IMPORTS:[{"imported": "BSHTMLLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.html_bs.BSHTMLLoader.html", "title": "How to handle long text when doing extraction"}]-->
 import re
@@ -40,7 +39,6 @@ document = loader.load()[0]
 document.page_content = re.sub("\n\n+", "\n", document.page_content)
 ```
 
-
 ```python
 print(len(document.page_content))
 ```
@@ -52,7 +50,6 @@ print(len(document.page_content))
 Following the [extraction tutorial](/docs/tutorials/extraction), we will use Pydantic to define the schema of information we wish to extract. In this case, we will extract a list of "key developments" (e.g., important historical events) that include a year and description.
 
 Note that we also include an `evidence` key and instruct the model to provide in verbatim the relevant sentences of text from the article. This allows us to compare the extraction results to (the model's reconstruction of) text from the original document.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to handle long text when doing extraction"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to handle long text when doing extraction"}]-->
@@ -106,10 +103,9 @@ Let's select an LLM. Because we are using tool-calling, we will need a model tha
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="llm"
-  openaiParams={`model="gpt-4-0125-preview", temperature=0`}
+customVarName="llm"
+openaiParams={`model="gpt-4-0125-preview", temperature=0`}
 />
-
 
 ```python
 extractor = prompt | llm.with_structured_output(
@@ -121,7 +117,6 @@ extractor = prompt | llm.with_structured_output(
 ## Brute force approach
 
 Split the documents into chunks such that each chunk fits into the context window of the LLMs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TokenTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.TokenTextSplitter.html", "title": "How to handle long text when doing extraction"}]-->
@@ -145,7 +140,6 @@ You can often use .batch() to parallelize the extractions! `.batch` uses a threa
 If your model is exposed via an API, this will likely speed up your extraction flow!
 :::
 
-
 ```python
 # Limit just to the first 3 chunks
 # so the code can be re-run quickly
@@ -161,7 +155,6 @@ extractions = extractor.batch(
 
 After extracting data from across the chunks, we'll want to merge the extractions together.
 
-
 ```python
 key_developments = []
 
@@ -170,8 +163,6 @@ for extraction in extractions:
 
 key_developments[:10]
 ```
-
-
 
 ```output
 [KeyDevelopment(year=1966, description='The Toyota Corolla began production, becoming the best-selling series of automobile in history.', evidence='The Toyota Corolla, which has been in production since 1966, is the best-selling series of automobile in history.'),
@@ -185,7 +176,6 @@ key_developments[:10]
  KeyDevelopment(year=1890, description='Daimler Motoren Gesellschaft (DMG) was founded by Daimler and Maybach in Cannstatt.', evidence='Daimler and Maybach founded Daimler Motoren Gesellschaft (DMG) in Cannstatt in 1890.'),
  KeyDevelopment(year=1891, description='Auguste Doriot and Louis Rigoulot completed the longest trip by a petrol-driven vehicle with a Daimler powered Peugeot Type 3.', evidence='In 1891, Auguste Doriot and his Peugeot colleague Louis Rigoulot completed the longest trip by a petrol-driven vehicle when their self-designed and built Daimler powered Peugeot Type 3 completed 2,100 kilometres (1,300 mi) from Valentigney to Paris and Brest and back again.')]
 ```
-
 
 ## RAG based approach
 
@@ -207,7 +197,6 @@ To implement the RAG based approach:
 
 Here's a simple example that relies on the `FAISS` vectorstore.
 
-
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to handle long text when doing extraction"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to handle long text when doing extraction"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to handle long text when doing extraction"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to handle long text when doing extraction"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to handle long text when doing extraction"}]-->
 from langchain_community.vectorstores import FAISS
@@ -226,18 +215,15 @@ retriever = vectorstore.as_retriever(
 
 In this case the RAG extractor is only looking at the top document.
 
-
 ```python
 rag_extractor = {
     "text": retriever | (lambda docs: docs[0].page_content)  # fetch content of top doc
 } | extractor
 ```
 
-
 ```python
 results = rag_extractor.invoke("Key developments associated with cars")
 ```
-
 
 ```python
 for key_development in results.key_developments:

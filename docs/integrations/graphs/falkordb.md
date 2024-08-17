@@ -5,11 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # FalkorDB
 
->[FalkorDB](https://www.falkordb.com/) is a low-latency Graph Database that delivers knowledge to GenAI.
-
+> [FalkorDB](https://www.falkordb.com/) is a low-latency Graph Database that delivers knowledge to GenAI.
 
 This notebook shows how to use LLMs to provide a natural language interface to `FalkorDB` database.
-
 
 ## Setting up
 
@@ -21,7 +19,6 @@ docker run -p 6379:6379 -it --rm falkordb/falkordb
 
 Once launched, you create a database on the local machine and connect to it.
 
-
 ```python
 <!--IMPORTS:[{"imported": "FalkorDBQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.falkordb.FalkorDBQAChain.html", "title": "FalkorDB"}, {"imported": "FalkorDBGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.falkordb_graph.FalkorDBGraph.html", "title": "FalkorDB"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "FalkorDB"}]-->
 from langchain.chains import FalkorDBQAChain
@@ -31,11 +28,9 @@ from langchain_openai import ChatOpenAI
 
 ## Create a graph connection and insert the demo data
 
-
 ```python
 graph = FalkorDBGraph(database="movies")
 ```
-
 
 ```python
 graph.query(
@@ -65,15 +60,11 @@ graph.query(
 )
 ```
 
-
-
 ```output
 []
 ```
 
-
 ## Creating FalkorDBQAChain
-
 
 ```python
 graph.refresh_schema()
@@ -95,7 +86,6 @@ chain = FalkorDBQAChain.from_llm(ChatOpenAI(temperature=0), graph=graph, verbose
 
 ## Querying the graph
 
-
 ```python
 chain.run("Who played in Top Gun?")
 ```
@@ -113,12 +103,9 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Tom Cruise, Val Kilmer, Anthony Edwards, and Meg Ryan played in Top Gun.'
 ```
-
-
 
 ```python
 chain.run("Who is the oldest actor who played in The Godfather: Part II?")
@@ -139,12 +126,9 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The oldest actor who played in The Godfather: Part II is Al Pacino.'
 ```
-
-
 
 ```python
 chain.run("Robert De Niro played in which movies?")
@@ -161,7 +145,6 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
-
 
 ```output
 'Robert De Niro played in "The Godfather: Part II".'

@@ -28,7 +28,7 @@ Set the following environment variables:
 
 * `GOOGLE_CLOUD_PROJECT_ID` - Your Google Cloud project ID.
 * `DATA_STORE_ID` - The ID of the data store in Vertex AI Search, which is a 36-character alphanumeric value found on
-  the data store details page.
+the data store details page.
 * `MODEL_TYPE` - The model type for Vertex AI Search.
 
 ## Usage

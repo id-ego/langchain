@@ -5,14 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # NetworkX
 
->[NetworkX](https://networkx.org/) is a Python package for the creation, manipulation, and study of the structure, dynamics, and functions of complex networks.
+> [NetworkX](https://networkx.org/) is a Python package for the creation, manipulation, and study of the structure, dynamics, and functions of complex networks.
 
 This notebook goes over how to do question answering over a graph data structure.
 
 ## Setting up
 
 We have to install a Python package.
-
 
 ```python
 %pip install --upgrade --quiet  networkx
@@ -22,18 +21,15 @@ We have to install a Python package.
 
 In this section, we construct an example graph. At the moment, this works best for small pieces of text.
 
-
 ```python
 <!--IMPORTS:[{"imported": "GraphIndexCreator", "source": "langchain_community.graphs.index_creator", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.index_creator.GraphIndexCreator.html", "title": "NetworkX"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "NetworkX"}]-->
 from langchain_community.graphs.index_creator import GraphIndexCreator
 from langchain_openai import OpenAI
 ```
 
-
 ```python
 index_creator = GraphIndexCreator(llm=OpenAI(temperature=0))
 ```
-
 
 ```python
 with open("../../../how_to/state_of_the_union.txt") as f:
@@ -42,23 +38,17 @@ with open("../../../how_to/state_of_the_union.txt") as f:
 
 We will use just a small snippet, because extracting the knowledge triplets is a bit intensive at the moment.
 
-
 ```python
 text = "\n".join(all_text.split("\n\n")[105:108])
 ```
-
 
 ```python
 text
 ```
 
-
-
 ```output
 'It won’t look like much, but if you stop and look closely, you’ll see a “Field of dreams,” the ground on which America’s future will be built. \nThis is where Intel, the American company that helped build Silicon Valley, is going to build its $20 billion semiconductor “mega site”. \nUp to eight state-of-the-art factories in one place. 10,000 new good-paying jobs. '
 ```
-
-
 
 ```python
 graph = index_creator.from_text(text)
@@ -66,12 +56,9 @@ graph = index_creator.from_text(text)
 
 We can inspect the created graph.
 
-
 ```python
 graph.get_triples()
 ```
-
-
 
 ```output
 [('Intel', '$20 billion semiconductor "mega site"', 'is going to build'),
@@ -83,21 +70,17 @@ graph.get_triples()
   'is the ground on which')]
 ```
 
-
 ## Querying the graph
 We can now use the graph QA chain to ask question of the graph
-
 
 ```python
 <!--IMPORTS:[{"imported": "GraphQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.base.GraphQAChain.html", "title": "NetworkX"}]-->
 from langchain.chains import GraphQAChain
 ```
 
-
 ```python
 chain = GraphQAChain.from_llm(OpenAI(temperature=0), graph=graph, verbose=True)
 ```
-
 
 ```python
 chain.run("what is Intel going to build?")
@@ -117,37 +100,29 @@ Intel is helping build Silicon Valley[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 ' Intel is going to build a $20 billion semiconductor "mega site" with state-of-the-art factories, creating 10,000 new good-paying jobs and helping to build Silicon Valley.'
 ```
 
-
 ## Save the graph
 We can also save and load the graph.
-
 
 ```python
 graph.write_to_gml("graph.gml")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "NetworkxEntityGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.networkx_graph.NetworkxEntityGraph.html", "title": "NetworkX"}]-->
 from langchain_community.graphs import NetworkxEntityGraph
 ```
 
-
 ```python
 loaded_graph = NetworkxEntityGraph.from_gml("graph.gml")
 ```
 
-
 ```python
 loaded_graph.get_triples()
 ```
-
-
 
 ```output
 [('Intel', '$20 billion semiconductor "mega site"', 'is going to build'),
@@ -159,47 +134,37 @@ loaded_graph.get_triples()
   'is the ground on which')]
 ```
 
-
-
 ```python
 loaded_graph.get_number_of_nodes()
 ```
-
 
 ```python
 loaded_graph.add_node("NewNode")
 ```
 
-
 ```python
 loaded_graph.has_node("NewNode")
 ```
-
 
 ```python
 loaded_graph.remove_node("NewNode")
 ```
 
-
 ```python
 loaded_graph.get_neighbors("Intel")
 ```
-
 
 ```python
 loaded_graph.has_edge("Intel", "Silicon Valley")
 ```
 
-
 ```python
 loaded_graph.remove_edge("Intel", "Silicon Valley")
 ```
 
-
 ```python
 loaded_graph.clear_edges()
 ```
-
 
 ```python
 loaded_graph.clear()

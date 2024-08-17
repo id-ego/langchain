@@ -11,9 +11,9 @@ All functionality related to `Microsoft Azure` and other `Microsoft` products.
 ## Chat Models
 ### Azure OpenAI
 
->[Microsoft Azure](https://en.wikipedia.org/wiki/Microsoft_Azure), often referred to as `Azure` is a cloud computing platform run by `Microsoft`, which offers access, management, and development of applications and services through global data centers. It provides a range of capabilities, including software as a service (SaaS), platform as a service (PaaS), and infrastructure as a service (IaaS). `Microsoft Azure` supports many programming languages, tools, and frameworks, including Microsoft-specific and third-party software and systems.
+> [Microsoft Azure](https://en.wikipedia.org/wiki/Microsoft_Azure), often referred to as `Azure` is a cloud computing platform run by `Microsoft`, which offers access, management, and development of applications and services through global data centers. It provides a range of capabilities, including software as a service (SaaS), platform as a service (PaaS), and infrastructure as a service (IaaS). `Microsoft Azure` supports many programming languages, tools, and frameworks, including Microsoft-specific and third-party software and systems.
 
->[Azure OpenAI](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) is an `Azure` service with powerful language models from `OpenAI` including the `GPT-3`, `Codex` and `Embeddings model` series for content generation, summarization, semantic search, and natural language to code translation.
+> [Azure OpenAI](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/) is an `Azure` service with powerful language models from `OpenAI` including the `GPT-3`, `Codex` and `Embeddings model` series for content generation, summarization, semantic search, and natural language to code translation.
 
 ```bash
 pip install langchain-openai
@@ -29,7 +29,6 @@ os.environ["AZURE_OPENAI_API_KEY"] = "your AzureOpenAI key"
 ```
 
 See a [usage example](/docs/integrations/chat/azure_chat_openai)
-
 
 ```python
 <!--IMPORTS:[{"imported": "AzureChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.azure.AzureChatOpenAI.html", "title": "Microsoft"}]-->
@@ -70,12 +69,12 @@ from langchain_openai import AzureOpenAIEmbeddings
 
 ### Azure AI Data
 
->[Azure AI Studio](https://ai.azure.com/) provides the capability to upload data assets 
-> to cloud storage and register existing data assets from the following sources:
->
->- `Microsoft OneLake`
->- `Azure Blob Storage`
->- `Azure Data Lake gen 2`
+> [Azure AI Studio](https://ai.azure.com/) provides the capability to upload data assets
+to cloud storage and register existing data assets from the following sources:
+> 
+> - `Microsoft OneLake`
+> - `Azure Blob Storage`
+> - `Azure Data Lake gen 2`
 
 First, you need to install several python packages.
 
@@ -90,15 +89,14 @@ See a [usage example](/docs/integrations/document_loaders/azure_ai_data).
 from langchain.document_loaders import AzureAIDataLoader
 ```
 
-
 ### Azure AI Document Intelligence
 
->[Azure AI Document Intelligence](https://aka.ms/doc-intelligence) (formerly known
-> as `Azure Form Recognizer`) is machine-learning
-> based service that extracts texts (including handwriting), tables, document structures, 
-> and key-value-pairs
-> from digital or scanned PDFs, images, Office and HTML files.
->
+> [Azure AI Document Intelligence](https://aka.ms/doc-intelligence) (formerly known
+as `Azure Form Recognizer`) is machine-learning
+based service that extracts texts (including handwriting), tables, document structures,
+and key-value-pairs
+from digital or scanned PDFs, images, Office and HTML files.
+> 
 > Document Intelligence supports `PDF`, `JPEG/JPG`, `PNG`, `BMP`, `TIFF`, `HEIF`, `DOCX`, `XLSX`, `PPTX` and `HTML`.
 
 First, you need to install a python package.
@@ -113,14 +111,13 @@ See a [usage example](/docs/integrations/document_loaders/azure_document_intelli
 from langchain.document_loaders import AzureAIDocumentIntelligenceLoader
 ```
 
-
 ### Azure Blob Storage
 
->[Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction) is Microsoft's object storage solution for the cloud. Blob Storage is optimized for storing massive amounts of unstructured data. Unstructured data is data that doesn't adhere to a particular data model or definition, such as text or binary data.
+> [Azure Blob Storage](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction) is Microsoft's object storage solution for the cloud. Blob Storage is optimized for storing massive amounts of unstructured data. Unstructured data is data that doesn't adhere to a particular data model or definition, such as text or binary data.
 
->[Azure Files](https://learn.microsoft.com/en-us/azure/storage/files/storage-files-introduction) offers fully managed
-> file shares in the cloud that are accessible via the industry standard Server Message Block (`SMB`) protocol,
-> Network File System (`NFS`) protocol, and `Azure Files REST API`. `Azure Files` are based on the `Azure Blob Storage`.
+> [Azure Files](https://learn.microsoft.com/en-us/azure/storage/files/storage-files-introduction) offers fully managed
+file shares in the cloud that are accessible via the industry standard Server Message Block (`SMB`) protocol,
+Network File System (`NFS`) protocol, and `Azure Files REST API`. `Azure Files` are based on the `Azure Blob Storage`.
 
 `Azure Blob Storage` is designed for:
 - Serving images or documents directly to a browser.
@@ -148,10 +145,9 @@ See a [usage example for the Azure Files](/docs/integrations/document_loaders/az
 from langchain_community.document_loaders import AzureBlobStorageFileLoader
 ```
 
-
 ### Microsoft OneDrive
 
->[Microsoft OneDrive](https://en.wikipedia.org/wiki/OneDrive) (formerly `SkyDrive`) is a file-hosting service operated by Microsoft.
+> [Microsoft OneDrive](https://en.wikipedia.org/wiki/OneDrive) (formerly `SkyDrive`) is a file-hosting service operated by Microsoft.
 
 First, you need to install a python package.
 
@@ -168,7 +164,7 @@ from langchain_community.document_loaders import OneDriveLoader
 
 ### Microsoft OneDrive File
 
->[Microsoft OneDrive](https://en.wikipedia.org/wiki/OneDrive) (formerly `SkyDrive`) is a file-hosting service operated by Microsoft.
+> [Microsoft OneDrive](https://en.wikipedia.org/wiki/OneDrive) (formerly `SkyDrive`) is a file-hosting service operated by Microsoft.
 
 First, you need to install a python package.
 
@@ -181,10 +177,9 @@ pip install o365
 from langchain_community.document_loaders import OneDriveFileLoader
 ```
 
-
 ### Microsoft Word
 
->[Microsoft Word](https://www.microsoft.com/en-us/microsoft-365/word) is a word processor developed by Microsoft.
+> [Microsoft Word](https://www.microsoft.com/en-us/microsoft-365/word) is a word processor developed by Microsoft.
 
 See a [usage example](/docs/integrations/document_loaders/microsoft_word).
 
@@ -193,16 +188,15 @@ See a [usage example](/docs/integrations/document_loaders/microsoft_word).
 from langchain_community.document_loaders import UnstructuredWordDocumentLoader
 ```
 
-
 ### Microsoft Excel
 
->[Microsoft Excel](https://en.wikipedia.org/wiki/Microsoft_Excel) is a spreadsheet editor developed by 
-> Microsoft for Windows, macOS, Android, iOS and iPadOS. 
-> It features calculation or computation capabilities, graphing tools, pivot tables, and a macro programming 
-> language called Visual Basic for Applications (VBA). Excel forms part of the Microsoft 365 suite of software.
+> [Microsoft Excel](https://en.wikipedia.org/wiki/Microsoft_Excel) is a spreadsheet editor developed by
+Microsoft for Windows, macOS, Android, iOS and iPadOS.
+It features calculation or computation capabilities, graphing tools, pivot tables, and a macro programming
+language called Visual Basic for Applications (VBA). Excel forms part of the Microsoft 365 suite of software.
 
-The `UnstructuredExcelLoader` is used to load `Microsoft Excel` files. The loader works with both `.xlsx` and `.xls` files. 
-The page content will be the raw text of the Excel file. If you use the loader in `"elements"` mode, an HTML 
+The `UnstructuredExcelLoader` is used to load `Microsoft Excel` files. The loader works with both `.xlsx` and `.xls` files.
+The page content will be the raw text of the Excel file. If you use the loader in `"elements"` mode, an HTML
 representation of the Excel file will be available in the document metadata under the `text_as_html` key.
 
 See a [usage example](/docs/integrations/document_loaders/microsoft_excel).
@@ -212,12 +206,11 @@ See a [usage example](/docs/integrations/document_loaders/microsoft_excel).
 from langchain_community.document_loaders import UnstructuredExcelLoader
 ```
 
-
 ### Microsoft SharePoint
 
->[Microsoft SharePoint](https://en.wikipedia.org/wiki/SharePoint) is a website-based collaboration system 
-> that uses workflow applications, “list” databases, and other web parts and security features to 
-> empower business teams to work together developed by Microsoft.
+> [Microsoft SharePoint](https://en.wikipedia.org/wiki/SharePoint) is a website-based collaboration system
+that uses workflow applications, “list” databases, and other web parts and security features to
+empower business teams to work together developed by Microsoft.
 
 See a [usage example](/docs/integrations/document_loaders/microsoft_sharepoint).
 
@@ -226,10 +219,9 @@ See a [usage example](/docs/integrations/document_loaders/microsoft_sharepoint).
 from langchain_community.document_loaders.sharepoint import SharePointLoader
 ```
 
-
 ### Microsoft PowerPoint
 
->[Microsoft PowerPoint](https://en.wikipedia.org/wiki/Microsoft_PowerPoint) is a presentation program by Microsoft.
+> [Microsoft PowerPoint](https://en.wikipedia.org/wiki/Microsoft_PowerPoint) is a presentation program by Microsoft.
 
 See a [usage example](/docs/integrations/document_loaders/microsoft_powerpoint).
 
@@ -255,11 +247,10 @@ from langchain_community.document_loaders.onenote import OneNoteLoader
 
 ### Playwright URL Loader
 
->[Playwright](https://github.com/microsoft/playwright) is an open-source automation tool 
-> developed by `Microsoft` that allows you to programmatically control and automate 
-> web browsers. It is designed for end-to-end testing, scraping, and automating 
-> tasks across various web browsers such as `Chromium`, `Firefox`, and `WebKit`.
-
+> [Playwright](https://github.com/microsoft/playwright) is an open-source automation tool
+developed by `Microsoft` that allows you to programmatically control and automate
+web browsers. It is designed for end-to-end testing, scraping, and automating
+tasks across various web browsers such as `Chromium`, `Firefox`, and `WebKit`.
 
 First, let's install dependencies:
 
@@ -284,9 +275,9 @@ Below are two available Azure Cosmos DB APIs that can provide vector store funct
 
 ### Azure Cosmos DB for MongoDB (vCore)
 
->[Azure Cosmos DB for MongoDB vCore](https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/) makes it easy to create a database with full native MongoDB support.
-> You can apply your MongoDB experience and continue to use your favorite MongoDB drivers, SDKs, and tools by pointing your application to the API for MongoDB vCore account's connection string.
-> Use vector search in Azure Cosmos DB for MongoDB vCore to seamlessly integrate your AI-based applications with your data that's stored in Azure Cosmos DB.
+> [Azure Cosmos DB for MongoDB vCore](https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/) makes it easy to create a database with full native MongoDB support.
+You can apply your MongoDB experience and continue to use your favorite MongoDB drivers, SDKs, and tools by pointing your application to the API for MongoDB vCore account's connection string.
+Use vector search in Azure Cosmos DB for MongoDB vCore to seamlessly integrate your AI-based applications with your data that's stored in Azure Cosmos DB.
 
 #### Installation and Setup
 
@@ -315,7 +306,7 @@ from langchain_community.vectorstores import AzureCosmosDBVectorSearch
 
 ### Azure Cosmos DB NoSQL
 
->[Azure Cosmos DB for NoSQL](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/vector-search) now offers vector indexing and search in preview.
+> [Azure Cosmos DB for NoSQL](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/vector-search) now offers vector indexing and search in preview.
 This feature is designed to handle high-dimensional vectors, enabling efficient and accurate vector search at any scale. You can now store vectors
 directly in the documents alongside your data. This means that each document in your database can contain not only traditional schema-free data,
 but also high-dimensional vectors as other properties of the documents. This colocation of data and vectors allows for efficient indexing and searching,
@@ -348,14 +339,14 @@ from langchain_community.vectorstores import AzureCosmosDBNoSQLVectorSearch
 ## Retrievers
 ### Azure AI Search
 
->[Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search) (formerly known as `Azure Search` or `Azure Cognitive Search` ) is a cloud search service that gives developers infrastructure, APIs, and tools for building a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
+> [Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search) (formerly known as `Azure Search` or `Azure Cognitive Search` ) is a cloud search service that gives developers infrastructure, APIs, and tools for building a rich search experience over private, heterogeneous content in web, mobile, and enterprise applications.
 
->Search is foundational to any app that surfaces text to users, where common scenarios include catalog or document search, online retail apps, or data exploration over proprietary content. When you create a search service, you'll work with the following capabilities:
->- A search engine for full text search over a search index containing user-owned content
->- Rich indexing, with lexical analysis and optional AI enrichment for content extraction and transformation
->- Rich query syntax for text search, fuzzy search, autocomplete, geo-search and more
->- Programmability through REST APIs and client libraries in Azure SDKs
->- Azure integration at the data layer, machine learning layer, and AI (AI Services)
+> Search is foundational to any app that surfaces text to users, where common scenarios include catalog or document search, online retail apps, or data exploration over proprietary content. When you create a search service, you'll work with the following capabilities:
+> - A search engine for full text search over a search index containing user-owned content
+> - Rich indexing, with lexical analysis and optional AI enrichment for content extraction and transformation
+> - Rich query syntax for text search, fuzzy search, autocomplete, geo-search and more
+> - Programmability through REST APIs and client libraries in Azure SDKs
+> - Azure integration at the data layer, machine learning layer, and AI (AI Services)
 
 See [set up instructions](https://learn.microsoft.com/en-us/azure/search/search-create-service-portal).
 
@@ -425,7 +416,6 @@ We need to install `O365` python package.
 pip install O365
 ```
 
-
 See a [usage example](/docs/integrations/tools/office365).
 
 ```python
@@ -451,10 +441,10 @@ from langchain_community.utilities.powerbi import PowerBIDataset
 
 ### PlayWright Browser Toolkit
 
->[Playwright](https://github.com/microsoft/playwright) is an open-source automation tool 
-> developed by `Microsoft` that allows you to programmatically control and automate 
-> web browsers. It is designed for end-to-end testing, scraping, and automating 
-> tasks across various web browsers such as `Chromium`, `Firefox`, and `WebKit`.
+> [Playwright](https://github.com/microsoft/playwright) is an open-source automation tool
+developed by `Microsoft` that allows you to programmatically control and automate
+web browsers. It is designed for end-to-end testing, scraping, and automating
+tasks across various web browsers such as `Chromium`, `Firefox`, and `WebKit`.
 
 We need to install several python packages.
 
@@ -491,8 +481,8 @@ from langchain_community.graphs.graph_document import GraphDocument, Node, Relat
 
 ### Bing Search API
 
->[Microsoft Bing](https://www.bing.com/), commonly referred to as `Bing` or `Bing Search`, 
-> is a web search engine owned and operated by `Microsoft`.
+> [Microsoft Bing](https://www.bing.com/), commonly referred to as `Bing` or `Bing Search`,
+is a web search engine owned and operated by `Microsoft`.
 
 See a [usage example](/docs/integrations/tools/bing_search).
 
@@ -505,10 +495,10 @@ from langchain_community.utilities import BingSearchAPIWrapper
 
 ### Microsoft Presidio
 
->[Presidio](https://microsoft.github.io/presidio/) (Origin from Latin praesidium ‘protection, garrison’) 
-> helps to ensure sensitive data is properly managed and governed. It provides fast identification and 
-> anonymization modules for private entities in text and images such as credit card numbers, names, 
-> locations, social security numbers, bitcoin wallets, US phone numbers, financial data and more.
+> [Presidio](https://microsoft.github.io/presidio/) (Origin from Latin praesidium ‘protection, garrison’)
+helps to ensure sensitive data is properly managed and governed. It provides fast identification and
+anonymization modules for private entities in text and images such as credit card numbers, names,
+locations, social security numbers, bitcoin wallets, US phone numbers, financial data and more.
 
 First, you need to install several python packages and download a `SpaCy` model.
 

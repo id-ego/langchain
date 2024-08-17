@@ -5,10 +5,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Apache Doris
 
->[Apache Doris](https://doris.apache.org/) is a modern data warehouse for real-time analytics.
+> [Apache Doris](https://doris.apache.org/) is a modern data warehouse for real-time analytics.
 It delivers lightning-fast analytics on real-time data at scale.
 
->Usually `Apache Doris` is categorized into OLAP, and it has showed excellent performance in [ClickBench — a Benchmark For Analytical DBMS](https://benchmark.clickhouse.com/). Since it has a super-fast vectorized execution engine, it could also be used as a fast vectordb.
+> Usually `Apache Doris` is categorized into OLAP, and it has showed excellent performance in [ClickBench — a Benchmark For Analytical DBMS](https://benchmark.clickhouse.com/). Since it has a super-fast vectorized execution engine, it could also be used as a fast vectordb.
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
 
@@ -16,19 +16,16 @@ Here we'll show how to use the Apache Doris Vector Store.
 
 ## Setup
 
-
 ```python
 %pip install --upgrade --quiet  pymysql
 ```
 
 Set `update_vectordb = False` at the beginning. If there is no docs updated, then we don't need to rebuild the embeddings of docs
 
-
 ```python
 !pip install  sqlalchemy
 !pip install langchain
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Apache Doris"}, {"imported": "DirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.directory.DirectoryLoader.html", "title": "Apache Doris"}, {"imported": "UnstructuredMarkdownLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.markdown.UnstructuredMarkdownLoader.html", "title": "Apache Doris"}, {"imported": "ApacheDoris", "source": "langchain_community.vectorstores.apache_doris", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.apache_doris.ApacheDoris.html", "title": "Apache Doris"}, {"imported": "ApacheDorisSettings", "source": "langchain_community.vectorstores.apache_doris", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.apache_doris.ApacheDorisSettings.html", "title": "Apache Doris"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Apache Doris"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Apache Doris"}, {"imported": "TokenTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.TokenTextSplitter.html", "title": "Apache Doris"}]-->
@@ -53,7 +50,6 @@ Load all markdown files under the `docs` directory
 
 for Apache Doris documents, you can clone repo from https://github.com/apache/doris, and there is `docs` directory in it.
 
-
 ```python
 loader = DirectoryLoader(
     "./docs", glob="**/*.md", loader_cls=UnstructuredMarkdownLoader
@@ -62,7 +58,6 @@ documents = loader.load()
 ```
 
 Split docs into tokens, and set `update_vectordb = True` because there are new docs/tokens.
-
 
 ```python
 # load text splitter and split docs into snippets of text
@@ -80,7 +75,6 @@ print("# docs  = %d, # splits = %d" % (len(documents), len(split_docs)))
 ## Create vectordb instance
 
 ### Use Apache Doris as vectordb
-
 
 ```python
 def gen_apache_doris(update_vectordb, embeddings, settings):
@@ -102,14 +96,12 @@ Configuring Apache Doris instance is pretty much like configuring mysql instance
 4. database(default: 'default')
 5. table(default: 'langchain')
 
-
 ```python
 import os
 from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
-
 
 ```python
 update_vectordb = True
@@ -132,7 +124,6 @@ update_vectordb = False
 
 ## Build QA and ask question to it
 
-
 ```python
 llm = OpenAI()
 qa = RetrievalQA.from_chain_type(
@@ -142,7 +133,6 @@ query = "what is apache doris"
 resp = qa.run(query)
 print(resp)
 ```
-
 
 ## Related
 

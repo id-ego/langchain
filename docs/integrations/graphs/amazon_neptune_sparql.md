@@ -5,15 +5,14 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Amazon Neptune with SPARQL
 
->[Amazon Neptune](https://aws.amazon.com/neptune/) is a high-performance graph analytics and serverless database for superior scalability and availability.
->
->This example shows the QA chain that queries [Resource Description Framework (RDF)](https://en.wikipedia.org/wiki/Resource_Description_Framework) data 
+> [Amazon Neptune](https://aws.amazon.com/neptune/) is a high-performance graph analytics and serverless database for superior scalability and availability.
+> 
+> This example shows the QA chain that queries [Resource Description Framework (RDF)](https://en.wikipedia.org/wiki/Resource_Description_Framework) data
 in an `Amazon Neptune` graph database using the `SPARQL` query language and returns a human-readable response.
->
->[SPARQL](https://en.wikipedia.org/wiki/SPARQL) is a standard query language for `RDF` graphs.
+> 
+> [SPARQL](https://en.wikipedia.org/wiki/SPARQL) is a standard query language for `RDF` graphs.
 
-
-This example uses a `NeptuneRdfGraph` class that connects with the Neptune database and loads its schema. 
+This example uses a `NeptuneRdfGraph` class that connects with the Neptune database and loads its schema.
 The `NeptuneSparqlQAChain` is used to connect the graph and LLM to ask natural language questions.
 
 This notebook demonstrates an example using organizational data.
@@ -41,14 +40,12 @@ Requirements for running this notebook:
 ### Seed the W3C organizational data
 
 Seed the W3C organizational data, W3C org ontology plus some instances. 
- 
-You will need an S3 bucket in the same region and account. Set `STAGE_BUCKET`as the name of that bucket.
 
+You will need an S3 bucket in the same region and account. Set `STAGE_BUCKET`as the name of that bucket.
 
 ```python
 STAGE_BUCKET = "<bucket-name>"
 ```
-
 
 ```bash
 %%bash  -s "$STAGE_BUCKET"
@@ -68,18 +65,15 @@ aws s3 cp example_org.ttl s3://$1/example_org.ttl
 
 Bulk-load the org ttl - both ontology and instances
 
-
 ```python
 %load -s s3://{STAGE_BUCKET} -f turtle --store-to loadres --run
 ```
-
 
 ```python
 %load_status {loadres['payload']['loadId']} --errors --details
 ```
 
 ### Setup Chain
-
 
 ```python
 !pip install --upgrade --quiet langchain langchain-community langchain-aws
@@ -88,7 +82,6 @@ Bulk-load the org ttl - both ontology and instances
 ** Restart kernel **
 
 ### Prepare an example
-
 
 ```python
 EXAMPLES = """
@@ -188,7 +181,6 @@ select ?event ?prop ?obj where {{
 """
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "NeptuneSparqlQAChain", "source": "langchain_community.chains.graph_qa.neptune_sparql", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.neptune_sparql.NeptuneSparqlQAChain.html", "title": "Amazon Neptune with SPARQL"}, {"imported": "NeptuneRdfGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neptune_rdf_graph.NeptuneRdfGraph.html", "title": "Amazon Neptune with SPARQL"}]-->
 import boto3
@@ -224,36 +216,29 @@ chain = NeptuneSparqlQAChain.from_llm(
 ## Ask questions
 Depends on the data we ingested above
 
-
 ```python
 chain.invoke("""How many organizations are in the graph""")
 ```
-
 
 ```python
 chain.invoke("""Are there any mergers or acquisitions""")
 ```
 
-
 ```python
 chain.invoke("""Find organizations""")
 ```
-
 
 ```python
 chain.invoke("""Find sites of MegaSystems or MegaFinancial""")
 ```
 
-
 ```python
 chain.invoke("""Find a member who is manager of one or more members.""")
 ```
 
-
 ```python
 chain.invoke("""Find five members and who their manager is.""")
 ```
-
 
 ```python
 chain.invoke(

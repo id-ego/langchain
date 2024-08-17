@@ -6,11 +6,11 @@ sidebar_label: Google Vertex AI Search
 
 # Google Vertex AI Search
 
->[Google Vertex AI Search](https://cloud.google.com/enterprise-search) (formerly known as `Enterprise Search` on `Generative AI App Builder`) is a part of the [Vertex AI](https://cloud.google.com/vertex-ai) machine learning platform offered by `Google Cloud`.
->
->`Vertex AI Search` lets organizations quickly build generative AI-powered search engines for customers and employees. It's underpinned by a variety of `Google Search` technologies, including semantic search, which helps deliver more relevant results than traditional keyword-based search techniques by using natural language processing and machine learning techniques to infer relationships within the content and intent from the user’s query input. Vertex AI Search also benefits from Google’s expertise in understanding how users search and factors in content relevance to order displayed results.
+> [Google Vertex AI Search](https://cloud.google.com/enterprise-search) (formerly known as `Enterprise Search` on `Generative AI App Builder`) is a part of the [Vertex AI](https://cloud.google.com/vertex-ai) machine learning platform offered by `Google Cloud`.
+> 
+> `Vertex AI Search` lets organizations quickly build generative AI-powered search engines for customers and employees. It's underpinned by a variety of `Google Search` technologies, including semantic search, which helps deliver more relevant results than traditional keyword-based search techniques by using natural language processing and machine learning techniques to infer relationships within the content and intent from the user’s query input. Vertex AI Search also benefits from Google’s expertise in understanding how users search and factors in content relevance to order displayed results.
 
->`Vertex AI Search` is available in the `Google Cloud Console` and via an API for enterprise workflow integration.
+> `Vertex AI Search` is available in the `Google Cloud Console` and via an API for enterprise workflow integration.
 
 This notebook demonstrates how to configure `Vertex AI Search` and use the Vertex AI Search [retriever](/docs/concepts/#retrievers). The Vertex AI Search retriever encapsulates the [Python client library](https://cloud.google.com/generative-ai-app-builder/docs/libraries#client-libraries-install-python) and uses it to access the [Search Service API](https://cloud.google.com/python/docs/reference/discoveryengine/latest/google.cloud.discoveryengine_v1beta.services.search_service).
 
@@ -29,7 +29,6 @@ import {ItemTable} from "@theme/FeatureTables";
 
 You need to install the `langchain-google-community` and `google-cloud-discoveryengine` packages to use the Vertex AI Search retriever.
 
-
 ```python
 %pip install -qU langchain-google-community google-cloud-discoveryengine
 ```
@@ -40,14 +39,12 @@ Vertex AI Search is generally available without allowlist as of August 2023.
 
 Before you can use the retriever, you need to complete the following steps:
 
-
 #### Create a search engine and populate an unstructured data store
 
 - Follow the instructions in the [Vertex AI Search Getting Started guide](https://cloud.google.com/generative-ai-app-builder/docs/try-enterprise-search) to set up a Google Cloud project and Vertex AI Search.
 - [Use the Google Cloud Console to create an unstructured data store](https://cloud.google.com/generative-ai-app-builder/docs/create-engine-es#unstructured-data)
   - Populate it with the example PDF documents from the `gs://cloud-samples-data/gen-app-builder/search/alphabet-investor-pdfs` Cloud Storage folder.
   - Make sure to use the `Cloud Storage (without metadata)` option.
-
 
 #### Set credentials to access Vertex AI Search API
 
@@ -56,8 +53,6 @@ Client libraries support [Application Default Credentials (ADC)](https://cloud.g
 With ADC, you can make credentials available to your application in a variety of environments, such as local development or production, without needing to modify your application code.
 
 If running in [Google Colab](https://colab.google) authenticate with `google.colab.google.auth` otherwise follow one of the [supported methods](https://cloud.google.com/docs/authentication/application-default-credentials) to make sure that you Application Default Credentials are properly set.
-
-
 
 ```python
 import sys
@@ -132,9 +127,7 @@ To update to the new retriever, make the following changes:
 - Change the import from: `from langchain.retrievers import GoogleCloudEnterpriseSearchRetriever` -> `from langchain_google_community import VertexAISearchRetriever`.
 - Change all class references from `GoogleCloudEnterpriseSearchRetriever` -> `VertexAISearchRetriever`.
 
-
 Note: When using the retriever, if you want to get automated tracing from individual queries, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -144,7 +137,6 @@ Note: When using the retriever, if you want to get automated tracing from indivi
 ## Instantiation
 
 ### Configure and use the retriever for **unstructured** data with extractive segments
-
 
 ```python
 from langchain_google_community import (
@@ -158,7 +150,6 @@ SEARCH_ENGINE_ID = "<YOUR SEARCH APP ID>"  # Set to your search app ID
 DATA_STORE_ID = "<YOUR DATA STORE ID>"  # Set to your data store ID
 ```
 
-
 ```python
 retriever = VertexAISearchRetriever(
     project_id=PROJECT_ID,
@@ -167,7 +158,6 @@ retriever = VertexAISearchRetriever(
     max_documents=3,
 )
 ```
-
 
 ```python
 query = "What are Alphabet's Other Bets?"
@@ -178,8 +168,6 @@ for doc in result:
 ```
 
 ### Configure and use the retriever for **unstructured** data with extractive answers
-
-
 
 ```python
 retriever = VertexAISearchRetriever(
@@ -198,8 +186,6 @@ for doc in result:
 
 ### Configure and use the retriever for **structured** data
 
-
-
 ```python
 retriever = VertexAISearchRetriever(
     project_id=PROJECT_ID,
@@ -215,8 +201,6 @@ for doc in result:
 ```
 
 ### Configure and use the retriever for **website** data with Advanced Website Indexing
-
-
 
 ```python
 retriever = VertexAISearchRetriever(
@@ -236,8 +220,6 @@ for doc in result:
 
 ### Configure and use the retriever for **blended** data
 
-
-
 ```python
 retriever = VertexAISearchRetriever(
     project_id=PROJECT_ID,
@@ -255,8 +237,6 @@ for doc in result:
 ### Configure and use the retriever for multi-turn search
 
 [Search with follow-ups](https://cloud.google.com/generative-ai-app-builder/docs/multi-turn-search) is based on generative AI models and it is different from the regular unstructured data search.
-
-
 
 ```python
 retriever = VertexAIMultiTurnSearchRetriever(
@@ -276,11 +256,9 @@ Following the above examples, we use `.invoke` to issue a single query. Because 
 
 We can also incorporate retrievers into [chains](/docs/how_to/sequence/) to build larger applications, such as a simple [RAG](/docs/tutorials/rag/) application. For demonstration purposes, we instantiate a VertexAI chat model as well. See the corresponding Vertex [integration docs](/docs/integrations/chat/google_vertex_ai_palm/) for setup instructions.
 
-
 ```python
 %pip install -qU langchain-google-vertexai
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Google Vertex AI Search"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Google Vertex AI Search"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Google Vertex AI Search"}]-->
@@ -312,7 +290,6 @@ chain = (
 )
 ```
 
-
 ```python
 chain.invoke(query)
 ```
@@ -320,7 +297,6 @@ chain.invoke(query)
 ## API reference
 
 For detailed documentation of all `VertexAISearchRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/vertex_ai_search/langchain_google_community.vertex_ai_search.VertexAISearchRetriever.html).
-
 
 ## Related
 

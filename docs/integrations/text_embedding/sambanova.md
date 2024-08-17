@@ -17,7 +17,6 @@ A SambaStudio environment is required to deploy a model. Get more information at
 
 Register your environment variables:
 
-
 ```python
 import os
 
@@ -37,7 +36,6 @@ os.environ["SAMBASTUDIO_EMBEDDINGS_API_KEY"] = sambastudio_api_key
 
 Call SambaStudio hosted embeddings directly from LangChain!
 
-
 ```python
 <!--IMPORTS:[{"imported": "SambaStudioEmbeddings", "source": "langchain_community.embeddings.sambanova", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sambanova.SambaStudioEmbeddings.html", "title": "SambaNova"}]-->
 from langchain_community.embeddings.sambanova import SambaStudioEmbeddings
@@ -55,7 +53,6 @@ print(results)
 
 You can manually pass the endpoint parameters and manually set the batch size you have in your SambaStudio embeddings endpoint
 
-
 ```python
 embeddings = SambaStudioEmbeddings(
     sambastudio_embeddings_base_url=sambastudio_base_url,
@@ -69,7 +66,6 @@ embeddings = SambaStudioEmbeddings(
 
 Or You can use an embedding model expert included in your deployed CoE
 
-
 ```python
 embeddings = SambaStudioEmbeddings(
     batch_size=1,
@@ -78,7 +74,6 @@ embeddings = SambaStudioEmbeddings(
     },
 )
 ```
-
 
 ## Related
 

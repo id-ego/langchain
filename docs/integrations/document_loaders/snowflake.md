@@ -7,18 +7,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebooks goes over how to load documents from Snowflake
 
-
 ```python
 %pip install --upgrade --quiet  snowflake-connector-python
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "SnowflakeLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.snowflake_loader.SnowflakeLoader.html", "title": "Snowflake"}]-->
 import settings as s
 from langchain_community.document_loaders import SnowflakeLoader
 ```
-
 
 ```python
 QUERY = "select text, survey_id from CLOUD_DATA_SOLUTIONS.HAPPY_OR_NOT.OPEN_FEEDBACK limit 10"
@@ -35,7 +32,6 @@ snowflake_loader = SnowflakeLoader(
 snowflake_documents = snowflake_loader.load()
 print(snowflake_documents)
 ```
-
 
 ```python
 import settings as s
@@ -56,7 +52,6 @@ snowflake_loader = SnowflakeLoader(
 snowflake_documents = snowflake_loader.load()
 print(snowflake_documents)
 ```
-
 
 ## Related
 

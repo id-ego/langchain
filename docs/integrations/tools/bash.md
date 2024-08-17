@@ -11,11 +11,9 @@ The LLM can use it to execute any shell commands. A common use case for this is 
 
 **Note:** Shell tool does not work with Windows OS.
 
-
 ```python
 %pip install --upgrade --quiet langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ShellTool", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.shell.tool.ShellTool.html", "title": "Shell (bash)"}]-->
@@ -23,7 +21,6 @@ from langchain_community.tools import ShellTool
 
 shell_tool = ShellTool()
 ```
-
 
 ```python
 print(shell_tool.run({"commands": ["echo 'Hello World!'", "time"]}))
@@ -41,7 +38,6 @@ sys	0m0.000s
 ### Use with Agents
 
 As with all tools, these can be given to an agent to accomplish more complex tasks. Let's have the agent fetch some links from a web page.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Shell (bash)"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Shell (bash)"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Shell (bash)"}]-->
@@ -69,12 +65,12 @@ Thought: We need to download the langchain.com webpage and extract all the URLs 
 Action:
 ```
 {
-  "action": "shell",
-  "action_input": {
-    "commands": [
-      "curl -s https://langchain.com | grep -o 'http[s]*://[^\" ]*' | sort"
-    ]
-  }
+"action": "shell",
+"action_input": {
+"commands": [
+"curl -s https://langchain.com | grep -o 'http[s]*://[^\" ]*' | sort"
+]
+}
 }
 ```
 [0m
@@ -100,12 +96,9 @@ Final Answer: ["https://blog.langchain.dev/", "https://discord.gg/6adMQxSpJS", "
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 '["https://blog.langchain.dev/", "https://discord.gg/6adMQxSpJS", "https://docs.langchain.com/docs/", "https://github.com/hwchase17/chat-langchain", "https://github.com/hwchase17/langchain", "https://github.com/hwchase17/langchainjs", "https://github.com/sullivan-sean/chat-langchainjs", "https://js.langchain.com/docs/", "https://python.langchain.com/en/latest/", "https://twitter.com/langchainai"]'
 ```
-
-
 
 ## Related
 

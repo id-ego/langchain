@@ -5,15 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Context
 
->[Context](https://context.ai/) provides user analytics for LLM-powered products and features.
+> [Context](https://context.ai/) provides user analytics for LLM-powered products and features.
 
 With `Context`, you can start understanding your users and improving their experiences in less than 30 minutes.
-
 
 In this guide we will show you how to integrate with Context.
 
 ## Installation and Setup
-
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-openai langchain-community context-python
@@ -33,12 +31,10 @@ To use the `ContextCallbackHandler`, import the handler from Langchain and insta
 
 Ensure you have installed the `context-python` package before using the handler.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ContextCallbackHandler", "source": "langchain_community.callbacks.context_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.context_callback.ContextCallbackHandler.html", "title": "Context"}]-->
 from langchain_community.callbacks.context_callback import ContextCallbackHandler
 ```
-
 
 ```python
 import os
@@ -52,7 +48,6 @@ context_callback = ContextCallbackHandler(token)
 ### Context callback within a chat model
 
 The Context callback handler can be used to directly record transcripts between users and AI assistants.
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Context"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Context"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Context"}]-->
@@ -81,7 +76,7 @@ print(chat(messages))
 
 The Context callback handler can also be used to record the inputs and outputs of chains. Note that intermediate steps of the chain are not recorded - only the starting inputs and final outputs.
 
-__Note:__ Ensure that you pass the same context object to the chat model and the chain.
+**Note:** Ensure that you pass the same context object to the chat model and the chain.
 
 Wrong:
 > ```python
@@ -90,13 +85,11 @@ Wrong:
 > ```
 
 Correct:
->```python
->handler = ContextCallbackHandler(token)
->chat = ChatOpenAI(temperature=0.9, callbacks=[callback])
->chain = LLMChain(llm=chat, prompt=chat_prompt_template, callbacks=[callback])
->```
-
-
+> ```python
+> handler = ContextCallbackHandler(token)
+> chat = ChatOpenAI(temperature=0.9, callbacks=[callback])
+> chain = LLMChain(llm=chat, prompt=chat_prompt_template, callbacks=[callback])
+> ```
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Context"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Context"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Context"}, {"imported": "HumanMessagePromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.HumanMessagePromptTemplate.html", "title": "Context"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Context"}]-->

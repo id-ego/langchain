@@ -8,8 +8,6 @@ This template is designed to implement an agent capable of interacting with a gr
 The semantic layer equips the agent with a suite of robust tools, allowing it to interact with the graph database based on the user's intent.
 Learn more about the semantic layer template in the [corresponding blog post](https://medium.com/towards-data-science/enhancing-interaction-between-language-models-and-graph-databases-via-a-semantic-layer-0a78ad3eba49) and specifically about [Mixtral agents with Ollama](https://blog.langchain.dev/json-based-agents-with-ollama-and-langchain/).
 
-
-
 ## Tools
 
 The agent utilizes several tools to interact with the Neo4j graph database effectively:
@@ -28,11 +26,10 @@ The agent utilizes several tools to interact with the Neo4j graph database effec
 Before using this template, you need to set up Ollama and Neo4j database.
 
 1. Follow instructions [here](https://python.langchain.com/docs/integrations/chat/ollama) to download Ollama.
-
 2. Download your LLM of interest:
-
-    * This package uses `mixtral`: `ollama pull mixtral`
-    * You can choose from many LLMs [here](https://ollama.ai/library)
+   
+   * This package uses `mixtral`: `ollama pull mixtral`
+   * You can choose from many LLMs [here](https://ollama.ai/library)
 
 You need to define the following environment variables
 
@@ -90,9 +87,9 @@ from neo4j_semantic_ollama import agent_executor as neo4j_semantic_agent
 add_routes(app, neo4j_semantic_agent, path="/neo4j-semantic-ollama")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -107,7 +104,7 @@ If you are inside the top-level project directory, then you can spin up a LangSe
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

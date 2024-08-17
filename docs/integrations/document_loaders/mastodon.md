@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Mastodon
 
->[Mastodon](https://joinmastodon.org/) is a federated social media and social networking service.
+> [Mastodon](https://joinmastodon.org/) is a federated social media and social networking service.
 
 This loader fetches the text from the "toots" of a list of `Mastodon` accounts, using the `Mastodon.py` Python package.
 
@@ -13,17 +13,14 @@ Public accounts can the queried by default without any authentication. If non-pu
 
 Then you need to pass in the Mastodon account names you want to extract, in the `@account@instance` format.
 
-
 ```python
 <!--IMPORTS:[{"imported": "MastodonTootsLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.mastodon.MastodonTootsLoader.html", "title": "Mastodon"}]-->
 from langchain_community.document_loaders import MastodonTootsLoader
 ```
 
-
 ```python
 %pip install --upgrade --quiet  Mastodon.py
 ```
-
 
 ```python
 loader = MastodonTootsLoader(
@@ -42,7 +39,6 @@ loader = MastodonTootsLoader(
 # )
 ```
 
-
 ```python
 documents = loader.load()
 for doc in documents[:3]:
@@ -58,7 +54,6 @@ for doc in documents[:3]:
 ================================================================================
 ```
 The toot texts (the documents' `page_content`) is by default HTML as returned by the Mastodon API.
-
 
 ## Related
 

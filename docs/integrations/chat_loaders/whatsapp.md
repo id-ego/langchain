@@ -22,7 +22,6 @@ To make the export of your WhatsApp conversation(s), complete the following step
 
 An example of the data format for each conversation is below: 
 
-
 ```python
 %%writefile whatsapp_chat.txt
 [8/15/23, 9:12:33 AM] Dr. Feather: ‎Messages and calls are end-to-end encrypted. No one outside of this chat, not even WhatsApp, can read or listen to them.
@@ -47,12 +46,10 @@ The WhatsAppChatLoader accepts the resulting zip file, unzipped directory, or th
 
 Provide that as well as the user name you want to take on the role of "AI" when fine-tuning.
 
-
 ```python
 <!--IMPORTS:[{"imported": "WhatsAppChatLoader", "source": "langchain_community.chat_loaders.whatsapp", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.whatsapp.WhatsAppChatLoader.html", "title": "WhatsApp"}]-->
 from langchain_community.chat_loaders.whatsapp import WhatsAppChatLoader
 ```
-
 
 ```python
 loader = WhatsAppChatLoader(
@@ -63,7 +60,6 @@ loader = WhatsAppChatLoader(
 ## 3. Load messages
 
 The `load()` (or `lazy_load`) methods return a list of "ChatSessions" that currently store the list of messages per loaded conversation.
-
 
 ```python
 <!--IMPORTS:[{"imported": "map_ai_messages", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.map_ai_messages.html", "title": "WhatsApp"}, {"imported": "merge_chat_runs", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.merge_chat_runs.html", "title": "WhatsApp"}, {"imported": "ChatSession", "source": "langchain_core.chat_sessions", "docs": "https://api.python.langchain.com/en/latest/chat_sessions/langchain_core.chat_sessions.ChatSession.html", "title": "WhatsApp"}]-->
@@ -84,8 +80,6 @@ messages: List[ChatSession] = list(
 )
 ```
 
-
-
 ```output
 [{'messages': [AIMessage(content='I spotted a rare Hyacinth Macaw yesterday in the Amazon Rainforest. Such a magnificent creature!', additional_kwargs={'sender': 'Dr. Feather', 'events': [{'message_time': '8/15/23, 9:12:43 AM'}]}, example=False),
    HumanMessage(content="That's stunning! Were you able to observe its behavior?", additional_kwargs={'sender': 'Jungle Jane', 'events': [{'message_time': '8/15/23, 9:13:15 AM'}]}, example=False),
@@ -97,11 +91,9 @@ messages: List[ChatSession] = list(
    HumanMessage(content='Looking forward to it! Keep up the great work.', additional_kwargs={'sender': 'Jungle Jane', 'events': [{'message_time': '8/15/23, 9:25:16 PM'}]}, example=False)]}]
 ```
 
-
 ### Next Steps
 
 You can then use these messages how you see fit, such as fine-tuning a model, few-shot example selection, or directly make predictions for the next message.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "WhatsApp"}]-->

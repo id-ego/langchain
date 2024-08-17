@@ -3,7 +3,7 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/memory/astradb_ch
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/astradb_chat_message_history.ipynb
 ---
 
-# Astra DB 
+# Astra DB
 
 > DataStax [Astra DB](https://docs.datastax.com/en/astra/home/astra.html) is a serverless vector-capable database built on Cassandra and made conveniently available through an easy-to-use JSON API.
 
@@ -16,13 +16,11 @@ To run this notebook you need a running Astra DB. Get the connection secrets on 
 - the API Endpoint looks like `https://01234567-89ab-cdef-0123-456789abcdef-us-east1.apps.astra.datastax.com`;
 - the Token looks like `AstraCS:6gBhNmsk135...`.
 
-
 ```python
 %pip install --upgrade --quiet  "astrapy>=0.7.1 langchain-community" 
 ```
 
 ### Set up the database connection parameters and secrets
-
 
 ```python
 import getpass
@@ -37,7 +35,6 @@ ASTRA_DB_APPLICATION_TOKEN =  ········
 Depending on whether local or cloud-based Astra DB, create the corresponding database connection "Session" object.
 
 ## Example
-
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDBChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.astradb.AstraDBChatMessageHistory.html", "title": "Astra DB "}]-->
@@ -54,12 +51,9 @@ message_history.add_user_message("hi!")
 message_history.add_ai_message("whats up?")
 ```
 
-
 ```python
 message_history.messages
 ```
-
-
 
 ```output
 [HumanMessage(content='hi!'), AIMessage(content='whats up?')]

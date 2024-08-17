@@ -6,13 +6,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # Azure Cosmos DB No SQL
 
 This notebook shows you how to leverage this integrated [vector database](https://learn.microsoft.com/en-us/azure/cosmos-db/vector-database) to store documents in collections, create indicies and perform vector search queries using approximate nearest neighbor algorithms such as COS (cosine distance), L2 (Euclidean distance), and IP (inner product) to locate documents close to the query vectors. 
-    
+
 Azure Cosmos DB is the database that powers OpenAI's ChatGPT service. It offers single-digit millisecond response times, automatic and instant scalability, along with guaranteed speed at any scale. 
 
 [Azure Cosmos DB for NoSQL](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/vector-search) now offers vector indexing and search in preview. This feature is designed to handle high-dimensional vectors, enabling efficient and accurate vector search at any scale. You can now store vectors directly in the documents alongside your data. This means that each document in your database can contain not only traditional schema-free data, but also high-dimensional vectors as other properties of the documents. This colocation of data and vectors allows for efficient indexing and searching, as the vectors are stored in the same logical unit as the data they represent. This simplifies data management, AI application architectures, and the efficiency of vector-based operations.
 
 [Sign Up](https://azure.microsoft.com/en-us/free/) for lifetime free access to get started today.
-
 
 ```python
 %pip install --upgrade --quiet azure-cosmos langchain-openai langchain-community
@@ -32,7 +31,6 @@ OPENAI_EMBEDDINGS_MODEL_DEPLOYMENT = "text-embedding-ada-002"
 
 ## Insert Data
 
-
 ```python
 <!--IMPORTS:[{"imported": "PyPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html", "title": "Azure Cosmos DB No SQL"}]-->
 from langchain_community.document_loaders import PyPDFLoader
@@ -42,7 +40,6 @@ loader = PyPDFLoader("https://arxiv.org/pdf/2303.08774.pdf")
 data = loader.load()
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Azure Cosmos DB No SQL"}]-->
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -51,7 +48,6 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=15
 docs = text_splitter.split_documents(data)
 ```
 
-
 ```python
 print(docs[0])
 ```
@@ -59,7 +55,6 @@ print(docs[0])
 page_content='GPT-4 Technical Report\nOpenAI∗\nAbstract\nWe report the development of GPT-4, a large-scale, multimodal model which can\naccept image and text inputs and produce text outputs. While less capable than\nhumans in many real-world scenarios, GPT-4 exhibits human-level performance\non various professional and academic benchmarks, including passing a simulated\nbar exam with a score around the top 10% of test takers. GPT-4 is a Transformer-\nbased model pre-trained to predict the next token in a document. The post-training\nalignment process results in improved performance on measures of factuality and\nadherence to desired behavior. A core component of this project was developing\ninfrastructure and optimization methods that behave predictably across a wide\nrange of scales. This allowed us to accurately predict some aspects of GPT-4’s\nperformance based on models trained with no more than 1/1,000th the compute of\nGPT-4.\n1 Introduction' metadata={'source': 'https://arxiv.org/pdf/2303.08774.pdf', 'page': 0}
 ```
 ## Creating AzureCosmosDB NoSQL Vector Search
-
 
 ```python
 indexing_policy = {
@@ -80,7 +75,6 @@ vector_embedding_policy = {
     ]
 }
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AzureCosmosDBNoSqlVectorSearch", "source": "langchain_community.vectorstores.azure_cosmos_db_no_sql", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azure_cosmos_db_no_sql.AzureCosmosDBNoSqlVectorSearch.html", "title": "Azure Cosmos DB No SQL"}, {"imported": "AzureOpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.azure.AzureOpenAIEmbeddings.html", "title": "Azure Cosmos DB No SQL"}]-->
@@ -121,7 +115,6 @@ vector_search = AzureCosmosDBNoSqlVectorSearch.from_documents(
 
 ## Querying Data
 
-
 ```python
 # Perform a similarity search between the embedding of the query and the embeddings of the documents
 query = "What were the compute requirements for training GPT 4"
@@ -144,7 +137,6 @@ in such scenarios, GPT-4 was evaluated on a variety of exams originally designed
 these evaluations it performs quite well and often outscores the vast majority of human test takers.
 ```
 ## Similarity Search with Score
-
 
 ```python
 query = "What were the compute requirements for training GPT 4"

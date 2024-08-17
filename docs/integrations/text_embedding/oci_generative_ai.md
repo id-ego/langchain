@@ -6,19 +6,18 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # Oracle Cloud Infrastructure Generative AI
 
 Oracle Cloud Infrastructure (OCI) Generative AI is a fully managed service that provides a set of state-of-the-art, customizable large language models (LLMs), that cover a wide range of use cases, and which are available through a single API.
-Using the OCI Generative AI service you can access ready-to-use pretrained models, or create and host your own fine-tuned custom models based on your own data on dedicated AI clusters. Detailed documentation of the service and API is available __[here](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm)__ and __[here](https://docs.oracle.com/en-us/iaas/api/#/en/generative-ai/20231130/)__.
+Using the OCI Generative AI service you can access ready-to-use pretrained models, or create and host your own fine-tuned custom models based on your own data on dedicated AI clusters. Detailed documentation of the service and API is available **[here](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm)** and **[here](https://docs.oracle.com/en-us/iaas/api/#/en/generative-ai/20231130/)**.
 
 This notebook explains how to use OCI's Genrative AI models with LangChain.
 
 ### Prerequisite
 We will need to install the oci sdk
 
-
 ```python
 !pip install -U oci
 ```
 
-### OCI Generative AI API endpoint 
+### OCI Generative AI API endpoint
 https://inference.generativeai.us-chicago-1.oci.oraclecloud.com
 
 ## Authentication
@@ -29,11 +28,9 @@ The authentication methods supported for this langchain integration are:
 3. Instance principal
 4. Resource principal 
 
-These follows the standard SDK authentication methods detailed __[here](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdk_authentication_methods.htm)__.
- 
+These follows the standard SDK authentication methods detailed **[here](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdk_authentication_methods.htm)**.
 
 ## Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "OCIGenAIEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.oci_generative_ai.OCIGenAIEmbeddings.html", "title": "Oracle Cloud Infrastructure Generative AI"}]-->
@@ -56,7 +53,6 @@ response = embeddings.embed_documents(documents)
 print(response)
 ```
 
-
 ```python
 # Use Session Token to authN
 embeddings = OCIGenAIEmbeddings(
@@ -76,7 +72,6 @@ documents = ["This is a sample document", "and here is another one"]
 response = embeddings.embed_documents(documents)
 print(response)
 ```
-
 
 ## Related
 

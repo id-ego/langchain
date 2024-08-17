@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 Exa's search integration exists in its own [partner package](https://pypi.org/project/langchain-exa/). You can install it with:
 
-
 ```python
 %pip install -qU langchain-exa
 ```
@@ -17,7 +16,6 @@ In order to use the package, you will also need to set the `EXA_API_KEY` environ
 ## Retriever
 
 You can use the [`ExaSearchRetriever`](/docs/integrations/tools/exa_search#using-exasearchretriever) in a standard retrieval pipeline. You can import it as follows
-
 
 ```python
 <!--IMPORTS:[{"imported": "ExaSearchRetriever", "source": "langchain_exa", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_exa.retrievers.ExaSearchRetriever.html", "title": "Exa Search"}]-->

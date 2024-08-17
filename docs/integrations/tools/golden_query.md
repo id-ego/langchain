@@ -5,11 +5,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Golden Query
 
->[Golden](https://golden.com) provides a set of natural language APIs for querying and enrichment using the Golden Knowledge Graph e.g. queries such as: `Products from OpenAI`, `Generative ai companies with series a funding`, and `rappers who invest` can be used to retrieve structured data about relevant entities.
->
->The `golden-query` langchain tool is a wrapper on top of the [Golden Query API](https://docs.golden.com/reference/query-api) which enables programmatic access to these results.
->See the [Golden Query API docs](https://docs.golden.com/reference/query-api) for more information.
-
+> [Golden](https://golden.com) provides a set of natural language APIs for querying and enrichment using the Golden Knowledge Graph e.g. queries such as: `Products from OpenAI`, `Generative ai companies with series a funding`, and `rappers who invest` can be used to retrieve structured data about relevant entities.
+> 
+> The `golden-query` langchain tool is a wrapper on top of the [Golden Query API](https://docs.golden.com/reference/query-api) which enables programmatic access to these results.
+See the [Golden Query API docs](https://docs.golden.com/reference/query-api) for more information.
 
 This notebook goes over how to use the `golden-query` tool.
 
@@ -17,11 +16,9 @@ This notebook goes over how to use the `golden-query` tool.
 - Get your API key from the [Golden API Settings](https://golden.com/settings/api) page.
 - Save your API key into GOLDEN_API_KEY env variable
 
-
 ```python
 %pip install -qU langchain-community
 ```
-
 
 ```python
 import os
@@ -29,25 +26,20 @@ import os
 os.environ["GOLDEN_API_KEY"] = ""
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "GoldenQueryAPIWrapper", "source": "langchain_community.utilities.golden_query", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.golden_query.GoldenQueryAPIWrapper.html", "title": "Golden Query"}]-->
 from langchain_community.utilities.golden_query import GoldenQueryAPIWrapper
 ```
 
-
 ```python
 golden_query = GoldenQueryAPIWrapper()
 ```
-
 
 ```python
 import json
 
 json.loads(golden_query.run("companies in nanotech"))
 ```
-
-
 
 ```output
 {'results': [{'id': 4673886,
@@ -93,8 +85,6 @@ json.loads(golden_query.run("companies in nanotech"))
  'next': 'https://golden.com/api/v2/public/queries/59044/results/?cursor=eyJwb3NpdGlvbiI6IFsxNzYxNiwgIklCTS04M1lQM1oiXX0%3D&pageSize=10',
  'previous': None}
 ```
-
-
 
 ## Related
 

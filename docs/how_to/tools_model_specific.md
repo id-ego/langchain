@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # How to bind model-specific tools
 
-Providers adopt different conventions for formatting tool schemas. 
+Providers adopt different conventions for formatting tool schemas.
 For instance, OpenAI uses a format like this:
 
 - `type`: The type of the tool. At the time of writing, this is always `"function"`.
@@ -15,7 +15,6 @@ For instance, OpenAI uses a format like this:
 - `function.parameters`: The nested details of the schema you want to extract, formatted as a [JSON schema](https://json-schema.org/) dict.
 
 We can bind this model-specific format directly to the model as well if preferred. Here's an example:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to bind model-specific tools"}]-->

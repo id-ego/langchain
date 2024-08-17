@@ -6,12 +6,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # DashVector
 
 > [DashVector](https://help.aliyun.com/document_detail/2510225.html) is a fully managed vector DB service that supports high-dimension dense and sparse vectors, real-time insertion and filtered search. It is built to scale automatically and can adapt to different application requirements.
-> The vector retrieval service `DashVector` is based on the `Proxima` core of the efficient vector engine independently developed by `DAMO Academy`,
->  and provides a cloud-native, fully managed vector retrieval service with horizontal expansion capabilities.
->  `DashVector` exposes its powerful vector management, vector query and other diversified capabilities through a simple and
-> easy-to-use SDK/API interface, which can be quickly integrated by upper-layer AI applications, thereby providing services
-> including large model ecology, multi-modal AI search, molecular structure A variety of application scenarios, including analysis,
-> provide the required efficient vector retrieval capabilities.
+The vector retrieval service `DashVector` is based on the `Proxima` core of the efficient vector engine independently developed by `DAMO Academy`,
+and provides a cloud-native, fully managed vector retrieval service with horizontal expansion capabilities.
+`DashVector` exposes its powerful vector management, vector query and other diversified capabilities through a simple and
+easy-to-use SDK/API interface, which can be quickly integrated by upper-layer AI applications, thereby providing services
+including large model ecology, multi-modal AI search, molecular structure A variety of application scenarios, including analysis,
+provide the required efficient vector retrieval capabilities.
 
 In this notebook, we'll demo the `SelfQueryRetriever` with a `DashVector` vector store.
 
@@ -23,11 +23,9 @@ To use DashVector, you have to have `dashvector` package installed, and you must
 
 NOTE: The self-query retriever requires you to have `lark` package installed.
 
-
 ```python
 %pip install --upgrade --quiet  lark dashvector
 ```
-
 
 ```python
 import os
@@ -36,7 +34,6 @@ import dashvector
 
 client = dashvector.Client(api_key=os.environ["DASHVECTOR_API_KEY"])
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "DashScopeEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.dashscope.DashScopeEmbeddings.html", "title": "DashVector"}, {"imported": "DashVector", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.dashvector.DashVector.html", "title": "DashVector"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "DashVector"}]-->
@@ -49,7 +46,6 @@ embeddings = DashScopeEmbeddings()
 # create DashVector collection
 client.create("langchain-self-retriever-demo", dimension=1536)
 ```
-
 
 ```python
 docs = [
@@ -92,7 +88,6 @@ vectorstore = DashVector.from_documents(
 
 Now we can instantiate our retriever. To do this we'll need to provide some information upfront about the metadata fields that our documents support and a short description of the document contents.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "DashVector"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "DashVector"}, {"imported": "Tongyi", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.tongyi.Tongyi.html", "title": "DashVector"}]-->
 from langchain.chains.query_constructor.base import AttributeInfo
@@ -130,7 +125,6 @@ retriever = SelfQueryRetriever.from_llm(
 
 And now we can try actually using our retriever!
 
-
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are some movies about dinosaurs")
@@ -139,15 +133,12 @@ retriever.invoke("What are some movies about dinosaurs")
 query='dinosaurs' filter=None limit=None
 ```
 
-
 ```output
 [Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'year': 1993, 'rating': 7.699999809265137, 'genre': 'action'}),
  Document(page_content='Toys come alive and have a blast doing so', metadata={'year': 1995, 'genre': 'animated'}),
  Document(page_content='Leo DiCaprio gets lost in a dream within a dream within a dream within a ...', metadata={'year': 2010, 'director': 'Christopher Nolan', 'rating': 8.199999809265137}),
  Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'year': 2006, 'director': 'Satoshi Kon', 'rating': 8.600000381469727})]
 ```
-
-
 
 ```python
 # This example only specifies a filter
@@ -157,13 +148,10 @@ retriever.invoke("I want to watch a movie rated higher than 8.5")
 query=' ' filter=Comparison(comparator=<Comparator.GTE: 'gte'>, attribute='rating', value=8.5) limit=None
 ```
 
-
 ```output
 [Document(page_content='Three men walk into the Zone, three men walk out of the Zone', metadata={'year': 1979, 'director': 'Andrei Tarkovsky', 'rating': 9.899999618530273, 'genre': 'science fiction'}),
  Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'year': 2006, 'director': 'Satoshi Kon', 'rating': 8.600000381469727})]
 ```
-
-
 
 ```python
 # This example specifies a query and a filter
@@ -173,12 +161,9 @@ retriever.invoke("Has Greta Gerwig directed any movies about women")
 query='Greta Gerwig' filter=Comparison(comparator=<Comparator.EQ: 'eq'>, attribute='director', value='Greta Gerwig') limit=None
 ```
 
-
 ```output
 [Document(page_content='A bunch of normal-sized women are supremely wholesome and some men pine after them', metadata={'year': 2019, 'director': 'Greta Gerwig', 'rating': 8.300000190734863})]
 ```
-
-
 
 ```python
 # This example specifies a composite filter
@@ -188,18 +173,15 @@ retriever.invoke("What's a highly rated (above 8.5) science fiction film?")
 query='science fiction' filter=Operation(operator=<Operator.AND: 'and'>, arguments=[Comparison(comparator=<Comparator.EQ: 'eq'>, attribute='genre', value='science fiction'), Comparison(comparator=<Comparator.GT: 'gt'>, attribute='rating', value=8.5)]) limit=None
 ```
 
-
 ```output
 [Document(page_content='Three men walk into the Zone, three men walk out of the Zone', metadata={'year': 1979, 'director': 'Andrei Tarkovsky', 'rating': 9.899999618530273, 'genre': 'science fiction'})]
 ```
-
 
 ## Filter k
 
 We can also use the self query retriever to specify `k`: the number of documents to fetch.
 
 We can do this by passing `enable_limit=True` to the constructor.
-
 
 ```python
 retriever = SelfQueryRetriever.from_llm(
@@ -212,7 +194,6 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
-
 ```python
 # This example only specifies a relevant query
 retriever.invoke("what are two movies about dinosaurs")
@@ -220,7 +201,6 @@ retriever.invoke("what are two movies about dinosaurs")
 ```output
 query='dinosaurs' filter=None limit=2
 ```
-
 
 ```output
 [Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'year': 1993, 'rating': 7.699999809265137, 'genre': 'action'}),

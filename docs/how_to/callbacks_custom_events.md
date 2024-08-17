@@ -27,14 +27,12 @@ To dispatch a custom event you need to decide on two attributes for the event: t
 | name      | str  | A user defined name for the event.                                                                       |
 | data      | Any  | The data associated with the event. This can be anything, though we suggest making it JSON serializable. |
 
-
 :::important
 * Dispatching custom callback events requires `langchain-core>=0.2.15`.
 * Custom callback events can only be dispatched from within an existing `Runnable`.
 * If using `astream_events`, you must use `version='v2'` to see custom events.
 * Sending or rendering custom callbacks events in LangSmith is not yet supported.
 :::
-
 
 :::caution COMPATIBILITY
 LangChain cannot automatically propagate configuration, including callbacks necessary for astream_events(), to child runnables if you are running async code in python<=3.10. This is a common reason why you may fail to see events being emitted from custom runnables or tools.
@@ -50,12 +48,10 @@ The most useful way to consume custom events is via the [Astream Events API](/do
 
 We can use the `async` `adispatch_custom_event` API to emit custom events in an async setting. 
 
-
 :::important
 
 To see custom events via the astream events API, you need to use the newer `v2` API of `astream_events`.
 :::
-
 
 ```python
 <!--IMPORTS:[{"imported": "adispatch_custom_event", "source": "langchain_core.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.adispatch_custom_event.html", "title": "How to dispatch custom callback events"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to dispatch custom callback events"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables.config", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to dispatch custom callback events"}]-->
@@ -84,7 +80,6 @@ async for event in foo.astream_events("hello world", version="v2"):
 {'event': 'on_chain_end', 'data': {'output': 'hello world'}, 'run_id': 'f354ffe8-4c22-4881-890a-c1cad038a9a6', 'name': 'foo', 'tags': [], 'metadata': {}, 'parent_ids': []}
 ```
 In python <= 3.10, you must propagate the config manually!
-
 
 ```python
 <!--IMPORTS:[{"imported": "adispatch_custom_event", "source": "langchain_core.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.adispatch_custom_event.html", "title": "How to dispatch custom callback events"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to dispatch custom callback events"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables.config", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to dispatch custom callback events"}]-->
@@ -119,7 +114,6 @@ async for event in bar.astream_events("hello world", version="v2"):
 ## Async Callback Handler
 
 You can also consume the dispatched event via an async callback handler.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.AsyncCallbackHandler.html", "title": "How to dispatch custom callback events"}, {"imported": "adispatch_custom_event", "source": "langchain_core.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.adispatch_custom_event.html", "title": "How to dispatch custom callback events"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to dispatch custom callback events"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables.config", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to dispatch custom callback events"}]-->
@@ -169,18 +163,15 @@ Received event event1 with data: {'x': 1}, with tags: ['foo', 'bar'], with metad
 Received event event2 with data: 5, with tags: ['foo', 'bar'], with metadata: {} and run_id: a62b84be-7afd-4829-9947-7165df1f37d9
 ```
 
-
 ```output
 1
 ```
-
 
 ## Sync Callback Handler
 
 Let's see how to emit custom events in a sync environment using `dispatch_custom_event`.
 
 You **must** call `dispatch_custom_event` from within an existing `Runnable`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.BaseCallbackHandler.html", "title": "How to dispatch custom callback events"}, {"imported": "dispatch_custom_event", "source": "langchain_core.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.dispatch_custom_event.html", "title": "How to dispatch custom callback events"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to dispatch custom callback events"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables.config", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to dispatch custom callback events"}]-->
@@ -226,11 +217,9 @@ Received event event1 with data: {'x': 1}, with tags: ['foo', 'bar'], with metad
 Received event event2 with data: {'x': 1}, with tags: ['foo', 'bar'], with metadata: {} and run_id: 27b5ce33-dc26-4b34-92dd-08a89cb22268
 ```
 
-
 ```output
 1
 ```
-
 
 ## Next steps
 

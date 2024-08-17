@@ -6,16 +6,16 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # Zep Open Source Memory
 > Recall, understand, and extract data from chat histories. Power personalized AI experiences.
 
->[Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-> With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-> while also reducing hallucinations, latency, and cost.
+> [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
+With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
+while also reducing hallucinations, latency, and cost.
 
 > Interested in Zep Cloud? See [Zep Cloud Installation Guide](https://help.getzep.com/sdks) and [Zep Cloud Memory Example](https://help.getzep.com/langchain/examples/messagehistory-example)
 
 ## Open Source Installation and Setup
 
 > Zep Open Source project: [https://github.com/getzep/zep](https://github.com/getzep/zep)
->
+> 
 > Zep Open Source Docs: [https://docs.getzep.com/](https://docs.getzep.com/)
 
 ## Example
@@ -29,7 +29,6 @@ We'll demonstrate:
 2. Running an agent and having message automatically added to the store.
 3. Viewing the enriched messages.
 4. Vector search over the conversation history.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Zep Open Source Memory"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Zep Open Source Memory"}, {"imported": "ZepMemory", "source": "langchain_community.memory.zep_memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain_community.memory.zep_memory.ZepMemory.html", "title": "Zep Open Source Memory"}, {"imported": "ZepRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.zep.ZepRetriever.html", "title": "Zep Open Source Memory"}, {"imported": "WikipediaAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wikipedia.WikipediaAPIWrapper.html", "title": "Zep Open Source Memory"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Zep Open Source Memory"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Zep Open Source Memory"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Zep Open Source Memory"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Zep Open Source Memory"}]-->
@@ -49,14 +48,12 @@ ZEP_API_URL = "http://localhost:8000"
 session_id = str(uuid4())  # This is a unique identifier for the user
 ```
 
-
 ```python
 # Provide your OpenAI key
 import getpass
 
 openai_key = getpass.getpass()
 ```
-
 
 ```python
 # Provide your Zep API key. Note that this is optional. See https://docs.getzep.com/deployment/auth
@@ -65,8 +62,6 @@ zep_api_key = getpass.getpass()
 ```
 
 ### Initialize the Zep Chat Message History Class and initialize the Agent
-
-
 
 ```python
 search = WikipediaAPIWrapper()
@@ -101,8 +96,6 @@ agent_chain = initialize_agent(
 ```
 
 ### Add some history data
-
-
 
 ```python
 # Preload some messages into the memory. The default message window is 12 messages. We want to push beyond this to demonstrate auto-summarization.
@@ -181,8 +174,6 @@ for msg in test_history:
 
 Doing so will automatically add the input and response to the Zep memory.
 
-
-
 ```python
 agent_chain.run(
     input="What is the book's relevance to the challenges facing contemporary society?",
@@ -198,19 +189,15 @@ AI: Parable of the Sower is a prescient novel that speaks to the challenges faci
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Parable of the Sower is a prescient novel that speaks to the challenges facing contemporary society, such as climate change, inequality, and violence. It is a cautionary tale that warns of the dangers of unchecked greed and the need for individuals to take responsibility for their own lives and the lives of those around them.'
 ```
-
 
 ### Inspect the Zep memory
 
 Note the summary, and that the history has been enriched with token counts, UUIDs, and timestamps.
 
 Summaries are biased towards the most recent messages.
-
-
 
 ```python
 def print_messages(messages):
@@ -250,8 +237,6 @@ ai :
 Zep provides native vector search over historical conversation memory via the `ZepRetriever`.
 
 You can use the `ZepRetriever` with chains that support passing in a Langchain `Retriever` object.
-
-
 
 ```python
 retriever = ZepRetriever(

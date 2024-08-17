@@ -5,9 +5,8 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Etherscan
 
->[Etherscan](https://docs.etherscan.io/)  is the leading blockchain explorer, search, API and analytics platform for Ethereum, 
+> [Etherscan](https://docs.etherscan.io/)  is the leading blockchain explorer, search, API and analytics platform for Ethereum,
 a decentralized smart contracts platform.
-
 
 ## Overview
 
@@ -23,7 +22,6 @@ The loader supports the following six functionalities:
 * Retrieve erc721 transactions under specific account on Ethereum Mainet
 * Retrieve erc1155 transactions under specific account on Ethereum Mainet
 * Retrieve ethereum balance in wei under specific account on Ethereum Mainet
-
 
 If the account does not have corresponding transactions, the loader will a list with one document. The content of document is ''.
 
@@ -49,16 +47,13 @@ All functions related to transactions histories are restricted 1000 histories ma
 
 ## Setup
 
-
 ```python
 %pip install --upgrade --quiet  langchain -q
 ```
 
-
 ```python
 etherscanAPIKey = "..."
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "EtherscanLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.etherscan.EtherscanLoader.html", "title": "Etherscan"}]-->
@@ -67,13 +62,11 @@ import os
 from langchain_community.document_loaders import EtherscanLoader
 ```
 
-
 ```python
 os.environ["ETHERSCAN_API_KEY"] = etherscanAPIKey
 ```
 
 ## Create a ERC20 transaction loader
-
 
 ```python
 account_address = "0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b"
@@ -81,8 +74,6 @@ loader = EtherscanLoader(account_address, filter="erc20_transaction")
 result = loader.load()
 eval(result[0].page_content)
 ```
-
-
 
 ```output
 {'blockNumber': '13242975',
@@ -106,9 +97,7 @@ eval(result[0].page_content)
  'confirmations': '4492277'}
 ```
 
-
 ## Create a normal transaction loader with customized parameters
-
 
 ```python
 loader = EtherscanLoader(
@@ -125,7 +114,6 @@ result
 ```output
 20
 ```
-
 
 ```output
 [Document(page_content="{'blockNumber': '1723771', 'timeStamp': '1466213371', 'hash': '0xe00abf5fa83a4b23ee1cc7f07f9dda04ab5fa5efe358b315df8b76699a83efc4', 'nonce': '3155', 'blockHash': '0xc2c2207bcaf341eed07f984c9a90b3f8e8bdbdbd2ac6562f8c2f5bfa4b51299d', 'transactionIndex': '5', 'from': '0x3763e6e1228bfeab94191c856412d1bb0a8e6996', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b', 'value': '13149213761000000000', 'gas': '90000', 'gasPrice': '22655598156', 'isError': '0', 'txreceipt_status': '', 'input': '0x', 'contractAddress': '', 'cumulativeGasUsed': '126000', 'gasUsed': '21000', 'confirmations': '16011481', 'methodId': '0x', 'functionName': ''}", metadata={'from': '0x3763e6e1228bfeab94191c856412d1bb0a8e6996', 'tx_hash': '0xe00abf5fa83a4b23ee1cc7f07f9dda04ab5fa5efe358b315df8b76699a83efc4', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b'}),
@@ -149,8 +137,6 @@ result
  Document(page_content="{'blockNumber': '1777057', 'timeStamp': '1466976422', 'hash': '0xe76ca3603d2f4e7134bdd7a1c3fd553025fc0b793f3fd2a75cd206b8049e74ab', 'nonce': '1248', 'blockHash': '0xc7cacda0ac38c99f1b9bccbeee1562a41781d2cfaa357e8c7b4af6a49584b968', 'transactionIndex': '7', 'from': '0x16545fb79dbee1ad3a7f868b7661c023f372d5de', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b', 'value': '4556173496000000000', 'gas': '90000', 'gasPrice': '20000000000', 'isError': '0', 'txreceipt_status': '', 'input': '0x', 'contractAddress': '', 'cumulativeGasUsed': '168000', 'gasUsed': '21000', 'confirmations': '15958195', 'methodId': '0x', 'functionName': ''}", metadata={'from': '0x16545fb79dbee1ad3a7f868b7661c023f372d5de', 'tx_hash': '0xe76ca3603d2f4e7134bdd7a1c3fd553025fc0b793f3fd2a75cd206b8049e74ab', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b'}),
  Document(page_content="{'blockNumber': '1780120', 'timeStamp': '1467020353', 'hash': '0xc5ec8cecdc9f5ed55a5b8b0ad79c964fb5c49dc1136b6a49e981616c3e70bbe6', 'nonce': '1266', 'blockHash': '0xfc0e066e5b613239e1a01e6d582e7ab162ceb3ca4f719dfbd1a0c965adcfe1c5', 'transactionIndex': '1', 'from': '0x16545fb79dbee1ad3a7f868b7661c023f372d5de', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b', 'value': '11890330240000000000', 'gas': '90000', 'gasPrice': '20000000000', 'isError': '0', 'txreceipt_status': '', 'input': '0x', 'contractAddress': '', 'cumulativeGasUsed': '42000', 'gasUsed': '21000', 'confirmations': '15955132', 'methodId': '0x', 'functionName': ''}", metadata={'from': '0x16545fb79dbee1ad3a7f868b7661c023f372d5de', 'tx_hash': '0xc5ec8cecdc9f5ed55a5b8b0ad79c964fb5c49dc1136b6a49e981616c3e70bbe6', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b'})]
 ```
-
-
 
 ## Related
 

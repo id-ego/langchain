@@ -34,7 +34,6 @@ Head to the [AWS docs](https://docs.aws.amazon.com/bedrock/latest/userguide/sett
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -44,7 +43,6 @@ If you want to get automated tracing of your model calls you can also set your [
 
 The LangChain Bedrock integration lives in the `langchain-aws` package:
 
-
 ```python
 %pip install -qU langchain-aws
 ```
@@ -52,7 +50,6 @@ The LangChain Bedrock integration lives in the `langchain-aws` package:
 ## Instantiation
 
 Now we can instantiate our model object and generate chat completions:
-
 
 ```python
 from langchain_aws import ChatBedrock
@@ -66,7 +63,6 @@ llm = ChatBedrock(
 
 ## Invocation
 
-
 ```python
 messages = [
     (
@@ -79,13 +75,9 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-
-
 ```output
 AIMessage(content="Voici la traduction en français :\n\nJ'aime la programmation.", additional_kwargs={'usage': {'prompt_tokens': 29, 'completion_tokens': 21, 'total_tokens': 50}, 'stop_reason': 'end_turn', 'model_id': 'anthropic.claude-3-sonnet-20240229-v1:0'}, response_metadata={'usage': {'prompt_tokens': 29, 'completion_tokens': 21, 'total_tokens': 50}, 'stop_reason': 'end_turn', 'model_id': 'anthropic.claude-3-sonnet-20240229-v1:0'}, id='run-fdb07dc3-ff72-430d-b22b-e7824b15c766-0', usage_metadata={'input_tokens': 29, 'output_tokens': 21, 'total_tokens': 50})
 ```
-
-
 
 ```python
 print(ai_msg.content)
@@ -98,7 +90,6 @@ J'aime la programmation.
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatBedrock"}]-->
@@ -124,19 +115,15 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Ich liebe Programmieren.', additional_kwargs={'usage': {'prompt_tokens': 23, 'completion_tokens': 11, 'total_tokens': 34}, 'stop_reason': 'end_turn', 'model_id': 'anthropic.claude-3-sonnet-20240229-v1:0'}, response_metadata={'usage': {'prompt_tokens': 23, 'completion_tokens': 11, 'total_tokens': 34}, 'stop_reason': 'end_turn', 'model_id': 'anthropic.claude-3-sonnet-20240229-v1:0'}, id='run-5ad005ce-9f31-4670-baa0-9373d418698a-0', usage_metadata={'input_tokens': 23, 'output_tokens': 11, 'total_tokens': 34})
 ```
-
 
 ## ***Beta***: Bedrock Converse API
 
 AWS has recently recently the Bedrock Converse API which provides a unified conversational interface for Bedrock models. This API does not yet support custom models. You can see a list of all [models that are supported here](https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html). To improve reliability the ChatBedrock integration will switch to using the Bedrock Converse API as soon as it has feature parity with the existing Bedrock API. Until then a separate [ChatBedrockConverse](https://api.python.langchain.com/en/latest/chat_models/langchain_aws.chat_models.bedrock_converse.ChatBedrockConverse.html#langchain_aws.chat_models.bedrock_converse.ChatBedrockConverse) integration has been released in beta for users who do not need to use custom models.
 
 You can use it like so:
-
 
 ```python
 from langchain_aws import ChatBedrockConverse
@@ -155,18 +142,15 @@ llm.invoke(messages)
   warn_beta(
 ```
 
-
 ```output
 AIMessage(content="Voici la traduction en français :\n\nJ'aime la programmation.", response_metadata={'ResponseMetadata': {'RequestId': '122fb1c8-c3c5-4b06-941e-c95d210bfbc7', 'HTTPStatusCode': 200, 'HTTPHeaders': {'date': 'Mon, 01 Jul 2024 21:48:25 GMT', 'content-type': 'application/json', 'content-length': '243', 'connection': 'keep-alive', 'x-amzn-requestid': '122fb1c8-c3c5-4b06-941e-c95d210bfbc7'}, 'RetryAttempts': 0}, 'stopReason': 'end_turn', 'metrics': {'latencyMs': 830}}, id='run-0e3df22f-fcd8-4fbb-a4fb-565227e7e430-0', usage_metadata={'input_tokens': 29, 'output_tokens': 21, 'total_tokens': 50})
 ```
-
 
 ## API reference
 
 For detailed documentation of all ChatBedrock features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_aws.chat_models.bedrock.ChatBedrock.html
 
 For detailed documentation of all ChatBedrockConverse features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_aws.chat_models.bedrock_converse.ChatBedrockConverse.html
-
 
 ## Related
 

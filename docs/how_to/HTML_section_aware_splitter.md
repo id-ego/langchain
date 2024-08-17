@@ -14,7 +14,6 @@ Use `xslt_path` to provide an absolute path to transform the HTML so that it can
 ## Usage examples
 ### 1) How to split HTML strings:
 
-
 ```python
 <!--IMPORTS:[{"imported": "HTMLSectionSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/html/langchain_text_splitters.html.HTMLSectionSplitter.html", "title": "How to split by HTML sections"}]-->
 from langchain_text_splitters import HTMLSectionSplitter
@@ -52,19 +51,15 @@ html_header_splits = html_splitter.split_text(html_string)
 html_header_splits
 ```
 
-
-
 ```output
 [Document(page_content='Foo \n Some intro text about Foo.', metadata={'Header 1': 'Foo'}),
  Document(page_content='Bar main section \n Some intro text about Bar. \n Bar subsection 1 \n Some text about the first subtopic of Bar. \n Bar subsection 2 \n Some text about the second subtopic of Bar.', metadata={'Header 2': 'Bar main section'}),
  Document(page_content='Baz \n Some text about Baz \n \n \n Some concluding text about Foo', metadata={'Header 2': 'Baz'})]
 ```
 
-
 ### 2) How to constrain chunk sizes:
 
 `HTMLSectionSplitter` can be used with other text splitters as part of a chunking pipeline. Internally, it uses the `RecursiveCharacterTextSplitter` when the section size is larger than the chunk size. It also considers the font size of the text to determine whether it is a section or not based on the determined font size threshold.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to split by HTML sections"}]-->
@@ -117,8 +112,6 @@ text_splitter = RecursiveCharacterTextSplitter(
 splits = text_splitter.split_documents(html_header_splits)
 splits
 ```
-
-
 
 ```output
 [Document(page_content='Foo \n Some intro text about Foo.', metadata={'Header 1': 'Foo'}),

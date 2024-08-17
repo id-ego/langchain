@@ -7,21 +7,20 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 > Recall, understand, and extract data from chat histories. Power personalized AI experiences.
 
 > [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-> With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-> while also reducing hallucinations, latency, and cost.
+With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
+while also reducing hallucinations, latency, and cost.
 
 > See [Zep Cloud Installation Guide](https://help.getzep.com/sdks)
 
 ## Usage
 
-In the examples below, we're using Zep's auto-embedding feature which automatically embeds documents on the Zep server 
+In the examples below, we're using Zep's auto-embedding feature which automatically embeds documents on the Zep server
 using low-latency embedding models.
 
 ## Note
 - These examples use Zep's async interfaces. Call sync interfaces by removing the `a` prefix from the method names.
 
 ## Load or create a Collection from documents
-
 
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Zep Cloud"}, {"imported": "ZepCloudVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.zep_cloud.ZepCloudVectorStore.html", "title": "Zep Cloud"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Zep Cloud"}]-->
@@ -53,7 +52,6 @@ vs = ZepCloudVectorStore.from_documents(
 )
 ```
 
-
 ```python
 # wait for the collection embedding to complete
 
@@ -82,7 +80,6 @@ await wait_for_ready(collection_name)
 Embedding status: 401/401 documents embedded
 ```
 ## Simarility Search Query over the Collection
-
 
 ```python
 # query it
@@ -129,7 +126,6 @@ inadequate one) of the immense extent of numerical tables which it has  ->  0.78
 
 Zep offers native, hardware-accelerated MMR re-ranking of search results.
 
-
 ```python
 query = "what is the structure of our solar system?"
 docs = await vs.asearch(query, search_type="mmr", k=3)
@@ -170,7 +166,6 @@ the astronomer and navigator. We feel, nevertheless, that the truly
 
 Use a metadata filter to narrow down results. First, load another book: "Adventures of Sherlock Holmes"
 
-
 ```python
 # Let's add more content to the existing Collection
 article_url = "https://www.gutenberg.org/files/48320/48320-0.txt"
@@ -198,7 +193,6 @@ Embedding status: 1431/1691 documents embedded
 Embedding status: 1691/1691 documents embedded
 ```
 We see results from both books. Note the `source` metadata
-
 
 ```python
 query = "Was he interested in astronomy?"
@@ -237,7 +231,6 @@ our regret, that a discovery of such paramount practical value, in a  ->  {'sour
 ====
 ```
 Now, we set up a filter
-
 
 ```python
 filter = {

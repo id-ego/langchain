@@ -7,33 +7,25 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 [Ionic](https://www.ioniccommerce.com/) is a plug and play ecommerce marketplace for AI Assistants. By including the [Ionic Tool](https://github.com/ioniccommerce/ionic_langchain) in your agent, you are effortlessly providing your users with the ability to shop and transact directly within your agent, and you'll get a cut of the transaction.
 
-
 This is a basic jupyter notebook demonstrating how to integrate the Ionic Tool into your agent. For more information on setting up your Agent with Ionic, see the Ionic [documentation](https://docs.ioniccommerce.com/introduction).
 
 This Jupyter Notebook demonstrates how to use the Ionic tool with an Agent.
 
 **Note: The ionic-langchain package is maintained by the Ionic Commerce team, not the LangChain maintainers.**
 
-
-
----
-
-
+* * *
 
 ## Setup
-
 
 ```python
 pip install langchain langchain_openai langchainhub
 ```
-
 
 ```python
 pip install ionic-langchain
 ```
 
 ## Setup Agent
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Ionic Shopping Tool"}, {"imported": "Tool", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Ionic Shopping Tool"}, {"imported": "create_react_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.react.agent.create_react_agent.html", "title": "Ionic Shopping Tool"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Ionic Shopping Tool"}]-->
@@ -99,14 +91,12 @@ agent_executor = AgentExecutor(
 
 ## Run
 
-
 ```python
 input = (
     "I'm looking for a new 4k monitor can you find me some options for less than $1000"
 )
 agent_executor.invoke({"input": input})
 ```
-
 
 ## Related
 

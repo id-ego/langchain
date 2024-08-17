@@ -13,7 +13,6 @@ It supports batched generation.
 
 **Warning - this module is still experimental**
 
-
 ```python
 %pip install --upgrade --quiet  lm-format-enforcer langchain-huggingface > /dev/null
 ```
@@ -22,8 +21,6 @@ It supports batched generation.
 
 We will start by setting up a LLama2 model and initializing our desired output format.
 Note that Llama2 [requires approval for access to the models](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf).
-
-
 
 ```python
 import logging
@@ -39,7 +36,6 @@ class PlayerInformation(BaseModel):
     num_seasons_in_nba: int
     year_of_birth: int
 ```
-
 
 ```python
 import torch
@@ -75,7 +71,6 @@ Downloading (…)okenizer_config.json: 100%|██████████| 1.62
 
 First, let's establish a qualitative baseline by checking the output of the model without structured decoding.
 
-
 ```python
 DEFAULT_SYSTEM_PROMPT = """\
 You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.\
@@ -99,7 +94,6 @@ def get_prompt(player_name):
         )
     )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFacePipeline", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "LM Format Enforcer"}]-->
@@ -154,7 +148,6 @@ print(generated)
 
 Let's try that again, now providing a the Action input's JSON Schema to the model.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LMFormatEnforcer", "source": "langchain_experimental.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_experimental.llms.lmformatenforcer_decoder.LMFormatEnforcer.html", "title": "LM Format Enforcer"}]-->
 from langchain_experimental.llms import LMFormatEnforcer
@@ -176,7 +169,6 @@ This means that if you need to format a JSON for an API call or similar, if you 
 
 LMFormatEnforcer also works in batch mode:
 
-
 ```python
 prompts = [
     get_prompt(name) for name in ["Michael Jordan", "Kareem Abdul Jabbar", "Tim Duncan"]
@@ -193,7 +185,6 @@ for generation in results.generations:
 ## Regular Expressions
 
 LMFormatEnforcer has an additional mode, which uses regular expressions to filter the output. Note that it uses [interegular](https://pypi.org/project/interegular/) under the hood, therefore it does not support 100% of the regex capabilities.
-
 
 ```python
 question_prompt = "When was Michael Jordan Born? Please answer in mm/dd/yyyy format."
@@ -216,7 +207,6 @@ Enforced Output:
  In mm/dd/yyyy format, Michael Jordan was born in 02/17/1963
 ```
 As in the previous example, the output conforms to the regular expression and contains the correct information.
-
 
 ## Related
 

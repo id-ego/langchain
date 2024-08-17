@@ -5,10 +5,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Cassandra Database Toolkit
 
->`Apache Cassandra®` is a widely used database for storing transactional application data. The introduction of functions and >tooling in Large Language Models has opened up some exciting use cases for existing data in Generative AI applications. 
+> `Apache Cassandra®` is a widely used database for storing transactional application data. The introduction of functions and >tooling in Large Language Models has opened up some exciting use cases for existing data in Generative AI applications. 
 
->The `Cassandra Database` toolkit enables AI engineers to integrate agents with Cassandra data efficiently, offering 
->the following features: 
+> The `Cassandra Database` toolkit enables AI engineers to integrate agents with Cassandra data efficiently, offering
+the following features: 
 > - Fast data access through optimized queries. Most queries should run in single-digit ms or less.
 > - Schema introspection to enhance LLM reasoning capabilities
 > - Compatibility with various Cassandra deployments, including Apache Cassandra®, DataStax Enterprise™, and DataStax Astra™
@@ -17,28 +17,28 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 For more information on creating a Cassandra DB agent see the [CQL agent cookbook](https://github.com/langchain-ai/langchain/blob/master/cookbook/cql_agent.ipynb)
 
 ## Quick Start
- - Install the `cassio` library
- - Set environment variables for the Cassandra database you are connecting to
- - Initialize `CassandraDatabase`
- - Pass the tools to your agent with `toolkit.get_tools()`
- - Sit back and watch it do all your work for you
+- Install the `cassio` library
+- Set environment variables for the Cassandra database you are connecting to
+- Initialize `CassandraDatabase`
+- Pass the tools to your agent with `toolkit.get_tools()`
+- Sit back and watch it do all your work for you
 
 ## Theory of Operation
 
 `Cassandra Query Language (CQL)` is the primary *human-centric* way of interacting with a Cassandra database. While offering some flexibility when generating queries, it requires knowledge of Cassandra data modeling best practices. LLM function calling gives an agent the ability to reason and then choose a tool to satisfy the request. Agents using LLMs should reason using Cassandra-specific logic when choosing the appropriate toolkit or chain of toolkits. This reduces the randomness introduced when LLMs are forced to provide a top-down solution. Do you want an LLM to have complete unfettered access to your database? Yeah. Probably not. To accomplish this, we provide a prompt for use when constructing questions for the agent: 
 
-You are an Apache Cassandra expert query analysis bot with the following features 
+You are an Apache Cassandra expert query analysis bot with the following features
 and rules:
- - You will take a question from the end user about finding specific 
-   data in the database.
- - You will examine the schema of the database and create a query path. 
- - You will provide the user with the correct query to find the data they are looking 
-   for, showing the steps provided by the query path.
- - You will use best practices for querying Apache Cassandra using partition keys 
-   and clustering columns.
- - Avoid using ALLOW FILTERING in the query.
- - The goal is to find a query path, so it may take querying other tables to get 
-   to the final answer. 
+- You will take a question from the end user about finding specific
+data in the database.
+- You will examine the schema of the database and create a query path. 
+- You will provide the user with the correct query to find the data they are looking
+for, showing the steps provided by the query path.
+- You will use best practices for querying Apache Cassandra using partition keys
+and clustering columns.
+- Avoid using ALLOW FILTERING in the query.
+- The goal is to find a query path, so it may take querying other tables to get
+to the final answer. 
 
 The following is an example of a query path in JSON format:
 
@@ -114,13 +114,11 @@ OPENAI_API_KEY=sk-....
 
 (You may also modify the below code to directly connect with `cassio`.)
 
-
 ```python
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Cassandra Database Toolkit"}, {"imported": "create_openai_tools_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_tools.base.create_openai_tools_agent.html", "title": "Cassandra Database Toolkit"}, {"imported": "CassandraDatabaseToolkit", "source": "langchain_community.agent_toolkits.cassandra_database.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.cassandra_database.toolkit.CassandraDatabaseToolkit.html", "title": "Cassandra Database Toolkit"}, {"imported": "CassandraDatabase", "source": "langchain_community.utilities.cassandra_database", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.cassandra_database.CassandraDatabase.html", "title": "Cassandra Database Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Cassandra Database Toolkit"}]-->
@@ -140,7 +138,6 @@ from langchain_openai import ChatOpenAI
 
 ## Connect to a Cassandra Database
 
-
 ```python
 cassio.init(auto=True)
 session = cassio.config.resolve_session()
@@ -149,7 +146,6 @@ if not session:
         "Check environment configuration or manually configure cassio connection parameters"
     )
 ```
-
 
 ```python
 # Test data pep
@@ -223,13 +219,11 @@ session.execute(
 session.set_keyspace("langchain_agent_test")
 ```
 
-
 ```python
 # Create a CassandraDatabase instance
 # Uses the cassio session to connect to the database
 db = CassandraDatabase()
 ```
-
 
 ```python
 # Choose the LLM that will drive the agent
@@ -271,7 +265,6 @@ prompt = hub.pull("hwchase17/openai-tools-agent")
 # Construct the OpenAI Tools agent
 agent = create_openai_tools_agent(llm, tools, prompt)
 ```
-
 
 ```python
 input = (
@@ -394,3 +387,4 @@ Following this query path, we found that the user with the user_id `522b1fe2-2e3
 
 - Tool [conceptual guide](/docs/concepts/#tools)
 - Tool [how-to guides](/docs/how_to/#tools)
+```

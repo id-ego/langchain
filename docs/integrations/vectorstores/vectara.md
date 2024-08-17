@@ -13,7 +13,7 @@ Vectara serverless RAG-as-a-service provides all the components of RAG behind an
 3. The [Boomerang](https://vectara.com/how-boomerang-takes-retrieval-augmented-generation-to-the-next-level-via-grounded-generation/) embeddings model.
 4. Its own internal vector database where text chunks and embedding vectors are stored.
 5. A query service that automatically encodes the query into embedding, and retrieves the most relevant text segments (including support for [Hybrid Search](https://docs.vectara.com/docs/api-reference/search-apis/lexical-matching) and [MMR](https://vectara.com/get-diverse-results-and-comprehensive-summaries-with-vectaras-mmr-reranker/))
-7. An LLM to for creating a [generative summary](https://docs.vectara.com/docs/learn/grounded-generation/grounded-generation-overview), based on the retrieved documents (context), including citations.
+6. An LLM to for creating a [generative summary](https://docs.vectara.com/docs/learn/grounded-generation/grounded-generation-overview), based on the retrieved documents (context), including citations.
 
 See the [Vectara API documentation](https://docs.vectara.com/docs/) for more information on how to use the API.
 
@@ -32,7 +32,7 @@ To use LangChain with Vectara, you'll need to have these three values: `customer
 You can provide those to LangChain in two ways:
 
 1. Include in your environment these three variables: `VECTARA_CUSTOMER_ID`, `VECTARA_CORPUS_ID` and `VECTARA_API_KEY`.
-
+   
    For example, you can set these variables using os.environ and getpass as follows:
 
 ```python
@@ -56,7 +56,6 @@ vectara = Vectara(
 
 In this notebook we assume they are provided in the environment.
 
-
 ```python
 <!--IMPORTS:[{"imported": "Vectara", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.Vectara.html", "title": "Vectara"}, {"imported": "RerankConfig", "source": "langchain_community.vectorstores.vectara", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.RerankConfig.html", "title": "Vectara"}, {"imported": "SummaryConfig", "source": "langchain_community.vectorstores.vectara", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.SummaryConfig.html", "title": "Vectara"}, {"imported": "VectaraQueryConfig", "source": "langchain_community.vectorstores.vectara", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.VectaraQueryConfig.html", "title": "Vectara"}]-->
 import os
@@ -79,7 +78,6 @@ Note that we use the `from_files` interface which does not require any local pro
 
 In this case it uses a `.txt` file but the same works for many other [file types](https://docs.vectara.com/docs/api-reference/indexing-apis/file-upload/file-upload-filetypes).
 
-
 ```python
 vectara = Vectara.from_files(["state_of_the_union.txt"])
 ```
@@ -92,7 +90,6 @@ We now create a `VectaraQueryConfig` object to control the retrieval and summari
 * We want the top-10 results, with hybrid search configured with a value of 0.025
 
 Using this configuration, let's create a LangChain `Runnable` object that encpasulates the full Vectara RAG pipeline, using the `as_rag` method:
-
 
 ```python
 summary_config = SummaryConfig(is_enabled=True, max_results=7, response_lang="eng")
@@ -107,15 +104,11 @@ rag = vectara.as_rag(config)
 rag.invoke(query_str)["answer"]
 ```
 
-
-
 ```output
 "Biden addressed various topics in his statements. He highlighted the need to confront Putin by building a coalition of nations[1]. He also expressed commitment to investigating the impact of burn pits on soldiers' health, including his son's case[2]. Additionally, Biden outlined a plan to fight inflation by cutting prescription drug costs[3]. He emphasized the importance of continuing to combat COVID-19 and not just accepting living with it[4]. Furthermore, he discussed measures to weaken Russia economically and target Russian oligarchs[6]. Biden also advocated for passing the Equality Act to support LGBTQ+ Americans and condemned state laws targeting transgender individuals[7]."
 ```
 
-
 We can also use the streaming interface like this:
-
 
 ```python
 output = {}
@@ -139,7 +132,6 @@ Vectara created [HHEM](https://huggingface.co/vectara/hallucination_evaluation_m
 
 As part of the Vectara RAG, the "Factual Consistency Score" (or FCS), which is an improved version of the open source HHEM is made available via the API. This is automatically included in the output of the RAG pipeline
 
-
 ```python
 summary_config = SummaryConfig(is_enabled=True, max_results=5, response_lang="eng")
 rerank_config = RerankConfig(reranker="mmr", rerank_k=50, mmr_diversity_bias=0.1)
@@ -162,7 +154,6 @@ The Vectara component can also be used just as a retriever.
 
 In this case, it behaves just like any other LangChain retriever. The main use of this mode is for semantic search, and in this case we disable summarization:
 
-
 ```python
 config.summary_config.is_enabled = False
 config.k = 3
@@ -170,17 +161,13 @@ retriever = vectara.as_retriever(config=config)
 retriever.invoke(query_str)
 ```
 
-
-
 ```output
 [Document(page_content='He thought the West and NATO wouldn’t respond. And he thought he could divide us at home. We were ready.  Here is what we did. We prepared extensively and carefully. We spent months building a coalition of other freedom-loving nations from Europe and the Americas to Asia and Africa to confront Putin.', metadata={'lang': 'eng', 'section': '1', 'offset': '2160', 'len': '36', 'X-TIKA:Parsed-By': 'org.apache.tika.parser.csv.TextAndCSVParser', 'Content-Encoding': 'UTF-8', 'Content-Type': 'text/plain; charset=UTF-8', 'source': 'vectara'}),
  Document(page_content='When they came home, many of the world’s fittest and best trained warriors were never the same. Dizziness. \n\nA cancer that would put them in a flag-draped coffin. I know. \n\nOne of those soldiers was my son Major Beau Biden. We don’t know for sure if a burn pit was the cause of his brain cancer, or the diseases of so many of our troops. But I’m committed to finding out everything we can.', metadata={'lang': 'eng', 'section': '1', 'offset': '34652', 'len': '60', 'X-TIKA:Parsed-By': 'org.apache.tika.parser.csv.TextAndCSVParser', 'Content-Encoding': 'UTF-8', 'Content-Type': 'text/plain; charset=UTF-8', 'source': 'vectara'}),
  Document(page_content='But cancer from prolonged exposure to burn pits ravaged Heath’s lungs and body. Danielle says Heath was a fighter to the very end. He didn’t know how to stop fighting, and neither did she. Through her pain she found purpose to demand we do better. Tonight, Danielle—we are.', metadata={'lang': 'eng', 'section': '1', 'offset': '35442', 'len': '57', 'X-TIKA:Parsed-By': 'org.apache.tika.parser.csv.TextAndCSVParser', 'Content-Encoding': 'UTF-8', 'Content-Type': 'text/plain; charset=UTF-8', 'source': 'vectara'})]
 ```
 
-
 For backwards compatibility, you can also enable summarization with a retriever, in which case the summary is added as an additional Document object:
-
 
 ```python
 config.summary_config.is_enabled = True
@@ -189,8 +176,6 @@ retriever = vectara.as_retriever(config=config)
 retriever.invoke(query_str)
 ```
 
-
-
 ```output
 [Document(page_content='He thought the West and NATO wouldn’t respond. And he thought he could divide us at home. We were ready.  Here is what we did. We prepared extensively and carefully. We spent months building a coalition of other freedom-loving nations from Europe and the Americas to Asia and Africa to confront Putin.', metadata={'lang': 'eng', 'section': '1', 'offset': '2160', 'len': '36', 'X-TIKA:Parsed-By': 'org.apache.tika.parser.csv.TextAndCSVParser', 'Content-Encoding': 'UTF-8', 'Content-Type': 'text/plain; charset=UTF-8', 'source': 'vectara'}),
  Document(page_content='When they came home, many of the world’s fittest and best trained warriors were never the same. Dizziness. \n\nA cancer that would put them in a flag-draped coffin. I know. \n\nOne of those soldiers was my son Major Beau Biden. We don’t know for sure if a burn pit was the cause of his brain cancer, or the diseases of so many of our troops. But I’m committed to finding out everything we can.', metadata={'lang': 'eng', 'section': '1', 'offset': '34652', 'len': '60', 'X-TIKA:Parsed-By': 'org.apache.tika.parser.csv.TextAndCSVParser', 'Content-Encoding': 'UTF-8', 'Content-Type': 'text/plain; charset=UTF-8', 'source': 'vectara'}),
@@ -198,13 +183,11 @@ retriever.invoke(query_str)
  Document(page_content="Biden discussed various topics in his statements. He highlighted the importance of unity and preparation to confront challenges, such as building coalitions to address global issues [1]. Additionally, he shared personal stories about the impact of health issues on soldiers, including his son's experience with brain cancer possibly linked to burn pits [2]. Biden also outlined his plans to combat inflation by cutting prescription drug costs and emphasized the ongoing efforts to combat COVID-19, rejecting the idea of merely living with the virus [4, 5]. Overall, Biden's messages revolved around unity, healthcare challenges faced by soldiers, economic plans, and the ongoing fight against COVID-19.", metadata={'summary': True, 'fcs': 0.54751414})]
 ```
 
-
 ## Advanced LangChain query pre-processing with Vectara
 
 Vectara's "RAG as a service" does a lot of the heavy lifting in creating question answering or chatbot chains. The integration with LangChain provides the option to use additional capabilities such as query pre-processing  like `SelfQueryRetriever` or `MultiQueryRetriever`. Let's look at an example of using the [MultiQueryRetriever](https://python.langchain.com/docs/modules/data_connection/retrievers/MultiQueryRetriever).
 
 Since MQR uses an LLM we have to set that up - here we choose `ChatOpenAI`:
-
 
 ```python
 <!--IMPORTS:[{"imported": "MultiQueryRetriever", "source": "langchain.retrievers.multi_query", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.multi_query.MultiQueryRetriever.html", "title": "Vectara"}, {"imported": "ChatOpenAI", "source": "langchain_openai.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Vectara"}]-->
@@ -222,13 +205,9 @@ def get_summary(documents):
 (mqr | get_summary).invoke(query_str)
 ```
 
-
-
 ```output
 "Biden's statement highlighted his efforts to unite freedom-loving nations against Putin's aggression, sharing information in advance to counter Russian lies and hold Putin accountable[1]. Additionally, he emphasized his commitment to military families, like Danielle Robinson, and outlined plans for more affordable housing, Pre-K for 3- and 4-year-olds, and ensuring no additional taxes for those earning less than $400,000 a year[2][3]. The statement also touched on the readiness of the West and NATO to respond to Putin's actions, showcasing extensive preparation and coalition-building efforts[4]. Heath Robinson's story, a combat medic who succumbed to cancer from burn pits, was used to illustrate the resilience and fight for better conditions[5]."
 ```
-
-
 
 ## Related
 

@@ -5,17 +5,16 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Trello
 
->[Trello](https://www.atlassian.com/software/trello) is a web-based project management and collaboration tool that allows individuals and teams to organize and track their tasks and projects. It provides a visual interface known as a "board" where users can create lists and cards to represent their tasks and activities.
+> [Trello](https://www.atlassian.com/software/trello) is a web-based project management and collaboration tool that allows individuals and teams to organize and track their tasks and projects. It provides a visual interface known as a "board" where users can create lists and cards to represent their tasks and activities.
 
 The TrelloLoader allows you to load cards from a Trello board and is implemented on top of [py-trello](https://pypi.org/project/py-trello/)
 
 This currently supports `api_key/token` only.
 
 1. Credentials generation: https://trello.com/power-ups/admin/
-
 2. Click in the manual token generation link to get the token.
 
-To specify the API key and token you can either set the environment variables ``TRELLO_API_KEY`` and ``TRELLO_TOKEN`` or you can pass ``api_key`` and ``token`` directly into the `from_credentials` convenience constructor method.
+To specify the API key and token you can either set the environment variables `TRELLO_API_KEY` and `TRELLO_TOKEN` or you can pass `api_key` and `token` directly into the `from_credentials` convenience constructor method.
 
 This loader allows you to provide the board name to pull in the corresponding cards into Document objects.
 
@@ -33,13 +32,9 @@ You can also specify several load parameters to include / remove different field
 
 By default all card fields are included for the full text page_content and metadata accordinly.
 
-
-
-
 ```python
 %pip install --upgrade --quiet  py-trello beautifulsoup4 lxml
 ```
-
 
 ```python
 # If you have already set the API key and token using environment variables,
@@ -113,7 +108,6 @@ documents = loader.load()
 print("Document: " + documents[0].page_content)
 print(documents[0].metadata)
 ```
-
 
 ## Related
 

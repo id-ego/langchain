@@ -22,7 +22,6 @@ There are three main methods for debugging:
 | See "important" events | ✅            | ❌          | ✅                 |
 | Runs Locally           | ✅            | ✅          | ❌                 |
 
-
 ## Tracing
 
 Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls.
@@ -51,9 +50,8 @@ Let's suppose we have an agent, and want to visualize the actions it takes and t
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="llm"
+customVarName="llm"
 />
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to debug your LLM apps"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to debug your LLM apps"}, {"imported": "TavilySearchResults", "source": "langchain_community.tools.tavily_search", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.tavily_search.tool.TavilySearchResults.html", "title": "How to debug your LLM apps"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to debug your LLM apps"}]-->
@@ -84,13 +82,10 @@ agent_executor.invoke(
 )
 ```
 
-
-
 ```output
 {'input': 'Who directed the 2023 film Oppenheimer and what is their age in days?',
  'output': 'The 2023 film "Oppenheimer" was directed by Christopher Nolan.\n\nTo calculate Christopher Nolan\'s age in days, we first need his birthdate, which is July 30, 1970. Let\'s calculate his age in days from his birthdate to today\'s date, December 7, 2023.\n\n1. Calculate the total number of days from July 30, 1970, to December 7, 2023.\n2. Nolan was born on July 30, 1970. From July 30, 1970, to July 30, 2023, is 53 years.\n3. From July 30, 2023, to December 7, 2023, is 130 days.\n\nNow, calculate the total days:\n- 53 years = 53 x 365 = 19,345 days\n- Adding leap years from 1970 to 2023: There are 13 leap years (1972, 1976, 1980, 1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012, 2016, 2020). So, add 13 days.\n- Total days from years and leap years = 19,345 + 13 = 19,358 days\n- Add the days from July 30, 2023, to December 7, 2023 = 130 days\n\nTotal age in days = 19,358 + 130 = 19,488 days\n\nChristopher Nolan is 19,488 days old as of December 7, 2023.'}
 ```
-
 
 We don't get much output, but since we set up LangSmith we can easily see what happened under the hood:
 
@@ -104,11 +99,9 @@ There are a number of ways to enable printing at varying degrees of verbosity.
 
 Note: These still work even with LangSmith enabled, so you can have both turned on and running at the same time
 
-
 ### `set_verbose(True)`
 
 Setting the `verbose` flag will print out inputs and outputs in a slightly more readable format and will skip logging certain raw outputs (like the token usage stats for an LLM call) so that you can focus on application logic.
-
 
 ```python
 <!--IMPORTS:[{"imported": "set_verbose", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_verbose.html", "title": "How to debug your LLM apps"}]-->
@@ -168,17 +161,14 @@ Therefore, Christopher Nolan is 19,488 days old as of December 7, 2023.[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'Who directed the 2023 film Oppenheimer and what is their age in days?',
  'output': "I am currently unable to retrieve the exact birth date of Christopher Nolan from the sources available. However, it is widely known that he was born on July 30, 1970. Using this date, I can calculate his age in days as of today.\n\nLet's calculate:\n\n- Christopher Nolan's birth date: July 30, 1970.\n- Today's date: December 7, 2023.\n\nThe number of days between these two dates can be calculated as follows:\n\n1. From July 30, 1970, to July 30, 2023, is 53 years.\n2. From July 30, 2023, to December 7, 2023, is 130 days.\n\nCalculating the total days for 53 years (considering leap years):\n- 53 years × 365 days/year = 19,345 days\n- Adding leap years (1972, 1976, ..., 2020, 2024 - 13 leap years): 13 days\n\nTotal days from birth until July 30, 2023: 19,345 + 13 = 19,358 days\nAdding the days from July 30, 2023, to December 7, 2023: 130 days\n\nTotal age in days as of December 7, 2023: 19,358 + 130 = 19,488 days.\n\nTherefore, Christopher Nolan is 19,488 days old as of December 7, 2023."}
 ```
 
-
 ### `set_debug(True)`
 
 Setting the global `debug` flag will cause all LangChain components with callback support (chains, models, agents, tools, retrievers) to print the inputs they receive and outputs they generate. This is the most verbose setting and will fully log raw inputs and outputs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "set_debug", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_debug.html", "title": "How to debug your LLM apps"}]-->
@@ -425,7 +415,6 @@ Error in ConsoleCallbackHandler.on_tool_end callback: AttributeError("'list' obj
   "output": "The 2023 film \"Oppenheimer\" was directed by Christopher Nolan.\n\nTo calculate Christopher Nolan's age in days, we first need his birth date, which is July 30, 1970. Let's calculate his age in days from his birth date to today's date, December 7, 2023.\n\n1. Calculate the total number of days from July 30, 1970, to December 7, 2023.\n2. Christopher Nolan was born on July 30, 1970. From July 30, 1970, to July 30, 2023, is 53 years.\n3. From July 30, 2023, to December 7, 2023, is 130 days.\n\nNow, calculate the total days for 53 years:\n- Each year has 365 days, so 53 years × 365 days/year = 19,345 days.\n- Adding the leap years from 1970 to 2023: 1972, 1976, 1980, 1984, 1988, 1992, 1996, 2000, 2004, 2008, 2012, 2016, 2020, and 2024 (up to February). This gives us 14 leap years.\n- Total days from leap years: 14 days.\n\nAdding all together:\n- Total days = 19,345 days (from years) + 14 days (from leap years) + 130 days (from July 30, 2023, to December 7, 2023) = 19,489 days.\n\nTherefore, as of December 7, 2023, Christopher Nolan is 19,489 days old."
 }
 ```
-
 
 ```output
 {'input': 'Who directed the 2023 film Oppenheimer and what is their age in days?',

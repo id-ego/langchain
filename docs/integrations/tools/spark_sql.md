@@ -11,14 +11,12 @@ This notebook shows how to use agents to interact with `Spark SQL`. Similar to [
 
 ## Initialization
 
-
 ```python
 <!--IMPORTS:[{"imported": "SparkSQLToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.spark_sql.toolkit.SparkSQLToolkit.html", "title": "Spark SQL Toolkit"}, {"imported": "create_spark_sql_agent", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.spark_sql.base.create_spark_sql_agent.html", "title": "Spark SQL Toolkit"}, {"imported": "SparkSQL", "source": "langchain_community.utilities.spark_sql", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.spark_sql.SparkSQL.html", "title": "Spark SQL Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Spark SQL Toolkit"}]-->
 from langchain_community.agent_toolkits import SparkSQLToolkit, create_spark_sql_agent
 from langchain_community.utilities.spark_sql import SparkSQL
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 from pyspark.sql import SparkSession
@@ -75,7 +73,6 @@ agent_executor = create_spark_sql_agent(llm=llm, toolkit=toolkit, verbose=True)
 
 ## Example: describing a table
 
-
 ```python
 agent_executor.run("Describe the titanic table")
 ```
@@ -121,14 +118,11 @@ Final Answer: The titanic table has the following columns: PassengerId (INT), Su
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The titanic table has the following columns: PassengerId (INT), Survived (INT), Pclass (INT), Name (STRING), Sex (STRING), Age (DOUBLE), SibSp (INT), Parch (INT), Ticket (STRING), Fare (DOUBLE), Cabin (STRING), and Embarked (STRING). Here are some sample rows from the table: \n\n1. PassengerId: 1, Survived: 0, Pclass: 3, Name: Braund, Mr. Owen Harris, Sex: male, Age: 22.0, SibSp: 1, Parch: 0, Ticket: A/5 21171, Fare: 7.25, Cabin: None, Embarked: S\n2. PassengerId: 2, Survived: 1, Pclass: 1, Name: Cumings, Mrs. John Bradley (Florence Briggs Thayer), Sex: female, Age: 38.0, SibSp: 1, Parch: 0, Ticket: PC 17599, Fare: 71.2833, Cabin: C85, Embarked: C\n3. PassengerId: 3, Survived: 1, Pclass: 3, Name: Heikkinen, Miss. Laina, Sex: female, Age: 26.0, SibSp: 0, Parch: 0, Ticket: STON/O2. 3101282, Fare: 7.925, Cabin: None, Embarked: S'
 ```
 
-
 ## Example: running queries
-
 
 ```python
 agent_executor.run("whats the square root of the average age?")
@@ -181,12 +175,9 @@ Final Answer: The square root of the average age is approximately 5.45.[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The square root of the average age is approximately 5.45.'
 ```
-
-
 
 ```python
 agent_executor.run("What's the name of the oldest survived passenger?")
@@ -237,12 +228,9 @@ Final Answer: The oldest survived passenger is Barkworth, Mr. Algernon Henry Wil
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The oldest survived passenger is Barkworth, Mr. Algernon Henry Wilson, who was 80 years old.'
 ```
-
-
 
 ## Related
 

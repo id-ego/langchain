@@ -5,12 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # scikit-learn
 
->[scikit-learn](https://scikit-learn.org/stable/) is an open-source collection of machine learning algorithms, including some implementations of the [k nearest neighbors](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html). `SKLearnVectorStore` wraps this implementation and adds the possibility to persist the vector store in json, bson (binary json) or Apache Parquet format.
+> [scikit-learn](https://scikit-learn.org/stable/) is an open-source collection of machine learning algorithms, including some implementations of the [k nearest neighbors](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html). `SKLearnVectorStore` wraps this implementation and adds the possibility to persist the vector store in json, bson (binary json) or Apache Parquet format.
 
 This notebook shows how to use the `SKLearnVectorStore` vector database.
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
-
 
 ```python
 %pip install --upgrade --quiet  scikit-learn
@@ -24,7 +23,6 @@ You'll need to install `langchain-community` with `pip install -qU langchain-com
 
 To use OpenAI embeddings, you will need an OpenAI key. You can get one at https://platform.openai.com/account/api-keys or feel free to use any other embeddings.
 
-
 ```python
 import os
 from getpass import getpass
@@ -35,7 +33,6 @@ os.environ["OPENAI_API_KEY"] = getpass("Enter your OpenAI key:")
 ## Basic usage
 
 ### Load a sample document corpus
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "scikit-learn"}, {"imported": "SKLearnVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.sklearn.SKLearnVectorStore.html", "title": "scikit-learn"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "scikit-learn"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "scikit-learn"}]-->
@@ -52,7 +49,6 @@ embeddings = OpenAIEmbeddings()
 ```
 
 ### Create the SKLearnVectorStore, index the document corpus and run a sample query
-
 
 ```python
 import tempfile
@@ -80,7 +76,6 @@ One of the most serious constitutional responsibilities a President has is nomin
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
 ## Saving and loading a vector store
-
 
 ```python
 vector_store.persist()
@@ -115,11 +110,9 @@ And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketan
 ```
 ## Clean-up
 
-
 ```python
 os.remove(persist_path)
 ```
-
 
 ## Related
 

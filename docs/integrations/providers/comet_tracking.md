@@ -5,8 +5,8 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Comet
 
->[Comet](https://www.comet.com/) machine learning platform integrates with your existing infrastructure
->and tools so you can manage, visualize, and optimize models—from training runs to production monitoring
+> [Comet](https://www.comet.com/) machine learning platform integrates with your existing infrastructure
+and tools so you can manage, visualize, and optimize models—from training runs to production monitoring
 
 ![](https://user-images.githubusercontent.com/7529846/230328046-a8b18c51-12e3-4617-9b39-97614a571a2d.png)
 
@@ -16,13 +16,12 @@ In this guide we will demonstrate how to track your Langchain Experiments, Evalu
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
+
 **Example Project:** [Comet with LangChain](https://www.comet.com/examples/comet-example-langchain/view/b5ZThK6OFdhKWVSP3fDfRtrNF/panels?utm_source=langchain&utm_medium=referral&utm_campaign=comet_notebook)
 
 ![](https://user-images.githubusercontent.com/7529846/230326720-a9711435-9c6f-4edb-a707-94b67271ab25.png)
 
-
 ### Install Comet and Dependencies
-
 
 ```python
 %pip install --upgrade --quiet  comet_ml langchain langchain-openai google-search-results spacy textstat pandas
@@ -35,7 +34,6 @@ In this guide we will demonstrate how to track your Langchain Experiments, Evalu
 
 You can grab your [Comet API Key here](https://www.comet.com/signup?utm_source=langchain&utm_medium=referral&utm_campaign=comet_notebook) or click the link after initializing Comet
 
-
 ```python
 import comet_ml
 
@@ -46,7 +44,6 @@ comet_ml.init(project_name="comet-example-langchain")
 
 You will need an [OpenAI API Key](https://platform.openai.com/account/api-keys) and a [SerpAPI API Key](https://serpapi.com/dashboard) to run the following examples
 
-
 ```python
 import os
 
@@ -56,7 +53,6 @@ os.environ["SERPAPI_API_KEY"] = "..."
 ```
 
 ### Scenario 1: Using just an LLM
-
 
 ```python
 <!--IMPORTS:[{"imported": "CometCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.comet_ml_callback.CometCallbackHandler.html", "title": "Comet"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Comet"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Comet"}]-->
@@ -80,7 +76,6 @@ comet_callback.flush_tracker(llm, finish=True)
 ```
 
 ### Scenario 2: Using an LLM in a Chain
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Comet"}, {"imported": "CometCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.comet_ml_callback.CometCallbackHandler.html", "title": "Comet"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Comet"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Comet"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Comet"}]-->
@@ -110,8 +105,7 @@ print(synopsis_chain.apply(test_prompts))
 comet_callback.flush_tracker(synopsis_chain, finish=True)
 ```
 
-### Scenario 3: Using An Agent with Tools 
-
+### Scenario 3: Using An Agent with Tools
 
 ```python
 <!--IMPORTS:[{"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Comet"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Comet"}, {"imported": "CometCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.comet_ml_callback.CometCallbackHandler.html", "title": "Comet"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Comet"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Comet"}]-->
@@ -147,14 +141,11 @@ comet_callback.flush_tracker(agent, finish=True)
 
 The `CometCallbackManager` also allows you to define and use Custom Evaluation Metrics to assess generated outputs from your model. Let's take a look at how this works. 
 
-
 In the snippet below, we will use the [ROUGE](https://huggingface.co/spaces/evaluate-metric/rouge) metric to evaluate the quality of a generated summary of an input prompt. 
-
 
 ```python
 %pip install --upgrade --quiet  rouge-score
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Comet"}, {"imported": "CometCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.comet_ml_callback.CometCallbackHandler.html", "title": "Comet"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Comet"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Comet"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Comet"}]-->
@@ -237,8 +228,6 @@ comet_callback.flush_tracker(synopsis_chain, finish=True)
 There is another integration with Comet:
 
 See an [example](/docs/integrations/callbacks/comet_tracing).
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "CometTracer", "source": "langchain_community.callbacks.tracers.comet", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.tracers.comet.CometTracer.html", "title": "Comet"}]-->

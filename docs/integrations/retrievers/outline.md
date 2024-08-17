@@ -5,19 +5,17 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Outline
 
->[Outline](https://www.getoutline.com/) is an open-source collaborative knowledge base platform designed for team information sharing.
+> [Outline](https://www.getoutline.com/) is an open-source collaborative knowledge base platform designed for team information sharing.
 
 This notebook shows how to retrieve documents from your Outline instance into the Document format that is used downstream.
 
 ## Setup
-
 
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
 ```
 
 You first need to [create an api key](https://www.getoutline.com/developers#section/Authentication) for your Outline instance. Then you need to set the following environment variables:
-
 
 ```python
 import os
@@ -37,23 +35,18 @@ os.environ["OUTLINE_INSTANCE_URL"] = "https://app.getoutline.com"
 
 ### Running retriever
 
-
 ```python
 <!--IMPORTS:[{"imported": "OutlineRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.outline.OutlineRetriever.html", "title": "Outline"}]-->
 from langchain_community.retrievers import OutlineRetriever
 ```
 
-
 ```python
 retriever = OutlineRetriever()
 ```
 
-
 ```python
 retriever.invoke("LangChain", doc_content_chars_max=100)
 ```
-
-
 
 ```output
 [Document(page_content='This walkthrough demonstrates how to use an agent optimized for conversation. Other agents are often optimized for using tools to figure out the best response, which is not ideal in a conversational setting where you may want the agent to be able to chat with the user as well.\n\nIf we compare it to the standard ReAct agent, the main difference is the prompt. We want it to be much more conversational.\n\nfrom langchain.agents import AgentType, Tool, initialize_agent\n\nfrom langchain_openai import OpenAI\n\nfrom langchain.memory import ConversationBufferMemory\n\nfrom langchain_community.utilities import SerpAPIWrapper\n\nsearch = SerpAPIWrapper() tools = \\[ Tool( name="Current Search", func=search.run, description="useful for when you need to answer questions about current events or the current state of the world", ), \\]\n\n\\\nllm = OpenAI(temperature=0)\n\nUsing LCEL\n\nWe will first show how to create this agent using LCEL\n\nfrom langchain import hub\n\nfrom langchain.agents.format_scratchpad import format_log_to_str\n\nfrom langchain.agents.output_parsers import ReActSingleInputOutputParser\n\nfrom langchain.tools.render import render_text_description\n\nprompt = hub.pull("hwchase17/react-chat")\n\nprompt = prompt.partial( tools=render_text_description(tools), tool_names=", ".join(\\[[t.name](http://t.name) for t in tools\\]), )\n\nllm_with_stop = llm.bind(stop=\\["\\nObservation"\\])\n\nagent = ( { "input": lambda x: x\\["input"\\], "agent_scratchpad": lambda x: format_log_to_str(x\\["intermediate_steps"\\]), "chat_history": lambda x: x\\["chat_history"\\], } | prompt | llm_with_stop | ReActSingleInputOutputParser() )\n\nfrom langchain.agents import AgentExecutor\n\nmemory = ConversationBufferMemory(memory_key="chat_history") agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, memory=memory)\n\nagent_executor.invoke({"input": "hi, i am bob"})\\["output"\\]\n\n```\n> Entering new AgentExecutor chain...\n\nThought: Do I need to use a tool? No\nFinal Answer: Hi Bob, nice to meet you! How can I help you today?\n\n> Finished chain.\n```\n\n\\\n\'Hi Bob, nice to meet you! How can I help you today?\'\n\nagent_executor.invoke({"input": "whats my name?"})\\["output"\\]\n\n```\n> Entering new AgentExecutor chain...\n\nThought: Do I need to use a tool? No\nFinal Answer: Your name is Bob.\n\n> Finished chain.\n```\n\n\\\n\'Your name is Bob.\'\n\nagent_executor.invoke({"input": "what are some movies showing 9/21/2023?"})\\["output"\\]\n\n```\n> Entering new AgentExecutor chain...\n\nThought: Do I need to use a tool? Yes\nAction: Current Search\nAction Input: Movies showing 9/21/2023[\'September 2023 Movies: The Creator • Dumb Money • Expend4bles • The Kill Room • The Inventor • The Equalizer 3 • PAW Patrol: The Mighty Movie, ...\'] Do I need to use a tool? No\nFinal Answer: According to current search, some movies showing on 9/21/2023 are The Creator, Dumb Money, Expend4bles, The Kill Room, The Inventor, The Equalizer 3, and PAW Patrol: The Mighty Movie.\n\n> Finished chain.\n```\n\n\\\n\'According to current search, some movies showing on 9/21/2023 are The Creator, Dumb Money, Expend4bles, The Kill Room, The Inventor, The Equalizer 3, and PAW Patrol: The Mighty Movie.\'\n\n\\\nUse the off-the-shelf agent\n\nWe can also create this agent using the off-the-shelf agent class\n\nagent_executor = initialize_agent( tools, llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory, )\n\nUse a chat model\n\nWe can also use a chat model here. The main difference here is in the prompts used.\n\nfrom langchain import hub\n\nfrom langchain_openai import ChatOpenAI\n\nprompt = hub.pull("hwchase17/react-chat-json") chat_model = ChatOpenAI(temperature=0, model="gpt-4")\n\nprompt = prompt.partial( tools=render_text_description(tools), tool_names=", ".join(\\[[t.name](http://t.name) for t in tools\\]), )\n\nchat_model_with_stop = chat_model.bind(stop=\\["\\nObservation"\\])\n\nfrom langchain.agents.format_scratchpad import format_log_to_messages\n\nfrom langchain.agents.output_parsers import JSONAgentOutputParser\n\n# We need some extra steering, or the c', metadata={'title': 'Conversational', 'source': 'https://d01.getoutline.com/doc/conversational-B5dBkUgQ4b'}),
@@ -61,9 +54,7 @@ retriever.invoke("LangChain", doc_content_chars_max=100)
  Document(page_content='This walkthrough showcases using an agent to implement the [ReAct](https://react-lm.github.io/) logic.\n\n```javascript\nfrom langchain.agents import AgentType, initialize_agent, load_tools\nfrom langchain_openai import OpenAI\n```\n\nFirst, let\'s load the language model we\'re going to use to control the agent.\n\n```javascript\nllm = OpenAI(temperature=0)\n```\n\nNext, let\'s load some tools to use. Note that the llm-math tool uses an LLM, so we need to pass that in.\n\n```javascript\ntools = load_tools(["serpapi", "llm-math"], llm=llm)\n```\n\n## Using LCEL[\u200b](/docs/modules/agents/agent_types/react#using-lcel "Direct link to Using LCEL")\n\nWe will first show how to create the agent using LCEL\n\n```javascript\nfrom langchain import hub\nfrom langchain.agents.format_scratchpad import format_log_to_str\nfrom langchain.agents.output_parsers import ReActSingleInputOutputParser\nfrom langchain.tools.render import render_text_description\n```\n\n```javascript\nprompt = hub.pull("hwchase17/react")\nprompt = prompt.partial(\n    tools=render_text_description(tools),\n    tool_names=", ".join([t.name for t in tools]),\n)\n```\n\n```javascript\nllm_with_stop = llm.bind(stop=["\\nObservation"])\n```\n\n```javascript\nagent = (\n    {\n        "input": lambda x: x["input"],\n        "agent_scratchpad": lambda x: format_log_to_str(x["intermediate_steps"]),\n    }\n    | prompt\n    | llm_with_stop\n    | ReActSingleInputOutputParser()\n)\n```\n\n```javascript\nfrom langchain.agents import AgentExecutor\n```\n\n```javascript\nagent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)\n```\n\n```javascript\nagent_executor.invoke(\n    {\n        "input": "Who is Leo DiCaprio\'s girlfriend? What is her current age raised to the 0.43 power?"\n    }\n)\n```\n\n```javascript\n    \n    \n    > Entering new AgentExecutor chain...\n     I need to find out who Leo DiCaprio\'s girlfriend is and then calculate her age raised to the 0.43 power.\n    Action: Search\n    Action Input: "Leo DiCaprio girlfriend"model Vittoria Ceretti I need to find out Vittoria Ceretti\'s age\n    Action: Search\n    Action Input: "Vittoria Ceretti age"25 years I need to calculate 25 raised to the 0.43 power\n    Action: Calculator\n    Action Input: 25^0.43Answer: 3.991298452658078 I now know the final answer\n    Final Answer: Leo DiCaprio\'s girlfriend is Vittoria Ceretti and her current age raised to the 0.43 power is 3.991298452658078.\n    \n    > Finished chain.\n\n\n\n\n\n    {\'input\': "Who is Leo DiCaprio\'s girlfriend? What is her current age raised to the 0.43 power?",\n     \'output\': "Leo DiCaprio\'s girlfriend is Vittoria Ceretti and her current age raised to the 0.43 power is 3.991298452658078."}\n```\n\n## Using ZeroShotReactAgent[\u200b](/docs/modules/agents/agent_types/react#using-zeroshotreactagent "Direct link to Using ZeroShotReactAgent")\n\nWe will now show how to use the agent with an off-the-shelf agent implementation\n\n```javascript\nagent_executor = initialize_agent(\n    tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True\n)\n```\n\n```javascript\nagent_executor.invoke(\n    {\n        "input": "Who is Leo DiCaprio\'s girlfriend? What is her current age raised to the 0.43 power?"\n    }\n)\n```\n\n```javascript\n    \n    \n    > Entering new AgentExecutor chain...\n     I need to find out who Leo DiCaprio\'s girlfriend is and then calculate her age raised to the 0.43 power.\n    Action: Search\n    Action Input: "Leo DiCaprio girlfriend"\n    Observation: model Vittoria Ceretti\n    Thought: I need to find out Vittoria Ceretti\'s age\n    Action: Search\n    Action Input: "Vittoria Ceretti age"\n    Observation: 25 years\n    Thought: I need to calculate 25 raised to the 0.43 power\n    Action: Calculator\n    Action Input: 25^0.43\n    Observation: Answer: 3.991298452658078\n    Thought: I now know the final answer\n    Final Answer: Leo DiCaprio\'s girlfriend is Vittoria Ceretti and her current age raised to the 0.43 power is 3.991298452658078.\n    \n    > Finished chain.\n\n\n\n\n\n    {\'input\': "Who is L', metadata={'title': 'ReAct', 'source': 'https://d01.getoutline.com/doc/react-d6rxRS1MHk'})]
 ```
 
-
 ### Answering Questions on Outline Documents
-
 
 ```python
 import os
@@ -71,7 +62,6 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass("OpenAI API Key:")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ConversationalRetrievalChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.conversational_retrieval.base.ConversationalRetrievalChain.html", "title": "Outline"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Outline"}]-->
@@ -82,20 +72,15 @@ model = ChatOpenAI(model="gpt-3.5-turbo")
 qa = ConversationalRetrievalChain.from_llm(model, retriever=retriever)
 ```
 
-
 ```python
 qa({"question": "what is langchain?", "chat_history": {}})
 ```
-
-
 
 ```output
 {'question': 'what is langchain?',
  'chat_history': {},
  'answer': "LangChain is a framework for developing applications powered by language models. It provides a set of libraries and tools that enable developers to build context-aware and reasoning-based applications. LangChain allows you to connect language models to various sources of context, such as prompt instructions, few-shot examples, and content, to enhance the model's responses. It also supports the composition of multiple language model components using LangChain Expression Language (LCEL). Additionally, LangChain offers off-the-shelf chains, templates, and integrations for easy application development. LangChain can be used in conjunction with LangSmith for debugging and monitoring chains, and with LangServe for deploying applications as a REST API."}
 ```
-
-
 
 ## Related
 

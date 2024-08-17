@@ -8,9 +8,9 @@ canonical: https://python.langchain.com/v0.2/docs/how_to/document_loader_json/
 
 [JSON Lines](https://jsonlines.org/) is a file format where each line is a valid JSON value.
 
-LangChain implements a [JSONLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.json_loader.JSONLoader.html) 
-to convert JSON and JSONL data into LangChain [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html#langchain_core.documents.base.Document) 
-objects. It uses a specified [jq schema](https://en.wikipedia.org/wiki/Jq_(programming_language)) to parse the JSON files, allowing for the extraction of specific fields into the content 
+LangChain implements a [JSONLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.json_loader.JSONLoader.html)
+to convert JSON and JSONL data into LangChain [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html#langchain_core.documents.base.Document)
+objects. It uses a specified [jq schema](https://en.wikipedia.org/wiki/Jq_(programming_language)) to parse the JSON files, allowing for the extraction of specific fields into the content
 and metadata of the LangChain Document.
 
 It uses the `jq` python package. Check out this [manual](https://stedolan.github.io/jq/manual/#Basicfilters) for a detailed documentation of the `jq` syntax.
@@ -20,17 +20,14 @@ Here we will demonstrate:
 - How to load JSON and JSONL data into the content of a LangChain `Document`;
 - How to load JSON and JSONL data into metadata associated with a `Document`.
 
-
 ```python
 #!pip install jq
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "JSONLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.json_loader.JSONLoader.html", "title": "How to load JSON"}]-->
 from langchain_community.document_loaders import JSONLoader
 ```
-
 
 ```python
 import json
@@ -42,12 +39,12 @@ file_path='./example_data/facebook_chat.json'
 data = json.loads(Path(file_path).read_text())
 ```
 
-
 ```python
 pprint(data)
 ```
 
 <CodeOutputBlock lang="python">
+
 
 ```
     {'image': {'creation_timestamp': 1675549016, 'uri': 'image_of_the_chat.jpg'},
@@ -103,7 +100,6 @@ pprint(data)
 
 Suppose we are interested in extracting the values under the `content` field within the `messages` key of the JSON data. This can easily be done through the `JSONLoader` as shown below.
 
-
 ### JSON file
 
 ```python
@@ -115,12 +111,12 @@ loader = JSONLoader(
 data = loader.load()
 ```
 
-
 ```python
 pprint(data)
 ```
 
 <CodeOutputBlock lang="python">
+
 
 ```
     [Document(page_content='Bye!', metadata={'source': '/Users/avsolatorio/WBG/langchain/docs/modules/indexes/document_loaders/examples/example_data/facebook_chat.json', 'seq_num': 1}),
@@ -151,6 +147,7 @@ pprint(Path(file_path).read_text())
 
 <CodeOutputBlock lang="python">
 
+
 ```
     ('{"sender_name": "User 2", "timestamp_ms": 1675597571851, "content": "Bye!"}\n'
      '{"sender_name": "User 1", "timestamp_ms": 1675597435669, "content": "Oh no '
@@ -177,6 +174,7 @@ pprint(data)
 ```
 
 <CodeOutputBlock lang="python">
+
 
 ```
     [Document(page_content='Bye!', metadata={'source': 'langchain/docs/modules/indexes/document_loaders/examples/example_data/facebook_chat_messages.jsonl', 'seq_num': 1}),
@@ -205,6 +203,7 @@ pprint(data)
 
 <CodeOutputBlock lang="python">
 
+
 ```
     [Document(page_content='User 2', metadata={'source': 'langchain/docs/modules/indexes/document_loaders/examples/example_data/facebook_chat_messages.jsonl', 'seq_num': 1}),
      Document(page_content='User 1', metadata={'source': 'langchain/docs/modules/indexes/document_loaders/examples/example_data/facebook_chat_messages.jsonl', 'seq_num': 2}),
@@ -213,9 +212,10 @@ pprint(data)
 
 </CodeOutputBlock>
 
+
 ### JSON file with jq schema `content_key`
 
-To load documents from a JSON file using the content_key within the jq schema, set is_content_key_jq_parsable=True. 
+To load documents from a JSON file using the content_key within the jq schema, set is_content_key_jq_parsable=True.
 Ensure that content_key is compatible and can be parsed using the jq schema.
 
 ```python
@@ -224,6 +224,7 @@ pprint(Path(file_path).read_text())
 ```
 
 <CodeOutputBlock lang="python">
+
 
 ```json
     {"data": [
@@ -259,12 +260,14 @@ pprint(data)
 
 <CodeOutputBlock lang="python">
 
+
 ```
     [Document(page_content='message1', metadata={'source': '/path/to/sample.json', 'seq_num': 1}),
      Document(page_content='message2', metadata={'source': '/path/to/sample.json', 'seq_num': 2})]
 ```
 
 </CodeOutputBlock>
+
 
 ## Extracting metadata
 
@@ -288,7 +291,6 @@ This allows us to pass the records (dict) into the `metadata_func` that has to b
 
 Additionally, we now have to explicitly specify in the loader, via the `content_key` argument, the key from the record where the value for the `page_content` needs to be extracted from.
 
-
 ```python
 # Define the metadata extraction function.
 def metadata_func(record: dict, metadata: dict) -> dict:
@@ -309,12 +311,12 @@ loader = JSONLoader(
 data = loader.load()
 ```
 
-
 ```python
 pprint(data)
 ```
 
 <CodeOutputBlock lang="python">
+
 
 ```
     [Document(page_content='Bye!', metadata={'source': '/Users/avsolatorio/WBG/langchain/docs/modules/indexes/document_loaders/examples/example_data/facebook_chat.json', 'seq_num': 1, 'sender_name': 'User 2', 'timestamp_ms': 1675597571851}),
@@ -332,6 +334,7 @@ pprint(data)
 
 </CodeOutputBlock>
 
+
 Now, you will see that the documents contain the metadata associated with the content we extracted.
 
 ## The `metadata_func`
@@ -341,7 +344,6 @@ As shown above, the `metadata_func` accepts the default metadata generated by th
 For example, the default metadata contains the `source` and the `seq_num` keys. However, it is possible that the JSON data contain these keys as well. The user can then exploit the `metadata_func` to rename the default keys and use the ones from the JSON data.
 
 The example below shows how we can modify the `source` to only contain information of the file source relative to the `langchain` directory.
-
 
 ```python
 # Define the metadata extraction function.
@@ -368,12 +370,12 @@ loader = JSONLoader(
 data = loader.load()
 ```
 
-
 ```python
 pprint(data)
 ```
 
 <CodeOutputBlock lang="python">
+
 
 ```
     [Document(page_content='Bye!', metadata={'source': 'langchain/docs/modules/indexes/document_loaders/examples/example_data/facebook_chat.json', 'seq_num': 1, 'sender_name': 'User 2', 'timestamp_ms': 1675597571851}),
@@ -390,6 +392,7 @@ pprint(data)
 ```
 
 </CodeOutputBlock>
+
 
 ## Common JSON structures with jq schema
 

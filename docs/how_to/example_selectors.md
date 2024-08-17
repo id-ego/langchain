@@ -23,7 +23,7 @@ class BaseExampleSelector(ABC):
         """Add new example to store."""
 ```
 
-The only method it needs to define is a ``select_examples`` method. This takes in the input variables and then returns a list of examples. It is up to each specific implementation as to how those examples are selected.
+The only method it needs to define is a `select_examples` method. This takes in the input variables and then returns a list of examples. It is up to each specific implementation as to how those examples are selected.
 
 LangChain has a few different types of example selectors. For an overview of all these types, see the below table.
 
@@ -32,7 +32,6 @@ In this guide, we will walk through creating a custom example selector.
 ## Examples
 
 In order to use an example selector, we need to create a list of examples. These should generally be example inputs and outputs. For this demo purpose, let's imagine we are selecting examples of how to translate English to Italian.
-
 
 ```python
 examples = [
@@ -45,7 +44,6 @@ examples = [
 ## Custom Example Selector
 
 Let's write an example selector that chooses what example to pick based on the length of the word.
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseExampleSelector", "source": "langchain_core.example_selectors.base", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.base.BaseExampleSelector.html", "title": "How to use example selectors"}]-->
@@ -81,44 +79,33 @@ class CustomExampleSelector(BaseExampleSelector):
         return [best_match]
 ```
 
-
 ```python
 example_selector = CustomExampleSelector(examples)
 ```
 
-
 ```python
 example_selector.select_examples({"input": "okay"})
 ```
-
-
 
 ```output
 [{'input': 'bye', 'output': 'arrivederci'}]
 ```
 
-
-
 ```python
 example_selector.add_example({"input": "hand", "output": "mano"})
 ```
-
 
 ```python
 example_selector.select_examples({"input": "okay"})
 ```
 
-
-
 ```output
 [{'input': 'hand', 'output': 'mano'}]
 ```
 
-
 ## Use in a Prompt
 
 We can now use this example selector in a prompt
-
 
 ```python
 <!--IMPORTS:[{"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts.few_shot", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to use example selectors"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts.prompt", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to use example selectors"}]-->
@@ -127,7 +114,6 @@ from langchain_core.prompts.prompt import PromptTemplate
 
 example_prompt = PromptTemplate.from_template("Input: {input} -> Output: {output}")
 ```
-
 
 ```python
 prompt = FewShotPromptTemplate(

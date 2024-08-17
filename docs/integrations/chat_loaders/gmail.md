@@ -12,14 +12,11 @@ Note that there are clear limitations here. For example, all examples created ar
 To use:
 
 - Set up a Google Developer Account: Go to the Google Developer Console, create a project, and enable the Gmail API for that project. This will give you a credentials.json file that you'll need later.
-
 - Install the Google Client Library: Run the following command to install the Google Client Library:
-
 
 ```python
 %pip install --upgrade --quiet  google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 ```
-
 
 ```python
 import os.path
@@ -53,35 +50,27 @@ if not creds or not creds.valid:
         token.write(creds.to_json())
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "GMailLoader", "source": "langchain_community.chat_loaders.gmail", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.gmail.GMailLoader.html", "title": "GMail"}]-->
 from langchain_community.chat_loaders.gmail import GMailLoader
 ```
 
-
 ```python
 loader = GMailLoader(creds=creds, n=3)
 ```
 
-
 ```python
 data = loader.load()
 ```
-
 
 ```python
 # Sometimes there can be errors which we silently ignore
 len(data)
 ```
 
-
-
 ```output
 2
 ```
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "map_ai_messages", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.map_ai_messages.html", "title": "GMail"}]-->
@@ -89,7 +78,6 @@ from langchain_community.chat_loaders.utils import (
     map_ai_messages,
 )
 ```
-
 
 ```python
 # This makes messages sent by hchase@langchain.com the AI Messages

@@ -5,26 +5,22 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # WhatsApp Chat
 
->[WhatsApp](https://www.whatsapp.com/) (also called `WhatsApp Messenger`) is a freeware, cross-platform, centralized instant messaging (IM) and voice-over-IP (VoIP) service. It allows users to send text and voice messages, make voice and video calls, and share images, documents, user locations, and other content.
+> [WhatsApp](https://www.whatsapp.com/) (also called `WhatsApp Messenger`) is a freeware, cross-platform, centralized instant messaging (IM) and voice-over-IP (VoIP) service. It allows users to send text and voice messages, make voice and video calls, and share images, documents, user locations, and other content.
 
 This notebook covers how to load data from the `WhatsApp Chats` into a format that can be ingested into LangChain.
-
 
 ```python
 <!--IMPORTS:[{"imported": "WhatsAppChatLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.whatsapp_chat.WhatsAppChatLoader.html", "title": "WhatsApp Chat"}]-->
 from langchain_community.document_loaders import WhatsAppChatLoader
 ```
 
-
 ```python
 loader = WhatsAppChatLoader("example_data/whatsapp_chat.txt")
 ```
 
-
 ```python
 loader.load()
 ```
-
 
 ## Related
 

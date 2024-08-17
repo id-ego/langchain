@@ -19,11 +19,9 @@ to:
 
 `return {"vectors": sentence_embeddings.tolist()}`.
 
-
 ```python
 !pip3 install langchain boto3
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "SagemakerEndpointEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sagemaker_endpoint.SagemakerEndpointEmbeddings.html", "title": "SageMaker"}, {"imported": "EmbeddingsContentHandler", "source": "langchain_community.embeddings.sagemaker_endpoint", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sagemaker_endpoint.EmbeddingsContentHandler.html", "title": "SageMaker"}]-->
@@ -90,21 +88,17 @@ embeddings = SagemakerEndpointEmbeddings(
 # )
 ```
 
-
 ```python
 query_result = embeddings.embed_query("foo")
 ```
-
 
 ```python
 doc_results = embeddings.embed_documents(["foo"])
 ```
 
-
 ```python
 doc_results
 ```
-
 
 ## Related
 

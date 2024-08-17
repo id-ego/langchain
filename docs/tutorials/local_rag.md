@@ -40,7 +40,6 @@ The instructions [on their GitHub repo](https://github.com/ollama/ollama) provid
 
 Next, install packages needed for local embeddings, vector storage, and inference.
 
-
 ```python
 # Document loading, retrieval methods and text splitting
 %pip install -qU langchain langchain_community
@@ -60,7 +59,6 @@ Now let's load and split an example document.
 
 We'll use a [blog post](https://lilianweng.github.io/posts/2023-06-23-agent/) by Lilian Weng on agents as an example.
 
-
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Build a Local RAG Application"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Build a Local RAG Application"}]-->
 from langchain_community.document_loaders import WebBaseLoader
@@ -75,7 +73,6 @@ all_splits = text_splitter.split_documents(data)
 
 Next, the below steps will initialize your vector store. We use [`nomic-embed-text`](https://ollama.com/library/nomic-embed-text), but you can explore other providers or options as well:
 
-
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Build a Local RAG Application"}, {"imported": "OllamaEmbeddings", "source": "langchain_ollama", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_ollama.embeddings.OllamaEmbeddings.html", "title": "Build a Local RAG Application"}]-->
 from langchain_chroma import Chroma
@@ -88,34 +85,25 @@ vectorstore = Chroma.from_documents(documents=all_splits, embedding=local_embedd
 
 And now we have a working vector store! Test that similarity search is working:
 
-
 ```python
 question = "What are the approaches to Task Decomposition?"
 docs = vectorstore.similarity_search(question)
 len(docs)
 ```
 
-
-
 ```output
 4
 ```
-
-
 
 ```python
 docs[0]
 ```
 
-
-
 ```output
 Document(metadata={'description': 'Building agents with LLM (large language model) as its core controller is a cool concept. Several proof-of-concepts demos, such as AutoGPT, GPT-Engineer and BabyAGI, serve as inspiring examples. The potentiality of LLM extends beyond generating well-written copies, stories, essays and programs; it can be framed as a powerful general problem solver.\nAgent System Overview In a LLM-powered autonomous agent system, LLM functions as the agent’s brain, complemented by several key components:', 'language': 'en', 'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/', 'title': "LLM Powered Autonomous Agents | Lil'Log"}, page_content='Task decomposition can be done (1) by LLM with simple prompting like "Steps for XYZ.\\n1.", "What are the subgoals for achieving XYZ?", (2) by using task-specific instructions; e.g. "Write a story outline." for writing a novel, or (3) with human inputs.')
 ```
 
-
 Next, set up a model. We use Ollama with `llama3.1:8b` here, but you can [explore other providers](/docs/how_to/local_llms/) or [model options depending on your hardware setup](https://ollama.com/library):
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOllama", "source": "langchain_ollama", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_ollama.chat_models.ChatOllama.html", "title": "Build a Local RAG Application"}]-->
@@ -127,7 +115,6 @@ model = ChatOllama(
 ```
 
 Test it to make sure you've set everything up properly:
-
 
 ```python
 response_message = model.invoke(
@@ -191,7 +178,6 @@ We can create a summarization chain with either model by passing in retrieved do
 
 It formats the prompt template using the input key values provided and passes the formatted string to the specified model:
 
-
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Build a Local RAG Application"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a Local RAG Application"}]-->
 from langchain_core.output_parsers import StrOutputParser
@@ -217,17 +203,13 @@ docs = vectorstore.similarity_search(question)
 chain.invoke(docs)
 ```
 
-
-
 ```output
 'The main themes in these documents are:\n\n1. **Task Decomposition**: The process of breaking down complex tasks into smaller, manageable subgoals is crucial for efficient task handling.\n2. **Autonomous Agent System**: A system powered by Large Language Models (LLMs) that can perform planning, reflection, and refinement to improve the quality of final results.\n3. **Challenges in Planning and Decomposition**:\n\t* Long-term planning and task decomposition are challenging for LLMs.\n\t* Adjusting plans when faced with unexpected errors is difficult for LLMs.\n\t* Humans learn from trial and error, making them more robust than LLMs in certain situations.\n\nOverall, the documents highlight the importance of task decomposition and planning in autonomous agent systems powered by LLMs, as well as the challenges that still need to be addressed.'
 ```
 
-
 ## Q&A
 
 You can also perform question-answering with your local model and vector store. Here's an example with a simple string prompt:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Build a Local RAG Application"}]-->
@@ -261,17 +243,13 @@ docs = vectorstore.similarity_search(question)
 chain.invoke({"context": docs, "question": question})
 ```
 
-
-
 ```output
 'Task decomposition can be done through (1) simple prompting using LLM, (2) task-specific instructions, or (3) human inputs. This approach helps break down large tasks into smaller, manageable subgoals for efficient handling of complex tasks. It enables agents to plan ahead and improve the quality of final results through reflection and refinement.'
 ```
 
-
 ## Q&A with retrieval
 
 Finally, instead of manually passing in docs, you can automatically retrieve them from our vector store based on the user question:
-
 
 ```python
 retriever = vectorstore.as_retriever()
@@ -284,19 +262,15 @@ qa_chain = (
 )
 ```
 
-
 ```python
 question = "What are the approaches to Task Decomposition?"
 
 qa_chain.invoke(question)
 ```
 
-
-
 ```output
 'Task decomposition can be done through (1) simple prompting in Large Language Models (LLM), (2) using task-specific instructions, or (3) with human inputs. This process involves breaking down large tasks into smaller, manageable subgoals for efficient handling of complex tasks.'
 ```
-
 
 ## Next steps
 

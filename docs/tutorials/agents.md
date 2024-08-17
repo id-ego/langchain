@@ -31,7 +31,6 @@ The code snippet below represents a fully functional agent that uses an LLM to d
 
 In the rest of the guide, we will walk through the individual components and what each part does - but if you want to just grab some code and get started, feel free to use this!
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "Build an Agent"}, {"imported": "TavilySearchResults", "source": "langchain_community.tools.tavily_search", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.tavily_search.tool.TavilySearchResults.html", "title": "Build an Agent"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Build an Agent"}]-->
 # Import relevant functionality
@@ -84,7 +83,6 @@ This and other tutorials are perhaps most conveniently run in a Jupyter notebook
 
 To install LangChain run:
 
-
 ```python
 %pip install -U langchain-community langgraph langchain-anthropic tavily-python langgraph-checkpoint-sqlite
 ```
@@ -136,8 +134,6 @@ os.environ["TAVILY_API_KEY"] = getpass.getpass()
 
 We first need to create the tools we want to use. Our main tool of choice will be [Tavily](/docs/integrations/tools/tavily_search) - a search engine. We have a built-in tool in LangChain to easily use Tavily search engine as tool.
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "TavilySearchResults", "source": "langchain_community.tools.tavily_search", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.tavily_search.tool.TavilySearchResults.html", "title": "Build an Agent"}]-->
 from langchain_community.tools.tavily_search import TavilySearchResults
@@ -150,15 +146,12 @@ print(search_results)
 tools = [search]
 ```
 
-
-
 ```output
 [{'url': 'https://www.weatherapi.com/',
   'content': "{'location': {'name': 'San Francisco', 'region': 'California', 'country': 'United States of America', 'lat': 37.78, 'lon': -122.42, 'tz_id': 'America/Los_Angeles', 'localtime_epoch': 1717238703, 'localtime': '2024-06-01 3:45'}, 'current': {'last_updated_epoch': 1717237800, 'last_updated': '2024-06-01 03:30', 'temp_c': 12.0, 'temp_f': 53.6, 'is_day': 0, 'condition': {'text': 'Mist', 'icon': '//cdn.weatherapi.com/weather/64x64/night/143.png', 'code': 1030}, 'wind_mph': 5.6, 'wind_kph': 9.0, 'wind_degree': 310, 'wind_dir': 'NW', 'pressure_mb': 1013.0, 'pressure_in': 29.92, 'precip_mm': 0.0, 'precip_in': 0.0, 'humidity': 88, 'cloud': 100, 'feelslike_c': 10.5, 'feelslike_f': 50.8, 'windchill_c': 9.3, 'windchill_f': 48.7, 'heatindex_c': 11.1, 'heatindex_f': 51.9, 'dewpoint_c': 8.8, 'dewpoint_f': 47.8, 'vis_km': 6.4, 'vis_miles': 3.0, 'uv': 1.0, 'gust_mph': 12.5, 'gust_kph': 20.1}}"},
  {'url': 'https://www.wunderground.com/hourly/us/ca/san-francisco/date/2024-01-06',
   'content': 'Current Weather for Popular Cities . San Francisco, CA 58 ° F Partly Cloudy; Manhattan, NY warning 51 ° F Cloudy; Schiller Park, IL (60176) warning 51 ° F Fair; Boston, MA warning 41 ° F ...'}]
 ```
-
 
 ## Using Language Models
 
@@ -170,7 +163,6 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 You can call the language model by passing in a list of messages. By default, the response is a `content` string.
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Build an Agent"}]-->
 from langchain_core.messages import HumanMessage
@@ -179,22 +171,17 @@ response = model.invoke([HumanMessage(content="hi!")])
 response.content
 ```
 
-
-
 ```output
 'Hi there!'
 ```
 
-
 We can now see what it is like to enable this model to do tool calling. In order to enable that we use `.bind_tools` to give the language model knowledge of these tools
-
 
 ```python
 model_with_tools = model.bind_tools(tools)
 ```
 
 We can now call the model. Let's first call it with a normal message, and see how it responds. We can look at both the `content` field as well as the `tool_calls` field.
-
 
 ```python
 response = model_with_tools.invoke([HumanMessage(content="Hi!")])
@@ -207,7 +194,6 @@ ContentString: Hello!
 ToolCalls: []
 ```
 Now, let's try calling it with some input that would expect a tool to be called.
-
 
 ```python
 response = model_with_tools.invoke([HumanMessage(content="What's the weather in SF?")])
@@ -225,14 +211,12 @@ This isn't calling that tool yet - it's just telling us to. In order to actually
 
 ## Create the agent
 
-Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent. 
+Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent.
 Currently we are using a high level interface to construct the agent, but the nice thing about LangGraph is that this high-level interface is backed by a low-level, highly controllable API in case you want to modify the agent logic.
-
 
 Now, we can initialize the agent with the LLM and the tools.
 
 Note that we are passing in the `model`, not `model_with_tools`. That is because `create_react_agent` will call `.bind_tools` for us under the hood.
-
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -246,25 +230,20 @@ We can now run the agent on a few queries! Note that for now, these are all **st
 
 First up, let's see how it responds when there's no need to call a tool:
 
-
 ```python
 response = agent_executor.invoke({"messages": [HumanMessage(content="hi!")]})
 
 response["messages"]
 ```
 
-
-
 ```output
 [HumanMessage(content='hi!', id='a820fcc5-9b87-457a-9af0-f21768143ee3'),
  AIMessage(content='Hello!', response_metadata={'id': 'msg_01VbC493X1VEDyusgttiEr1z', 'model': 'claude-3-sonnet-20240229', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 264, 'output_tokens': 5}}, id='run-0e0ddae8-a85b-4bd6-947c-c36c857a4698-0', usage_metadata={'input_tokens': 264, 'output_tokens': 5, 'total_tokens': 269})]
 ```
 
-
 In order to see exactly what is happening under the hood (and to make sure it's not calling a tool) we can take a look at the [LangSmith trace](https://smith.langchain.com/public/28311faa-e135-4d6a-ab6b-caecf6482aaa/r)
 
 Let's now try it out on an example where it should be invoking the tool
-
 
 ```python
 response = agent_executor.invoke(
@@ -273,8 +252,6 @@ response = agent_executor.invoke(
 response["messages"]
 ```
 
-
-
 ```output
 [HumanMessage(content='whats the weather in sf?', id='1d6c96bb-4ddb-415c-a579-a07d5264de0d'),
  AIMessage(content=[{'id': 'toolu_01Y5EK4bw2LqsQXeaUv8iueF', 'input': {'query': 'weather in san francisco'}, 'name': 'tavily_search_results_json', 'type': 'tool_use'}], response_metadata={'id': 'msg_0132wQUcEduJ8UKVVVqwJzM4', 'model': 'claude-3-sonnet-20240229', 'stop_reason': 'tool_use', 'stop_sequence': None, 'usage': {'input_tokens': 269, 'output_tokens': 61}}, id='run-26d5e5e8-d4fd-46d2-a197-87b95b10e823-0', tool_calls=[{'name': 'tavily_search_results_json', 'args': {'query': 'weather in san francisco'}, 'id': 'toolu_01Y5EK4bw2LqsQXeaUv8iueF'}], usage_metadata={'input_tokens': 269, 'output_tokens': 61, 'total_tokens': 330}),
@@ -282,13 +259,11 @@ response["messages"]
  AIMessage(content='Based on the search results, here is a summary of the current weather in San Francisco:\n\nThe weather in San Francisco is currently misty with a temperature of around 53°F (12°C). There is complete cloud cover and moderate winds from the northwest around 5-9 mph (9-14 km/h). Humidity is high at 88%. Visibility is around 3 miles (6.4 km). \n\nThe results provide an hourly forecast as well as current conditions from a couple different weather sources. Let me know if you need any additional details about the San Francisco weather!', response_metadata={'id': 'msg_01BRX9mrT19nBDdHYtR7wJ92', 'model': 'claude-3-sonnet-20240229', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 920, 'output_tokens': 132}}, id='run-d0325583-3ddc-4432-b2b2-d023eb97660f-0', usage_metadata={'input_tokens': 920, 'output_tokens': 132, 'total_tokens': 1052})]
 ```
 
-
 We can check out the [LangSmith trace](https://smith.langchain.com/public/f520839d-cd4d-4495-8764-e32b548e235d/r) to make sure it's calling the search tool effectively.
 
 ## Streaming Messages
 
 We've seen how the agent can be called with `.invoke` to get back a final response. If the agent is executing multiple steps, that may take a while. In order to show intermediate progress, we can stream back messages as they occur.
-
 
 ```python
 for chunk in agent_executor.stream(
@@ -313,7 +288,6 @@ We can do this with the `.astream_events` method.
 :::important
 This `.astream_events` method only works with Python 3.11 or higher.
 :::
-
 
 ```python
 async for event in agent_executor.astream_events(
@@ -365,20 +339,17 @@ The| current| weather| in| San| Francisco|,| California|,| USA| is| sunny| with|
 
 As mentioned earlier, this agent is stateless. This means it does not remember previous interactions. To give it memory we need to pass in a checkpointer. When passing in a checkpointer, we also have to pass in a `thread_id` when invoking the agent (so it knows which thread/conversation to resume from).
 
-
 ```python
 from langgraph.checkpoint.memory import MemorySaver
 
 memory = MemorySaver()
 ```
 
-
 ```python
 agent_executor = create_react_agent(model, tools, checkpointer=memory)
 
 config = {"configurable": {"thread_id": "abc123"}}
 ```
-
 
 ```python
 for chunk in agent_executor.stream(
@@ -407,7 +378,6 @@ Example [LangSmith trace](https://smith.langchain.com/public/fa73960b-0f7d-4910-
 
 If I want to start a new conversation, all I have to do is change the `thread_id` used
 
-
 ```python
 config = {"configurable": {"thread_id": "xyz123"}}
 for chunk in agent_executor.stream(
@@ -422,7 +392,7 @@ for chunk in agent_executor.stream(
 ```
 ## Conclusion
 
-That's a wrap! In this quick start we covered how to create a simple agent. 
+That's a wrap! In this quick start we covered how to create a simple agent.
 We've then shown how to stream back a response - not only the intermediate steps, but also tokens!
 We've also added in memory so you can have a conversation with them.
 Agents are a complex topic, and there's lot to learn! 

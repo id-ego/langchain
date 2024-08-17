@@ -19,7 +19,6 @@ Then you will need to set the environment variable `SERPAPI_API_KEY` to your `Se
 
 ## Use the Tool
 
-
 ```python
 %pip install --upgrade --quiet  google-search-results langchain_community
 ```
@@ -43,18 +42,13 @@ os.environ["SERPAPI_API_KEY"] = ""
 tool = GoogleTrendsQueryRun(api_wrapper=GoogleTrendsAPIWrapper())
 ```
 
-
 ```python
 tool.run("Water")
 ```
 
-
-
 ```output
 'Query: Water\nDate From: Nov 20, 2022\nDate To: Nov 11, 2023\nMin Value: 72\nMax Value: 100\nAverage Value: 84.25490196078431\nPrecent Change: 5.555555555555555%\nTrend values: 72, 72, 74, 77, 86, 80, 82, 88, 79, 79, 85, 82, 81, 84, 83, 77, 80, 85, 82, 80, 88, 84, 82, 84, 83, 85, 92, 92, 100, 92, 100, 96, 94, 95, 94, 98, 96, 84, 86, 84, 85, 83, 83, 76, 81, 85, 78, 77, 81, 75, 76\nRising Related Queries: avatar way of water, avatar the way of water, owala water bottle, air up water bottle, lake mead water level\nTop Related Queries: water park, water bottle, water heater, water filter, water tank, water bill, water world, avatar way of water, avatar the way of water, coconut water, deep water, water cycle, water dispenser, water purifier, water pollution, distilled water, hot water heater, water cooler, sparkling water, american water, micellar water, density of water, tankless water heater, tonic water, water jug'
 ```
-
-
 
 ## Related
 

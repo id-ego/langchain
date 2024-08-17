@@ -5,13 +5,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Memgraph
 
->[Memgraph](https://github.com/memgraph/memgraph) is the open-source graph database, compatible with `Neo4j`.
->The database is using the `Cypher` graph query language, 
->
->[Cypher](https://en.wikipedia.org/wiki/Cypher_(query_language)) is a declarative graph query language that allows for expressive and efficient data querying in a property graph.
+> [Memgraph](https://github.com/memgraph/memgraph) is the open-source graph database, compatible with `Neo4j`.
+The database is using the `Cypher` graph query language, 
+> 
+> [Cypher](https://en.wikipedia.org/wiki/Cypher_(query_language)) is a declarative graph query language that allows for expressive and efficient data querying in a property graph.
 
 This notebook shows how to use LLMs to provide a natural language interface to a [Memgraph](https://github.com/memgraph/memgraph) database.
-
 
 ## Setting up
 
@@ -37,13 +36,11 @@ Now you can start playing with `Memgraph`!
 
 Begin by installing and importing all the necessary packages. We'll use the package manager called [pip](https://pip.pypa.io/en/stable/installation/), along with the `--user` flag, to ensure proper permissions. If you've installed Python 3.4 or a later version, pip is included by default. You can install all the required packages using the following command:
 
-
 ```python
 pip install langchain langchain-openai neo4j gqlalchemy --user
 ```
 
 You can either run the provided code blocks in this notebook or use a separate Python file to experiment with Memgraph and LangChain.
-
 
 ```python
 <!--IMPORTS:[{"imported": "GraphCypherQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher.GraphCypherQAChain.html", "title": "Memgraph"}, {"imported": "MemgraphGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.memgraph_graph.MemgraphGraph.html", "title": "Memgraph"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Memgraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Memgraph"}]-->
@@ -58,14 +55,12 @@ from langchain_openai import ChatOpenAI
 
 We're utilizing the Python library [GQLAlchemy](https://github.com/memgraph/gqlalchemy) to establish a connection between our Memgraph database and Python script. You can establish the connection to a running Memgraph instance with the Neo4j driver as well, since it's compatible with Memgraph. To execute queries with GQLAlchemy, we can set up a Memgraph instance as follows:
 
-
 ```python
 memgraph = Memgraph(host="127.0.0.1", port=7687)
 ```
 
 ## Populating the database
 You can effortlessly populate your new, empty database using the Cypher query language. Don't worry if you don't grasp every line just yet, you can learn Cypher from the documentation [here](https://memgraph.com/docs/cypher-manual/). Running the following script will execute a seeding query on the database, giving us data about a video game, including details like the publisher, available platforms, and genres. This data will serve as a basis for our work.
-
 
 ```python
 # Creating and executing the seeding query
@@ -92,20 +87,17 @@ memgraph.execute(query)
 
 You're all set to instantiate the Memgraph-LangChain graph using the following script. This interface will allow us to query our database using LangChain, automatically creating the required graph schema for generating Cypher queries through LLM.
 
-
 ```python
 graph = MemgraphGraph(url="bolt://localhost:7687", username="", password="")
 ```
 
 If necessary, you can manually refresh the graph schema as follows.
 
-
 ```python
 graph.refresh_schema()
 ```
 
 To familiarize yourself with the data and verify the updated graph schema, you can print it using the following statement.
-
 
 ```python
 print(graph.schema)
@@ -130,13 +122,11 @@ The relationships are the following:
 
 To interact with the OpenAI API, you must configure your API key as an environment variable using the Python [os](https://docs.python.org/3/library/os.html) package. This ensures proper authorization for your requests. You can find more information on obtaining your API key [here](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key).
 
-
 ```python
 os.environ["OPENAI_API_KEY"] = "your-key-here"
 ```
 
 You should create the graph chain using the following script, which will be utilized in the question-answering process based on your graph data. While it defaults to GPT-3.5-turbo, you might also consider experimenting with other models like [GPT-4](https://help.openai.com/en/articles/7102672-how-can-i-access-gpt-4) for notably improved Cypher queries and outcomes. We'll utilize the OpenAI chat, utilizing the key you previously configured. We'll set the temperature to zero, ensuring predictable and consistent answers. Additionally, we'll use our Memgraph-LangChain graph and set the verbose parameter, which defaults to False, to True to receive more detailed messages regarding query generation.
-
 
 ```python
 chain = GraphCypherQAChain.from_llm(
@@ -145,7 +135,6 @@ chain = GraphCypherQAChain.from_llm(
 ```
 
 Now you can start asking questions!
-
 
 ```python
 response = chain.run("Which platforms is Baldur's Gate 3 available on?")
@@ -163,7 +152,6 @@ Full Context:
 > Finished chain.
 Baldur's Gate 3 is available on PlayStation 5, Mac OS, Windows, and Xbox Series X/S.
 ```
-
 
 ```python
 response = chain.run("Is Baldur's Gate 3 available on Windows?")
@@ -189,14 +177,12 @@ To modify the behavior of your chain and obtain more context or additional infor
 #### Return direct query results
 The `return_direct` modifier specifies whether to return the direct results of the executed Cypher query or the processed natural language response.
 
-
 ```python
 # Return the result of querying the graph directly
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, return_direct=True
 )
 ```
-
 
 ```python
 response = chain.run("Which studio published Baldur's Gate 3?")
@@ -216,14 +202,12 @@ RETURN p.name
 #### Return query intermediate steps
 The `return_intermediate_steps` chain modifier enhances the returned response by including the intermediate steps of the query in addition to the initial query result.
 
-
 ```python
 # Return all the intermediate steps of query execution
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, return_intermediate_steps=True
 )
 ```
-
 
 ```python
 response = chain("Is Baldur's Gate 3 an Adventure game?")
@@ -247,14 +231,12 @@ Final response: Yes, Baldur's Gate 3 is an Adventure game.
 #### Limit the number of query results
 The `top_k` modifier can be used when you want to restrict the maximum number of query results.
 
-
 ```python
 # Limit the maximum number of results returned by query
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, top_k=2
 )
 ```
-
 
 ```python
 response = chain.run("What genres are associated with Baldur's Gate 3?")
@@ -279,13 +261,11 @@ As the complexity of your solution grows, you might encounter different use-case
 
 Let's instantiate our chain once again and attempt to ask some questions that users might potentially ask.
 
-
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True, model_name="gpt-3.5-turbo"
 )
 ```
-
 
 ```python
 response = chain.run("Is Baldur's Gate 3 available on PS5?")
@@ -310,7 +290,6 @@ The generated Cypher query looks fine, but we didn't receive any information in 
 
 To address this, we can adjust the initial Cypher prompt of the QA chain. This involves adding guidance to the LLM on how users can refer to specific platforms, such as PS5 in our case. We achieve this using the LangChain [PromptTemplate](/docs/how_to#prompt-templates), creating a modified initial prompt. This modified prompt is then supplied as an argument to our refined Memgraph-LangChain instance.
 
-
 ```python
 CYPHER_GENERATION_TEMPLATE = """
 Task:Generate Cypher statement to query a graph database.
@@ -333,7 +312,6 @@ CYPHER_GENERATION_PROMPT = PromptTemplate(
 )
 ```
 
-
 ```python
 chain = GraphCypherQAChain.from_llm(
     ChatOpenAI(temperature=0),
@@ -343,7 +321,6 @@ chain = GraphCypherQAChain.from_llm(
     model_name="gpt-3.5-turbo",
 )
 ```
-
 
 ```python
 response = chain.run("Is Baldur's Gate 3 available on PS5?")

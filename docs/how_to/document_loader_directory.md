@@ -12,7 +12,6 @@ LangChain's [DirectoryLoader](https://api.python.langchain.com/en/latest/documen
 - How to use custom loader classes to parse specific file types (e.g., code);
 - How to handle errors, such as those due to decoding.
 
-
 ```python
 <!--IMPORTS:[{"imported": "DirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.directory.DirectoryLoader.html", "title": "How to load documents from a directory"}]-->
 from langchain_community.document_loaders import DirectoryLoader
@@ -22,20 +21,15 @@ from langchain_community.document_loaders import DirectoryLoader
 
 We can use the `glob` parameter to control which files to load. Note that here it doesn't load the `.rst` file or the `.html` files.
 
-
 ```python
 loader = DirectoryLoader("../", glob="**/*.md")
 docs = loader.load()
 len(docs)
 ```
 
-
-
 ```output
 20
 ```
-
-
 
 ```python
 print(docs[0].page_content[:100])
@@ -49,7 +43,6 @@ LangChain has a large ecosystem of integrations with various external resources 
 
 By default a progress bar will not be shown. To show a progress bar, install the `tqdm` library (e.g. `pip install tqdm`), and set the `show_progress` parameter to `True`.
 
-
 ```python
 loader = DirectoryLoader("../", glob="**/*.md", show_progress=True)
 docs = loader.load()
@@ -61,7 +54,6 @@ docs = loader.load()
 
 By default the loading happens in one thread. In order to utilize several threads set the `use_multithreading` flag to true.
 
-
 ```python
 loader = DirectoryLoader("../", glob="**/*.md", use_multithreading=True)
 docs = loader.load()
@@ -70,7 +62,6 @@ docs = loader.load()
 ## Change loader class
 By default this uses the `UnstructuredLoader` class. To customize the loader, specify the loader class in the `loader_cls` kwarg. Below we show an example using [TextLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html):
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "How to load documents from a directory"}]-->
 from langchain_community.document_loaders import TextLoader
@@ -78,7 +69,6 @@ from langchain_community.document_loaders import TextLoader
 loader = DirectoryLoader("../", glob="**/*.md", loader_cls=TextLoader)
 docs = loader.load()
 ```
-
 
 ```python
 print(docs[0].page_content[:100])
@@ -92,7 +82,6 @@ Notice that while the `UnstructuredLoader` parses Markdown headers, `TextLoader`
 
 If you need to load Python source code files, use the `PythonLoader`:
 
-
 ```python
 <!--IMPORTS:[{"imported": "PythonLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.python.PythonLoader.html", "title": "How to load documents from a directory"}]-->
 from langchain_community.document_loaders import PythonLoader
@@ -104,7 +93,6 @@ loader = DirectoryLoader("../../../../../", glob="**/*.py", loader_cls=PythonLoa
 
 `DirectoryLoader` can help manage errors due to variations in file encodings. Below we will attempt to load in a collection of files, one of which includes non-UTF8 encodings.
 
-
 ```python
 path = "../../../../libs/langchain/tests/unit_tests/examples/"
 
@@ -114,7 +102,6 @@ loader = DirectoryLoader(path, glob="**/*.txt", loader_cls=TextLoader)
 ### A. Default Behavior
 
 By default we raise an error:
-
 
 ```python
 loader.load()
@@ -191,7 +178,6 @@ With the default behavior of `TextLoader` any failure to load any of the documen
 
 We can pass the parameter `silent_errors` to the `DirectoryLoader` to skip the files which could not be loaded and continue the load process.
 
-
 ```python
 loader = DirectoryLoader(
     path, glob="**/*.txt", loader_cls=TextLoader, silent_errors=True
@@ -207,17 +193,13 @@ doc_sources = [doc.metadata["source"] for doc in docs]
 doc_sources
 ```
 
-
-
 ```output
 ['../../../../libs/langchain/tests/unit_tests/examples/example-utf8.txt']
 ```
 
-
 ### C. Auto detect encodings
 
 We can also ask `TextLoader` to auto detect the file encoding before failing, by passing the `autodetect_encoding` to the loader class.
-
 
 ```python
 text_loader_kwargs = {"autodetect_encoding": True}
@@ -227,13 +209,10 @@ loader = DirectoryLoader(
 docs = loader.load()
 ```
 
-
 ```python
 doc_sources = [doc.metadata["source"] for doc in docs]
 doc_sources
 ```
-
-
 
 ```output
 ['../../../../libs/langchain/tests/unit_tests/examples/example-utf8.txt',

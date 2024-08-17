@@ -5,17 +5,14 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # TensorFlow Hub
 
->[TensorFlow Hub](https://www.tensorflow.org/hub) is a repository of trained machine learning models ready for fine-tuning and deployable anywhere. Reuse trained models like `BERT` and `Faster R-CNN` with just a few lines of code.
->
->
+> [TensorFlow Hub](https://www.tensorflow.org/hub) is a repository of trained machine learning models ready for fine-tuning and deployable anywhere. Reuse trained models like `BERT` and `Faster R-CNN` with just a few lines of code.
+> 
 Let's load the TensorflowHub Embedding class.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TensorflowHubEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.tensorflow_hub.TensorflowHubEmbeddings.html", "title": "TensorFlow Hub"}]-->
 from langchain_community.embeddings import TensorflowHubEmbeddings
 ```
-
 
 ```python
 embeddings = TensorflowHubEmbeddings()
@@ -31,21 +28,17 @@ To enable them in other operations, rebuild TensorFlow with the appropriate comp
 text = "This is a test document."
 ```
 
-
 ```python
 query_result = embeddings.embed_query(text)
 ```
-
 
 ```python
 doc_results = embeddings.embed_documents(["foo"])
 ```
 
-
 ```python
 doc_results
 ```
-
 
 ## Related
 

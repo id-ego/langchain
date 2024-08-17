@@ -52,7 +52,6 @@ import CodeBlock from "@theme/CodeBlock";
 </Tabs>
 
 
-
 For more details, see our [Installation guide](/docs/how_to/installation).
 
 ### LangSmith
@@ -78,7 +77,6 @@ os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-
 ## Define tools
 
 We first need to create the tools we want to use. We will use two tools: [Tavily](/docs/integrations/tools/tavily_search) (to search online) and then a retriever over a local index we will create
@@ -94,23 +92,18 @@ Once you create your API key, you will need to export that as:
 export TAVILY_API_KEY="..."
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "TavilySearchResults", "source": "langchain_community.tools.tavily_search", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.tavily_search.tool.TavilySearchResults.html", "title": "Build an Agent with AgentExecutor (Legacy)"}]-->
 from langchain_community.tools.tavily_search import TavilySearchResults
 ```
 
-
 ```python
 search = TavilySearchResults(max_results=2)
 ```
 
-
 ```python
 search.invoke("what is the weather in SF")
 ```
-
-
 
 ```output
 [{'url': 'https://www.weatherapi.com/',
@@ -119,11 +112,9 @@ search.invoke("what is the weather in SF")
   'content': 'San Francisco Weather Forecast for Apr 2024 - Risk of Rain Graph. Rain Risk Graph: Monthly Overview. Bar heights indicate rain risk percentages. Yellow bars mark low-risk days, while black and grey bars signal higher risks. Grey-yellow bars act as buffers, advising to keep at least one day clear from the riskier grey and black days, guiding ...'}]
 ```
 
-
 ### Retriever
 
 We will also create a retriever over some data of our own. For a deeper explanation of each step here, see [this tutorial](/docs/tutorials/rag).
-
 
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Build an Agent with AgentExecutor (Legacy)"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Build an Agent with AgentExecutor (Legacy)"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Build an Agent with AgentExecutor (Legacy)"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Build an Agent with AgentExecutor (Legacy)"}]-->
@@ -141,26 +132,20 @@ vector = FAISS.from_documents(documents, OpenAIEmbeddings())
 retriever = vector.as_retriever()
 ```
 
-
 ```python
 retriever.invoke("how to upload a dataset")[0]
 ```
-
-
 
 ```output
 Document(page_content='# The data to predict and grade over    evaluators=[exact_match], # The evaluators to score the results    experiment_prefix="sample-experiment", # The name of the experiment    metadata={      "version": "1.0.0",      "revision_id": "beta"    },)import { Client, Run, Example } from \'langsmith\';import { runOnDataset } from \'langchain/smith\';import { EvaluationResult } from \'langsmith/evaluation\';const client = new Client();// Define dataset: these are your test casesconst datasetName = "Sample Dataset";const dataset = await client.createDataset(datasetName, {    description: "A sample dataset in LangSmith."});await client.createExamples({    inputs: [        { postfix: "to LangSmith" },        { postfix: "to Evaluations in LangSmith" },    ],    outputs: [        { output: "Welcome to LangSmith" },        { output: "Welcome to Evaluations in LangSmith" },    ],    datasetId: dataset.id,});// Define your evaluatorconst exactMatch = async ({ run, example }: { run: Run; example?:', metadata={'source': 'https://docs.smith.langchain.com/overview', 'title': 'Getting started with LangSmith | \uf8ffü¶úÔ∏è\uf8ffüõ†Ô∏è LangSmith', 'description': 'Introduction', 'language': 'en'})
 ```
 
-
 Now that we have populated our index that we will do doing retrieval over, we can easily turn it into a tool (the format needed for an agent to properly use it)
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retriever_tool", "source": "langchain.tools.retriever", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "Build an Agent with AgentExecutor (Legacy)"}]-->
 from langchain.tools.retriever import create_retriever_tool
 ```
-
 
 ```python
 retriever_tool = create_retriever_tool(
@@ -173,7 +158,6 @@ retriever_tool = create_retriever_tool(
 ### Tools
 
 Now that we have created both, we can create a list of tools that we will use downstream.
-
 
 ```python
 tools = [search, retriever_tool]
@@ -189,7 +173,6 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 You can call the language model by passing in a list of messages. By default, the response is a `content` string.
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Build an Agent with AgentExecutor (Legacy)"}]-->
 from langchain_core.messages import HumanMessage
@@ -198,22 +181,17 @@ response = model.invoke([HumanMessage(content="hi!")])
 response.content
 ```
 
-
-
 ```output
 'Hello! How can I assist you today?'
 ```
 
-
 We can now see what it is like to enable this model to do tool calling. In order to enable that we use `.bind_tools` to give the language model knowledge of these tools
-
 
 ```python
 model_with_tools = model.bind_tools(tools)
 ```
 
 We can now call the model. Let's first call it with a normal message, and see how it responds. We can look at both the `content` field as well as the `tool_calls` field.
-
 
 ```python
 response = model_with_tools.invoke([HumanMessage(content="Hi!")])
@@ -226,7 +204,6 @@ ContentString: Hello! How can I assist you today?
 ToolCalls: []
 ```
 Now, let's try calling it with some input that would expect a tool to be called.
-
 
 ```python
 response = model_with_tools.invoke([HumanMessage(content="What's the weather in SF?")])
@@ -252,7 +229,6 @@ If you want to see the contents of this prompt and have access to LangSmith, you
 
 [https://smith.langchain.com/hub/hwchase17/openai-functions-agent](https://smith.langchain.com/hub/hwchase17/openai-functions-agent)
 
-
 ```python
 from langchain import hub
 
@@ -261,8 +237,6 @@ prompt = hub.pull("hwchase17/openai-functions-agent")
 prompt.messages
 ```
 
-
-
 ```output
 [SystemMessagePromptTemplate(prompt=PromptTemplate(input_variables=[], template='You are a helpful assistant')),
  MessagesPlaceholder(variable_name='chat_history', optional=True),
@@ -270,11 +244,9 @@ prompt.messages
  MessagesPlaceholder(variable_name='agent_scratchpad')]
 ```
 
-
 Now, we can initalize the agent with the LLM, the prompt, and the tools. The agent is responsible for taking in input and deciding what actions to take. Crucially, the Agent does not execute those actions - that is done by the AgentExecutor (next step). For more information about how to think about these components, see our [conceptual guide](/docs/concepts/#agents).
 
 Note that we are passing in the `model`, not `model_with_tools`. That is because `create_tool_calling_agent` will call `.bind_tools` for us under the hood.
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "Build an Agent with AgentExecutor (Legacy)"}]-->
@@ -284,7 +256,6 @@ agent = create_tool_calling_agent(model, tools, prompt)
 ```
 
 Finally, we combine the agent (the brains) with the tools inside the AgentExecutor (which will repeatedly call the agent and execute tools).
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Build an Agent with AgentExecutor (Legacy)"}]-->
@@ -299,51 +270,39 @@ We can now run the agent on a few queries! Note that for now, these are all **st
 
 First up, let's how it responds when there's no need to call a tool:
 
-
 ```python
 agent_executor.invoke({"input": "hi!"})
 ```
-
-
 
 ```output
 {'input': 'hi!', 'output': 'Hello! How can I assist you today?'}
 ```
 
-
 In order to see exactly what is happening under the hood (and to make sure it's not calling a tool) we can take a look at the [LangSmith trace](https://smith.langchain.com/public/8441812b-94ce-4832-93ec-e1114214553a/r)
 
 Let's now try it out on an example where it should be invoking the retriever
 
-
 ```python
 agent_executor.invoke({"input": "how can langsmith help with testing?"})
 ```
-
-
 
 ```output
 {'input': 'how can langsmith help with testing?',
  'output': 'LangSmith is a platform that aids in building production-grade Language Learning Model (LLM) applications. It can assist with testing in several ways:\n\n1. **Monitoring and Evaluation**: LangSmith allows close monitoring and evaluation of your application. This helps you to ensure the quality of your application and deploy it with confidence.\n\n2. **Tracing**: LangSmith has tracing capabilities that can be beneficial for debugging and understanding the behavior of your application.\n\n3. **Evaluation Capabilities**: LangSmith has built-in tools for evaluating the performance of your LLM. \n\n4. **Prompt Hub**: This is a prompt management tool built into LangSmith that can help in testing different prompts and their responses.\n\nPlease note that to use LangSmith, you would need to install it and create an API key. The platform offers Python and Typescript SDKs for utilization. It works independently and does not require the use of LangChain.'}
 ```
 
-
 Let's take a look at the [LangSmith trace](https://smith.langchain.com/public/762153f6-14d4-4c98-8659-82650f860c62/r) to make sure it's actually calling that.
 
 Now let's try one where it needs to call the search tool:
-
 
 ```python
 agent_executor.invoke({"input": "whats the weather in sf?"})
 ```
 
-
-
 ```output
 {'input': 'whats the weather in sf?',
  'output': 'The current weather in San Francisco is partly cloudy with a temperature of 16.1°C (61.0°F). The wind is coming from the WNW at a speed of 10.5 mph. The humidity is at 67%. [source](https://www.weatherapi.com/)'}
 ```
-
 
 We can check out the [LangSmith trace](https://smith.langchain.com/public/36df5b1a-9a0b-4185-bae2-964e1d53c665/r) to make sure it's calling the search tool effectively.
 
@@ -351,13 +310,10 @@ We can check out the [LangSmith trace](https://smith.langchain.com/public/36df5b
 
 As mentioned earlier, this agent is stateless. This means it does not remember previous interactions. To give it memory we need to pass in previous `chat_history`. Note: it needs to be called `chat_history` because of the prompt we are using. If we use a different prompt, we could change the variable name
 
-
 ```python
 # Here we pass in an empty list of messages for chat_history because it is the first message in the chat
 agent_executor.invoke({"input": "hi! my name is bob", "chat_history": []})
 ```
-
-
 
 ```output
 {'input': 'hi! my name is bob',
@@ -365,13 +321,10 @@ agent_executor.invoke({"input": "hi! my name is bob", "chat_history": []})
  'output': 'Hello Bob! How can I assist you today?'}
 ```
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Build an Agent with AgentExecutor (Legacy)"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Build an Agent with AgentExecutor (Legacy)"}]-->
 from langchain_core.messages import AIMessage, HumanMessage
 ```
-
 
 ```python
 agent_executor.invoke(
@@ -385,8 +338,6 @@ agent_executor.invoke(
 )
 ```
 
-
-
 ```output
 {'chat_history': [HumanMessage(content='hi! my name is bob'),
   AIMessage(content='Hello Bob! How can I assist you today?')],
@@ -394,9 +345,7 @@ agent_executor.invoke(
  'output': 'Your name is Bob. How can I assist you further?'}
 ```
 
-
 If we want to keep track of these messages automatically, we can wrap this in a RunnableWithMessageHistory. For more information on how to use this, see [this guide](/docs/how_to/message_history). 
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "Build an Agent with AgentExecutor (Legacy)"}, {"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "Build an Agent with AgentExecutor (Legacy)"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "Build an Agent with AgentExecutor (Legacy)"}]-->
@@ -418,7 +367,6 @@ Because we have multiple inputs, we need to specify two things:
 - `input_messages_key`: The input key to use to add to the conversation history.
 - `history_messages_key`: The key to add the loaded messages into.
 
-
 ```python
 agent_with_chat_history = RunnableWithMessageHistory(
     agent_executor,
@@ -428,7 +376,6 @@ agent_with_chat_history = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 agent_with_chat_history.invoke(
     {"input": "hi! I'm bob"},
@@ -436,15 +383,11 @@ agent_with_chat_history.invoke(
 )
 ```
 
-
-
 ```output
 {'input': "hi! I'm bob",
  'chat_history': [],
  'output': 'Hello Bob! How can I assist you today?'}
 ```
-
-
 
 ```python
 agent_with_chat_history.invoke(
@@ -453,15 +396,12 @@ agent_with_chat_history.invoke(
 )
 ```
 
-
-
 ```output
 {'input': "what's my name?",
  'chat_history': [HumanMessage(content="hi! I'm bob"),
   AIMessage(content='Hello Bob! How can I assist you today?')],
  'output': 'Your name is Bob.'}
 ```
-
 
 Example LangSmith trace: https://smith.langchain.com/public/98c8d162-60ae-4493-aa9f-992d87bd0429/r
 

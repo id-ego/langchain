@@ -5,11 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Llama.cpp
 
->[llama.cpp python](https://github.com/abetlen/llama-cpp-python) library is a simple Python bindings for `@ggerganov`
->[llama.cpp](https://github.com/ggerganov/llama.cpp).
->
->This package provides:
->
+> [llama.cpp python](https://github.com/abetlen/llama-cpp-python) library is a simple Python bindings for `@ggerganov`
+[llama.cpp](https://github.com/ggerganov/llama.cpp).
+> 
+> This package provides:
+> 
 > - Low-level access to C API via ctypes interface.
 > - High-level Python API for text completion
 >   - `OpenAI`-like API
@@ -20,7 +20,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 >   - Function Calling support
 >   - Vision API support
 >   - Multiple Models
-
 
 ## Overview
 
@@ -52,7 +51,6 @@ See our guides on local models to go deeper:
 
 The LangChain LlamaCpp integration lives in the `langchain-community` and `llama-cpp-python` packages:
 
-
 ```python
 %pip install -qU langchain-community llama-cpp-python
 ```
@@ -61,12 +59,10 @@ The LangChain LlamaCpp integration lives in the `langchain-community` and `llama
 
 Now we can instantiate our model object and generate chat completions:
 
-
 ```python
 # Path to your model weights
 local_model = "local/path/to/Hermes-2-Pro-Llama-3-8B-Q8_0.gguf"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatLlamaCpp", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.llamacpp.ChatLlamaCpp.html", "title": "Llama.cpp"}]-->
@@ -90,7 +86,6 @@ llm = ChatLlamaCpp(
 
 ## Invocation
 
-
 ```python
 messages = [
     (
@@ -103,7 +98,6 @@ messages = [
 ai_msg = llm.invoke(messages)
 ai_msg
 ```
-
 
 ```python
 print(ai_msg.content)
@@ -119,7 +113,6 @@ Je suis amoureux de la programmation informatique.
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Llama.cpp"}]-->
@@ -161,11 +154,9 @@ With `ChatLlamaCpp.bind_tools`, we can easily pass in Pydantic classes, dict sch
 ```
 and passed in every model invocation.
 
-
 However, it cannot automatically trigger a function/tool, we need to force it by specifying the 'tool choice' parameter. This parameter is typically formatted as described below.
 
-```{"type": "function", "function": {"name": <<tool_name>>}}.```
-
+`{"type": "function", "function": {"name": <<tool_name>>}}.`
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "Llama.cpp"}]-->
@@ -190,27 +181,21 @@ llm_with_tools = llm.bind_tools(
 )
 ```
 
-
 ```python
 ai_msg = llm_with_tools.invoke(
     "what is the weather like in HCMC in celsius",
 )
 ```
 
-
 ```python
 ai_msg.tool_calls
 ```
-
-
 
 ```output
 [{'name': 'get_current_weather',
   'args': {'location': 'Ho Chi Minh City', 'unit': 'celsius'},
   'id': 'call__0_get_current_weather_cmpl-394d9943-0a1f-425b-8139-d2826c1431f2'}]
 ```
-
-
 
 ```python
 class MagicFunctionInput(BaseModel):
@@ -235,12 +220,9 @@ ai_msg = llm_with_tools.invoke(
 ai_msg
 ```
 
-
 ```python
 ai_msg.tool_calls
 ```
-
-
 
 ```output
 [{'name': 'get_magic_function',
@@ -248,9 +230,7 @@ ai_msg.tool_calls
   'id': 'call__0_get_magic_function_cmpl-cd83a994-b820-4428-957c-48076c68335a'}]
 ```
 
-
 # Structured output
-
 
 ```python
 <!--IMPORTS:[{"imported": "convert_to_openai_tool", "source": "langchain_core.utils.function_calling", "docs": "https://api.python.langchain.com/en/latest/utils/langchain_core.utils.function_calling.convert_to_openai_tool.html", "title": "Llama.cpp"}]-->
@@ -271,22 +251,16 @@ result = structured_llm.invoke("Tell me a joke about birds")
 result
 ```
 
-
 ```python
 result
 ```
-
-
 
 ```output
 {'setup': '- Why did the chicken cross the playground?',
  'punchline': '\n\n- To get to its gilded cage on the other side!'}
 ```
 
-
 # Streaming
-
-
 
 ```python
 for chunk in llm.stream("what is 25x5"):
@@ -296,7 +270,6 @@ for chunk in llm.stream("what is 25x5"):
 ## API reference
 
 For detailed documentation of all ChatLlamaCpp features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.llamacpp.ChatLlamaCpp.html
-
 
 ## Related
 

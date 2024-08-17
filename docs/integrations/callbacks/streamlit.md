@@ -5,8 +5,8 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/callbacks/streaml
 # Streamlit
 
 > **[Streamlit](https://streamlit.io/) is a faster way to build and share data apps.**
-> Streamlit turns data scripts into shareable web apps in minutes. All in pure Python. No front‑end experience required.
-> See more examples at [streamlit.io/generative-ai](https://streamlit.io/generative-ai).
+Streamlit turns data scripts into shareable web apps in minutes. All in pure Python. No front‑end experience required.
+See more examples at [streamlit.io/generative-ai](https://streamlit.io/generative-ai).
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/langchain-ai/streamlit-agent?quickstart=1)
 
@@ -17,6 +17,7 @@ interactive Streamlit app. Try it out with the running app below using the MRKL 
     style={{ width: 100 + '%', border: 'none', marginBottom: 1 + 'rem', height: 600 }}
     allow="camera;clipboard-read;clipboard-write;"
 ></iframe>
+
 
 ## Installation and Setup
 

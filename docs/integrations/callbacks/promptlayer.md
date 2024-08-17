@@ -5,16 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # PromptLayer
 
->[PromptLayer](https://docs.promptlayer.com/introduction) is a platform for prompt engineering. It also helps with the LLM observability to visualize requests, version prompts, and track usage.
->
->While `PromptLayer` does have LLMs that integrate directly with LangChain (e.g. [`PromptLayerOpenAI`](/docs/integrations/llms/promptlayer_openai)), using a callback is the recommended way to integrate `PromptLayer` with LangChain.
+> [PromptLayer](https://docs.promptlayer.com/introduction) is a platform for prompt engineering. It also helps with the LLM observability to visualize requests, version prompts, and track usage.
+> 
+> While `PromptLayer` does have LLMs that integrate directly with LangChain (e.g. [`PromptLayerOpenAI`](/docs/integrations/llms/promptlayer_openai)), using a callback is the recommended way to integrate `PromptLayer` with LangChain.
 
 In this guide, we will go over how to setup the `PromptLayerCallbackHandler`. 
 
 See [PromptLayer docs](https://docs.promptlayer.com/languages/langchain) for more information.
 
 ## Installation and Setup
-
 
 ```python
 %pip install --upgrade --quiet  langchain-community promptlayer --upgrade
@@ -24,7 +23,6 @@ See [PromptLayer docs](https://docs.promptlayer.com/languages/langchain) for mor
 
 If you do not have a PromptLayer account, create one on [promptlayer.com](https://www.promptlayer.com). Then get an API key by clicking on the settings cog in the navbar and
 set it as an environment variabled called `PROMPTLAYER_API_KEY`
-
 
 ## Usage
 
@@ -36,7 +34,6 @@ Getting started with `PromptLayerCallbackHandler` is fairly simple, it takes two
 
 In this simple example we use `PromptLayerCallbackHandler` with `ChatOpenAI`. We add a PromptLayer tag named `chatopenai`
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptLayerCallbackHandler", "source": "langchain_community.callbacks.promptlayer_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.promptlayer_callback.PromptLayerCallbackHandler.html", "title": "PromptLayer"}]-->
 import promptlayer  # Don't forget this 🍰
@@ -44,7 +41,6 @@ from langchain_community.callbacks.promptlayer_callback import (
     PromptLayerCallbackHandler,
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "PromptLayer"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "PromptLayer"}]-->
@@ -66,7 +62,6 @@ print(llm_results)
 
 ## GPT4All Example
 
-
 ```python
 <!--IMPORTS:[{"imported": "GPT4All", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.gpt4all.GPT4All.html", "title": "PromptLayer"}]-->
 from langchain_community.llms import GPT4All
@@ -87,7 +82,6 @@ In this example, we unlock more of the power of `PromptLayer`.
 PromptLayer allows you to visually create, version, and track prompt templates. Using the [Prompt Registry](https://docs.promptlayer.com/features/prompt-registry), we can programmatically fetch the prompt template called `example`.
 
 We also define a `pl_id_callback` function which takes in the `promptlayer_request_id` and logs a score, metadata and links the prompt template used. Read more about tracking on [our docs](https://docs.promptlayer.com/features/prompt-history/request-id).
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "PromptLayer"}]-->

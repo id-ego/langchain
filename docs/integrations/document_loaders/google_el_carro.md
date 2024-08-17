@@ -34,7 +34,6 @@ the README to set up your El Carro Oracle database.
 The integration lives in its own `langchain-google-el-carro` package, so
 we need to install it.
 
-
 ```python
 %pip install --upgrade --quiet langchain-google-el-carro
 ```
@@ -43,7 +42,6 @@ we need to install it.
 
 ### Set Up Oracle Database Connection
 Fill out the following variable with your Oracle database connections details.
-
 
 ```python
 # @title Set Your Values Here { display-mode: "form" }
@@ -55,13 +53,11 @@ USER = "my-user"  # @param {type: "string"}
 PASSWORD = input("Please provide a password to be used for the database user: ")
 ```
 
-
 If you are using El Carro, you can find the hostname and port values in the
 status of the El Carro Kubernetes instance.
 Use the user password you created for your PDB.
 
 Example Ouput:
-
 
 ```
 kubectl get -w instances.oracle.db.anthosapis.com -n db
@@ -73,7 +69,6 @@ mydb   Oracle      18c       Express      mydb-svc.db   34.71.69.25:6021   ['pdb
 ### ElCarroEngine Connection Pool
 
 `ElCarroEngine` configures a connection pool to your Oracle database, enabling successful connections from your application and following industry best practices.
-
 
 ```python
 from langchain_google_el_carro import ElCarroEngine
@@ -95,7 +90,6 @@ via `elcarro_engine.init_document_table(<table_name>)`. Table Columns:
 - page_content (type: text)
 - langchain_metadata (type: JSON)
 
-
 ```python
 elcarro_engine.drop_document_table(TABLE_NAME)
 elcarro_engine.init_document_table(
@@ -110,8 +104,7 @@ To initialize `ElCarroDocumentSaver` class you need to provide 2 things:
 
 1. `elcarro_engine` - An instance of a `ElCarroEngine` engine.
 2. `table_name` - The name of the table within the Oracle database to store
-   langchain documents.
-
+langchain documents.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google El Carro for Oracle Workloads"}]-->
@@ -139,9 +132,7 @@ To initialize `ElCarroLoader` class you need to provide:
 
 1. `elcarro_engine` - An instance of a `ElCarroEngine` engine.
 2. `table_name` - The name of the table within the Oracle database to store
-   langchain documents.
-
-
+langchain documents.
 
 ```python
 from langchain_google_el_carro import ElCarroLoader
@@ -156,7 +147,6 @@ for doc in docs:
 
 Other than loading documents from a table, we can also choose to load documents
 from a view generated from a SQL query. For example:
-
 
 ```python
 from langchain_google_el_carro import ElCarroLoader
@@ -187,7 +177,6 @@ A `row` should be deleted if there exists a `document` in the list, such that
 - `document.page_content` equals `row[page_content]`
 - `document.metadata` equals `row[langchain_metadata]`
 
-
 ```python
 docs = loader.load()
 print("Documents before delete:", docs)
@@ -201,7 +190,6 @@ print("Documents after delete:", loader.load())
 
 First we prepare an example table with non-default schema, and populate it with
 some arbitrary data.
-
 
 ```python
 import sqlalchemy
@@ -251,7 +239,6 @@ from this example table, the `page_content` of loaded documents will be the
 first column of the table, and `metadata` will be consisting of key-value pairs
 of all the other columns.
 
-
 ```python
 loader = ElCarroLoader(
     elcarro_engine=elcarro_engine,
@@ -266,14 +253,13 @@ the `content_columns` and `metadata_columns` when initializing
 the `ElCarroLoader`.
 
 1. `content_columns`: The columns to write into the `page_content` of the
-   document.
+document.
 2. `metadata_columns`: The columns to write into the `metadata` of the document.
 
 For example here, the values of columns in `content_columns` will be joined
 together into a space-separated string, as `page_content` of loaded documents,
 and `metadata` of loaded documents will only contain key-value pairs of columns
 specified in `metadata_columns`.
-
 
 ```python
 loader = ElCarroLoader(
@@ -302,22 +288,20 @@ created table will have table columns:
 - type (type VARCHAR2(200)): for storing fruit type.
 - weight (type INT): for storing fruit weight.
 - extra_json_metadata (type: JSON): for storing other metadata information of the
-  fruit.
+fruit.
 
 We can use the following parameters
 with `elcarro_engine.init_document_table()` to create the table:
 
 1. `table_name`: The name of the table within the Oracle database to store
-   langchain documents.
+langchain documents.
 2. `metadata_columns`: A list of `sqlalchemy.Column` indicating the list of
-   metadata columns we need.
+metadata columns we need.
 3. `content_column`: column name to store `page_content` of langchain
-   document. Default: `"page_content", "VARCHAR2(4000)"`
+document. Default: `"page_content", "VARCHAR2(4000)"`
 4. `metadata_json_column`: column name to store extra
-   JSON `metadata` of langchain document.
-   Default: `"langchain_metadata", "VARCHAR2(4000)"`.
-
-
+JSON `metadata` of langchain document.
+Default: `"langchain_metadata", "VARCHAR2(4000)"`.
 
 ```python
 elcarro_engine.drop_document_table(TABLE_NAME)
@@ -339,9 +323,7 @@ can see in this example,
 - `document.metadata.type` will be saved into `type` column.
 - `document.metadata.weight` will be saved into `weight` column.
 - `document.metadata.organic` will be saved into `extra_json_metadata` column in
-  JSON format.
-
-
+JSON format.
 
 ```python
 doc = Document(
@@ -383,11 +365,10 @@ A `row` should be deleted if there exists a `document` in the list, such that
 
 - `document.page_content` equals `row[page_content]`
 - For every metadata field `k` in `document.metadata`
-    - `document.metadata[k]` equals `row[k]` or `document.metadata[k]`
-      equals `row[langchain_metadata][k]`
+  - `document.metadata[k]` equals `row[k]` or `document.metadata[k]`
+equals `row[langchain_metadata][k]`
 - There is no extra metadata field present in `row` but not
-  in `document.metadata`.
-
+in `document.metadata`.
 
 ```python
 loader = ElCarroLoader(elcarro_engine=elcarro_engine, table_name=TABLE_NAME)
@@ -402,8 +383,6 @@ at [demo_doc_loader_basic.py](https://github.com/googleapis/langchain-google-el-
 and [demo_doc_loader_advanced.py](https://github.com/googleapis/langchain-google-el-carro-python/tree/main/samples/demo_doc_loader_advanced.py)
 for
 complete code examples.
-
-
 
 ## Related
 

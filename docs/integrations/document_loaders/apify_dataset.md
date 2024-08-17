@@ -5,22 +5,19 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Apify Dataset
 
->[Apify Dataset](https://docs.apify.com/platform/storage/dataset) is a scalable append-only storage with sequential access built for storing structured web scraping results, such as a list of products or Google SERPs, and then export them to various formats like JSON, CSV, or Excel. Datasets are mainly used to save results of [Apify Actors](https://apify.com/store)—serverless cloud programs for various web scraping, crawling, and data extraction use cases.
+> [Apify Dataset](https://docs.apify.com/platform/storage/dataset) is a scalable append-only storage with sequential access built for storing structured web scraping results, such as a list of products or Google SERPs, and then export them to various formats like JSON, CSV, or Excel. Datasets are mainly used to save results of [Apify Actors](https://apify.com/store)—serverless cloud programs for various web scraping, crawling, and data extraction use cases.
 
 This notebook shows how to load Apify datasets to LangChain.
-
 
 ## Prerequisites
 
 You need to have an existing dataset on the Apify platform. This example shows how to load a dataset produced by the [Website Content Crawler](https://apify.com/apify/website-content-crawler).
-
 
 ```python
 %pip install --upgrade --quiet  apify-client
 ```
 
 First, import `ApifyDatasetLoader` into your source code:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ApifyDatasetLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.apify_dataset.ApifyDatasetLoader.html", "title": "Apify Dataset"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Apify Dataset"}]-->
@@ -41,7 +38,6 @@ For example, if your dataset items are structured like this:
 
 The mapping function in the code below will convert them to LangChain `Document` format, so that you can use them further with any LLM model (e.g. for question answering).
 
-
 ```python
 loader = ApifyDatasetLoader(
     dataset_id="your-dataset-id",
@@ -51,7 +47,6 @@ loader = ApifyDatasetLoader(
 )
 ```
 
-
 ```python
 data = loader.load()
 ```
@@ -59,7 +54,6 @@ data = loader.load()
 ## An example with question answering
 
 In this example, we use data from a dataset to answer a question.
-
 
 ```python
 <!--IMPORTS:[{"imported": "VectorstoreIndexCreator", "source": "langchain.indexes", "docs": "https://api.python.langchain.com/en/latest/indexes/langchain.indexes.vectorstore.VectorstoreIndexCreator.html", "title": "Apify Dataset"}, {"imported": "ApifyWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.apify.ApifyWrapper.html", "title": "Apify Dataset"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Apify Dataset"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Apify Dataset"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Apify Dataset"}]-->
@@ -70,7 +64,6 @@ from langchain_openai import OpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 ```
 
-
 ```python
 loader = ApifyDatasetLoader(
     dataset_id="your-dataset-id",
@@ -80,17 +73,14 @@ loader = ApifyDatasetLoader(
 )
 ```
 
-
 ```python
 index = VectorstoreIndexCreator(embedding=OpenAIEmbeddings()).from_loaders([loader])
 ```
-
 
 ```python
 query = "What is Apify?"
 result = index.query_with_sources(query, llm=OpenAI())
 ```
-
 
 ```python
 print(result["answer"])

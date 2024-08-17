@@ -30,11 +30,9 @@ $$
 
 It runs in a secure and isolated environment within a Databricks SQL warehouse.
 
-
 ```python
 %pip install --upgrade --quiet databricks-sdk langchain-community mlflow
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatDatabricks", "source": "langchain_community.chat_models.databricks", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.databricks.ChatDatabricks.html", "title": "Databricks Unity Catalog (UC)"}]-->
@@ -42,7 +40,6 @@ from langchain_community.chat_models.databricks import ChatDatabricks
 
 llm = ChatDatabricks(endpoint="databricks-meta-llama-3-70b-instruct")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "UCFunctionToolkit", "source": "langchain_community.tools.databricks", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.databricks.tool.UCFunctionToolkit.html", "title": "Databricks Unity Catalog (UC)"}]-->
@@ -61,7 +58,6 @@ tools = (
     .get_tools()
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Databricks Unity Catalog (UC)"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "Databricks Unity Catalog (UC)"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Databricks Unity Catalog (UC)"}]-->
@@ -83,7 +79,6 @@ prompt = ChatPromptTemplate.from_messages(
 agent = create_tool_calling_agent(llm, tools, prompt)
 ```
 
-
 ```python
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 agent_executor.invoke({"input": "36939 * 8922.4"})
@@ -101,13 +96,10 @@ Invoking: `main__tools__python_exec` with `{'code': 'print(36939 * 8922.4)'}`
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': '36939 * 8922.4',
  'output': 'The result of the multiplication 36939 * 8922.4 is 329,584,533.60.'}
 ```
-
-
 
 ## Related
 

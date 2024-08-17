@@ -5,15 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # HTML to text
 
->[html2text](https://github.com/Alir3z4/html2text/) is a Python package that converts a page of `HTML` into clean, easy-to-read plain `ASCII text`. 
+> [html2text](https://github.com/Alir3z4/html2text/) is a Python package that converts a page of `HTML` into clean, easy-to-read plain `ASCII text`. 
 
 The ASCII also happens to be a valid `Markdown` (a text-to-HTML format).
-
 
 ```python
 %pip install --upgrade --quiet html2text
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncHtmlLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.async_html.AsyncHtmlLoader.html", "title": "HTML to text"}]-->

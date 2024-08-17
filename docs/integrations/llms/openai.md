@@ -22,7 +22,6 @@ This example goes over how to use LangChain to interact with `OpenAI` [models](h
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [ChatOpenAI](https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html) | [langchain-openai](https://api.python.langchain.com/en/latest/openai_api_reference.html) | ❌ | beta | ✅ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-openai?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-openai?style=flat-square&label=%20) |
 
-
 ## Setup
 
 To access OpenAI models you'll need to create an OpenAI account, get an API key, and install the `langchain-openai` integration package.
@@ -30,7 +29,6 @@ To access OpenAI models you'll need to create an OpenAI account, get an API key,
 ### Credentials
 
 Head to https://platform.openai.com to sign up to OpenAI and generate an API key. Once you've done this set the OPENAI_API_KEY environment variable:
-
 
 ```python
 import getpass
@@ -44,7 +42,6 @@ Enter your OpenAI API key:  ········
 ```
 If you want to get automated best in-class tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -53,7 +50,6 @@ If you want to get automated best in-class tracing of your model calls you can a
 ### Installation
 
 The LangChain OpenAI integration lives in the `langchain-openai` package:
-
 
 ```python
 %pip install -qU langchain-openai
@@ -72,7 +68,6 @@ os.environ["OPENAI_ORGANIZATION"] = OPENAI_ORGANIZATION
 
 Now we can instantiate our model object and generate chat completions:
 
-
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "OpenAI"}]-->
 from langchain_openai import OpenAI
@@ -82,20 +77,15 @@ llm = OpenAI()
 
 ## Invocation
 
-
 ```python
 llm.invoke("Hello how are you?")
 ```
-
-
 
 ```output
 "\n\nI'm an AI language model created by OpenAI, so I don't have feelings or emotions. But thank you for asking! How can I assist you today?"
 ```
 
-
 ## Chaining
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "OpenAI"}]-->
@@ -116,7 +106,6 @@ chain.invoke(
 
 If you are behind an explicit proxy, you can specify the http_client to pass through
 
-
 ```python
 %pip install httpx
 
@@ -131,7 +120,6 @@ openai = OpenAI(
 ## API reference
 
 For detailed documentation of all `OpenAI` llm features and configurations head to the API reference: https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html
-
 
 ## Related
 

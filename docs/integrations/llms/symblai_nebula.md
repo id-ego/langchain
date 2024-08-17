@@ -12,7 +12,6 @@ This example goes over how to use LangChain to interact with the [Nebula platfor
 
 Make sure you have API Key with you. If you don't have one please [request one](https://info.symbl.ai/Nebula_Private_Beta.html).
 
-
 ```python
 <!--IMPORTS:[{"imported": "Nebula", "source": "langchain_community.llms.symblai_nebula", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.symblai_nebula.Nebula.html", "title": "Nebula (Symbl.ai)"}]-->
 from langchain_community.llms.symblai_nebula import Nebula
@@ -21,7 +20,6 @@ llm = Nebula(nebula_api_key="<your_api_key>")
 ```
 
 Use a conversation transcript and instruction to construct a prompt.
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Nebula (Symbl.ai)"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Nebula (Symbl.ai)"}]-->
@@ -46,7 +44,6 @@ llm_chain = LLMChain(prompt=prompt, llm=llm)
 
 llm_chain.run(instruction=instruction, conversation=conversation)
 ```
-
 
 ## Related
 

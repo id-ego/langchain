@@ -5,21 +5,18 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # DuckDB
 
->[DuckDB](https://duckdb.org/) is an in-process SQL OLAP database management system.
+> [DuckDB](https://duckdb.org/) is an in-process SQL OLAP database management system.
 
 Load a `DuckDB` query with one document per row.
-
 
 ```python
 %pip install --upgrade --quiet  duckdb
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "DuckDBLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.duckdb_loader.DuckDBLoader.html", "title": "DuckDB"}]-->
 from langchain_community.document_loaders import DuckDBLoader
 ```
-
 
 ```python
 %%file example.csv
@@ -37,7 +34,6 @@ loader = DuckDBLoader("SELECT * FROM read_csv_auto('example.csv')")
 data = loader.load()
 ```
 
-
 ```python
 print(data)
 ```
@@ -45,7 +41,6 @@ print(data)
 [Document(page_content='Team: Nationals\nPayroll: 81.34', metadata={}), Document(page_content='Team: Reds\nPayroll: 82.2', metadata={})]
 ```
 ## Specifying Which Columns are Content vs Metadata
-
 
 ```python
 loader = DuckDBLoader(
@@ -57,7 +52,6 @@ loader = DuckDBLoader(
 data = loader.load()
 ```
 
-
 ```python
 print(data)
 ```
@@ -65,7 +59,6 @@ print(data)
 [Document(page_content='Team: Nationals', metadata={'Payroll': 81.34}), Document(page_content='Team: Reds', metadata={'Payroll': 82.2})]
 ```
 ## Adding Source to Metadata
-
 
 ```python
 loader = DuckDBLoader(
@@ -75,7 +68,6 @@ loader = DuckDBLoader(
 
 data = loader.load()
 ```
-
 
 ```python
 print(data)

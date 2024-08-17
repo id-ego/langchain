@@ -12,7 +12,6 @@ In this guide we'll go over prompting strategies to improve graph database query
 
 First, get required packages and set environment variables:
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai neo4j
 ```
@@ -20,7 +19,6 @@ First, get required packages and set environment variables:
 Note: you may need to restart the kernel to use updated packages.
 ```
 We default to OpenAI models in this guide, but you can swap them out for the model provider of your choice.
-
 
 ```python
 import getpass
@@ -38,7 +36,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 Next, we need to define Neo4j credentials.
 Follow [these installation steps](https://neo4j.com/docs/operations-manual/current/installation/) to set up a Neo4j database.
 
-
 ```python
 os.environ["NEO4J_URI"] = "bolt://localhost:7687"
 os.environ["NEO4J_USERNAME"] = "neo4j"
@@ -46,7 +43,6 @@ os.environ["NEO4J_PASSWORD"] = "password"
 ```
 
 The below example will create a connection with a Neo4j database and will populate it with example data about movies and their actors.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Neo4jGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neo4j_graph.Neo4jGraph.html", "title": "How to best prompt for Graph-RAG"}]-->
@@ -78,18 +74,14 @@ FOREACH (genre in split(row.genres, '|') |
 graph.query(movies_query)
 ```
 
-
-
 ```output
 []
 ```
-
 
 # Filtering graph schema
 
 At times, you may need to focus on a specific subset of the graph schema while generating Cypher statements.
 Let's say we are dealing with the following graph schema:
-
 
 ```python
 graph.refresh_schema()
@@ -103,9 +95,8 @@ Relationship properties are the following:
 The relationships are the following:
 (:Movie)-[:IN_GENRE]->(:Genre),(:Person)-[:DIRECTED]->(:Movie),(:Person)-[:ACTED_IN]->(:Movie)
 ```
-Let's say we want to exclude the _Genre_ node from the schema representation we pass to an LLM.
+Let's say we want to exclude the *Genre* node from the schema representation we pass to an LLM.
 We can achieve that using the `exclude` parameter of the GraphCypherQAChain chain.
-
 
 ```python
 <!--IMPORTS:[{"imported": "GraphCypherQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher.GraphCypherQAChain.html", "title": "How to best prompt for Graph-RAG"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to best prompt for Graph-RAG"}]-->
@@ -117,7 +108,6 @@ chain = GraphCypherQAChain.from_llm(
     graph=graph, llm=llm, exclude_types=["Genre"], verbose=True
 )
 ```
-
 
 ```python
 print(chain.graph_schema)
@@ -135,7 +125,6 @@ The relationships are the following:
 Including examples of natural language questions being converted to valid Cypher queries against our database in the prompt will often improve model performance, especially for complex queries.
 
 Let's say we have the following examples:
-
 
 ```python
 examples = [
@@ -176,7 +165,6 @@ examples = [
 
 We can create a few-shot prompt with them like so:
 
-
 ```python
 <!--IMPORTS:[{"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to best prompt for Graph-RAG"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to best prompt for Graph-RAG"}]-->
 from langchain_core.prompts import FewShotPromptTemplate, PromptTemplate
@@ -192,7 +180,6 @@ prompt = FewShotPromptTemplate(
     input_variables=["question", "schema"],
 )
 ```
-
 
 ```python
 print(prompt.format(question="How many artists are there?", schema="foo"))
@@ -229,7 +216,6 @@ If we have enough examples, we may want to only include the most relevant ones i
 
 We can do just this using an ExampleSelector. In this case we'll use a [SemanticSimilarityExampleSelector](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html), which will store the examples in the vector database of our choosing. At runtime it will perform a similarity search between the input and our examples, and return the most semantically similar ones: 
 
-
 ```python
 <!--IMPORTS:[{"imported": "Neo4jVector", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.neo4j_vector.Neo4jVector.html", "title": "How to best prompt for Graph-RAG"}, {"imported": "SemanticSimilarityExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html", "title": "How to best prompt for Graph-RAG"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to best prompt for Graph-RAG"}]-->
 from langchain_community.vectorstores import Neo4jVector
@@ -245,12 +231,9 @@ example_selector = SemanticSimilarityExampleSelector.from_examples(
 )
 ```
 
-
 ```python
 example_selector.select_examples({"question": "how many artists are there?"})
 ```
-
-
 
 ```output
 [{'query': 'MATCH (a:Person)-[:ACTED_IN]->(:Movie) RETURN count(DISTINCT a)',
@@ -265,9 +248,7 @@ example_selector.select_examples({"question": "how many artists are there?"})
   'question': 'Find the actor with the highest number of movies in the database.'}]
 ```
 
-
 To use it, we can pass the ExampleSelector directly in to our FewShotPromptTemplate:
-
 
 ```python
 prompt = FewShotPromptTemplate(
@@ -278,7 +259,6 @@ prompt = FewShotPromptTemplate(
     input_variables=["question", "schema"],
 )
 ```
-
 
 ```python
 print(prompt.format(question="how many artists are there?", schema="foo"))
@@ -317,7 +297,6 @@ chain = GraphCypherQAChain.from_llm(
 )
 ```
 
-
 ```python
 chain.invoke("How many actors are in the graph?")
 ```
@@ -332,7 +311,6 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
-
 
 ```output
 {'query': 'How many actors are in the graph?',

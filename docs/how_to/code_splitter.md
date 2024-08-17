@@ -48,11 +48,9 @@ RecursiveCharacterTextSplitter.from_language
 
 Below we demonstrate examples for the various languages.
 
-
 ```python
 %pip install -qU langchain-text-splitters
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Language", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.Language.html", "title": "How to split code"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to split code"}]-->
@@ -64,12 +62,9 @@ from langchain_text_splitters import (
 
 To view the full list of supported languages:
 
-
 ```python
 [e.value for e in Language]
 ```
-
-
 
 ```output
 ['cpp',
@@ -98,27 +93,19 @@ To view the full list of supported languages:
  'haskell']
 ```
 
-
 You can also see the separators used for a given language:
-
 
 ```python
 RecursiveCharacterTextSplitter.get_separators_for_language(Language.PYTHON)
 ```
 
-
-
 ```output
 ['\nclass ', '\ndef ', '\n\tdef ', '\n\n', '\n', ' ', '']
 ```
 
-
 ## Python
 
 Here's an example using the PythonTextSplitter:
-
-
-
 
 ```python
 PYTHON_CODE = """
@@ -135,17 +122,13 @@ python_docs = python_splitter.create_documents([PYTHON_CODE])
 python_docs
 ```
 
-
-
 ```output
 [Document(page_content='def hello_world():\n    print("Hello, World!")'),
  Document(page_content='# Call the function\nhello_world()')]
 ```
 
-
 ## JS
 Here's an example using the JS text splitter:
-
 
 ```python
 JS_CODE = """
@@ -164,17 +147,13 @@ js_docs = js_splitter.create_documents([JS_CODE])
 js_docs
 ```
 
-
-
 ```output
 [Document(page_content='function helloWorld() {\n  console.log("Hello, World!");\n}'),
  Document(page_content='// Call the function\nhelloWorld();')]
 ```
 
-
 ## TS
 Here's an example using the TS text splitter:
-
 
 ```python
 TS_CODE = """
@@ -193,20 +172,15 @@ ts_docs = ts_splitter.create_documents([TS_CODE])
 ts_docs
 ```
 
-
-
 ```output
 [Document(page_content='function helloWorld(): void {'),
  Document(page_content='console.log("Hello, World!");\n}'),
  Document(page_content='// Call the function\nhelloWorld();')]
 ```
 
-
 ## Markdown
 
 Here's an example using the Markdown text splitter:
-
-
 
 ```python
 markdown_text = """
@@ -223,7 +197,6 @@ As an open-source project in a rapidly developing field, we are extremely open t
 """
 ```
 
-
 ```python
 md_splitter = RecursiveCharacterTextSplitter.from_language(
     language=Language.MARKDOWN, chunk_size=60, chunk_overlap=0
@@ -231,8 +204,6 @@ md_splitter = RecursiveCharacterTextSplitter.from_language(
 md_docs = md_splitter.create_documents([markdown_text])
 md_docs
 ```
-
-
 
 ```output
 [Document(page_content='# 🦜️🔗 LangChain'),
@@ -244,12 +215,9 @@ md_docs
  Document(page_content='are extremely open to contributions.')]
 ```
 
-
 ## Latex
 
 Here's an example on Latex text:
-
-
 
 ```python
 latex_text = """
@@ -272,7 +240,6 @@ LLMs have many applications in industry, including chatbots, content creation, a
 """
 ```
 
-
 ```python
 latex_splitter = RecursiveCharacterTextSplitter.from_language(
     language=Language.MARKDOWN, chunk_size=60, chunk_overlap=0
@@ -280,8 +247,6 @@ latex_splitter = RecursiveCharacterTextSplitter.from_language(
 latex_docs = latex_splitter.create_documents([latex_text])
 latex_docs
 ```
-
-
 
 ```output
 [Document(page_content='\\documentclass{article}\n\n\x08egin{document}\n\n\\maketitle'),
@@ -308,12 +273,9 @@ latex_docs
  Document(page_content='\\end{document}')]
 ```
 
-
 ## HTML
 
 Here's an example using an HTML text splitter:
-
-
 
 ```python
 html_text = """
@@ -343,7 +305,6 @@ html_text = """
 """
 ```
 
-
 ```python
 html_splitter = RecursiveCharacterTextSplitter.from_language(
     language=Language.HTML, chunk_size=60, chunk_overlap=0
@@ -351,8 +312,6 @@ html_splitter = RecursiveCharacterTextSplitter.from_language(
 html_docs = html_splitter.create_documents([html_text])
 html_docs
 ```
-
-
 
 ```output
 [Document(page_content='<!DOCTYPE html>\n<html>'),
@@ -370,10 +329,8 @@ html_docs
  Document(page_content='</div>\n    </body>\n</html>')]
 ```
 
-
 ## Solidity
 Here's an example using the Solidity text splitter:
-
 
 ```python
 SOL_CODE = """
@@ -392,18 +349,13 @@ sol_docs = sol_splitter.create_documents([SOL_CODE])
 sol_docs
 ```
 
-
-
 ```output
 [Document(page_content='pragma solidity ^0.8.20;'),
  Document(page_content='contract HelloWorld {\n   function add(uint a, uint b) pure public returns(uint) {\n       return a + b;\n   }\n}')]
 ```
 
-
 ## C#
 Here's an example using the C# text splitter:
-
-
 
 ```python
 C_CODE = """
@@ -437,8 +389,6 @@ c_docs = c_splitter.create_documents([C_CODE])
 c_docs
 ```
 
-
-
 ```output
 [Document(page_content='using System;'),
  Document(page_content='class Program\n{\n    static void Main()\n    {\n        int age = 30; // Change the age value as needed'),
@@ -447,10 +397,8 @@ c_docs
  Document(page_content='// Age is a senior citizen\n        }\n    }\n}')]
 ```
 
-
 ## Haskell
 Here's an example using the Haskell text splitter:
-
 
 ```python
 HASKELL_CODE = """
@@ -468,8 +416,6 @@ haskell_docs = haskell_splitter.create_documents([HASKELL_CODE])
 haskell_docs
 ```
 
-
-
 ```output
 [Document(page_content='main :: IO ()'),
  Document(page_content='main = do\n    putStrLn "Hello, World!"\n-- Some'),
@@ -477,10 +423,8 @@ haskell_docs
  Document(page_content='= x + y')]
 ```
 
-
 ## PHP
 Here's an example using the PHP text splitter:
-
 
 ```python
 PHP_CODE = """<?php
@@ -507,8 +451,6 @@ php_docs = php_splitter.create_documents([PHP_CODE])
 php_docs
 ```
 
-
-
 ```output
 [Document(page_content='<?php\nnamespace foo;'),
  Document(page_content='class Hello {'),
@@ -519,10 +461,8 @@ php_docs
  Document(page_content='case Blue;\n}')]
 ```
 
-
 ## PowerShell
 Here's an example using the PowerShell text splitter:
-
 
 ```python
 POWERSHELL_CODE = """

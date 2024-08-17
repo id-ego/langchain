@@ -30,7 +30,6 @@ To access Fireworks models you'll need to create a Fireworks account, get an API
 
 Head to (ttps://fireworks.ai/login to sign up to Fireworks and generate an API key. Once you've done this set the FIREWORKS_API_KEY environment variable:
 
-
 ```python
 import getpass
 import os
@@ -39,7 +38,6 @@ os.environ["FIREWORKS_API_KEY"] = getpass.getpass("Enter your Fireworks API key:
 ```
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -50,7 +48,6 @@ If you want to get automated tracing of your model calls you can also set your [
 
 The LangChain Fireworks integration lives in the `langchain-fireworks` package:
 
-
 ```python
 %pip install -qU langchain-fireworks
 ```
@@ -60,7 +57,6 @@ The LangChain Fireworks integration lives in the `langchain-fireworks` package:
 Now we can instantiate our model object and generate chat completions:
 
 - TODO: Update model instantiation with relevant params.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatFireworks", "source": "langchain_fireworks", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_fireworks.chat_models.ChatFireworks.html", "title": "ChatFireworks"}]-->
@@ -78,7 +74,6 @@ llm = ChatFireworks(
 
 ## Invocation
 
-
 ```python
 messages = [
     (
@@ -91,13 +86,9 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-
-
 ```output
 AIMessage(content="J'adore la programmation.", response_metadata={'token_usage': {'prompt_tokens': 35, 'total_tokens': 44, 'completion_tokens': 9}, 'model_name': 'accounts/fireworks/models/llama-v3-70b-instruct', 'system_fingerprint': '', 'finish_reason': 'stop', 'logprobs': None}, id='run-df28e69a-ff30-457e-a743-06eb14d01cb0-0', usage_metadata={'input_tokens': 35, 'output_tokens': 9, 'total_tokens': 44})
 ```
-
-
 
 ```python
 print(ai_msg.content)
@@ -108,7 +99,6 @@ J'adore la programmation.
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatFireworks"}]-->
@@ -134,17 +124,13 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Ich liebe das Programmieren.', response_metadata={'token_usage': {'prompt_tokens': 30, 'total_tokens': 37, 'completion_tokens': 7}, 'model_name': 'accounts/fireworks/models/llama-v3-70b-instruct', 'system_fingerprint': '', 'finish_reason': 'stop', 'logprobs': None}, id='run-ff3f91ad-ed81-4acf-9f59-7490dc8d8f48-0', usage_metadata={'input_tokens': 30, 'output_tokens': 7, 'total_tokens': 37})
 ```
 
-
 ## API reference
 
 For detailed documentation of all ChatFireworks features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_fireworks.chat_models.ChatFireworks.html
-
 
 ## Related
 

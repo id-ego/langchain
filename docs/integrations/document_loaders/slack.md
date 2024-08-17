@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Slack
 
->[Slack](https://slack.com/) is an instant messaging program.
+> [Slack](https://slack.com/) is an instant messaging program.
 
 This notebook covers how to load documents from a Zipfile generated from a `Slack` export.
 
@@ -19,12 +19,10 @@ The download will produce a `.zip` file in your Downloads folder (or wherever yo
 
 Copy the path to the `.zip` file, and assign it as `LOCAL_ZIPFILE` below.
 
-
 ```python
 <!--IMPORTS:[{"imported": "SlackDirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.slack_directory.SlackDirectoryLoader.html", "title": "Slack"}]-->
 from langchain_community.document_loaders import SlackDirectoryLoader
 ```
-
 
 ```python
 # Optionally set your Slack URL. This will give you proper URLs in the docs sources.
@@ -34,12 +32,10 @@ LOCAL_ZIPFILE = ""  # Paste the local paty to your Slack zip file here.
 loader = SlackDirectoryLoader(LOCAL_ZIPFILE, SLACK_WORKSPACE_URL)
 ```
 
-
 ```python
 docs = loader.load()
 docs
 ```
-
 
 ## Related
 

@@ -5,11 +5,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Confident
 
->[DeepEval](https://confident-ai.com) package for unit testing LLMs.
-> Using Confident, everyone can build robust language models through faster iterations
-> using both unit testing and integration testing. We provide support for each step in the iteration
-> from synthetic data creation to testing.
-
+> [DeepEval](https://confident-ai.com) package for unit testing LLMs.
+Using Confident, everyone can build robust language models through faster iterations
+using both unit testing and integration testing. We provide support for each step in the iteration
+from synthetic data creation to testing.
 
 In this guide we will demonstrate how to test and measure LLMs in performance. We show how you can use our callback to measure performance and how you can define your own metric and log them into our dashboard.
 
@@ -19,7 +18,6 @@ DeepEval also offers:
 - A dashboard to monitor and review results over time
 
 ## Installation and Setup
-
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-openai langchain-community deepeval langchain-chroma
@@ -33,9 +31,7 @@ To get the DeepEval API credentials, follow the next steps:
 2. Click on "Organization"
 3. Copy the API Key.
 
-
 When you log in, you will also be asked to set the `implementation` name. The implementation name is required to describe the type of implementation. (Think of what you want to call your project. We recommend making it descriptive.)
-
 
 ```python
 !deepeval login
@@ -48,7 +44,6 @@ You can, by default, use the `DeepEvalCallbackHandler` to set up the metrics you
 - [Bias](https://docs.confident-ai.com/docs/measuring_llm_performance/debias)
 - [Toxicness](https://docs.confident-ai.com/docs/measuring_llm_performance/non_toxic)
 
-
 ```python
 from deepeval.metrics.answer_relevancy import AnswerRelevancy
 
@@ -59,7 +54,6 @@ answer_relevancy_metric = AnswerRelevancy(minimum_score=0.5)
 ## Get Started
 
 To use the `DeepEvalCallbackHandler`, we need the `implementation_name`. 
-
 
 ```python
 <!--IMPORTS:[{"imported": "DeepEvalCallbackHandler", "source": "langchain_community.callbacks.confident_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.confident_callback.DeepEvalCallbackHandler.html", "title": "Confident"}]-->
@@ -73,7 +67,6 @@ deepeval_callback = DeepEvalCallbackHandler(
 ### Scenario 1: Feeding into LLM
 
 You can then feed it into your LLM with OpenAI.
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Confident"}]-->
@@ -92,15 +85,11 @@ output = llm.generate(
 )
 ```
 
-
-
 ```output
 LLMResult(generations=[[Generation(text='\n\nQ: What did the fish say when he hit the wall? \nA: Dam.', generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text='\n\nThe Moon \n\nThe moon is high in the midnight sky,\nSparkling like a star above.\nThe night so peaceful, so serene,\nFilling up the air with love.\n\nEver changing and renewing,\nA never-ending light of grace.\nThe moon remains a constant view,\nA reminder of life’s gentle pace.\n\nThrough time and space it guides us on,\nA never-fading beacon of hope.\nThe moon shines down on us all,\nAs it continues to rise and elope.', generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text='\n\nQ. What did one magnet say to the other magnet?\nA. "I find you very attractive!"', generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text="\n\nThe world is charged with the grandeur of God.\nIt will flame out, like shining from shook foil;\nIt gathers to a greatness, like the ooze of oil\nCrushed. Why do men then now not reck his rod?\n\nGenerations have trod, have trod, have trod;\nAnd all is seared with trade; bleared, smeared with toil;\nAnd wears man's smudge and shares man's smell: the soil\nIs bare now, nor can foot feel, being shod.\n\nAnd for all this, nature is never spent;\nThere lives the dearest freshness deep down things;\nAnd though the last lights off the black West went\nOh, morning, at the brown brink eastward, springs —\n\nBecause the Holy Ghost over the bent\nWorld broods with warm breast and with ah! bright wings.\n\n~Gerard Manley Hopkins", generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text='\n\nQ: What did one ocean say to the other ocean?\nA: Nothing, they just waved.', generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text="\n\nA poem for you\n\nOn a field of green\n\nThe sky so blue\n\nA gentle breeze, the sun above\n\nA beautiful world, for us to love\n\nLife is a journey, full of surprise\n\nFull of joy and full of surprise\n\nBe brave and take small steps\n\nThe future will be revealed with depth\n\nIn the morning, when dawn arrives\n\nA fresh start, no reason to hide\n\nSomewhere down the road, there's a heart that beats\n\nBelieve in yourself, you'll always succeed.", generation_info={'finish_reason': 'stop', 'logprobs': None})]], llm_output={'token_usage': {'completion_tokens': 504, 'total_tokens': 528, 'prompt_tokens': 24}, 'model_name': 'text-davinci-003'})
 ```
 
-
 You can then check the metric if it was successful by calling the `is_successful()` method.
-
 
 ```python
 answer_relevancy_metric.is_successful()
@@ -116,7 +105,6 @@ Once you have ran that, you should be able to see our dashboard below.
 To track an LLM in a chain without callbacks, you can plug into it at the end.
 
 We can start by defining a simple chain as shown below.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Confident"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Confident"}, {"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Confident"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Confident"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Confident"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Confident"}]-->
@@ -155,7 +143,6 @@ result = qa.run(query)
 ```
 
 After defining a chain, you can then manually check for answer similarity.
-
 
 ```python
 answer_relevancy_metric.measure(result, query)

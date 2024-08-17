@@ -5,15 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # ClickUp Toolkit
 
->[ClickUp](https://clickup.com/) is an all-in-one productivity platform that provides small and large teams across industries with flexible and customizable work management solutions, tools, and functions. 
+> [ClickUp](https://clickup.com/) is an all-in-one productivity platform that provides small and large teams across industries with flexible and customizable work management solutions, tools, and functions. 
 
->It is a cloud-based project management solution for businesses of all sizes featuring communication and collaboration tools to help achieve organizational goals.
-
+> It is a cloud-based project management solution for businesses of all sizes featuring communication and collaboration tools to help achieve organizational goals.
 
 ```python
 %pip install -qU langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "ClickUp Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "ClickUp Toolkit"}, {"imported": "ClickupToolkit", "source": "langchain_community.agent_toolkits.clickup.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.clickup.toolkit.ClickupToolkit.html", "title": "ClickUp Toolkit"}, {"imported": "ClickupAPIWrapper", "source": "langchain_community.utilities.clickup", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.clickup.ClickupAPIWrapper.html", "title": "ClickUp Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "ClickUp Toolkit"}]-->
@@ -32,10 +30,8 @@ from langchain_openai import OpenAI
 ### Get Authenticated
 1. Create a [ClickUp App](https://help.clickup.com/hc/en-us/articles/6303422883095-Create-your-own-app-with-the-ClickUp-API)
 2. Follow [these steps](https://clickup.com/api/developer-portal/authentication/) to get your `client_id` and `client_secret`.
-    - *Suggestion: use `https://google.com` as the redirect_uri. This is what we assume in the defaults for this toolkit.*
+   - *Suggestion: use `https://google.com` as the redirect_uri. This is what we assume in the defaults for this toolkit.*
 3. Copy/paste them and run the next cell to get your `code`
-
-
 
 ```python
 # Copilot Sandbox
@@ -54,8 +50,6 @@ The url should change to something like this https://www.google.com/?code=THISIS
 
 Next, copy/paste the `CODE` (THISISMYCODERIGHTHERE) generated in the URL in the cell below.
 
-
-
 ```python
 code = "THISISMYCODERIGHTHERE"
 ```
@@ -64,7 +58,6 @@ code = "THISISMYCODERIGHTHERE"
 Then, use the code below to get your `access_token`.
 
 *Important*: Each code is a one time code that will expire after use. The `access_token` can be used for a period of time. Make sure to copy paste the `access_token` once you get it!
-
 
 ```python
 access_token = ClickupAPIWrapper.get_access_token(
@@ -93,7 +86,6 @@ Note: If you know this is the wrong ID, you can pass it at initialization.
 ```
 ### Create Agent
 
-
 ```python
 llm = OpenAI(temperature=0, openai_api_key="")
 
@@ -103,7 +95,6 @@ agent = initialize_agent(
 ```
 
 ## Use an Agent
-
 
 ```python
 # helper function for demo
@@ -118,7 +109,6 @@ def print_and_run(command):
 
 ### Navigation
 You can get the teams, folder and spaces your user has access to
-
 
 ```python
 print_and_run("Get all the teams that the user is authorized to access")
@@ -176,22 +166,18 @@ Final Answer: The folders in the team are listed in the observation.[0m
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 'The folders in the team are listed in the observation.'
 ```
 
-
 ### Task Operations
 You can get, ask question about tasks and update them
-
 
 ```python
 task_id = "8685mb5fn"
 ```
 
 #### Basic attirbute getting and updating
-
 
 ```python
 # We can get a task to inspect it's contents
@@ -296,12 +282,9 @@ Final Answer: The description of task 8685mb5fn has been updated to 'An old, bor
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 "The description of task 8685mb5fn has been updated to 'An old, boring task description'."
 ```
-
-
 
 ```python
 print_and_run("Change the descrition task 8685mj6cd to 'Look ma no hands'")
@@ -325,20 +308,16 @@ Final Answer: The description of task 8685mj6cd has been changed to 'Look ma no 
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 "The description of task 8685mj6cd has been changed to 'Look ma no hands'."
 ```
 
-
 #### Advanced Attributes (Assignees)
 You can query and update almost every thing about a task!
-
 
 ```python
 user_id = 81928627
 ```
-
 
 ```python
 print_and_run(f"What are the assignees of task id {task_id}?")
@@ -421,15 +400,12 @@ Final Answer: User 81928627 has been removed from the assignees of task id 8685m
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 'User 81928627 has been removed from the assignees of task id 8685mb5fn.'
 ```
 
-
 ### Creation
 You can create tasks, lists and folders
-
 
 ```python
 time_str = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
@@ -456,12 +432,9 @@ Final Answer: A task called 'Test Task - 18/09/2023-10:31:22' with description '
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 "A task called 'Test Task - 18/09/2023-10:31:22' with description 'This is a Test' was successfully created."
 ```
-
-
 
 ```python
 time_str = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
@@ -486,12 +459,9 @@ Final Answer: The list "Test List - 18/09/2023-10:32:12" has been created with i
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 'The list "Test List - 18/09/2023-10:32:12" has been created with id 901100774700.'
 ```
-
-
 
 ```python
 time_str = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
@@ -516,12 +486,9 @@ Final Answer: The folder 'Test Folder - 18/09/2023-10:32:51' has been successful
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 "The folder 'Test Folder - 18/09/2023-10:32:51' has been successfully created."
 ```
-
-
 
 ```python
 time_str = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
@@ -548,14 +515,11 @@ Final Answer: The list 'Test List - 18/09/2023-10:34:01' with content 'My test l
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 "The list 'Test List - 18/09/2023-10:34:01' with content 'My test list' with high priority and status red has been successfully created."
 ```
 
-
 ## Multi-Step Tasks
-
 
 ```python
 print_and_run(
@@ -591,12 +555,9 @@ Final Answer: Rodrigo's user ID is 81928627 and a task called 'Rod's task' has b
 --------------------------------------------------------------------------------
 ```
 
-
 ```output
 "Rodrigo's user ID is 81928627 and a task called 'Rod's task' has been created and assigned to him."
 ```
-
-
 
 ## Related
 

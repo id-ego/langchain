@@ -5,12 +5,12 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/providers/konko/
 # Konko
 All functionality related to Konko
 
->[Konko AI](https://www.konko.ai/) provides a fully managed API to help application developers
+> [Konko AI](https://www.konko.ai/) provides a fully managed API to help application developers
 
->1. **Select** the right open source or proprietary LLMs for their application
->2. **Build** applications faster with integrations to leading application frameworks and fully managed APIs
->3. **Fine tune** smaller open-source LLMs to achieve industry-leading performance at a fraction of the cost
->4. **Deploy production-scale APIs** that meet security, privacy, throughput, and latency SLAs without infrastructure set-up or administration using Konko AI's SOC 2 compliant, multi-cloud infrastructure
+> 1. **Select** the right open source or proprietary LLMs for their application
+> 2. **Build** applications faster with integrations to leading application frameworks and fully managed APIs
+> 3. **Fine tune** smaller open-source LLMs to achieve industry-leading performance at a fraction of the cost
+> 4. **Deploy production-scale APIs** that meet security, privacy, throughput, and latency SLAs without infrastructure set-up or administration using Konko AI's SOC 2 compliant, multi-cloud infrastructure
 
 ## Installation and Setup
 
@@ -31,7 +31,6 @@ export OPENAI_API_KEY={your_OPENAI_API_KEY_here} #Optional
 
 Please see [the Konko docs](https://docs.konko.ai/docs/getting-started) for more details.
 
-
 ## LLM
 
 **Explore Available Models:** Start by browsing through the [available models](https://docs.konko.ai/docs/list-of-models) on Konko. Each model caters to different use cases and capabilities.
@@ -43,7 +42,7 @@ See a usage [example](/docs/integrations/llms/konko).
 ### Examples of Endpoint Usage
 
 - **Completion with mistralai/Mistral-7B-v0.1:**
-
+  
   ```python
   from langchain_community.llms import Konko
   llm = Konko(max_tokens=800, model='mistralai/Mistral-7B-v0.1')
@@ -55,9 +54,8 @@ See a usage [example](/docs/integrations/llms/konko).
 
 See a usage [example](/docs/integrations/chat/konko).
 
-
 - **ChatCompletion with Mistral-7B:**
-
+  
   ```python
   from langchain_core.messages import HumanMessage
   from langchain_community.chat_models import ChatKonko

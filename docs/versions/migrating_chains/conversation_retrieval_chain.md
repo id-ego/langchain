@@ -15,11 +15,9 @@ Advantages of switching to the LCEL implementation are similar to the `Retrieval
 
 Here are side-by-side implementations with custom prompts. We'll reuse the loaded documents and vector store from the previous section:
 
-
 ```python
 %pip install --upgrade --quiet langchain-community langchain langchain-openai faiss-cpu
 ```
-
 
 ```python
 import os
@@ -27,7 +25,6 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Load docs"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Load docs"}, {"imported": "ChatOpenAI", "source": "langchain_openai.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Load docs"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Load docs"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Load docs"}]-->
@@ -107,16 +104,14 @@ convo_qa_chain(
 )
 ```
 
-
-
 ```output
 {'question': 'What are autonomous agents?',
  'chat_history': '',
  'answer': 'Autonomous agents are entities empowered with capabilities like planning, task decomposition, and memory to perform complex tasks independently. These agents can leverage tools like browsing the internet, reading documentation, executing code, and calling APIs to achieve their objectives. They are designed to handle tasks like scientific discovery and experimentation autonomously.'}
 ```
 
-
 </details>
+
 
 ## LCEL
 
@@ -176,8 +171,6 @@ convo_qa_chain.invoke(
 )
 ```
 
-
-
 ```output
 {'input': 'What are autonomous agents?',
  'chat_history': [],
@@ -188,8 +181,8 @@ convo_qa_chain.invoke(
  'answer': 'Autonomous agents are entities that can act independently to achieve specific goals or tasks without direct human intervention. These agents have the ability to perceive their environment, make decisions, and take actions based on their programming or learning. They can perform tasks such as planning, execution, and problem-solving autonomously.'}
 ```
 
-
 </details>
+
 
 ## Next steps
 

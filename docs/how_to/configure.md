@@ -33,7 +33,6 @@ In order to make this experience as easy as possible, we have defined two method
 
 Let's walk through an example that configures chat model fields like temperature at runtime:
 
-
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
 
@@ -42,7 +41,6 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to configure runtime chain internals"}, {"imported": "ConfigurableField", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableField.html", "title": "How to configure runtime chain internals"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to configure runtime chain internals"}]-->
@@ -61,31 +59,23 @@ model = ChatOpenAI(temperature=0).configurable_fields(
 model.invoke("pick a random number")
 ```
 
-
-
 ```output
 AIMessage(content='17', response_metadata={'token_usage': {'completion_tokens': 1, 'prompt_tokens': 11, 'total_tokens': 12}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-ba26a0da-0a69-4533-ab7f-21178a73d303-0')
 ```
 
-
 Above, we defined `temperature` as a [`ConfigurableField`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableField.html#langchain_core.runnables.utils.ConfigurableField) that we can set at runtime. To do so, we use the [`with_config`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_config) method like this:
-
 
 ```python
 model.with_config(configurable={"llm_temperature": 0.9}).invoke("pick a random number")
 ```
 
-
-
 ```output
 AIMessage(content='12', response_metadata={'token_usage': {'completion_tokens': 1, 'prompt_tokens': 11, 'total_tokens': 12}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-ba8422ad-be77-4cb1-ac45-ad0aae74e3d9-0')
 ```
 
-
 Note that the passed `llm_temperature` entry in the dict has the same key as the `id` of the `ConfigurableField`.
 
 We can also do this to affect just one step that's part of a chain:
-
 
 ```python
 prompt = PromptTemplate.from_template("Pick a random number above {x}")
@@ -94,29 +84,21 @@ chain = prompt | model
 chain.invoke({"x": 0})
 ```
 
-
-
 ```output
 AIMessage(content='27', response_metadata={'token_usage': {'completion_tokens': 1, 'prompt_tokens': 14, 'total_tokens': 15}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-ecd4cadd-1b72-4f92-b9a0-15e08091f537-0')
 ```
-
-
 
 ```python
 chain.with_config(configurable={"llm_temperature": 0.9}).invoke({"x": 0})
 ```
 
-
-
 ```output
 AIMessage(content='35', response_metadata={'token_usage': {'completion_tokens': 1, 'prompt_tokens': 14, 'total_tokens': 15}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-a916602b-3460-46d3-a4a8-7c926ec747c0-0')
 ```
 
-
 ### With HubRunnables
 
 This is useful to allow for switching of prompts
-
 
 ```python
 <!--IMPORTS:[{"imported": "HubRunnable", "source": "langchain.runnables.hub", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain.runnables.hub.HubRunnable.html", "title": "How to configure runtime chain internals"}]-->
@@ -133,13 +115,9 @@ prompt = HubRunnable("rlm/rag-prompt").configurable_fields(
 prompt.invoke({"question": "foo", "context": "bar"})
 ```
 
-
-
 ```output
 ChatPromptValue(messages=[HumanMessage(content="You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.\nQuestion: foo \nContext: bar \nAnswer:")])
 ```
-
-
 
 ```python
 prompt.with_config(configurable={"hub_commit": "rlm/rag-prompt-llama"}).invoke(
@@ -147,19 +125,13 @@ prompt.with_config(configurable={"hub_commit": "rlm/rag-prompt-llama"}).invoke(
 )
 ```
 
-
-
 ```output
 ChatPromptValue(messages=[HumanMessage(content="[INST]<<SYS>> You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.<</SYS>> \nQuestion: foo \nContext: bar \nAnswer: [/INST]")])
 ```
 
-
 ## Configurable Alternatives
 
-
-
 The `configurable_alternatives()` method allows us to swap out steps in a chain with an alternative. Below, we swap out one chat model for another:
-
 
 ```python
 %pip install --upgrade --quiet langchain-anthropic
@@ -204,44 +176,31 @@ chain = prompt | llm
 chain.invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 AIMessage(content="Here's a bear joke for you:\n\nWhy don't bears wear socks? \nBecause they have bear feet!\n\nHow's that? I tried to come up with a simple, silly pun-based joke about bears. Puns and wordplay are a common way to create humorous bear jokes. Let me know if you'd like to hear another one!", response_metadata={'id': 'msg_018edUHh5fUbWdiimhrC3dZD', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 13, 'output_tokens': 80}}, id='run-775bc58c-28d7-4e6b-a268-48fa6661f02f-0')
 ```
-
-
 
 ```python
 # We can use `.with_config(configurable={"llm": "openai"})` to specify an llm to use
 chain.with_config(configurable={"llm": "openai"}).invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 AIMessage(content="Why don't bears like fast food?\n\nBecause they can't catch it!", response_metadata={'token_usage': {'completion_tokens': 15, 'prompt_tokens': 13, 'total_tokens': 28}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-7bdaa992-19c9-4f0d-9a0c-1f326bc992d4-0')
 ```
-
-
 
 ```python
 # If we use the `default_key` then it uses the default
 chain.with_config(configurable={"llm": "anthropic"}).invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 AIMessage(content="Here's a bear joke for you:\n\nWhy don't bears wear socks? \nBecause they have bear feet!\n\nHow's that? I tried to come up with a simple, silly pun-based joke about bears. Puns and wordplay are a common way to create humorous bear jokes. Let me know if you'd like to hear another one!", response_metadata={'id': 'msg_01BZvbmnEPGBtcxRWETCHkct', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 13, 'output_tokens': 80}}, id='run-59b6ee44-a1cd-41b8-a026-28ee67cdd718-0')
 ```
 
-
 ### With Prompts
 
 We can do a similar thing, but alternate between prompts
-
-
 
 ```python
 llm = ChatAnthropic(model="claude-3-haiku-20240307", temperature=0)
@@ -264,31 +223,23 @@ chain = prompt | llm
 chain.invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 AIMessage(content="Here's a bear joke for you:\n\nWhy don't bears wear socks? \nBecause they have bear feet!", response_metadata={'id': 'msg_01DtM1cssjNFZYgeS3gMZ49H', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 13, 'output_tokens': 28}}, id='run-8199af7d-ea31-443d-b064-483693f2e0a1-0')
 ```
-
-
 
 ```python
 # We can configure it write a poem
 chain.with_config(configurable={"prompt": "poem"}).invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 AIMessage(content="Here is a short poem about bears:\n\nMajestic bears, strong and true,\nRoaming the forests, wild and free.\nPowerful paws, fur soft and brown,\nCommanding respect, nature's crown.\n\nForaging for berries, fishing streams,\nProtecting their young, fierce and keen.\nMighty bears, a sight to behold,\nGuardians of the wilderness, untold.\n\nIn the wild they reign supreme,\nEmbodying nature's grand theme.\nBears, a symbol of strength and grace,\nCaptivating all who see their face.", response_metadata={'id': 'msg_01Wck3qPxrjURtutvtodaJFn', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 13, 'output_tokens': 134}}, id='run-69414a1e-51d7-4bec-a307-b34b7d61025e-0')
 ```
-
 
 ### With Prompts and LLMs
 
 We can also have multiple things configurable!
 Here's an example doing that with both prompts and LLMs.
-
 
 ```python
 llm = ChatAnthropic(
@@ -327,30 +278,22 @@ chain.with_config(configurable={"prompt": "poem", "llm": "openai"}).invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content="In the forest deep and wide,\nBears roam with grace and pride.\nWith fur as dark as night,\nThey rule the land with all their might.\n\nIn winter's chill, they hibernate,\nIn spring they emerge, hungry and great.\nWith claws sharp and eyes so keen,\nThey hunt for food, fierce and lean.\n\nBut beneath their tough exterior,\nLies a gentle heart, warm and superior.\nThey love their cubs with all their might,\nProtecting them through day and night.\n\nSo let us admire these majestic creatures,\nIn awe of their strength and features.\nFor in the wild, they reign supreme,\nThe mighty bears, a timeless dream.", response_metadata={'token_usage': {'completion_tokens': 133, 'prompt_tokens': 13, 'total_tokens': 146}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-5eec0b96-d580-49fd-ac4e-e32a0803b49b-0')
 ```
-
-
 
 ```python
 # We can always just configure only one if we want
 chain.with_config(configurable={"llm": "openai"}).invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 AIMessage(content="Why don't bears wear shoes?\n\nBecause they have bear feet!", response_metadata={'token_usage': {'completion_tokens': 13, 'prompt_tokens': 13, 'total_tokens': 26}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-c1b14c9c-4988-49b8-9363-15bfd479973a-0')
 ```
 
-
 ### Saving configurations
 
 We can also easily save configured chains as their own objects
-
 
 ```python
 openai_joke = chain.with_config(configurable={"llm": "openai"})
@@ -358,12 +301,9 @@ openai_joke = chain.with_config(configurable={"llm": "openai"})
 openai_joke.invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 AIMessage(content="Why did the bear break up with his girlfriend? \nBecause he couldn't bear the relationship anymore!", response_metadata={'token_usage': {'completion_tokens': 20, 'prompt_tokens': 13, 'total_tokens': 33}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-391ebd55-9137-458b-9a11-97acaff6a892-0')
 ```
-
 
 ## Next steps
 

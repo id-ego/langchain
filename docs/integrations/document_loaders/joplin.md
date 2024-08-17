@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Joplin
 
->[Joplin](https://joplinapp.org/) is an open-source note-taking app. Capture your thoughts and securely access them from any device.
+> [Joplin](https://joplinapp.org/) is an open-source note-taking app. Capture your thoughts and securely access them from any device.
 
 This notebook covers how to load documents from a `Joplin` database.
 
@@ -20,22 +20,18 @@ You may either initialize the loader directly with the access token, or store it
 
 An alternative to this approach is to export the `Joplin`'s note database to Markdown files (optionally, with Front Matter metadata) and use a Markdown loader, such as ObsidianLoader, to load them.
 
-
 ```python
 <!--IMPORTS:[{"imported": "JoplinLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.joplin.JoplinLoader.html", "title": "Joplin"}]-->
 from langchain_community.document_loaders import JoplinLoader
 ```
 
-
 ```python
 loader = JoplinLoader(access_token="<access-token>")
 ```
 
-
 ```python
 docs = loader.load()
 ```
-
 
 ## Related
 

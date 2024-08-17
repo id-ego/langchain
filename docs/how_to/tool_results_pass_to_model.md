@@ -26,10 +26,9 @@ First, let's define our tools and our model:
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="llm"
-  fireworksParams={`model="accounts/fireworks/models/firefunction-v1", temperature=0`}
+customVarName="llm"
+fireworksParams={`model="accounts/fireworks/models/firefunction-v1", temperature=0`}
 />
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to pass tool outputs to chat models"}]-->
@@ -54,7 +53,6 @@ llm_with_tools = llm.bind_tools(tools)
 ```
 
 Now, let's get the model to call a tool. We'll add it to a list of messages that we'll treat as conversation history:
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to pass tool outputs to chat models"}]-->
@@ -85,7 +83,6 @@ If you are on earlier versions of `langchain-core`, you will need to extract the
 
 :::
 
-
 ```python
 for tool_call in ai_msg.tool_calls:
     selected_tool = {"add": add, "multiply": multiply}[tool_call["name"].lower()]
@@ -95,8 +92,6 @@ for tool_call in ai_msg.tool_calls:
 messages
 ```
 
-
-
 ```output
 [HumanMessage(content='What is 3 * 12? Also, what is 11 + 49?'),
  AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_loT2pliJwJe3p7nkgXYF48A1', 'function': {'arguments': '{"a": 3, "b": 12}', 'name': 'multiply'}, 'type': 'function'}, {'id': 'call_bG9tYZCXOeYDZf3W46TceoV4', 'function': {'arguments': '{"a": 11, "b": 49}', 'name': 'add'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 50, 'prompt_tokens': 87, 'total_tokens': 137}, 'model_name': 'gpt-4o-mini-2024-07-18', 'system_fingerprint': 'fp_661538dc1f', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-e3db3c46-bf9e-478e-abc1-dc9a264f4afe-0', tool_calls=[{'name': 'multiply', 'args': {'a': 3, 'b': 12}, 'id': 'call_loT2pliJwJe3p7nkgXYF48A1', 'type': 'tool_call'}, {'name': 'add', 'args': {'a': 11, 'b': 49}, 'id': 'call_bG9tYZCXOeYDZf3W46TceoV4', 'type': 'tool_call'}], usage_metadata={'input_tokens': 87, 'output_tokens': 50, 'total_tokens': 137}),
@@ -104,20 +99,15 @@ messages
  ToolMessage(content='60', name='add', tool_call_id='call_bG9tYZCXOeYDZf3W46TceoV4')]
 ```
 
-
 And finally, we'll invoke the model with the tool results. The model will use this information to generate a final answer to our original query:
-
 
 ```python
 llm_with_tools.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='The result of \\(3 \\times 12\\) is 36, and the result of \\(11 + 49\\) is 60.', response_metadata={'token_usage': {'completion_tokens': 31, 'prompt_tokens': 153, 'total_tokens': 184}, 'model_name': 'gpt-4o-mini-2024-07-18', 'system_fingerprint': 'fp_661538dc1f', 'finish_reason': 'stop', 'logprobs': None}, id='run-87d1ef0a-1223-4bb3-9310-7b591789323d-0', usage_metadata={'input_tokens': 153, 'output_tokens': 31, 'total_tokens': 184})
 ```
-
 
 Note that each `ToolMessage` must include a `tool_call_id` that matches an `id` in the original tool calls that the model generates. This helps the model match tool responses with tool calls.
 

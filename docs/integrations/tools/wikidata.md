@@ -5,15 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Wikidata
 
->[Wikidata](https://wikidata.org/) is a free and open knowledge base that can be read and edited by both humans and machines. Wikidata is one of the world's largest open knowledge bases.
+> [Wikidata](https://wikidata.org/) is a free and open knowledge base that can be read and edited by both humans and machines. Wikidata is one of the world's largest open knowledge bases.
 
 First, you need to install `wikibase-rest-api-client` and `mediawikiapi` python packages.
-
 
 ```python
 %pip install --upgrade --quiet "wikibase-rest-api-client<0.2" mediawikiapi
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "WikidataAPIWrapper", "source": "langchain_community.tools.wikidata.tool", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wikidata.WikidataAPIWrapper.html", "title": "Wikidata"}, {"imported": "WikidataQueryRun", "source": "langchain_community.tools.wikidata.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.wikidata.tool.WikidataQueryRun.html", "title": "Wikidata"}]-->

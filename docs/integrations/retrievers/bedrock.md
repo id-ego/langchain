@@ -27,7 +27,6 @@ Knowledge Bases can be configured through [AWS Console](https://aws.amazon.com/c
 
 If you want to get automated tracing from individual queries, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -37,7 +36,6 @@ If you want to get automated tracing from individual queries, you can also set y
 
 This retriever lives in the `langchain-aws` package:
 
-
 ```python
 %pip install -qU langchain-aws
 ```
@@ -45,7 +43,6 @@ This retriever lives in the `langchain-aws` package:
 ## Instantiation
 
 Now we can instantiate our retriever:
-
 
 ```python
 from langchain_aws.retrievers import AmazonKnowledgeBasesRetriever
@@ -58,7 +55,6 @@ retriever = AmazonKnowledgeBasesRetriever(
 
 ## Usage
 
-
 ```python
 query = "What did the president say about Ketanji Brown?"
 
@@ -66,7 +62,6 @@ retriever.invoke(query)
 ```
 
 ## Use within a chain
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Bedrock (Knowledge Bases) Retriever"}]-->
@@ -88,7 +83,6 @@ qa(query)
 ## API reference
 
 For detailed documentation of all `AmazonKnowledgeBasesRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/retrievers/langchain_aws.retrievers.bedrock.AmazonKnowledgeBasesRetriever.html).
-
 
 ## Related
 

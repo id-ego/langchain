@@ -11,7 +11,6 @@ But we can do other things besides throw errors. Specifically, we can pass the m
 
 For this example, we'll use the above Pydantic output parser. Here's what happens if we pass it a result that does not comply with the schema:
 
-
 ```python
 <!--IMPORTS:[{"imported": "PydanticOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html", "title": "How to use the output-fixing parser"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use the output-fixing parser"}]-->
 from typing import List
@@ -20,7 +19,6 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 class Actor(BaseModel):
@@ -33,11 +31,9 @@ actor_query = "Generate the filmography for a random actor."
 parser = PydanticOutputParser(pydantic_object=Actor)
 ```
 
-
 ```python
 misformatted = "{'name': 'Tom Hanks', 'film_names': ['Forrest Gump']}"
 ```
-
 
 ```python
 parser.parse(misformatted)
@@ -90,7 +86,6 @@ OutputParserException: Failed to parse Actor from completion {'name': 'Tom Hanks
 
 Now we can construct and use a `OutputFixingParser`. This output parser takes as an argument another output parser but also an LLM with which to try to correct any formatting mistakes.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OutputFixingParser", "source": "langchain.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.fix.OutputFixingParser.html", "title": "How to use the output-fixing parser"}]-->
 from langchain.output_parsers import OutputFixingParser
@@ -98,16 +93,12 @@ from langchain.output_parsers import OutputFixingParser
 new_parser = OutputFixingParser.from_llm(parser=parser, llm=ChatOpenAI())
 ```
 
-
 ```python
 new_parser.parse(misformatted)
 ```
 
-
-
 ```output
 Actor(name='Tom Hanks', film_names=['Forrest Gump'])
 ```
-
 
 Find out api documentation for [OutputFixingParser](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.fix.OutputFixingParser.html#langchain.output_parsers.fix.OutputFixingParser).

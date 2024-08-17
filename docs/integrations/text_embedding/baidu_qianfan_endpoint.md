@@ -14,9 +14,7 @@ Basically, those model are split into the following type:
 - Completion
 
 In this notebook, we will introduce how to use langchain with [Qianfan](https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html) mainly in `Embedding` corresponding
- to the package `langchain/embeddings` in langchain:
-
-
+to the package `langchain/embeddings` in langchain:
 
 ## API Initialization
 
@@ -28,8 +26,6 @@ You could either choose to init the AK,SK in environment variables or init param
 export QIANFAN_AK=XXX
 export QIANFAN_SK=XXX
 ```
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "QianfanEmbeddingsEndpoint", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.baidu_qianfan_endpoint.QianfanEmbeddingsEndpoint.html", "title": "Baidu Qianfan"}]-->
@@ -81,7 +77,6 @@ In the case you want to deploy your own model based on Ernie Bot or third-party 
 
 - 1. （Optional, if the model are included in the default models, skip it）Deploy your model in Qianfan Console, get your own customized deploy endpoint.
 - 2. Set up the field called `endpoint` in the initialization:
-
 
 ```python
 embed = QianfanEmbeddingsEndpoint(model="bge_large_zh", endpoint="bge_large_zh")

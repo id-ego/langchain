@@ -11,7 +11,6 @@ Sometimes, a query analysis technique may allow for multiple queries to be gener
 ## Setup
 #### Install dependencies
 
-
 ```python
 # %pip install -qU langchain langchain-community langchain-openai langchain-chroma
 ```
@@ -19,7 +18,6 @@ Sometimes, a query analysis technique may allow for multiple queries to be gener
 #### Set environment variables
 
 We'll use OpenAI in this example:
-
 
 ```python
 import getpass
@@ -35,7 +33,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ### Create Index
 
 We will create a vectorstore over fake information.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to handle multiple queries when doing query analysis"}]-->
@@ -56,7 +53,6 @@ retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
 
 We will use function calling to structure the output. We will let it return multiple queries.
 
-
 ```python
 from typing import List, Optional
 
@@ -71,7 +67,6 @@ class Search(BaseModel):
         description="Distinct queries to search for",
     )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticToolsParser", "source": "langchain_core.output_parsers.openai_tools", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to handle multiple queries when doing query analysis"}]-->
@@ -101,40 +96,30 @@ query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
 We can see that this allows for creating multiple queries
 
-
 ```python
 query_analyzer.invoke("where did Harrison Work")
 ```
-
-
 
 ```output
 Search(queries=['Harrison work location'])
 ```
 
-
-
 ```python
 query_analyzer.invoke("where did Harrison and ankush Work")
 ```
-
-
 
 ```output
 Search(queries=['Harrison work place', 'Ankush work place'])
 ```
 
-
 ## Retrieval with query analysis
 
 So how would we include this in a chain? One thing that will make this a lot easier is if we call our retriever asyncronously - this will let us loop over the queries and not get blocked on the response time.
-
 
 ```python
 <!--IMPORTS:[{"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to handle multiple queries when doing query analysis"}]-->
 from langchain_core.runnables import chain
 ```
-
 
 ```python
 @chain
@@ -149,24 +134,17 @@ async def custom_chain(question):
     return docs
 ```
 
-
 ```python
 await custom_chain.ainvoke("where did Harrison Work")
 ```
-
-
 
 ```output
 [Document(page_content='Harrison worked at Kensho')]
 ```
 
-
-
 ```python
 await custom_chain.ainvoke("where did Harrison and ankush Work")
 ```
-
-
 
 ```output
 [Document(page_content='Harrison worked at Kensho'),

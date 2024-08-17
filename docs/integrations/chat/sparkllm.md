@@ -9,7 +9,6 @@ SparkLLM chat models API by iFlyTek. For more information, see [iFlyTek Open Pla
 
 ## Basic use
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatSparkLLM", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.sparkllm.ChatSparkLLM.html", "title": "SparkLLM Chat"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "SparkLLM Chat"}]-->
 """For basic init and call"""
@@ -23,17 +22,13 @@ message = HumanMessage(content="Hello")
 chat([message])
 ```
 
-
-
 ```output
 AIMessage(content='Hello! How can I help you today?')
 ```
 
-
 - Get SparkLLM's app_id, api_key and api_secret from [iFlyTek SparkLLM API Console](https://console.xfyun.cn/services/bm3) (for more info, see [iFlyTek SparkLLM Intro](https://xinghuo.xfyun.cn/sparkapi) ), then set environment variables `IFLYTEK_SPARK_APP_ID`, `IFLYTEK_SPARK_API_KEY` and `IFLYTEK_SPARK_API_SECRET` or pass parameters when creating `ChatSparkLLM` as the demo above.
 
 ## For ChatSparkLLM with Streaming
-
 
 ```python
 chat = ChatSparkLLM(
@@ -49,7 +44,6 @@ for chunk in chat.stream("Hello!"):
 Hello! How can I help you today?
 ```
 ## For v2
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatSparkLLM", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.sparkllm.ChatSparkLLM.html", "title": "SparkLLM Chat"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "SparkLLM Chat"}]-->
@@ -67,7 +61,6 @@ chat = ChatSparkLLM(
 message = HumanMessage(content="Hello")
 chat([message])
 ```
-
 
 ## Related
 

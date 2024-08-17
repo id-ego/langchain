@@ -12,7 +12,6 @@ This guide assumes familiarity with the following concepts:
 - [LLMs](/docs/concepts/#llms)
 :::
 
-
 You may find yourself in a situation where you are getting rate limited by the model provider API because you're making too many requests.
 
 For example, this might happen if you are running many parallel queries to benchmark the chat model on a test dataset.
@@ -20,9 +19,9 @@ For example, this might happen if you are running many parallel queries to bench
 If you are facing such a situation, you can use a rate limiter to help match the rate at which you're making request to the rate allowed
 by the API.
 
-:::info Requires ``langchain-core >= 0.2.24``
+:::info Requires `langchain-core >= 0.2.24`
 
-This functionality was added in ``langchain-core == 0.2.24``. Please make sure your package is up to date.
+This functionality was added in `langchain-core == 0.2.24`. Please make sure your package is up to date.
 :::
 
 ## Initialize a rate limiter
@@ -31,7 +30,6 @@ Langchain comes with a built-in in memory rate limiter. This rate limiter is thr
 
 The provided rate limiter can only limit the number of requests per unit time. It will not help if you need to also limited based on the size
 of the requests.
-
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryRateLimiter", "source": "langchain_core.rate_limiters", "docs": "https://api.python.langchain.com/en/latest/rate_limiters/langchain_core.rate_limiters.InMemoryRateLimiter.html", "title": "How to handle rate limits"}]-->
@@ -47,7 +45,6 @@ rate_limiter = InMemoryRateLimiter(
 ## Choose a model
 
 Choose any model and pass to it the rate_limiter via the `rate_limiter` attribute.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to handle rate limits"}]-->
@@ -65,7 +62,6 @@ model = ChatAnthropic(model_name="claude-3-opus-20240229", rate_limiter=rate_lim
 ```
 
 Let's confirm that the rate limiter works. We should only be able to invoke the model once per 10 seconds.
-
 
 ```python
 for _ in range(5):

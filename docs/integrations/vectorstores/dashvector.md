@@ -14,13 +14,11 @@ Here are the [installation instructions](https://help.aliyun.com/document_detail
 
 ## Install
 
-
 ```python
 %pip install --upgrade --quiet  langchain-community dashvector dashscope
 ```
 
 We want to use `DashScopeEmbeddings` so we also have to get the Dashscope API Key.
-
 
 ```python
 import getpass
@@ -32,14 +30,12 @@ os.environ["DASHSCOPE_API_KEY"] = getpass.getpass("DashScope API Key:")
 
 ## Example
 
-
 ```python
 <!--IMPORTS:[{"imported": "DashScopeEmbeddings", "source": "langchain_community.embeddings.dashscope", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.dashscope.DashScopeEmbeddings.html", "title": "DashVector"}, {"imported": "DashVector", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.dashvector.DashVector.html", "title": "DashVector"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "DashVector"}]-->
 from langchain_community.embeddings.dashscope import DashScopeEmbeddings
 from langchain_community.vectorstores import DashVector
 from langchain_text_splitters import CharacterTextSplitter
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "DashVector"}]-->
@@ -55,7 +51,6 @@ embeddings = DashScopeEmbeddings()
 
 We can create DashVector from documents.
 
-
 ```python
 dashvector = DashVector.from_documents(docs, embeddings)
 
@@ -65,7 +60,6 @@ print(docs)
 ```
 
 We can add texts with meta datas and ids, and search with meta filter.
-
 
 ```python
 texts = ["foo", "bar", "baz"]
@@ -84,7 +78,6 @@ print(docs)
 
 The `partition` parameter defaults to default, and if a non-existent `partition` parameter is passed in, the `partition` will be created automatically. 
 
-
 ```python
 texts = ["foo", "bar", "baz"]
 metadatas = [{"key": i} for i in range(len(texts))]
@@ -101,7 +94,6 @@ docs = dashvector.similarity_search(query, partition=partition)
 # delete
 dashvector.delete(ids=ids, partition=partition)
 ```
-
 
 ## Related
 

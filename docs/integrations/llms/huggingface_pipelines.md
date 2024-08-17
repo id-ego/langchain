@@ -11,8 +11,7 @@ The [Hugging Face Model Hub](https://huggingface.co/models) hosts over 120k mode
 
 These can be called from LangChain either through this local pipeline wrapper or by calling their hosted inference endpoints through the HuggingFaceHub class.
 
-To use, you should have the ``transformers`` python [package installed](https://pypi.org/project/transformers/), as well as [pytorch](https://pytorch.org/get-started/locally/). You can also install `xformer` for a more memory-efficient attention implementation.
-
+To use, you should have the `transformers` python [package installed](https://pypi.org/project/transformers/), as well as [pytorch](https://pytorch.org/get-started/locally/). You can also install `xformer` for a more memory-efficient attention implementation.
 
 ```python
 %pip install --upgrade --quiet transformers
@@ -21,7 +20,6 @@ To use, you should have the ``transformers`` python [package installed](https://
 ### Model Loading
 
 Models can be loaded by specifying the model parameters using the `from_model_id` method.
-
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFacePipeline", "source": "langchain_huggingface.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "Hugging Face Local Pipelines"}]-->
@@ -35,7 +33,6 @@ hf = HuggingFacePipeline.from_model_id(
 ```
 
 They can also be loaded by passing in an existing `transformers` pipeline directly
-
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFacePipeline", "source": "langchain_huggingface.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "Hugging Face Local Pipelines"}]-->
@@ -53,7 +50,6 @@ hf = HuggingFacePipeline(pipeline=pipe)
 
 With the model loaded into memory, you can compose it with a prompt to
 form a chain.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Hugging Face Local Pipelines"}]-->
@@ -73,7 +69,6 @@ print(chain.invoke({"question": question}))
 
 To get response without prompt, you can bind `skip_prompt=True` with LLM.
 
-
 ```python
 chain = prompt | hf.bind(skip_prompt=True)
 
@@ -83,7 +78,6 @@ print(chain.invoke({"question": question}))
 ```
 
 Streaming repsonse.
-
 
 ```python
 for chunk in chain.stream(question):
@@ -98,7 +92,6 @@ Defaults to `-1` for CPU inference.
 If you have multiple-GPUs and/or the model is too large for a single GPU, you can specify `device_map="auto"`, which requires and uses the [Accelerate](https://huggingface.co/docs/accelerate/index) library to automatically determine how to load the model weights. 
 
 *Note*: both `device` and `device_map` should not be specified together and can lead to unexpected behavior.
-
 
 ```python
 gpu_llm = HuggingFacePipeline.from_model_id(
@@ -118,7 +111,6 @@ print(gpu_chain.invoke({"question": question}))
 ### Batch GPU Inference
 
 If running on a device with GPU, you can also run inference on the GPU in batch mode.
-
 
 ```python
 gpu_llm = HuggingFacePipeline.from_model_id(
@@ -146,11 +138,9 @@ To deploy a model with OpenVINO, you can specify the `backend="openvino"` parame
 
 If you have an Intel GPU, you can specify `model_kwargs={"device": "GPU"}` to run inference on it.
 
-
 ```python
 %pip install --upgrade-strategy eager "optimum[openvino,nncf]" --quiet
 ```
-
 
 ```python
 ov_config = {"PERFORMANCE_HINT": "LATENCY", "NUM_STREAMS": "1", "CACHE_DIR": ""}
@@ -174,21 +164,17 @@ print(ov_chain.invoke({"question": question}))
 
 It is possible to [export your model](https://github.com/huggingface/optimum-intel?tab=readme-ov-file#export) to the OpenVINO IR format with the CLI, and load the model from local folder.
 
-
-
 ```python
 !optimum-cli export openvino --model gpt2 ov_model_dir
 ```
 
 It is recommended to apply 8 or 4-bit weight quantization to reduce inference latency and model footprint using `--weight-format`:
 
-
 ```python
 !optimum-cli export openvino --model gpt2  --weight-format int8 ov_model_dir # for 8-bit quantization
 
 !optimum-cli export openvino --model gpt2  --weight-format int4 ov_model_dir # for 4-bit quantization
 ```
-
 
 ```python
 ov_llm = HuggingFacePipeline.from_model_id(
@@ -208,7 +194,6 @@ print(ov_chain.invoke({"question": question}))
 
 You can get additional inference speed improvement with Dynamic Quantization of activations and KV-cache quantization. These options can be enabled with `ov_config` as follows:
 
-
 ```python
 ov_config = {
     "KV_CACHE_PRECISION": "u8",
@@ -220,7 +205,6 @@ ov_config = {
 ```
 
 For more information refer to [OpenVINO LLM guide](https://docs.openvino.ai/2024/learn-openvino/llm_inference_guide.html) and [OpenVINO Local Pipelines notebook](/docs/integrations/llms/openvino/).
-
 
 ## Related
 

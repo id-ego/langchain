@@ -12,7 +12,7 @@ The Embeddings class is a class designed for interfacing with text embedding mod
 
 Embeddings create a vector representation of a piece of text. This is useful because it means we can think about text in the vector space, and do things like semantic search where we look for pieces of text that are most similar in the vector space.
 
-The base Embeddings class in LangChain provides two methods: one for embedding documents and one for embedding a query. The former, `.embed_documents`, takes as input multiple texts, while the latter, `.embed_query`, takes a single text. The reason for having these as two separate methods is that some embedding providers have different embedding methods for documents (to be searched over) vs queries (the search query itself). 
+The base Embeddings class in LangChain provides two methods: one for embedding documents and one for embedding a query. The former, `.embed_documents`, takes as input multiple texts, while the latter, `.embed_query`, takes a single text. The reason for having these as two separate methods is that some embedding providers have different embedding methods for documents (to be searched over) vs queries (the search query itself).
 `.embed_query` will return a list of floats, whereas `.embed_documents` returns a list of lists of floats.
 
 ## Get started
@@ -25,6 +25,7 @@ import TabItem from '@theme/TabItem';
 <Tabs>
   <TabItem value="openai" label="OpenAI" default>
 To start we'll need to install the OpenAI partner package:
+
 
 ```bash
 pip install langchain-openai
@@ -55,6 +56,7 @@ embeddings_model = OpenAIEmbeddings()
 
   </TabItem>
   <TabItem value="cohere" label="Cohere">
+
 
 To start we'll need to install the Cohere SDK package:
 
@@ -89,6 +91,7 @@ Do note that it is mandatory to pass the model parameter while initializing the 
   </TabItem>
   <TabItem value="huggingface" label="Hugging Face">
 
+
 To start we'll need to install the Hugging Face partner package:
 
 ```bash
@@ -116,6 +119,7 @@ embeddings_model = HuggingFaceEmbeddings()
   </TabItem>
 </Tabs>
 
+
 ### `embed_documents`
 #### Embed list of texts
 
@@ -136,11 +140,13 @@ len(embeddings), len(embeddings[0])
 
 <CodeOutputBlock language="python">
 
+
 ```
 (5, 1536)
 ```
 
 </CodeOutputBlock>
+
 
 ### `embed_query`
 #### Embed single query
@@ -152,6 +158,7 @@ embedded_query[:5]
 ```
 
 <CodeOutputBlock language="python">
+
 
 ```
 [0.0053587136790156364,

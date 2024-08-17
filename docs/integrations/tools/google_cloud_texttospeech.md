@@ -5,19 +5,17 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Google Cloud Text-to-Speech
 
->[Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) enables developers to synthesize natural-sounding speech with 100+ voices, available in multiple languages and variants. It applies DeepMind’s groundbreaking research in WaveNet and Google’s powerful neural networks to deliver the highest fidelity possible.
+> [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) enables developers to synthesize natural-sounding speech with 100+ voices, available in multiple languages and variants. It applies DeepMind’s groundbreaking research in WaveNet and Google’s powerful neural networks to deliver the highest fidelity possible.
 
 This notebook shows how to interact with the `Google Cloud Text-to-Speech API` to achieve speech synthesis capabilities.
 
 First, you need to set up an Google Cloud project. You can follow the instructions [here](https://cloud.google.com/text-to-speech/docs/before-you-begin).
-
 
 ```python
 %pip install --upgrade --quiet  google-cloud-text-to-speech langchain-community
 ```
 
 ## Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleCloudTextToSpeechTool", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.google_cloud.texttospeech.GoogleCloudTextToSpeechTool.html", "title": "Google Cloud Text-to-Speech"}]-->
@@ -31,11 +29,9 @@ tts.name
 
 We can generate audio, save it to the temporary file and then play it.
 
-
 ```python
 speech_file = tts.run(text_to_speak)
 ```
-
 
 ## Related
 

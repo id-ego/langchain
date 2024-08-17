@@ -17,7 +17,6 @@ Note that, as this agent is in active development, all answers might not be corr
 
 ## Initialization
 
-
 ```python
 <!--IMPORTS:[{"imported": "PowerBIToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.powerbi.toolkit.PowerBIToolkit.html", "title": "PowerBI Toolkit"}, {"imported": "create_pbi_agent", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.powerbi.base.create_pbi_agent.html", "title": "PowerBI Toolkit"}, {"imported": "PowerBIDataset", "source": "langchain_community.utilities.powerbi", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.powerbi.PowerBIDataset.html", "title": "PowerBI Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "PowerBI Toolkit"}]-->
 from azure.identity import DefaultAzureCredential
@@ -25,7 +24,6 @@ from langchain_community.agent_toolkits import PowerBIToolkit, create_pbi_agent
 from langchain_community.utilities.powerbi import PowerBIDataset
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 fast_llm = ChatOpenAI(
@@ -51,7 +49,6 @@ agent_executor = create_pbi_agent(
 
 ## Example: describing a table
 
-
 ```python
 agent_executor.run("Describe table1")
 ```
@@ -59,25 +56,21 @@ agent_executor.run("Describe table1")
 ## Example: simple query on a table
 In this example, the agent actually figures out the correct query to get a row count of the table.
 
-
 ```python
 agent_executor.run("How many records are in table1?")
 ```
 
 ## Example: running queries
 
-
 ```python
 agent_executor.run("How many records are there by dimension1 in table2?")
 ```
-
 
 ```python
 agent_executor.run("What unique values are there for dimensions2 in table2")
 ```
 
 ## Example: add your own few-shot prompts
-
 
 ```python
 # fictional example
@@ -108,11 +101,9 @@ agent_executor = create_pbi_agent(
 )
 ```
 
-
 ```python
 agent_executor.run("What was the maximum of value in revenue in dollars in 2022?")
 ```
-
 
 ## Related
 

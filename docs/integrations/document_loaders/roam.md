@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Roam
 
->[ROAM](https://roamresearch.com/) is a note-taking tool for networked thought, designed to create a personal knowledge base.
+> [ROAM](https://roamresearch.com/) is a note-taking tool for networked thought, designed to create a personal knowledge base.
 
 This notebook covers how to load documents from a Roam database. This takes a lot of inspiration from the example repo [here](https://github.com/JimmyLv/roam-qa).
 
@@ -23,23 +23,18 @@ Run the following command to unzip the zip file (replace the `Export...` with yo
 unzip Roam-Export-1675782732639.zip -d Roam_DB
 ```
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "RoamLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.roam.RoamLoader.html", "title": "Roam"}]-->
 from langchain_community.document_loaders import RoamLoader
 ```
 
-
 ```python
 loader = RoamLoader("Roam_DB")
 ```
 
-
 ```python
 docs = loader.load()
 ```
-
 
 ## Related
 

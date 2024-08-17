@@ -5,16 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Alibaba Cloud OpenSearch
 
->[Alibaba Cloud Opensearch](https://www.alibabacloud.com/product/opensearch) is a one-stop platform to develop intelligent search services. `OpenSearch` was built on the large-scale distributed search engine developed by `Alibaba`. `OpenSearch` serves more than 500 business cases in Alibaba Group and thousands of Alibaba Cloud customers. `OpenSearch` helps develop search services in different search scenarios, including e-commerce, O2O, multimedia, the content industry, communities and forums, and big data query in enterprises.
+> [Alibaba Cloud Opensearch](https://www.alibabacloud.com/product/opensearch) is a one-stop platform to develop intelligent search services. `OpenSearch` was built on the large-scale distributed search engine developed by `Alibaba`. `OpenSearch` serves more than 500 business cases in Alibaba Group and thousands of Alibaba Cloud customers. `OpenSearch` helps develop search services in different search scenarios, including e-commerce, O2O, multimedia, the content industry, communities and forums, and big data query in enterprises.
 
->`OpenSearch` helps you develop high-quality, maintenance-free, and high-performance intelligent search services to provide your users with high search efficiency and accuracy.
+> `OpenSearch` helps you develop high-quality, maintenance-free, and high-performance intelligent search services to provide your users with high search efficiency and accuracy.
 
->`OpenSearch` provides the vector search feature. In specific scenarios, especially test question search and image search scenarios, you can use the vector search feature together with the multimodal search feature to improve the accuracy of search results.
+> `OpenSearch` provides the vector search feature. In specific scenarios, especially test question search and image search scenarios, you can use the vector search feature together with the multimodal search feature to improve the accuracy of search results.
 
 This notebook shows how to use functionality related to the `Alibaba Cloud OpenSearch Vector Search Edition`.
 
 ## Setting up
-
 
 ### Purchase an instance and configure it
 
@@ -22,7 +21,6 @@ Purchase OpenSearch Vector Search Edition from [Alibaba Cloud](https://opensearc
 
 To run, you should have an [OpenSearch Vector Search Edition](https://opensearch.console.aliyun.com) instance up and running.
 
-  
 ### Alibaba Cloud OpenSearch Vector Store class
                                                                                                                 `AlibabaCloudOpenSearch` class supports functions:
 - `add_texts`
@@ -36,7 +34,6 @@ To run, you should have an [OpenSearch Vector Search Edition](https://opensearch
 - `similarity_search_with_relevance_scores`
 - `delete_doc_by_texts`
 
-
 Read the [help document](https://www.alibabacloud.com/help/en/opensearch/latest/vector-search) to quickly familiarize and configure OpenSearch Vector Search Edition instance.
 
 If you encounter any problems during use, please feel free to contact xingshaomin.xsm@alibaba-inc.com, and we will do our best to provide you with assistance and support.
@@ -45,13 +42,11 @@ After the instance is up and running, follow these steps to split documents, get
 
 We need to install the following Python packages first.
 
-
 ```python
 %pip install --upgrade --quiet  langchain-community alibabacloud_ha3engine_vector
 ```
 
 We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
-
 
 ```python
 import getpass
@@ -61,7 +56,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
 ## Example
-
 
 ```python
 <!--IMPORTS:[{"imported": "AlibabaCloudOpenSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.alibabacloud_opensearch.AlibabaCloudOpenSearch.html", "title": "Alibaba Cloud OpenSearch"}, {"imported": "AlibabaCloudOpenSearchSettings", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.alibabacloud_opensearch.AlibabaCloudOpenSearchSettings.html", "title": "Alibaba Cloud OpenSearch"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Alibaba Cloud OpenSearch"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Alibaba Cloud OpenSearch"}]-->
@@ -74,7 +68,6 @@ from langchain_text_splitters import CharacterTextSplitter
 ```
 
 Split documents and get embeddings.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Alibaba Cloud OpenSearch"}]-->
@@ -89,7 +82,6 @@ embeddings = OpenAIEmbeddings()
 ```
 
 Create opensearch settings.
-
 
 ```python
 settings = AlibabaCloudOpenSearchSettings(
@@ -136,7 +128,6 @@ settings = AlibabaCloudOpenSearchSettings(
 
 Create an opensearch access instance by settings.
 
-
 ```python
 # Create an opensearch instance and index docs.
 opensearch = AlibabaCloudOpenSearch.from_texts(
@@ -146,14 +137,12 @@ opensearch = AlibabaCloudOpenSearch.from_texts(
 
 or
 
-
 ```python
 # Create an opensearch instance.
 opensearch = AlibabaCloudOpenSearch(embedding=embeddings, config=settings)
 ```
 
 Add texts and build index.
-
 
 ```python
 metadatas = [
@@ -167,7 +156,6 @@ opensearch.add_texts(texts=docs, ids=[], metadatas=metadatas)
 
 Query and retrieve data.
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = opensearch.similarity_search(query)
@@ -175,8 +163,6 @@ print(docs[0].page_content)
 ```
 
 Query and retrieve data with metadata.
-
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -190,9 +176,7 @@ docs = opensearch.similarity_search(query, filter=metadata)
 print(docs[0].page_content)
 ```
 
-If you encounter any problems during use, please feel free to contact <xingshaomin.xsm@alibaba-inc.com>, and we will do our best to provide you with assistance and support.
-
-
+If you encounter any problems during use, please feel free to contact <mailto:xingshaomin.xsm@alibaba-inc.com>, and we will do our best to provide you with assistance and support.
 
 ## Related
 

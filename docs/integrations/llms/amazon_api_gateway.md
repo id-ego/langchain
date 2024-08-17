@@ -5,10 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Amazon API Gateway
 
->[Amazon API Gateway](https://aws.amazon.com/api-gateway/) is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any >scale. APIs act as the "front door" for applications to access data, business logic, or functionality from your backend services. Using `API Gateway`, you can create RESTful APIs and >WebSocket APIs that enable real-time two-way communication applications. API Gateway supports containerized and serverless workloads, as well as web applications.
+> [Amazon API Gateway](https://aws.amazon.com/api-gateway/) is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any >scale. APIs act as the "front door" for applications to access data, business logic, or functionality from your backend services. Using `API Gateway`, you can create RESTful APIs and >WebSocket APIs that enable real-time two-way communication applications. API Gateway supports containerized and serverless workloads, as well as web applications.
 
->`API Gateway` handles all the tasks involved in accepting and processing up to hundreds of thousands of concurrent API calls, including traffic management, CORS support, authorization >and access control, throttling, monitoring, and API version management. `API Gateway` has no minimum fees or startup costs. You pay for the API calls you receive and the amount of data >transferred out and, with the `API Gateway` tiered pricing model, you can reduce your cost as your API usage scales.
-
+> `API Gateway` handles all the tasks involved in accepting and processing up to hundreds of thousands of concurrent API calls, including traffic management, CORS support, authorization >and access control, throttling, monitoring, and API version management. `API Gateway` has no minimum fees or startup costs. You pay for the API calls you receive and the amount of data >transferred out and, with the `API Gateway` tiered pricing model, you can reduce your cost as your API usage scales.
 
 ```python
 ##Installing the langchain packages needed to use the integration
@@ -17,18 +16,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 ## LLM
 
-
 ```python
 <!--IMPORTS:[{"imported": "AmazonAPIGateway", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.amazon_api_gateway.AmazonAPIGateway.html", "title": "Amazon API Gateway"}]-->
 from langchain_community.llms import AmazonAPIGateway
 ```
 
-
 ```python
 api_url = "https://<api_gateway_id>.execute-api.<region>.amazonaws.com/LATEST/HF"
 llm = AmazonAPIGateway(api_url=api_url)
 ```
-
 
 ```python
 # These are sample parameters for Falcon 40B Instruct Deployed from Amazon SageMaker JumpStart
@@ -47,15 +43,11 @@ llm.model_kwargs = parameters
 llm(prompt)
 ```
 
-
-
 ```output
 'what day comes after Friday?\nSaturday'
 ```
 
-
 ## Agent
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Amazon API Gateway"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Amazon API Gateway"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Amazon API Gateway"}]-->
@@ -108,12 +100,9 @@ Hello, world![0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Hello, world!'
 ```
-
-
 
 ```python
 result = agent.run(
@@ -144,12 +133,9 @@ Action:[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 '42.43998894277659'
 ```
-
-
 
 ## Related
 

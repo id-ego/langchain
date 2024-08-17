@@ -11,7 +11,6 @@ This tool requires LLMs that support fine-tuning. Currently, only `langchain.llm
 
 ## Imports
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Memorize"}, {"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Memorize"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Memorize"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Memorize"}, {"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Memorize"}, {"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "Memorize"}, {"imported": "GradientLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.gradient_ai.GradientLLM.html", "title": "Memorize"}]-->
 import os
@@ -24,7 +23,6 @@ from langchain_community.llms import GradientLLM
 
 ## Set the Environment API Key
 Make sure to get your API key from Gradient AI. You are given $10 in free credits to test and fine-tune different models.
-
 
 ```python
 from getpass import getpass
@@ -41,11 +39,10 @@ if not os.environ.get("GRADIENT_MODEL_ADAPTER_ID", None):
     os.environ["GRADIENT_MODEL_ID"] = getpass("gradient.ai model id:")
 ```
 
-Optional: Validate your Environment variables ```GRADIENT_ACCESS_TOKEN``` and ```GRADIENT_WORKSPACE_ID``` to get currently deployed models.
+Optional: Validate your Environment variables `GRADIENT_ACCESS_TOKEN` and `GRADIENT_WORKSPACE_ID` to get currently deployed models.
 
 ## Create the `GradientLLM` instance
 You can specify different parameters such as the model name, max tokens generated, temperature, etc.
-
 
 ```python
 llm = GradientLLM(
@@ -58,13 +55,11 @@ llm = GradientLLM(
 
 ## Load tools
 
-
 ```python
 tools = load_tools(["memorize"], llm=llm)
 ```
 
 ## Initiate the Agent
-
 
 ```python
 agent = initialize_agent(
@@ -78,7 +73,6 @@ agent = initialize_agent(
 
 ## Run the agent
 Ask the agent to memorize a piece of text.
-
 
 ```python
 agent.run(
@@ -99,12 +93,9 @@ Final Answer: Zara Tubikova set a world[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Zara Tubikova set a world'
 ```
-
-
 
 ## Related
 

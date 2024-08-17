@@ -10,7 +10,6 @@ Infinispan is an open-source key-value data grid, it can work as single node as 
 Vector search is supported since release 15.x
 For more: [Infinispan Home](https://infinispan.org)
 
-
 ```python
 # Ensure that all we need is installed
 # You may want to skip this
@@ -28,13 +27,11 @@ In the next three cells we're going to:
 - create the configuration
 - run Infinispan in docker
 
-
 ```bash
 %%bash
 #get an archive of news
 wget https://raw.githubusercontent.com/rigazilla/infinispan-vector/main/bbc_news.csv.gz
 ```
-
 
 ```bash
 %%bash
@@ -64,7 +61,6 @@ echo 'infinispan:
 ' > infinispan-noauth.yaml
 ```
 
-
 ```python
 !docker rm --force infinispanvs-demo
 !docker run -d --name infinispanvs-demo -v $(pwd):/user-config  -p 11222:11222 infinispan/server:15.0 -c /user-config/infinispan-noauth.yaml
@@ -76,7 +72,6 @@ echo 'infinispan:
 
 In this demo we're using
 a HuggingFace embedding mode.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Embeddings", "source": "langchain_core.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_core.embeddings.embeddings.Embeddings.html", "title": "Infinispan"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Infinispan"}]-->
@@ -96,7 +91,6 @@ configured by the python layer. We take advantage of this feature so we can focu
 ## Prepare the data
 
 In this demo we rely on the default configuration, thus texts, metadatas and vectors in the same cache, but other options are possible: i.e. content can be store somewhere else and vector store could contain only a reference to the actual content.
-
 
 ```python
 import csv
@@ -126,7 +120,6 @@ with gzip.open("bbc_news.csv.gz", "rt", newline="") as csvfile:
 
 # Populate the vector store
 
-
 ```python
 <!--IMPORTS:[{"imported": "InfinispanVS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.infinispanvs.InfinispanVS.html", "title": "Infinispan"}]-->
 # add texts and fill vector db
@@ -142,7 +135,6 @@ By default InfinispanVS returns the protobuf `ŧext` field in the `Document.page
 and all the remaining protobuf fields (except the vector) in the `metadata`. This behaviour is
 configurable via lambda functions at setup.
 
-
 ```python
 def print_docs(docs):
     for res, i in zip(docs, range(len(docs))):
@@ -155,37 +147,30 @@ def print_docs(docs):
 
 Below some sample queries
 
-
 ```python
 docs = ispnvs.similarity_search("European nations", 5)
 print_docs(docs)
 ```
 
-
 ```python
 print_docs(ispnvs.similarity_search("Milan fashion week begins", 2))
 ```
-
 
 ```python
 print_docs(ispnvs.similarity_search("Stock market is rising today", 4))
 ```
 
-
 ```python
 print_docs(ispnvs.similarity_search("Why cats are so viral?", 2))
 ```
-
 
 ```python
 print_docs(ispnvs.similarity_search("How to stay young", 5))
 ```
 
-
 ```python
 !docker rm --force infinispanvs-demo
 ```
-
 
 ## Related
 

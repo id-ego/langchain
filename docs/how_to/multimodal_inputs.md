@@ -5,17 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # How to pass multimodal data directly to models
 
-Here we demonstrate how to pass multimodal input directly to models. 
+Here we demonstrate how to pass multimodal input directly to models.
 We currently expect all input to be passed in the same format as [OpenAI expects](https://platform.openai.com/docs/guides/vision).
 For other model providers that support multimodal input, we have added logic inside the class to convert to the expected format.
 
 In this example we will ask a model to describe an image.
 
-
 ```python
 image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to pass multimodal data directly to models"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to pass multimodal data directly to models"}]-->
@@ -28,7 +26,6 @@ model = ChatOpenAI(model="gpt-4o")
 The most commonly supported way to pass in images is to pass it in as a byte string.
 This should work for most model integrations.
 
-
 ```python
 import base64
 
@@ -36,7 +33,6 @@ import httpx
 
 image_data = base64.b64encode(httpx.get(image_url).content).decode("utf-8")
 ```
-
 
 ```python
 message = HumanMessage(
@@ -56,7 +52,6 @@ The weather in the image appears to be clear and pleasant. The sky is mostly blu
 ```
 We can feed the image URL directly in a content block of type "image_url". Note that only some model providers support this.
 
-
 ```python
 message = HumanMessage(
     content=[
@@ -71,7 +66,6 @@ print(response.content)
 The weather in the image appears to be clear and sunny. The sky is mostly blue with a few scattered clouds, suggesting good visibility and a likely pleasant temperature. The bright sunlight is casting distinct shadows on the grass and vegetation, indicating it is likely daytime, possibly late morning or early afternoon. The overall ambiance suggests a warm and inviting day, suitable for outdoor activities.
 ```
 We can also pass in multiple images.
-
 
 ```python
 message = HumanMessage(
@@ -90,7 +84,6 @@ Yes, the two images are the same. They both depict a wooden boardwalk extending 
 ## Tool calls
 
 Some multimodal models support [tool calling](/docs/concepts/#functiontool-calling) features as well. To call tools using such models, simply bind tools to them in the [usual way](/docs/how_to/tool_calling), and invoke the model using content blocks of the desired type (e.g., containing image data).
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to pass multimodal data directly to models"}]-->

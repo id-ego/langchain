@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Pinecone
 
->[Pinecone](https://docs.pinecone.io/docs/overview) is a vector database with broad functionality.
+> [Pinecone](https://docs.pinecone.io/docs/overview) is a vector database with broad functionality.
 
 In the walkthrough, we'll demo the `SelfQueryRetriever` with a `Pinecone` vector store.
 
@@ -16,16 +16,13 @@ To use Pinecone, you have to have `pinecone` package installed and you must have
 
 **Note:** The self-query retriever requires you to have `lark` package installed.
 
-
 ```python
 %pip install --upgrade --quiet  lark
 ```
 
-
 ```python
 %pip install --upgrade --quiet pinecone-notebooks pinecone-client==3.2.2
 ```
-
 
 ```python
 # Connect to Pinecone and get an API key.
@@ -43,13 +40,11 @@ api_key = os.environ["PINECONE_API_KEY"]
 ```
 We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
 
-
 ```python
 import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
-
 
 ```python
 from pinecone import Pinecone, ServerlessSpec
@@ -60,7 +55,6 @@ index_name = "langchain-self-retriever-demo"
 
 pc = Pinecone(api_key=api_key)
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Pinecone"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Pinecone"}, {"imported": "PineconeVectorStore", "source": "langchain_pinecone", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html", "title": "Pinecone"}]-->
@@ -79,7 +73,6 @@ if index_name not in pc.list_indexes().names():
         spec=ServerlessSpec(cloud="aws", region="us-east-1"),
     )
 ```
-
 
 ```python
 docs = [
@@ -121,7 +114,6 @@ vectorstore = PineconeVectorStore.from_documents(
 ## Creating our self-querying retriever
 Now we can instantiate our retriever. To do this we'll need to provide some information upfront about the metadata fields that our documents support and a short description of the document contents.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "Pinecone"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "Pinecone"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Pinecone"}]-->
 from langchain.chains.query_constructor.base import AttributeInfo
@@ -158,7 +150,6 @@ retriever = SelfQueryRetriever.from_llm(
 ## Testing it out
 And now we can try actually using our retriever!
 
-
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are some movies about dinosaurs")
@@ -167,15 +158,12 @@ retriever.invoke("What are some movies about dinosaurs")
 query='dinosaur' filter=None
 ```
 
-
 ```output
 [Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'genre': ['action', 'science fiction'], 'rating': 7.7, 'year': 1993.0}),
  Document(page_content='Toys come alive and have a blast doing so', metadata={'genre': 'animated', 'year': 1995.0}),
  Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'director': 'Satoshi Kon', 'rating': 8.6, 'year': 2006.0}),
  Document(page_content='Leo DiCaprio gets lost in a dream within a dream within a dream within a ...', metadata={'director': 'Christopher Nolan', 'rating': 8.2, 'year': 2010.0})]
 ```
-
-
 
 ```python
 # This example only specifies a filter
@@ -185,13 +173,10 @@ retriever.invoke("I want to watch a movie rated higher than 8.5")
 query=' ' filter=Comparison(comparator=<Comparator.GT: 'gt'>, attribute='rating', value=8.5)
 ```
 
-
 ```output
 [Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'director': 'Satoshi Kon', 'rating': 8.6, 'year': 2006.0}),
  Document(page_content='Three men walk into the Zone, three men walk out of the Zone', metadata={'director': 'Andrei Tarkovsky', 'genre': ['science fiction', 'thriller'], 'rating': 9.9, 'year': 1979.0})]
 ```
-
-
 
 ```python
 # This example specifies a query and a filter
@@ -201,12 +186,9 @@ retriever.invoke("Has Greta Gerwig directed any movies about women")
 query='women' filter=Comparison(comparator=<Comparator.EQ: 'eq'>, attribute='director', value='Greta Gerwig')
 ```
 
-
 ```output
 [Document(page_content='A bunch of normal-sized women are supremely wholesome and some men pine after them', metadata={'director': 'Greta Gerwig', 'rating': 8.3, 'year': 2019.0})]
 ```
-
-
 
 ```python
 # This example specifies a composite filter
@@ -216,12 +198,9 @@ retriever.invoke("What's a highly rated (above 8.5) science fiction film?")
 query=' ' filter=Operation(operator=<Operator.AND: 'and'>, arguments=[Comparison(comparator=<Comparator.EQ: 'eq'>, attribute='genre', value='science fiction'), Comparison(comparator=<Comparator.GT: 'gt'>, attribute='rating', value=8.5)])
 ```
 
-
 ```output
 [Document(page_content='Three men walk into the Zone, three men walk out of the Zone', metadata={'director': 'Andrei Tarkovsky', 'genre': ['science fiction', 'thriller'], 'rating': 9.9, 'year': 1979.0})]
 ```
-
-
 
 ```python
 # This example specifies a query and composite filter
@@ -233,18 +212,15 @@ retriever.invoke(
 query='toys' filter=Operation(operator=<Operator.AND: 'and'>, arguments=[Comparison(comparator=<Comparator.GT: 'gt'>, attribute='year', value=1990.0), Comparison(comparator=<Comparator.LT: 'lt'>, attribute='year', value=2005.0), Comparison(comparator=<Comparator.EQ: 'eq'>, attribute='genre', value='animated')])
 ```
 
-
 ```output
 [Document(page_content='Toys come alive and have a blast doing so', metadata={'genre': 'animated', 'year': 1995.0})]
 ```
-
 
 ## Filter k
 
 We can also use the self query retriever to specify `k`: the number of documents to fetch.
 
 We can do this by passing `enable_limit=True` to the constructor.
-
 
 ```python
 retriever = SelfQueryRetriever.from_llm(
@@ -256,7 +232,6 @@ retriever = SelfQueryRetriever.from_llm(
     verbose=True,
 )
 ```
-
 
 ```python
 # This example only specifies a relevant query

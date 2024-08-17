@@ -10,7 +10,6 @@ This notebook shows how to augment Llama-2 `LLM`s with the `Llama2Chat` wrapper 
 
 `Llama2Chat` is a generic wrapper that implements `BaseChatModel` and can therefore be used in applications as [chat model](/docs/how_to#chat-models). `Llama2Chat` converts a list of Messages into the [required chat prompt format](https://huggingface.co/blog/llama2#how-to-prompt-llama-2) and forwards the formatted prompt as `str` to the wrapped `LLM`.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Llama2Chat"}, {"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "Llama2Chat"}, {"imported": "Llama2Chat", "source": "langchain_experimental.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_experimental.chat_models.llm_wrapper.Llama2Chat.html", "title": "Llama2Chat"}]-->
 from langchain.chains import LLMChain
@@ -19,7 +18,6 @@ from langchain_experimental.chat_models import Llama2Chat
 ```
 
 For the chat application examples below, we'll use the following chat `prompt_template`:
-
 
 ```python
 <!--IMPORTS:[{"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Llama2Chat"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Llama2Chat"}, {"imported": "HumanMessagePromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.HumanMessagePromptTemplate.html", "title": "Llama2Chat"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Llama2Chat"}]-->
@@ -59,13 +57,11 @@ docker run \
 
 This works on a machine with 4 x RTX 3080ti cards, for example. Adjust the `--num_shard` value to the number of GPUs available. The `HF_API_TOKEN` environment variable holds the Hugging Face API token.
 
-
 ```python
 # !pip3 install text-generation
 ```
 
 Create a `HuggingFaceTextGenInference` instance that connects to the local inference server and wrap it into `Llama2Chat`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceTextGenInference", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.huggingface_text_gen_inference.HuggingFaceTextGenInference.html", "title": "Llama2Chat"}]-->
@@ -84,12 +80,10 @@ model = Llama2Chat(llm=llm)
 
 Then you are ready to use the chat `model` together with `prompt_template` and conversation `memory` in an `LLMChain`.
 
-
 ```python
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 chain = LLMChain(llm=model, prompt=prompt_template, memory=memory)
 ```
-
 
 ```python
 print(
@@ -127,7 +121,6 @@ For using a Llama-2 chat model with a [LlamaCPP](/docs/integrations/llms/llamacp
 
 After creating a `LlamaCpp` instance, the `llm` is again wrapped into `Llama2Chat`
 
-
 ```python
 <!--IMPORTS:[{"imported": "LlamaCpp", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.llamacpp.LlamaCpp.html", "title": "Llama2Chat"}]-->
 from os.path import expanduser
@@ -145,12 +138,10 @@ model = Llama2Chat(llm=llm)
 
 and used in the same way as in the previous example.
 
-
 ```python
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 chain = LLMChain(llm=model, prompt=prompt_template, memory=memory)
 ```
-
 
 ```python
 print(

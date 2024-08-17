@@ -4,28 +4,25 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 ---
 
 # MultiOn Toolkit
- 
+
 [MultiON](https://www.multion.ai/blog/multion-building-a-brighter-future-for-humanity-with-ai-agents) has built an AI Agent that can interact with a broad array of web services and applications. 
 
 This notebook walks you through connecting LangChain to the `MultiOn` Client in your browser. 
 
 This enables custom agentic workflow that utilize the power of MultiON agents.
- 
+
 To use this toolkit, you will need to add `MultiOn Extension` to your browser: 
 
 * Create a [MultiON account](https://app.multion.ai/login?callbackUrl=%2Fprofile). 
 * Add  [MultiOn extension for Chrome](https://multion.notion.site/Download-MultiOn-ddddcfe719f94ab182107ca2612c07a5).
 
-
 ```python
 %pip install --upgrade --quiet  multion langchain -q
 ```
 
-
 ```python
 %pip install -qU langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "MultionToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.multion.toolkit.MultionToolkit.html", "title": "MultiOn Toolkit"}]-->
@@ -35,32 +32,24 @@ toolkit = MultionToolkit()
 toolkit
 ```
 
-
-
 ```output
 MultionToolkit()
 ```
-
-
 
 ```python
 tools = toolkit.get_tools()
 tools
 ```
 
-
-
 ```output
 [MultionCreateSession(), MultionUpdateSession(), MultionCloseSession()]
 ```
-
 
 ## MultiOn Setup
 
 Once you have created an account, create an API key at https://app.multion.ai/. 
 
 Login to establish connection with your extension.
-
 
 ```python
 # Authorize connection to your Browser extention
@@ -80,14 +69,12 @@ We can run the below, and view the [trace](https://smith.langchain.com/public/34
 * The agent uses the `create_multion_session` tool
 * It then uses MultiON to execute the query
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "MultiOn Toolkit"}, {"imported": "create_openai_functions_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.create_openai_functions_agent.html", "title": "MultiOn Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "MultiOn Toolkit"}]-->
 from langchain import hub
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 # Prompt
@@ -96,12 +83,10 @@ base_prompt = hub.pull("langchain-ai/openai-functions-template")
 prompt = base_prompt.partial(instructions=instructions)
 ```
 
-
 ```python
 # LLM
 llm = ChatOpenAI(temperature=0)
 ```
-
 
 ```python
 # Agent
@@ -112,7 +97,6 @@ agent_executor = AgentExecutor(
     verbose=False,
 )
 ```
-
 
 ```python
 agent_executor.invoke(
@@ -129,13 +113,10 @@ WARNING: 'update_session' is deprecated and will be removed in a future version.
 WARNING: 'update_session' is deprecated and will be removed in a future version. Use 'step_session' instead.
 ```
 
-
 ```output
 {'input': 'Use multion to how AlphaCodium works, a recently released code language model.',
  'output': 'AlphaCodium is a recently released code language model that is designed to assist developers in writing code more efficiently. It is based on advanced machine learning techniques and natural language processing. AlphaCodium can understand and generate code in multiple programming languages, making it a versatile tool for developers.\n\nThe model is trained on a large dataset of code snippets and programming examples, allowing it to learn patterns and best practices in coding. It can provide suggestions and auto-complete code based on the context and the desired outcome.\n\nAlphaCodium also has the ability to analyze code and identify potential errors or bugs. It can offer recommendations for improving code quality and performance.\n\nOverall, AlphaCodium aims to enhance the coding experience by providing intelligent assistance and reducing the time and effort required to write high-quality code.\n\nFor more detailed information, you can visit the official AlphaCodium website or refer to the documentation and resources available online.\n\nI hope this helps! Let me know if you have any other questions.'}
 ```
-
-
 
 ## Related
 

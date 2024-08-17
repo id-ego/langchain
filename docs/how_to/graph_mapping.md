@@ -14,13 +14,11 @@ Therefore, we can introduce a new step in graph database QA system to accurately
 
 First, get required packages and set environment variables:
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai neo4j
 ```
 
 We default to OpenAI models in this guide, but you can swap them out for the model provider of your choice.
-
 
 ```python
 import getpass
@@ -38,7 +36,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 Next, we need to define Neo4j credentials.
 Follow [these installation steps](https://neo4j.com/docs/operations-manual/current/installation/) to set up a Neo4j database.
 
-
 ```python
 os.environ["NEO4J_URI"] = "bolt://localhost:7687"
 os.environ["NEO4J_USERNAME"] = "neo4j"
@@ -46,7 +43,6 @@ os.environ["NEO4J_PASSWORD"] = "password"
 ```
 
 The below example will create a connection with a Neo4j database and will populate it with example data about movies and their actors.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Neo4jGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neo4j_graph.Neo4jGraph.html", "title": "How to map values to a graph database"}]-->
@@ -78,16 +74,12 @@ FOREACH (genre in split(row.genres, '|') |
 graph.query(movies_query)
 ```
 
-
-
 ```output
 []
 ```
 
-
 ## Detecting entities in the user input
 We have to extract the types of entities/values we want to map to a graph database. In this example, we are dealing with a movie graph, so we can map movies and people to the database.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to map values to a graph database"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to map values to a graph database"}]-->
@@ -129,21 +121,16 @@ entity_chain = prompt | llm.with_structured_output(Entities)
 
 We can test the entity extraction chain.
 
-
 ```python
 entities = entity_chain.invoke({"question": "Who played in Casino movie?"})
 entities
 ```
 
-
-
 ```output
 Entities(names=['Casino'])
 ```
 
-
 We will utilize a simple `CONTAINS` clause to match entities to database. In practice, you might want to use a fuzzy search or a fulltext index to allow for minor misspellings.
-
 
 ```python
 match_query = """MATCH (p:Person|Movie)
@@ -167,18 +154,14 @@ def map_to_database(entities: Entities) -> Optional[str]:
 map_to_database(entities)
 ```
 
-
-
 ```output
 'Casino maps to Casino Movie in database\n'
 ```
-
 
 ## Custom Cypher generating chain
 
 We need to define a custom Cypher prompt that takes the entity mapping information along with the schema and the user question to construct a Cypher statement.
 We will be using the LangChain expression language to accomplish that.
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to map values to a graph database"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to map values to a graph database"}]-->
@@ -215,24 +198,19 @@ cypher_response = (
 )
 ```
 
-
 ```python
 cypher = cypher_response.invoke({"question": "Who played in Casino movie?"})
 cypher
 ```
 
-
-
 ```output
 'MATCH (:Movie {title: "Casino"})<-[:ACTED_IN]-(actor)\nRETURN actor.name'
 ```
-
 
 ## Generating answers based on database results
 
 Now that we have a chain that generates the Cypher statement, we need to execute the Cypher statement against the database and send the database results back to an LLM to generate the final answer.
 Again, we will be using LCEL.
-
 
 ```python
 <!--IMPORTS:[{"imported": "CypherQueryCorrector", "source": "langchain_community.chains.graph_qa.cypher_utils", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher_utils.CypherQueryCorrector.html", "title": "How to map values to a graph database"}, {"imported": "Schema", "source": "langchain_community.chains.graph_qa.cypher_utils", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher_utils.Schema.html", "title": "How to map values to a graph database"}]-->
@@ -276,12 +254,9 @@ chain = (
 )
 ```
 
-
 ```python
 chain.invoke({"question": "Who played in Casino movie?"})
 ```
-
-
 
 ```output
 'Robert De Niro, James Woods, Joe Pesci, and Sharon Stone played in the movie "Casino".'

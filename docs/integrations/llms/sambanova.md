@@ -12,19 +12,17 @@ This example goes over how to use LangChain to interact with SambaNova models
 ## Sambaverse
 
 **Sambaverse** allows you to interact with multiple open-source models. You can view the list of available models and interact with them in the [playground](https://sambaverse.sambanova.ai/playground).
- **Please note that Sambaverse's free offering is performance-limited.** Companies that are ready to evaluate the production tokens-per-second performance, volume throughput, and 10x lower total cost of ownership (TCO) of SambaNova should [contact us](https://sambaverse.sambanova.ai/contact-us) for a non-limited evaluation instance.
+**Please note that Sambaverse's free offering is performance-limited.** Companies that are ready to evaluate the production tokens-per-second performance, volume throughput, and 10x lower total cost of ownership (TCO) of SambaNova should [contact us](https://sambaverse.sambanova.ai/contact-us) for a non-limited evaluation instance.
 
 An API key is required to access Sambaverse models. To get a key, create an account at [sambaverse.sambanova.ai](https://sambaverse.sambanova.ai/)
 
 The [sseclient-py](https://pypi.org/project/sseclient-py/) package is required to run streaming predictions 
-
 
 ```python
 %pip install --quiet sseclient-py==1.8.0
 ```
 
 Register your API key as an environment variable:
-
 
 ```python
 import os
@@ -36,7 +34,6 @@ os.environ["SAMBAVERSE_API_KEY"] = sambaverse_api_key
 ```
 
 Call Sambaverse models directly from LangChain!
-
 
 ```python
 <!--IMPORTS:[{"imported": "Sambaverse", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.Sambaverse.html", "title": "SambaNova"}]-->
@@ -60,7 +57,6 @@ llm = Sambaverse(
 
 print(llm.invoke("Why should I use open source models?"))
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Sambaverse", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.Sambaverse.html", "title": "SambaNova"}]-->
@@ -96,13 +92,11 @@ A SambaStudio environment is required to deploy a model. Get more information at
 
 The [sseclient-py](https://pypi.org/project/sseclient-py/) package is required to run streaming predictions 
 
-
 ```python
 %pip install --quiet sseclient-py==1.8.0
 ```
 
 Register your environment variables:
-
 
 ```python
 import os
@@ -123,7 +117,6 @@ os.environ["SAMBASTUDIO_API_KEY"] = sambastudio_api_key
 
 Call SambaStudio models directly from LangChain!
 
-
 ```python
 <!--IMPORTS:[{"imported": "SambaStudio", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.SambaStudio.html", "title": "SambaNova"}]-->
 from langchain_community.llms.sambanova import SambaStudio
@@ -143,7 +136,6 @@ llm = SambaStudio(
 
 print(llm.invoke("Why should I use open source models?"))
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "SambaStudio", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.SambaStudio.html", "title": "SambaNova"}]-->
@@ -170,7 +162,6 @@ for chunk in llm.stream("Why should I use open source models?"):
 
 You can also call a CoE endpoint expert model 
 
-
 ```python
 <!--IMPORTS:[{"imported": "SambaStudio", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.SambaStudio.html", "title": "SambaNova"}]-->
 # Using a CoE endpoint
@@ -194,7 +185,6 @@ llm = SambaStudio(
 
 print(llm.invoke("Why should I use open source models?"))
 ```
-
 
 ## Related
 

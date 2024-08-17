@@ -9,7 +9,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 Both Cloudflare account ID and API token are required. Find how to obtain them from [this document](https://developers.cloudflare.com/workers-ai/get-started/rest-api/).
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Cloudflare Workers AI"}, {"imported": "CloudflareWorkersAI", "source": "langchain_community.llms.cloudflare_workersai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.cloudflare_workersai.CloudflareWorkersAI.html", "title": "Cloudflare Workers AI"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Cloudflare Workers AI"}]-->
 from langchain.chains import LLMChain
@@ -25,7 +24,6 @@ prompt = PromptTemplate.from_template(template)
 
 Get authentication before running LLM.
 
-
 ```python
 import getpass
 
@@ -34,7 +32,6 @@ my_api_token = getpass.getpass("Enter your Cloudflare API token:\n\n")
 llm = CloudflareWorkersAI(account_id=my_account_id, api_token=my_api_token)
 ```
 
-
 ```python
 llm_chain = LLMChain(prompt=prompt, llm=llm)
 
@@ -42,13 +39,9 @@ question = "Why are roses red?"
 llm_chain.run(question)
 ```
 
-
-
 ```output
 "AI Assistant: Ah, a fascinating question! The answer to why roses are red is a bit complex, but I'll do my best to explain it in a simple and polite manner.\nRoses are red due to the presence of a pigment called anthocyanin. Anthocyanin is a type of flavonoid, a class of plant compounds that are responsible for the red, purple, and blue colors found in many fruits and vegetables.\nNow, you might be wondering why roses specifically have this pigment. The answer lies in the evolutionary history of roses. You see, roses have been around for millions of years, and their red color has likely played a crucial role in attracting pollinators like bees and butterflies. These pollinators are drawn to the bright colors of roses, which helps the plants reproduce and spread their seeds.\nSo, to summarize, the reason roses are red is because of the anthocyanin pigment, which is a result of millions of years of evolutionary pressures shaping the plant's coloration to attract pollinators. I hope that helps clarify things for"
 ```
-
-
 
 ```python
 # Using streaming

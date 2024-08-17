@@ -11,7 +11,6 @@ This notebook serves as a step-by-step guide on how to log, trace, and monitor L
 
 First, let's import Portkey, OpenAI, and Agent tools
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Log, Trace, and Monitor"}, {"imported": "create_openai_tools_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_tools.base.create_openai_tools_agent.html", "title": "Log, Trace, and Monitor"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Log, Trace, and Monitor"}]-->
 import os
@@ -23,7 +22,6 @@ from portkey_ai import PORTKEY_GATEWAY_URL, createHeaders
 
 Paste your OpenAI API key below. [(You can find it here)](https://platform.openai.com/account/api-keys)
 
-
 ```python
 os.environ["OPENAI_API_KEY"] = "..."
 ```
@@ -33,7 +31,6 @@ os.environ["OPENAI_API_KEY"] = "..."
 2. On your [dashboard](https://app.portkey.ai/), click on the profile icon on the bottom left, then click on "Copy API Key"
 3. Paste it below
 
-
 ```python
 PORTKEY_API_KEY = "..."  # Paste your Portkey API Key here
 ```
@@ -42,13 +39,11 @@ PORTKEY_API_KEY = "..."  # Paste your Portkey API Key here
 1. Set the trace id for your request below
 2. The Trace ID can be common for all API calls originating from a single request
 
-
 ```python
 TRACE_ID = "uuid-trace-id"  # Set trace id here
 ```
 
 ## Generate Portkey Headers
-
 
 ```python
 portkey_headers = createHeaders(
@@ -57,7 +52,6 @@ portkey_headers = createHeaders(
 ```
 
 Define the prompts and the tools to use
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "Log, Trace, and Monitor"}]-->
@@ -83,7 +77,6 @@ tools = [multiply, exponentiate]
 ```
 
 Run your agent as usual. The **only** change is that we will **include the above headers** in the request now.
-
 
 ```python
 model = ChatOpenAI(
@@ -123,12 +116,10 @@ Invoking: `exponentiate` with `{'base': 8748, 'exponent': 2}`
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'Take 3 to the fifth power and multiply that by thirty six, then square the result',
  'output': 'The result of taking 3 to the fifth power, multiplying it by 36, and then squaring the result is 76,527,504.'}
 ```
-
 
 ## How Logging & Tracing Works on Portkey
 

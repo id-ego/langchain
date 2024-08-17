@@ -5,10 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Postgres
 
->[PostgreSQL](https://en.wikipedia.org/wiki/PostgreSQL) also known as `Postgres`, is a free and open-source relational database management system (RDBMS) emphasizing extensibility and SQL compliance.
+> [PostgreSQL](https://en.wikipedia.org/wiki/PostgreSQL) also known as `Postgres`, is a free and open-source relational database management system (RDBMS) emphasizing extensibility and SQL compliance.
 
 This notebook goes over how to use Postgres to store chat message history.
-
 
 ```python
 <!--IMPORTS:[{"imported": "PostgresChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.postgres.PostgresChatMessageHistory.html", "title": "Postgres"}]-->
@@ -25,7 +24,6 @@ history.add_user_message("hi!")
 
 history.add_ai_message("whats up?")
 ```
-
 
 ```python
 history.messages

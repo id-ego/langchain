@@ -18,10 +18,10 @@ import {ItemTable} from "@theme/FeatureTables";
 
 <ItemTable category="document_retrievers" item="MilvusCollectionHybridSearchRetriever" />
 
+
 ## Setup
 
 If you want to get automated tracing from individual queries, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -32,11 +32,9 @@ If you want to get automated tracing from individual queries, you can also set y
 
 This retriever lives in the `langchain-milvus` package. This guide requires the following dependencies:
 
-
 ```python
 %pip install --upgrade --quiet pymilvus[model] langchain-milvus langchain-openai
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "MilvusCollectionHybridSearchRetriever", "source": "langchain_milvus.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_milvus.retrievers.milvus_hybrid_search.MilvusCollectionHybridSearchRetriever.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "BM25SparseEmbedding", "source": "langchain_milvus.utils.sparse", "docs": "https://api.python.langchain.com/en/latest/utils/langchain_milvus.utils.sparse.BM25SparseEmbedding.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Milvus Hybrid Search Retriever"}]-->
@@ -62,7 +60,6 @@ Please refer to the [Milvus documentation](https://milvus.io/docs/install_standa
 
 After starting milvus, you need to specify your milvus connection URI.
 
-
 ```python
 CONNECTION_URI = "http://localhost:19530"
 ```
@@ -75,11 +72,9 @@ Please refer to the [OpenAI documentation](https://platform.openai.com/account/a
 export OPENAI_API_KEY=<your_api_key>
 ```
 
-
 ### Prepare dense and sparse embedding functions
 
 Let us fictionalize 10 fake descriptions of novels. In actual production, it may be a large amount of text data.
-
 
 ```python
 texts = [
@@ -100,31 +95,24 @@ We will use the [OpenAI Embedding](https://platform.openai.com/docs/guides/embed
 
 Initialize dense embedding function and get dimension
 
-
 ```python
 dense_embedding_func = OpenAIEmbeddings()
 dense_dim = len(dense_embedding_func.embed_query(texts[1]))
 dense_dim
 ```
 
-
-
 ```output
 1536
 ```
-
 
 Initialize sparse embedding function.
 
 Note that the output of sparse embedding is a set of sparse vectors, which represents the index and weight of the keywords of the input text.
 
-
 ```python
 sparse_embedding_func = BM25SparseEmbedding(corpus=texts)
 sparse_embedding_func.embed_query(texts[1])
 ```
-
-
 
 ```output
 {0: 0.4270424944042204,
@@ -149,18 +137,15 @@ sparse_embedding_func.embed_query(texts[1])
  39: 1.845826690498331}
 ```
 
-
 ### Create Milvus Collection and load data
 
 Initialize connection URI and establish connection
-
 
 ```python
 connections.connect(uri=CONNECTION_URI)
 ```
 
 Define field names and their data types
-
 
 ```python
 pk_field = "doc_id"
@@ -183,7 +168,6 @@ fields = [
 
 Create a collection with the defined schema
 
-
 ```python
 schema = CollectionSchema(fields=fields, enable_dynamic_field=False)
 collection = Collection(
@@ -192,7 +176,6 @@ collection = Collection(
 ```
 
 Define index for dense and sparse vectors
-
 
 ```python
 dense_index = {"index_type": "FLAT", "metric_type": "IP"}
@@ -203,7 +186,6 @@ collection.flush()
 ```
 
 Insert entities into the collection and load the collection
-
 
 ```python
 entities = []
@@ -221,7 +203,6 @@ collection.load()
 ## Instantiation
 
 Now we can instantiate our retriever, defining search parameters for sparse and dense fields:
-
 
 ```python
 sparse_search_params = {"metric_type": "IP"}
@@ -241,12 +222,9 @@ In the input parameters of this Retriever, we use a dense embedding and a sparse
 
 ## Usage
 
-
 ```python
 retriever.invoke("What are the story about ventures?")
 ```
-
-
 
 ```output
 [Document(page_content="In 'The Lost Expedition' by Caspian Grey, a team of explorers ventures into the heart of the Amazon rainforest in search of a lost city, but soon finds themselves hunted by a ruthless treasure hunter and the treacherous jungle itself.", metadata={'doc_id': '449281835035545843'}),
@@ -254,11 +232,9 @@ retriever.invoke("What are the story about ventures?")
  Document(page_content="In 'The Dreamwalker's Journey' by Lyra Snow, a young dreamwalker discovers she has the ability to enter people's dreams, but soon finds herself trapped in a surreal world of nightmares and illusions, where the boundaries between reality and fantasy blur.", metadata={'doc_id': '449281835035545846'})]
 ```
 
-
 ## Use within a chain
 
 Initialize ChatOpenAI and define a prompt template
-
 
 ```python
 llm = ChatOpenAI()
@@ -284,14 +260,12 @@ prompt = PromptTemplate(
 
 Define a function for formatting documents
 
-
 ```python
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 ```
 
 Define a chain using the retriever and other components
-
 
 ```python
 rag_chain = (
@@ -304,20 +278,15 @@ rag_chain = (
 
 Perform a query using the defined chain
 
-
 ```python
 rag_chain.invoke("What novels has Lila written and what are their contents?")
 ```
-
-
 
 ```output
 "Lila Rose has written 'The Memory Thief,' which follows a charismatic thief with the ability to steal and manipulate memories as they navigate a daring heist and a web of deceit and betrayal."
 ```
 
-
 Drop the collection
-
 
 ```python
 collection.drop()
@@ -326,7 +295,6 @@ collection.drop()
 ## API reference
 
 For detailed documentation of all `MilvusCollectionHybridSearchRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/retrievers/langchain_milvus.retrievers.milvus_hybrid_search.MilvusCollectionHybridSearchRetriever.html).
-
 
 ## Related
 

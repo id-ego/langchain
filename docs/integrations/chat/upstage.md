@@ -24,13 +24,11 @@ Make sure to set the following environment variables:
 
 ## Usage
 
-
 ```python
 import os
 
 os.environ["UPSTAGE_API_KEY"] = "YOUR_API_KEY"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatUpstage"}]-->
@@ -40,12 +38,10 @@ from langchain_upstage import ChatUpstage
 chat = ChatUpstage()
 ```
 
-
 ```python
 # using chat invoke
 chat.invoke("Hello, how are you?")
 ```
-
 
 ```python
 # using chat stream
@@ -54,7 +50,6 @@ for m in chat.stream("Hello, how are you?"):
 ```
 
 ## Chaining
-
 
 ```python
 # using chain
@@ -68,7 +63,6 @@ chain = prompt | chat
 
 chain.invoke({"english_text": "Hello, how are you?"})
 ```
-
 
 ## Related
 

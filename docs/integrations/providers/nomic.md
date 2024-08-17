@@ -12,13 +12,11 @@ Nomic currently offers two products:
 
 The Nomic integration exists in its own [partner package](https://pypi.org/project/langchain-nomic/). You can install it with:
 
-
 ```python
 %pip install -qU langchain-nomic
 ```
 
 Currently, you can import their hosted [embedding model](/docs/integrations/text_embedding/nomic) as follows:
-
 
 ```python
 <!--IMPORTS:[{"imported": "NomicEmbeddings", "source": "langchain_nomic", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_nomic.embeddings.NomicEmbeddings.html", "title": "Nomic"}]-->

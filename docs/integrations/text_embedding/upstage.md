@@ -22,18 +22,15 @@ Make sure to set the following environment variables:
 
 - `UPSTAGE_API_KEY`: Your Upstage API key from [Upstage console](https://console.upstage.ai/).
 
-
 ```python
 import os
 
 os.environ["UPSTAGE_API_KEY"] = "YOUR_API_KEY"
 ```
 
-
 ## Usage
 
 Initialize `UpstageEmbeddings` class.
-
 
 ```python
 from langchain_upstage import UpstageEmbeddings
@@ -42,7 +39,6 @@ embeddings = UpstageEmbeddings(model="solar-embedding-1-large")
 ```
 
 Use `embed_documents` to embed list of texts or documents. 
-
 
 ```python
 doc_result = embeddings.embed_documents(
@@ -53,7 +49,6 @@ print(doc_result)
 
 Use `embed_query` to embed query string.
 
-
 ```python
 query_result = embeddings.embed_query("What does Sung do?")
 print(query_result)
@@ -61,12 +56,10 @@ print(query_result)
 
 Use `aembed_documents` and `aembed_query` for async operations.
 
-
 ```python
 # async embed query
 await embeddings.aembed_query("My query to look up")
 ```
-
 
 ```python
 # async embed documents
@@ -78,7 +71,6 @@ await embeddings.aembed_documents(
 ## Using with vector store
 
 You can use `UpstageEmbeddings` with vector store component. The following demonstrates a simple example.
-
 
 ```python
 <!--IMPORTS:[{"imported": "DocArrayInMemorySearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.docarray.in_memory.DocArrayInMemorySearch.html", "title": "UpstageEmbeddings"}]-->
@@ -92,7 +84,6 @@ retriever = vectorstore.as_retriever()
 docs = retriever.invoke("Where did Harrison work?")
 print(docs)
 ```
-
 
 ## Related
 

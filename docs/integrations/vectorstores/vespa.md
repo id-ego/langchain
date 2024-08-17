@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Vespa
 
->[Vespa](https://vespa.ai/) is a fully featured search engine and vector database. It supports vector search (ANN), lexical search, and search in structured data, all in the same query.
+> [Vespa](https://vespa.ai/) is a fully featured search engine and vector database. It supports vector search (ANN), lexical search, and search in structured data, all in the same query.
 
 This notebook shows how to use `Vespa.ai` as a LangChain vector store.
 
@@ -14,7 +14,6 @@ You'll need to install `langchain-community` with `pip install -qU langchain-com
 In order to create the vector store, we use
 [pyvespa](https://pyvespa.readthedocs.io/en/latest/index.html) to create a
 connection a `Vespa` service.
-
 
 ```python
 %pip install --upgrade --quiet  pyvespa
@@ -29,7 +28,6 @@ Here, we will create a new Vespa application and deploy that using Docker.
 #### Creating a Vespa application
 
 First, we need to create an application package:
-
 
 ```python
 from vespa.package import ApplicationPackage, Field, RankProfile
@@ -72,7 +70,6 @@ instruct Vespa how to order documents. Here we set this up with a
 
 Now we can deploy this application locally:
 
-
 ```python
 from vespa.deployment import VespaDocker
 
@@ -87,7 +84,6 @@ please refer to the PyVespa application for how to connect.
 #### Creating a Vespa vector store
 
 Now, let's load some documents:
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Vespa"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Vespa"}, {"imported": "SentenceTransformerEmbeddings", "source": "langchain_community.embeddings.sentence_transformer", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.huggingface.SentenceTransformerEmbeddings.html", "title": "Vespa"}]-->
@@ -114,7 +110,6 @@ To feed these to Vespa, we need to configure how the vector store should map to
 fields in the Vespa application. Then we create the vector store directly from
 this set of documents:
 
-
 ```python
 <!--IMPORTS:[{"imported": "VespaStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vespa.VespaStore.html", "title": "Vespa"}]-->
 vespa_config = dict(
@@ -133,7 +128,6 @@ The vector store takes care of calling the embedding function for each document
 and inserts them into the database.
 
 We can now query the vector store:
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -160,7 +154,6 @@ An alternative to calling `from_documents`, you can create the vector
 store directly and call `add_texts` from that. This can also be used to update
 documents:
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 results = db.similarity_search(query)
@@ -180,7 +173,6 @@ content on Vespa which you can use directly.
 
 You can delete documents using the `delete` function:
 
-
 ```python
 result = db.similarity_search(query)
 # docs[0].metadata["id"] == "id:testapp:testapp::32"
@@ -196,7 +188,6 @@ Again, the `pyvespa` connection contains methods to delete documents as well.
 
 The `similarity_search` method only returns the documents in order of
 relevancy. To retrieve the actual scores:
-
 
 ```python
 results = db.similarity_search_with_score(query)
@@ -221,7 +212,6 @@ To use this vector store as a
 simply call the `as_retriever` function, which is a standard vector store
 method:
 
-
 ```python
 db = VespaStore.from_documents(docs, embedding_function, app=vespa_app, **vespa_config)
 retriever = db.as_retriever()
@@ -242,7 +232,6 @@ is referred to as metadata.
 Vespa can contain many fields with different types by adding them to the application
 package:
 
-
 ```python
 app_package.schema.add_fields(
     # ...
@@ -256,7 +245,6 @@ vespa_app = vespa_docker.deploy(application_package=app_package)
 
 We can add some metadata fields in the documents:
 
-
 ```python
 # Add metadata
 for i, doc in enumerate(docs):
@@ -267,14 +255,12 @@ for i, doc in enumerate(docs):
 
 And let the Vespa vector store know about these fields:
 
-
 ```python
 vespa_config.update(dict(metadata_fields=["date", "rating", "author"]))
 ```
 
 Now, when searching for these documents, these fields will be returned.
 Also, these fields can be filtered on:
-
 
 ```python
 db = VespaStore.from_documents(docs, embedding_function, app=vespa_app, **vespa_config)
@@ -293,7 +279,6 @@ rather just write this yourself.
 
 First, let's add a BM25 ranking function to our application:
 
-
 ```python
 from vespa.package import FieldSet
 
@@ -304,7 +289,6 @@ db = VespaStore.from_documents(docs, embedding_function, app=vespa_app, **vespa_
 ```
 
 Then, to perform a regular text search based on BM25:
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -330,7 +314,6 @@ Hybrid search means using both a classic term-based search such as
 BM25 and a vector search and combining the results. We need to create
 a new rank profile for hybrid search on Vespa:
 
-
 ```python
 app_package.schema.add_rank_profile(
     RankProfile(
@@ -345,7 +328,6 @@ db = VespaStore.from_documents(docs, embedding_function, app=vespa_app, **vespa_
 
 Here, we score each document as a combination of it's BM25 score and its
 distance score. We can query using a custom query:
-
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -377,7 +359,6 @@ Please refer to [Vespa embeddings](https://docs.vespa.ai/en/embedding.html)
 for more information.
 
 First, we need to modify our application package:
-
 
 ```python
 from vespa.package import Component, Parameter
@@ -414,7 +395,6 @@ includes instructions for embedding using the `hf-embedder`.
 
 Now we can query with a custom query:
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 nearest_neighbor_expression = (
@@ -444,7 +424,6 @@ best matches. To avoid this, we can use
 
 First, we can change the embedding field to create a HNSW index:
 
-
 ```python
 from vespa.package import HNSW
 
@@ -466,7 +445,6 @@ This creates a HNSW index on the embedding data which allows for efficient
 searching. With this set, we can easily search using ANN by setting
 the `approximate` argument to `True`:
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 results = db.similarity_search(query, approximate=True)
@@ -474,9 +452,6 @@ results = db.similarity_search(query, approximate=True)
 ```
 
 This covers most of the functionality in the Vespa vector store in LangChain.
-
-
-
 
 ## Related
 

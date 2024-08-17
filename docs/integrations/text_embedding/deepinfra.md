@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 [DeepInfra](https://deepinfra.com/?utm_source=langchain) is a serverless inference as a service that provides access to a [variety of LLMs](https://deepinfra.com/models?utm_source=langchain) and [embeddings models](https://deepinfra.com/models?type=embeddings&utm_source=langchain). This notebook goes over how to use LangChain with DeepInfra for text embeddings.
 
-
 ```python
 # sign up for an account: https://deepinfra.com/login?utm_source=langchain
 
@@ -25,12 +24,10 @@ import os
 os.environ["DEEPINFRA_API_TOKEN"] = DEEPINFRA_API_TOKEN
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "DeepInfraEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.deepinfra.DeepInfraEmbeddings.html", "title": "DeepInfra"}]-->
 from langchain_community.embeddings import DeepInfraEmbeddings
 ```
-
 
 ```python
 embeddings = DeepInfraEmbeddings(
@@ -40,18 +37,15 @@ embeddings = DeepInfraEmbeddings(
 )
 ```
 
-
 ```python
 docs = ["Dog is not a cat", "Beta is the second letter of Greek alphabet"]
 document_result = embeddings.embed_documents(docs)
 ```
 
-
 ```python
 query = "What is the first letter of Greek alphabet"
 query_result = embeddings.embed_query(query)
 ```
-
 
 ```python
 import numpy as np

@@ -20,7 +20,6 @@ pip install premai langchain
 
 Before proceeding further, please make sure that you have made an account on PremAI and already created a project. If not, please refer to the [quick start](https://docs.premai.io/introduction) guide to get started with the PremAI platform. Create your first project and grab your API key.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPremAI", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.premai.ChatPremAI.html", "title": "ChatPremAI"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatPremAI"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "ChatPremAI"}]-->
 from langchain_community.chat_models import ChatPremAI
@@ -35,7 +34,6 @@ To use langchain with prem, you do not need to pass any model name or set any pa
 
 > Note: If you change the `model` or any other parameters like `temperature`  or `max_tokens` while setting the client, it will override existing default configurations, that was used in LaunchPad.   
 
-
 ```python
 import getpass
 import os
@@ -47,7 +45,6 @@ import os
 if os.environ.get("PREMAI_API_KEY") is None:
     os.environ["PREMAI_API_KEY"] = getpass.getpass("PremAI API Key:")
 ```
-
 
 ```python
 # By default it will use the model which was deployed through the platform
@@ -62,7 +59,6 @@ chat = ChatPremAI(project_id=1234, model_name="gpt-4o")
 
 The first one will give us a static result. Whereas the second one will stream tokens one by one. Here's how you can generate chat-like completions. 
 
-
 ```python
 human_message = HumanMessage(content="Who are you?")
 
@@ -74,7 +70,6 @@ I am an AI language model created by OpenAI, designed to assist with answering q
 ```
 Above looks interesting right? I set my default lanchpad system-prompt as: `Always sound like a pirate` You can also, override the default system prompt if you need to. Here's how you can do it. 
 
-
 ```python
 system_message = SystemMessage(content="You are a friendly assistant.")
 human_message = HumanMessage(content="Who are you?")
@@ -82,15 +77,11 @@ human_message = HumanMessage(content="Who are you?")
 chat.invoke([system_message, human_message])
 ```
 
-
-
 ```output
 AIMessage(content="I'm your friendly assistant! How can I help you today?", response_metadata={'document_chunks': [{'repository_id': 1985, 'document_id': 1306, 'chunk_id': 173899, 'document_name': '[D] Difference between sparse and dense informati…', 'similarity_score': 0.3209080100059509, 'content': "with the difference or anywhere\nwhere I can read about it?\n\n\n      17                  9\n\n\n      u/ScotiabankCanada        •  Promoted\n\n\n                       Accelerate your study permit process\n                       with Scotiabank's Student GIC\n                       Program. We're here to help you tur…\n\n\n                       startright.scotiabank.com         Learn More\n\n\n                            Add a Comment\n\n\nSort by:   Best\n\n\n      DinosParkour      • 1y ago\n\n\n     Dense Retrieval (DR) m"}]}, id='run-510bbd0e-3f8f-4095-9b1f-c2d29fd89719-0')
 ```
 
-
 You can provide system prompt here like this:
-
 
 ```python
 chat.invoke([system_message, human_message], temperature=0.7, max_tokens=10, top_p=0.95)
@@ -100,11 +91,9 @@ chat.invoke([system_message, human_message], temperature=0.7, max_tokens=10, top
   warnings.warn(f"WARNING: Parameter {key} is not supported in kwargs.")
 ```
 
-
 ```output
 AIMessage(content="Hello! I'm your friendly assistant. How can I", response_metadata={'document_chunks': [{'repository_id': 1985, 'document_id': 1306, 'chunk_id': 173899, 'document_name': '[D] Difference between sparse and dense informati…', 'similarity_score': 0.3209080100059509, 'content': "with the difference or anywhere\nwhere I can read about it?\n\n\n      17                  9\n\n\n      u/ScotiabankCanada        •  Promoted\n\n\n                       Accelerate your study permit process\n                       with Scotiabank's Student GIC\n                       Program. We're here to help you tur…\n\n\n                       startright.scotiabank.com         Learn More\n\n\n                            Add a Comment\n\n\nSort by:   Best\n\n\n      DinosParkour      • 1y ago\n\n\n     Dense Retrieval (DR) m"}]}, id='run-c4b06b98-4161-4cca-8495-fd2fc98fa8f8-0')
 ```
-
 
 > If you are going to place system prompt here, then it will override your system prompt that was fixed while deploying the application from the platform. 
 
@@ -113,7 +102,6 @@ AIMessage(content="Hello! I'm your friendly assistant. How can I", response_meta
 Prem Repositories which allows users to upload documents (.txt, .pdf etc) and connect those repositories to the LLMs. You can think Prem repositories as native RAG, where each repository can be considered as a vector database. You can connect multiple repositories. You can learn more about repositories [here](https://docs.premai.io/get-started/repositories).
 
 Repositories are also supported in langchain premai. Here is how you can do it. 
-
 
 ```python
 query = "Which models are used for dense retrieval"
@@ -128,7 +116,6 @@ First we start by defining our repository with some repository ids. Make sure th
 > Please note: Similar like `model_name` when you invoke the argument `repositories`, then you are potentially overriding the repositories connected in the launchpad. 
 
 Now, we connect the repository with our chat object to invoke RAG based generations. 
-
 
 ```python
 import json
@@ -164,7 +151,7 @@ Dense retrieval models typically include:
 
 Writing Prompt Templates can be super messy. Prompt templates are long, hard to manage, and must be continuously tweaked to improve and keep the same throughout the application. 
 
-With **Prem**, writing and managing prompts can be super easy. The **_Templates_** tab inside the [launchpad](https://docs.premai.io/get-started/launchpad) helps you write as many prompts you need and use it inside the SDK to make your application running using those prompts. You can read more about Prompt Templates [here](https://docs.premai.io/get-started/prem-templates). 
+With **Prem**, writing and managing prompts can be super easy. The ***Templates*** tab inside the [launchpad](https://docs.premai.io/get-started/launchpad) helps you write as many prompts you need and use it inside the SDK to make your application running using those prompts. You can read more about Prompt Templates [here](https://docs.premai.io/get-started/prem-templates). 
 
 To use Prem Templates natively with LangChain, you need to pass an id the `HumanMessage`. This id should be the name the variable of your prompt template. the `content` in `HumanMessage` should be the value of that variable. 
 
@@ -177,7 +164,6 @@ from my age. My name is: {name} and age is {age}
 
 So now your human_messages should look like:
 
-
 ```python
 human_messages = [
     HumanMessage(content="Shawn", id="name"),
@@ -185,10 +171,8 @@ human_messages = [
 ]
 ```
 
-
 Pass this `human_messages` to ChatPremAI Client. Please note: Do not forget to
 pass the additional `template_id` to invoke generation with Prem Templates. If you are not aware of `template_id` you can learn more about that [in our docs](https://docs.premai.io/get-started/prem-templates). Here is an example:
-
 
 ```python
 template_id = "78069ce8-xxxxx-xxxxx-xxxx-xxx"
@@ -202,7 +186,6 @@ Prem Template feature is available in streaming too.
 
 In this section, let's see how we can stream tokens using langchain and PremAI. Here's how you do it. 
 
-
 ```python
 import sys
 
@@ -214,7 +197,6 @@ for chunk in chat.stream("hello how are you"):
 It looks like your message got cut off. If you need information about Dense Retrieval (DR) or any other topic, please provide more details or clarify your question.
 ```
 Similar to above, if you want to override the system-prompt and the generation parameters, you need to add the following:
-
 
 ```python
 import sys
@@ -250,7 +232,6 @@ The current version of LangChain ChatPremAI do not support function/tool calling
 In order to pass tools and let the LLM choose the tool it needs to call, we need to pass a tool schema. A tool schema is the function definition along with proper docstring on what does the function do, what each argument of the function is etc. Below are some simple arithmetic functions with their schema. 
 
 **NOTE:** When defining function/tool schema, do not forget to add information around the function arguments, otherwise it would throw error.
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "ChatPremAI"}]-->
@@ -291,14 +272,12 @@ def multiply(a: int, b: int) -> int:
 
 We will now use the `bind_tools` method to convert our above functions to a "tool" and binding it with the model. This means we are going to pass these tool informations everytime we invoke the model. 
 
-
 ```python
 tools = [add, multiply]
 llm_with_tools = chat.bind_tools(tools)
 ```
 
 After this, we get the response from the model which is now binded with the tools. 
-
 
 ```python
 query = "What is 3 * 12? Also, what is 11 + 49?"
@@ -309,12 +288,9 @@ ai_msg = llm_with_tools.invoke(messages)
 
 As we can see, when our chat model is binded with tools, then based on the given prompt, it calls the correct set of the tools and sequentially. 
 
-
 ```python
 ai_msg.tool_calls
 ```
-
-
 
 ```output
 [{'name': 'multiply',
@@ -325,9 +301,7 @@ ai_msg.tool_calls
   'id': 'call_MPKYGLHbf39csJIyb5BZ9xIk'}]
 ```
 
-
 We append this message shown above to the LLM which acts as a context and makes the LLM aware that what all functions it has called. 
-
 
 ```python
 messages.append(ai_msg)
@@ -336,9 +310,7 @@ messages.append(ai_msg)
 Since tool calling happens into two phases, where:
 
 1. in our first call, we gathered all the tools that the LLM decided to tool, so that it can get the result as an added context to give more accurate and hallucination free result. 
-
 2. in our second call, we will parse those set of tools decided by LLM and run them (in our case it will be the functions we defined, with the LLM's extracted arguments) and pass this result to the LLM
-
 
 ```python
 <!--IMPORTS:[{"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "ChatPremAI"}]-->
@@ -351,7 +323,6 @@ for tool_call in ai_msg.tool_calls:
 ```
 
 Finally, we call the LLM (binded with the tools) with the function response added in it's context. 
-
 
 ```python
 response = llm_with_tools.invoke(messages)
@@ -366,7 +337,6 @@ The final answers are:
 ### Defining tool schemas: Pydantic class
 
 Above we have shown how to define schema using `tool` decorator, however we can equivalently define the schema using Pydantic. Pydantic is useful when your tool inputs are more complex:
-
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticToolsParser", "source": "langchain_core.output_parsers.openai_tools", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html", "title": "ChatPremAI"}]-->
@@ -392,21 +362,16 @@ tools = [add, multiply]
 
 Now, we can bind them to chat models and directly get the result:
 
-
 ```python
 chain = llm_with_tools | PydanticToolsParser(tools=[multiply, add])
 chain.invoke(query)
 ```
 
-
-
 ```output
 [multiply(a=3, b=12), add(a=11, b=49)]
 ```
 
-
 Now, as done above, we parse this and run this functions and call the LLM once again to get the result.
-
 
 ## Related
 

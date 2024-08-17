@@ -10,14 +10,12 @@ This notebook shows how to use LangChain with [LlamaAPI](https://llama-api.com/)
 
 %pip install --upgrade --quiet  llamaapi
 
-
 ```python
 from llamaapi import LlamaAPI
 
 # Replace 'Your_API_Token' with your actual API token
 llama = LlamaAPI("Your_API_Token")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatLlamaAPI", "source": "langchain_experimental.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_experimental.llms.llamaapi.ChatLlamaAPI.html", "title": "ChatLlamaAPI"}]-->
@@ -31,7 +29,6 @@ from langchain_experimental.llms import ChatLlamaAPI
 ```python
 model = ChatLlamaAPI(client=llama)
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_tagging_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.openai_functions.tagging.create_tagging_chain.html", "title": "ChatLlamaAPI"}]-->
@@ -54,18 +51,13 @@ schema = {
 chain = create_tagging_chain(schema, model)
 ```
 
-
 ```python
 chain.run("give me your money")
 ```
 
-
-
 ```output
 {'sentiment': 'aggressive', 'aggressiveness': 8, 'language': 'english'}
 ```
-
-
 
 ## Related
 

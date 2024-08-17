@@ -18,25 +18,20 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 There are two requirements for running the examples in this file.
 1. You must install and set up the JaguarDB server and its HTTP gateway server.
-   Please refer to the instructions in:
-   [www.jaguardb.com](http://www.jaguardb.com)
-   For quick setup in docker environment:
-   docker pull jaguardb/jaguardb_with_http
-   docker run -d -p 8888:8888 -p 8080:8080 --name jaguardb_with_http  jaguardb/jaguardb_with_http
-
+Please refer to the instructions in:
+[www.jaguardb.com](http://www.jaguardb.com)
+For quick setup in docker environment:
+docker pull jaguardb/jaguardb_with_http
+docker run -d -p 8888:8888 -p 8080:8080 --name jaguardb_with_http  jaguardb/jaguardb_with_http
 2. You must install the http client package for JaguarDB:
    ```
        pip install -U jaguardb-http-client
    ```
-   
 3. You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
-
 
 ## RAG With Langchain
 
 This section demonstrates chatting with LLM together with Jaguar in the langchain software stack.
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQAWithSourcesChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.qa_with_sources.retrieval.RetrievalQAWithSourcesChain.html", "title": "Jaguar Vector Database"}, {"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Jaguar Vector Database"}, {"imported": "Jaguar", "source": "langchain_community.vectorstores.jaguar", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.jaguar.Jaguar.html", "title": "Jaguar Vector Database"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Jaguar Vector Database"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Jaguar Vector Database"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Jaguar Vector Database"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Jaguar Vector Database"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Jaguar Vector Database"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Jaguar Vector Database"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Jaguar Vector Database"}]-->
@@ -147,8 +142,6 @@ print(resp)
 
 Users can interact directly with the Jaguar vector store for similarity search and anomaly detection.
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "Jaguar", "source": "langchain_community.vectorstores.jaguar", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.jaguar.Jaguar.html", "title": "Jaguar Vector Database"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Jaguar Vector Database"}]-->
 from langchain_community.vectorstores.jaguar import Jaguar
@@ -224,7 +217,6 @@ vectorstore.drop()
 # Logout
 vectorstore.logout()
 ```
-
 
 ## Related
 

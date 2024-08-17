@@ -25,7 +25,6 @@ More [Docs](https://docs.zenguard.ai/start/intro/)
 
 Using pip:
 
-
 ```python
 pip install langchain-community
 ```
@@ -34,23 +33,21 @@ pip install langchain-community
 
 Generate an API Key:
 
- 1. Navigate to the [Settings](https://console.zenguard.ai/settings)
- 2. Click on the `+ Create new secret key`.
- 3. Name the key `Quickstart Key`.
- 4. Click on the `Add` button.
- 5. Copy the key value by pressing on the copy icon.
+1. Navigate to the [Settings](https://console.zenguard.ai/settings)
+2. Click on the `+ Create new secret key`.
+3. Name the key `Quickstart Key`.
+4. Click on the `Add` button.
+5. Copy the key value by pressing on the copy icon.
 
 ## Code Usage
 
- Instantiate the pack with the API Key
+Instantiate the pack with the API Key
 
 paste your api key into env ZENGUARD_API_KEY
-
 
 ```python
 %set_env ZENGUARD_API_KEY=your_api_key
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ZenGuardTool", "source": "langchain_community.tools.zenguard", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.zenguard.tool.ZenGuardTool.html", "title": "ZenGuard AI"}]-->
@@ -60,7 +57,6 @@ tool = ZenGuardTool()
 ```
 
 ### Detect Prompt Injection
-
 
 ```python
 <!--IMPORTS:[{"imported": "Detector", "source": "langchain_community.tools.zenguard", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.zenguard.tool.Detector.html", "title": "ZenGuard AI"}]-->
@@ -76,25 +72,24 @@ else:
 ```
 
 * `is_detected(boolean)`: Indicates whether a prompt injection attack was detected in the provided message. In this example, it is False.
- * `score(float: 0.0 - 1.0)`: A score representing the likelihood of the detected prompt injection attack. In this example, it is 0.0.
- * `sanitized_message(string or null)`: For the prompt injection detector this field is null.
- * `latency(float or null)`: Time in milliseconds during which the detection was performed
+* `score(float: 0.0 - 1.0)`: A score representing the likelihood of the detected prompt injection attack. In this example, it is 0.0.
+* `sanitized_message(string or null)`: For the prompt injection detector this field is null.
+* `latency(float or null)`: Time in milliseconds during which the detection was performed
 
-  **Error Codes:**
+**Error Codes:**
 
- * `401 Unauthorized`: API key is missing or invalid.
- * `400 Bad Request`: The request body is malformed.
- * `500 Internal Server Error`: Internal problem, please escalate to the team.
+* `401 Unauthorized`: API key is missing or invalid.
+* `400 Bad Request`: The request body is malformed.
+* `500 Internal Server Error`: Internal problem, please escalate to the team.
 
 ### More examples
 
- * [Detect PII](https://docs.zenguard.ai/detectors/pii/)
- * [Detect Allowed Topics](https://docs.zenguard.ai/detectors/allowed-topics/)
- * [Detect Banned Topics](https://docs.zenguard.ai/detectors/banned-topics/)
- * [Detect Keywords](https://docs.zenguard.ai/detectors/keywords/)
- * [Detect Secrets](https://docs.zenguard.ai/detectors/secrets/)
- * [Detect Toxicity](https://docs.zenguard.ai/detectors/toxicity/)
-
+* [Detect PII](https://docs.zenguard.ai/detectors/pii/)
+* [Detect Allowed Topics](https://docs.zenguard.ai/detectors/allowed-topics/)
+* [Detect Banned Topics](https://docs.zenguard.ai/detectors/banned-topics/)
+* [Detect Keywords](https://docs.zenguard.ai/detectors/keywords/)
+* [Detect Secrets](https://docs.zenguard.ai/detectors/secrets/)
+* [Detect Toxicity](https://docs.zenguard.ai/detectors/toxicity/)
 
 ## Related
 

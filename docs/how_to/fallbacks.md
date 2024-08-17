@@ -20,11 +20,9 @@ This is maybe the most common use case for fallbacks. A request to an LLM API ca
 
 IMPORTANT: By default, a lot of the LLM wrappers catch errors and retry. You will most likely want to turn those off when working with fallbacks. Otherwise the first wrapper will keep on retrying and not failing.
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-openai
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to add fallbacks to a runnable"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add fallbacks to a runnable"}]-->
@@ -33,7 +31,6 @@ from langchain_openai import ChatOpenAI
 ```
 
 First, let's mock out what happens if we hit a RateLimitError from OpenAI
-
 
 ```python
 from unittest.mock import patch
@@ -46,14 +43,12 @@ response = httpx.Response(200, request=request)
 error = RateLimitError("rate limit", response=response, body="")
 ```
 
-
 ```python
 # Note that we set max_retries = 0 to avoid retrying on RateLimits, etc
 openai_llm = ChatOpenAI(model="gpt-3.5-turbo-0125", max_retries=0)
 anthropic_llm = ChatAnthropic(model="claude-3-haiku-20240307")
 llm = openai_llm.with_fallbacks([anthropic_llm])
 ```
-
 
 ```python
 # Let's use just the OpenAI LLm first, to show that we run into an error
@@ -79,7 +74,6 @@ with patch("openai.resources.chat.completions.Completions.create", side_effect=e
 content=' I don\'t actually know why the chicken crossed the road, but here are some possible humorous answers:\n\n- To get to the other side!\n\n- It was too chicken to just stand there. \n\n- It wanted a change of scenery.\n\n- It wanted to show the possum it could be done.\n\n- It was on its way to a poultry farmers\' convention.\n\nThe joke plays on the double meaning of "the other side" - literally crossing the road to the other side, or the "other side" meaning the afterlife. So it\'s an anti-joke, with a silly or unexpected pun as the answer.' additional_kwargs={} example=False
 ```
 We can use our "LLM with Fallbacks" as we would a normal LLM.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add fallbacks to a runnable"}]-->
@@ -108,7 +102,6 @@ content=" I don't actually know why the kangaroo crossed the road, but I can tak
 
 We can also create fallbacks for sequences, that are sequences themselves. Here we do that with two different models: ChatOpenAI and then normal OpenAI (which does not use a chat model). Because OpenAI is NOT a chat model, you likely want a different prompt.
 
-
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to add fallbacks to a runnable"}]-->
 # First let's create a chain with a ChatModel
@@ -129,7 +122,6 @@ chat_model = ChatOpenAI(model="gpt-fake")
 bad_chain = chat_prompt | chat_model | StrOutputParser()
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to add fallbacks to a runnable"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "How to add fallbacks to a runnable"}]-->
 # Now lets create a chain with the normal OpenAI model
@@ -144,24 +136,19 @@ llm = OpenAI()
 good_chain = prompt | llm
 ```
 
-
 ```python
 # We can now create a final chain which combines the two
 chain = bad_chain.with_fallbacks([good_chain])
 chain.invoke({"animal": "turtle"})
 ```
 
-
-
 ```output
 '\n\nAnswer: The turtle crossed the road to get to the other side, and I have to say he had some impressive determination.'
 ```
 
-
 ## Fallback for Long Inputs
 
 One of the big limiting factors of LLMs is their context window. Usually, you can count and track the length of prompts before sending them to an LLM, but in situations where that is hard/complicated, you can fallback to a model with a longer context length.
-
 
 ```python
 short_llm = ChatOpenAI()
@@ -169,11 +156,9 @@ long_llm = ChatOpenAI(model="gpt-3.5-turbo-16k")
 llm = short_llm.with_fallbacks([long_llm])
 ```
 
-
 ```python
 inputs = "What is the next number: " + ", ".join(["one", "two"] * 3000)
 ```
-
 
 ```python
 try:
@@ -198,19 +183,16 @@ content='The next number in the sequence is two.' additional_kwargs={} example=F
 
 Often times we ask models to output format in a specific format (like JSON). Models like GPT-3.5 can do this okay, but sometimes struggle. This naturally points to fallbacks - we can try with GPT-3.5 (faster, cheaper), but then if parsing fails we can use GPT-4.
 
-
 ```python
 <!--IMPORTS:[{"imported": "DatetimeOutputParser", "source": "langchain.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.datetime.DatetimeOutputParser.html", "title": "How to add fallbacks to a runnable"}]-->
 from langchain.output_parsers import DatetimeOutputParser
 ```
-
 
 ```python
 prompt = ChatPromptTemplate.from_template(
     "what time was {event} (in %Y-%m-%dT%H:%M:%S.%fZ format - only return this value)"
 )
 ```
-
 
 ```python
 # In this case we are going to do the fallbacks on the LLM + output parser level
@@ -219,12 +201,10 @@ openai_35 = ChatOpenAI() | DatetimeOutputParser()
 openai_4 = ChatOpenAI(model="gpt-4") | DatetimeOutputParser()
 ```
 
-
 ```python
 only_35 = prompt | openai_35
 fallback_4 = prompt | openai_35.with_fallbacks([openai_4])
 ```
-
 
 ```python
 try:

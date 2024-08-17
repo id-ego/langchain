@@ -15,11 +15,9 @@ The most common pattern is to combine a sparse retriever (like BM25) with a dens
 
 Below we demonstrate ensembling of a [BM25Retriever](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.bm25.BM25Retriever.html) with a retriever derived from the [FAISS vector store](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html).
 
-
 ```python
 %pip install --upgrade --quiet  rank_bm25 > /dev/null
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "EnsembleRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.ensemble.EnsembleRetriever.html", "title": "How to combine results from multiple retrievers"}, {"imported": "BM25Retriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.bm25.BM25Retriever.html", "title": "How to combine results from multiple retrievers"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to combine results from multiple retrievers"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to combine results from multiple retrievers"}]-->
@@ -57,13 +55,10 @@ ensemble_retriever = EnsembleRetriever(
 )
 ```
 
-
 ```python
 docs = ensemble_retriever.invoke("apples")
 docs
 ```
-
-
 
 ```output
 [Document(page_content='I like apples', metadata={'source': 1}),
@@ -72,11 +67,9 @@ docs
  Document(page_content='You like oranges', metadata={'source': 2})]
 ```
 
-
 ## Runtime Configuration
 
 We can also configure the individual retrievers at runtime using [configurable fields](/docs/how_to/configure). Below we update the "top-k" parameter for the FAISS retriever specifically:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ConfigurableField", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableField.html", "title": "How to combine results from multiple retrievers"}]-->
@@ -97,20 +90,16 @@ ensemble_retriever = EnsembleRetriever(
 )
 ```
 
-
 ```python
 config = {"configurable": {"search_kwargs_faiss": {"k": 1}}}
 docs = ensemble_retriever.invoke("apples", config=config)
 docs
 ```
 
-
-
 ```output
 [Document(page_content='I like apples', metadata={'source': 1}),
  Document(page_content='You like apples', metadata={'source': 2}),
  Document(page_content='Apples and oranges are fruits', metadata={'source': 1})]
 ```
-
 
 Notice that this only returns one source from the FAISS retriever, because we pass in the relevant configuration at run time

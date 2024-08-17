@@ -32,7 +32,6 @@ Authentication will depend on specifics of the inference server.
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -42,7 +41,6 @@ If you want to get automated tracing of your model calls you can also set your [
 
 The LangChain vLLM integration can be accessed via the `langchain-openai` package:
 
-
 ```python
 %pip install -qU langchain-openai
 ```
@@ -50,7 +48,6 @@ The LangChain vLLM integration can be accessed via the `langchain-openai` packag
 ## Instantiation
 
 Now we can instantiate our model object and generate chat completions:
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "vLLM Chat"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "vLLM Chat"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "vLLM Chat"}, {"imported": "HumanMessagePromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.HumanMessagePromptTemplate.html", "title": "vLLM Chat"}, {"imported": "SystemMessagePromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.SystemMessagePromptTemplate.html", "title": "vLLM Chat"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "vLLM Chat"}]-->
@@ -62,7 +59,6 @@ from langchain_core.prompts.chat import (
 )
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 inference_server_url = "http://localhost:8000/v1"
@@ -78,7 +74,6 @@ llm = ChatOpenAI(
 
 ## Invocation
 
-
 ```python
 messages = [
     SystemMessage(
@@ -91,17 +86,13 @@ messages = [
 llm.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content=' Io amo programmare', additional_kwargs={}, example=False)
 ```
 
-
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "vLLM Chat"}]-->
@@ -132,7 +123,6 @@ chain.invoke(
 For detailed documentation of all features and configurations exposed via `langchain-openai`, head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html
 
 Refer to the vLLM [documentation](https://docs.vllm.ai/en/latest/) as well.
-
 
 ## Related
 

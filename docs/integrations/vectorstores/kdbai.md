@@ -19,7 +19,6 @@ You'll need to install `langchain-community` with `pip install -qU langchain-com
 
 ## Import required packages
 
-
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "KDB.AI"}, {"imported": "PyPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html", "title": "KDB.AI"}, {"imported": "KDBAI", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kdbai.KDBAI.html", "title": "KDB.AI"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "KDB.AI"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "KDB.AI"}]-->
 import os
@@ -34,7 +33,6 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.vectorstores import KDBAI
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 ```
-
 
 ```python
 KDBAI_ENDPOINT = input("KDB.AI endpoint: ")
@@ -54,7 +52,6 @@ K = 3
 
 ## Create a KBD.AI Session
 
-
 ```python
 print("Create a KDB.AI session...")
 session = kdbai.Session(endpoint=KDBAI_ENDPOINT, api_key=KDBAI_API_KEY)
@@ -63,7 +60,6 @@ session = kdbai.Session(endpoint=KDBAI_ENDPOINT, api_key=KDBAI_API_KEY)
 Create a KDB.AI session...
 ```
 ## Create a table
-
 
 ```python
 print('Create table "documents"...')
@@ -97,14 +93,11 @@ CPU times: user 44.1 ms, sys: 6.04 ms, total: 50.2 ms
 Wall time: 213 ms
 ```
 
-
 ```output
 562978
 ```
 
-
 ## Read a PDF
-
 
 ```python
 %%time
@@ -119,14 +112,11 @@ CPU times: user 156 ms, sys: 12.5 ms, total: 169 ms
 Wall time: 183 ms
 ```
 
-
 ```output
 3
 ```
 
-
 ## Create a Vector Database from PDF Text
-
 
 ```python
 %%time
@@ -147,16 +137,13 @@ CPU times: user 211 ms, sys: 18.4 ms, total: 229 ms
 Wall time: 2.23 s
 ```
 
-
 ```output
 ['3ef27d23-47cf-419b-8fe9-5dfae9e8e895',
  'd3a9a69d-28f5-434b-b95b-135db46695c8',
  'd2069bda-c0b8-4791-b84d-0c6f84f4be34']
 ```
 
-
 ## Create LangChain Pipeline
-
 
 ```python
 %%time
@@ -175,7 +162,6 @@ Wall time: 44.7 ms
 ```
 ## Summarize the document in English
 
-
 ```python
 %%time
 Q = "Summarize the document in English:"
@@ -192,7 +178,6 @@ CPU times: user 144 ms, sys: 50.2 ms, total: 194 ms
 Wall time: 4.96 s
 ```
 ## Query the Data
-
 
 ```python
 %%time
@@ -270,20 +255,15 @@ Wall time: 2.78 s
 ```
 ## Clean up the Documents table
 
-
 ```python
 # Clean up KDB.AI "documents" table and index for similarity search
 # so this notebook could be played again and again
 session.table("documents").drop()
 ```
 
-
-
 ```output
 True
 ```
-
-
 
 ## Related
 

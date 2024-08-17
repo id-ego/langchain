@@ -11,9 +11,8 @@ It supports inference for GPTQ & EXL2 quantized models, which can be accessed on
 
 This notebook goes over how to run `exllamav2` within LangChain.
 
-Additional information: 
+Additional information:
 [ExLlamav2 examples](https://github.com/turboderp/exllamav2/tree/master/examples)
-
 
 ## Installation
 
@@ -46,8 +45,6 @@ It is worth understanding which models are suitable to be used on the desired ma
 
 [TheBloke's](https://huggingface.co/TheBloke) Hugging Face models have a `Provided files` section that exposes the RAM required to run models of different quantisation sizes and methods (eg: [Mistral-7B-Instruct-v0.2-GPTQ](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GPTQ)).
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "ExLlamaV2", "source": "langchain_community.llms.exllamav2", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.exllamav2.ExLlamaV2.html", "title": "ExLlamaV2"}, {"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "ExLlamaV2"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "ExLlamaV2"}]-->
 import os
@@ -59,7 +56,6 @@ from langchain_core.prompts import PromptTemplate
 
 from libs.langchain.langchain.chains.llm import LLMChain
 ```
-
 
 ```python
 # function to download the gptq model
@@ -87,7 +83,6 @@ def download_GPTQ_model(model_name: str, models_dir: str = "./models/") -> str:
 
     return model_path
 ```
-
 
 ```python
 from exllamav2.generator import (

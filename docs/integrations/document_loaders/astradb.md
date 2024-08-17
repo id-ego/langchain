@@ -37,12 +37,10 @@ The following metadata is set to the LangChain Documents metadata output:
 
 ## Load documents with the Document Loader
 
-
 ```python
 <!--IMPORTS:[{"imported": "AstraDBLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.astradb.AstraDBLoader.html", "title": "AstraDB"}]-->
 from langchain_community.document_loaders import AstraDBLoader
 ```
-
 
 ```python
 from getpass import getpass
@@ -50,7 +48,6 @@ from getpass import getpass
 ASTRA_DB_API_ENDPOINT = input("ASTRA_DB_API_ENDPOINT = ")
 ASTRA_DB_APPLICATION_TOKEN = getpass("ASTRA_DB_APPLICATION_TOKEN = ")
 ```
-
 
 ```python
 loader = AstraDBLoader(
@@ -62,23 +59,17 @@ loader = AstraDBLoader(
 )
 ```
 
-
 ```python
 docs = loader.load()
 ```
-
 
 ```python
 docs[0]
 ```
 
-
-
 ```output
 Document(page_content='{"_id": "659bdffa16cbc4586b11a423", "title": "Dangerous Men", "reviewtext": "\\"Dangerous Men,\\" the picture\'s production notes inform, took 26 years to reach the big screen. After having seen it, I wonder: What was the rush?"}', metadata={'namespace': 'default_keyspace', 'api_endpoint': 'https://01234567-89ab-cdef-0123-456789abcdef-us-east1.apps.astra.datastax.com', 'collection': 'movie_reviews'})
 ```
-
-
 
 ## Related
 

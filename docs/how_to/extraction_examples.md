@@ -24,7 +24,6 @@ LangChain adopts this convention for structuring tool calls into conversation ac
 
 First we build a prompt template that includes a placeholder for these messages:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use reference examples when doing extraction"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to use reference examples when doing extraction"}]-->
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -52,7 +51,6 @@ prompt = ChatPromptTemplate.from_messages(
 
 Test out the template:
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to use reference examples when doing extraction"}]-->
 from langchain_core.messages import (
@@ -64,17 +62,13 @@ prompt.invoke(
 )
 ```
 
-
-
 ```output
 ChatPromptValue(messages=[SystemMessage(content="You are an expert extraction algorithm. Only extract relevant information from the text. If you do not know the value of an attribute asked to extract, return null for the attribute's value."), HumanMessage(content='testing 1 2 3'), HumanMessage(content='this is some text')])
 ```
 
-
 ## Define the schema
 
 Let's re-use the person schema from the [extraction tutorial](/docs/tutorials/extraction).
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use reference examples when doing extraction"}]-->
@@ -122,7 +116,6 @@ The format of the example needs to match the API used (e.g., tool calling or JSO
 
 Here, the formatted examples will match the format expected for the tool calling API since that's what we're using.
 :::
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to use reference examples when doing extraction"}, {"imported": "BaseMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.base.BaseMessage.html", "title": "How to use reference examples when doing extraction"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to use reference examples when doing extraction"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to use reference examples when doing extraction"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to use reference examples when doing extraction"}]-->
@@ -189,7 +182,6 @@ def tool_example_to_messages(example: Example) -> List[BaseMessage]:
 
 Next let's define our examples and then convert them into message format.
 
-
 ```python
 examples = [
     (
@@ -212,7 +204,6 @@ for text, tool_call in examples:
 ```
 
 Let's test out the prompt
-
 
 ```python
 example_prompt = prompt.invoke({"text": "this is some text", "examples": messages})
@@ -237,12 +228,11 @@ Let's select an LLM. Because we are using tool-calling, we will need a model tha
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="llm"
-  openaiParams={`model="gpt-4-0125-preview", temperature=0`}
+customVarName="llm"
+openaiParams={`model="gpt-4-0125-preview", temperature=0`}
 />
 
 Following the [extraction tutorial](/docs/tutorials/extraction), we use the `.with_structured_output` method to structure model outputs according to the desired schema:
-
 
 ```python
 runnable = prompt | llm.with_structured_output(
@@ -255,7 +245,6 @@ runnable = prompt | llm.with_structured_output(
 ## Without examples 😿
 
 Notice that even capable models can fail with a **very simple** test case!
-
 
 ```python
 for _ in range(5):
@@ -273,7 +262,6 @@ people=[]
 
 Reference examples helps to fix the failure!
 
-
 ```python
 for _ in range(5):
     text = "The solar system is large, but earth has only 1 moon."
@@ -290,7 +278,6 @@ Note that we can see the few-shot examples as tool-calls in the [Langsmith trace
 
 And we retain performance on a positive sample:
 
-
 ```python
 runnable.invoke(
     {
@@ -299,8 +286,6 @@ runnable.invoke(
     }
 )
 ```
-
-
 
 ```output
 Data(people=[Person(name='Harrison', hair_color='black', height_in_meters=None)])

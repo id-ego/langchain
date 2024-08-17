@@ -7,7 +7,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This example selector selects which examples to use based on length. This is useful when you are worried about constructing a prompt that will go over the length of the context window. For longer inputs, it will select fewer examples to include, while for shorter inputs it will select more.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LengthBasedExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.length_based.LengthBasedExampleSelector.html", "title": "How to select examples by length"}, {"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to select examples by length"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to select examples by length"}]-->
 from langchain_core.example_selectors import LengthBasedExampleSelector
@@ -48,7 +47,6 @@ dynamic_prompt = FewShotPromptTemplate(
     input_variables=["adjective"],
 )
 ```
-
 
 ```python
 # An example with small input, so it selects all examples.

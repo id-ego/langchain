@@ -14,7 +14,6 @@ pip install scrapfly-sdk langchain langchain-community
 
 #### Usage
 
-
 ```python
 <!--IMPORTS:[{"imported": "ScrapflyLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.scrapfly.ScrapflyLoader.html", "title": "# ScrapFly"}]-->
 from langchain_community.document_loaders import ScrapflyLoader
@@ -31,7 +30,6 @@ print(documents)
 ```
 
 The ScrapflyLoader also allows passigng ScrapeConfig object for customizing the scrape request. See the documentation for the full feature details and their API params: https://scrapfly.io/docs/scrape-api/getting-started
-
 
 ```python
 <!--IMPORTS:[{"imported": "ScrapflyLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.scrapfly.ScrapflyLoader.html", "title": "# ScrapFly"}]-->
@@ -58,7 +56,6 @@ scrapfly_loader = ScrapflyLoader(
 documents = scrapfly_loader.load()
 print(documents)
 ```
-
 
 ## Related
 

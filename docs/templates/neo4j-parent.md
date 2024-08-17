@@ -27,7 +27,6 @@ First, the text is divided into larger chunks ("parents") and then further subdi
 After storing these chunks in the database, embeddings for the child nodes are computed using OpenAI's embeddings and stored back in the graph for future retrieval or analysis.
 Additionally, a vector index named `retrieval` is created for efficient querying of these embeddings.
 
-
 ## Usage
 
 To use this package, you should first have the LangChain CLI installed:
@@ -55,9 +54,9 @@ from neo4j_parent import chain as neo4j_parent_chain
 add_routes(app, neo4j_parent_chain, path="/neo4j-parent")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -72,7 +71,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

@@ -14,7 +14,6 @@ You'll need to install `langchain-community` with `pip install -qU langchain-com
 ## Installation
 Install ScaNN through pip. Alternatively, you can follow instructions on the [ScaNN Website](https://github.com/google-research/google-research/tree/master/scann#building-from-source) to install from source.
 
-
 ```python
 %pip install --upgrade --quiet  scann
 ```
@@ -22,7 +21,6 @@ Install ScaNN through pip. Alternatively, you can follow instructions on the [Sc
 ## Retrieval Demo
 
 Below we show how to use ScaNN in conjunction with Huggingface Embeddings.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "ScaNN"}, {"imported": "ScaNN", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.scann.ScaNN.html", "title": "ScaNN"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "ScaNN"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "ScaNN"}]-->
@@ -52,7 +50,6 @@ Next, we demonstrate using ScaNN in conjunction with Google PaLM API.
 
 You can obtain an API key from https://developers.generativeai.google/tutorials/setup
 
-
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "ScaNN"}, {"imported": "ChatGooglePalm", "source": "langchain_community.chat_models.google_palm", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.google_palm.ChatGooglePalm.html", "title": "ScaNN"}]-->
 from langchain.chains import RetrievalQA
@@ -66,7 +63,6 @@ qa = RetrievalQA.from_chain_type(
     retriever=db.as_retriever(search_kwargs={"k": 10}),
 )
 ```
-
 
 ```python
 print(qa.run("What did the president say about Ketanji Brown Jackson?"))
@@ -83,12 +79,10 @@ The president did not mention Michael Phelps in his speech.
 ```
 ## Save and loading local retrieval index
 
-
 ```python
 db.save_local("/tmp/db", "state_of_union")
 restored_db = ScaNN.load_local("/tmp/db", embeddings, index_name="state_of_union")
 ```
-
 
 ## Related
 

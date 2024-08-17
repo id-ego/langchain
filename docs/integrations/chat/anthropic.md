@@ -10,7 +10,6 @@ This notebook provides a quick overview for getting started with Anthropic [chat
 
 Anthropic has several chat models. You can find information about their latest models and their costs, context windows, and supported input types in the [Anthropic docs](https://docs.anthropic.com/en/docs/models-overview).
 
-
 :::info AWS Bedrock and Google VertexAI
 
 Note that certain Anthropic models can also be accessed via AWS Bedrock and Google VertexAI. See the [ChatBedrock](/docs/integrations/chat/bedrock/) and [ChatVertexAI](/docs/integrations/chat/google_vertex_ai_palm/) integrations to use Anthropic models via these services.
@@ -37,7 +36,6 @@ To access Anthropic models you'll need to create an Anthropic account, get an AP
 
 Head to https://console.anthropic.com/ to sign up for Anthropic and generate an API key. Once you've done this set the ANTHROPIC_API_KEY environment variable:
 
-
 ```python
 import getpass
 import os
@@ -46,7 +44,6 @@ os.environ["ANTHROPIC_API_KEY"] = getpass.getpass("Enter your Anthropic API key:
 ```
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -57,7 +54,6 @@ If you want to get automated tracing of your model calls you can also set your [
 
 The LangChain Anthropic integration lives in the `langchain-anthropic` package:
 
-
 ```python
 %pip install -qU langchain-anthropic
 ```
@@ -65,7 +61,6 @@ The LangChain Anthropic integration lives in the `langchain-anthropic` package:
 ## Instantiation
 
 Now we can instantiate our model object and generate chat completions:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "ChatAnthropic"}]-->
@@ -83,8 +78,6 @@ llm = ChatAnthropic(
 
 ## Invocation
 
-
-
 ```python
 messages = [
     (
@@ -97,13 +90,9 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-
-
 ```output
 AIMessage(content="J'adore la programmation.", response_metadata={'id': 'msg_018Nnu76krRPq8HvgKLW4F8T', 'model': 'claude-3-5-sonnet-20240620', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 29, 'output_tokens': 11}}, id='run-57e9295f-db8a-48dc-9619-babd2bedd891-0', usage_metadata={'input_tokens': 29, 'output_tokens': 11, 'total_tokens': 40})
 ```
-
-
 
 ```python
 print(ai_msg.content)
@@ -114,7 +103,6 @@ J'adore la programmation.
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatAnthropic"}]-->
@@ -140,17 +128,13 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content="Here's the German translation:\n\nIch liebe Programmieren.", response_metadata={'id': 'msg_01GhkRtQZUkA5Ge9hqmD8HGY', 'model': 'claude-3-5-sonnet-20240620', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 23, 'output_tokens': 18}}, id='run-da5906b4-b200-4e08-b81a-64d4453643b6-0', usage_metadata={'input_tokens': 23, 'output_tokens': 18, 'total_tokens': 41})
 ```
 
-
 ## Content blocks
 
 One key difference to note between Anthropic models and most others is that the contents of a single Anthropic AI message can either be a single string or a **list of content blocks**. For example when an Anthropic model invokes a tool, the tool invocation is part of the message content (as well as being exposed in the standardized `AIMessage.tool_calls`):
-
 
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -167,8 +151,6 @@ ai_msg = llm_with_tools.invoke("Which city is hotter today: LA or NY?")
 ai_msg.content
 ```
 
-
-
 ```output
 [{'text': "To answer this question, we'll need to check the current weather in both Los Angeles (LA) and New York (NY). I'll use the GetWeather function to retrieve this information for both cities.",
   'type': 'text'},
@@ -182,13 +164,9 @@ ai_msg.content
   'type': 'tool_use'}]
 ```
 
-
-
 ```python
 ai_msg.tool_calls
 ```
-
-
 
 ```output
 [{'name': 'GetWeather',
@@ -199,11 +177,9 @@ ai_msg.tool_calls
   'id': 'toolu_012kz4qHZQqD4qg8sFPeKqpP'}]
 ```
 
-
 ## API reference
 
 For detailed documentation of all ChatAnthropic features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html
-
 
 ## Related
 

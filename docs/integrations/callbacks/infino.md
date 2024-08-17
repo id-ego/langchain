@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Infino
 
->[Infino](https://github.com/infinohq/infino) is a scalable telemetry store designed for logs, metrics, and traces. Infino can function as a standalone observability solution or as the storage layer in your observability stack.
+> [Infino](https://github.com/infinohq/infino) is a scalable telemetry store designed for logs, metrics, and traces. Infino can function as a standalone observability solution or as the storage layer in your observability stack.
 
 This example shows how one can track the following while calling OpenAI and ChatOpenAI models via `LangChain` and [Infino](https://github.com/infinohq/infino):
 
@@ -17,7 +17,6 @@ This example shows how one can track the following while calling OpenAI and Chat
 
 ## Initializing
 
-
 ```python
 # Install necessary dependencies.
 %pip install --upgrade --quiet  infinopy
@@ -26,12 +25,10 @@ This example shows how one can track the following while calling OpenAI and Chat
 %pip install --upgrade --quiet  langchain langchain-openai langchain-community
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "InfinoCallbackHandler", "source": "langchain_community.callbacks.infino_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.infino_callback.InfinoCallbackHandler.html", "title": "Infino"}]-->
 from langchain_community.callbacks.infino_callback import InfinoCallbackHandler
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Infino"}]-->
@@ -47,7 +44,6 @@ from langchain_openai import OpenAI
 
 ## Start Infino server, initialize the Infino client
 
-
 ```python
 # Start server using the Infino docker image.
 !docker run --rm --detach --name infino-example -p 3000:3000 infinohq/infino:latest
@@ -59,7 +55,6 @@ client = InfinoClient()
 a1159e99c6bdb3101139157acee6aba7ae9319375e77ab6fbc79beff75abeca3
 ```
 ## Read the questions dataset
-
 
 ```python
 # These are a subset of questions from Stanford's QA dataset -
@@ -89,7 +84,6 @@ questions = data.split("\n")
 ```
 
 ## Example 1: LangChain OpenAI Q&A; Publish metrics and logs to Infino
-
 
 ```python
 # Set your key here.
@@ -140,7 +134,6 @@ generations=[[Generation(text='\n\nThe Duke of Normandy, William the Conqueror, 
 
 We now use matplotlib to create graphs of latency, errors and tokens consumed.
 
-
 ```python
 # Helper function to create a graph using matplotlib.
 def plot(data, title):
@@ -169,7 +162,6 @@ def plot(data, title):
     plt.show()
 ```
 
-
 ```python
 response = client.search_ts("__name__", "latency", 0, int(time.time()))
 plot(response.text, "Latency")
@@ -189,7 +181,6 @@ plot(response.text, "Total Tokens")
 
 ## Full text query on prompt or prompt outputs.
 
-
 ```python
 # Search for a particular prompt text.
 query = "normandy"
@@ -208,7 +199,6 @@ Results for normandy : [{"time":1696947743,"fields":{"prompt_response":"\n\nThe 
 Results for king charles III : [{"time":1696947745,"fields":{"prompt_response":"\n\nKing Charles III swore fealty to King Philip II of Spain."},"text":"\n\nKing Charles III swore fealty to King Philip II of Spain."},{"time":1696947744,"fields":{"prompt":"Who did King Charles III swear fealty to?"},"text":"Who did King Charles III swear fealty to?"}]
 ```
 # Example 2: Summarize a piece of text using ChatOpenAI
-
 
 ```python
 <!--IMPORTS:[{"imported": "load_summarize_chain", "source": "langchain.chains.summarize", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.summarize.chain.load_summarize_chain.html", "title": "Infino"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Infino"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Infino"}]-->
@@ -242,7 +232,6 @@ for url in urls:
 
 ## Create Metric Charts
 
-
 ```python
 response = client.search_ts("__name__", "latency", 0, int(time.time()))
 plot(response.text, "Latency")
@@ -257,11 +246,9 @@ response = client.search_ts("__name__", "completion_tokens", 0, int(time.time())
 plot(response.text, "Completion Tokens")
 ```
 
-
 ```python
 ## Full text query on prompt or prompt outputs
 ```
-
 
 ```python
 # Search for a particular prompt text.
@@ -280,7 +267,6 @@ print("===")
 ```python
 ## Stop Infino server
 ```
-
 
 ```python
 !docker rm -f infino-example

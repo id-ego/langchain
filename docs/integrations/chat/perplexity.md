@@ -8,7 +8,6 @@ sidebar_label: Perplexity
 
 This notebook covers how to get started with `Perplexity` chat models.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPerplexity", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.perplexity.ChatPerplexity.html", "title": "ChatPerplexity"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatPerplexity"}]-->
 from langchain_community.chat_models import ChatPerplexity
@@ -16,7 +15,6 @@ from langchain_core.prompts import ChatPromptTemplate
 ```
 
 The code provided assumes that your PPLX_API_KEY is set in your environment variables. If you would like to manually specify your API key and also choose a different model, you can use the following code:
-
 
 ```python
 chat = ChatPerplexity(
@@ -26,7 +24,6 @@ chat = ChatPerplexity(
 
 You can check a list of available models [here](https://docs.perplexity.ai/docs/model-cards). For reproducibility, we can set the API key dynamically by taking it as an input in this notebook.
 
-
 ```python
 import os
 from getpass import getpass
@@ -35,11 +32,9 @@ PPLX_API_KEY = getpass()
 os.environ["PPLX_API_KEY"] = PPLX_API_KEY
 ```
 
-
 ```python
 chat = ChatPerplexity(temperature=0, model="llama-3-sonar-small-32k-online")
 ```
-
 
 ```python
 system = "You are a helpful assistant."
@@ -51,15 +46,11 @@ response = chain.invoke({"input": "Why is the Higgs Boson important?"})
 response.content
 ```
 
-
-
 ```output
 'The Higgs Boson is an elementary subatomic particle that plays a crucial role in the Standard Model of particle physics, which accounts for three of the four fundamental forces governing the behavior of our universe: the strong and weak nuclear forces, electromagnetism, and gravity. The Higgs Boson is important for several reasons:\n\n1. **Final Elementary Particle**: The Higgs Boson is the last elementary particle waiting to be discovered under the Standard Model. Its detection helps complete the Standard Model and further our understanding of the fundamental forces in the universe.\n\n2. **Mass Generation**: The Higgs Boson is responsible for giving mass to other particles, a process that occurs through its interaction with the Higgs field. This mass generation is essential for the formation of atoms, molecules, and the visible matter we observe in the universe.\n\n3. **Implications for New Physics**: While the detection of the Higgs Boson has confirmed many aspects of the Standard Model, it also opens up new possibilities for discoveries beyond the Standard Model. Further research on the Higgs Boson could reveal insights into the nature of dark matter, supersymmetry, and other exotic phenomena.\n\n4. **Advancements in Technology**: The search for the Higgs Boson has led to significant advancements in technology, such as the development of artificial intelligence and machine learning algorithms used in particle accelerators like the Large Hadron Collider (LHC). These advancements have not only contributed to the discovery of the Higgs Boson but also have potential applications in various other fields.\n\nIn summary, the Higgs Boson is important because it completes the Standard Model, plays a crucial role in mass generation, hints at new physics phenomena beyond the Standard Model, and drives advancements in technology.\n'
 ```
 
-
 You can format and structure the prompts like you would typically. In the following example, we ask the model to tell us a joke about cats.
-
 
 ```python
 chat = ChatPerplexity(temperature=0, model="llama-3-sonar-small-32k-online")
@@ -69,15 +60,11 @@ response = chain.invoke({"topic": "cats"})
 response.content
 ```
 
-
-
 ```output
 'Here\'s a joke about cats:\n\nWhy did the cat want math lessons from a mermaid?\n\nBecause it couldn\'t find its "core purpose" in life!\n\nRemember, cats are unique and fascinating creatures, and each one has its own special traits and abilities. While some may see them as mysterious or even a bit aloof, they are still beloved pets that bring joy and companionship to their owners. So, if your cat ever seeks guidance from a mermaid, just remember that they are on their own journey to self-discovery!\n'
 ```
 
-
 ## `ChatPerplexity` also supports streaming functionality:
-
 
 ```python
 chat = ChatPerplexity(temperature=0.7, model="llama-3-sonar-small-32k-online")

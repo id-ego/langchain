@@ -5,11 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Llama.cpp
 
->[llama.cpp python](https://github.com/abetlen/llama-cpp-python) library is a simple Python bindings for `@ggerganov`
->[llama.cpp](https://github.com/ggerganov/llama.cpp).
->
->This package provides:
->
+> [llama.cpp python](https://github.com/abetlen/llama-cpp-python) library is a simple Python bindings for `@ggerganov`
+[llama.cpp](https://github.com/ggerganov/llama.cpp).
+> 
+> This package provides:
+> 
 > - Low-level access to C API via ctypes interface.
 > - High-level Python API for text completion
 >   - `OpenAI`-like API
@@ -21,38 +21,30 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 >   - Vision API support
 >   - Multiple Models
 
-
-
 ```python
 %pip install --upgrade --quiet  llama-cpp-python
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "LlamaCppEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.llamacpp.LlamaCppEmbeddings.html", "title": "Llama.cpp"}]-->
 from langchain_community.embeddings import LlamaCppEmbeddings
 ```
 
-
 ```python
 llama = LlamaCppEmbeddings(model_path="/path/to/model/ggml-model-q4_0.bin")
 ```
-
 
 ```python
 text = "This is a test document."
 ```
 
-
 ```python
 query_result = llama.embed_query(text)
 ```
 
-
 ```python
 doc_result = llama.embed_documents([text])
 ```
-
 
 ## Related
 

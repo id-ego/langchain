@@ -7,9 +7,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/arangodb/interactive_tutorials/blob/master/notebooks/Langchain.ipynb)
 
->[ArangoDB](https://github.com/arangodb/arangodb) is a scalable graph database system to drive value from
->connected data, faster. Native graphs, an integrated search engine, and JSON support, via
->a single query language. `ArangoDB` runs on-prem or in the cloud.
+> [ArangoDB](https://github.com/arangodb/arangodb) is a scalable graph database system to drive value from
+connected data, faster. Native graphs, an integrated search engine, and JSON support, via
+a single query language. `ArangoDB` runs on-prem or in the cloud.
 
 This notebook shows how to use LLMs to provide a natural language interface to an [ArangoDB](https://github.com/arangodb/arangodb#readme) database.
 
@@ -23,7 +23,6 @@ docker run -p 8529:8529 -e ARANGO_ROOT_PASSWORD= arangodb/arangodb
 
 An alternative is to use the [ArangoDB Cloud Connector package](https://github.com/arangodb/adb-cloud-connector#readme) to get a temporary cloud instance running:
 
-
 ```python
 %%capture
 %pip install --upgrade --quiet  python-arango # The ArangoDB Python Driver
@@ -31,7 +30,6 @@ An alternative is to use the [ArangoDB Cloud Connector package](https://github.c
 %pip install --upgrade --quiet  langchain-openai
 %pip install --upgrade --quiet  langchain
 ```
-
 
 ```python
 # Instantiate ArangoDB Database
@@ -72,7 +70,6 @@ graph = ArangoGraph(db)
 ## Populating database
 
 We will rely on the `Python Driver` to import our [GameOfThrones](https://github.com/arangodb/example-datasets/tree/master/GameOfThrones) data into our database.
-
 
 ```python
 if db.has_graph("GameOfThrones"):
@@ -135,8 +132,6 @@ db.collection("Characters").import_bulk(documents)
 db.collection("ChildOf").import_bulk(edges)
 ```
 
-
-
 ```output
 {'error': False,
  'created': 4,
@@ -147,11 +142,9 @@ db.collection("ChildOf").import_bulk(edges)
  'details': []}
 ```
 
-
 ## Getting and setting the ArangoDB schema
 
 An initial `ArangoDB Schema` is generated upon instantiating the `ArangoDBGraph` object. Below are the schema's getter & setter methods should you be interested in viewing or modifying the schema:
-
 
 ```python
 # The schema should be empty here,
@@ -171,7 +164,6 @@ print(json.dumps(graph.schema, indent=4))
 ```python
 graph.set_schema()
 ```
-
 
 ```python
 # We can now view the generated schema
@@ -287,13 +279,11 @@ print(json.dumps(graph.schema, indent=4))
 
 We can now use the `ArangoDB Graph` QA Chain to inquire about our data
 
-
 ```python
 import os
 
 os.environ["OPENAI_API_KEY"] = "your-key-here"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ArangoGraphQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.arangodb.ArangoGraphQAChain.html", "title": "ArangoDB"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "ArangoDB"}]-->
@@ -304,7 +294,6 @@ chain = ArangoGraphQAChain.from_llm(
     ChatOpenAI(temperature=0), graph=graph, verbose=True
 )
 ```
-
 
 ```python
 chain.run("Is Ned Stark alive?")
@@ -325,12 +314,9 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Yes, Ned Stark is alive.'
 ```
-
-
 
 ```python
 chain.run("How old is Arya Stark?")
@@ -351,12 +337,9 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Arya Stark is 11 years old.'
 ```
-
-
 
 ```python
 chain.run("Are Arya Stark and Ned Stark related?")
@@ -377,12 +360,9 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Yes, Arya Stark and Ned Stark are related. According to the information retrieved from the database, there is a relationship between them. Arya Stark is the child of Ned Stark.'
 ```
-
-
 
 ```python
 chain.run("Does Arya Stark have a dead parent?")
@@ -403,17 +383,13 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Yes, Arya Stark has a dead parent. The parent is Catelyn Stark.'
 ```
 
-
 ## Chain modifiers
 
 You can alter the values of the following `ArangoDBGraphQAChain` class variables to modify the behaviour of your chain results
-
-
 
 ```python
 # Specify the maximum number of AQL Query Results to return
@@ -442,7 +418,6 @@ FOR e IN ChildOf
 """
 ```
 
-
 ```python
 chain.run("Is Ned Stark alive?")
 
@@ -461,12 +436,9 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Yes, according to the information in the database, Ned Stark is alive.'
 ```
-
-
 
 ```python
 chain.run("Is Bran Stark the child of Ned Stark?")
@@ -485,7 +457,6 @@ AQL Result:
 
 [1m> Finished chain.[0m
 ```
-
 
 ```output
 'Yes, according to the information in the ArangoDB database, Bran Stark is indeed the child of Ned Stark.'

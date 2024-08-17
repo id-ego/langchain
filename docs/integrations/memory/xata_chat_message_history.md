@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Xata
 
->[Xata](https://xata.io) is a serverless data platform, based on `PostgreSQL` and `Elasticsearch`. It provides a Python SDK for interacting with your database, and a UI for managing your data. With the `XataChatMessageHistory` class, you can use Xata databases for longer-term persistence of chat sessions.
+> [Xata](https://xata.io) is a serverless data platform, based on `PostgreSQL` and `Elasticsearch`. It provides a Python SDK for interacting with your database, and a UI for managing your data. With the `XataChatMessageHistory` class, you can use Xata databases for longer-term persistence of chat sessions.
 
 This notebook covers:
 
@@ -20,13 +20,11 @@ In the [Xata UI](https://app.xata.io) create a new database. You can name it wha
 
 Let's first install our dependencies:
 
-
 ```python
 %pip install --upgrade --quiet  xata langchain-openai langchain langchain-community
 ```
 
 Next, we need to get the environment variables for Xata. You can create a new API key by visiting your [account settings](https://app.xata.io/settings). To find the database URL, go to the Settings page of the database that you have created. The database URL should look something like this: `https://demo-uni3q8.eu-west-1.xata.sh/db/langchain`.
-
 
 ```python
 import getpass
@@ -38,7 +36,6 @@ db_url = input("Xata database URL (copy it from your DB settings):")
 ## Create a simple memory store
 
 To test the memory store functionality in isolation, let's use the following code snippet:
-
 
 ```python
 <!--IMPORTS:[{"imported": "XataChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.xata.XataChatMessageHistory.html", "title": "Xata"}]-->
@@ -57,7 +54,6 @@ The above code creates a session with the ID `session-1` and stores two messages
 
 You can retrieve the message history for a particular session with the following code:
 
-
 ```python
 history.messages
 ```
@@ -67,7 +63,6 @@ history.messages
 Let's now see a more complex example in which we combine OpenAI, the Xata Vector Store integration, and the Xata memory store integration to create a Q&A chat bot on your data, with follow-up questions and history.
 
 We're going to need to access the OpenAI API, so let's configure the API key:
-
 
 ```python
 import os
@@ -81,7 +76,6 @@ To store the documents that the chatbot will search for answers, add a table nam
 * `embedding` of type "Vector". Use the dimension used by the model you plan to use. In this notebook we use OpenAI embeddings, which have 1536 dimensions.
 
 Let's create the vector store and add some sample docs to it:
-
 
 ```python
 <!--IMPORTS:[{"imported": "XataVectorStore", "source": "langchain_community.vectorstores.xata", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.xata.XataVectorStore.html", "title": "Xata"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Xata"}]-->
@@ -105,7 +99,6 @@ After running the above command, if you go to the Xata UI, you should see the do
 
 Let's now create a ConversationBufferMemory to store the chat messages from both the user and the AI.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "Xata"}]-->
 from uuid import uuid4
@@ -124,7 +117,6 @@ memory = ConversationBufferMemory(
 ```
 
 Now it's time to create an Agent to use both the vector store and the chat memory together.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Xata"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Xata"}, {"imported": "create_retriever_tool", "source": "langchain.agents.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "Xata"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Xata"}]-->
@@ -152,13 +144,11 @@ agent = initialize_agent(
 
 To test, let's tell the agent our name:
 
-
 ```python
 agent.run(input="My name is bob")
 ```
 
 Now, let's now ask the agent some questions about Xata:
-
 
 ```python
 agent.run(input="What is xata?")
@@ -166,13 +156,11 @@ agent.run(input="What is xata?")
 
 Notice that it answers based on the data stored in the document store. And now, let's ask a follow up question:
 
-
 ```python
 agent.run(input="Does it support similarity search?")
 ```
 
 And now let's test its memory:
-
 
 ```python
 agent.run(input="Did I tell you my name? What is it?")

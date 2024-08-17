@@ -4,8 +4,8 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/providers/bananad
 
 # Banana
 
->[Banana](https://www.banana.dev/) provided serverless GPU inference for AI models, 
-> a CI/CD build pipeline and a simple Python framework (`Potassium`) to server your models.
+> [Banana](https://www.banana.dev/) provided serverless GPU inference for AI models,
+a CI/CD build pipeline and a simple Python framework (`Potassium`) to server your models.
 
 This page covers how to use the [Banana](https://www.banana.dev) ecosystem within LangChain.
 
@@ -30,7 +30,7 @@ Other starter repos are available [here](https://github.com/orgs/bananaml/reposi
 
 ## Build the Banana app
 
-To use Banana apps within Langchain, you must include the `outputs` key 
+To use Banana apps within Langchain, you must include the `outputs` key
 in the returned json, and the value must be a string.
 
 ```python
@@ -61,9 +61,7 @@ def handler(context: dict, request: Request) -> Response:
 
 This example is from the `app.py` file in [CodeLlama-7B-Instruct-GPTQ](https://github.com/bananaml/demo-codellama-7b-instruct-gptq).
 
-
 ## LLM
-
 
 ```python
 <!--IMPORTS:[{"imported": "Banana", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.bananadev.Banana.html", "title": "Banana"}]-->

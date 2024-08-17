@@ -9,11 +9,9 @@ This notebook shows how to use Volcengine Reranker for document compression and 
 
 Volcengine's Rerank Service supports reranking up to 50 documents with a maximum of 4000 tokens. For more, please visit [here](https://www.volcengine.com/docs/84313/1254474) and [here](https://www.volcengine.com/docs/84313/1254605).
 
-
 ```python
 %pip install --upgrade --quiet  volcengine
 ```
-
 
 ```python
 %pip install --upgrade --quiet  faiss
@@ -22,7 +20,6 @@ Volcengine's Rerank Service supports reranking up to 50 documents with a maximum
 
 %pip install --upgrade --quiet  faiss-cpu
 ```
-
 
 ```python
 # To obtain ak/sk: https://www.volcengine.com/docs/84313/1254488
@@ -33,7 +30,6 @@ import os
 os.environ["VOLC_API_AK"] = getpass.getpass("Volcengine API AK:")
 os.environ["VOLC_API_SK"] = getpass.getpass("Volcengine API SK:")
 ```
-
 
 ```python
 # Helper function for printing docs
@@ -47,7 +43,6 @@ def pretty_print_docs(docs):
 
 ## Set up the base vector store retriever
 Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Volcengine Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores.faiss", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Volcengine Reranker"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Volcengine Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Volcengine Reranker"}]-->
@@ -294,7 +289,6 @@ To disable this warning, you can either:
 ```
 ## Reranking with VolcengineRerank
 Now let's wrap our base retriever with a `ContextualCompressionRetriever`. We'll use the `VolcengineRerank` to rerank the returned results.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Volcengine Reranker"}, {"imported": "VolcengineRerank", "source": "langchain_community.document_compressors.volcengine_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.volcengine_rerank.VolcengineRerank.html", "title": "Volcengine Reranker"}]-->

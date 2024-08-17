@@ -7,17 +7,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook provides a quick overview for getting started with `PyPDF` [document loader](https://python.langchain.com/v0.2/docs/concepts/#document-loaders). For detailed documentation of all DocumentLoader features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html).
 
-
 ## Overview
 ### Integration details
-
 
 | Class | Package | Local | Serializable | JS support|
 | :--- | :--- | :---: | :---: |  :---: |
 | [PyPDFLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) | ✅ | ❌ | ❌ | 
 ### Loader features
 | Source | Document Lazy Loading | Native Async Support
-| :---: | :---: | :---: | 
+| :---: | :---: | :---: |
 | PyPDFLoader | ✅ | ❌ | 
 
 ## Setup
@@ -30,7 +28,6 @@ No credentials are required to use `PyPDFLoader`.
 
 To use `PyPDFLoader` you need to have the `langchain-community` python package downloaded:
 
-
 ```python
 %pip install -qU langchain_community pypdf
 ```
@@ -38,7 +35,6 @@ To use `PyPDFLoader` you need to have the `langchain-community` python package d
 ## Initialization
 
 Now we can instantiate our model object and load documents:
-
 
 ```python
 <!--IMPORTS:[{"imported": "PyPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html", "title": "PyPDFLoader"}]-->
@@ -51,19 +47,14 @@ loader = PyPDFLoader(
 
 ## Load
 
-
 ```python
 docs = loader.load()
 docs[0]
 ```
 
-
-
 ```output
 Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'page': 0}, page_content='LayoutParser : A Uniﬁed Toolkit for Deep\nLearning Based Document Image Analysis\nZejiang Shen1( \x00), Ruochen Zhang2, Melissa Dell3, Benjamin Charles Germain\nLee4, Jacob Carlson3, and Weining Li5\n1Allen Institute for AI\nshannons@allenai.org\n2Brown University\nruochen zhang@brown.edu\n3Harvard University\n{melissadell,jacob carlson }@fas.harvard.edu\n4University of Washington\nbcgl@cs.washington.edu\n5University of Waterloo\nw422li@uwaterloo.ca\nAbstract. Recent advances in document image analysis (DIA) have been\nprimarily driven by the application of neural networks. Ideally, research\noutcomes could be easily deployed in production and extended for further\ninvestigation. However, various factors like loosely organized codebases\nand sophisticated model conﬁgurations complicate the easy reuse of im-\nportant innovations by a wide audience. Though there have been on-going\neﬀorts to improve reusability and simplify deep learning (DL) model\ndevelopment in disciplines like natural language processing and computer\nvision, none of them are optimized for challenges in the domain of DIA.\nThis represents a major gap in the existing toolkit, as DIA is central to\nacademic research across a wide range of disciplines in the social sciences\nand humanities. This paper introduces LayoutParser , an open-source\nlibrary for streamlining the usage of DL in DIA research and applica-\ntions. The core LayoutParser library comes with a set of simple and\nintuitive interfaces for applying and customizing DL models for layout de-\ntection, character recognition, and many other document processing tasks.\nTo promote extensibility, LayoutParser also incorporates a community\nplatform for sharing both pre-trained models and full document digiti-\nzation pipelines. We demonstrate that LayoutParser is helpful for both\nlightweight and large-scale digitization pipelines in real-word use cases.\nThe library is publicly available at https://layout-parser.github.io .\nKeywords: Document Image Analysis ·Deep Learning ·Layout Analysis\n·Character Recognition ·Open Source library ·Toolkit.\n1 Introduction\nDeep Learning(DL)-based approaches are the state-of-the-art for a wide range of\ndocument image analysis (DIA) tasks including document image classiﬁcation [ 11,arXiv:2103.15348v2  [cs.CV]  21 Jun 2021')
 ```
-
-
 
 ```python
 print(docs[0].metadata)
@@ -72,8 +63,6 @@ print(docs[0].metadata)
 {'source': './example_data/layout-parser-paper.pdf', 'page': 0}
 ```
 ## Lazy Load
-
-
 
 ```python
 pages = []
@@ -87,13 +76,9 @@ for doc in loader.lazy_load():
 len(pages)
 ```
 
-
-
 ```output
 6
 ```
-
-
 
 ```python
 print(pages[0].page_content[:100])
@@ -107,7 +92,6 @@ focuses on precision, eﬃciency, and robustness.
 ## API reference
 
 For detailed documentation of all `PyPDFLoader` features and configurations head to the API reference: https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html
-
 
 ## Related
 

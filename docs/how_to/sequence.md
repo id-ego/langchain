@@ -34,9 +34,8 @@ To show off how this works, let's go through an example. We'll walk through a co
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="model"
+customVarName="model"
 />
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to chain runnables"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to chain runnables"}]-->
@@ -50,17 +49,13 @@ chain = prompt | model | StrOutputParser()
 
 Prompts and models are both runnable, and the output type from the prompt call is the same as the input type of the chat model, so we can chain them together. We can then invoke the resulting sequence like any other runnable:
 
-
 ```python
 chain.invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 "Here's a bear joke for you:\n\nWhy did the bear dissolve in water?\nBecause it was a polar bear!"
 ```
-
 
 ### Coercion
 
@@ -71,7 +66,6 @@ For example, let's say we wanted to compose the joke generating chain with anoth
 We would need to be careful with how we format the input into the next chain. In the below example, the dict in the chain is automatically parsed and converted into a [`RunnableParallel`](/docs/how_to/parallel), which runs all of its values in parallel and returns a dict with the results.
 
 This happens to be the same format the next prompt template expects. Here it is in action:
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to chain runnables"}]-->
@@ -84,15 +78,11 @@ composed_chain = {"joke": chain} | analysis_prompt | model | StrOutputParser()
 composed_chain.invoke({"topic": "bears"})
 ```
 
-
-
 ```output
 'Haha, that\'s a clever play on words! Using "polar" to imply the bear dissolved or became polar/polarized when put in water. Not the most hilarious joke ever, but it has a cute, groan-worthy pun that makes it mildly amusing. I appreciate a good pun or wordplay joke.'
 ```
 
-
 Functions will also be coerced into runnables, so you can add custom logic to your chains too. The below chain results in the same logical flow as before:
-
 
 ```python
 composed_chain_with_lambda = (
@@ -106,19 +96,15 @@ composed_chain_with_lambda = (
 composed_chain_with_lambda.invoke({"topic": "beets"})
 ```
 
-
-
 ```output
 "Haha, that's a cute and punny joke! I like how it plays on the idea of beets blushing or turning red like someone blushing. Food puns can be quite amusing. While not a total knee-slapper, it's a light-hearted, groan-worthy dad joke that would make me chuckle and shake my head. Simple vegetable humor!"
 ```
-
 
 However, keep in mind that using functions like this may interfere with operations like streaming. See [this section](/docs/how_to/functions) for more information.
 
 ## The `.pipe()` method
 
 We could also compose the same sequence using the `.pipe()` method. Here's what that looks like:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "How to chain runnables"}]-->
@@ -134,15 +120,11 @@ composed_chain_with_pipe = (
 composed_chain_with_pipe.invoke({"topic": "battlestar galactica"})
 ```
 
-
-
 ```output
 "I cannot reproduce any copyrighted material verbatim, but I can try to analyze the humor in the joke you provided without quoting it directly.\n\nThe joke plays on the idea that the Cylon raiders, who are the antagonists in the Battlestar Galactica universe, failed to locate the human survivors after attacking their home planets (the Twelve Colonies) due to using an outdated and poorly performing operating system (Windows Vista) for their targeting systems.\n\nThe humor stems from the juxtaposition of a futuristic science fiction setting with a relatable real-world frustration – the use of buggy, slow, or unreliable software or technology. It pokes fun at the perceived inadequacies of Windows Vista, which was widely criticized for its performance issues and other problems when it was released.\n\nBy attributing the Cylons' failure to locate the humans to their use of Vista, the joke creates an amusing and unexpected connection between a fictional advanced race of robots and a familiar technological annoyance experienced by many people in the real world.\n\nOverall, the joke relies on incongruity and relatability to generate humor, but without reproducing any copyrighted material directly."
 ```
 
-
 Or the abbreviated:
-
 
 ```python
 composed_chain_with_pipe = RunnableParallel({"joke": chain}).pipe(

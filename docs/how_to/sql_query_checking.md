@@ -16,11 +16,9 @@ We will cover:
 
 First, get required packages and set environment variables:
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai
 ```
-
 
 ```python
 # Uncomment the below to use LangSmith. Not required.
@@ -37,7 +35,6 @@ The below example will use a SQLite connection with Chinook database. Follow [th
 * Test `SELECT * FROM Artist LIMIT 10;`
 
 Now, `Chinhook.db` is in our directory and we can interface with it using the SQLAlchemy-driven `SQLDatabase` class:
-
 
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabase", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html", "title": "How to do query validation as part of SQL question-answering"}]-->
@@ -71,7 +68,6 @@ chain = create_sql_query_chain(llm, db)
 
 And we want to validate its outputs. We can do so by extending the chain with a second prompt and model call:
 
-
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to do query validation as part of SQL question-answering"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to do query validation as part of SQL question-answering"}]-->
 from langchain_core.output_parsers import StrOutputParser
@@ -99,7 +95,6 @@ validation_chain = prompt | llm | StrOutputParser()
 full_chain = {"query": chain} | validation_chain
 ```
 
-
 ```python
 query = full_chain.invoke(
     {
@@ -119,20 +114,15 @@ AND i.InvoiceDate < '2010-01-01'
 ```
 Note how we can see both steps of the chain in the [Langsmith trace](https://smith.langchain.com/public/8a743295-a57c-4e4c-8625-bc7e36af9d74/r).
 
-
 ```python
 db.run(query)
 ```
-
-
 
 ```output
 '[(6.632999999999998,)]'
 ```
 
-
 The obvious downside of this approach is that we need to make two model calls instead of one to generate our query. To get around this we can try to perform the query generation and query check in a single model invocation:
-
 
 ```python
 system = """You are a {dialect} expert. Given an input question, create a syntactically correct {dialect} query to run.
@@ -227,12 +217,9 @@ AND i."InvoiceDate" BETWEEN '2003-01-01' AND '2010-01-01';
 db.run(query)
 ```
 
-
-
 ```output
 '[(6.632999999999998,)]'
 ```
-
 
 ## Human-in-the-loop
 

@@ -21,7 +21,6 @@ when using LangChain with Pydantic.
 While LangChain supports Pydantic V2 objects in some APIs (listed below), it's suggested that users keep using Pydantic V1 objects until LangChain 0.3 is released.
 :::
 
-
 ## 1. Passing Pydantic objects to LangChain APIs
 
 Most LangChain APIs for *tool usage* (see list below) have been updated to accept either Pydantic v1 or v2 objects.
@@ -29,14 +28,12 @@ Most LangChain APIs for *tool usage* (see list below) have been updated to accep
 * Pydantic v1 objects correspond to subclasses of `pydantic.BaseModel` if `pydantic 1` is installed or subclasses of `pydantic.v1.BaseModel` if `pydantic 2` is installed.
 * Pydantic v2 objects correspond to subclasses of `pydantic.BaseModel` if `pydantic 2` is installed.
 
-
 | API                                    | Pydantic 1 | Pydantic 2                                                     |
 |----------------------------------------|------------|----------------------------------------------------------------|
 | `BaseChatModel.bind_tools`             | Yes        | langchain-core>=0.2.23, appropriate version of partner package |
 | `BaseChatModel.with_structured_output` | Yes        | langchain-core>=0.2.23, appropriate version of partner package |
 | `Tool.from_function`                   | Yes        | langchain-core>=0.2.23                                         |
 | `StructuredTool.from_function`         | Yes        | langchain-core>=0.2.23                                         |
-
 
 Partner packages that accept pydantic v2 objects via `bind_tools` or `with_structured_output` APIs:
 
@@ -57,7 +54,6 @@ address it.
 Example:
 
 Prior to `langchain-core<0.2.23`, use Pydantic v1 objects when passing to LangChain APIs.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use LangChain with different Pydantic versions"}]-->
@@ -96,7 +92,6 @@ model.invoke('Bob is a person.')
 
 Because LangChain internally uses Pydantic v1, if you are sub-classing LangChain models, you should use Pydantic v1
 primitives.
-
 
 **Example 1: Extending via inheritance**
 
@@ -153,7 +148,6 @@ CustomTool(
     x=1,
 )
 ```
-
 
 ## 3. Disable run-time validation for LangChain objects used inside Pydantic v2 models
 

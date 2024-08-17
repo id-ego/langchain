@@ -30,24 +30,20 @@ You can deploy foundation models like Mistral and Llama 2 with one click from th
 
 In this example, we'll work with Mistral 7B. [Deploy Mistral 7B here](https://app.baseten.co/explore/mistral_7b_instruct) and follow along with the deployed model's ID, found in the model dashboard.
 
-
 ```python
 ##Installing the langchain packages needed to use the integration
 %pip install -qU langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Baseten", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.baseten.Baseten.html", "title": "Baseten"}]-->
 from langchain_community.llms import Baseten
 ```
 
-
 ```python
 # Load the model
 mistral = Baseten(model="MODEL_ID", deployment="production")
 ```
-
 
 ```python
 # Prompt the model
@@ -59,7 +55,6 @@ mistral("What is the Mistral wind?")
 We can chain together multiple calls to one or multiple models, which is the whole point of Langchain!
 
 For example, we can replace GPT with Mistral in this demo of terminal emulation.
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Baseten"}, {"imported": "ConversationBufferWindowMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer_window.ConversationBufferWindowMemory.html", "title": "Baseten"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Baseten"}]-->
@@ -96,18 +91,15 @@ output = chatgpt_chain.predict(
 print(output)
 ```
 
-
 ```python
 output = chatgpt_chain.predict(human_input="ls ~")
 print(output)
 ```
 
-
 ```python
 output = chatgpt_chain.predict(human_input="cd ~")
 print(output)
 ```
-
 
 ```python
 output = chatgpt_chain.predict(
@@ -117,7 +109,6 @@ print(output)
 ```
 
 As we can see from the final example, which outputs a number that may or may not be correct, the model is only approximating likely terminal output, not actually executing provided commands. Still, the example demonstrates Mistral's ample context window, code generation capabilities, and ability to stay on-topic even in conversational sequences.
-
 
 ## Related
 

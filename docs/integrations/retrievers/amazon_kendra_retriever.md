@@ -11,11 +11,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 ## Using the Amazon Kendra Index Retriever
 
-
 ```python
 %pip install --upgrade --quiet  boto3
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AmazonKendraRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.kendra.AmazonKendraRetriever.html", "title": "Amazon Kendra"}]-->
@@ -24,18 +22,15 @@ from langchain_community.retrievers import AmazonKendraRetriever
 
 Create New Retriever
 
-
 ```python
 retriever = AmazonKendraRetriever(index_id="c0806df7-e76b-4bce-9b5c-d5582f6b1a03")
 ```
 
 Now you can use retrieved documents from Kendra index
 
-
 ```python
 retriever.invoke("what is langchain")
 ```
-
 
 ## Related
 

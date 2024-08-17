@@ -11,7 +11,6 @@ However, it can still be useful to use an LLM to **translate documents into othe
 
 We can accomplish this using the [Doctran](https://github.com/psychic-api/doctran) library, which uses OpenAI's function calling feature to translate documents between languages.
 
-
 ```python
 %pip install --upgrade --quiet  doctran
 ```
@@ -25,23 +24,18 @@ from langchain_community.document_transformers import DoctranTextTranslator
 from langchain_core.documents import Document
 ```
 
-
 ```python
 from dotenv import load_dotenv
 
 load_dotenv()
 ```
 
-
-
 ```output
 True
 ```
 
-
 ## Input
 This is the document we'll translate
-
 
 ```python
 sample_text = """[Generated with ChatGPT]
@@ -81,7 +75,6 @@ jason@psychic.dev
 """
 ```
 
-
 ```python
 documents = [Document(page_content=sample_text)]
 qa_translator = DoctranTextTranslator(language="spanish")
@@ -90,11 +83,9 @@ qa_translator = DoctranTextTranslator(language="spanish")
 ## Output using Sync version
 After translating a document, the result will be returned as a new document with the page_content translated into the target language
 
-
 ```python
 translated_document = qa_translator.transform_documents(documents)
 ```
-
 
 ```python
 print(translated_document[0].page_content)
@@ -137,16 +128,13 @@ jason@psychic.dev
 
 After translating a document, the result will be returned as a new document with the page_content translated into the target language. The async version will improve performance when the documents are chunked in multiple parts. It will also make sure to return the output in the correct order.
 
-
 ```python
 import asyncio
 ```
 
-
 ```python
 result = await qa_translator.atransform_documents(documents)
 ```
-
 
 ```python
 print(result[0].page_content)

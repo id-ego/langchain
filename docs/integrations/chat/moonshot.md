@@ -10,7 +10,6 @@ sidebar_label: Moonshot
 
 This example goes over how to use LangChain to interact with Moonshot Inference for Chat.
 
-
 ```python
 import os
 
@@ -18,13 +17,11 @@ import os
 os.environ["MOONSHOT_API_KEY"] = "MOONSHOT_API_KEY"
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "MoonshotChat", "source": "langchain_community.chat_models.moonshot", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.moonshot.MoonshotChat.html", "title": "MoonshotChat"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "MoonshotChat"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "MoonshotChat"}]-->
 from langchain_community.chat_models.moonshot import MoonshotChat
 from langchain_core.messages import HumanMessage, SystemMessage
 ```
-
 
 ```python
 chat = MoonshotChat()
@@ -32,7 +29,6 @@ chat = MoonshotChat()
 # Available models: https://platform.moonshot.cn/docs
 # chat = MoonshotChat(model="moonshot-v1-128k")
 ```
-
 
 ```python
 messages = [
@@ -46,7 +42,6 @@ messages = [
 
 chat.invoke(messages)
 ```
-
 
 ## Related
 

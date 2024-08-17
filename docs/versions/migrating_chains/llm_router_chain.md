@@ -10,7 +10,6 @@ The [`LLMRouterChain`](https://api.python.langchain.com/en/latest/chains/langcha
 
 Consider an example from a [MultiPromptChain](/docs/versions/migrating_chains/multi_prompt_chain), which uses `LLMRouterChain`. Below is an (example) default prompt:
 
-
 ```python
 from langchain.chains.router.multi_prompt import MULTI_PROMPT_ROUTER_TEMPLATE
 
@@ -58,11 +57,9 @@ Most of the behavior is determined via a single natural language prompt. Chat mo
 
 Now let's look at `LLMRouterChain` side-by-side with an LCEL implementation that uses tool-calling. Note that for this guide we will `langchain-openai >= 0.1.20`:
 
-
 ```python
 %pip install -qU langchain-core langchain-openai
 ```
-
 
 ```python
 import os
@@ -95,7 +92,6 @@ router_prompt = PromptTemplate(
 chain = LLMRouterChain.from_llm(llm, router_prompt)
 ```
 
-
 ```python
 result = chain.invoke({"input": "What color are carrots?"})
 
@@ -105,6 +101,7 @@ print(result["destination"])
 vegetables
 ```
 </details>
+
 
 ## LCEL
 
@@ -145,7 +142,6 @@ class RouteQuery(TypedDict):
 chain = route_prompt | llm.with_structured_output(RouteQuery)
 ```
 
-
 ```python
 result = chain.invoke({"input": "What color are carrots?"})
 
@@ -155,6 +151,7 @@ print(result["destination"])
 vegetable
 ```
 </details>
+
 
 ## Next steps
 

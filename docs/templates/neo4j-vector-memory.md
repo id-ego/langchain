@@ -8,7 +8,6 @@ This template allows you to integrate an LLM with a vector-based retrieval syste
 Additionally, it uses the graph capabilities of the Neo4j database to store and retrieve the dialogue history of a specific user's session.
 Having the dialogue history stored as a graph allows for seamless conversational flows but also gives you the ability to analyze user behavior and text chunk retrieval through graph analytics.
 
-
 ## Environment Setup
 
 You need to define the following environment variables
@@ -25,7 +24,6 @@ NEO4J_PASSWORD=<YOUR_NEO4J_PASSWORD>
 If you want to populate the DB with some example data, you can run `python ingest.py`.
 The script process and stores sections of the text from the file `dune.txt` into a Neo4j graph database.
 Additionally, a vector index named `dune` is created for efficient querying of these embeddings.
-
 
 ## Usage
 
@@ -54,9 +52,9 @@ from neo4j_vector_memory import chain as neo4j_vector_memory_chain
 add_routes(app, neo4j_vector_memory_chain, path="/neo4j-vector-memory")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -71,7 +69,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

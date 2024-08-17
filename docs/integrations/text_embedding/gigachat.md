@@ -5,8 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # GigaChat
 This notebook shows how to use LangChain with [GigaChat embeddings](https://developers.sber.ru/portal/products/gigachat).
-To use you need to install ```gigachat``` python package.
-
+To use you need to install `gigachat` python package.
 
 ```python
 %pip install --upgrade --quiet  gigachat
@@ -16,14 +15,12 @@ To get GigaChat credentials you need to [create account](https://developers.sber
 
 ## Example
 
-
 ```python
 import os
 from getpass import getpass
 
 os.environ["GIGACHAT_CREDENTIALS"] = getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "GigaChatEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.gigachat.GigaChatEmbeddings.html", "title": "GigaChat"}]-->
@@ -32,17 +29,13 @@ from langchain_community.embeddings import GigaChatEmbeddings
 embeddings = GigaChatEmbeddings(verify_ssl_certs=False, scope="GIGACHAT_API_PERS")
 ```
 
-
 ```python
 query_result = embeddings.embed_query("The quick brown fox jumps over the lazy dog")
 ```
 
-
 ```python
 query_result[:5]
 ```
-
-
 
 ```output
 [0.8398333191871643,
@@ -51,8 +44,6 @@ query_result[:5]
  -0.17103666067123413,
  1.2884578704833984]
 ```
-
-
 
 ## Related
 

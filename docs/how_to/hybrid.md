@@ -27,7 +27,6 @@ Let's see a concrete example of what this looks like in code. We will use the Ca
 
 Install the following Python package:
 
-
 ```python
 !pip install "cassio>=0.1.7"
 ```
@@ -35,7 +34,6 @@ Install the following Python package:
 Get the [connection secrets](https://docs.datastax.com/en/astra/astra-db-vector/get-started/quickstart.html).
 
 Initialize cassio:
-
 
 ```python
 import cassio
@@ -48,7 +46,6 @@ cassio.init(
 ```
 
 Create the Cassandra VectorStore with a standard [index analyzer](https://docs.datastax.com/en/astra/astra-db-vector/cql/use-analyzers-with-cql.html). The index analyzer is needed to enable term matching.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Cassandra", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.cassandra.Cassandra.html", "title": "Hybrid Search"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Hybrid Search"}]-->
@@ -76,12 +73,9 @@ vectorstore.add_texts(
 
 If we do a standard similarity search, we get all the documents:
 
-
 ```python
 vectorstore.as_retriever().invoke("What city did I visit last?")
 ```
-
-
 
 ```output
 [Document(page_content='In 2022, I visited New York'),
@@ -89,9 +83,7 @@ Document(page_content='In 2023, I visited Paris'),
 Document(page_content='In 2021, I visited New Orleans')]
 ```
 
-
 The Astra DB vectorstore `body_search` argument can be used to filter the search on the term `new`.
-
 
 ```python
 vectorstore.as_retriever(search_kwargs={"body_search": "new"}).invoke(
@@ -99,16 +91,12 @@ vectorstore.as_retriever(search_kwargs={"body_search": "new"}).invoke(
 )
 ```
 
-
-
 ```output
 [Document(page_content='In 2022, I visited New York'),
 Document(page_content='In 2021, I visited New Orleans')]
 ```
 
-
 We can now create the chain that we will use to do question-answering over
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Hybrid Search"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Hybrid Search"}, {"imported": "ConfigurableField", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableField.html", "title": "Hybrid Search"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Hybrid Search"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Hybrid Search"}]-->
@@ -122,7 +110,6 @@ from langchain_openai import ChatOpenAI
 ```
 
 This is basic question-answering chain set up.
-
 
 ```python
 template = """Answer the question based only on the following context:
@@ -138,7 +125,6 @@ retriever = vectorstore.as_retriever()
 
 Here we mark the retriever as having a configurable field. All vectorstore retrievers have `search_kwargs` as a field. This is just a dictionary, with vectorstore specific fields
 
-
 ```python
 configurable_retriever = retriever.configurable_fields(
     search_kwargs=ConfigurableField(
@@ -151,7 +137,6 @@ configurable_retriever = retriever.configurable_fields(
 
 We can now create the chain using our configurable retriever
 
-
 ```python
 chain = (
     {"context": configurable_retriever, "question": RunnablePassthrough()}
@@ -161,20 +146,15 @@ chain = (
 )
 ```
 
-
 ```python
 chain.invoke("What city did I visit last?")
 ```
-
-
 
 ```output
 Paris
 ```
 
-
 We can now invoke the chain with configurable options. `search_kwargs` is the id of the configurable field. The value is the search kwargs to use for Astra DB.
-
 
 ```python
 chain.invoke(
@@ -182,8 +162,6 @@ chain.invoke(
     config={"configurable": {"search_kwargs": {"body_search": "new"}}},
 )
 ```
-
-
 
 ```output
 New York

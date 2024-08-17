@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # You.com
 
->[you.com API](https://api.you.com) is a suite of tools designed to help developers ground the output of LLMs in the most recent, most accurate, most relevant information that may not have been included in their training dataset.
+> [you.com API](https://api.you.com) is a suite of tools designed to help developers ground the output of LLMs in the most recent, most accurate, most relevant information that may not have been included in their training dataset.
 
 ## Setup
 
@@ -13,11 +13,9 @@ The retriever lives in the `langchain-community` package.
 
 You also need to set your you.com API key.
 
-
 ```python
 %pip install --upgrade --quiet langchain-community
 ```
-
 
 ```python
 import os
@@ -36,7 +34,6 @@ os.environ["OPENAI_API_KEY"] = ""
 
 It's also helpful (but not needed) to set up [LangSmith](https://smith.langchain.com/) for best-in-class observability
 
-
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
@@ -44,7 +41,6 @@ It's also helpful (but not needed) to set up [LangSmith](https://smith.langchain
 ```
 
 ## Utility Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "YouSearchAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.you.YouSearchAPIWrapper.html", "title": "You.com"}]-->
@@ -54,7 +50,6 @@ utility = YouSearchAPIWrapper(num_web_results=1)
 
 utility
 ```
-
 
 ```python
 import json
@@ -105,7 +100,6 @@ print(response)
 ```
 ## Retriever Usage
 
-
 ```python
 <!--IMPORTS:[{"imported": "YouRetriever", "source": "langchain_community.retrievers.you", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.you.YouRetriever.html", "title": "You.com"}]-->
 from langchain_community.retrievers.you import YouRetriever
@@ -114,7 +108,6 @@ retriever = YouRetriever(num_web_results=1)
 
 retriever
 ```
-
 
 ```python
 # .invoke wraps utility.results
@@ -131,12 +124,10 @@ print(response)
 ```
 ## Chaining
 
-
 ```python
 # you need a model to use in the chain
 !pip install --upgrade --quiet langchain-openai
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "YouRetriever", "source": "langchain_community.retrievers.you", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.you.YouRetriever.html", "title": "You.com"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "You.com"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "You.com"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "You.com"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "You.com"}]-->
@@ -160,7 +151,6 @@ output_parser = StrOutputParser()
 ```
 
 ### Invoke
-
 
 ```python
 # set up prompt that expects one question
@@ -189,7 +179,6 @@ The weather in New York City today is 43° with a high/low of --/39°. The wind 
 ```
 ### Stream
 
-
 ```python
 # set up prompt that expects one question
 prompt = ChatPromptTemplate.from_template(
@@ -215,7 +204,6 @@ for s in chain.stream({"question": "what is the weather in NY today"}):
 The weather in New York City today is a high of 39°F and a low of 31°F with a feels like temperature of 43°F. The wind speed is 3 mph, humidity is 63%, and the air quality is considered to be good.
 ```
 ### Batch
-
 
 ```python
 chain = (

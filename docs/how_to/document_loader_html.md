@@ -13,11 +13,9 @@ Parsing HTML files often requires specialized tools. Here we demonstrate parsing
 
 ## Loading HTML with Unstructured
 
-
 ```python
 %pip install unstructured
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredHTMLLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.html.UnstructuredHTMLLoader.html", "title": "How to load HTML"}]-->
@@ -37,11 +35,9 @@ print(data)
 
 We can also use `BeautifulSoup4` to load HTML documents using the `BSHTMLLoader`.  This will extract the text from the HTML into `page_content`, and the page title as `title` into `metadata`.
 
-
 ```python
 %pip install bs4
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "BSHTMLLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.html_bs.BSHTMLLoader.html", "title": "How to load HTML"}]-->

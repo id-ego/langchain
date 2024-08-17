@@ -39,13 +39,12 @@ As an example, let's get a model to generate a joke and separate the setup from 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="llm"
+customVarName="llm"
 />
 
 ### Pydantic class
 
 If we want the model to return a Pydantic object, we just need to pass in the desired Pydantic class. The key advantage of using Pydantic is that the model-generated output will be validated. Pydantic will raise an error if any required fields are missing or if any fields are of the wrong type.
-
 
 ```python
 from typing import Optional
@@ -69,12 +68,9 @@ structured_llm = llm.with_structured_output(Joke)
 structured_llm.invoke("Tell me a joke about cats")
 ```
 
-
-
 ```output
 Joke(setup='Why was the cat sitting on the computer?', punchline='Because it wanted to keep an eye on the mouse!', rating=7)
 ```
-
 
 :::tip
 Beyond just the structure of the Pydantic class, the name of the Pydantic class, the docstring, and the names and provided descriptions of parameters are very important. Most of the time `with_structured_output` is using a model's function/tool calling API, and you can effectively think of all of this information as being added to the model prompt.
@@ -90,7 +86,6 @@ If you don't want to use Pydantic, explicitly don't want validation of the argum
 - Typing extensions: It is highly recommended to import `Annotated` and `TypedDict` from `typing_extensions` instead of `typing` to ensure consistent behavior across Python versions.
 
 :::
-
 
 ```python
 from typing_extensions import Annotated, TypedDict
@@ -117,17 +112,13 @@ structured_llm = llm.with_structured_output(Joke)
 structured_llm.invoke("Tell me a joke about cats")
 ```
 
-
-
 ```output
 {'setup': 'Why was the cat sitting on the computer?',
  'punchline': 'Because it wanted to keep an eye on the mouse!',
  'rating': 7}
 ```
 
-
 Equivalently, we can pass in a [JSON Schema](https://json-schema.org/) dict. This requires no imports or classes and makes it very clear exactly how each parameter is documented, at the cost of being a bit more verbose.
-
 
 ```python
 json_schema = {
@@ -156,19 +147,15 @@ structured_llm = llm.with_structured_output(json_schema)
 structured_llm.invoke("Tell me a joke about cats")
 ```
 
-
-
 ```output
 {'setup': 'Why was the cat sitting on the computer?',
  'punchline': 'Because it wanted to keep an eye on the mouse!',
  'rating': 7}
 ```
 
-
 ### Choosing between multiple schemas
 
 The simplest way to let the model choose from multiple schemas is to create a parent schema that has a Union-typed attribute:
-
 
 ```python
 from typing import Union
@@ -200,24 +187,17 @@ structured_llm = llm.with_structured_output(Response)
 structured_llm.invoke("Tell me a joke about cats")
 ```
 
-
-
 ```output
 Response(output=Joke(setup='Why was the cat sitting on the computer?', punchline='To keep an eye on the mouse!', rating=8))
 ```
-
-
 
 ```python
 structured_llm.invoke("How are you today?")
 ```
 
-
-
 ```output
 Response(output=ConversationalResponse(response="I'm just a digital assistant, so I don't have feelings, but I'm here and ready to help you. How can I assist you today?"))
 ```
-
 
 Alternatively, you can use tool calling directly to allow the model to choose between options, if your [chosen model supports it](/docs/integrations/chat/). This involves a bit more parsing and setup but in some instances leads to better performance because you don't have to use nested schemas. See [this how-to guide](/docs/how_to/tool_calling) for more details.
 
@@ -230,7 +210,6 @@ We can stream outputs from our structured model when the output type is a dict (
 Note that what's yielded is already aggregated chunks, not deltas.
 
 :::
-
 
 ```python
 from typing_extensions import Annotated, TypedDict
@@ -282,7 +261,6 @@ For more complex schemas it's very useful to add few-shot examples to the prompt
 
 The simplest and most universal way is to add examples to a system message in the prompt:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to return structured data from a model"}]-->
 from langchain_core.prompts import ChatPromptTemplate
@@ -307,17 +285,13 @@ few_shot_structured_llm = prompt | structured_llm
 few_shot_structured_llm.invoke("what's something funny about woodpeckers")
 ```
 
-
-
 ```output
 {'setup': 'Woodpecker',
  'punchline': "Woodpecker who? Woodpecker who can't find a tree is just a bird with a headache!",
  'rating': 7}
 ```
 
-
 When the underlying method for structuring outputs is tool calling, we can pass in our examples as explicit tool calls. You can check if the model you're using makes use of tool calling in its API reference.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to return structured data from a model"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to return structured data from a model"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to return structured data from a model"}]-->
@@ -389,14 +363,11 @@ few_shot_structured_llm = prompt | structured_llm
 few_shot_structured_llm.invoke({"input": "crocodiles", "examples": examples})
 ```
 
-
-
 ```output
 {'setup': 'Crocodile',
  'punchline': 'Crocodile be seeing you later, alligator!',
  'rating': 7}
 ```
-
 
 For more on few shot prompting when using tool calling, see [here](/docs/how_to/function_calling/#Few-shot-prompting).
 
@@ -412,7 +383,6 @@ To see if the model you're using supports JSON mode, check its entry in the [API
 
 :::
 
-
 ```python
 structured_llm = llm.with_structured_output(None, method="json_mode")
 
@@ -421,26 +391,20 @@ structured_llm.invoke(
 )
 ```
 
-
-
 ```output
 {'setup': 'Why was the cat sitting on the computer?',
  'punchline': 'Because it wanted to keep an eye on the mouse!'}
 ```
 
-
 ### (Advanced) Raw outputs
 
 LLMs aren't perfect at generating structured output, especially as schemas become complex. You can avoid raising exceptions and handle the raw output yourself by passing `include_raw=True`. This changes the output format to contain the raw message output, the `parsed` value (if successful), and any resulting errors:
-
 
 ```python
 structured_llm = llm.with_structured_output(Joke, include_raw=True)
 
 structured_llm.invoke("Tell me a joke about cats")
 ```
-
-
 
 ```output
 {'raw': AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_f25ZRmh8u5vHlOWfTUw8sJFZ', 'function': {'arguments': '{"setup":"Why was the cat sitting on the computer?","punchline":"Because it wanted to keep an eye on the mouse!","rating":7}', 'name': 'Joke'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 33, 'prompt_tokens': 93, 'total_tokens': 126}, 'model_name': 'gpt-4o-2024-05-13', 'system_fingerprint': 'fp_4e2b2da518', 'finish_reason': 'stop', 'logprobs': None}, id='run-d880d7e2-df08-4e9e-ad92-dfc29f2fd52f-0', tool_calls=[{'name': 'Joke', 'args': {'setup': 'Why was the cat sitting on the computer?', 'punchline': 'Because it wanted to keep an eye on the mouse!', 'rating': 7}, 'id': 'call_f25ZRmh8u5vHlOWfTUw8sJFZ', 'type': 'tool_call'}], usage_metadata={'input_tokens': 93, 'output_tokens': 33, 'total_tokens': 126}),
@@ -450,7 +414,6 @@ structured_llm.invoke("Tell me a joke about cats")
  'parsing_error': None}
 ```
 
-
 ## Prompting and parsing model outputs directly
 
 Not all models support `.with_structured_output()`, since not all models have tool calling or JSON mode support. For such models you'll need to directly prompt the model to use a specific format, and use an output parser to extract the structured response from the raw model output.
@@ -458,7 +421,6 @@ Not all models support `.with_structured_output()`, since not all models have to
 ### Using `PydanticOutputParser`
 
 The following example uses the built-in [`PydanticOutputParser`](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html) to parse the output of a chat model prompted to match the given Pydantic schema. Note that we are adding `format_instructions` directly to the prompt from a method on the parser:
-
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html", "title": "How to return structured data from a model"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to return structured data from a model"}]-->
@@ -501,7 +463,6 @@ prompt = ChatPromptTemplate.from_messages(
 
 Let’s take a look at what information is sent to the model:
 
-
 ```python
 query = "Anna is 23 years old and she is 6 feet tall"
 
@@ -522,26 +483,21 @@ Human: Anna is 23 years old and she is 6 feet tall
 ```
 And now let's invoke it:
 
-
 ```python
 chain = prompt | llm | parser
 
 chain.invoke({"query": query})
 ```
 
-
-
 ```output
 People(people=[Person(name='Anna', height_in_meters=1.8288)])
 ```
-
 
 For a deeper dive into using output parsers with prompting techniques for structured output, see [this guide](/docs/how_to/output_parser_structured).
 
 ### Custom Parsing
 
 You can also create a custom prompt and parser with [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language), using a plain function to parse the output from the model:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to return structured data from a model"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to return structured data from a model"}]-->
@@ -609,7 +565,6 @@ def extract_json(message: AIMessage) -> List[dict]:
 
 Here is the prompt sent to the model:
 
-
 ```python
 query = "Anna is 23 years old and she is 6 feet tall"
 
@@ -623,14 +578,11 @@ Human: Anna is 23 years old and she is 6 feet tall
 ```
 And here's what it looks like when we invoke it:
 
-
 ```python
 chain = prompt | llm | extract_json
 
 chain.invoke({"query": query})
 ```
-
-
 
 ```output
 [{'people': [{'name': 'Anna', 'height_in_meters': 1.8288}]}]

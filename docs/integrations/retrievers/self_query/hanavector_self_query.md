@@ -9,7 +9,6 @@ For more information on how to setup the SAP HANA vetor store, take a look at th
 
 We use the same setup here:
 
-
 ```python
 import os
 
@@ -31,7 +30,6 @@ connection = dbapi.connect(
 To be able to self query with good performance we create additional metadata fields
 for our vectorstore table in HANA:
 
-
 ```python
 # Create custom table with attribute
 cur = connection.cursor()
@@ -49,7 +47,6 @@ cur.execute(
 ```
 
 Let's add some documents.
-
 
 ```python
 <!--IMPORTS:[{"imported": "HanaDB", "source": "langchain_community.vectorstores.hanavector", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.hanavector.HanaDB.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "SAP HANA Cloud Vector Engine"}]-->
@@ -90,7 +87,6 @@ db.add_documents(docs)
 ## Self querying
 
 Now for the main act: here is how to construct a SelfQueryRetriever for HANA vectorstore:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "HanaTranslator", "source": "langchain_community.query_constructors.hanavector", "docs": "https://api.python.langchain.com/en/latest/query_constructors/langchain_community.query_constructors.hanavector.HanaTranslator.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "SAP HANA Cloud Vector Engine"}]-->
@@ -139,7 +135,6 @@ retriever = SelfQueryRetriever.from_llm(
 
 Let's use this retriever to prepare a (self) query for a person:
 
-
 ```python
 query_prompt = "Which person is not active?"
 
@@ -150,7 +145,6 @@ for doc in docs:
 ```
 
 We can also take a look at how the query is being constructed:
-
 
 ```python
 <!--IMPORTS:[{"imported": "StructuredQueryOutputParser", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.base.StructuredQueryOutputParser.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "get_query_constructor_prompt", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.base.get_query_constructor_prompt.html", "title": "SAP HANA Cloud Vector Engine"}]-->

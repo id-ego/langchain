@@ -12,7 +12,6 @@ In this guide we'll go over the basic ways of constructing a knowledge graph bas
 
 Constructing knowledge graphs requires executing write access to the database. There are inherent risks in doing this. Make sure that you verify and validate data before importing it. For more on general security best practices, [see here](/docs/security).
 
-
 ## Architecture
 
 At a high-level, the steps of constructing a knowledge are from text are:
@@ -25,7 +24,6 @@ At a high-level, the steps of constructing a knowledge are from text are:
 First, get required packages and set environment variables.
 In this example, we will be using Neo4j graph database.
 
-
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai langchain-experimental neo4j
 ```
@@ -33,7 +31,6 @@ In this example, we will be using Neo4j graph database.
 Note: you may need to restart the kernel to use updated packages.
 ```
 We default to OpenAI models in this guide.
-
 
 ```python
 import getpass
@@ -50,7 +47,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ```
 Next, we need to define Neo4j credentials and connection.
 Follow [these installation steps](https://neo4j.com/docs/operations-manual/current/installation/) to set up a Neo4j database.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Neo4jGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neo4j_graph.Neo4jGraph.html", "title": "How to construct knowledge graphs"}]-->
@@ -69,8 +65,6 @@ graph = Neo4jGraph()
 
 Extracting graph data from text enables the transformation of unstructured information into structured formats, facilitating deeper insights and more efficient navigation through complex relationships and patterns. The `LLMGraphTransformer` converts text documents into structured graph documents by leveraging a LLM to parse and categorize entities and their relationships. The selection of the LLM model significantly influences the output by determining the accuracy and nuance of the extracted graph data.
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "LLMGraphTransformer", "source": "langchain_experimental.graph_transformers", "docs": "https://api.python.langchain.com/en/latest/graph_transformers/langchain_experimental.graph_transformers.llm.LLMGraphTransformer.html", "title": "How to construct knowledge graphs"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to construct knowledge graphs"}]-->
 import os
@@ -84,7 +78,6 @@ llm_transformer = LLMGraphTransformer(llm=llm)
 ```
 
 Now we can pass in example text and examine the results.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to construct knowledge graphs"}]-->
@@ -113,7 +106,6 @@ Note that the graph construction process is non-deterministic since we are using
 
 Additionally, you have the flexibility to define specific types of nodes and relationships for extraction according to your requirements.
 
-
 ```python
 llm_transformer_filtered = LLMGraphTransformer(
     llm=llm,
@@ -138,7 +130,6 @@ The `node_properties` parameter enables the extraction of node properties, allow
 When set to `True`, LLM autonomously identifies and extracts relevant node properties.
 Conversely, if `node_properties` is defined as a list of strings, the LLM selectively retrieves only the specified properties from the text.
 
-
 ```python
 llm_transformer_props = LLMGraphTransformer(
     llm=llm,
@@ -157,7 +148,6 @@ Relationships:[Relationship(source=Node(id='Marie Curie', type='Person'), target
 ## Storing to graph database
 
 The generated graph documents can be stored to a graph database using the `add_graph_documents` method.
-
 
 ```python
 graph.add_graph_documents(graph_documents_props)

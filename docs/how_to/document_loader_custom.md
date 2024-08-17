@@ -9,14 +9,12 @@ title: Custom Document Loader
 
 ## Overview
 
-
 Applications based on LLMs frequently entail extracting data from databases or files, like PDFs, and converting it into a format that LLMs can utilize. In LangChain, this usually involves creating Document objects, which encapsulate the extracted text (`page_content`) along with metadata—a dictionary containing details about the document, such as the author's name or the date of publication.
 
 `Document` objects are often formatted into prompts that are fed into an LLM, allowing the LLM to use the information in the `Document` to generate a desired response (e.g., summarizing the document).
 `Documents` can be either used immediately or indexed into a vectorstore for future retrieval and use.
 
 The main abstractions for Document Loading are:
-
 
 | Component      | Description                    |
 |----------------|--------------------------------|
@@ -34,7 +32,7 @@ This guide will demonstrate how to write custom document loading and file parsin
 
 A document loader can be implemented by sub-classing from a `BaseLoader` which provides a standard interface for loading documents.
 
-### Interface 
+### Interface
 
 | Method Name | Explanation |
 |-------------|-------------|
@@ -49,14 +47,12 @@ A document loader can be implemented by sub-classing from a `BaseLoader` which p
 :::important
 When implementing a document loader do **NOT** provide parameters via the `lazy_load` or `alazy_load` methods.
 
-All configuration is expected to be passed through the initializer (__init__). This was a design choice made by LangChain to make sure that once a document loader has been instantiated it has all the information needed to load documents.
+All configuration is expected to be passed through the initializer (**init**). This was a design choice made by LangChain to make sure that once a document loader has been instantiated it has all the information needed to load documents.
 :::
-
 
 ### Implementation
 
 Let's create an example of a standard document loader that loads a file and creates a document from each line in the file.
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseLoader", "source": "langchain_core.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_core.document_loaders.base.BaseLoader.html", "title": "How to create a custom Document Loader"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to create a custom Document Loader"}]-->
@@ -115,9 +111,7 @@ class CustomDocumentLoader(BaseLoader):
 
 ### Test 🧪
 
-
 To test out the document loader, we need a file with some quality content.
-
 
 ```python
 with open("./meow.txt", "w", encoding="utf-8") as f:
@@ -126,7 +120,6 @@ with open("./meow.txt", "w", encoding="utf-8") as f:
 
 loader = CustomDocumentLoader("./meow.txt")
 ```
-
 
 ```python
 ## Test out the lazy load interface
@@ -173,19 +166,15 @@ Avoid using it for production code since eager loading assumes that all the cont
 can fit into memory, which is not always the case, especially for enterprise data.
 :::
 
-
 ```python
 loader.load()
 ```
-
-
 
 ```output
 [Document(page_content='meow meow🐱 \n', metadata={'line_number': 0, 'source': './meow.txt'}),
  Document(page_content=' meow meow🐱 \n', metadata={'line_number': 1, 'source': './meow.txt'}),
  Document(page_content=' meow😻😻', metadata={'line_number': 2, 'source': './meow.txt'})]
 ```
-
 
 ## Working with Files
 
@@ -196,7 +185,6 @@ As a result, it can be helpful to decouple the parsing logic from the loading lo
 ### BaseBlobParser
 
 A `BaseBlobParser` is an interface that accepts a `blob` and outputs a list of `Document` objects. A `blob` is a representation of data that lives either in memory or in a file. LangChain python has a `Blob` primitive which is inspired by the [Blob WebAPI spec](https://developer.mozilla.org/en-US/docs/Web/API/Blob).
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseBlobParser", "source": "langchain_core.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_core.document_loaders.base.BaseBlobParser.html", "title": "How to create a custom Document Loader"}, {"imported": "Blob", "source": "langchain_core.document_loaders", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Blob.html", "title": "How to create a custom Document Loader"}]-->
@@ -218,18 +206,14 @@ class MyParser(BaseBlobParser):
                 )
 ```
 
-
 ```python
 blob = Blob.from_path("./meow.txt")
 parser = MyParser()
 ```
 
-
 ```python
 list(parser.lazy_parse(blob))
 ```
-
-
 
 ```output
 [Document(page_content='meow meow🐱 \n', metadata={'line_number': 1, 'source': './meow.txt'}),
@@ -237,103 +221,73 @@ list(parser.lazy_parse(blob))
  Document(page_content=' meow😻😻', metadata={'line_number': 3, 'source': './meow.txt'})]
 ```
 
-
 Using the **blob** API also allows one to load content directly from memory without having to read it from a file!
-
 
 ```python
 blob = Blob(data=b"some data from memory\nmeow")
 list(parser.lazy_parse(blob))
 ```
 
-
-
 ```output
 [Document(page_content='some data from memory\n', metadata={'line_number': 1, 'source': None}),
  Document(page_content='meow', metadata={'line_number': 2, 'source': None})]
 ```
 
-
 ### Blob
 
 Let's take a quick look through some of the Blob API.
-
 
 ```python
 blob = Blob.from_path("./meow.txt", metadata={"foo": "bar"})
 ```
 
-
 ```python
 blob.encoding
 ```
-
-
 
 ```output
 'utf-8'
 ```
 
-
-
 ```python
 blob.as_bytes()
 ```
-
-
 
 ```output
 b'meow meow\xf0\x9f\x90\xb1 \n meow meow\xf0\x9f\x90\xb1 \n meow\xf0\x9f\x98\xbb\xf0\x9f\x98\xbb'
 ```
 
-
-
 ```python
 blob.as_string()
 ```
-
-
 
 ```output
 'meow meow🐱 \n meow meow🐱 \n meow😻😻'
 ```
 
-
-
 ```python
 blob.as_bytes_io()
 ```
-
-
 
 ```output
 <contextlib._GeneratorContextManager at 0x743f34324450>
 ```
 
-
-
 ```python
 blob.metadata
 ```
-
-
 
 ```output
 {'foo': 'bar'}
 ```
 
-
-
 ```python
 blob.source
 ```
 
-
-
 ```output
 './meow.txt'
 ```
-
 
 ### Blob Loaders
 
@@ -343,14 +297,12 @@ A the moment, `LangChain` only supports `FileSystemBlobLoader`.
 
 You can use the `FileSystemBlobLoader` to load blobs and then use the parser to parse them.
 
-
 ```python
 <!--IMPORTS:[{"imported": "FileSystemBlobLoader", "source": "langchain_community.document_loaders.blob_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.blob_loaders.file_system.FileSystemBlobLoader.html", "title": "How to create a custom Document Loader"}]-->
 from langchain_community.document_loaders.blob_loaders import FileSystemBlobLoader
 
 blob_loader = FileSystemBlobLoader(path=".", glob="*.mdx", show_progress=True)
 ```
-
 
 ```python
 parser = MyParser()
@@ -378,7 +330,6 @@ page_content='# HTML\n' metadata={'line_number': 1, 'source': 'html.mdx'}
 LangChain has a `GenericLoader` abstraction which composes a `BlobLoader` with a `BaseBlobParser`.
 
 `GenericLoader` is meant to provide standardized classmethods that make it easy to use existing `BlobLoader` implementations. At the moment, only the `FileSystemBlobLoader` is supported.
-
 
 ```python
 <!--IMPORTS:[{"imported": "GenericLoader", "source": "langchain_community.document_loaders.generic", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.generic.GenericLoader.html", "title": "How to create a custom Document Loader"}]-->
@@ -412,7 +363,6 @@ If you really like creating classes, you can sub-class and create a class to enc
 
 You can sub-class from this class to load content using an existing loader.
 
-
 ```python
 from typing import Any
 
@@ -423,7 +373,6 @@ class MyCustomLoader(GenericLoader):
         """Override this method to associate a default parser with the class."""
         return MyParser()
 ```
-
 
 ```python
 loader = MyCustomLoader.from_filesystem(path=".", glob="*.mdx", show_progress=True)

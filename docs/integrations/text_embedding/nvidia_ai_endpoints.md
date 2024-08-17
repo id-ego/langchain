@@ -3,19 +3,19 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/nv
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/nvidia_ai_endpoints.ipynb
 ---
 
-# NVIDIA NIMs 
+# NVIDIA NIMs
 
-The `langchain-nvidia-ai-endpoints` package contains LangChain integrations building applications with models on 
-NVIDIA NIM inference microservice. NIM supports models across domains like chat, embedding, and re-ranking models 
-from the community as well as NVIDIA. These models are optimized by NVIDIA to deliver the best performance on NVIDIA 
-accelerated infrastructure and deployed as a NIM, an easy-to-use, prebuilt containers that deploy anywhere using a single 
+The `langchain-nvidia-ai-endpoints` package contains LangChain integrations building applications with models on
+NVIDIA NIM inference microservice. NIM supports models across domains like chat, embedding, and re-ranking models
+from the community as well as NVIDIA. These models are optimized by NVIDIA to deliver the best performance on NVIDIA
+accelerated infrastructure and deployed as a NIM, an easy-to-use, prebuilt containers that deploy anywhere using a single
 command on NVIDIA accelerated infrastructure.
 
-NVIDIA hosted deployments of NIMs are available to test on the [NVIDIA API catalog](https://build.nvidia.com/). After testing, 
-NIMs can be exported from NVIDIA’s API catalog using the NVIDIA AI Enterprise license and run on-premises or in the cloud, 
+NVIDIA hosted deployments of NIMs are available to test on the [NVIDIA API catalog](https://build.nvidia.com/). After testing,
+NIMs can be exported from NVIDIA’s API catalog using the NVIDIA AI Enterprise license and run on-premises or in the cloud,
 giving enterprises ownership and full control of their IP and AI application.
 
-NIMs are packaged as container images on a per model basis and are distributed as NGC container images through the NVIDIA NGC Catalog. 
+NIMs are packaged as container images on a per model basis and are distributed as NGC container images through the NVIDIA NGC Catalog.
 At their core, NIMs provide easy, consistent, and familiar APIs for running inference on an AI model.
 
 This example goes over how to use LangChain to interact with the supported [NVIDIA Retrieval QA Embedding Model](https://build.nvidia.com/nvidia/embed-qa-4) for [retrieval-augmented generation](https://developer.nvidia.com/blog/build-enterprise-retrieval-augmented-generation-apps-with-nvidia-retrieval-qa-embedding-model/) via the `NVIDIAEmbeddings` class.
@@ -23,7 +23,6 @@ This example goes over how to use LangChain to interact with the supported [NVID
 For more information on accessing the chat models through this API, check out the [ChatNVIDIA](https://python.langchain.com/docs/integrations/chat/nvidia_ai_endpoints/) documentation.
 
 ## Installation
-
 
 ```python
 %pip install --upgrade --quiet  langchain-nvidia-ai-endpoints
@@ -34,13 +33,9 @@ For more information on accessing the chat models through this API, check out th
 **To get started:**
 
 1. Create a free account with [NVIDIA](https://build.nvidia.com/), which hosts NVIDIA AI Foundation models.
-
 2. Select the `Retrieval` tab, then select your model of choice.
-
 3. Under `Input` select the `Python` tab, and click `Get API Key`. Then click `Generate Key`.
-
 4. Copy and save the generated key as `NVIDIA_API_KEY`. From there, you should have access to the endpoints.
-
 
 ```python
 import getpass
@@ -61,7 +56,6 @@ We should be able to see an embedding model among that list which can be used in
 
 When initializing an embedding model you can select a model by passing it, e.g. `NV-Embed-QA` below, or use the default by not passing any arguments.
 
-
 ```python
 <!--IMPORTS:[{"imported": "NVIDIAEmbeddings", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_nvidia_ai_endpoints.embeddings.NVIDIAEmbeddings.html", "title": "NVIDIA NIMs "}]-->
 from langchain_nvidia_ai_endpoints import NVIDIAEmbeddings
@@ -72,17 +66,13 @@ embedder = NVIDIAEmbeddings(model="NV-Embed-QA")
 This model is a fine-tuned E5-large model which supports the expected `Embeddings` methods including:
 
 - `embed_query`: Generate query embedding for a query sample.
-
 - `embed_documents`: Generate passage embeddings for a list of documents which you would like to search over.
-
 - `aembed_query`/`aembed_documents`: Asynchronous versions of the above.
 
 ## Working with self-hosted NVIDIA NIMs
 When ready to deploy, you can self-host models with NVIDIA NIM—which is included with the NVIDIA AI Enterprise software license—and run them anywhere, giving you ownership of your customizations and full control of your intellectual property (IP) and AI applications.
 
 [Learn more about NIMs](https://developer.nvidia.com/blog/nvidia-nim-offers-optimized-inference-microservices-for-deploying-ai-models-at-scale/)
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "NVIDIAEmbeddings", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_nvidia_ai_endpoints.embeddings.NVIDIAEmbeddings.html", "title": "NVIDIA NIMs "}]-->
@@ -99,29 +89,20 @@ The following is a quick test of the similarity for these data points:
 **Queries:**
 
 - What's the weather like in Komchatka?
-
 - What kinds of food is Italy known for?
-
 - What's my name? I bet you don't remember...
-
 - What's the point of life anyways?
-
 - The point of life is to have fun :D
 
 **Documents:**
 
 - Komchatka's weather is cold, with long, severe winters.
-
 - Italy is famous for pasta, pizza, gelato, and espresso.
-
 - I can't recall personal names, only provide information.
-
 - Life's purpose varies, often seen as personal fulfillment.
-
 - Enjoying life's moments is indeed a wonderful approach.
 
 ### Embedding Runtimes
-
 
 ```python
 print("\nSequential Embedding: ")
@@ -136,7 +117,6 @@ print("Shape:", (len(q_embeddings), len(q_embeddings[0])))
 ```
 
 ### Document Embedding
-
 
 ```python
 print("\nBatch Document Embedding: ")
@@ -154,11 +134,9 @@ print("Shape:", (len(q_embeddings), len(q_embeddings[0])))
 
 Now that we've generated our embeddings, we can do a simple similarity check on the results to see which documents would have triggered as reasonable answers in a retrieval task:
 
-
 ```python
 %pip install --upgrade --quiet  matplotlib scikit-learn
 ```
-
 
 ```python
 import matplotlib.pyplot as plt
@@ -187,25 +165,17 @@ As a reminder, the queries and documents sent to our system were:
 **Queries:**
 
 - What's the weather like in Komchatka?
-
 - What kinds of food is Italy known for?
-
 - What's my name? I bet you don't remember...
-
 - What's the point of life anyways?
-
 - The point of life is to have fun :D
 
 **Documents:**
 
 - Komchatka's weather is cold, with long, severe winters.
-
 - Italy is famous for pasta, pizza, gelato, and espresso.
-
 - I can't recall personal names, only provide information.
-
 - Life's purpose varies, often seen as personal fulfillment.
-
 - Enjoying life's moments is indeed a wonderful approach.
 
 ## Truncation
@@ -217,15 +187,13 @@ Since models operate on tokens and applications usually work with text, it can b
 To assist with this, NVIDIA's NIMs (API Catalog or local) provide a `truncate` parameter that truncates the input on the server side if it's too large.
 
 The `truncate` parameter has three options:
- - "NONE": The default option. An exception is thrown if the input is too large.
- - "START": The server truncates the input from the start (left), discarding tokens as necessary.
- - "END": The server truncates the input from the end (right), discarding tokens as necessary.
-
+- "NONE": The default option. An exception is thrown if the input is too large.
+- "START": The server truncates the input from the start (left), discarding tokens as necessary.
+- "END": The server truncates the input from the end (right), discarding tokens as necessary.
 
 ```python
 long_text = "AI is amazing, amazing is " * 100
 ```
-
 
 ```python
 strict_embedder = NVIDIAEmbeddings()
@@ -235,7 +203,6 @@ except Exception as e:
     print("Error:", e)
 ```
 
-
 ```python
 truncating_embedder = NVIDIAEmbeddings(truncate="END")
 truncating_embedder.embed_query(long_text)[:5]
@@ -243,11 +210,9 @@ truncating_embedder.embed_query(long_text)[:5]
 
 ## RAG Retrieval:
 
-The following is a repurposing of the initial example of the [LangChain Expression Language Retrieval Cookbook entry](
-https://python.langchain.com/docs/expression_language/cookbook/retrieval), but executed with the AI Foundation Models' [Mixtral 8x7B Instruct](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/ai-foundation/models/mixtral-8x7b) and [NVIDIA Retrieval QA Embedding](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/ai-foundation/models/nvolve-40k) models available in their playground environments. The subsequent examples in the cookbook also run as expected, and we encourage you to explore with these options.
+The following is a repurposing of the initial example of the [LangChain Expression Language Retrieval Cookbook entry](https://python.langchain.com/docs/expression_language/cookbook/retrieval), but executed with the AI Foundation Models' [Mixtral 8x7B Instruct](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/ai-foundation/models/mixtral-8x7b) and [NVIDIA Retrieval QA Embedding](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/ai-foundation/models/nvolve-40k) models available in their playground environments. The subsequent examples in the cookbook also run as expected, and we encourage you to explore with these options.
 
 **TIP:** We would recommend using Mixtral for internal reasoning (i.e. instruction following for data extraction, tool selection, etc.) and Llama-Chat for a single final "wrap-up by making a simple response that works for this user based on the history and context" response.
-
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "NVIDIA NIMs "}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "NVIDIA NIMs "}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "NVIDIA NIMs "}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "NVIDIA NIMs "}, {"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "NVIDIA NIMs "}]-->
@@ -261,7 +226,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 ```
-
 
 ```python
 vectorstore = FAISS.from_texts(
@@ -292,7 +256,6 @@ chain = (
 chain.invoke("where did harrison work?")
 ```
 
-
 ```python
 prompt = ChatPromptTemplate.from_messages(
     [
@@ -318,7 +281,6 @@ chain = (
 
 chain.invoke({"question": "where did harrison work", "language": "italian"})
 ```
-
 
 ## Related
 

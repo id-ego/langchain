@@ -13,7 +13,6 @@ Let's take a look at how we can add examples for the LangChain YouTube video que
 ## Setup
 #### Install dependencies
 
-
 ```python
 # %pip install -qU langchain-core langchain-openai
 ```
@@ -21,7 +20,6 @@ Let's take a look at how we can add examples for the LangChain YouTube video que
 #### Set environment variables
 
 We'll use OpenAI in this example:
-
 
 ```python
 import getpass
@@ -37,7 +35,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ## Query schema
 
 We'll define a query schema that we want our model to output. To make our query analysis a bit more interesting, we'll add a `sub_queries` field that contains more narrow questions derived from the top level question.
-
 
 ```python
 from typing import List, Optional
@@ -68,7 +65,6 @@ class Search(BaseModel):
 
 ## Query generation
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add examples to the prompt for query analysis"}]-->
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -95,19 +91,15 @@ query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 
 Let's try out our query analyzer without any examples in the prompt:
 
-
 ```python
 query_analyzer.invoke(
     "what's the difference between web voyager and reflection agents? do both use langgraph?"
 )
 ```
 
-
-
 ```output
 Search(query='web voyager vs reflection agents', sub_queries=['difference between web voyager and reflection agents', 'do web voyager and reflection agents use langgraph'], publish_year=None)
 ```
-
 
 ## Adding examples and tuning the prompt
 
@@ -115,11 +107,9 @@ This works pretty well, but we probably want it to decompose the question even f
 
 To tune our query generation results, we can add some examples of inputs questions and gold standard output queries to our prompt.
 
-
 ```python
 examples = []
 ```
-
 
 ```python
 question = "What's chat langchain, is it a langchain template?"
@@ -129,7 +119,6 @@ query = Search(
 )
 examples.append({"input": question, "tool_calls": [query]})
 ```
-
 
 ```python
 question = "How to build multi-agent system and stream intermediate steps from it"
@@ -144,7 +133,6 @@ query = Search(
 
 examples.append({"input": question, "tool_calls": [query]})
 ```
-
 
 ```python
 question = "LangChain agents vs LangGraph?"
@@ -161,7 +149,6 @@ examples.append({"input": question, "tool_calls": [query]})
 ```
 
 Now we need to update our prompt template and chain so that the examples are included in each prompt. Since we're working with OpenAI function-calling, we'll need to do a bit of extra structuring to send example inputs and outputs to the model. We'll create a `tool_example_to_messages` helper function to handle this for us:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "BaseMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.base.BaseMessage.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to add examples to the prompt for query analysis"}]-->
@@ -205,7 +192,6 @@ def tool_example_to_messages(example: Dict) -> List[BaseMessage]:
 example_msgs = [msg for ex in examples for msg in tool_example_to_messages(ex)]
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add examples to the prompt for query analysis"}]-->
 from langchain_core.prompts import MessagesPlaceholder
@@ -217,19 +203,15 @@ query_analyzer_with_examples = (
 )
 ```
 
-
 ```python
 query_analyzer_with_examples.invoke(
     "what's the difference between web voyager and reflection agents? do both use langgraph?"
 )
 ```
 
-
-
 ```output
 Search(query='Difference between web voyager and reflection agents, do they both use LangGraph?', sub_queries=['What is Web Voyager', 'What are Reflection agents', 'Do Web Voyager and Reflection agents use LangGraph'], publish_year=None)
 ```
-
 
 Thanks to our examples we get a slightly more decomposed search query. With some more prompt engineering and tuning of our examples we could improve query generation even more.
 

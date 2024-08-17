@@ -31,7 +31,6 @@ os.environ['MS_GRAPH_CLIENT_SECRET'] = "YOUR CLIENT SECRET"
 
 This loader uses an authentication called [*on behalf of a user*](https://learn.microsoft.com/en-us/graph/auth-v2-user?context=graph%2Fapi%2F1.0&view=graph-rest-1.0). It is a 2 step authentication with user consent. When you instantiate the loader, it will call will print a url that the user must visit to give consent to the app on the required permissions. The user must then visit this url and give consent to the application. Then the user must copy the resulting page url and paste it back on the console. The method will then return True if the login attempt was successful.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OneNoteLoader", "source": "langchain_community.document_loaders.onenote", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onenote.OneNoteLoader.html", "title": "Microsoft OneNote"}]-->
 from langchain_community.document_loaders.onenote import OneNoteLoader
@@ -63,7 +62,6 @@ loader = OneNoteLoader(notebook_name="NOTEBOOK NAME", section_name="SECTION NAME
 
 `OneNoteLoader` can load pages from OneNote notebooks stored in OneDrive. You can specify any combination of `notebook_name`, `section_name`, `page_title` to filter for pages under a specific notebook, under a specific section, or with a specific title respectively. For instance, you want to load all pages that are stored under a section called `Recipes` within any of your notebooks OneDrive.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OneNoteLoader", "source": "langchain_community.document_loaders.onenote", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onenote.OneNoteLoader.html", "title": "Microsoft OneNote"}]-->
 from langchain_community.document_loaders.onenote import OneNoteLoader
@@ -78,7 +76,6 @@ Another possibility is to provide a list of `object_ids` for each page you want 
 
 For instance, to retrieve information about all pages that are stored in your notebooks, you need make a request to: `https://graph.microsoft.com/v1.0/me/onenote/pages`. Once you have the list of IDs that you are interested in, then you can instantiate the loader with the following parameters.
 
-
 ```python
 <!--IMPORTS:[{"imported": "OneNoteLoader", "source": "langchain_community.document_loaders.onenote", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onenote.OneNoteLoader.html", "title": "Microsoft OneNote"}]-->
 from langchain_community.document_loaders.onenote import OneNoteLoader
@@ -86,8 +83,6 @@ from langchain_community.document_loaders.onenote import OneNoteLoader
 loader = OneNoteLoader(object_ids=["ID_1", "ID_2"], auth_with_token=True)
 documents = loader.load()
 ```
-
-
 
 ## Related
 

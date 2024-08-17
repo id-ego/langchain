@@ -19,11 +19,9 @@ Or pass the key in as a argument to the wrapper serp_api_key="your secret key"
 
 Use the Tool
 
-
 ```python
 %pip install --upgrade --quiet  google-search-results langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleFinanceQueryRun", "source": "langchain_community.tools.google_finance", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.google_finance.tool.GoogleFinanceQueryRun.html", "title": "Google Finance"}, {"imported": "GoogleFinanceAPIWrapper", "source": "langchain_community.utilities.google_finance", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_finance.GoogleFinanceAPIWrapper.html", "title": "Google Finance"}]-->
@@ -36,13 +34,11 @@ os.environ["SERPAPI_API_KEY"] = ""
 tool = GoogleFinanceQueryRun(api_wrapper=GoogleFinanceAPIWrapper())
 ```
 
-
 ```python
 tool.run("Google")
 ```
 
 Using it with Langchain
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Google Finance"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Google Finance"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Google Finance"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Google Finance"}]-->
@@ -60,7 +56,6 @@ agent = initialize_agent(
 )
 agent.run("what is google's stock")
 ```
-
 
 ## Related
 

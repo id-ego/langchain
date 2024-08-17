@@ -6,14 +6,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 # Azure Cosmos DB Mongo vCore
 
 This notebook shows you how to leverage this integrated [vector database](https://learn.microsoft.com/en-us/azure/cosmos-db/vector-database) to store documents in collections, create indicies and perform vector search queries using approximate nearest neighbor algorithms such as COS (cosine distance), L2 (Euclidean distance), and IP (inner product) to locate documents close to the query vectors. 
-    
+
 Azure Cosmos DB is the database that powers OpenAI's ChatGPT service. It offers single-digit millisecond response times, automatic and instant scalability, along with guaranteed speed at any scale. 
 
 Azure Cosmos DB for MongoDB vCore(https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/) provides developers with a fully managed MongoDB-compatible database service for building modern applications with a familiar architecture. You can apply your MongoDB experience and continue to use your favorite MongoDB drivers, SDKs, and tools by pointing your application to the API for MongoDB vCore account's connection string.
 
 [Sign Up](https://azure.microsoft.com/en-us/free/) for lifetime free access to get started today.
-        
-
 
 ```python
 %pip install --upgrade --quiet  pymongo langchain-openai langchain-community
@@ -36,7 +34,6 @@ DB_NAME, COLLECTION_NAME = NAMESPACE.split(".")
 
 We want to use `OpenAIEmbeddings` so we need to set up our Azure OpenAI API Key alongside other environment variables. 
 
-
 ```python
 # Set up the OpenAI Environment Variables
 os.environ["OPENAI_API_TYPE"] = "azure"
@@ -54,7 +51,6 @@ os.environ["OPENAI_EMBEDDINGS_MODEL_NAME"] = "text-embedding-ada-002"  # the mod
 Now, we need to load the documents into the collection, create the index and then run our queries against the index to retrieve matches.
 
 Please refer to the [documentation](https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/vector-search) if you have questions about certain parameters
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "AzureCosmosDBVectorSearch", "source": "langchain_community.vectorstores.azure_cosmos_db", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azure_cosmos_db.AzureCosmosDBVectorSearch.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "CosmosDBSimilarityType", "source": "langchain_community.vectorstores.azure_cosmos_db", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azure_cosmos_db.CosmosDBSimilarityType.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "CosmosDBVectorSearchType", "source": "langchain_community.vectorstores.azure_cosmos_db", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azure_cosmos_db.CosmosDBVectorSearchType.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Azure Cosmos DB Mongo vCore"}]-->
@@ -85,7 +81,6 @@ openai_embeddings: OpenAIEmbeddings = OpenAIEmbeddings(
     deployment=model_deployment, model=model_name, chunk_size=1
 )
 ```
-
 
 ```python
 from pymongo import MongoClient
@@ -124,8 +119,6 @@ vectorstore.create_index(
 )
 ```
 
-
-
 ```output
 {'raw': {'defaultShard': {'numIndexesBefore': 1,
    'numIndexesAfter': 2,
@@ -134,14 +127,11 @@ vectorstore.create_index(
  'ok': 1}
 ```
 
-
-
 ```python
 # perform a similarity search between the embedding of the query and the embeddings of the documents
 query = "What did the president say about Ketanji Brown Jackson"
 docs = vectorstore.similarity_search(query)
 ```
-
 
 ```python
 print(docs[0].page_content)
@@ -156,7 +146,6 @@ One of the most serious constitutional responsibilities a President has is nomin
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
 Once the documents have been loaded and the index has been created, you can now instantiate the vector store directly and run queries against the index
-
 
 ```python
 vectorstore = AzureCosmosDBVectorSearch.from_connection_string(
@@ -201,7 +190,6 @@ And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketan
 ```
 ## Filtered vector search (Preview)
 Azure Cosmos DB for MongoDB supports pre-filtering with $lt, $lte, $eq, $neq, $gte, $gt, $in, $nin, and $regex. To use this feature, enable "filtering vector search" in the "Preview Features" tab of your Azure Subscription. Learn more about preview features [here](https://learn.microsoft.com/azure/cosmos-db/mongodb/vcore/vector-search#filtered-vector-search-preview).
-
 
 ## Related
 

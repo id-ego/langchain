@@ -9,7 +9,6 @@ keywords:
 
 # Google AI
 
-
 :::caution
 You are currently on a page documenting the use of Google models as [text completion models](/docs/concepts/#llms). Many popular Google models are [chat completion models](/docs/concepts/#chat-models).
 
@@ -20,26 +19,21 @@ A guide on using [Google Generative AI](https://developers.generativeai.google/)
 
 ## Setting up
 
-
 To use Google Generative AI you must install the `langchain-google-genai` Python package and generate an API key. [Read more details](https://developers.generativeai.google/).
-
 
 ```python
 %pip install --upgrade --quiet  langchain-google-genai
 ```
 
-
 ```python
 from langchain_google_genai import GoogleGenerativeAI
 ```
-
 
 ```python
 from getpass import getpass
 
 api_key = getpass()
 ```
-
 
 ```python
 llm = GoogleGenerativeAI(model="models/text-bison-001", google_api_key=api_key)
@@ -103,12 +97,10 @@ print(
 ```
 ## Using in a chain
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Google AI"}]-->
 from langchain_core.prompts import PromptTemplate
 ```
-
 
 ```python
 template = """Question: {question}
@@ -125,7 +117,6 @@ print(chain.invoke({"question": question}))
 4
 ```
 ## Streaming calls
-
 
 ```python
 import sys
@@ -164,7 +155,6 @@ A frozen world, with magic all around.
 
 Gemini models have default safety settings that can be overridden. If you are receiving lots of "Safety Warnings" from your models, you can try tweaking the `safety_settings` attribute of the model. For example, to turn off safety blocking for dangerous content, you can construct your LLM as follows:
 
-
 ```python
 from langchain_google_genai import GoogleGenerativeAI, HarmBlockThreshold, HarmCategory
 
@@ -178,7 +168,6 @@ llm = GoogleGenerativeAI(
 ```
 
 For an enumeration of the categories and thresholds available, see Google's [safety setting types](https://ai.google.dev/api/python/google/generativeai/types/SafetySettingDict).
-
 
 ## Related
 

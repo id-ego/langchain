@@ -7,17 +7,14 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebooks goes over how to load documents from Kinetica
 
-
 ```python
 %pip install gpudb==7.2.0.9
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "KineticaLoader", "source": "langchain_community.document_loaders.kinetica_loader", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.kinetica_loader.KineticaLoader.html", "title": "Kinetica"}]-->
 from langchain_community.document_loaders.kinetica_loader import KineticaLoader
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "KineticaSettings", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.KineticaSettings.html", "title": "Kinetica"}]-->
@@ -32,7 +29,6 @@ from langchain_community.vectorstores import (
 load_dotenv()
 ```
 
-
 ```python
 # Kinetica needs the connection to the database.
 # This is how to set it up.
@@ -44,7 +40,6 @@ PASSWORD = os.getenv("KINETICA_PASSWORD", "")
 def create_config() -> KineticaSettings:
     return KineticaSettings(host=HOST, username=USERNAME, password=PASSWORD)
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "KineticaLoader", "source": "langchain_community.document_loaders.kinetica_loader", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.kinetica_loader.KineticaLoader.html", "title": "Kinetica"}]-->
@@ -65,7 +60,6 @@ kinetica_documents = kinetica_loader.load()
 print(kinetica_documents)
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "KineticaLoader", "source": "langchain_community.document_loaders.kinetica_loader", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.kinetica_loader.KineticaLoader.html", "title": "Kinetica"}]-->
 from langchain_community.document_loaders.kinetica_loader import KineticaLoader
@@ -85,7 +79,6 @@ kl = KineticaLoader(
 kinetica_documents = kl.load()
 print(kinetica_documents)
 ```
-
 
 ## Related
 

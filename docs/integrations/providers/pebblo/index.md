@@ -9,10 +9,9 @@ worrying about the organization’s compliance and security requirements. The Pe
 loaded data and the Pebblo SafeRetriever enforces identity and semantic controls on the retrieved context. The results are
 summarized on the UI or a PDF report.
 
-
 ## Pebblo Overview:
 
-`Pebblo` provides a safe way to load and retrieve data for Gen AI applications. 
+`Pebblo` provides a safe way to load and retrieve data for Gen AI applications.
 It includes:
 1. **Identity-aware Safe Loader** that loads data and identifies semantic topics and entities.
 2. **SafeRetrieval**  that enforces identity and semantic controls on the retrieved context.

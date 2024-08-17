@@ -49,7 +49,6 @@ The most common full sequence from raw data to answer looks like:
 
 ![retrieval_diagram](../../static/img/rag_retrieval_generation.png)
 
-
 ## Setup
 
 ### Jupyter Notebook
@@ -74,7 +73,6 @@ import CodeBlock from "@theme/CodeBlock";
     <CodeBlock language="bash">conda install langchain langchain_community langchain_chroma -c conda-forge</CodeBlock>
   </TabItem>
 </Tabs>
-
 
 
 For more details, see our [Installation guide](/docs/how_to/installation).
@@ -161,13 +159,9 @@ rag_chain = (
 rag_chain.invoke("What is Task Decomposition?")
 ```
 
-
-
 ```output
 'Task Decomposition is a process where a complex task is broken down into smaller, simpler steps or subtasks. This technique is utilized to enhance model performance on complex tasks by making them more manageable. It can be done by using language models with simple prompting, task-specific instructions, or with human inputs.'
 ```
-
-
 
 ```python
 # cleanup
@@ -202,7 +196,6 @@ docs](https://beautiful-soup-4.readthedocs.io/en/latest/#beautifulsoup)).
 In this case only HTML tags with class “post-content”, “post-title”, or
 “post-header” are relevant, so we’ll remove all others.
 
-
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}]-->
 import bs4
@@ -219,13 +212,9 @@ docs = loader.load()
 len(docs[0].page_content)
 ```
 
-
-
 ```output
 43131
 ```
-
-
 
 ```python
 print(docs[0].page_content[:500])
@@ -248,15 +237,13 @@ In
 `Documents`.
 
 - [Docs](/docs/how_to#document-loaders):
-  Detailed documentation on how to use `DocumentLoaders`.
+Detailed documentation on how to use `DocumentLoaders`.
 - [Integrations](/docs/integrations/document_loaders/): 160+
-  integrations to choose from.
+integrations to choose from.
 - [Interface](https://api.python.langchain.com/en/latest/document_loaders/langchain_core.document_loaders.base.BaseLoader.html):
-  API reference  for the base interface.
-
+API reference  for the base interface.
 
 ## 2. Indexing: Split {#indexing-split}
-
 
 Our loaded document is over 42k characters long. This is too long to fit
 in the context window of many models. Even for those models that could
@@ -280,7 +267,6 @@ We set `add_start_index=True` so that the character index at which each
 split Document starts within the initial Document is preserved as
 metadata attribute “start_index”.
 
-
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}]-->
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -293,37 +279,26 @@ all_splits = text_splitter.split_documents(docs)
 len(all_splits)
 ```
 
-
-
 ```output
 66
 ```
-
-
 
 ```python
 len(all_splits[0].page_content)
 ```
 
-
-
 ```output
 969
 ```
-
-
 
 ```python
 all_splits[10].metadata
 ```
 
-
-
 ```output
 {'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/',
  'start_index': 7056}
 ```
-
 
 ### Go deeper
 
@@ -359,8 +334,6 @@ using the [Chroma](/docs/integrations/vectorstores/chroma)
 vector store and
 [OpenAIEmbeddings](/docs/integrations/text_embedding/openai)
 model.
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}]-->
@@ -410,7 +383,6 @@ which uses the similarity search capabilities of a vector store to
 facilitate retrieval. Any `VectorStore` can easily be turned into a
 `Retriever` with `VectorStore.as_retriever()`:
 
-
 ```python
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 6})
 
@@ -419,13 +391,9 @@ retrieved_docs = retriever.invoke("What are the approaches to Task Decomposition
 len(retrieved_docs)
 ```
 
-
-
 ```output
 6
 ```
-
-
 
 ```python
 print(retrieved_docs[0].page_content)
@@ -442,26 +410,26 @@ to do retrieval, too.
 `Retriever`: An object that returns `Document`s given a text query
 
 - [Docs](/docs/how_to#retrievers): Further
-  documentation on the interface and built-in retrieval techniques.
-  Some of which include:
+documentation on the interface and built-in retrieval techniques.
+Some of which include:
   - `MultiQueryRetriever` [generates variants of the input
-    question](/docs/how_to/MultiQueryRetriever)
-    to improve retrieval hit rate.
+question](/docs/how_to/MultiQueryRetriever)
+to improve retrieval hit rate.
   - `MultiVectorRetriever` instead generates
-    [variants of the
-    embeddings](/docs/how_to/multi_vector),
-    also in order to improve retrieval hit rate.
+[variants of the
+embeddings](/docs/how_to/multi_vector),
+also in order to improve retrieval hit rate.
   - `Max marginal relevance` selects for [relevance and
-    diversity](https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf)
-    among the retrieved documents to avoid passing in duplicate
-    context.
+diversity](https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf)
+among the retrieved documents to avoid passing in duplicate
+context.
   - Documents can be filtered during vector store retrieval using
-    metadata filters, such as with a [Self Query
-    Retriever](/docs/how_to/self_query).
+metadata filters, such as with a [Self Query
+Retriever](/docs/how_to/self_query).
 - [Integrations](/docs/integrations/retrievers/): Integrations
-  with retrieval services.
+with retrieval services.
 - [Interface](https://api.python.langchain.com/en/latest/retrievers/langchain_core.retrievers.BaseRetriever.html):
-  API reference for the base interface.
+API reference for the base interface.
 
 ## 5. Retrieval and Generation: Generate {#retrieval-and-generation-generate}
 
@@ -473,13 +441,12 @@ We’ll use the gpt-4o-mini OpenAI chat model, but any LangChain `LLM`
 or `ChatModel` could be substituted in.
 
 <ChatModelTabs
-  customVarName="llm"
-  anthropicParams={`"model="claude-3-sonnet-20240229", temperature=0.2, max_tokens=1024"`}
+customVarName="llm"
+anthropicParams={`"model="claude-3-sonnet-20240229", temperature=0.2, max_tokens=1024"`}
 />
 
 We’ll use a prompt for RAG that is checked into the LangChain prompt hub
 ([here](https://smith.langchain.com/hub/rlm/rag-prompt)).
-
 
 ```python
 from langchain import hub
@@ -493,13 +460,9 @@ example_messages = prompt.invoke(
 example_messages
 ```
 
-
-
 ```output
 [HumanMessage(content="You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.\nQuestion: filler question \nContext: filler context \nAnswer:")]
 ```
-
-
 
 ```python
 print(example_messages[0].content)
@@ -518,7 +481,6 @@ protocol to define the chain, allowing us to
 - get streaming, async, and batched calling out of the box.
 
 Here is the implementation:
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}]-->
@@ -576,7 +538,6 @@ If preferred, LangChain includes convenience functions that implement the above 
 - [create_stuff_documents_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html) specifies how retrieved context is fed into a prompt and LLM. In this case, we will "stuff" the contents into the prompt -- i.e., we will include all retrieved context without any summarization or other processing. It largely implements our above `rag_chain`, with input keys `context` and `input`-- it generates an answer using retrieved context and query.
 - [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html) adds the retrieval step and propagates the retrieved context through the chain, providing it alongside the final answer. It has input key `input`, and includes `input`, `context`, and `answer` in its output.
 
-
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}]-->
 from langchain.chains import create_retrieval_chain
@@ -612,7 +573,6 @@ Task Decomposition is a process in which complex tasks are broken down into smal
 ```
 #### Returning sources
 Often in Q&A applications it's important to show users the sources that were used to generate the answer. LangChain's built-in `create_retrieval_chain` will propagate retrieved source documents through to the output in the `"context"` key:
-
 
 ```python
 for document in response["context"]:
@@ -658,7 +618,6 @@ As shown above, we can load prompts (e.g., [this RAG
 prompt](https://smith.langchain.com/hub/rlm/rag-prompt)) from the prompt
 hub. The prompt can also be easily customized:
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Build a Retrieval Augmented Generation (RAG) App"}]-->
 from langchain_core.prompts import PromptTemplate
@@ -685,12 +644,9 @@ rag_chain = (
 rag_chain.invoke("What is Task Decomposition?")
 ```
 
-
-
 ```output
 'Task decomposition is the process of breaking down a complex task into smaller, more manageable parts. Techniques like Chain of Thought (CoT) and Tree of Thoughts allow an agent to "think step by step" and explore multiple reasoning possibilities, respectively. This process can be executed by a Language Model with simple prompts, task-specific instructions, or human inputs. Thanks for asking!'
 ```
-
 
 Check out the [LangSmith
 trace](https://smith.langchain.com/public/da23c4d8-3b33-47fd-84df-a3a582eedf84/r)

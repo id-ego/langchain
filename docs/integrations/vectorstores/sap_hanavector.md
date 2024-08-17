@@ -5,14 +5,13 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # SAP HANA Cloud Vector Engine
 
->[SAP HANA Cloud Vector Engine](https://www.sap.com/events/teched/news-guide/ai.html#article8) is a vector store fully integrated into the `SAP HANA Cloud` database.
+> [SAP HANA Cloud Vector Engine](https://www.sap.com/events/teched/news-guide/ai.html#article8) is a vector store fully integrated into the `SAP HANA Cloud` database.
 
 You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
 
 ## Setting up
 
 Installation of the HANA database driver.
-
 
 ```python
 # Pip install necessary package
@@ -21,7 +20,6 @@ Installation of the HANA database driver.
 
 For `OpenAIEmbeddings` we use the OpenAI API key from the environment.
 
-
 ```python
 import os
 # Use OPENAI_API_KEY env variable
@@ -29,7 +27,6 @@ import os
 ```
 
 Create a database connection to a HANA Cloud instance.
-
 
 ```python
 from hdbcli import dbapi
@@ -49,7 +46,6 @@ connection = dbapi.connect(
 
 Load the sample document "state_of_the_union.txt" and create chunks from it.
 
-
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "HanaDB", "source": "langchain_community.vectorstores.hanavector", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.hanavector.HanaDB.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "SAP HANA Cloud Vector Engine"}]-->
 from langchain_community.document_loaders import TextLoader
@@ -68,7 +64,6 @@ embeddings = OpenAIEmbeddings()
 
 Create a LangChain VectorStore interface for the HANA database and specify the table (collection) to use for accessing the vector embeddings
 
-
 ```python
 db = HanaDB(
     embedding=embeddings, connection=connection, table_name="STATE_OF_THE_UNION"
@@ -76,7 +71,6 @@ db = HanaDB(
 ```
 
 Add the loaded document chunks to the table. For this example, we delete any previous content from the table which might exist from previous runs.
-
 
 ```python
 # Delete already existing documents from the table
@@ -89,7 +83,6 @@ db.add_documents(text_chunks)
 Perform a query to get the two best-matching document chunks from the ones that were added in the previous step.
 By default "Cosine Similarity" is used for the search.
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = db.similarity_search(query, k=2)
@@ -100,7 +93,6 @@ for doc in docs:
 ```
 
 Query the same content with "Euclidian Distance". The results shoud be the same as with "Cosine Similarity".
-
 
 ```python
 <!--IMPORTS:[{"imported": "DistanceStrategy", "source": "langchain_community.vectorstores.utils", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.utils.DistanceStrategy.html", "title": "SAP HANA Cloud Vector Engine"}]-->
@@ -124,7 +116,6 @@ for doc in docs:
 
 `Maximal marginal relevance` optimizes for similarity to query AND diversity among selected documents. The first 20 (fetch_k) items will be retrieved from the DB. The MMR algorithm will then find the best 2 (k) matches.
 
-
 ```python
 docs = db.max_marginal_relevance_search(query, k=2, fetch_k=20)
 for doc in docs:
@@ -133,7 +124,6 @@ for doc in docs:
 ```
 
 ## Basic Vectorstore Operations
-
 
 ```python
 db = HanaDB(
@@ -146,14 +136,12 @@ db.delete(filter={})
 
 We can add simple text documents to the existing table.
 
-
 ```python
 docs = [Document(page_content="Some text"), Document(page_content="Other docs")]
 db.add_documents(docs)
 ```
 
 Add documents with metadata.
-
 
 ```python
 docs = [
@@ -171,7 +159,6 @@ db.add_documents(docs)
 
 Query documents with specific metadata.
 
-
 ```python
 docs = db.similarity_search("foobar", k=2, filter={"quality": "bad"})
 # With filtering on "quality"=="bad", only one document should be returned
@@ -182,7 +169,6 @@ for doc in docs:
 ```
 
 Delete documents with specific metadata.
-
 
 ```python
 db.delete(filter={"quality": "bad"})
@@ -210,7 +196,6 @@ The table below shows the available filter operators.
 | `$like`  | Text equality based on the "LIKE" semantics in SQL (using "%" as wildcard)  |
 | `$and`   | Logical "and", supporting 2 or more operands |
 | `$or`    | Logical "or", supporting 2 or more operands |
-
 
 ```python
 # Prepare some test documents
@@ -250,7 +235,6 @@ def print_filter_result(result):
 
 Filtering with `$ne`, `$gt`, `$gte`, `$lt`, `$lte`
 
-
 ```python
 advanced_filter = {"id": {"$ne": 1}}
 print(f"Filter: {advanced_filter}")
@@ -275,7 +259,6 @@ print_filter_result(db.similarity_search("just testing", k=5, filter=advanced_fi
 
 Filtering with `$between`, `$in`, `$nin`
 
-
 ```python
 advanced_filter = {"id": {"$between": (1, 2)}}
 print(f"Filter: {advanced_filter}")
@@ -292,7 +275,6 @@ print_filter_result(db.similarity_search("just testing", k=5, filter=advanced_fi
 
 Text filtering with `$like`
 
-
 ```python
 advanced_filter = {"name": {"$like": "a%"}}
 print(f"Filter: {advanced_filter}")
@@ -304,7 +286,6 @@ print_filter_result(db.similarity_search("just testing", k=5, filter=advanced_fi
 ```
 
 Combined filtering with `$and`, `$or`
-
 
 ```python
 advanced_filter = {"$or": [{"id": 1}, {"name": "bob"}]}
@@ -321,7 +302,6 @@ print_filter_result(db.similarity_search("just testing", k=5, filter=advanced_fi
 ```
 
 ## Using a VectorStore as a retriever in chains for retrieval augmented generation (RAG)
-
 
 ```python
 <!--IMPORTS:[{"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "SAP HANA Cloud Vector Engine"}]-->
@@ -347,7 +327,6 @@ retriever = db.as_retriever()
 
 Define the prompt.
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "SAP HANA Cloud Vector Engine"}]-->
 from langchain_core.prompts import PromptTemplate
@@ -371,7 +350,6 @@ chain_type_kwargs = {"prompt": PROMPT}
 
 Create the ConversationalRetrievalChain, which handles the chat history and the retrieval of similar document chunks to be added to the prompt.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ConversationalRetrievalChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.conversational_retrieval.base.ConversationalRetrievalChain.html", "title": "SAP HANA Cloud Vector Engine"}]-->
 from langchain.chains import ConversationalRetrievalChain
@@ -392,7 +370,6 @@ qa_chain = ConversationalRetrievalChain.from_llm(
 
 Ask the first question (and verify how many text chunks have been used).
 
-
 ```python
 question = "What about Mexico and Guatemala?"
 
@@ -408,7 +385,6 @@ print(f"Number of used source document chunks: {len(source_docs)}")
 
 Examine the used chunks of the chain in detail. Check if the best ranked chunk contains info about "Mexico and Guatemala" as mentioned in the question.
 
-
 ```python
 for doc in source_docs:
     print("-" * 80)
@@ -417,7 +393,6 @@ for doc in source_docs:
 ```
 
 Ask another question on the same conversational chain. The answer should relate to the previous answer given.
-
 
 ```python
 question = "What about other countries?"
@@ -435,7 +410,6 @@ As default behaviour, the table for the embeddings is created with 3 columns:
 - A column `VEC_TEXT`, which contains the text of the Document
 - A column `VEC_META`, which contains the metadata of the Document
 - A column `VEC_VECTOR`, which contains the embeddings-vector of the Document's text
-
 
 ```python
 # Access the vector DB with a new table
@@ -458,7 +432,6 @@ db.add_documents(docs)
 
 Show the columns in table "LANGCHAIN_DEMO_NEW_TABLE"
 
-
 ```python
 cur = connection.cursor()
 cur.execute(
@@ -471,7 +444,6 @@ cur.close()
 ```
 
 Show the value of the inserted document in the three columns 
-
 
 ```python
 cur = connection.cursor()
@@ -492,7 +464,6 @@ Custom tables must have at least three columns that match the semantics of a sta
 - A column with type `REAL_VECTOR` for the embedding vector
 
 The table can contain additional columns. When new Documents are inserted into the table, these additional columns must allow NULL values.
-
 
 ```python
 # Create a new table "MY_OWN_TABLE" with three "standard" columns and one additional column
@@ -540,7 +511,6 @@ cur.close()
 
 Add another document and perform a similarity search on the custom table.
 
-
 ```python
 docs = [
     Document(
@@ -560,7 +530,6 @@ for doc in docs:
 ### Filter Performance Optimization with Custom Columns
 
 To allow flexible metadata values, all metadata is stored as JSON in the metadata column by default. If some of the used metadata keys and value types are known, they can be stored in additional columns instead by creating the target table with the key names as column names and passing them to the HanaDB constructor via the specific_metadata_columns list. Metadata keys that match those values are copied into the special column during insert. Filters use the special columns instead of the metadata JSON column for keys in the specific_metadata_columns list.
-
 
 ```python
 # Create a new table "PERFORMANT_CUSTOMTEXT_FILTER" with three "standard" columns and one additional column
@@ -618,7 +587,6 @@ cur.close()
 
 The special columns are completely transparent to the rest of the langchain interface. Everything works as it did before, just more performant.
 
-
 ```python
 docs = [
     Document(
@@ -640,7 +608,6 @@ for doc in docs:
     print("-" * 80)
     print(doc.page_content)
 ```
-
 
 ## Related
 

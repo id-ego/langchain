@@ -9,19 +9,16 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 Get your api key here: https://bearly.ai/dashboard/developers
 
-
 ```python
 %pip install --upgrade --quiet langchain-community
 ```
 
 In this notebook, we will create an example of an agent that uses Bearly to interact with data
 
-
 ```python
 <!--IMPORTS:[{"imported": "BearlyInterpreterTool", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.bearly.tool.BearlyInterpreterTool.html", "title": "Bearly Code Interpreter"}]-->
 from langchain_community.tools import BearlyInterpreterTool
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Bearly Code Interpreter"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Bearly Code Interpreter"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Bearly Code Interpreter"}]-->
@@ -31,13 +28,11 @@ from langchain_openai import ChatOpenAI
 
 Initialize the interpreter
 
-
 ```python
 bearly_tool = BearlyInterpreterTool(api_key="...")
 ```
 
 Let's add some files to the sandbox
-
 
 ```python
 bearly_tool.add_file(
@@ -50,23 +45,17 @@ bearly_tool.add_file(
 
 Create a `Tool` object now. This is necessary, because we added the files, and we want the tool description to reflect that
 
-
 ```python
 tools = [bearly_tool.as_tool()]
 ```
-
 
 ```python
 tools[0].name
 ```
 
-
-
 ```output
 'bearly_interpreter'
 ```
-
-
 
 ```python
 print(tools[0].description)
@@ -86,7 +75,6 @@ The following files available in the evaluation environment:
 ```
 Initialize an agent
 
-
 ```python
 llm = ChatOpenAI(model="gpt-4", temperature=0)
 agent = initialize_agent(
@@ -97,7 +85,6 @@ agent = initialize_agent(
     handle_parsing_errors=True,
 )
 ```
-
 
 ```python
 # Extract pdf content
@@ -158,12 +145,9 @@ Anthropogenic Risk, Evolutionary Learning, and the Future of the Social State’
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The text on page 3 of the PDF is:\n\n"1 COVID-19 at Work: \nExposing how risk is assessed and its consequences in England and Sweden \nPeter Andersson and Tonia Novitz* \n1.Introduction\nThe crisis which arose suddenly at the beginning of 2020 relating to coronavirus was immediately \ncentred on risk. Predictions had to be made swiftly regarding how it would spread, who it might \naffect and what measures could be taken to prevent exposure in everyday social interaction, \nincluding in the workplace. This was in no way a straightforward assessment, because initially so \nmuch was unknown. Those gaps in our knowledge have since, partially, been ameliorated. It is \nevident that not all those exposed to COVID-19 become ill, and many who contract the virus remain \nasymptomatic, so that the odds on becoming seriously ill may seem small. But those odds are also stacked against certain segments of the population. The likelihood of mortality and morbidity are associated  with age and ethnicity as well as pre-existing medical conditions (such as diabetes), but \nalso with poverty which correlates to the extent of exposure in certain occupations.\n1 Some risks \narise which remain  less predictable, as previously healthy people with no signs of particular \nvulnerability can experience serious long term illness as well and in rare cases will even die.2 \nPerceptions of risk in different countries have led to particular measures taken, ranging from handwashing to social distancing, use of personal protective equipment (PPE) such as face coverings, and even ‘lockdowns’ which have taken various forms.\n3 Use of testing and vaccines \nalso became part of the remedial landscape, with their availability and administration  being \n*This paper is part of the project An  inclusive and sustainable Swedish labour law – the way\nahead, dnr. 2017-03134 financed by the Swedish research council led by Petra Herzfeld Olssonat Stockholm University. The authors would like to thank her and other participants, Niklas\nBruun and Erik Sjödin for their helpful comments on earlier drafts. A much shorter article titled\n‘Risk Assessment and COVID -19: Systems at work (or not) in England and Sweden’ is published\nin the (2021) Comparative Labour and Social Security Review /\n Revue de droit comparé du\ntravail et de la sécurité sociale.\n1 Public Health England, Disparities in the risk and outcomes of COVID-19 (2 June 2020 -\nhttps://assets.publishing.service.gov.uk/government/uploads/ system /uploads/attachment_data/file\n/890258/disparities_review.pdf.\n2 Nisreen A. Alwan, ‘Track COVID- 19 sickness, not just positive tests and deaths’ ( 2020)\n584.7820 Nature  170- 171; Elisabeth Mahase, ‘Covid-19: What do we know about “long covid”?’\n(2020) BMJ  370.\n3 Sarah Dryhurst, Claudia R. Schneider, John Kerr, Alexandra LJ Freeman, Gabriel Recchia,\nAnne Marthe Van Der Bles, David Spiegelhalter, and Sander van der Linden, ‘Risk perceptionsof COVID-19 around the world’ (2020) 23(7- 8) Journal of Risk Research  994; Wändi Bruine de\nBruin, and Daniel Bennett, ‘Relationships between initial COVID -19 risk perceptions and\nprotective health behaviors: A national survey’ (2020) 59(2) American Journal of Preventive\nMedicine  157; and Simon Deakin and Gaofeng Meng, ‘The Governance of Covid- 19:\nAnthropogenic Risk, Evolutionary Learning, and the Future of the Social State’ (2020)49(4) Industrial Law Journal  539."'
 ```
-
-
 
 ```python
 # Simple Queries
@@ -187,12 +171,9 @@ Invoking: `bearly_interpreter` with `{'python_code': "import pandas as pd\n\n# L
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'The US GDP for each quarter in 2019 was as follows:\n\n- Q1: 21104.133 billion dollars\n- Q2: 21384.775 billion dollars\n- Q3: 21694.282 billion dollars\n- Q4: 21902.39 billion dollars'
 ```
-
-
 
 ```python
 # Calculations
@@ -211,12 +192,9 @@ Invoking: `bearly_interpreter` with `{'python_code': "import pandas as pd\n\n# L
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'If the latest GDP number grew by 50%, the GDP in 2030 would be approximately 40,594.518 billion dollars.'
 ```
-
-
 
 ```python
 # Chart output
@@ -239,12 +217,9 @@ The x-axis represents the year and the y-axis represents the GDP in billions. Th
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'Here is the chart of the US GDP growth over time:\n\n![US GDP Over Time](https://bearly-cubby.c559ae877a0a39985f534614a037d899.r2.cloudflarestorage.com/prod/bearly-cubby/temp/interpreter/2023_10/089daf37e9e343ba5ff21afaaa78b967c3466a550b3b11bd5c710c052b559e97/sxhM8gop2AYP88n5uHCsOJ6yTYNQm-HimZ70DcwQ4VI.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=c058d02de50a3cf0bb7e21c8e2d062c5%2F20231010%2F%2Fs3%2Faws4_request&X-Amz-Date=20231010T000000Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=104dc0d4a4b71eeea1030dda1830059920cb0f354fa00197b439eb8565bf141a)\n\nThe x-axis represents the year and the y-axis represents the GDP in billions. The line plot shows the growth of the US GDP over time.'
 ```
-
-
 
 ## Related
 

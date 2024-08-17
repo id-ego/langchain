@@ -7,7 +7,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook shows how to use the iMessage chat loader. This class helps convert iMessage conversations to LangChain chat messages.
 
-On MacOS, iMessage stores conversations in a sqlite database at `~/Library/Messages/chat.db` (at least for macOS Ventura 13.4). 
+On MacOS, iMessage stores conversations in a sqlite database at `~/Library/Messages/chat.db` (at least for macOS Ventura 13.4).
 The `IMessageChatLoader` loads from this database file. 
 
 1. Create the `IMessageChatLoader` with the file path pointed to `chat.db` database you'd like to process.
@@ -18,7 +18,6 @@ The `IMessageChatLoader` loads from this database file.
 It's likely that your terminal is denied access to `~/Library/Messages`. To use this class, you can copy the DB to an accessible directory (e.g., Documents) and load from there. Alternatively (and not recommended), you can grant full disk access for your terminal emulator in System Settings > Security and Privacy > Full Disk Access.
 
 We have created an example database you can use at [this linked drive file](https://drive.google.com/file/d/1NebNKqTA2NXApCmeH6mu0unJD2tANZzo/view?usp=sharing).
-
 
 ```python
 # This uses some example data
@@ -53,12 +52,10 @@ File chat.db downloaded.
 
 Provide the loader with the file path to the zip directory. You can optionally specify the user id that maps to an ai message as well an configure whether to merge message runs.
 
-
 ```python
 <!--IMPORTS:[{"imported": "IMessageChatLoader", "source": "langchain_community.chat_loaders.imessage", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.imessage.IMessageChatLoader.html", "title": "iMessage"}]-->
 from langchain_community.chat_loaders.imessage import IMessageChatLoader
 ```
-
 
 ```python
 loader = IMessageChatLoader(
@@ -71,7 +68,6 @@ loader = IMessageChatLoader(
 The `load()` (or `lazy_load`) methods return a list of "ChatSessions" that currently just contain a list of messages per loaded conversation. All messages are mapped to "HumanMessage" objects to start. 
 
 You can optionally choose to merge message "runs" (consecutive messages from the same sender) and select a sender to represent the "AI". The fine-tuned LLM will learn to generate these AI messages.
-
 
 ```python
 <!--IMPORTS:[{"imported": "map_ai_messages", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.map_ai_messages.html", "title": "iMessage"}, {"imported": "merge_chat_runs", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.merge_chat_runs.html", "title": "iMessage"}, {"imported": "ChatSession", "source": "langchain_core.chat_sessions", "docs": "https://api.python.langchain.com/en/latest/chat_sessions/langchain_core.chat_sessions.ChatSession.html", "title": "iMessage"}]-->
@@ -92,14 +88,11 @@ chat_sessions: List[ChatSession] = list(
 )
 ```
 
-
 ```python
 # Now all of the Tortoise's messages will take the AI message class
 # which maps to the 'assistant' role in OpenAI's training format
 chat_sessions[0]["messages"][:3]
 ```
-
-
 
 ```output
 [AIMessage(content="Slow and steady, that's my motto.", additional_kwargs={'message_time': 1693182723, 'sender': 'Tortoise'}, example=False),
@@ -107,17 +100,14 @@ chat_sessions[0]["messages"][:3]
  AIMessage(content='A balanced approach is more reliable.', additional_kwargs={'message_time': 1693182783, 'sender': 'Tortoise'}, example=False)]
 ```
 
-
 ## 3. Prepare for fine-tuning
 
 Now it's time to convert our chat  messages to OpenAI dictionaries. We can use the `convert_messages_for_finetuning` utility to do so.
-
 
 ```python
 <!--IMPORTS:[{"imported": "convert_messages_for_finetuning", "source": "langchain_community.adapters.openai", "docs": "https://api.python.langchain.com/en/latest/adapters/langchain_community.adapters.openai.convert_messages_for_finetuning.html", "title": "iMessage"}]-->
 from langchain_community.adapters.openai import convert_messages_for_finetuning
 ```
-
 
 ```python
 training_data = convert_messages_for_finetuning(chat_sessions)
@@ -131,11 +121,9 @@ Prepared 10 dialogues for training
 It's time to fine-tune the model. Make sure you have `openai` installed
 and have set your `OPENAI_API_KEY` appropriately
 
-
 ```python
 %pip install --upgrade --quiet  langchain-openai
 ```
-
 
 ```python
 import json
@@ -167,7 +155,6 @@ File file-zHIgf4r8LltZG3RFpkGd4Sjf ready after 10.19 seconds.
 ```
 With the file ready, it's time to kick off a training job.
 
-
 ```python
 job = openai.fine_tuning.jobs.create(
     training_file=training_file.id,
@@ -176,7 +163,6 @@ job = openai.fine_tuning.jobs.create(
 ```
 
 Grab a cup of tea while your model is being prepared. This may take some time!
-
 
 ```python
 status = openai.fine_tuning.jobs.retrieve(job.id).status
@@ -201,7 +187,6 @@ ft:gpt-3.5-turbo-0613:personal::7sKoRdlz
 
 You can use the resulting model ID directly the `ChatOpenAI` model class.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "iMessage"}]-->
 from langchain_openai import ChatOpenAI
@@ -211,7 +196,6 @@ model = ChatOpenAI(
     temperature=1,
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "iMessage"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "iMessage"}]-->
@@ -227,7 +211,6 @@ prompt = ChatPromptTemplate.from_messages(
 
 chain = prompt | model | StrOutputParser()
 ```
-
 
 ```python
 for tok in chain.stream({"input": "What's the golden thread?"}):

@@ -26,13 +26,9 @@ messages = [
 chat.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content='저는 대형 언어 모델 프로젝트를 구축하고 싶습니다.')
 ```
-
-
 
 ## Related
 

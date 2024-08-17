@@ -56,11 +56,10 @@ We will show examples of streaming using a chat model. Choose one from the optio
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="model"
+customVarName="model"
 />
 
 Let's start with the sync `stream` API:
-
 
 ```python
 chunks = []
@@ -73,7 +72,6 @@ The| sky| appears| blue| during| the| day|.|
 ```
 Alternatively, if you're working in an async environment, you may consider using the async `astream` API:
 
-
 ```python
 chunks = []
 async for chunk in model.astream("what color is the sky?"):
@@ -85,33 +83,25 @@ The| sky| appears| blue| during| the| day|.|
 ```
 Let's inspect one of the chunks
 
-
 ```python
 chunks[0]
 ```
-
-
 
 ```output
 AIMessageChunk(content='The', id='run-b36bea64-5511-4d7a-b6a3-a07b3db0c8e7')
 ```
 
-
 We got back something called an `AIMessageChunk`. This chunk represents a part of an `AIMessage`.
 
 Message chunks are additive by design -- one can simply add them up to get the state of the response so far!
-
 
 ```python
 chunks[0] + chunks[1] + chunks[2] + chunks[3] + chunks[4]
 ```
 
-
-
 ```output
 AIMessageChunk(content='The sky appears blue during', id='run-b36bea64-5511-4d7a-b6a3-a07b3db0c8e7')
 ```
-
 
 ### Chains
 
@@ -124,7 +114,6 @@ We will use [`StrOutputParser`](https://api.python.langchain.com/en/latest/outpu
 :::tip
 LCEL is a *declarative* way to specify a "program" by chainining together different LangChain primitives. Chains created using LCEL benefit from an automatic implementation of `stream` and `astream` allowing streaming of the final output. In fact, chains created with LCEL implement the entire standard Runnable interface.
 :::
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to stream runnables"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to stream runnables"}]-->
@@ -175,7 +164,6 @@ Well, turns out there is a way to do it -- the parser needs to operate on the **
 
 Let's see such a parser in action to understand what this means.
 
-
 ```python
 <!--IMPORTS:[{"imported": "JsonOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.JsonOutputParser.html", "title": "How to stream runnables"}]-->
 from langchain_core.output_parsers import JsonOutputParser
@@ -221,7 +209,6 @@ Any steps in the chain that operate on **finalized inputs** rather than on **inp
 :::tip
 Later, we will discuss the `astream_events` API which streams results from intermediate steps. This API will stream results from intermediate steps even if the chain contains steps that only operate on **finalized inputs**.
 :::
-
 
 ```python
 <!--IMPORTS:[{"imported": "JsonOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.JsonOutputParser.html", "title": "How to stream runnables"}]-->
@@ -270,7 +257,6 @@ Let's fix the streaming using a generator function that can operate on the **inp
 :::tip
 A generator function (a function that uses `yield`) allows writing code that operates on **input streams**
 :::
-
 
 ```python
 <!--IMPORTS:[{"imported": "JsonOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.JsonOutputParser.html", "title": "How to stream runnables"}]-->
@@ -324,7 +310,6 @@ We're focusing on streaming concepts, not necessarily the results of the chains.
 
 Some built-in components like Retrievers do not offer any `streaming`. What happens if we try to `stream` them? 🤨
 
-
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to stream runnables"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to stream runnables"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to stream runnables"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to stream runnables"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to stream runnables"}]-->
 from langchain_community.vectorstores import FAISS
@@ -350,13 +335,10 @@ chunks = [chunk for chunk in retriever.stream("where did harrison work?")]
 chunks
 ```
 
-
-
 ```output
 [[Document(page_content='harrison worked at kensho'),
   Document(page_content='harrison likes spicy food')]]
 ```
-
 
 Stream just yielded the final result from that component.
 
@@ -365,7 +347,6 @@ This is OK 🥹! Not all components have to implement streaming -- in some cases
 :::tip
 An LCEL chain constructed using non-streaming components, will still be able to stream in a lot of cases, with streaming of partial output starting after the last non-streaming step in the chain.
 :::
-
 
 ```python
 retrieval_chain = (
@@ -378,7 +359,6 @@ retrieval_chain = (
     | StrOutputParser()
 )
 ```
-
 
 ```python
 for chunk in retrieval_chain.stream(
@@ -408,7 +388,6 @@ Event Streaming is a **beta** API. This API may change a bit based on feedback.
 This guide demonstrates the `V2` API and requires langchain-core >= 0.2. For the `V1` API compatible with older versions of LangChain, see [here](https://python.langchain.com/v0.1/docs/expression_language/streaming/#using-stream-events).
 :::
 
-
 ```python
 import langchain_core
 
@@ -425,7 +404,6 @@ For the `astream_events` API to work properly:
 ### Event Reference
 
 Below is a reference table that shows some events that might be emitted by the various Runnable objects.
-
 
 :::note
 When streaming is implemented properly, the inputs to a runnable will not be known until after the input stream has been entirely consumed. This means that `inputs` will often be included only for `end` events and rather than for `start` events.
@@ -453,7 +431,6 @@ When streaming is implemented properly, the inputs to a runnable will not be kno
 
 Let's start off by looking at the events produced by a chat model.
 
-
 ```python
 events = []
 async for event in model.astream_events("hello", version="v2"):
@@ -479,12 +456,9 @@ In short, we are annoying you now, so we don't have to annoy you later.
 
 Let's take a look at the few of the start event and a few of the end events.
 
-
 ```python
 events[:3]
 ```
-
-
 
 ```output
 [{'event': 'on_chat_model_start',
@@ -507,13 +481,9 @@ events[:3]
   'metadata': {}}]
 ```
 
-
-
 ```python
 events[-2:]
 ```
-
-
 
 ```output
 [{'event': 'on_chat_model_stream',
@@ -530,11 +500,9 @@ events[-2:]
   'metadata': {}}]
 ```
 
-
 ### Chain
 
 Let's revisit the example chain that parsed streaming JSON to explore the streaming events API.
-
 
 ```python
 chain = (
@@ -560,12 +528,9 @@ The three start events correspond to:
 2. The model
 3. The parser
 
-
 ```python
 events[:3]
 ```
-
-
 
 ```output
 [{'event': 'on_chain_start',
@@ -588,11 +553,9 @@ events[:3]
   'metadata': {}}]
 ```
 
-
 What do you think you'd see if you looked at the last 3 events? what about the middle?
 
 Let's use this API to take output the stream events from the model and the parser. We're ignoring start events, end events and events from the chain.
-
 
 ```python
 num_events = 0
@@ -653,7 +616,6 @@ You can filter by either component `name`, component `tags` or component `type`.
 
 #### By Name
 
-
 ```python
 chain = model.with_config({"run_name": "model"}) | JsonOutputParser().with_config(
     {"run_name": "my_parser"}
@@ -689,7 +651,6 @@ async for event in chain.astream_events(
 ...
 ```
 #### By Type
-
 
 ```python
 chain = model.with_config({"run_name": "model"}) | JsonOutputParser().with_config(
@@ -732,7 +693,6 @@ Tags are inherited by child components of a given runnable.
 If you're using tags to filter, make sure that this is what you want.
 :::
 
-
 ```python
 chain = (model | JsonOutputParser()).with_config({"tags": ["my_chain"]})
 
@@ -769,7 +729,6 @@ Remember how some components don't stream well because they don't operate on **i
 
 While such components can break streaming of the final output when using `astream`, `astream_events` will still yield streaming events from intermediate steps that support streaming!
 
-
 ```python
 # Function that does not support streaming.
 # It operates on the finalizes inputs rather than
@@ -800,7 +759,6 @@ chain = (
 
 As expected, the `astream` API doesn't work correctly because `_extract_country_names` doesn't operate on streams.
 
-
 ```python
 async for chunk in chain.astream(
     "output a list of the countries france, spain and japan and their populations in JSON format. "
@@ -813,7 +771,6 @@ async for chunk in chain.astream(
 ['France', 'Spain', 'Japan']
 ```
 Now, let's confirm that with astream_events we're still seeing streaming output from the model and the parser.
-
 
 ```python
 num_events = 0
@@ -878,7 +835,6 @@ If you're using invoking runnables inside your tools, you need to propagate call
 When using `RunnableLambdas` or `@chain` decorator, callbacks are propagated automatically behind the scenes.
 :::
 
-
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to stream runnables"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to stream runnables"}]-->
 from langchain_core.runnables import RunnableLambda
@@ -909,7 +865,6 @@ async for event in bad_tool.astream_events("hello", version="v2"):
 ```
 Here's a re-implementation that does propagate callbacks correctly. You'll notice that now we're getting events from the `reverse_word` runnable as well.
 
-
 ```python
 @tool
 def correct_tool(word: str, callbacks):
@@ -927,7 +882,6 @@ async for event in correct_tool.astream_events("hello", version="v2"):
 {'event': 'on_tool_end', 'data': {'output': 'olleh'}, 'run_id': 'd5ea83b9-9278-49cc-9f1d-aa302d671040', 'name': 'correct_tool', 'tags': [], 'metadata': {}}
 ```
 If you're invoking runnables from within Runnable Lambdas or `@chains`, then callbacks will be passed automatically on your behalf.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to stream runnables"}]-->
@@ -953,7 +907,6 @@ async for event in reverse_and_double.astream_events("1234", version="v2"):
 {'event': 'on_chain_end', 'data': {'output': '43214321'}, 'run_id': '03b0e6a1-3e60-42fc-8373-1e7829198d80', 'name': 'reverse_and_double', 'tags': [], 'metadata': {}}
 ```
 And with the `@chain` decorator:
-
 
 ```python
 <!--IMPORTS:[{"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to stream runnables"}]-->

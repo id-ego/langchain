@@ -11,7 +11,6 @@ You will need to install the ArcGIS API for Python `arcgis` and, optionally, `bs
 
 You can use an `arcgis.gis.GIS` object for authenticated data loading, or leave it blank to access public data.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ArcGISLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.arcgis_loader.ArcGISLoader.html", "title": "ArcGIS"}]-->
 from langchain_community.document_loaders import ArcGISLoader
@@ -23,7 +22,6 @@ docs = loader.load()
 ```
 
 Let's measure loader latency.
-
 
 ```python
 %%time
@@ -38,8 +36,6 @@ Wall time: 1.05 s
 ```python
 docs[0].metadata
 ```
-
-
 
 ```output
 {'accessed': '2023-09-13T19:58:32.546576+00:00Z',
@@ -217,19 +213,15 @@ docs[0].metadata
  }}
 ```
 
-
-### Retrieving Geometries  
-
+### Retrieving Geometries
 
 If you want to retrieve feature geometries, you may do so with the `return_geometry` keyword.
 
 Each document's geometry will be stored in its metadata dictionary.
 
-
 ```python
 loader_geom = ArcGISLoader(URL, return_geometry=True)
 ```
-
 
 ```python
 %%time
@@ -245,15 +237,11 @@ Wall time: 1.06 s
 docs[0].metadata["geometry"]
 ```
 
-
-
 ```output
 {'x': -81.01508803280349,
  'y': 29.24246579525828,
  'spatialReference': {'wkid': 4326, 'latestWkid': 4326}}
 ```
-
-
 
 ```python
 for doc in docs:

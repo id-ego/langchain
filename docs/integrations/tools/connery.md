@@ -27,7 +27,6 @@ Learn more about Connery:
 
 You need to install the `langchain_community` package to use the Connery tools.
 
-
 ```python
 %pip install -qU langchain-community
 ```
@@ -39,7 +38,6 @@ To use Connery Actions in your LangChain agent, you need to do some preparation:
 1. Set up the Connery runner using the [Quickstart](https://docs.connery.io/docs/runner/quick-start/) guide.
 2. Install all the plugins with the actions you want to use in your agent.
 3. Set environment variables `CONNERY_RUNNER_URL` and `CONNERY_RUNNER_API_KEY` so the toolkit can communicate with the Connery Runner.
-
 
 ```python
 import getpass
@@ -58,7 +56,6 @@ In the example below, we create an agent that uses two Connery Actions to summar
 2. **Send email** action from the [Gmail](https://github.com/connery-io/gmail) plugin.
 
 You can see a LangSmith trace of this example [here](https://smith.langchain.com/public/4af5385a-afe9-46f6-8a53-57fe2d63c5bc/r).
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Connery Toolkit and Tools"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Connery Toolkit and Tools"}, {"imported": "ConneryToolkit", "source": "langchain_community.agent_toolkits.connery", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.connery.toolkit.ConneryToolkit.html", "title": "Connery Toolkit and Tools"}, {"imported": "ConneryService", "source": "langchain_community.tools.connery", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.connery.service.ConneryService.html", "title": "Connery Toolkit and Tools"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Connery Toolkit and Tools"}]-->
@@ -115,7 +112,6 @@ NOTE: Connery Action is a structured tool, so you can only use it in the agents 
 
 ## Tool
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Connery Toolkit and Tools"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Connery Toolkit and Tools"}, {"imported": "ConneryService", "source": "langchain_community.tools.connery", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.connery.service.ConneryService.html", "title": "Connery Toolkit and Tools"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Connery Toolkit and Tools"}]-->
 import os
@@ -141,7 +137,6 @@ send_email_action = connery_service.get_action("CABC80BB79C15067CA983495324AE709
 
 Run the action manually.
 
-
 ```python
 manual_run_result = send_email_action.run(
     {
@@ -156,7 +151,6 @@ print(manual_run_result)
 Run the action using the OpenAI Functions agent.
 
 You can see a LangSmith trace of this example [here](https://smith.langchain.com/public/a37d216f-c121-46da-a428-0e09dc19b1dc/r).
-
 
 ```python
 llm = ChatOpenAI(temperature=0)
@@ -189,7 +183,6 @@ For detailed documentation of all Connery features and configurations head to th
 
 - Toolkit: https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.connery.toolkit.ConneryToolkit.html
 - Tool: https://api.python.langchain.com/en/latest/tools/langchain_community.tools.connery.service.ConneryService.html
-
 
 ## Related
 

@@ -5,21 +5,18 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # YouTube transcripts
 
->[YouTube](https://www.youtube.com/) is an online video sharing and social media platform created by Google.
+> [YouTube](https://www.youtube.com/) is an online video sharing and social media platform created by Google.
 
 This notebook covers how to load documents from `YouTube transcripts`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "YoutubeLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.youtube.YoutubeLoader.html", "title": "YouTube transcripts"}]-->
 from langchain_community.document_loaders import YoutubeLoader
 ```
 
-
 ```python
 %pip install --upgrade --quiet  youtube-transcript-api
 ```
-
 
 ```python
 loader = YoutubeLoader.from_youtube_url(
@@ -27,18 +24,15 @@ loader = YoutubeLoader.from_youtube_url(
 )
 ```
 
-
 ```python
 loader.load()
 ```
 
 ### Add video info
 
-
 ```python
 %pip install --upgrade --quiet  pytube
 ```
-
 
 ```python
 loader = YoutubeLoader.from_youtube_url(
@@ -52,7 +46,6 @@ loader.load()
 Language param : It's a list of language codes in a descending priority, `en` by default.
 
 translation param : It's a translate preference, you can translate available transcript to your preferred language.
-
 
 ```python
 loader = YoutubeLoader.from_youtube_url(
@@ -72,7 +65,6 @@ Get one or more `Document` objects, each containing a chunk of the video transcr
 
 `chunk_size_seconds` param:  An integer number of video seconds to be represented by each chunk of transcript data.  Default is 120 seconds.
 
-
 ```python
 <!--IMPORTS:[{"imported": "TranscriptFormat", "source": "langchain_community.document_loaders.youtube", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.youtube.TranscriptFormat.html", "title": "YouTube transcripts"}]-->
 from langchain_community.document_loaders.youtube import TranscriptFormat
@@ -91,16 +83,15 @@ print("\n\n".join(map(repr, loader.load())))
 ### Prerequisites
 
 1. Create a Google Cloud project or use an existing project
-1. Enable the [Youtube Api](https://console.cloud.google.com/apis/enableflow?apiid=youtube.googleapis.com&project=sixth-grammar-344520)
-1. [Authorize credentials for desktop app](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)
-1. `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib youtube-transcript-api`
+2. Enable the [Youtube Api](https://console.cloud.google.com/apis/enableflow?apiid=youtube.googleapis.com&project=sixth-grammar-344520)
+3. [Authorize credentials for desktop app](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)
+4. `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib youtube-transcript-api`
 
 ### 🧑 Instructions for ingesting your Google Docs data
 By default, the `GoogleDriveLoader` expects the `credentials.json` file to be `~/.credentials/credentials.json`, but this is configurable using the `credentials_file` keyword argument. Same thing with `token.json`. Note that `token.json` will be created automatically the first time you use the loader.
 
 `GoogleApiYoutubeLoader` can load from a list of Google Docs document ids or a folder id. You can obtain your folder and document id from the URL:
 Note depending on your set up, the `service_account_path` needs to be set up. See [here](https://developers.google.com/drive/api/v3/quickstart/python) for more details.
-
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleApiClient", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.youtube.GoogleApiClient.html", "title": "YouTube transcripts"}, {"imported": "GoogleApiYoutubeLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.youtube.GoogleApiYoutubeLoader.html", "title": "YouTube transcripts"}]-->
@@ -128,7 +119,6 @@ youtube_loader_ids = GoogleApiYoutubeLoader(
 # returns a list of Documents
 youtube_loader_channel.load()
 ```
-
 
 ## Related
 

@@ -22,7 +22,6 @@ Enabling a LLM system to query structured data can be qualitatively different fr
 
 Building Q&A systems of SQL databases requires executing model-generated SQL queries. There are inherent risks in doing this. Make sure that your database connection permissions are always scoped as narrowly as possible for your chain/agent's needs. This will mitigate though not eliminate the risks of building a model-driven system. For more on general security best practices, [see here](/docs/security).
 
-
 ## Architecture
 
 At a high-level, the steps of these systems are:
@@ -39,14 +38,12 @@ Note that querying data in CSVs can follow a similar approach. See our [how-to g
 
 First, get required packages and set environment variables:
 
-
 ```python
 %%capture --no-stderr
 %pip install --upgrade --quiet langchain langchain-community langchain-openai faiss-cpu
 ```
 
 We will use an OpenAI model and a [FAISS-powered vector store](/docs/integrations/vectorstores/faiss/) in this guide.
-
 
 ```python
 import getpass
@@ -70,7 +67,6 @@ The below example will use a SQLite connection with Chinook database. Follow [th
 
 Now, `Chinhook.db` is in our directory and we can interface with it using the SQLAlchemy-driven `SQLDatabase` class:
 
-
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabase", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html", "title": "Build a Question/Answering system over SQL data"}]-->
 from langchain_community.utilities import SQLDatabase
@@ -85,11 +81,9 @@ sqlite
 ['Album', 'Artist', 'Customer', 'Employee', 'Genre', 'Invoice', 'InvoiceLine', 'MediaType', 'Playlist', 'PlaylistTrack', 'Track']
 ```
 
-
 ```output
 "[(1, 'AC/DC'), (2, 'Accept'), (3, 'Aerosmith'), (4, 'Alanis Morissette'), (5, 'Alice In Chains'), (6, 'Antônio Carlos Jobim'), (7, 'Apocalyptica'), (8, 'Audioslave'), (9, 'BackBeat'), (10, 'Billy Cobham')]"
 ```
-
 
 Great! We've got a SQL database that we can query. Now let's try hooking it up to an LLM.
 
@@ -120,26 +114,19 @@ response = chain.invoke({"question": "How many employees are there"})
 response
 ```
 
-
-
 ```output
 'SELECT COUNT("EmployeeId") AS "TotalEmployees" FROM "Employee"\nLIMIT 1;'
 ```
 
-
 We can execute the query to make sure it's valid:
-
 
 ```python
 db.run(response)
 ```
 
-
-
 ```output
 '[(8,)]'
 ```
-
 
 We can look at the [LangSmith trace](https://smith.langchain.com/public/c8fa52ea-be46-4829-bde2-52894970b830/r) to get a better understanding of what this chain is doing. We can also inspect the chain directly for its prompts. Looking at the prompt (below), we can see that it is:
 
@@ -148,7 +135,6 @@ We can look at the [LangSmith trace](https://smith.langchain.com/public/c8fa52ea
 * Has three examples rows for each table.
 
 This technique is inspired by papers like [this](https://arxiv.org/pdf/2204.00498.pdf), which suggest showing examples rows and being explicit about tables improves performance. We can also inspect the full prompt like so:
-
 
 ```python
 chain.get_prompts()[0].pretty_print()
@@ -178,7 +164,6 @@ Now that we've generated a SQL query, we'll want to execute it. **This is the mo
 
 We can use the `QuerySQLDatabaseTool` to easily add query execution to our chain:
 
-
 ```python
 <!--IMPORTS:[{"imported": "QuerySQLDataBaseTool", "source": "langchain_community.tools.sql_database.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.sql_database.tool.QuerySQLDataBaseTool.html", "title": "Build a Question/Answering system over SQL data"}]-->
 from langchain_community.tools.sql_database.tool import QuerySQLDataBaseTool
@@ -189,17 +174,13 @@ chain = write_query | execute_query
 chain.invoke({"question": "How many employees are there"})
 ```
 
-
-
 ```output
 '[(8,)]'
 ```
 
-
 ### Answer the question
 
 Now that we've got a way to automatically generate and execute queries, we just need to combine the original question and SQL query result to generate a final answer. We can do this by passing question and result to the LLM once more:
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Build a Question/Answering system over SQL data"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Build a Question/Answering system over SQL data"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Build a Question/Answering system over SQL data"}]-->
@@ -230,17 +211,14 @@ chain = (
 chain.invoke({"question": "How many employees are there"})
 ```
 
-
-
 ```output
 'There are a total of 8 employees.'
 ```
 
-
 Let's review what is happening in the above LCEL. Suppose this chain is invoked.
-- After the first `RunnablePassthrough.assign`, we have a runnable with two elements:  
-  `{"question": question, "query": write_query.invoke(question)}`  
-  Where `write_query` will generate a SQL query in service of answering the question.
+- After the first `RunnablePassthrough.assign`, we have a runnable with two elements:\
+`{"question": question, "query": write_query.invoke(question)}`\
+Where `write_query` will generate a SQL query in service of answering the question.
 - After the second `RunnablePassthrough.assign`, we have add a third element `"result"` that contains `execute_query.invoke(query)`, where `query` was computed in the previous step.
 - These three inputs are formatted into the prompt and passed into the LLM.
 - The `StrOutputParser()` plucks out the string content of the output message.
@@ -271,7 +249,6 @@ To initialize the agent we'll use the `SQLDatabaseToolkit` to create a bunch of 
 * Retrieve table descriptions
 * ... and more
 
-
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabaseToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.sql.toolkit.SQLDatabaseToolkit.html", "title": "Build a Question/Answering system over SQL data"}]-->
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
@@ -283,8 +260,6 @@ tools = toolkit.get_tools()
 tools
 ```
 
-
-
 ```output
 [QuerySQLDataBaseTool(description="Input to this tool is a detailed and correct SQL query, output is a result from the database. If the query is not correct, an error message will be returned. If an error is returned, rewrite the query, check the query, and try again. If you encounter an issue with Unknown column 'xxxx' in 'field list', use sql_db_schema to query the correct table fields.", db=<langchain_community.utilities.sql_database.SQLDatabase object at 0x113403b50>),
  InfoSQLDatabaseTool(description='Input to this tool is a comma-separated list of tables, output is the schema and sample rows for those tables. Be sure that the tables actually exist by calling sql_db_list_tables first! Example Input: table1, table2, table3', db=<langchain_community.utilities.sql_database.SQLDatabase object at 0x113403b50>),
@@ -292,11 +267,9 @@ tools
  QuerySQLCheckerTool(description='Use this tool to double check if your query is correct before executing it. Always use this tool before executing a query with sql_db_query!', db=<langchain_community.utilities.sql_database.SQLDatabase object at 0x113403b50>, llm=ChatOpenAI(client=<openai.resources.chat.completions.Completions object at 0x115b7e890>, async_client=<openai.resources.chat.completions.AsyncCompletions object at 0x115457e10>, temperature=0.0, openai_api_key=SecretStr('**********'), openai_proxy=''), llm_chain=LLMChain(prompt=PromptTemplate(input_variables=['dialect', 'query'], template='\n{query}\nDouble check the {dialect} query above for common mistakes, including:\n- Using NOT IN with NULL values\n- Using UNION when UNION ALL should have been used\n- Using BETWEEN for exclusive ranges\n- Data type mismatch in predicates\n- Properly quoting identifiers\n- Using the correct number of arguments for functions\n- Casting to the correct data type\n- Using the proper columns for joins\n\nIf there are any of the above mistakes, rewrite the query. If there are no mistakes, just reproduce the original query.\n\nOutput the final SQL query only.\n\nSQL Query: '), llm=ChatOpenAI(client=<openai.resources.chat.completions.Completions object at 0x115b7e890>, async_client=<openai.resources.chat.completions.AsyncCompletions object at 0x115457e10>, temperature=0.0, openai_api_key=SecretStr('**********'), openai_proxy='')))]
 ```
 
-
 ### System Prompt
 
 We will also want to create a system prompt for our agent. This will consist of instructions for how to behave.
-
 
 ```python
 <!--IMPORTS:[{"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Build a Question/Answering system over SQL data"}]-->
@@ -323,14 +296,12 @@ system_message = SystemMessage(content=SQL_PREFIX)
 ### Initializing agent
 First, get required package **LangGraph**
 
-
 ```python
 %%capture --no-stderr
 %pip install --upgrade --quiet langgraph
 ```
 
 We will use a prebuilt [LangGraph](/docs/concepts/#langgraph) agent to build our agent
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Build a Question/Answering system over SQL data"}]-->
@@ -341,7 +312,6 @@ agent_executor = create_react_agent(llm, tools, messages_modifier=system_message
 ```
 
 Consider how the agent responds to the below question:
-
 
 ```python
 for s in agent_executor.stream(
@@ -375,7 +345,6 @@ The agent is then able to use the result of the final query to generate an answe
 
 The agent can similarly handle qualitative questions:
 
-
 ```python
 for s in agent_executor.stream(
     {"messages": [HumanMessage(content="Describe the playlisttrack table")]}
@@ -407,7 +376,6 @@ We can achieve this by creating a vector store with all the distinct proper noun
 
 First we need the unique values for each entity we want, for which we define a function that parses the result into a list of elements:
 
-
 ```python
 import ast
 import re
@@ -425,8 +393,6 @@ albums = query_as_list(db, "SELECT Title FROM Album")
 albums[:5]
 ```
 
-
-
 ```output
 ['Big Ones',
  'Cidade Negra - Hits',
@@ -435,9 +401,7 @@ albums[:5]
  'Voodoo Lounge']
 ```
 
-
 Using this function, we can create a **retriever tool** that the agent can execute at its discretion.
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retriever_tool", "source": "langchain.agents.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "Build a Question/Answering system over SQL data"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Build a Question/Answering system over SQL data"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Build a Question/Answering system over SQL data"}]-->
@@ -458,7 +422,6 @@ retriever_tool = create_retriever_tool(
 
 Let's try it out:
 
-
 ```python
 print(retriever_tool.invoke("Alice Chains"))
 ```
@@ -476,7 +439,6 @@ Audioslave
 This way, if the agent determines it needs to write a filter based on an artist along the lines of "Alice Chains", it can first use the retriever tool to observe relevant values of a column.
 
 Putting this together:
-
 
 ```python
 system = """You are an agent designed to interact with a SQL database.
@@ -503,7 +465,6 @@ tools.append(retriever_tool)
 
 agent = create_react_agent(llm, tools, messages_modifier=system_message)
 ```
-
 
 ```python
 for s in agent.stream(

@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Nuclia
 
->[Nuclia](https://nuclia.com) automatically indexes your unstructured data from any internal and external source, providing optimized search results and generative answers. It can handle video and audio transcription, image content extraction, and document parsing.
+> [Nuclia](https://nuclia.com) automatically indexes your unstructured data from any internal and external source, providing optimized search results and generative answers. It can handle video and audio transcription, image content extraction, and document parsing.
 
 `Nuclia Understanding API` document transformer splits text into paragraphs and sentences, identifies entities, provides a summary of the text and generates embeddings for all the sentences.
 
@@ -13,12 +13,10 @@ To use the Nuclia Understanding API, you need to have a Nuclia account. You can 
 
 from langchain_community.document_transformers.nuclia_text_transform import NucliaTextTransformer
 
-
 ```python
 %pip install --upgrade --quiet  protobuf
 %pip install --upgrade --quiet  nucliadb-protos
 ```
-
 
 ```python
 import os
@@ -29,7 +27,6 @@ os.environ["NUCLIA_NUA_KEY"] = "<YOUR_API_KEY>"
 
 To use the Nuclia document transformer, you need to instantiate a `NucliaUnderstandingAPI` tool with `enable_ml` set to `True`:
 
-
 ```python
 <!--IMPORTS:[{"imported": "NucliaUnderstandingAPI", "source": "langchain_community.tools.nuclia", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.nuclia.tool.NucliaUnderstandingAPI.html", "title": "Nuclia"}]-->
 from langchain_community.tools.nuclia import NucliaUnderstandingAPI
@@ -38,7 +35,6 @@ nua = NucliaUnderstandingAPI(enable_ml=True)
 ```
 
 The Nuclia document transformer must be called in async mode, so you need to use the `atransform_documents` method:
-
 
 ```python
 <!--IMPORTS:[{"imported": "NucliaTextTransformer", "source": "langchain_community.document_transformers.nuclia_text_transform", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.nuclia_text_transform.NucliaTextTransformer.html", "title": "Nuclia"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Nuclia"}]-->

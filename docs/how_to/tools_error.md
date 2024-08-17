@@ -22,13 +22,11 @@ This guide covers some ways to build error handling into your chains to mitigate
 
 We'll need to install the following packages:
 
-
 ```python
 %pip install --upgrade --quiet langchain-core langchain-openai
 ```
 
 If you'd like to trace your runs in [LangSmith](https://docs.smith.langchain.com/) uncomment and set the following environment variables:
-
 
 ```python
 import getpass
@@ -68,7 +66,6 @@ chain = llm_with_tools | (lambda msg: msg.tool_calls[0]["args"]) | complex_tool
 ```
 
 We can see that when we try to invoke this chain with even a fairly explicit input, the model fails to correctly call the tool (it forgets the `dict_arg` argument).
-
 
 ```python
 chain.invoke(
@@ -155,7 +152,6 @@ dict_arg
 
 The simplest way to more gracefully handle errors is to try/except the tool-calling step and return a helpful message on errors:
 
-
 ```python
 <!--IMPORTS:[{"imported": "Runnable", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html", "title": "How to handle tool errors"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to handle tool errors"}]-->
 from typing import Any
@@ -193,7 +189,6 @@ dict_arg
 
 We can also try to fallback to a better model in the event of a tool invocation error. In this case we'll fall back to an identical chain that uses `gpt-4-1106-preview` instead of `gpt-3.5-turbo`.
 
-
 ```python
 chain = llm_with_tools | (lambda msg: msg.tool_calls[0]["args"]) | complex_tool
 
@@ -210,19 +205,15 @@ chain_with_fallback.invoke(
 )
 ```
 
-
-
 ```output
 10.5
 ```
-
 
 Looking at the [LangSmith trace](https://smith.langchain.com/public/00e91fc2-e1a4-4b0f-a82e-e6b3119d196c/r) for this chain run, we can see that the first chain call fails as expected and it's the fallback that succeeds.
 
 ## Retry with exception
 
 To take things one step further, we can try to automatically re-run the chain with the exception passed in, so that the model may be able to correct its behavior:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to handle tool errors"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to handle tool errors"}, {"imported": "ToolCall", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCall.html", "title": "How to handle tool errors"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to handle tool errors"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to handle tool errors"}]-->
@@ -277,7 +268,6 @@ self_correcting_chain = chain.with_fallbacks(
 )
 ```
 
-
 ```python
 self_correcting_chain.invoke(
     {
@@ -286,12 +276,9 @@ self_correcting_chain.invoke(
 )
 ```
 
-
-
 ```output
 10.5
 ```
-
 
 And our chain succeeds! Looking at the [LangSmith trace](https://smith.langchain.com/public/c11e804c-e14f-4059-bd09-64766f999c14/r), we can see that indeed our initial chain still fails, and it's only on retrying that the chain succeeds.
 

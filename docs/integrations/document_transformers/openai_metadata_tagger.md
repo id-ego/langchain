@@ -13,7 +13,6 @@ The `OpenAIMetadataTagger` document transformer automates this process by extrac
 
 For example, let's say you wanted to index a set of movie reviews. You could initialize the document transformer with a valid `JSON Schema` object as follows:
 
-
 ```python
 <!--IMPORTS:[{"imported": "create_metadata_tagger", "source": "langchain_community.document_transformers.openai_functions", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.openai_functions.create_metadata_tagger.html", "title": "OpenAI metadata tagger"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "OpenAI metadata tagger"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "OpenAI metadata tagger"}]-->
 from langchain_community.document_transformers.openai_functions import (
@@ -22,7 +21,6 @@ from langchain_community.document_transformers.openai_functions import (
 from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI
 ```
-
 
 ```python
 schema = {
@@ -46,7 +44,6 @@ document_transformer = create_metadata_tagger(metadata_schema=schema, llm=llm)
 
 You can then simply pass the document transformer a list of documents, and it will extract metadata from the contents:
 
-
 ```python
 original_documents = [
     Document(
@@ -60,7 +57,6 @@ original_documents = [
 
 enhanced_documents = document_transformer.transform_documents(original_documents)
 ```
-
 
 ```python
 import json
@@ -90,7 +86,6 @@ This movie was super boring. 1 out of 5 stars.
 The new documents can then be further processed by a text splitter before being loaded into a vector store. Extracted fields will not overwrite existing metadata.
 
 You can also initialize the document transformer with a Pydantic schema:
-
 
 ```python
 from typing import Literal
@@ -131,11 +126,9 @@ This movie was super boring. 1 out of 5 stars.
 {"movie_title": "The Godfather", "critic": "Anonymous", "tone": "negative", "rating": 1, "reliable": false}
 ```
 
-
 ## Customization
 
 You can pass the underlying tagging chain the standard LLMChain arguments in the document transformer constructor. For example, if you wanted to ask the LLM to focus specific details in the input documents, or extract metadata in a certain style, you could pass in a custom prompt:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "OpenAI metadata tagger"}]-->

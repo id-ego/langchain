@@ -36,7 +36,6 @@ To access OpenAI models you'll need to create an OpenAI account, get an API key,
 
 Head to https://platform.openai.com to sign up to OpenAI and generate an API key. Once you've done this set the OPENAI_API_KEY environment variable:
 
-
 ```python
 import getpass
 import os
@@ -47,7 +46,6 @@ if not os.environ.get("OPENAI_API_KEY"):
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
@@ -57,7 +55,6 @@ If you want to get automated tracing of your model calls you can also set your [
 
 The LangChain OpenAI integration lives in the `langchain-openai` package:
 
-
 ```python
 %pip install -qU langchain-openai
 ```
@@ -65,7 +62,6 @@ The LangChain OpenAI integration lives in the `langchain-openai` package:
 ## Instantiation
 
 Now we can instantiate our model object and generate chat completions:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "ChatOpenAI"}]-->
@@ -86,7 +82,6 @@ llm = ChatOpenAI(
 
 ## Invocation
 
-
 ```python
 messages = [
     (
@@ -99,13 +94,9 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
-
-
 ```output
 AIMessage(content="J'adore la programmation.", response_metadata={'token_usage': {'completion_tokens': 5, 'prompt_tokens': 31, 'total_tokens': 36}, 'model_name': 'gpt-4o', 'system_fingerprint': 'fp_43dfabdef1', 'finish_reason': 'stop', 'logprobs': None}, id='run-012cffe2-5d3d-424d-83b5-51c6d4a593d1-0', usage_metadata={'input_tokens': 31, 'output_tokens': 5, 'total_tokens': 36})
 ```
-
-
 
 ```python
 print(ai_msg.content)
@@ -116,7 +107,6 @@ J'adore la programmation.
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatOpenAI"}]-->
@@ -142,12 +132,9 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Ich liebe Programmieren.', response_metadata={'token_usage': {'completion_tokens': 5, 'prompt_tokens': 26, 'total_tokens': 31}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': 'fp_b28b39ffa8', 'finish_reason': 'stop', 'logprobs': None}, id='run-94fa6741-c99b-4513-afce-c3f562631c79-0')
 ```
-
 
 ## Tool calling
 
@@ -165,7 +152,6 @@ With `ChatOpenAI.bind_tools`, we can easily pass in Pydantic classes, dict schem
 ```
 and passed in every model invocation.
 
-
 ```python
 from pydantic import BaseModel, Field
 
@@ -179,7 +165,6 @@ class GetWeather(BaseModel):
 llm_with_tools = llm.bind_tools([GetWeather])
 ```
 
-
 ```python
 ai_msg = llm_with_tools.invoke(
     "what is the weather like in San Francisco",
@@ -187,23 +172,19 @@ ai_msg = llm_with_tools.invoke(
 ai_msg
 ```
 
-
-
 ```output
 AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_H7fABDuzEau48T10Qn0Lsh0D', 'function': {'arguments': '{"location":"San Francisco"}', 'name': 'GetWeather'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 15, 'prompt_tokens': 70, 'total_tokens': 85}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': 'fp_b28b39ffa8', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-b469135e-2718-446a-8164-eef37e672ba2-0', tool_calls=[{'name': 'GetWeather', 'args': {'location': 'San Francisco'}, 'id': 'call_H7fABDuzEau48T10Qn0Lsh0D'}])
 ```
 
+### `strict=True`
 
-### ``strict=True``
-
-:::info Requires ``langchain-openai>=0.1.21rc1``
+:::info Requires `langchain-openai>=0.1.21rc1`
 
 :::
 
 As of Aug 6, 2024, OpenAI supports a `strict` argument when calling tools that will enforce that the tool argument schema is respected by the model. See more here: https://platform.openai.com/docs/guides/function-calling
 
-**Note**: If ``strict=True`` the tool definition will also be validated, and a subset of JSON schema are accepted. Crucially, schema cannot have optional args (those with default values). Read the full docs on what types of schema are supported here: https://platform.openai.com/docs/guides/structured-outputs/supported-schemas. 
-
+**Note**: If `strict=True` the tool definition will also be validated, and a subset of JSON schema are accepted. Crucially, schema cannot have optional args (those with default values). Read the full docs on what types of schema are supported here: https://platform.openai.com/docs/guides/structured-outputs/supported-schemas. 
 
 ```python
 llm_with_tools = llm.bind_tools([GetWeather], strict=True)
@@ -213,29 +194,22 @@ ai_msg = llm_with_tools.invoke(
 ai_msg
 ```
 
-
-
 ```output
 AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_VYEfpPDh3npMQ95J9EWmWvSn', 'function': {'arguments': '{"location":"San Francisco, CA"}', 'name': 'GetWeather'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 17, 'prompt_tokens': 68, 'total_tokens': 85}, 'model_name': 'gpt-4o-2024-05-13', 'system_fingerprint': 'fp_3aa7262c27', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-a4c6749b-adbb-45c7-8b17-8d6835d5c443-0', tool_calls=[{'name': 'GetWeather', 'args': {'location': 'San Francisco, CA'}, 'id': 'call_VYEfpPDh3npMQ95J9EWmWvSn', 'type': 'tool_call'}], usage_metadata={'input_tokens': 68, 'output_tokens': 17, 'total_tokens': 85})
 ```
 
-
 ### AIMessage.tool_calls
 Notice that the AIMessage has a `tool_calls` attribute. This contains in a standardized ToolCall format that is model-provider agnostic.
-
 
 ```python
 ai_msg.tool_calls
 ```
-
-
 
 ```output
 [{'name': 'GetWeather',
   'args': {'location': 'San Francisco'},
   'id': 'call_H7fABDuzEau48T10Qn0Lsh0D'}]
 ```
-
 
 For more on binding tools and tool call outputs, head to the [tool calling](/docs/how_to/function_calling) docs.
 
@@ -245,7 +219,6 @@ You can call fine-tuned OpenAI models by passing in your corresponding `modelNam
 
 This generally takes the form of `ft:{OPENAI_MODEL_NAME}:{ORG_NAME}::{MODEL_ID}`. For example:
 
-
 ```python
 fine_tuned_model = ChatOpenAI(
     temperature=0, model_name="ft:gpt-3.5-turbo-0613:langchain::7qTVM5AR"
@@ -254,17 +227,13 @@ fine_tuned_model = ChatOpenAI(
 fine_tuned_model(messages)
 ```
 
-
-
 ```output
 AIMessage(content="J'adore la programmation.", additional_kwargs={}, example=False)
 ```
 
-
 ## API reference
 
 For detailed documentation of all ChatOpenAI features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html
-
 
 ## Related
 

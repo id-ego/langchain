@@ -12,13 +12,11 @@ If the value is not a nested json, but rather a very large string the string wil
 1. How the text is split: json value.
 2. How the chunk size is measured: by number of characters.
 
-
 ```python
 %pip install -qU langchain-text-splitters
 ```
 
 First we load some json data:
-
 
 ```python
 import json
@@ -33,7 +31,6 @@ json_data = requests.get("https://api.smith.langchain.com/openapi.json").json()
 
 Specify `max_chunk_size` to constrain chunk sizes:
 
-
 ```python
 <!--IMPORTS:[{"imported": "RecursiveJsonSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/json/langchain_text_splitters.json.RecursiveJsonSplitter.html", "title": "How to split JSON data"}]-->
 from langchain_text_splitters import RecursiveJsonSplitter
@@ -42,7 +39,6 @@ splitter = RecursiveJsonSplitter(max_chunk_size=300)
 ```
 
 To obtain json chunks, use the `.split_json` method:
-
 
 ```python
 # Recursively split json data - If you need to access/manipulate the smaller json chunks
@@ -58,7 +54,6 @@ for chunk in json_chunks[:3]:
 ```
 To obtain LangChain [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) objects, use the `.create_documents` method:
 
-
 ```python
 # The splitter can also output documents
 docs = splitter.create_documents(texts=[json_data])
@@ -72,7 +67,6 @@ page_content='{"paths": {"/api/v1/sessions/{session_id}": {"get": {"tags": ["tra
 page_content='{"paths": {"/api/v1/sessions/{session_id}": {"get": {"security": [{"API Key": []}, {"Tenant ID": []}, {"Bearer Auth": []}]}}}}'
 ```
 Or use `.split_text` to obtain string content directly:
-
 
 ```python
 texts = splitter.split_text(json_data=json_data)
@@ -88,7 +82,6 @@ print(texts[1])
 
 Note that one of the chunks in this example is larger than the specified `max_chunk_size` of 300. Reviewing one of these chunks that was bigger we see there is a list object there:
 
-
 ```python
 print([len(text) for text in texts][:10])
 print()
@@ -103,13 +96,11 @@ The json splitter by default does not split lists.
 
 Specify `convert_lists=True` to preprocess the json, converting list content to dicts with `index:item` as `key:val` pairs:
 
-
 ```python
 texts = splitter.split_text(json_data=json_data, convert_lists=True)
 ```
 
 Let's look at the size of the chunks. Now they are all under the max
-
 
 ```python
 print([len(text) for text in texts][:10])
@@ -118,7 +109,6 @@ print([len(text) for text in texts][:10])
 [176, 236, 141, 203, 212, 221, 210, 213, 242, 291]
 ```
 The list has been converted to a dict, but retains all the needed contextual information even if split into many chunks:
-
 
 ```python
 print(texts[1])
@@ -131,8 +121,6 @@ print(texts[1])
 # We can also look at the documents
 docs[1]
 ```
-
-
 
 ```output
 Document(page_content='{"paths": {"/api/v1/sessions/{session_id}": {"get": {"tags": ["tracer-sessions"], "summary": "Read Tracer Session", "description": "Get a specific session.", "operationId": "read_tracer_session_api_v1_sessions__session_id__get"}}}}')

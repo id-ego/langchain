@@ -11,7 +11,7 @@ This notebook covers how to get started with ErnieBot chat models.
 
 **Deprecated Warning**
 
-We recommend users using `langchain_community.chat_models.ErnieBotChat` 
+We recommend users using `langchain_community.chat_models.ErnieBotChat`
 to use `langchain_community.chat_models.QianfanChatEndpoint` instead.
 
 documentation for `QianfanChatEndpoint` is [here](/docs/integrations/chat/baidu_qianfan_endpoint/).
@@ -29,7 +29,6 @@ Some tips for migration:
 - install `qianfan` package. like `pip install qianfan`
 - change `ErnieBotChat` to `QianfanChatEndpoint`.
 
-
 ```python
 <!--IMPORTS:[{"imported": "QianfanChatEndpoint", "source": "langchain_community.chat_models.baidu_qianfan_endpoint", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.baidu_qianfan_endpoint.QianfanChatEndpoint.html", "title": "ErnieBotChat"}]-->
 from langchain_community.chat_models.baidu_qianfan_endpoint import QianfanChatEndpoint
@@ -41,7 +40,6 @@ chat = QianfanChatEndpoint(
 ```
 
 ## Usage
-
 
 ```python
 <!--IMPORTS:[{"imported": "ErnieBotChat", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.ernie.ErnieBotChat.html", "title": "ErnieBotChat"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ErnieBotChat"}]-->
@@ -59,18 +57,13 @@ export ERNIE_CLIENT_ID=YOUR_CLIENT_ID
 export ERNIE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
 
-
 ```python
 chat([HumanMessage(content="hello there, who are you?")])
 ```
 
-
-
 ```output
 AIMessage(content='Hello, I am an artificial intelligence language model. My purpose is to help users answer questions or provide information. What can I do for you?', additional_kwargs={}, example=False)
 ```
-
-
 
 ## Related
 

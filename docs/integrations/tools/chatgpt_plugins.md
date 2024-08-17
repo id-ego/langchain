@@ -18,17 +18,14 @@ Note 1: This currently only works for plugins with no auth.
 
 Note 2: There are almost certainly other ways to do this, this is just a first pass. If you have better ideas, please open a PR!
 
-
 ```python
 %pip install --upgrade --quiet langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIPluginTool", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.plugin.AIPluginTool.html", "title": "ChatGPT Plugins"}]-->
 from langchain_community.tools import AIPluginTool
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "ChatGPT Plugins"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "ChatGPT Plugins"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "ChatGPT Plugins"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "ChatGPT Plugins"}]-->
@@ -36,11 +33,9 @@ from langchain.agents import AgentType, initialize_agent, load_tools
 from langchain_openai import ChatOpenAI
 ```
 
-
 ```python
 tool = AIPluginTool.from_plugin_url("https://www.klarna.com/.well-known/ai-plugin.json")
 ```
-
 
 ```python
 llm = ChatOpenAI(temperature=0)
@@ -72,12 +67,9 @@ Final Answer: The available t shirts in Klarna are Lacoste Men's Pack of Plain T
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 "The available t shirts in Klarna are Lacoste Men's Pack of Plain T-Shirts, Hanes Men's Ultimate 6pk. Crewneck T-Shirts, Nike Boy's Jordan Stretch T-shirts, Polo Classic Fit Cotton V-Neck T-Shirts 3-Pack, and adidas Comfort T-shirts Men's 3-pack."
 ```
-
-
 
 ## Related
 

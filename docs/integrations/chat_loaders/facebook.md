@@ -11,22 +11,18 @@ This notebook shows how to load data from Facebook in a format you can fine-tune
 2. Create the Chat Loader and call `loader.load()` (or `loader.lazy_load()`) to perform the conversion.
 3. Optionally use `merge_chat_runs` to combine message from the same sender in sequence, and/or `map_ai_messages` to convert messages from the specified sender to the "AIMessage" class. Once you've done this, call `convert_messages_for_finetuning` to prepare your data for fine-tuning.
 
-
 Once this has been done, you can fine-tune your model. To do so you would complete the following steps:
 
 4. Upload your messages to OpenAI and run a fine-tuning job.
-6. Use the resulting model in your LangChain app!
-
+5. Use the resulting model in your LangChain app!
 
 Let's begin.
-
 
 ## 1. Download Data
 
 To download your own messenger data, following instructions [here](https://www.zapptales.com/en/download-facebook-messenger-chat-history-how-to/). IMPORTANT - make sure to download them in JSON format (not HTML).
 
 We are hosting an example dump at [this google drive link](https://drive.google.com/file/d/1rh1s1o2i7B-Sk1v9o8KNgivLVGwJ-osV/view?usp=sharing) that we will use in this walkthrough.
-
 
 ```python
 # This uses some example data
@@ -69,11 +65,9 @@ File file.zip has been unzipped.
 
 We have 2 different `FacebookMessengerChatLoader` classes, one for an entire directory of chats, and one to load individual files. We
 
-
 ```python
 directory_path = "./hogwarts"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "FolderFacebookMessengerChatLoader", "source": "langchain_community.chat_loaders.facebook_messenger", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.facebook_messenger.FolderFacebookMessengerChatLoader.html", "title": "Facebook Messenger"}, {"imported": "SingleFileFacebookMessengerChatLoader", "source": "langchain_community.chat_loaders.facebook_messenger", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.facebook_messenger.SingleFileFacebookMessengerChatLoader.html", "title": "Facebook Messenger"}]-->
@@ -83,20 +77,16 @@ from langchain_community.chat_loaders.facebook_messenger import (
 )
 ```
 
-
 ```python
 loader = SingleFileFacebookMessengerChatLoader(
     path="./hogwarts/inbox/HermioneGranger/messages_Hermione_Granger.json",
 )
 ```
 
-
 ```python
 chat_session = loader.load()[0]
 chat_session["messages"][:3]
 ```
-
-
 
 ```output
 [HumanMessage(content="Hi Hermione! How's your summer going so far?", additional_kwargs={'sender': 'Harry Potter'}),
@@ -104,33 +94,26 @@ chat_session["messages"][:3]
  HumanMessage(content="I miss you all too. The Dursleys are being their usual unpleasant selves but I'm getting by. At least I can practice some spells in my room without them knowing. Let me know if you find anything good in your researching!", additional_kwargs={'sender': 'Harry Potter'})]
 ```
 
-
-
 ```python
 loader = FolderFacebookMessengerChatLoader(
     path="./hogwarts",
 )
 ```
 
-
 ```python
 chat_sessions = loader.load()
 len(chat_sessions)
 ```
 
-
-
 ```output
 9
 ```
-
 
 ## 3. Prepare for fine-tuning
 
 Calling `load()` returns all the chat messages we could extract as human messages. When conversing with chat bots, conversations typically follow a more strict alternating dialogue pattern relative to real conversations. 
 
 You can choose to merge message "runs" (consecutive messages from the same sender) and select a sender to represent the "AI". The fine-tuned LLM will learn to generate these AI messages.
-
 
 ```python
 <!--IMPORTS:[{"imported": "map_ai_messages", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.map_ai_messages.html", "title": "Facebook Messenger"}, {"imported": "merge_chat_runs", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.merge_chat_runs.html", "title": "Facebook Messenger"}]-->
@@ -140,12 +123,10 @@ from langchain_community.chat_loaders.utils import (
 )
 ```
 
-
 ```python
 merged_sessions = merge_chat_runs(chat_sessions)
 alternating_sessions = list(map_ai_messages(merged_sessions, "Harry Potter"))
 ```
-
 
 ```python
 # Now all of Harry Potter's messages will take the AI message class
@@ -153,23 +134,18 @@ alternating_sessions = list(map_ai_messages(merged_sessions, "Harry Potter"))
 alternating_sessions[0]["messages"][:3]
 ```
 
-
-
 ```output
 [AIMessage(content="Professor Snape, I was hoping I could speak with you for a moment about something that's been concerning me lately.", additional_kwargs={'sender': 'Harry Potter'}),
  HumanMessage(content="What is it, Potter? I'm quite busy at the moment.", additional_kwargs={'sender': 'Severus Snape'}),
  AIMessage(content="I apologize for the interruption, sir. I'll be brief. I've noticed some strange activity around the school grounds at night. I saw a cloaked figure lurking near the Forbidden Forest last night. I'm worried someone may be plotting something sinister.", additional_kwargs={'sender': 'Harry Potter'})]
 ```
 
-
 #### Now we can convert to OpenAI format dictionaries
-
 
 ```python
 <!--IMPORTS:[{"imported": "convert_messages_for_finetuning", "source": "langchain_community.adapters.openai", "docs": "https://api.python.langchain.com/en/latest/adapters/langchain_community.adapters.openai.convert_messages_for_finetuning.html", "title": "Facebook Messenger"}]-->
 from langchain_community.adapters.openai import convert_messages_for_finetuning
 ```
-
 
 ```python
 training_data = convert_messages_for_finetuning(alternating_sessions)
@@ -183,8 +159,6 @@ Prepared 9 dialogues for training
 training_data[0][:3]
 ```
 
-
-
 ```output
 [{'role': 'assistant',
   'content': "Professor Snape, I was hoping I could speak with you for a moment about something that's been concerning me lately."},
@@ -194,12 +168,10 @@ training_data[0][:3]
   'content': "I apologize for the interruption, sir. I'll be brief. I've noticed some strange activity around the school grounds at night. I saw a cloaked figure lurking near the Forbidden Forest last night. I'm worried someone may be plotting something sinister."}]
 ```
 
-
 OpenAI currently requires at least 10 training examples for a fine-tuning job, though they recommend between 50-100 for most tasks. Since we only have 9 chat sessions, we can subdivide them (optionally with some overlap) so that each training example is comprised of a portion of a whole conversation.
 
 Facebook chat sessions (1 per person) often span multiple days and conversations,
 so the long-range dependencies may not be that important to model anyhow.
-
 
 ```python
 # Our chat is alternating, we will make each datapoint a group of 8 messages,
@@ -216,23 +188,18 @@ training_examples = [
 len(training_examples)
 ```
 
-
-
 ```output
 100
 ```
-
 
 ## 4. Fine-tune the model
 
 It's time to fine-tune the model. Make sure you have `openai` installed
 and have set your `OPENAI_API_KEY` appropriately
 
-
 ```python
 %pip install --upgrade --quiet  langchain-openai
 ```
-
 
 ```python
 import json
@@ -264,7 +231,6 @@ File file-ULumAXLEFw3vB6bb9uy6DNVC ready after 0.00 seconds.
 ```
 With the file ready, it's time to kick off a training job.
 
-
 ```python
 job = openai.fine_tuning.jobs.create(
     training_file=training_file.id,
@@ -273,7 +239,6 @@ job = openai.fine_tuning.jobs.create(
 ```
 
 Grab a cup of tea while your model is being prepared. This may take some time!
-
 
 ```python
 status = openai.fine_tuning.jobs.retrieve(job.id).status
@@ -298,7 +263,6 @@ ft:gpt-3.5-turbo-0613:personal::8QnAzWMr
 
 You can use the resulting model ID directly the `ChatOpenAI` model class.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Facebook Messenger"}]-->
 from langchain_openai import ChatOpenAI
@@ -308,7 +272,6 @@ model = ChatOpenAI(
     temperature=1,
 )
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Facebook Messenger"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Facebook Messenger"}]-->
@@ -323,7 +286,6 @@ prompt = ChatPromptTemplate.from_messages(
 
 chain = prompt | model | StrOutputParser()
 ```
-
 
 ```python
 for tok in chain.stream({"input": "What classes are you taking?"}):

@@ -11,11 +11,9 @@ This notebook demonstrates the use of `langchain.chat_models.ChatAnyscale` for [
 * Set `ANYSCALE_API_KEY` environment variable
 * or use the `anyscale_api_key` keyword argument
 
-
 ```python
 %pip install --upgrade --quiet  langchain-openai
 ```
-
 
 ```python
 import os
@@ -27,7 +25,6 @@ os.environ["ANYSCALE_API_KEY"] = getpass()
  ········
 ```
 # Let's try out each model offered on Anyscale Endpoints
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnyscale", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.anyscale.ChatAnyscale.html", "title": "ChatAnyscale"}]-->
@@ -46,7 +43,6 @@ dict_keys(['meta-llama/Llama-2-70b-chat-hf', 'meta-llama/Llama-2-7b-chat-hf', 'm
 # We can use async methods and other stuff supported by ChatOpenAI
 
 This way, the three requests will only take as long as the longest individual request.
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatAnyscale"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "ChatAnyscale"}]-->
@@ -68,13 +64,11 @@ async def get_msgs():
     return dict(zip(chats.keys(), responses))
 ```
 
-
 ```python
 import nest_asyncio
 
 nest_asyncio.apply()
 ```
-
 
 ```python
 %%time

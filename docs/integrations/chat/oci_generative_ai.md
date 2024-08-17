@@ -9,8 +9,7 @@ sidebar_label: OCIGenAI
 This notebook provides a quick overview for getting started with OCIGenAI [chat models](/docs/concepts/#chat-models). For detailed documentation of all ChatOCIGenAI features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html).
 
 Oracle Cloud Infrastructure (OCI) Generative AI is a fully managed service that provides a set of state-of-the-art, customizable large language models (LLMs) that cover a wide range of use cases, and which is available through a single API.
-Using the OCI Generative AI service you can access ready-to-use pretrained models, or create and host your own fine-tuned custom models based on your own data on dedicated AI clusters. Detailed documentation of the service and API is available __[here](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm)__ and __[here](https://docs.oracle.com/en-us/iaas/api/#/en/generative-ai/20231130/)__.
-
+Using the OCI Generative AI service you can access ready-to-use pretrained models, or create and host your own fine-tuned custom models based on your own data on dedicated AI clusters. Detailed documentation of the service and API is available **[here](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm)** and **[here](https://docs.oracle.com/en-us/iaas/api/#/en/generative-ai/20231130/)**.
 
 ## Overview
 ### Integration details
@@ -30,14 +29,13 @@ To access OCIGenAI models you'll need to install the `oci` and `langchain-commun
 
 ### Credentials
 
-The credentials and authentication methods supported for this integration are equivalent to those used with other OCI services and follow the __[standard SDK authentication](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdk_authentication_methods.htm)__ methods, specifically API Key, session token, instance principal, and resource principal.
+The credentials and authentication methods supported for this integration are equivalent to those used with other OCI services and follow the **[standard SDK authentication](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdk_authentication_methods.htm)** methods, specifically API Key, session token, instance principal, and resource principal.
 
 API key is the default authentication method used in the examples above. The following example demonstrates how to use a different authentication method (session token)
 
 ### Installation
 
 The LangChain OCIGenAI integration lives in the `langchain-community` package and you will also need to install the `oci` package:
-
 
 ```python
 %pip install -qU langchain-community oci
@@ -46,8 +44,6 @@ The LangChain OCIGenAI integration lives in the `langchain-community` package an
 ## Instantiation
 
 Now we can instantiate our model object and generate chat completions:
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOCIGenAI", "source": "langchain_community.chat_models.oci_generative_ai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html", "title": "ChatOCIGenAI"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "ChatOCIGenAI"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatOCIGenAI"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "ChatOCIGenAI"}]-->
@@ -64,7 +60,6 @@ chat = ChatOCIGenAI(
 
 ## Invocation
 
-
 ```python
 messages = [
     SystemMessage(content="your are an AI assistant."),
@@ -74,7 +69,6 @@ messages = [
 response = chat.invoke(messages)
 ```
 
-
 ```python
 print(response.content)
 ```
@@ -82,8 +76,6 @@ print(response.content)
 ## Chaining
 
 We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatOCIGenAI"}]-->
@@ -99,7 +91,6 @@ print(response.content)
 ## API reference
 
 For detailed documentation of all ChatOCIGenAI features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html
-
 
 ## Related
 

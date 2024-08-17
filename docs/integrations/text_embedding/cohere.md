@@ -15,15 +15,14 @@ import { ItemTable } from "@theme/FeatureTables";
 
 <ItemTable category="text_embedding" item="Cohere" />
 
+
 ## Setup
 
 To access Cohere embedding models you'll need to create a/an Cohere account, get an API key, and install the `langchain-cohere` integration package.
 
 ### Credentials
 
-
 Head to [cohere.com](https://cohere.com) to sign up to Cohere and generate an API key. Once you’ve done this set the COHERE_API_KEY environment variable:
-
 
 ```python
 import getpass
@@ -35,7 +34,6 @@ if not os.getenv("COHERE_API_KEY"):
 
 If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
 
-
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -45,7 +43,6 @@ If you want to get automated tracing of your model calls you can also set your [
 
 The LangChain Cohere integration lives in the `langchain-cohere` package:
 
-
 ```python
 %pip install -qU langchain-cohere
 ```
@@ -53,7 +50,6 @@ The LangChain Cohere integration lives in the `langchain-cohere` package:
 ## Instantiation
 
 Now we can instantiate our model object and generate chat completions:
-
 
 ```python
 <!--IMPORTS:[{"imported": "CohereEmbeddings", "source": "langchain_cohere", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_cohere.embeddings.CohereEmbeddings.html", "title": "CohereEmbeddings"}]-->
@@ -69,7 +65,6 @@ embeddings = CohereEmbeddings(
 Embedding models are often used in retrieval-augmented generation (RAG) flows, both as part of indexing data as well as later retrieving it. For more detailed instructions, please see our RAG tutorials under the [working with external knowledge tutorials](/docs/tutorials/#working-with-external-knowledge).
 
 Below, see how to index and retrieve data using the `embeddings` object we initialized above. In this example, we will index and retrieve a sample document in the `InMemoryVectorStore`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryVectorStore", "source": "langchain_core.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.in_memory.InMemoryVectorStore.html", "title": "CohereEmbeddings"}]-->
@@ -93,12 +88,9 @@ retrieved_documents = retriever.invoke("What is LangChain?")
 retrieved_documents[0].page_content
 ```
 
-
-
 ```output
 'LangChain is the framework for building context-aware reasoning applications'
 ```
-
 
 ## Direct Usage
 
@@ -110,7 +102,6 @@ You can directly call these methods to get embeddings for your own use cases.
 
 You can embed single texts or documents with `embed_query`:
 
-
 ```python
 single_vector = embeddings.embed_query(text)
 print(str(single_vector)[:100])  # Show the first 100 characters of the vector
@@ -121,7 +112,6 @@ print(str(single_vector)[:100])  # Show the first 100 characters of the vector
 ### Embed multiple texts
 
 You can embed multiple texts with `embed_documents`:
-
 
 ```python
 text2 = (
@@ -138,8 +128,6 @@ for vector in two_vectors:
 ## API Reference
 
 For detailed documentation on `CohereEmbeddings` features and configuration options, please refer to the [API reference](https://api.python.langchain.com/en/latest/embeddings/langchain_cohere.embeddings.CohereEmbeddings.html).
-
-
 
 ## Related
 

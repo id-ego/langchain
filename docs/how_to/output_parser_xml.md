@@ -26,7 +26,6 @@ Keep in mind that large language models are leaky abstractions! You'll have to u
 
 In the following examples, we use Anthropic's Claude-2 model (https://docs.anthropic.com/claude/docs), which is one such model that is optimized for XML tags.
 
-
 ```python
 %pip install -qU langchain langchain-anthropic
 
@@ -37,7 +36,6 @@ os.environ["ANTHROPIC_API_KEY"] = getpass()
 ```
 
 Let's start with a simple request to the model.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to parse XML output"}, {"imported": "XMLOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.xml.XMLOutputParser.html", "title": "How to parse XML output"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to parse XML output"}]-->
@@ -72,7 +70,6 @@ Here is the shortened filmography for Tom Hanks, with movies enclosed in XML tag
 ```
 This actually worked pretty well! But it would be nice to parse that XML into a more easily usable format. We can use the `XMLOutputParser` to both add default format instructions to the prompt and parse outputted XML into a dict:
 
-
 ```python
 parser = XMLOutputParser()
 
@@ -80,13 +77,9 @@ parser = XMLOutputParser()
 parser.get_format_instructions()
 ```
 
-
-
 ```output
 'The output should be formatted as a XML file.\n1. Output should conform to the tags below. \n2. If tags are not given, make them on your own.\n3. Remember to always open and close all the tags.\n\nAs an example, for the tags ["foo", "bar", "baz"]:\n1. String "<foo>\n   <bar>\n      <baz></baz>\n   </bar>\n</foo>" is a well-formatted instance of the schema. \n2. String "<foo>\n   <bar>\n   </foo>" is a badly-formatted instance.\n3. String "<foo>\n   <tag>\n   </tag>\n</foo>" is a badly-formatted instance.\n\nHere are the output tags:\n```\nNone\n```'
 ```
-
-
 
 ```python
 prompt = PromptTemplate(
@@ -105,7 +98,6 @@ print(output)
 ```
 We can also add some tags to tailor the output to our needs. You can and should experiment with adding your own formatting hints in the other parts of your prompt to either augment or replace the default instructions:
 
-
 ```python
 parser = XMLOutputParser(tags=["movies", "actor", "film", "name", "genre"])
 
@@ -113,13 +105,9 @@ parser = XMLOutputParser(tags=["movies", "actor", "film", "name", "genre"])
 parser.get_format_instructions()
 ```
 
-
-
 ```output
 'The output should be formatted as a XML file.\n1. Output should conform to the tags below. \n2. If tags are not given, make them on your own.\n3. Remember to always open and close all the tags.\n\nAs an example, for the tags ["foo", "bar", "baz"]:\n1. String "<foo>\n   <bar>\n      <baz></baz>\n   </bar>\n</foo>" is a well-formatted instance of the schema. \n2. String "<foo>\n   <bar>\n   </foo>" is a badly-formatted instance.\n3. String "<foo>\n   <tag>\n   </tag>\n</foo>" is a badly-formatted instance.\n\nHere are the output tags:\n```\n[\'movies\', \'actor\', \'film\', \'name\', \'genre\']\n```'
 ```
-
-
 
 ```python
 prompt = PromptTemplate(
@@ -139,7 +127,6 @@ print(output)
 {'movies': [{'actor': [{'name': 'Tom Hanks'}, {'film': [{'name': 'Forrest Gump'}, {'genre': 'Drama'}]}, {'film': [{'name': 'Cast Away'}, {'genre': 'Adventure'}]}, {'film': [{'name': 'Saving Private Ryan'}, {'genre': 'War'}]}]}]}
 ```
 This output parser also supports streaming of partial chunks. Here's an example:
-
 
 ```python
 for s in chain.stream({"query": actor_query}):

@@ -14,11 +14,9 @@ Some advantages of switching to the LCEL implementation are:
 
 Now let's look at them side-by-side. We'll use the same ingestion code to load a [blog post by Lilian Weng](https://lilianweng.github.io/posts/2023-06-23-agent/) on autonomous agents into a local vector store:
 
-
 ```python
 %pip install --upgrade --quiet langchain-community langchain langchain-openai faiss-cpu
 ```
-
 
 ```python
 import os
@@ -26,7 +24,6 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Load docs"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Load docs"}, {"imported": "ChatOpenAI", "source": "langchain_openai.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Load docs"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Load docs"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Load docs"}]-->
@@ -71,15 +68,13 @@ qa_chain = RetrievalQA.from_llm(
 qa_chain("What are autonomous agents?")
 ```
 
-
-
 ```output
 {'query': 'What are autonomous agents?',
  'result': 'Autonomous agents are LLM-empowered agents capable of handling autonomous design, planning, and performance of complex scientific experiments. These agents can browse the Internet, read documentation, execute code, call robotics experimentation APIs, and leverage other LLMs. They can generate reasoning steps, such as developing a novel anticancer drug, based on requested tasks.'}
 ```
 
-
 </details>
+
 
 ## LCEL
 
@@ -113,15 +108,11 @@ qa_chain = (
 qa_chain.invoke("What are autonomous agents?")
 ```
 
-
-
 ```output
 'Autonomous agents are agents empowered by large language models (LLMs) that can handle autonomous design, planning, and performance of complex tasks such as scientific experiments. These agents can use tools to browse the Internet, read documentation, execute code, call robotics experimentation APIs, and leverage other LLMs for their tasks. The model can come up with reasoning steps when given a specific task, such as developing a novel anticancer drug.'
 ```
 
-
 The LCEL implementation exposes the internals of what's happening around retrieving, formatting documents, and passing them through a prompt to the LLM, but it is more verbose. You can customize and wrap this composition logic in a helper function, or use the higher-level [`create_retrieval_chain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html) and [`create_stuff_documents_chain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html) helper method:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Load docs"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Load docs"}]-->
@@ -138,8 +129,6 @@ rag_chain = create_retrieval_chain(vectorstore.as_retriever(), combine_docs_chai
 rag_chain.invoke({"input": "What are autonomous agents?"})
 ```
 
-
-
 ```output
 {'input': 'What are autonomous agents?',
  'context': [Document(metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/', 'title': "LLM Powered Autonomous Agents | Lil'Log", 'description': 'Building agents with LLM (large language model) as its core controller is a cool concept. Several proof-of-concepts demos, such as AutoGPT, GPT-Engineer and BabyAGI, serve as inspiring examples. The potentiality of LLM extends beyond generating well-written copies, stories, essays and programs; it can be framed as a powerful general problem solver.\nAgent System Overview In a LLM-powered autonomous agent system, LLM functions as the agent’s brain, complemented by several key components:', 'language': 'en'}, page_content='Boiko et al. (2023) also looked into LLM-empowered agents for scientific discovery, to handle autonomous design, planning, and performance of complex scientific experiments. This agent can use tools to browse the Internet, read documentation, execute code, call robotics experimentation APIs and leverage other LLMs.\nFor example, when requested to "develop a novel anticancer drug", the model came up with the following reasoning steps:'),
@@ -149,8 +138,8 @@ rag_chain.invoke({"input": "What are autonomous agents?"})
  'answer': 'Autonomous agents are entities capable of operating independently to perform tasks or make decisions without direct human intervention. In the context provided, autonomous agents empowered by Large Language Models (LLMs) are used for scientific discovery, including tasks like autonomous design, planning, and executing complex scientific experiments.'}
 ```
 
-
 </details>
+
 
 ## Next steps
 

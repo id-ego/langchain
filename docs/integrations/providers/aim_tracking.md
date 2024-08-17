@@ -21,8 +21,8 @@ Let's move forward and see how to enable and configure Aim callback.
 
 <h3>Tracking LangChain Executions with Aim</h3>
 
-In this notebook we will explore three usage scenarios. To start off, we will install the necessary packages and import certain modules. Subsequently, we will configure two environment variables that can be established either within the Python script or through the terminal.
 
+In this notebook we will explore three usage scenarios. To start off, we will install the necessary packages and import certain modules. Subsequently, we will configure two environment variables that can be established either within the Python script or through the terminal.
 
 ```python
 %pip install --upgrade --quiet  aim
@@ -30,7 +30,6 @@ In this notebook we will explore three usage scenarios. To start off, we will in
 %pip install --upgrade --quiet  langchain-openai
 %pip install --upgrade --quiet  google-search-results
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AimCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.aim_callback.AimCallbackHandler.html", "title": "Aim"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Aim"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Aim"}]-->
@@ -46,14 +45,12 @@ Our examples use a GPT model as the LLM, and OpenAI offers an API for this purpo
 
 We will use the SerpApi to retrieve search results from Google. To acquire the SerpApi key, please go to https://serpapi.com/manage-api-key .
 
-
 ```python
 os.environ["OPENAI_API_KEY"] = "..."
 os.environ["SERPAPI_API_KEY"] = "..."
 ```
 
 The event methods of `AimCallbackHandler` accept the LangChain module or agent as input and log at least the prompts and generated results, as well as the serialized version of the LangChain module, to the designated Aim run.
-
 
 ```python
 session_group = datetime.now().strftime("%m.%d.%Y_%H.%M.%S")
@@ -89,7 +86,6 @@ from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 ```
 
-
 ```python
 # scenario 2 - Chain
 template = """You are a playwright. Given the title of play, it is your job to write a synopsis for that title.
@@ -118,7 +114,6 @@ aim_callback.flush_tracker(
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Aim"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Aim"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Aim"}]-->
 from langchain.agents import AgentType, initialize_agent, load_tools
 ```
-
 
 ```python
 # scenario 3 - Agent with Tools

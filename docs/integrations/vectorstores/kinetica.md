@@ -6,7 +6,7 @@ sidebar_label: Kinetica
 
 # Kinetica Vectorstore API
 
->[Kinetica](https://www.kinetica.com/) is a database with integrated support for vector similarity search
+> [Kinetica](https://www.kinetica.com/) is a database with integrated support for vector similarity search
 
 It supports:
 - exact and approximate nearest neighbor search
@@ -15,7 +15,6 @@ It supports:
 This notebook shows how to use the Kinetica vector store (`Kinetica`).
 
 This needs an instance of Kinetica which can easily be setup using the instructions given here - [installation instruction](https://www.kinetica.com/developer-edition/).
-
 
 ```python
 # Pip install necessary package
@@ -42,14 +41,12 @@ Note: you may need to restart the kernel to use updated packages.
 ```
 We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
 
-
 ```python
 import getpass
 import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
-
 
 ```python
 ## Loading Environment Variables
@@ -58,13 +55,9 @@ from dotenv import load_dotenv
 load_dotenv()
 ```
 
-
-
 ```output
 False
 ```
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Kinetica Vectorstore API"}, {"imported": "DistanceStrategy", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.DistanceStrategy.html", "title": "Kinetica Vectorstore API"}, {"imported": "Kinetica", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.Kinetica.html", "title": "Kinetica Vectorstore API"}, {"imported": "KineticaSettings", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.KineticaSettings.html", "title": "Kinetica Vectorstore API"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Kinetica Vectorstore API"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Kinetica Vectorstore API"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Kinetica Vectorstore API"}]-->
@@ -79,7 +72,6 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
-
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
 documents = loader.load()
@@ -88,7 +80,6 @@ docs = text_splitter.split_documents(documents)
 
 embeddings = OpenAIEmbeddings()
 ```
-
 
 ```python
 # Kinetica needs the connection to the database.
@@ -105,7 +96,6 @@ def create_config() -> KineticaSettings:
 
 ## Similarity Search with Euclidean Distance (Default)
 
-
 ```python
 # The Kinetica Module will try to create a table with the name of the collection.
 # So, make sure that the collection name is unique and the user has the permission to create a table.
@@ -121,12 +111,10 @@ db = Kinetica.from_documents(
 )
 ```
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db.similarity_search_with_score(query)
 ```
-
 
 ```python
 for doc, score in docs_with_score:
@@ -188,11 +176,9 @@ We’re securing commitments and supporting partners in South and Central Americ
 ## Maximal Marginal Relevance Search (MMR)
 Maximal marginal relevance optimizes for similarity to query AND diversity among selected documents.
 
-
 ```python
 docs_with_score = db.max_marginal_relevance_search_with_score(query)
 ```
-
 
 ```python
 for doc, score in docs_with_score:
@@ -278,7 +264,6 @@ Cancer is the #2 cause of death in America–second only to heart disease.
 Above, we created a vectorstore from scratch. However, often times we want to work with an existing vectorstore.
 In order to do that, we can initialize it directly.
 
-
 ```python
 store = Kinetica(
     collection_name=COLLECTION_NAME,
@@ -290,52 +275,38 @@ store = Kinetica(
 ### Add documents
 We can add documents to the existing vectorstore.
 
-
 ```python
 store.add_documents([Document(page_content="foo")])
 ```
-
-
 
 ```output
 ['b94dc67c-ce7e-11ee-b8cb-b940b0e45762']
 ```
 
-
-
 ```python
 docs_with_score = db.similarity_search_with_score("foo")
 ```
-
 
 ```python
 docs_with_score[0]
 ```
 
-
-
 ```output
 (Document(page_content='foo'), 0.0)
 ```
 
-
-
 ```python
 docs_with_score[1]
 ```
-
-
 
 ```output
 (Document(page_content='A former top litigator in private practice. A former federal public defender. And from a family of public school educators and police officers. A consensus builder. Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democrats and Republicans. \n\nAnd if we are to advance liberty and justice, we need to secure the Border and fix the immigration system. \n\nWe can do both. At our border, we’ve installed new technology like cutting-edge scanners to better detect drug smuggling.  \n\nWe’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.  \n\nWe’re putting in place dedicated immigration judges so families fleeing persecution and violence can have their cases heard faster. \n\nWe’re securing commitments and supporting partners in South and Central America to host more refugees and secure their own borders.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
  0.6946534514427185)
 ```
 
-
 ### Overriding a vectorstore
 
 If you have an existing collection, you override it by doing `from_documents` and setting `pre_delete_collection` = True
-
 
 ```python
 db = Kinetica.from_documents(
@@ -347,31 +318,24 @@ db = Kinetica.from_documents(
 )
 ```
 
-
 ```python
 docs_with_score = db.similarity_search_with_score("foo")
 ```
 
-
 ```python
 docs_with_score[0]
 ```
-
-
 
 ```output
 (Document(page_content='A former top litigator in private practice. A former federal public defender. And from a family of public school educators and police officers. A consensus builder. Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democrats and Republicans. \n\nAnd if we are to advance liberty and justice, we need to secure the Border and fix the immigration system. \n\nWe can do both. At our border, we’ve installed new technology like cutting-edge scanners to better detect drug smuggling.  \n\nWe’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.  \n\nWe’re putting in place dedicated immigration judges so families fleeing persecution and violence can have their cases heard faster. \n\nWe’re securing commitments and supporting partners in South and Central America to host more refugees and secure their own borders.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
  0.6946534514427185)
 ```
 
-
 ### Using a VectorStore as a Retriever
-
 
 ```python
 retriever = store.as_retriever()
 ```
-
 
 ```python
 print(retriever)

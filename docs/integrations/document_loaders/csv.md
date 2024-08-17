@@ -5,10 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # CSV
 
->A [comma-separated values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values) file is a delimited text file that uses a comma to separate values. Each line of the file is a data record. Each record consists of one or more fields, separated by commas.
+> A [comma-separated values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values) file is a delimited text file that uses a comma to separate values. Each line of the file is a data record. Each record consists of one or more fields, separated by commas.
 
 Load [csv](https://en.wikipedia.org/wiki/Comma-separated_values) data with a single row per document.
-
 
 ```python
 <!--IMPORTS:[{"imported": "CSVLoader", "source": "langchain_community.document_loaders.csv_loader", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.CSVLoader.html", "title": "CSV"}]-->
@@ -26,7 +25,6 @@ print(data)
 ## Customizing the csv parsing and loading
 
 See the [csv module](https://docs.python.org/3/library/csv.html) documentation for more information of what csv args are supported.
-
 
 ```python
 loader = CSVLoader(
@@ -51,7 +49,6 @@ Use the `source_column` argument to specify a source for the document created fr
 
 This is useful when using documents loaded from CSV files for chains that answer questions using sources.
 
-
 ```python
 loader = CSVLoader(file_path="./example_data/mlb_teams_2012.csv", source_column="Team")
 
@@ -65,7 +62,6 @@ print(data)
 ## `UnstructuredCSVLoader`
 
 You can also load the table using the `UnstructuredCSVLoader`. One advantage of using `UnstructuredCSVLoader` is that if you use it in `"elements"` mode, an HTML representation of the table will be available in the metadata.
-
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredCSVLoader", "source": "langchain_community.document_loaders.csv_loader", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.UnstructuredCSVLoader.html", "title": "CSV"}]-->

@@ -19,11 +19,9 @@ This guide assumes familiarity with the following concepts:
 
 :::
 
-
 When composing chains with several steps, sometimes you will want to pass data from previous steps unchanged for use as input to a later step. The [`RunnablePassthrough`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html) class allows you to do just this, and is typically is used in conjuction with a [RunnableParallel](/docs/how_to/parallel/) to pass data through to a later step in your constructed chains.
 
 See the example below:
-
 
 ```python
 %pip install -qU langchain langchain-openai
@@ -33,7 +31,6 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "How to pass through arguments from one step to the next"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to pass through arguments from one step to the next"}]-->
@@ -47,12 +44,9 @@ runnable = RunnableParallel(
 runnable.invoke({"num": 1})
 ```
 
-
-
 ```output
 {'passed': {'num': 1}, 'modified': 2}
 ```
-
 
 As seen above, `passed` key was called with `RunnablePassthrough()` and so it simply passed on `{'num': 1}`. 
 
@@ -61,7 +55,6 @@ We also set a second key in the map with `modified`. This uses a lambda to set a
 ## Retrieval Example
 
 In the example below, we see a more real-world use case where we use `RunnablePassthrough` along with `RunnableParallel` in a chain to properly format inputs to a prompt:
-
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to pass through arguments from one step to the next"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to pass through arguments from one step to the next"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to pass through arguments from one step to the next"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to pass through arguments from one step to the next"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to pass through arguments from one step to the next"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to pass through arguments from one step to the next"}]-->
@@ -93,12 +86,9 @@ retrieval_chain = (
 retrieval_chain.invoke("where did harrison work?")
 ```
 
-
-
 ```output
 'Harrison worked at Kensho.'
 ```
-
 
 Here the input to prompt is expected to be a map with keys "context" and "question". The user input is just the question. So we need to get the context using our retriever and passthrough the user input under the "question" key. The `RunnablePassthrough` allows us to pass on the user's question to the prompt and model. 
 

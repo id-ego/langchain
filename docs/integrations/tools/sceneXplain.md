@@ -5,18 +5,15 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # SceneXplain
 
-
 [SceneXplain](https://scenex.jina.ai/) is an ImageCaptioning service accessible through the SceneXplain Tool.
 
 To use this tool, you'll need to make an account and fetch your API Token [from the website](https://scenex.jina.ai/api). Then you can instantiate the tool.
-
 
 ```python
 import os
 
 os.environ["SCENEX_API_KEY"] = "<YOUR_API_KEY>"
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "SceneXplain"}]-->
@@ -26,7 +23,6 @@ tools = load_tools(["sceneXplain"])
 ```
 
 Or directly instantiate the tool.
-
 
 ```python
 <!--IMPORTS:[{"imported": "SceneXplainTool", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.scenexplain.tool.SceneXplainTool.html", "title": "SceneXplain"}]-->
@@ -38,7 +34,6 @@ tool = SceneXplainTool()
 ## Usage in an Agent
 
 The tool can be used in any LangChain agent as follows:
-
 
 ```python
 <!--IMPORTS:[{"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "SceneXplain"}, {"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "SceneXplain"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "SceneXplain"}]-->

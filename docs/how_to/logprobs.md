@@ -18,11 +18,9 @@ Certain chat models can be configured to return token-level log probabilities re
 
 Install the LangChain x OpenAI package and set your API key
 
-
 ```python
 %pip install -qU langchain-openai
 ```
-
 
 ```python
 import getpass
@@ -32,7 +30,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ```
 
 For the OpenAI API to return log probabilities we need to configure the `logprobs=True` param. Then, the logprobs are included on each output [`AIMessage`](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html) as part of the `response_metadata`:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to get log probabilities"}]-->
@@ -44,8 +41,6 @@ msg = llm.invoke(("human", "how are you today"))
 
 msg.response_metadata["logprobs"]["content"][:5]
 ```
-
-
 
 ```output
 [{'token': 'I', 'bytes': [73], 'logprob': -0.26341408, 'top_logprobs': []},
@@ -67,9 +62,7 @@ msg.response_metadata["logprobs"]["content"][:5]
   'top_logprobs': []}]
 ```
 
-
 And are part of streamed Message chunks as well:
-
 
 ```python
 ct = 0

@@ -11,7 +11,6 @@ This notebook demonstrates a sample composition of the `Speak`, `Klarna`, and `S
 
 ### First, import dependencies and load the LLM
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Natural Language API Toolkits"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Natural Language API Toolkits"}, {"imported": "NLAToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.nla.toolkit.NLAToolkit.html", "title": "Natural Language API Toolkits"}, {"imported": "Requests", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.requests.Requests.html", "title": "Natural Language API Toolkits"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Natural Language API Toolkits"}]-->
 from langchain.agents import AgentType, initialize_agent
@@ -19,7 +18,6 @@ from langchain_community.agent_toolkits import NLAToolkit
 from langchain_community.utilities import Requests
 from langchain_openai import OpenAI
 ```
-
 
 ```python
 # Select the LLM to use. Here, we use gpt-3.5-turbo-instruct
@@ -29,7 +27,6 @@ llm = OpenAI(
 ```
 
 ### Next, load the Natural Language API Toolkits
-
 
 ```python
 speak_toolkit = NLAToolkit.from_llm_and_url(llm, "https://api.speak.com/openapi.yaml")
@@ -43,7 +40,6 @@ Attempting to load an OpenAPI 3.0.1 spec.  This may result in degraded performan
 Attempting to load an OpenAPI 3.0.1 spec.  This may result in degraded performance. Convert your OpenAPI spec to 3.1.* spec for better support.
 ```
 ### Create the Agent
-
 
 ```python
 # Slightly tweak the instructions from the default agent
@@ -61,7 +57,6 @@ Final Answer: the final answer to the original input question with the right amo
 When responding with your Final Answer, remember that the person you are responding to CANNOT see any of your Thought/Action/Action Input/Observations, so if there is any relevant information there you need to include it explicitly in your response."""
 ```
 
-
 ```python
 natural_language_tools = speak_toolkit.get_tools() + klarna_toolkit.get_tools()
 mrkl = initialize_agent(
@@ -72,7 +67,6 @@ mrkl = initialize_agent(
     agent_kwargs={"format_instructions": openapi_format_instructions},
 )
 ```
-
 
 ```python
 mrkl.run(
@@ -93,11 +87,9 @@ Final Answer: You can buy two products from the Alé brand in Italian Blue for y
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'You can buy two products from the Alé brand in Italian Blue for your end of year party. The Alé Colour Block Short Sleeve Jersey Men - Italian Blue costs $86.49, and the Alé Dolid Flash Jersey Men - Italian Blue costs $40.00.'
 ```
-
 
 ### Use Auth and add more Endpoints
 
@@ -110,11 +102,9 @@ Since each NLATool exposes a concisee natural language interface to its wrapped 
 1. Go to the [Spoonacular API Console](https://spoonacular.com/food-api/console#Profile) and make a free account.
 2. Click on `Profile` and copy your API key below.
 
-
 ```python
 spoonacular_api_key = ""  # Copy from the API Console
 ```
-
 
 ```python
 requests = Requests(headers={"x-api-key": spoonacular_api_key})
@@ -170,7 +160,6 @@ mrkl = initialize_agent(
 )
 ```
 
-
 ```python
 # Make the query more complex!
 user_input = (
@@ -179,7 +168,6 @@ user_input = (
     " an appropriate recipe to prepare so I can present for the class in Italian?"
 )
 ```
-
 
 ```python
 mrkl.run(user_input)
@@ -202,14 +190,11 @@ Final Answer: To present for your Italian language class, you could wear an Ital
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'To present for your Italian language class, you could wear an Italian Gold Sparkle Perfectina Necklace - Gold, an Italian Design Miami Cuban Link Chain Necklace - Gold, or an Italian Gold Miami Cuban Link Chain Necklace - Gold. For a recipe, you could make Turkey Tomato Cheese Pizza, Broccolini Quinoa Pilaf, Bruschetta Style Pork & Pasta, Salmon Quinoa Risotto, Italian Tuna Pasta, Roasted Brussels Sprouts With Garlic, Asparagus Lemon Risotto, Italian Steamed Artichokes, Crispy Italian Cauliflower Poppers Appetizer, or Pappa Al Pomodoro.'
 ```
 
-
 ## Thank you!
-
 
 ```python
 natural_language_api_tools[1].run(
@@ -217,13 +202,9 @@ natural_language_api_tools[1].run(
 )
 ```
 
-
-
 ```output
 "In Italian, you can say 'Buon appetito' to someone to wish them to enjoy their meal. This phrase is commonly used in Italy when someone is about to eat, often at the beginning of a meal. It's similar to saying 'Bon appétit' in French or 'Guten Appetit' in German."
 ```
-
-
 
 ## Related
 

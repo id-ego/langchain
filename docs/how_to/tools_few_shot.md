@@ -9,7 +9,6 @@ For more complex tool use it's very useful to add few-shot examples to the promp
 
 First let's define our tools and model.
 
-
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to use few-shot prompting with tool calling"}]-->
 from langchain_core.tools import tool
@@ -30,7 +29,6 @@ def multiply(a: int, b: int) -> int:
 tools = [add, multiply]
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use few-shot prompting with tool calling"}]-->
 import os
@@ -45,7 +43,6 @@ llm_with_tools = llm.bind_tools(tools)
 ```
 
 Let's run our model where we can notice that even with some special instructions our model can get tripped up by order of operations. 
-
 
 ```python
 llm_with_tools.invoke(
@@ -65,7 +62,6 @@ llm_with_tools.invoke(
 The model shouldn't be trying to add anything yet, since it technically can't know the results of 119 * 8 yet.
 
 By adding a prompt with some examples we can correct this behavior:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to use few-shot prompting with tool calling"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to use few-shot prompting with tool calling"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to use few-shot prompting with tool calling"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use few-shot prompting with tool calling"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to use few-shot prompting with tool calling"}]-->

@@ -13,7 +13,6 @@ In this notebook we take a look at how to approach this.
 ## Setup
 #### Install dependencies
 
-
 ```python
 # %pip install -qU langchain langchain-community langchain-openai faker langchain-chroma
 ```
@@ -21,7 +20,6 @@ In this notebook we take a look at how to approach this.
 #### Set environment variables
 
 We'll use OpenAI in this example:
-
 
 ```python
 import getpass
@@ -38,7 +36,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 
 We will generate a bunch of fake names
 
-
 ```python
 from faker import Faker
 
@@ -49,46 +46,35 @@ names = [fake.name() for _ in range(10000)]
 
 Let's look at some of the names
 
-
 ```python
 names[0]
 ```
-
-
 
 ```output
 'Hayley Gonzalez'
 ```
 
-
-
 ```python
 names[567]
 ```
-
-
 
 ```output
 'Jesse Knight'
 ```
 
-
 ## Query Analysis
 
 We can now set up a baseline query analysis
 
-
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
 ```
-
 
 ```python
 class Search(BaseModel):
     query: str
     author: str
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How deal with high cardinality categoricals when doing query analysis"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How deal with high cardinality categoricals when doing query analysis"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How deal with high cardinality categoricals when doing query analysis"}]-->
@@ -113,36 +99,27 @@ query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
 We can see that if we spell the name exactly correctly, it knows how to handle it
 
-
 ```python
 query_analyzer.invoke("what are books about aliens by Jesse Knight")
 ```
-
-
 
 ```output
 Search(query='books about aliens', author='Jesse Knight')
 ```
 
-
 The issue is that the values you want to filter on may NOT be spelled exactly correctly
-
 
 ```python
 query_analyzer.invoke("what are books about aliens by jess knight")
 ```
 
-
-
 ```output
 Search(query='books about aliens', author='Jess Knight')
 ```
 
-
 ### Add in all values
 
 One way around this is to add ALL possible values to the prompt. That will generally guide the query in the right direction
-
 
 ```python
 system = """Generate a relevant search query for a library system.
@@ -161,13 +138,11 @@ base_prompt = ChatPromptTemplate.from_messages(
 prompt = base_prompt.partial(authors=", ".join(names))
 ```
 
-
 ```python
 query_analyzer_all = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
 
 However... if the list of categoricals is long enough, it may error!
-
 
 ```python
 try:
@@ -180,29 +155,23 @@ Error code: 400 - {'error': {'message': "This model's maximum context length is 
 ```
 We can try to use a longer context window... but with so much information in there, it is not garunteed to pick it up reliably
 
-
 ```python
 llm_long = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0)
 structured_llm_long = llm_long.with_structured_output(Search)
 query_analyzer_all = {"question": RunnablePassthrough()} | prompt | structured_llm_long
 ```
 
-
 ```python
 query_analyzer_all.invoke("what are books about aliens by jess knight")
 ```
-
-
 
 ```output
 Search(query='aliens', author='Kevin Knight')
 ```
 
-
 ### Find and all relevant values
 
 Instead, what we can do is create an index over the relevant values and then query that for the N most relevant values,
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How deal with high cardinality categoricals when doing query analysis"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How deal with high cardinality categoricals when doing query analysis"}]-->
@@ -213,14 +182,12 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 vectorstore = Chroma.from_texts(names, embeddings, collection_name="author_names")
 ```
 
-
 ```python
 def select_names(question):
     _docs = vectorstore.similarity_search(question, k=10)
     _names = [d.page_content for d in _docs]
     return ", ".join(_names)
 ```
-
 
 ```python
 create_prompt = {
@@ -229,40 +196,30 @@ create_prompt = {
 } | base_prompt
 ```
 
-
 ```python
 query_analyzer_select = create_prompt | structured_llm
 ```
-
 
 ```python
 create_prompt.invoke("what are books by jess knight")
 ```
 
-
-
 ```output
 ChatPromptValue(messages=[SystemMessage(content='Generate a relevant search query for a library system.\n\n`author` attribute MUST be one of:\n\nJesse Knight, Kelly Knight, Scott Knight, Richard Knight, Andrew Knight, Katherine Knight, Erica Knight, Ashley Knight, Becky Knight, Kevin Knight\n\nDo NOT hallucinate author name!'), HumanMessage(content='what are books by jess knight')])
 ```
-
-
 
 ```python
 query_analyzer_select.invoke("what are books about aliens by jess knight")
 ```
 
-
-
 ```output
 Search(query='books about aliens', author='Jesse Knight')
 ```
-
 
 ### Replace after selection
 
 Another method is to let the LLM fill in whatever value, but then convert that value to a valid value.
 This can actually be done with the Pydantic class itself!
-
 
 ```python
 from langchain_core.pydantic_v1 import validator
@@ -276,7 +233,6 @@ class Search(BaseModel):
     def double(cls, v: str) -> str:
         return vectorstore.similarity_search(v, k=1)[0].page_content
 ```
-
 
 ```python
 system = """Generate a relevant search query for a library system"""
@@ -292,18 +248,13 @@ corrective_query_analyzer = (
 )
 ```
 
-
 ```python
 corrective_query_analyzer.invoke("what are books about aliens by jes knight")
 ```
 
-
-
 ```output
 Search(query='books about aliens', author='Jesse Knight')
 ```
-
-
 
 ```python
 # TODO: show trigram similarity

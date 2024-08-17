@@ -9,12 +9,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to use an LLM hosted on an `Azure ML Online Endpoint`.
 
-
 ```python
 ##Installing the langchain packages needed to use the integration
 %pip install -qU langchain-community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AzureMLOnlineEndpoint", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.AzureMLOnlineEndpoint.html", "title": "Azure ML"}]-->
@@ -45,7 +43,6 @@ The `content_formatter` parameter is a handler class for transforming the reques
 
 ### Example: LlaMa 2 completions with real-time endpoints
 
-
 ```python
 <!--IMPORTS:[{"imported": "AzureMLEndpointApiType", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.AzureMLEndpointApiType.html", "title": "Azure ML"}, {"imported": "CustomOpenAIContentFormatter", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.CustomOpenAIContentFormatter.html", "title": "Azure ML"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Azure ML"}]-->
 from langchain_community.llms.azureml_endpoint import (
@@ -67,14 +64,12 @@ response
 
 Model parameters can also be indicated during invocation:
 
-
 ```python
 response = llm.invoke("Write me a song about sparkling water:", temperature=0.5)
 response
 ```
 
 ### Example: Chat completions with pay-as-you-go deployments (model as a service)
-
 
 ```python
 <!--IMPORTS:[{"imported": "AzureMLEndpointApiType", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.AzureMLEndpointApiType.html", "title": "Azure ML"}, {"imported": "CustomOpenAIContentFormatter", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.CustomOpenAIContentFormatter.html", "title": "Azure ML"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Azure ML"}]-->
@@ -98,7 +93,6 @@ response
 ### Example: Custom content formatter
 
 Below is an example using a summarization model from Hugging Face.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AzureMLOnlineEndpoint", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.AzureMLOnlineEndpoint.html", "title": "Azure ML"}, {"imported": "ContentFormatterBase", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.ContentFormatterBase.html", "title": "Azure ML"}]-->
@@ -169,7 +163,6 @@ print(summarized_text)
 
 ### Example: Dolly with LLMChain
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Azure ML"}, {"imported": "DollyContentFormatter", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.DollyContentFormatter.html", "title": "Azure ML"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Azure ML"}]-->
 from langchain.chains import LLMChain
@@ -198,7 +191,6 @@ print(chain.invoke({"word_count": 100, "topic": "how to make friends"}))
 ## Serializing an LLM
 You can also save and load LLM configurations
 
-
 ```python
 <!--IMPORTS:[{"imported": "load_llm", "source": "langchain_community.llms.loading", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.loading.load_llm.html", "title": "Azure ML"}]-->
 from langchain_community.llms.loading import load_llm
@@ -218,7 +210,6 @@ loaded_llm = load_llm("azureml.json")
 
 print(loaded_llm)
 ```
-
 
 ## Related
 

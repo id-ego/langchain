@@ -9,7 +9,6 @@ This notebook shows how to load chat messages from Twitter to fine-tune on. We d
 
 First, use Apify to export tweets. An example
 
-
 ```python
 <!--IMPORTS:[{"imported": "convert_message_to_dict", "source": "langchain_community.adapters.openai", "docs": "https://api.python.langchain.com/en/latest/adapters/langchain_community.adapters.openai.convert_message_to_dict.html", "title": "Twitter (via Apify)"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Twitter (via Apify)"}]-->
 import json
@@ -18,12 +17,10 @@ from langchain_community.adapters.openai import convert_message_to_dict
 from langchain_core.messages import AIMessage
 ```
 
-
 ```python
 with open("example_data/dataset_twitter-scraper_2023-08-23_22-13-19-740.json") as f:
     data = json.load(f)
 ```
-
 
 ```python
 # Filter out tweets that reference other tweets, because it's a bit weird

@@ -10,7 +10,6 @@ This is a quick reference for all the most important LCEL primitives. For more a
 ### Invoke a runnable
 #### [Runnable.invoke()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.invoke) / [Runnable.ainvoke()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.ainvoke)
 
-
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
 from langchain_core.runnables import RunnableLambda
@@ -22,16 +21,12 @@ runnable.invoke(5)
 # await runnable.ainvoke(5)
 ```
 
-
-
 ```output
 '5'
 ```
 
-
 ### Batch a runnable
 #### [Runnable.batch()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.batch) / [Runnable.abatch()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.abatch)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -44,16 +39,12 @@ runnable.batch([7, 8, 9])
 # await runnable.abatch([7, 8, 9])
 ```
 
-
-
 ```output
 ['7', '8', '9']
 ```
 
-
 ### Stream a runnable
 #### [Runnable.stream()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.stream) / [Runnable.astream()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -84,7 +75,6 @@ for chunk in runnable.stream(range(5)):
 ### Compose runnables
 #### Pipe operator `|`
 
-
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
 from langchain_core.runnables import RunnableLambda
@@ -97,16 +87,12 @@ chain = runnable1 | runnable2
 chain.invoke(2)
 ```
 
-
-
 ```output
 [{'foo': 2}, {'foo': 2}]
 ```
 
-
 ### Invoke runnables in parallel
 #### [RunnableParallel](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -120,16 +106,12 @@ chain = RunnableParallel(first=runnable1, second=runnable2)
 chain.invoke(2)
 ```
 
-
-
 ```output
 {'first': {'foo': 2}, 'second': [2, 2]}
 ```
 
-
 ### Turn any function into a runnable
 #### [RunnableLambda](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -144,16 +126,12 @@ runnable = RunnableLambda(func)
 runnable.invoke(2)
 ```
 
-
-
 ```output
 7
 ```
 
-
 ### Merge input and output dicts
 #### [RunnablePassthrough.assign](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -166,16 +144,12 @@ chain = RunnablePassthrough.assign(bar=runnable1)
 chain.invoke({"foo": 10})
 ```
 
-
-
 ```output
 {'foo': 10, 'bar': 17}
 ```
 
-
 ### Include input dict in output dict
 #### [RunnablePassthrough](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -192,16 +166,12 @@ chain = RunnableParallel(bar=runnable1, baz=RunnablePassthrough())
 chain.invoke({"foo": 10})
 ```
 
-
-
 ```output
 {'bar': 17, 'baz': {'foo': 10}}
 ```
 
-
 ### Add default invocation args
 #### [Runnable.bind](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.bind)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -222,16 +192,12 @@ bound_runnable1 = runnable1.bind(other_arg="bye")
 bound_runnable1.invoke({"bar": "hello"})
 ```
 
-
-
 ```output
 {'bar': 'hello', 'foo': 'bye'}
 ```
 
-
 ### Add fallbacks
 #### [Runnable.with_fallbacks](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_fallbacks)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -245,16 +211,12 @@ chain = runnable1.with_fallbacks([runnable2])
 chain.invoke(5)
 ```
 
-
-
 ```output
 '5foo'
 ```
 
-
 ### Add retries
 #### [Runnable.with_retry](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_retry)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -279,15 +241,12 @@ attempt with counter=0
 attempt with counter=1
 ```
 
-
 ```output
 2.0
 ```
 
-
 ### Configure runnable execution
 #### [RunnableConfig](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -302,16 +261,12 @@ chain = RunnableParallel(first=runnable1, second=runnable2, third=runnable3)
 chain.invoke(7, config={"max_concurrency": 2})
 ```
 
-
-
 ```output
 {'first': {'foo': 7}, 'second': [7, 7], 'third': '7'}
 ```
 
-
 ### Add default config to runnable
 #### [Runnable.with_config](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_config)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -327,16 +282,12 @@ configured_chain = chain.with_config(max_concurrency=2)
 chain.invoke(7)
 ```
 
-
-
 ```output
 {'first': {'foo': 7}, 'second': [7, 7], 'third': '7'}
 ```
 
-
 ### Make runnable attributes configurable
 #### [Runnable.with_configurable_fields](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableSerializable.html#langchain_core.runnables.base.RunnableSerializable.configurable_fields)
-
 
 ```python
 <!--IMPORTS:[{"imported": "ConfigurableField", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableField.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableSerializable", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableSerializable.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -371,28 +322,20 @@ configurable_runnable1.invoke(
 )
 ```
 
-
-
 ```output
 {'not bar': 3}
 ```
-
-
 
 ```python
 configurable_runnable1.invoke({"foo": 10})
 ```
 
-
-
 ```output
 {'bar': 3}
 ```
 
-
 ### Make chain components configurable
 #### [Runnable.with_configurable_alternatives](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableSerializable.html#langchain_core.runnables.base.RunnableSerializable.configurable_alternatives)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -431,27 +374,19 @@ chain = runnable1 | configurable_runnable
 chain.invoke(7, config={"configurable": {"second_step": "string"}})
 ```
 
-
-
 ```output
 "{'foo': 7}"
 ```
-
-
 
 ```python
 chain.invoke(7)
 ```
 
-
-
 ```output
 [{'foo': 7}]
 ```
 
-
 ### Build a chain dynamically based on input
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -465,28 +400,20 @@ chain = RunnableLambda(lambda x: runnable1 if x > 6 else runnable2)
 chain.invoke(7)
 ```
 
-
-
 ```output
 {'foo': 7}
 ```
-
-
 
 ```python
 chain.invoke(5)
 ```
 
-
-
 ```output
 [5, 5]
 ```
 
-
 ### Generate a stream of events
 #### [Runnable.astream_events](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream_events)
-
 
 ```python
 # | echo: false
@@ -495,7 +422,6 @@ import nest_asyncio
 
 nest_asyncio.apply()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -538,7 +464,6 @@ event=on_chain_end | name=RunnableSequence | data={'output': {'foo': 'bar'}}
 ### Yield batched outputs as they complete
 #### [Runnable.batch_as_completed](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.batch_as_completed) / [Runnable.abatch_as_completed](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.abatch_as_completed)
 
-
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
 import time
@@ -563,7 +488,6 @@ slept 5
 ### Return subset of output dict
 #### [Runnable.pick](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.pick)
 
-
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "LangChain Expression Language Cheatsheet"}]-->
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
@@ -574,16 +498,12 @@ chain = RunnablePassthrough.assign(foo=runnable1).pick(["foo", "bar"])
 chain.invoke({"bar": "hi", "baz": 2})
 ```
 
-
-
 ```output
 {'foo': 7, 'bar': 'hi'}
 ```
 
-
 ### Declaratively make a batched version of a runnable
 #### [Runnable.map](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.map)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -597,16 +517,12 @@ chain = runnable1 | runnable2.map()
 chain.invoke(3)
 ```
 
-
-
 ```output
 [5, 6, 7]
 ```
 
-
 ### Get a graph representation of a runnable
 #### [Runnable.get_graph](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.get_graph)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -651,7 +567,6 @@ chain.get_graph().print_ascii()
 ```
 ### Get all prompts in a chain
 #### [Runnable.get_prompts](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.get_prompts)
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -711,7 +626,6 @@ really good ai
 ```
 ### Add lifecycle listeners
 #### [Runnable.with_listeners](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_listeners)
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "Run", "source": "langchain_core.tracers.schemas", "docs": "https://api.python.langchain.com/en/latest/tracers/langchain_core.tracers.schemas.Run.html", "title": "LangChain Expression Language Cheatsheet"}]-->

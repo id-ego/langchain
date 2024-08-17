@@ -5,7 +5,7 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Neo4j Vector Index
 
->[Neo4j](https://neo4j.com/) is an open-source graph database with integrated support for vector similarity search
+> [Neo4j](https://neo4j.com/) is an open-source graph database with integrated support for vector similarity search
 
 It supports:
 
@@ -17,7 +17,6 @@ This notebook shows how to use the Neo4j vector index (`Neo4jVector`).
 
 See the [installation instruction](https://neo4j.com/docs/operations-manual/current/installation/).
 
-
 ```python
 # Pip install necessary package
 %pip install --upgrade --quiet  neo4j
@@ -26,7 +25,6 @@ See the [installation instruction](https://neo4j.com/docs/operations-manual/curr
 ```
 
 We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
-
 
 ```python
 import getpass
@@ -47,7 +45,6 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
-
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
 
@@ -57,7 +54,6 @@ docs = text_splitter.split_documents(documents)
 
 embeddings = OpenAIEmbeddings()
 ```
-
 
 ```python
 # Neo4jVector requires the Neo4j database credentials
@@ -74,7 +70,6 @@ password = "password"
 
 ## Similarity Search with Cosine Distance (Default)
 
-
 ```python
 # The Neo4jVector Module will connect to Neo4j and create a vector index if needed.
 
@@ -83,12 +78,10 @@ db = Neo4jVector.from_documents(
 )
 ```
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db.similarity_search_with_score(query, k=2)
 ```
-
 
 ```python
 for doc, score in docs_with_score:
@@ -128,7 +121,6 @@ We’re securing commitments and supporting partners in South and Central Americ
 Above, we created a vectorstore from scratch. However, often times we want to work with an existing vectorstore.
 In order to do that, we can initialize it directly.
 
-
 ```python
 index_name = "vector"  # default index name
 
@@ -143,7 +135,6 @@ store = Neo4jVector.from_existing_index(
 
 We can also initialize a vectorstore from existing graph using the `from_existing_graph` method. This method pulls relevant text information from the database, and calculates and stores the text embeddings back to the database.
 
-
 ```python
 # First we create sample data in graph
 store.query(
@@ -151,13 +142,9 @@ store.query(
 )
 ```
 
-
-
 ```output
 []
 ```
-
-
 
 ```python
 # Now we initialize from existing graph
@@ -174,20 +161,15 @@ existing_graph = Neo4jVector.from_existing_graph(
 result = existing_graph.similarity_search("Slovenia", k=1)
 ```
 
-
 ```python
 result[0]
 ```
-
-
 
 ```output
 Document(page_content='\nname: Tomaz\nlocation: Slovenia', metadata={'age': 33, 'hobby': 'Bicycle'})
 ```
 
-
 Neo4j also supports relationship vector indexes, where an embedding is stored as a relationship property and indexed. A relationship vector index cannot be populated via LangChain, but you can connect it to existing relationship vector indexes.
-
 
 ```python
 # First we create sample data and index in graph
@@ -213,13 +195,9 @@ OPTIONS {indexConfig: {
 )
 ```
 
-
-
 ```output
 []
 ```
-
-
 
 ```python
 relationship_vector = Neo4jVector.from_existing_relationship_index(
@@ -233,20 +211,16 @@ relationship_vector = Neo4jVector.from_existing_relationship_index(
 relationship_vector.similarity_search("Example")
 ```
 
-
-
 ```output
 [Document(page_content='example text')]
 ```
 
-
 ### Metadata filtering
 
 Neo4j vector store also supports metadata filtering by combining parallel runtime and exact nearest neighbor search.
-_Requires Neo4j 5.18 or greater version._
+*Requires Neo4j 5.18 or greater version.*
 
 Equality filtering has the following syntax.
-
 
 ```python
 existing_graph.similarity_search(
@@ -255,12 +229,9 @@ existing_graph.similarity_search(
 )
 ```
 
-
-
 ```output
 [Document(page_content='\nname: Tomaz\nlocation: Slovenia', metadata={'age': 33, 'hobby': 'Bicycle'})]
 ```
-
 
 Metadata filtering also support the following operators:
 
@@ -276,7 +247,6 @@ Metadata filtering also support the following operators:
 * `$like: Text contains value`
 * `$ilike: lowered text contains value`
 
-
 ```python
 existing_graph.similarity_search(
     "Slovenia",
@@ -284,15 +254,11 @@ existing_graph.similarity_search(
 )
 ```
 
-
-
 ```output
 [Document(page_content='\nname: Tomaz\nlocation: Slovenia', metadata={'age': 33, 'hobby': 'Bicycle'})]
 ```
 
-
 You can also use `OR` operator between filters
-
 
 ```python
 existing_graph.similarity_search(
@@ -301,44 +267,32 @@ existing_graph.similarity_search(
 )
 ```
 
-
-
 ```output
 [Document(page_content='\nname: Tomaz\nlocation: Slovenia', metadata={'age': 33, 'hobby': 'Bicycle'})]
 ```
 
-
 ### Add documents
 We can add documents to the existing vectorstore.
-
 
 ```python
 store.add_documents([Document(page_content="foo")])
 ```
 
-
-
 ```output
 ['acbd18db4cc2f85cedef654fccc4a4d8']
 ```
-
-
 
 ```python
 docs_with_score = store.similarity_search_with_score("foo")
 ```
 
-
 ```python
 docs_with_score[0]
 ```
 
-
-
 ```output
 (Document(page_content='foo'), 0.9999997615814209)
 ```
-
 
 ## Customize response with retrieval query
 
@@ -360,7 +314,6 @@ The retrieval query must return the following three columns:
 
 Learn more in this [blog post](https://medium.com/neo4j/implementing-rag-how-to-write-a-graph-retrieval-query-in-langchain-74abf13044f2).
 
-
 ```python
 retrieval_query = """
 RETURN "Name:" + node.name AS text, score, {foo:"bar"} AS metadata
@@ -376,15 +329,11 @@ retrieval_example = Neo4jVector.from_existing_index(
 retrieval_example.similarity_search("Foo", k=1)
 ```
 
-
-
 ```output
 [Document(page_content='Name:Tomaz', metadata={'foo': 'bar'})]
 ```
 
-
 Here is an example of passing all node properties except for `embedding` as a dictionary to `text` column,
-
 
 ```python
 retrieval_query = """
@@ -401,16 +350,12 @@ retrieval_example = Neo4jVector.from_existing_index(
 retrieval_example.similarity_search("Foo", k=1)
 ```
 
-
-
 ```output
 [Document(page_content='name: Tomaz\nage: 33\nhobby: Bicycle\n', metadata={'foo': 'bar'})]
 ```
 
-
 You can also pass Cypher parameters to the retrieval query.
 Parameters can be used for additional filtering, traversals, etc...
-
 
 ```python
 retrieval_query = """
@@ -427,17 +372,13 @@ retrieval_example = Neo4jVector.from_existing_index(
 retrieval_example.similarity_search("Foo", k=1, params={"extra": "ParamInfo"})
 ```
 
-
-
 ```output
 [Document(page_content='location: Slovenia\nextra: ParamInfo\nname: Tomaz\nage: 33\nhobby: Bicycle\nembedding: None\n', metadata={'foo': 'bar'})]
 ```
 
-
 ## Hybrid search (vector + keyword)
 
 Neo4j integrates both vector and keyword indexes, which allows you to use a hybrid search approach
-
 
 ```python
 # The Neo4jVector Module will connect to Neo4j and create a vector and keyword indices if needed.
@@ -452,7 +393,6 @@ hybrid_db = Neo4jVector.from_documents(
 ```
 
 To load the hybrid search from existing indexes, you have to provide both the vector and keyword indices
-
 
 ```python
 index_name = "vector"  # default index name
@@ -473,23 +413,18 @@ store = Neo4jVector.from_existing_index(
 
 This section shows how to use `Neo4jVector` as a retriever.
 
-
 ```python
 retriever = store.as_retriever()
 retriever.invoke(query)[0]
 ```
 
-
-
 ```output
 Document(page_content='Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. \n\nTonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. \n\nOne of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court. \n\nAnd I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.', metadata={'source': '../../how_to/state_of_the_union.txt'})
 ```
 
-
 ## Question Answering with Sources
 
 This section goes over how to do question-answering with sources over an Index. It does this by using the `RetrievalQAWithSourcesChain`, which does the lookup of the documents from an Index. 
-
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQAWithSourcesChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.qa_with_sources.retrieval.RetrievalQAWithSourcesChain.html", "title": "Neo4j Vector Index"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Neo4j Vector Index"}]-->
@@ -497,13 +432,11 @@ from langchain.chains import RetrievalQAWithSourcesChain
 from langchain_openai import ChatOpenAI
 ```
 
-
 ```python
 chain = RetrievalQAWithSourcesChain.from_chain_type(
     ChatOpenAI(temperature=0), chain_type="stuff", retriever=retriever
 )
 ```
-
 
 ```python
 chain.invoke(
@@ -512,14 +445,10 @@ chain.invoke(
 )
 ```
 
-
-
 ```output
 {'answer': 'The president honored Justice Stephen Breyer for his service to the country and mentioned his retirement from the United States Supreme Court.\n',
  'sources': '../../how_to/state_of_the_union.txt'}
 ```
-
-
 
 ## Related
 

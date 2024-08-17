@@ -9,15 +9,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook demonstrates how to use Rockset as a document loader in langchain. To get started, make sure you have a Rockset account and an API key available.
 
-
-
-
 ## Setting up the environment
 
 1. Go to the [Rockset console](https://console.rockset.com/apikeys) and get an API key. Find your API region from the [API reference](https://rockset.com/docs/rest-api/#introduction). For the purpose of this notebook, we will assume you're using Rockset from `Oregon(us-west-2)`.
 2. Set your the environment variable `ROCKSET_API_KEY`.
 3. Install the Rockset python client, which will be used by langchain to interact with the Rockset database.
-
 
 ```python
 %pip install --upgrade --quiet  rockset
@@ -25,7 +21,6 @@ This notebook demonstrates how to use Rockset as a document loader in langchain.
 
 # Loading Documents
 The Rockset integration with LangChain allows you to load documents from Rockset collections with SQL queries. In order to do this you must construct a `RocksetLoader` object. Here is an example snippet that initializes a `RocksetLoader`.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RocksetLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.rocksetdb.RocksetLoader.html", "title": "Rockset"}]-->
@@ -50,13 +45,11 @@ The `text` column in the collection is used as the page content, and the record'
 
 To execute the query and access an iterator over the resulting `Document`s, run:
 
-
 ```python
 loader.lazy_load()
 ```
 
 To execute the query and access all resulting `Document`s at once, run:
-
 
 ```python
 loader.load()
@@ -84,7 +77,6 @@ Here is an example response of `loader.load()`:
 
 You can choose to use multiple columns as content:
 
-
 ```python
 <!--IMPORTS:[{"imported": "RocksetLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.rocksetdb.RocksetLoader.html", "title": "Rockset"}]-->
 from langchain_community.document_loaders import RocksetLoader
@@ -108,7 +100,6 @@ You can define you own function to join content columns by setting the `content_
 
 For example, if you wanted to join sentence1 and sentence2 with a space instead of a new line, you could set `content_columns_joiner` like so:
 
-
 ```python
 RocksetLoader(
     RocksetClient(Regions.usw2a1, "<api key>"),
@@ -128,7 +119,6 @@ This is the first sentence. This is the second sentence.
 
 Oftentimes you want to include the column name in the `page_content`. You can do that like this:
 
-
 ```python
 RocksetLoader(
     RocksetClient(Regions.usw2a1, "<api key>"),
@@ -146,7 +136,6 @@ This would result in the following `page_content`:
 sentence1: This is the first sentence.
 sentence2: This is the second sentence.
 ```
-
 
 ## Related
 

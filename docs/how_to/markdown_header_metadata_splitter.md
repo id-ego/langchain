@@ -14,14 +14,14 @@ Many chat or Q+A applications involve chunking input documents prior to embeddin
 ```
 When a full paragraph or document is embedded, the embedding process considers both the overall context and the relationships between the sentences and phrases within the text. This can result in a more comprehensive vector representation that captures the broader meaning and themes of the text.
 ```
- 
+
 As mentioned, chunking often aims to keep text with common context together. With this in mind, we might want to specifically honor the structure of the document itself. For example, a markdown file is organized by headers. Creating chunks within specific header groups is an intuitive idea. To address this challenge, we can use [MarkdownHeaderTextSplitter](https://api.python.langchain.com/en/latest/markdown/langchain_text_splitters.markdown.MarkdownHeaderTextSplitter.html). This will split a markdown file by a specified set of headers. 
 
 For example, if we want to split this markdown:
 ```
 md = '# Foo\n\n ## Bar\n\nHi this is Jim  \nHi this is Joe\n\n ## Baz\n\n Hi this is Molly' 
 ```
- 
+
 We can specify the headers to split on:
 ```
 [("#", "Header 1"),("##", "Header 2")]
@@ -37,17 +37,14 @@ Let's have a look at some examples below.
 
 ### Basic usage:
 
-
 ```python
 %pip install -qU langchain-text-splitters
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "MarkdownHeaderTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/markdown/langchain_text_splitters.markdown.MarkdownHeaderTextSplitter.html", "title": "How to split Markdown by Headers"}]-->
 from langchain_text_splitters import MarkdownHeaderTextSplitter
 ```
-
 
 ```python
 markdown_document = "# Foo\n\n    ## Bar\n\nHi this is Jim\n\nHi this is Joe\n\n ### Boo \n\n Hi this is Lance \n\n ## Baz\n\n Hi this is Molly"
@@ -63,29 +60,21 @@ md_header_splits = markdown_splitter.split_text(markdown_document)
 md_header_splits
 ```
 
-
-
 ```output
 [Document(page_content='Hi this is Jim  \nHi this is Joe', metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}),
  Document(page_content='Hi this is Lance', metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}),
  Document(page_content='Hi this is Molly', metadata={'Header 1': 'Foo', 'Header 2': 'Baz'})]
 ```
 
-
-
 ```python
 type(md_header_splits[0])
 ```
-
-
 
 ```output
 langchain_core.documents.base.Document
 ```
 
-
 By default, `MarkdownHeaderTextSplitter` strips headers being split on from the output chunk's content. This can be disabled by setting `strip_headers = False`.
-
 
 ```python
 markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on, strip_headers=False)
@@ -93,19 +82,15 @@ md_header_splits = markdown_splitter.split_text(markdown_document)
 md_header_splits
 ```
 
-
-
 ```output
 [Document(page_content='# Foo  \n## Bar  \nHi this is Jim  \nHi this is Joe', metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}),
  Document(page_content='### Boo  \nHi this is Lance', metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}),
  Document(page_content='## Baz  \nHi this is Molly', metadata={'Header 1': 'Foo', 'Header 2': 'Baz'})]
 ```
 
-
 ### How to return Markdown lines as separate documents
 
 By default, `MarkdownHeaderTextSplitter` aggregates lines based on the headers specified in `headers_to_split_on`. We can disable this by specifying `return_each_line`:
-
 
 ```python
 markdown_splitter = MarkdownHeaderTextSplitter(
@@ -116,8 +101,6 @@ md_header_splits = markdown_splitter.split_text(markdown_document)
 md_header_splits
 ```
 
-
-
 ```output
 [Document(page_content='Hi this is Jim', metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}),
  Document(page_content='Hi this is Joe', metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}),
@@ -125,13 +108,11 @@ md_header_splits
  Document(page_content='Hi this is Molly', metadata={'Header 1': 'Foo', 'Header 2': 'Baz'})]
 ```
 
-
 Note that here header information is retained in the `metadata` for each document.
 
 ### How to constrain chunk size:
 
 Within each markdown group we can then apply any text splitter we want, such as `RecursiveCharacterTextSplitter`, which allows for further control of the chunk size.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to split Markdown by Headers"}]-->
@@ -161,8 +142,6 @@ text_splitter = RecursiveCharacterTextSplitter(
 splits = text_splitter.split_documents(md_header_splits)
 splits
 ```
-
-
 
 ```output
 [Document(page_content='# Intro  \n## History  \nMarkdown[9] is a lightweight markup language for creating formatted text using a plain-text editor. John Gruber created Markdown in 2004 as a markup language that is appealing to human readers in its source code form.[9]', metadata={'Header 1': 'Intro', 'Header 2': 'History'}),

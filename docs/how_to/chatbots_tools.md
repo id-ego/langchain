@@ -23,7 +23,6 @@ For this guide, we'll be using a [tool calling agent](/docs/how_to/agent_executo
 
 You'll need to [sign up for an account](https://tavily.com/) on the Tavily website, and install the following packages:
 
-
 ```python
 %pip install --upgrade --quiet langchain-community langchain-openai tavily-python
 
@@ -41,7 +40,6 @@ Our end goal is to create an agent that can respond conversationally to user que
 
 First, let's initialize Tavily and an OpenAI chat model capable of tool calling:
 
-
 ```python
 <!--IMPORTS:[{"imported": "TavilySearchResults", "source": "langchain_community.tools.tavily_search", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.tavily_search.tool.TavilySearchResults.html", "title": "How to add tools to chatbots"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add tools to chatbots"}]-->
 from langchain_community.tools.tavily_search import TavilySearchResults
@@ -55,7 +53,6 @@ chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0)
 ```
 
 To make our agent conversational, we must also choose a prompt with a placeholder for our chat history. Here's an example:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add tools to chatbots"}]-->
@@ -76,7 +73,6 @@ prompt = ChatPromptTemplate.from_messages(
 
 Great! Now let's assemble our agent:
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to add tools to chatbots"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to add tools to chatbots"}]-->
 from langchain.agents import AgentExecutor, create_tool_calling_agent
@@ -89,7 +85,6 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ## Running the agent
 
 Now that we've set up our agent, let's try interacting with it! It can handle both trivial queries that require no lookup:
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add tools to chatbots"}]-->
@@ -106,15 +101,12 @@ agent_executor.invoke({"messages": [HumanMessage(content="I'm Nemo!")]})
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'messages': [HumanMessage(content="I'm Nemo!")],
  'output': "Hello Nemo! It's great to meet you. How can I assist you today?"}
 ```
 
-
 Or, it can use of the passed search tool to get up to date information if needed:
-
 
 ```python
 agent_executor.invoke(
@@ -142,17 +134,14 @@ You can read more about it in this article: [Great Barrier Reef hit with widespr
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'messages': [HumanMessage(content='What is the current conservation status of the Great Barrier Reef?')],
  'output': "The Great Barrier Reef is currently showing signs of recovery, with record coral cover being seen across much of the reef. This recovery comes after past storms and mass-bleaching events. However, the rapid growth in coral cover appears to have come at the expense of the diversity of coral on the reef, with most of the increases accounted for by fast-growing branching coral called Acropora. There were discussions about the reef's potential inclusion on the World Heritage In Danger list, but the meeting to consider this was indefinitely postponed due to the war in Ukraine.\n\nYou can read more about it in this article: [Great Barrier Reef hit with widespread and severe bleaching event](https://www.abc.net.au/news/2022-08-04/great-barrier-reef-report-says-coral-recovering-after-bleaching/101296186)"}
 ```
 
-
 ## Conversational responses
 
 Because our prompt contains a placeholder for chat history messages, our agent can also take previous interactions into account and respond conversationally like a standard chatbot:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to add tools to chatbots"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add tools to chatbots"}]-->
@@ -177,7 +166,6 @@ agent_executor.invoke(
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'messages': [HumanMessage(content="I'm Nemo!"),
   AIMessage(content='Hello Nemo! How can I assist you today?'),
@@ -185,9 +173,7 @@ agent_executor.invoke(
  'output': 'Your name is Nemo!'}
 ```
 
-
 If preferred, you can also wrap the agent executor in a [`RunnableWithMessageHistory`](/docs/how_to/message_history/) class to internally manage history messages. Let's redeclare it this way:
-
 
 ```python
 agent = create_tool_calling_agent(chat, tools, prompt)
@@ -196,7 +182,6 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
 
 Then, because our agent executor has multiple outputs, we also have to set the `output_messages_key` property when initializing the wrapper:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "How to add tools to chatbots"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to add tools to chatbots"}]-->
@@ -226,15 +211,12 @@ conversational_agent_executor.invoke(
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'messages': [HumanMessage(content="I'm Nemo!")],
  'output': "Hi Nemo! It's great to meet you. How can I assist you today?"}
 ```
 
-
 And then if we rerun our wrapped agent executor:
-
 
 ```python
 conversational_agent_executor.invoke(
@@ -251,14 +233,12 @@ conversational_agent_executor.invoke(
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'messages': [HumanMessage(content="I'm Nemo!"),
   AIMessage(content="Hi Nemo! It's great to meet you. How can I assist you today?"),
   HumanMessage(content='What is my name?')],
  'output': 'Your name is Nemo! How can I assist you today, Nemo?'}
 ```
-
 
 This [LangSmith trace](https://smith.langchain.com/public/1a9f712a-7918-4661-b3ff-d979bcc2af42/r) shows what's going on under the hood.
 

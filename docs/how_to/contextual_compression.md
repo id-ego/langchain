@@ -18,7 +18,6 @@ The Contextual Compression Retriever passes queries to the base retriever, takes
 
 ## Get started
 
-
 ```python
 # Helper function for printing docs
 
@@ -33,8 +32,6 @@ def pretty_print_docs(docs):
 
 ## Using a vanilla vector store retriever
 Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can see that given an example question our retriever returns one or two relevant docs and a few irrelevant docs. And even the relevant docs have a lot of irrelevant information in them.
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "How to do retrieval with contextual compression"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to do retrieval with contextual compression"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to do retrieval with contextual compression"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to do retrieval with contextual compression"}]-->
@@ -111,8 +108,6 @@ Let’s increase Pell Grants and increase our historic support of HBCUs, and inv
 ## Adding contextual compression with an `LLMChainExtractor`
 Now let's wrap our base retriever with a `ContextualCompressionRetriever`. We'll add an `LLMChainExtractor`, which will iterate over the initially returned documents and extract from each only the content that is relevant to the query.
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "How to do retrieval with contextual compression"}, {"imported": "LLMChainExtractor", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.chain_extract.LLMChainExtractor.html", "title": "How to do retrieval with contextual compression"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "How to do retrieval with contextual compression"}]-->
 from langchain.retrievers import ContextualCompressionRetriever
@@ -138,9 +133,6 @@ I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji B
 ## More built-in compressors: filters
 ### `LLMChainFilter`
 The `LLMChainFilter` is slightly simpler but more robust compressor that uses an LLM chain to decide which of the initially retrieved documents to filter out and which ones to return, without manipulating the document contents.
-
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChainFilter", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.chain_filter.LLMChainFilter.html", "title": "How to do retrieval with contextual compression"}]-->
@@ -173,7 +165,6 @@ And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketan
 
 Note that `LLMListwiseRerank` requires a model with the [with_structured_output](/docs/integrations/chat/) method implemented.
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMListwiseRerank", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.listwise_rerank.LLMListwiseRerank.html", "title": "How to do retrieval with contextual compression"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to do retrieval with contextual compression"}]-->
 from langchain.retrievers.document_compressors import LLMListwiseRerank
@@ -205,8 +196,6 @@ And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketan
 ### `EmbeddingsFilter`
 
 Making an extra LLM call over each retrieved document is expensive and slow. The `EmbeddingsFilter` provides a cheaper and faster option by embedding the documents and query and only returning those documents which have sufficiently similar embeddings to the query.
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "EmbeddingsFilter", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter.html", "title": "How to do retrieval with contextual compression"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to do retrieval with contextual compression"}]-->
@@ -254,8 +243,6 @@ Using the `DocumentCompressorPipeline` we can also easily combine multiple compr
 
 Below we create a compressor pipeline by first splitting our docs into smaller chunks, then removing redundant documents, and then filtering based on relevance to the query.
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "DocumentCompressorPipeline", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.base.DocumentCompressorPipeline.html", "title": "How to do retrieval with contextual compression"}, {"imported": "EmbeddingsRedundantFilter", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.embeddings_redundant_filter.EmbeddingsRedundantFilter.html", "title": "How to do retrieval with contextual compression"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to do retrieval with contextual compression"}]-->
 from langchain.retrievers.document_compressors import DocumentCompressorPipeline
@@ -269,7 +256,6 @@ pipeline_compressor = DocumentCompressorPipeline(
     transformers=[splitter, redundant_filter, relevant_filter]
 )
 ```
-
 
 ```python
 compression_retriever = ContextualCompressionRetriever(

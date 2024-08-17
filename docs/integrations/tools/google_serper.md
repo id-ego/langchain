@@ -7,11 +7,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to use the `Google Serper` component to search the web. First you need to sign up for a free account at [serper.dev](https://serper.dev) and get your api key.
 
-
 ```python
 %pip install --upgrade --quiet  langchain-community
 ```
-
 
 ```python
 import os
@@ -20,36 +18,28 @@ import pprint
 os.environ["SERPER_API_KEY"] = ""
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "GoogleSerperAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_serper.GoogleSerperAPIWrapper.html", "title": "Google Serper"}]-->
 from langchain_community.utilities import GoogleSerperAPIWrapper
 ```
 
-
 ```python
 search = GoogleSerperAPIWrapper()
 ```
-
 
 ```python
 search.run("Obama's first name?")
 ```
 
-
-
 ```output
 'Barack Hussein Obama II'
 ```
 
-
 ## As part of a Self Ask With Search Chain
-
 
 ```python
 os.environ["OPENAI_API_KEY"] = ""
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Google Serper"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Google Serper"}, {"imported": "GoogleSerperAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_serper.GoogleSerperAPIWrapper.html", "title": "Google Serper"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Google Serper"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Google Serper"}]-->
@@ -89,15 +79,12 @@ Intermediate answer: [36;1m[1;3mEl Palmar, Spain[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 'El Palmar, Spain'
 ```
 
-
 ## Obtaining results with metadata
 If you would also like to obtain the results in a structured way including metadata. For this we will be using the `results` method of the wrapper.
-
 
 ```python
 search = GoogleSerperAPIWrapper()
@@ -257,7 +244,6 @@ pprint.pp(results)
 ## Searching for Google Images
 We can also query Google Images using this wrapper. For example:
 
-
 ```python
 search = GoogleSerperAPIWrapper(type="images")
 results = search.results("Lion")
@@ -386,7 +372,6 @@ pprint.pp(results)
 ## Searching for Google News
 We can also query Google News using this wrapper. For example:
 
-
 ```python
 search = GoogleSerperAPIWrapper(type="news")
 results = search.results("Tesla Inc.")
@@ -489,7 +474,6 @@ pprint.pp(results)
 ```
 If you want to only receive news articles published in the last hour, you can do the following:
 
-
 ```python
 search = GoogleSerperAPIWrapper(type="news", tbs="qdr:h")
 results = search.results("Tesla Inc.")
@@ -550,10 +534,8 @@ You can specify intermediate time periods by adding a number:
 
 For all supported filters simply go to [Google Search](https://google.com), search for something, click on "Tools", add your date filter and check the URL for "tbs=".
 
-
 ## Searching for Google Places
 We can also query Google Places using this wrapper. For example:
-
 
 ```python
 search = GoogleSerperAPIWrapper(type="places")

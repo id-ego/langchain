@@ -9,13 +9,11 @@ Sometimes, for complex calculations, rather than have an LLM generate the answer
 
 This interface will only return things that are printed - therefore, if you want to use it to calculate an answer, make sure to have it print out the answer.
 
-
 :::caution
 Python REPL can execute arbitrary code on the host machine (e.g., delete files, make network requests). Use with caution.
 
 For more information general security guidelines, please see https://python.langchain.com/v0.2/docs/security/.
 :::
-
 
 ```python
 <!--IMPORTS:[{"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Python REPL"}, {"imported": "PythonREPL", "source": "langchain_experimental.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_experimental.utilities.python.PythonREPL.html", "title": "Python REPL"}]-->
@@ -23,11 +21,9 @@ from langchain_core.tools import Tool
 from langchain_experimental.utilities import PythonREPL
 ```
 
-
 ```python
 python_repl = PythonREPL()
 ```
-
 
 ```python
 python_repl.run("print(1+1)")
@@ -36,12 +32,9 @@ python_repl.run("print(1+1)")
 Python REPL can execute arbitrary code. Use with caution.
 ```
 
-
 ```output
 '2\n'
 ```
-
-
 
 ```python
 # You can create the tool to pass to an agent
@@ -51,7 +44,6 @@ repl_tool = Tool(
     func=python_repl.run,
 )
 ```
-
 
 ## Related
 

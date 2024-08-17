@@ -25,14 +25,12 @@ In this notebook we will show how those parameters map to the LangGraph react ag
 
 This how-to guide uses OpenAI as the LLM. Install the dependencies to run.
 
-
 ```python
 %%capture --no-stderr
 %pip install -U langgraph langchain langchain-openai
 ```
 
 Then, set your OpenAI API key.
-
 
 ```python
 import os
@@ -43,7 +41,6 @@ os.environ["OPENAI_API_KEY"] = "sk-..."
 ## Basic Usage
 
 For basic creation and usage of a tool-calling ReAct-style agent, the functionality is the same. First, let's define a model and tool(s), then we'll use those to create an agent.
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}]-->
@@ -67,7 +64,6 @@ query = "what is the value of magic_function(3)?"
 
 For the LangChain [AgentExecutor](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor), we define a prompt with a placeholder for the agent's scratchpad. The agent can be invoked as follows:
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}]-->
 from langchain.agents import AgentExecutor, create_tool_calling_agent
@@ -89,18 +85,12 @@ agent_executor = AgentExecutor(agent=agent, tools=tools)
 agent_executor.invoke({"input": query})
 ```
 
-
-
 ```output
 {'input': 'what is the value of magic_function(3)?',
  'output': 'The value of `magic_function(3)` is 5.'}
 ```
 
-
 LangGraph's [react agent executor](https://langchain-ai.github.io/langgraph/reference/prebuilt/#create_react_agent) manages a state that is defined by a list of messages. It will continue to process the list until there are no tool calls in the agent's output. To kick it off, we input a list of messages. The output will contain the entire state of the graph-- in this case, the conversation history.
-
-
-
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -115,14 +105,10 @@ messages = app.invoke({"messages": [("human", query)]})
 }
 ```
 
-
-
 ```output
 {'input': 'what is the value of magic_function(3)?',
  'output': 'The value of `magic_function(3)` is 5.'}
 ```
-
-
 
 ```python
 message_history = messages["messages"]
@@ -136,13 +122,10 @@ messages = app.invoke({"messages": message_history + [("human", new_query)]})
 }
 ```
 
-
-
 ```output
 {'input': 'Pardon?',
  'output': 'The value you get when you apply `magic_function` to the input 3 is 5.'}
 ```
-
 
 ## Prompt Templates
 
@@ -157,7 +140,6 @@ With LangGraph [react agent executor](https://langchain-ai.github.io/langgraph/r
 Let's take a look at all of these below. We will pass in custom instructions to get the agent to respond in Spanish.
 
 First up, using `AgentExecutor`:
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -176,13 +158,10 @@ agent_executor = AgentExecutor(agent=agent, tools=tools)
 agent_executor.invoke({"input": query})
 ```
 
-
-
 ```output
 {'input': 'what is the value of magic_function(3)?',
  'output': 'El valor de `magic_function(3)` es 5.'}
 ```
-
 
 Now, let's pass a custom system message to [react agent executor](https://langchain-ai.github.io/langgraph/reference/prebuilt/#create_react_agent).
 
@@ -194,7 +173,6 @@ LangGraph's prebuilt `create_react_agent` does not take a prompt template direct
 - Or a [`Runnable`](/docs/concepts/#langchain-expression-language-lcel), which should take in full graph state. The output is then passed to the language model.
 
 Here's how it looks in action:
-
 
 ```python
 <!--IMPORTS:[{"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}]-->
@@ -213,7 +191,6 @@ messages = app.invoke({"messages": [("user", query)]})
 
 We can also pass in an arbitrary function. This function should take in a list of messages and output a list of messages.
 We can do all types of arbitrary formatting of messages here. In this cases, let's just add a SystemMessage to the start of the list of messages.
-
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -252,7 +229,6 @@ print(
 ### In LangChain
 
 With LangChain's [AgentExecutor](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor.iter), you could add chat [Memory](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor.memory) so it can engage in a multi-turn conversation.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "InMemoryChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.InMemoryChatMessageHistory.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}]-->
@@ -327,7 +303,6 @@ Memory is just [persistence](https://langchain-ai.github.io/langgraph/how-tos/pe
 
 Add a `checkpointer` to the agent and you get chat memory for free.
 
-
 ```python
 from langgraph.checkpoint import MemorySaver  # an in-memory checkpointer
 from langgraph.prebuilt import create_react_agent
@@ -378,7 +353,6 @@ The output of the magic_function for the input of 3 was 5.
 
 With LangChain's [AgentExecutor](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor.iter), you could iterate over the steps using the [stream](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.stream) (or async `astream`) methods or the [iter](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor.iter) method. LangGraph supports stepwise iteration using [stream](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.stream) 
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}]-->
 from langchain.agents import AgentExecutor, create_tool_calling_agent
@@ -422,7 +396,6 @@ for step in agent_executor.stream({"input": query}):
 
 In LangGraph, things are handled natively using [stream](https://langchain-ai.github.io/langgraph/reference/graphs/#langgraph.graph.graph.CompiledGraph.stream) or the asynchronous `astream` method.
 
-
 ```python
 from langgraph.prebuilt import create_react_agent
 from langgraph.prebuilt.chat_agent_executor import AgentState
@@ -455,8 +428,6 @@ for step in app.stream({"messages": [("human", query)]}, stream_mode="updates"):
 
 Setting this parameter on AgentExecutor allows users to access intermediate_steps, which pairs agent actions (e.g., tool invocations) with their outcomes.
 
-
-
 ```python
 agent_executor = AgentExecutor(agent=agent, tools=tools, return_intermediate_steps=True)
 result = agent_executor.invoke({"input": query})
@@ -469,7 +440,6 @@ print(result["intermediate_steps"])
 
 By default the [react agent executor](https://langchain-ai.github.io/langgraph/reference/prebuilt/#create_react_agent) in LangGraph appends all messages to the central state. Therefore, it is easy to see any intermediate steps by just looking at the full state.
 
-
 ```python
 from langgraph.prebuilt import create_react_agent
 
@@ -480,8 +450,6 @@ messages = app.invoke({"messages": [("human", query)]})
 messages
 ```
 
-
-
 ```output
 {'messages': [HumanMessage(content='what is the value of magic_function(3)?', id='cd7d0f49-a0e0-425a-b2b0-603a716058ed'),
   AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_VfZ9287DuybOSrBsQH5X12xf', 'function': {'arguments': '{"input":3}', 'name': 'magic_function'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 14, 'prompt_tokens': 55, 'total_tokens': 69}, 'model_name': 'gpt-4o-2024-05-13', 'system_fingerprint': 'fp_4e2b2da518', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-a1e965cd-bf61-44f9-aec1-8aaecb80955f-0', tool_calls=[{'name': 'magic_function', 'args': {'input': 3}, 'id': 'call_VfZ9287DuybOSrBsQH5X12xf', 'type': 'tool_call'}], usage_metadata={'input_tokens': 55, 'output_tokens': 14, 'total_tokens': 69}),
@@ -489,13 +457,11 @@ messages
   AIMessage(content='The value of `magic_function(3)` is 5.', response_metadata={'token_usage': {'completion_tokens': 14, 'prompt_tokens': 78, 'total_tokens': 92}, 'model_name': 'gpt-4o-2024-05-13', 'system_fingerprint': 'fp_4e2b2da518', 'finish_reason': 'stop', 'logprobs': None}, id='run-abf9341c-ef41-4157-935d-a3be5dfa2f41-0', usage_metadata={'input_tokens': 78, 'output_tokens': 14, 'total_tokens': 92})]}
 ```
 
-
 ## `max_iterations`
 
 ### In LangChain
 
 `AgentExecutor` implements a `max_iterations` parameter, allowing users to abort a run that exceeds a specified number of iterations.
-
 
 ```python
 @tool
@@ -506,7 +472,6 @@ def magic_function(input: str) -> str:
 
 tools = [magic_function]
 ```
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -541,12 +506,10 @@ Invoking: `magic_function` with `{'input': '3'}`
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'what is the value of magic_function(3)?',
  'output': 'Parece que hubo un error al intentar calcular el valor de la función mágica. ¿Te gustaría que lo intente de nuevo?'}
 ```
-
 
 ### In LangGraph
 
@@ -555,7 +518,6 @@ In LangGraph this is controlled via `recursion_limit` configuration parameter.
 Note that in `AgentExecutor`, an "iteration" includes a full turn of tool invocation and execution. In LangGraph, each step contributes to the recursion limit, so we will need to multiply by two (and add one) to get equivalent results.
 
 If the recursion limit is reached, LangGraph raises a specific exception type, that we can catch and manage similarly to AgentExecutor.
-
 
 ```python
 from langgraph.errors import GraphRecursionError
@@ -588,7 +550,6 @@ content='I am currently unable to process the request with the input "3" for the
 ### In LangChain
 
 `AgentExecutor` implements a `max_execution_time` parameter, allowing users to abort a run that exceeds a total time limit.
-
 
 ```python
 import time
@@ -626,19 +587,16 @@ Invoking: `magic_function` with `{'input': '3'}`
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 {'input': 'what is the value of magic_function(3)?',
  'output': 'Agent stopped due to max iterations.'}
 ```
-
 
 ### In LangGraph
 
 With LangGraph's react agent, you can control timeouts on two levels. 
 
 You can set a `step_timeout` to bound each **step**:
-
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -660,7 +618,6 @@ except TimeoutError:
 {'input': 'what is the value of magic_function(3)?', 'output': 'Agent stopped due to max iterations.'}
 ```
 The other way to set a single max timeout for an entire run is to directly use the python stdlib [asyncio](https://docs.python.org/3/library/asyncio.html) library.
-
 
 ```python
 import asyncio
@@ -692,7 +649,6 @@ Task Cancelled.
 ### In LangChain
 
 With LangChain's [AgentExecutor](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor.iter), you could configure an [early_stopping_method](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor.early_stopping_method) to either return a string saying "Agent stopped due to iteration limit or time limit." (`"force"`) or prompt the LLM a final time to respond (`"generate"`).
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}]-->
@@ -739,7 +695,6 @@ Agent stopped due to max iterations.
 
 In LangGraph, you can explicitly handle the response behavior outside the agent, since the full state can be accessed.
 
-
 ```python
 from langgraph.errors import GraphRecursionError
 from langgraph.prebuilt import create_react_agent
@@ -772,7 +727,6 @@ content='It seems there was an issue with the previous attempt. Let me try that 
 With LangChain's [AgentExecutor](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor), you could trim the intermediate steps of long-running agents using [trim_intermediate_steps](https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html#langchain.agents.agent.AgentExecutor.trim_intermediate_steps), which is either an integer (indicating the agent should keep the last N steps) or a custom function.
 
 For instance, we could trim the value so the agent only sees the most recent intermediate step.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to migrate from legacy LangChain agents to LangGraph"}]-->
@@ -849,7 +803,6 @@ Call number: 15
 ### In LangGraph
 
 We can use the [`state_modifier`](https://langchain-ai.github.io/langgraph/reference/prebuilt/#create_react_agent) just as before when passing in [prompt templates](#prompt-templates).
-
 
 ```python
 from langgraph.errors import GraphRecursionError

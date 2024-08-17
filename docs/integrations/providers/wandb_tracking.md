@@ -7,16 +7,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to track your LangChain experiments into one centralized Weights and Biases dashboard. To learn more about prompt engineering and the callback please refer to this Report which explains both alongside the resultant dashboards you can expect to see.
 
-
 <a href="https://colab.research.google.com/drive/1DXH4beT4HFaRKy_Vm4PoxhXVDRf7Ym8L?usp=sharing" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
+[View Report](https://wandb.ai/a-sh0ts/langchain_callback_demo/reports/Prompt-Engineering-LLMs-with-LangChain-and-W-B--VmlldzozNjk1NTUw#👋-how-to-build-a-callback-in-langchain-for-better-prompt-engineering) 
 
-[View Report](https://wandb.ai/a-sh0ts/langchain_callback_demo/reports/Prompt-Engineering-LLMs-with-LangChain-and-W-B--VmlldzozNjk1NTUw#👋-how-to-build-a-callback-in-langchain-for-better-prompt-engineering
-) 
-
-
-**Note**: _the `WandbCallbackHandler` is being deprecated in favour of the `WandbTracer`_ . In future please use the `WandbTracer` as it is more flexible and allows for more granular logging. To know more about the `WandbTracer` refer to the [agent_with_wandb_tracing](/docs/integrations/providers/wandb_tracing) notebook or use the following [colab notebook](http://wandb.me/prompts-quickstart). To know more about Weights & Biases Prompts refer to the following [prompts documentation](https://docs.wandb.ai/guides/prompts).
-
+**Note**: *the `WandbCallbackHandler` is being deprecated in favour of the `WandbTracer`* . In future please use the `WandbTracer` as it is more flexible and allows for more granular logging. To know more about the `WandbTracer` refer to the [agent_with_wandb_tracing](/docs/integrations/providers/wandb_tracing) notebook or use the following [colab notebook](http://wandb.me/prompts-quickstart). To know more about Weights & Biases Prompts refer to the following [prompts documentation](https://docs.wandb.ai/guides/prompts).
 
 ```python
 %pip install --upgrade --quiet  wandb
@@ -26,7 +21,6 @@ This notebook goes over how to track your LangChain experiments into one central
 !python -m spacy download en_core_web_sm
 ```
 
-
 ```python
 import os
 
@@ -34,7 +28,6 @@ os.environ["WANDB_API_KEY"] = ""
 # os.environ["OPENAI_API_KEY"] = ""
 # os.environ["SERPAPI_API_KEY"] = ""
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "WandbCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.wandb_callback.WandbCallbackHandler.html", "title": "Weights & Biases"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Weights & Biases"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Weights & Biases"}]-->
@@ -69,9 +62,7 @@ complexity_metrics: bool = False,
 stream_logs: bool = False,
 ```
 
-
 NOTE: For beta workflows we have made the default analysis based on textstat and the visualizations based on spacy
-
 
 ```python
 """Main function.
@@ -119,7 +110,6 @@ View run at <a href='https://wandb.ai/harrison-chase/langchain_callback_demo/run
 [34m[1mwandb[0m: [33mWARNING[0m The wandb callback is currently in beta and is subject to change based on updates to `langchain`. Please report any issues to https://github.com/wandb/wandb/issues with the tag `langchain`.
 ```
 
-
 ```
 # Defaults for WandbCallbackHandler.flush_tracker(...)
 
@@ -127,10 +117,7 @@ reset: bool = True,
 finish: bool = False,
 ```
 
-
-
 The `flush_tracker` function is used to log LangChain sessions to Weights & Biases. It takes in the LangChain module or agent, and logs at minimum the prompts and generations alongside the serialized form of the LangChain module to the specified Weights & Biases project. By default we reset the session as opposed to concluding the session outright.
-
 
 ```python
 # SCENARIO 1 - LLM
@@ -174,13 +161,11 @@ View project at <a href='https://wandb.ai/harrison-chase/langchain_callback_demo
 View run at <a href='https://wandb.ai/harrison-chase/langchain_callback_demo/runs/jyxma7hu' target="_blank">https://wandb.ai/harrison-chase/langchain_callback_demo/runs/jyxma7hu</a> 
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Weights & Biases"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Weights & Biases"}]-->
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 ```
-
 
 ```python
 # SCENARIO 2 - Chain
@@ -237,12 +222,10 @@ View project at <a href='https://wandb.ai/harrison-chase/langchain_callback_demo
 View run at <a href='https://wandb.ai/harrison-chase/langchain_callback_demo/runs/wzy59zjq' target="_blank">https://wandb.ai/harrison-chase/langchain_callback_demo/runs/wzy59zjq</a> 
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Weights & Biases"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Weights & Biases"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Weights & Biases"}]-->
 from langchain.agents import AgentType, initialize_agent, load_tools
 ```
-
 
 ```python
 # SCENARIO 3 - Agent with Tools

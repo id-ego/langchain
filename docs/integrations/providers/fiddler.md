@@ -4,8 +4,8 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/providers/fiddler
 
 # Fiddler
 
->[Fiddler](https://www.fiddler.ai/) provides a unified platform to monitor, explain, analyze, 
-> and improve ML deployments at an enterprise scale. 
+> [Fiddler](https://www.fiddler.ai/) provides a unified platform to monitor, explain, analyze,
+and improve ML deployments at an enterprise scale. 
 
 ## Installation and Setup
 
@@ -22,7 +22,6 @@ pip install fiddler-client
 ```
 
 ## Callbacks
-
 
 ```python
 <!--IMPORTS:[{"imported": "FiddlerCallbackHandler", "source": "langchain_community.callbacks.fiddler_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.fiddler_callback.FiddlerCallbackHandler.html", "title": "Fiddler"}]-->

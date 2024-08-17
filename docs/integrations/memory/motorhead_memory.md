@@ -5,12 +5,11 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Motörhead
 
->[Motörhead](https://github.com/getmetal/motorhead) is a memory server implemented in Rust. It automatically handles incremental summarization in the background and allows for stateless applications.
+> [Motörhead](https://github.com/getmetal/motorhead) is a memory server implemented in Rust. It automatically handles incremental summarization in the background and allows for stateless applications.
 
 ## Setup
 
 See instructions at [Motörhead](https://github.com/getmetal/motorhead) for running the server locally.
-
 
 ```python
 <!--IMPORTS:[{"imported": "MotorheadMemory", "source": "langchain_community.memory.motorhead_memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain_community.memory.motorhead_memory.MotorheadMemory.html", "title": "Mot\u00f6rhead"}]-->
@@ -18,7 +17,6 @@ from langchain_community.memory.motorhead_memory import MotorheadMemory
 ```
 
 ## Example
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Mot\u00f6rhead"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Mot\u00f6rhead"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Mot\u00f6rhead"}]-->
@@ -50,7 +48,6 @@ llm_chain = LLMChain(
 )
 ```
 
-
 ```python
 llm_chain.run("hi im bob")
 ```
@@ -68,12 +65,9 @@ AI:[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 ' Hi Bob, nice to meet you! How are you doing today?'
 ```
-
-
 
 ```python
 llm_chain.run("whats my name?")
@@ -93,12 +87,9 @@ AI:[0m
 [1m> Finished chain.[0m
 ```
 
-
 ```output
 ' You said your name is Bob. Is that correct?'
 ```
-
-
 
 ```python
 llm_chain.run("whats for dinner?")
@@ -119,7 +110,6 @@ AI:[0m
 
 [1m> Finished chain.[0m
 ```
-
 
 ```output
 "  I'm sorry, I'm not sure what you're asking. Could you please rephrase your question?"

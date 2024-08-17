@@ -12,8 +12,6 @@ The package utilizes a full-text index for efficient mapping of text values to d
 
 In the provided example, the full-text index is used to map names of people and movies from the user's query to corresponding database entries.
 
-
-
 ## Environment Setup
 
 The following environment variables need to be set:
@@ -27,7 +25,6 @@ NEO4J_PASSWORD=<YOUR_NEO4J_PASSWORD>
 
 Additionally, if you wish to populate the DB with some example data, you can run `python ingest.py`.
 This script will populate the database with sample movie data and create a full-text index named `entity`, which is used to map person and movies from user input to database values for precise Cypher statement generation.
-
 
 ## Usage
 
@@ -56,11 +53,10 @@ from neo4j_cypher_ft import chain as neo4j_cypher_ft_chain
 add_routes(app, neo4j_cypher_ft_chain, path="/neo4j-cypher-ft")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
-
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -74,7 +70,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server running locally at 
+This will start the FastAPI app with a server running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

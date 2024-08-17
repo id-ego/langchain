@@ -22,7 +22,6 @@ This notebook covers how to load documents from *Dropbox*. In addition to common
 
 DropboxLoader can load data from a list of Dropbox file paths or a single Dropbox folder path. Both paths should be relative to the root directory of the Dropbox account linked to the access token.
 
-
 ```python
 pip install dropbox
 ```
@@ -44,14 +43,12 @@ Note: you may need to restart the kernel to use updated packages.
 from langchain_community.document_loaders import DropboxLoader
 ```
 
-
 ```python
 # Generate access token: https://www.dropbox.com/developers/apps/create.
 dropbox_access_token = "<DROPBOX_ACCESS_TOKEN>"
 # Dropbox root folder
 dropbox_folder_path = ""
 ```
-
 
 ```python
 loader = DropboxLoader(
@@ -60,7 +57,6 @@ loader = DropboxLoader(
     recursive=False,
 )
 ```
-
 
 ```python
 documents = loader.load()
@@ -74,7 +70,6 @@ File /A REPORT ON WILES’ CAMBRIDGE LECTURES.pdf could not be decoded as text. 
 for document in documents:
     print(document)
 ```
-
 
 ## Related
 

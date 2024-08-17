@@ -12,8 +12,6 @@ It uses GPT-4V to create image summaries for each slide, embeds the summaries, a
 
 Given a question, relevant slides are retrieved and passed to GPT-4V for answer synthesis.
 
-
-
 ## Input
 
 Supply a slide deck as PDF in the `/docs` directory. 
@@ -52,7 +50,6 @@ Make sure to deploy a Redis instance either in the [cloud](https://redis.com/try
 
 This will give you an accessible Redis endpoint that you can use as a URL. If deploying locally, simply use `redis://localhost:6379`.
 
-
 ## LLM
 
 The app will retrieve images based on similarity between the text input and the image summary (text), and pass the images to GPT-4V for answer synthesis.
@@ -90,9 +87,9 @@ from rag_redis_multi_modal_multi_vector import chain as rag_redis_multi_modal_ch
 add_routes(app, rag_redis_multi_modal_chain_mv, path="/rag-redis-multi-modal-multi-vector")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -107,7 +104,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

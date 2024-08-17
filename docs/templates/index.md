@@ -18,7 +18,6 @@ These are some of the more popular templates to get started with.
 - [OpenAI Functions Agent](/docs/templates/openai-functions-agent): Build a chatbot that can take actions. Uses OpenAI function calling and Tavily.
 - [XML Agent](/docs/templates/xml-agent): Build a chatbot that can take actions. Uses Anthropic and You.com.
 
-
 ## 📥 Advanced Retrieval
 
 These templates cover advanced retrieval techniques, which can be used for chat and QA over databases or documents.
@@ -38,7 +37,6 @@ A selection of advanced retrieval methods that involve transforming the original
 - [Step-back QA Prompting](/docs/templates/stepback-qa-prompting): A retrieval technique that generates a "step-back" question and then retrieves documents relevant to both that question and the original question. [Paper](https://arxiv.org/abs//2310.06117).
 - [RAG-Fusion](/docs/templates/rag-fusion): A retrieval technique that generates multiple queries and then reranks the retrieved documents using reciprocal rank fusion. [Article](https://towardsdatascience.com/forget-rag-the-future-is-rag-fusion-1147298d8ad1).
 - [Multi-Query Retriever](/docs/templates/rag-pinecone-multi-query): This retrieval technique uses an LLM to generate multiple queries and then fetches documents for all queries.
-
 
 ## 🧠Advanced Retrieval - Query Construction
 

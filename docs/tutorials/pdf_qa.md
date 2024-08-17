@@ -34,11 +34,9 @@ First, you'll need to choose a PDF to load. We'll use a document from [Nike's an
 
 Once you've chosen your PDF, the next step is to load it into a format that an LLM can more easily handle, since LLMs generally require text inputs. LangChain has a few different [built-in document loaders](/docs/how_to/document_loader_pdf/) for this purpose which you can experiment with. Below, we'll use one powered by the [`pypdf`](https://pypi.org/project/pypdf/) package that reads from a filepath:
 
-
 ```python
 %pip install -qU pypdf langchain_community
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "PyPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html", "title": "Build a PDF ingestion and Question/Answering system"}]-->
@@ -84,11 +82,9 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" openaiParams={`model="gpt-4o"`} />
 
-
 ```python
 %pip install langchain_chroma langchain_openai
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Build a PDF ingestion and Question/Answering system"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Build a PDF ingestion and Question/Answering system"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Build a PDF ingestion and Question/Answering system"}]-->
@@ -104,7 +100,6 @@ retriever = vectorstore.as_retriever()
 ```
 
 Finally, you'll use some built-in helpers to construct the final `rag_chain`:
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Build a PDF ingestion and Question/Answering system"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Build a PDF ingestion and Question/Answering system"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a PDF ingestion and Question/Answering system"}]-->
@@ -138,8 +133,6 @@ results = rag_chain.invoke({"input": "What was Nike's revenue in 2023?"})
 results
 ```
 
-
-
 ```output
 {'input': "What was Nike's revenue in 2023?",
  'context': [Document(page_content='Table of Contents\nFISCAL 2023 NIKE BRAND REVENUE HIGHLIGHTS\nThe following tables present NIKE Brand revenues disaggregated by reportable operating segment, distribution channel and major product line:\nFISCAL 2023 COMPARED TO FISCAL 2022\n•NIKE, Inc. Revenues were $51.2 billion in fiscal 2023, which increased 10% and 16% compared to fiscal 2022 on a reported and currency-neutral basis, respectively.\nThe increase was due to higher revenues in North America, Europe, Middle East & Africa ("EMEA"), APLA and Greater China, which contributed approximately 7, 6,\n2 and 1 percentage points to NIKE, Inc. Revenues, respectively.\n•NIKE Brand revenues, which represented over 90% of NIKE, Inc. Revenues, increased 10% and 16% on a reported and currency-neutral basis, respectively. This\nincrease was primarily due to higher revenues in Men\'s, the Jordan Brand, Women\'s and Kids\' which grew 17%, 35%,11% and 10%, respectively, on a wholesale\nequivalent basis.', metadata={'page': 35, 'source': '../example_data/nke-10k-2023.pdf'}),
@@ -149,11 +142,9 @@ results
  'answer': 'According to the financial highlights, Nike, Inc. achieved record revenues of $51.2 billion in fiscal 2023, which increased 10% on a reported basis and 16% on a currency-neutral basis compared to fiscal 2022.'}
 ```
 
-
 You can see that you get both a final answer in the `answer` key of the results dict, and the `context` the LLM used to generate an answer.
 
 Examining the values under the `context` further, you can see that they are documents that each contain a chunk of the ingested page content. Usefully, these documents also preserve the original metadata from way back when you first loaded them:
-
 
 ```python
 print(results["context"][0].page_content)

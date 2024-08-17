@@ -27,20 +27,20 @@ in [LangChain.js](https://js.langchain.com/docs/ecosystem/langserve).
 ## Features
 
 - Input and Output schemas automatically inferred from your LangChain object, and
-  enforced on every API call, with rich error messages
+enforced on every API call, with rich error messages
 - API docs page with JSONSchema and Swagger (insert example link)
 - Efficient `/invoke`, `/batch` and `/stream` endpoints with support for many
-  concurrent requests on a single server
+concurrent requests on a single server
 - `/stream_log` endpoint for streaming all (or some) intermediate steps from your
-  chain/agent
+chain/agent
 - **new** as of 0.0.40, supports `/stream_events` to make it easier to stream without needing to parse the output of `/stream_log`.
 - Playground page at `/playground/` with streaming output and intermediate steps
 - Built-in (optional) tracing to [LangSmith](https://www.langchain.com/langsmith), just
-  add your API key (see [Instructions](https://docs.smith.langchain.com/))
+add your API key (see [Instructions](https://docs.smith.langchain.com/))
 - All built with battle-tested open-source Python libraries like FastAPI, Pydantic,
-  uvloop and asyncio.
+uvloop and asyncio.
 - Use the client SDK to call a LangServe server as if it was a Runnable running
-  locally (or call the HTTP API directly)
+locally (or call the HTTP API directly)
 - [LangServe Hub](https://github.com/langchain-ai/langchain/blob/master/templates/README.md)
 
 ## ⚠️ LangGraph Compatibility
@@ -54,14 +54,14 @@ be better suited for deploying LangGraph applications.
 
 - Client callbacks are not yet supported for events that originate on the server
 - OpenAPI docs will not be generated when using Pydantic V2. Fast API does not
-  support [mixing pydantic v1 and v2 namespaces](https://github.com/tiangolo/fastapi/issues/10360).
-  See section below for more details.
+support [mixing pydantic v1 and v2 namespaces](https://github.com/tiangolo/fastapi/issues/10360).
+See section below for more details.
 
 ## Security
 
 - Vulnerability in Versions 0.0.13 - 0.0.15 -- playground endpoint allows accessing
-  arbitrary files on
-  server. [Resolved in 0.0.16](https://github.com/langchain-ai/langserve/pull/98).
+arbitrary files on
+server. [Resolved in 0.0.16](https://github.com/langchain-ai/langserve/pull/98).
 
 ## Installation
 
@@ -214,8 +214,8 @@ app.add_middleware(
 
 If you've deployed the server above, you can view the generated OpenAPI docs using:
 
-> ⚠️ If using pydantic v2, docs will not be generated for _invoke_, _batch_, _stream_,
-> _stream_log_. See [Pydantic](#pydantic) section below for more details.
+> ⚠️ If using pydantic v2, docs will not be generated for *invoke*, *batch*, *stream*,
+*stream_log*. See [Pydantic](#pydantic) section below for more details.
 
 ```sh
 curl localhost:8000/docs
@@ -224,8 +224,8 @@ curl localhost:8000/docs
 make sure to **add** the `/docs` suffix.
 
 > ⚠️ Index page `/` is not defined by **design**, so `curl localhost:8000` or visiting
-> the URL
-> will return a 404. If you want content at `/` define an endpoint `@app.get("/")`.
+the URL
+will return a 404. If you want content at `/` define an endpoint `@app.get("/")`.
 
 ### Client
 
@@ -326,9 +326,9 @@ adds of these endpoints to the server:
 - `POST /my_runnable/batch` - invoke the runnable on a batch of inputs
 - `POST /my_runnable/stream` - invoke on a single input and stream the output
 - `POST /my_runnable/stream_log` - invoke on a single input and stream the output,
-  including output of intermediate steps as it's generated
+including output of intermediate steps as it's generated
 - `POST /my_runnable/astream_events` - invoke on a single input and stream events as they are generated,
-  including from intermediate steps.
+including from intermediate steps.
 - `GET /my_runnable/input_schema` - json schema for input to the runnable
 - `GET /my_runnable/output_schema` - json schema for output of the runnable
 - `GET /my_runnable/config_schema` - json schema for config of the runnable
@@ -348,6 +348,7 @@ and invoke your runnable with streaming output and intermediate steps.
 <img src="https://github.com/langchain-ai/langserve/assets/3205522/5ca56e29-f1bb-40f4-84b5-15916384a276" width="50%"/>
 </p>
 
+
 ### Widgets
 
 The playground supports [widgets](#playground-widgets) and can be used to test your
@@ -362,6 +363,7 @@ runnable and share a link with the configuration:
 <p align="center">
 <img src="https://github.com/langchain-ai/langserve/assets/3205522/86ce9c59-f8e4-4d08-9fa3-62030e0f521d" width="50%"/>
 </p>
+
 
 ## Chat playground
 
@@ -424,6 +426,7 @@ Here's an example with the above two options turned on:
 <img src="./.github/img/chat_playground.png" width="50%"/>
 </p>
 
+
 Note: If you enable public trace links, the internals of your chain will be exposed. We recommend only using this setting
 for demos or testing.
 
@@ -482,9 +485,9 @@ gcloud run deploy [your-service-name] --source . --port 8001 --allow-unauthentic
 LangServe provides support for Pydantic 2 with some limitations.
 
 1. OpenAPI docs will not be generated for invoke/batch/stream/stream_log when using
-   Pydantic V2. Fast API does not support [mixing pydantic v1 and v2 namespaces]. To fix this, use `pip install pydantic==1.10.17`.
+Pydantic V2. Fast API does not support [mixing pydantic v1 and v2 namespaces]. To fix this, use `pip install pydantic==1.10.17`.
 2. LangChain uses the v1 namespace in Pydantic v2. Please read
-   the [following guidelines to ensure compatibility with LangChain](https://github.com/langchain-ai/langchain/discussions/9337)
+the [following guidelines to ensure compatibility with LangChain](https://github.com/langchain-ai/langchain/discussions/9337)
 
 Except for these limitations, we expect the API endpoints, the playground and any other
 features to work as expected.
@@ -546,12 +549,12 @@ LLM applications often deal with files. There are different architectures
 that can be made to implement file processing; at a high level:
 
 1. The file may be uploaded to the server via a dedicated endpoint and processed using a
-   separate endpoint
+separate endpoint
 2. The file may be uploaded by either value (bytes of file) or reference (e.g., s3 url
-   to file content)
+to file content)
 3. The processing endpoint may be blocking or non-blocking
 4. If significant processing is required, the processing may be offloaded to a dedicated
-   process pool
+process pool
 
 You should determine what is the appropriate architecture for your application.
 
@@ -605,8 +608,8 @@ add_routes(app, runnable)
 Inherit from `CustomUserType` if you want the data to de-serialize into a
 pydantic model rather than the equivalent dict representation.
 
-At the moment, this type only works _server_ side and is used
-to specify desired _decoding_ behavior. If inheriting from this type
+At the moment, this type only works *server* side and is used
+to specify desired *decoding* behavior. If inheriting from this type
 the server will keep the decoded type as a pydantic model instead
 of converting it into a dict.
 
@@ -654,9 +657,9 @@ Here are a few examples:
 #### Schema
 
 - A widget is specified at the field level and shipped as part of the JSON schema of the
-  input type
+input type
 - A widget must contain a key called `type` with the value being one of a well known
-  list of widgets
+list of widgets
 - Other widget keys will be associated with values that describe paths in a JSON object
 
 ```typescript
@@ -717,6 +720,7 @@ Example widget:
 <img src="https://github.com/langchain-ai/langserve/assets/3205522/52199e46-9464-4c2e-8be8-222250e08c3f" width="50%"/>
 </p>
 
+
 ### Chat Widget
 
 Look
@@ -724,10 +728,10 @@ at the [widget example](https://github.com/langchain-ai/langserve/tree/main/exam
 
 To define a chat widget, make sure that you pass "type": "chat".
 
-- "input" is JSONPath to the field in the _Request_ that has the new input message.
-- "output" is JSONPath to the field in the _Response_ that has new output message(s).
+- "input" is JSONPath to the field in the *Request* that has the new input message.
+- "output" is JSONPath to the field in the *Response* that has new output message(s).
 - Don't specify these fields if the entire input or output should be used as they are (
-  e.g., if the output is a list of chat messages.)
+e.g., if the output is a list of chat messages.)
 
 Here's a snippet:
 
@@ -770,6 +774,7 @@ Example widget:
 <p align="center">
 <img src="https://github.com/langchain-ai/langserve/assets/3205522/a71ff37b-a6a9-4857-a376-cf27c41d3ca4" width="50%"/>
 </p>
+
 
 You can also specify a list of messages as your a parameter directly, as shown in this snippet:
 

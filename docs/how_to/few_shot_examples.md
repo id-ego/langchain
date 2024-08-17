@@ -26,7 +26,6 @@ This guide will cover few-shotting with string prompt templates. For a guide on 
 
 Configure a formatter that will format the few-shot examples into a string. This formatter should be a `PromptTemplate` object.
 
-
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to use few shot examples"}]-->
 from langchain_core.prompts import PromptTemplate
@@ -37,7 +36,6 @@ example_prompt = PromptTemplate.from_template("Question: {question}\n{answer}")
 ## Creating the example set
 
 Next, we'll create a list of few-shot examples. Each example should be a dictionary representing an example input to the formatter prompt we defined above.
-
 
 ```python
 examples = [
@@ -94,7 +92,6 @@ So the final answer is: No
 
 Let's test the formatting prompt with one of our examples:
 
-
 ```python
 print(example_prompt.invoke(examples[0]).to_string())
 ```
@@ -111,7 +108,6 @@ So the final answer is: Muhammad Ali
 ### Pass the examples and formatter to `FewShotPromptTemplate`
 
 Finally, create a [`FewShotPromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html) object. This object takes in the few-shot examples and the formatter for the few-shot examples. When this `FewShotPromptTemplate` is formatted, it formats the passed examples using the `example_prompt`, then and adds them to the final prompt before `suffix`:
-
 
 ```python
 <!--IMPORTS:[{"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to use few shot examples"}]-->
@@ -183,7 +179,6 @@ We will reuse the example set and the formatter from the previous section. Howev
 
 To show what it looks like, let's initialize an instance and call it in isolation:
 
-
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to use few shot examples"}, {"imported": "SemanticSimilarityExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html", "title": "How to use few shot examples"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use few shot examples"}]-->
 from langchain_chroma import Chroma
@@ -225,7 +220,6 @@ So the final answer is: Joseph Ball
 question: Who was the maternal grandfather of George Washington?
 ```
 Now, let's create a `FewShotPromptTemplate` object. This object takes in the example selector and the formatter prompt for the few-shot examples.
-
 
 ```python
 prompt = FewShotPromptTemplate(

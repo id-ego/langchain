@@ -6,7 +6,7 @@ sidebar_label: Konko
 
 # Konko
 
->[Konko](https://www.konko.ai/) API is a fully managed Web API designed to help application developers:
+> [Konko](https://www.konko.ai/) API is a fully managed Web API designed to help application developers:
 
 1. **Select** the right open source or proprietary LLMs for their application
 2. **Build** applications faster with integrations to leading application frameworks and fully managed APIs
@@ -36,7 +36,6 @@ Find a model on the [Konko overview page](https://docs.konko.ai/docs/list-of-mod
 Another way to find the list of models running on the Konko instance is through this [endpoint](https://docs.konko.ai/reference/get-models).
 
 From here, we can initialize our model:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Konko", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.konko.Konko.html", "title": "Konko"}]-->

@@ -9,36 +9,29 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This example goes over how to use LangChain to interact with Solar Inference for text embedding.
 
-
 ```python
 import os
 
 os.environ["SOLAR_API_KEY"] = ""
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "SolarEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.solar.SolarEmbeddings.html", "title": "Solar"}]-->
 from langchain_community.embeddings import SolarEmbeddings
 ```
 
-
 ```python
 embeddings = SolarEmbeddings()
 ```
-
 
 ```python
 query_text = "This is a test query."
 query_result = embeddings.embed_query(query_text)
 ```
 
-
 ```python
 query_result
 ```
-
-
 
 ```output
 [-0.009612835943698883,
@@ -1044,19 +1037,14 @@ query_result
  ...]
 ```
 
-
-
 ```python
 document_text = "This is a test document."
 document_result = embeddings.embed_documents([document_text])
 ```
 
-
 ```python
 document_result
 ```
-
-
 
 ```output
 [[-0.019484492018818855,
@@ -2061,8 +2049,6 @@ document_result
   -0.0023829247802495956,
   ...]]
 ```
-
-
 
 ```python
 import numpy as np

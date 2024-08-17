@@ -5,13 +5,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # LASER Language-Agnostic SEntence Representations Embeddings by Meta AI
 
->[LASER](https://github.com/facebookresearch/LASER/) is a Python library developed by the Meta AI Research team and used for creating multilingual sentence embeddings for over 147 languages as of 2/25/2024 
->- List of supported languages at https://github.com/facebookresearch/flores/blob/main/flores200/README.md#languages-in-flores-200
+> [LASER](https://github.com/facebookresearch/LASER/) is a Python library developed by the Meta AI Research team and used for creating multilingual sentence embeddings for over 147 languages as of 2/25/2024 
+> - List of supported languages at https://github.com/facebookresearch/flores/blob/main/flores200/README.md#languages-in-flores-200
 
 ## Dependencies
 
 To use LaserEmbed with LangChain, install the `laser_encoders` Python package.
-
 
 ```python
 %pip install laser_encoders
@@ -19,22 +18,20 @@ To use LaserEmbed with LangChain, install the `laser_encoders` Python package.
 
 ## Imports
 
-
 ```python
 <!--IMPORTS:[{"imported": "LaserEmbeddings", "source": "langchain_community.embeddings.laser", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.laser.LaserEmbeddings.html", "title": "LASER Language-Agnostic SEntence Representations Embeddings by Meta AI"}]-->
 from langchain_community.embeddings.laser import LaserEmbeddings
 ```
 
 ## Instantiating Laser
-   
+
 ### Parameters
 - `lang: Optional[str]`
-    >If empty will default
-    to using a multilingual LASER encoder model (called "laser2").
-    You can find the list of supported languages and lang_codes [here](https://github.com/facebookresearch/flores/blob/main/flores200/README.md#languages-in-flores-200)
-    and [here](https://github.com/facebookresearch/LASER/blob/main/laser_encoders/language_list.py)
+  > If empty will default
+to using a multilingual LASER encoder model (called "laser2").
+You can find the list of supported languages and lang_codes [here](https://github.com/facebookresearch/flores/blob/main/flores200/README.md#languages-in-flores-200)
+and [here](https://github.com/facebookresearch/LASER/blob/main/laser_encoders/language_list.py)
 .
-
 
 ```python
 # Ex Instantiationz
@@ -45,7 +42,6 @@ embeddings = LaserEmbeddings(lang="eng_Latn")
 
 ### Generating document embeddings
 
-
 ```python
 document_embeddings = embeddings.embed_documents(
     ["This is a sentence", "This is some other sentence"]
@@ -54,11 +50,9 @@ document_embeddings = embeddings.embed_documents(
 
 ### Generating query embeddings
 
-
 ```python
 query_embeddings = embeddings.embed_query("This is a query")
 ```
-
 
 ## Related
 

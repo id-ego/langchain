@@ -25,7 +25,6 @@ You'll need to install `langchain-community` with `pip install -qU langchain-com
 
 To instantiate and configure the client you need to provide either the `url` or the `host` and `port` of your document indexing pipeline. In the code below we use a publicly available [demo pipeline](https://pathway.com/solutions/ai-pipelines#try-it-out), which REST API you can access at `https://demo-document-indexing.pathway.stream`. This demo ingests documents from [Google Drive](https://drive.google.com/drive/u/0/folders/1cULDv2OaViJBmOfG5WB0oWcgayNrGtVs) and [Sharepoint](https://navalgo.sharepoint.com/sites/ConnectorSandbox/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FConnectorSandbox%2FShared%20Documents%2FIndexerSandbox&p=true&ga=1) and maintains an index for retrieving documents.
 
-
 ```python
 <!--IMPORTS:[{"imported": "PathwayVectorClient", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.pathway.PathwayVectorClient.html", "title": "Pathway"}]-->
 from langchain_community.vectorstores import PathwayVectorClient
@@ -33,25 +32,22 @@ from langchain_community.vectorstores import PathwayVectorClient
 client = PathwayVectorClient(url="https://demo-document-indexing.pathway.stream")
 ```
 
- And we can start asking queries
-
+And we can start asking queries
 
 ```python
 query = "What is Pathway?"
 docs = client.similarity_search(query)
 ```
 
-
 ```python
 print(docs[0].page_content)
 ```
 
- **Your turn!** [Get your pipeline](https://pathway.com/solutions/ai-pipelines) or upload [new documents](https://chat-realtime-sharepoint-gdrive.demo.pathway.com/) to the demo pipeline and retry the query!
+**Your turn!** [Get your pipeline](https://pathway.com/solutions/ai-pipelines) or upload [new documents](https://chat-realtime-sharepoint-gdrive.demo.pathway.com/) to the demo pipeline and retry the query!
 
 ## Filtering based on file metadata
 
 We support document filtering using [jmespath](https://jmespath.org/) expressions, for instance:
-
 
 ```python
 # take into account only sources modified later than unix timestamp
@@ -76,8 +72,7 @@ docs = client.similarity_search(
 
 ## Getting information on indexed files
 
- `PathwayVectorClient.get_vectorstore_statistics()` gives essential statistics on the state of the vector store, like the number of indexed files and the timestamp of last updated one. You can use it in your chains to tell the user how fresh is your knowledge base.
-
+`PathwayVectorClient.get_vectorstore_statistics()` gives essential statistics on the state of the vector store, like the number of indexed files and the timestamp of last updated one. You can use it in your chains to tell the user how fresh is your knowledge base.
 
 ```python
 client.get_vectorstore_statistics()
@@ -91,7 +86,6 @@ To have your own Pathway data indexing pipeline check the Pathway's offer for [h
 ### Processing documents
 
 The vectorization pipeline supports pluggable components for parsing, splitting and embedding documents. For embedding and splitting you can use [Langchain components](https://pathway.com/developers/user-guide/llm-xpack/vectorstore_pipeline/#langchain) or check [embedders](https://pathway.com/developers/api-docs/pathway-xpacks-llm/embedders) and [splitters](https://pathway.com/developers/api-docs/pathway-xpacks-llm/splitters) available in Pathway. If parser is not provided, it defaults to `UTF-8` parser. You can find available parsers [here](https://github.com/pathwaycom/pathway/blob/main/python/pathway/xpacks/llm/parser.py).
-
 
 ## Related
 

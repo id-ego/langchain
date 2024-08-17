@@ -64,7 +64,6 @@ os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-
 ## Documents
 
 LangChain implements a [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) abstraction, which is intended to represent a unit of text and associated metadata. It has two attributes:
@@ -75,7 +74,6 @@ LangChain implements a [Document](https://api.python.langchain.com/en/latest/doc
 The `metadata` attribute can capture information about the source of the document, its relationship to other documents, and other information. Note that an individual `Document` object often represents a chunk of a larger document.
 
 Let's generate some sample documents:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Vector stores and retrievers"}]-->
@@ -117,7 +115,6 @@ LangChain includes a suite of [integrations](/docs/integrations/vectorstores) wi
 
 To instantiate a vector store, we often need to provide an [embedding](/docs/how_to/embed_text) model to specify how text should be converted into a numeric vector. Here we will use [OpenAI embeddings](/docs/integrations/text_embedding/openai/).
 
-
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Vector stores and retrievers"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Vector stores and retrievers"}]-->
 from langchain_chroma import Chroma
@@ -143,12 +140,9 @@ The methods will generally include a list of [Document](https://api.python.langc
 
 Return documents based on similarity to a string query:
 
-
 ```python
 vectorstore.similarity_search("cat")
 ```
-
-
 
 ```output
 [Document(page_content='Cats are independent pets that often enjoy their own space.', metadata={'source': 'mammal-pets-doc'}),
@@ -157,16 +151,12 @@ vectorstore.similarity_search("cat")
  Document(page_content='Parrots are intelligent birds capable of mimicking human speech.', metadata={'source': 'bird-pets-doc'})]
 ```
 
-
 Async query:
-
 
 ```python
 await vectorstore.asimilarity_search("cat")
 ```
 
-
-
 ```output
 [Document(page_content='Cats are independent pets that often enjoy their own space.', metadata={'source': 'mammal-pets-doc'}),
  Document(page_content='Dogs are great companions, known for their loyalty and friendliness.', metadata={'source': 'mammal-pets-doc'}),
@@ -174,9 +164,7 @@ await vectorstore.asimilarity_search("cat")
  Document(page_content='Parrots are intelligent birds capable of mimicking human speech.', metadata={'source': 'bird-pets-doc'})]
 ```
 
-
 Return scores:
-
 
 ```python
 # Note that providers implement different scores; Chroma here
@@ -185,8 +173,6 @@ Return scores:
 
 vectorstore.similarity_search_with_score("cat")
 ```
-
-
 
 ```output
 [(Document(page_content='Cats are independent pets that often enjoy their own space.', metadata={'source': 'mammal-pets-doc'}),
@@ -199,9 +185,7 @@ vectorstore.similarity_search_with_score("cat")
   0.4972994923591614)]
 ```
 
-
 Return documents based on similarity to an embedded query:
-
 
 ```python
 embedding = OpenAIEmbeddings().embed_query("cat")
@@ -209,15 +193,12 @@ embedding = OpenAIEmbeddings().embed_query("cat")
 vectorstore.similarity_search_by_vector(embedding)
 ```
 
-
-
 ```output
 [Document(page_content='Cats are independent pets that often enjoy their own space.', metadata={'source': 'mammal-pets-doc'}),
  Document(page_content='Dogs are great companions, known for their loyalty and friendliness.', metadata={'source': 'mammal-pets-doc'}),
  Document(page_content='Rabbits are social animals that need plenty of space to hop around.', metadata={'source': 'mammal-pets-doc'}),
  Document(page_content='Parrots are intelligent birds capable of mimicking human speech.', metadata={'source': 'bird-pets-doc'})]
 ```
-
 
 Learn more:
 
@@ -233,7 +214,6 @@ LangChain [Retrievers](https://api.python.langchain.com/en/latest/core_api_refer
 
 We can create a simple version of this ourselves, without subclassing `Retriever`. If we choose what method we wish to use to retrieve documents, we can create a runnable easily. Below we will build one around the `similarity_search` method:
 
-
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Vector stores and retrievers"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "Vector stores and retrievers"}]-->
 from typing import List
@@ -246,16 +226,12 @@ retriever = RunnableLambda(vectorstore.similarity_search).bind(k=1)  # select to
 retriever.batch(["cat", "shark"])
 ```
 
-
-
 ```output
 [[Document(page_content='Cats are independent pets that often enjoy their own space.', metadata={'source': 'mammal-pets-doc'})],
  [Document(page_content='Goldfish are popular pets for beginners, requiring relatively simple care.', metadata={'source': 'fish-pets-doc'})]]
 ```
 
-
 Vectorstores implement an `as_retriever` method that will generate a Retriever, specifically a [VectorStoreRetriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStoreRetriever.html). These retrievers include specific `search_type` and `search_kwargs` attributes that identify what methods of the underlying vector store to call, and how to parameterize them. For instance, we can replicate the above with the following:
-
 
 ```python
 retriever = vectorstore.as_retriever(
@@ -266,13 +242,10 @@ retriever = vectorstore.as_retriever(
 retriever.batch(["cat", "shark"])
 ```
 
-
-
 ```output
 [[Document(page_content='Cats are independent pets that often enjoy their own space.', metadata={'source': 'mammal-pets-doc'})],
  [Document(page_content='Goldfish are popular pets for beginners, requiring relatively simple care.', metadata={'source': 'fish-pets-doc'})]]
 ```
-
 
 `VectorStoreRetriever` supports search types of `"similarity"` (default), `"mmr"` (maximum marginal relevance, described above), and `"similarity_score_threshold"`. We can use the latter to threshold documents output by the retriever by similarity score.
 
@@ -301,7 +274,6 @@ prompt = ChatPromptTemplate.from_messages([("human", message)])
 
 rag_chain = {"context": retriever, "question": RunnablePassthrough()} | prompt | llm
 ```
-
 
 ```python
 response = rag_chain.invoke("tell me about cats")

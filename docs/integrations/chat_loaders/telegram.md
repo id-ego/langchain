@@ -27,7 +27,6 @@ To make the export:
 
 An example is below: 
 
-
 ```python
 %%writefile telegram_conversation.json
 {
@@ -75,12 +74,10 @@ Overwriting telegram_conversation.json
 
 All that's required is the file path. You can optionally specify the user name that maps to an ai message as well an configure whether to merge message runs.
 
-
 ```python
 <!--IMPORTS:[{"imported": "TelegramChatLoader", "source": "langchain_community.chat_loaders.telegram", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.telegram.TelegramChatLoader.html", "title": "Telegram"}]-->
 from langchain_community.chat_loaders.telegram import TelegramChatLoader
 ```
-
 
 ```python
 loader = TelegramChatLoader(
@@ -91,7 +88,6 @@ loader = TelegramChatLoader(
 ## 3. Load messages
 
 The `load()` (or `lazy_load`) methods return a list of "ChatSessions" that currently just contain a list of messages per loaded conversation.
-
 
 ```python
 <!--IMPORTS:[{"imported": "map_ai_messages", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.map_ai_messages.html", "title": "Telegram"}, {"imported": "merge_chat_runs", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.merge_chat_runs.html", "title": "Telegram"}, {"imported": "ChatSession", "source": "langchain_core.chat_sessions", "docs": "https://api.python.langchain.com/en/latest/chat_sessions/langchain_core.chat_sessions.ChatSession.html", "title": "Telegram"}]-->
@@ -115,7 +111,6 @@ messages: List[ChatSession] = list(
 ### Next Steps
 
 You can then use these messages how you see fit, such as fine-tuning a model, few-shot example selection, or directly make predictions for the next message  
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Telegram"}]-->

@@ -18,7 +18,6 @@ The wrapper is available from the `langchain-anthropic` package, and it also req
 
 Note: this is a beta feature that will be replaced by Anthropic's formal implementation of tool calling, but it is useful for testing and experimentation in the meantime.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropicTools", "source": "langchain_anthropic.experimental", "docs": "https://api.python.langchain.com/en/latest/experimental/langchain_anthropic.experimental.ChatAnthropicTools.html", "title": "[Deprecated] Experimental Anthropic Tools Wrapper"}]-->
 %pip install -qU langchain-anthropic defusedxml
@@ -28,7 +27,6 @@ from langchain_anthropic.experimental import ChatAnthropicTools
 ## Tool Binding
 
 `ChatAnthropicTools` exposes a `bind_tools` method that allows you to pass in Pydantic models or BaseTools to the llm.
-
 
 ```python
 from langchain_core.pydantic_v1 import BaseModel
@@ -43,17 +41,13 @@ model = ChatAnthropicTools(model="claude-3-opus-20240229").bind_tools(tools=[Per
 model.invoke("I am a 27 year old named Erick")
 ```
 
-
-
 ```output
 AIMessage(content='', additional_kwargs={'tool_calls': [{'function': {'name': 'Person', 'arguments': '{"name": "Erick", "age": "27"}'}, 'type': 'function'}]})
 ```
 
-
 ## Structured Output
 
 `ChatAnthropicTools` also implements the [`with_structured_output` spec](/docs/how_to/structured_output) for extracting values. Note: this may not be as stable as with models that explicitly offer tool calling.
-
 
 ```python
 chain = ChatAnthropicTools(model="claude-3-opus-20240229").with_structured_output(
@@ -62,13 +56,9 @@ chain = ChatAnthropicTools(model="claude-3-opus-20240229").with_structured_outpu
 chain.invoke("I am a 27 year old named Erick")
 ```
 
-
-
 ```output
 Person(name='Erick', age=27)
 ```
-
-
 
 ## Related
 

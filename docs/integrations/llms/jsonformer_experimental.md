@@ -11,7 +11,6 @@ It works by filling in the structure tokens and then sampling the content tokens
 
 **Warning - this module is still experimental**
 
-
 ```python
 %pip install --upgrade --quiet  jsonformer > /dev/null
 ```
@@ -20,13 +19,11 @@ It works by filling in the structure tokens and then sampling the content tokens
 
 First, let's establish a qualitative baseline by checking the output of the model without structured decoding.
 
-
 ```python
 import logging
 
 logging.basicConfig(level=logging.ERROR)
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "JSONFormer"}]-->
@@ -56,7 +53,6 @@ def ask_star_coder(query: str, temperature: float = 1.0, max_new_tokens: float =
     response.raise_for_status()
     return json.loads(response.content.decode("utf-8"))
 ```
-
 
 ```python
 prompt = """You must respond using JSON format, with a single action and single action input.
@@ -91,7 +87,6 @@ Human: 'What's the difference between an iterator and an iterable?'
 AI Assistant:""".format(arg_schema=ask_star_coder.args)
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "HuggingFacePipeline", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "JSONFormer"}]-->
 from langchain_huggingface import HuggingFacePipeline
@@ -117,7 +112,6 @@ Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation.
 
 Let's try that again, now providing a the Action input's JSON Schema to the model.
 
-
 ```python
 decoder_schema = {
     "title": "Decoding Schema",
@@ -132,14 +126,12 @@ decoder_schema = {
 }
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "JsonFormer", "source": "langchain_experimental.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_experimental.llms.jsonformer_decoder.JsonFormer.html", "title": "JSONFormer"}]-->
 from langchain_experimental.llms import JsonFormer
 
 json_former = JsonFormer(json_schema=decoder_schema, pipeline=hf_model)
 ```
-
 
 ```python
 results = json_former.predict(prompt, stop=["Observation:", "Human:"])
@@ -149,7 +141,6 @@ print(results)
 {"action": "ask_star_coder", "action_input": {"query": "What's the difference between an iterator and an iter", "temperature": 0.0, "max_new_tokens": 50.0}}
 ```
 **Voila! Free of parsing errors.**
-
 
 ## Related
 

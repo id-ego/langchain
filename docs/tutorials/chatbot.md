@@ -20,9 +20,8 @@ This guide assumes familiarity with the following concepts:
 
 ## Overview
 
-We'll go over an example of how to design and implement an LLM-powered chatbot. 
+We'll go over an example of how to design and implement an LLM-powered chatbot.
 This chatbot will be able to have a conversation and remember previous interactions.
-
 
 Note that this chatbot that we build will only use the language model to have a conversation.
 There are several other related concepts that you may be looking for:
@@ -56,7 +55,6 @@ import CodeBlock from "@theme/CodeBlock";
     <CodeBlock language="bash">conda install langchain -c conda-forge</CodeBlock>
   </TabItem>
 </Tabs>
-
 
 
 For more details, see our [Installation guide](/docs/how_to/installation).
@@ -94,7 +92,6 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 
 Let's first use the model directly. `ChatModel`s are instances of LangChain "Runnables", which means they expose a standard interface for interacting with them. To just simply call the model, we can pass in a list of messages to the `.invoke` method.
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Build a Chatbot"}]-->
 from langchain_core.messages import HumanMessage
@@ -102,26 +99,19 @@ from langchain_core.messages import HumanMessage
 model.invoke([HumanMessage(content="Hi! I'm Bob")])
 ```
 
-
-
 ```output
 AIMessage(content='Hello Bob! How can I assist you today?', response_metadata={'token_usage': {'completion_tokens': 10, 'prompt_tokens': 12, 'total_tokens': 22}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-d939617f-0c3b-45e9-a93f-13dafecbd4b5-0', usage_metadata={'input_tokens': 12, 'output_tokens': 10, 'total_tokens': 22})
 ```
 
-
 The model on its own does not have any concept of state. For example, if you ask a followup question:
-
 
 ```python
 model.invoke([HumanMessage(content="What's my name?")])
 ```
 
-
-
 ```output
 AIMessage(content="I'm sorry, I don't have access to personal information unless you provide it to me. How may I assist you today?", response_metadata={'token_usage': {'completion_tokens': 26, 'prompt_tokens': 12, 'total_tokens': 38}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-47bc8c20-af7b-4fd2-9345-f0e9fdf18ce3-0', usage_metadata={'input_tokens': 12, 'output_tokens': 26, 'total_tokens': 38})
 ```
-
 
 Let's take a look at the example [LangSmith trace](https://smith.langchain.com/public/5c21cb92-2814-4119-bae9-d02b8db577ac/r)
 
@@ -129,7 +119,6 @@ We can see that it doesn't take the previous conversation turn into context, and
 This makes for a terrible chatbot experience!
 
 To get around this, we need to pass the entire conversation history into the model. Let's see what happens when we do that:
-
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Build a Chatbot"}]-->
@@ -144,12 +133,9 @@ model.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Your name is Bob. How can I help you, Bob?', response_metadata={'token_usage': {'completion_tokens': 13, 'prompt_tokens': 35, 'total_tokens': 48}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-9f90291b-4df9-41dc-9ecf-1ee1081f4490-0', usage_metadata={'input_tokens': 35, 'output_tokens': 13, 'total_tokens': 48})
 ```
-
 
 And now we can see that we get a good response!
 
@@ -165,13 +151,11 @@ Let's see how to use this!
 
 First, let's make sure to install `langchain-community`, as we will be using an integration in there to store message history.
 
-
 ```python
 # ! pip install langchain_community
 ```
 
 After that, we can import the relevant classes and set up our chain which wraps the model and adds in this message history. A key part here is the function we pass into as the `get_session_history`. This function is expected to take in a `session_id` and return a Message History object. This `session_id` is used to distinguish between separate conversations, and should be passed in as part of the config when calling the new chain (we'll show how to do that).
-
 
 ```python
 <!--IMPORTS:[{"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "Build a Chatbot"}, {"imported": "InMemoryChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.InMemoryChatMessageHistory.html", "title": "Build a Chatbot"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "Build a Chatbot"}]-->
@@ -195,11 +179,9 @@ with_message_history = RunnableWithMessageHistory(model, get_session_history)
 
 We now need to create a `config` that we pass into the runnable every time. This config contains information that is not part of the input directly, but is still useful. In this case, we want to include a `session_id`. This should look like:
 
-
 ```python
 config = {"configurable": {"session_id": "abc2"}}
 ```
-
 
 ```python
 response = with_message_history.invoke(
@@ -210,13 +192,9 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 'Hi Bob! How can I assist you today?'
 ```
-
-
 
 ```python
 response = with_message_history.invoke(
@@ -227,15 +205,11 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 'Your name is Bob. How can I help you today, Bob?'
 ```
 
-
 Great! Our chatbot now remembers things about us. If we change the config to reference a different `session_id`, we can see that it starts the conversation fresh.
-
 
 ```python
 config = {"configurable": {"session_id": "abc3"}}
@@ -248,15 +222,11 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 "I'm sorry, I cannot determine your name as I am an AI assistant and do not have access to that information."
 ```
 
-
 However, we can always go back to the original conversation (since we are persisting it in a database)
-
 
 ```python
 config = {"configurable": {"session_id": "abc2"}}
@@ -269,12 +239,9 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 'Your name is Bob. How can I assist you today, Bob?'
 ```
-
 
 This is how we can support a chatbot having conversations with many users!
 
@@ -285,7 +252,6 @@ Right now, all we've done is add a simple persistence layer around the model. We
 Prompt Templates help to turn raw user information into a format that the LLM can work with. In this case, the raw user input is just a message, which we are passing to the LLM. Let's now make that a bit more complicated. First, let's add in a system message with some custom instructions (but still taking messages as input). Next, we'll add in more input besides just the messages.
 
 First, let's add in a system message. To do this, we will create a ChatPromptTemplate. We will utilize `MessagesPlaceholder` to pass all the messages in.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a Chatbot"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Build a Chatbot"}]-->
@@ -306,32 +272,25 @@ chain = prompt | model
 
 Note that this slightly changes the input type - rather than pass in a list of messages, we are now passing in a dictionary with a `messages` key where that contains a list of messages.
 
-
 ```python
 response = chain.invoke({"messages": [HumanMessage(content="hi! I'm bob")]})
 
 response.content
 ```
 
-
-
 ```output
 'Hello Bob! How can I assist you today?'
 ```
 
-
 We can now wrap this in the same Messages History object as before
-
 
 ```python
 with_message_history = RunnableWithMessageHistory(chain, get_session_history)
 ```
 
-
 ```python
 config = {"configurable": {"session_id": "abc5"}}
 ```
-
 
 ```python
 response = with_message_history.invoke(
@@ -342,13 +301,9 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 'Hello, Jim! How can I assist you today?'
 ```
-
-
 
 ```python
 response = with_message_history.invoke(
@@ -359,15 +314,11 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 'Your name is Jim.'
 ```
 
-
 Awesome! Let's now make our prompt a little bit more complicated. Let's assume that the prompt template now looks something like this:
-
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -385,7 +336,6 @@ chain = prompt | model
 
 Note that we have added a new `language` input to the prompt. We can now invoke the chain and pass in a language of our choice.
 
-
 ```python
 response = chain.invoke(
     {"messages": [HumanMessage(content="hi! I'm bob")], "language": "Spanish"}
@@ -394,15 +344,11 @@ response = chain.invoke(
 response.content
 ```
 
-
-
 ```output
 '¡Hola, Bob! ¿En qué puedo ayudarte hoy?'
 ```
 
-
 Let's now wrap this more complicated chain in a Message History class. This time, because there are multiple keys in the input, we need to specify the correct key to use to save the chat history.
-
 
 ```python
 with_message_history = RunnableWithMessageHistory(
@@ -412,11 +358,9 @@ with_message_history = RunnableWithMessageHistory(
 )
 ```
 
-
 ```python
 config = {"configurable": {"session_id": "abc11"}}
 ```
-
 
 ```python
 response = with_message_history.invoke(
@@ -427,13 +371,9 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 '¡Hola Todd! ¿En qué puedo ayudarte hoy?'
 ```
-
-
 
 ```python
 response = with_message_history.invoke(
@@ -444,12 +384,9 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 'Tu nombre es Todd.'
 ```
-
 
 To help you understand what's happening internally, check out [this LangSmith trace](https://smith.langchain.com/public/f48fabb6-6502-43ec-8242-afc352b769ed/r)
 
@@ -462,7 +399,6 @@ One important concept to understand when building chatbots is how to manage conv
 We can do this by adding a simple step in front of the prompt that modifies the `messages` key appropriately, and then wrap that new chain in the Message History class. 
 
 LangChain comes with a few built-in helpers for [managing a list of messages](/docs/how_to/#messages). In this case we'll use the [trim_messages](/docs/how_to/trim_messages/) helper to reduce how many messages we're sending to the model. The trimmer allows us to specify how many tokens we want to keep, along with other parameters like if we want to always keep the system message and whether to allow partial messages:
-
 
 ```python
 <!--IMPORTS:[{"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Build a Chatbot"}, {"imported": "trim_messages", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.utils.trim_messages.html", "title": "Build a Chatbot"}]-->
@@ -494,8 +430,6 @@ messages = [
 trimmer.invoke(messages)
 ```
 
-
-
 ```output
 [SystemMessage(content="you're a good assistant"),
  HumanMessage(content='whats 2 + 2'),
@@ -506,11 +440,9 @@ trimmer.invoke(messages)
  AIMessage(content='yes!')]
 ```
 
-
 To  use it in our chain, we just need to run the trimmer before we pass the `messages` input to our prompt. 
 
 Now if we try asking the model our name, it won't know it since we trimmed that part of the chat history:
-
 
 ```python
 <!--IMPORTS:[{"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Build a Chatbot"}]-->
@@ -533,15 +465,11 @@ response = chain.invoke(
 response.content
 ```
 
-
-
 ```output
 "I'm sorry, but I don't have access to your personal information. How can I assist you today?"
 ```
 
-
 But if we ask about information that is within the last few messages, it remembers:
-
 
 ```python
 response = chain.invoke(
@@ -553,15 +481,11 @@ response = chain.invoke(
 response.content
 ```
 
-
-
 ```output
 'You asked "what\'s 2 + 2?"'
 ```
 
-
 Let's now wrap this in the Message History
-
 
 ```python
 with_message_history = RunnableWithMessageHistory(
@@ -572,7 +496,6 @@ with_message_history = RunnableWithMessageHistory(
 
 config = {"configurable": {"session_id": "abc20"}}
 ```
-
 
 ```python
 response = with_message_history.invoke(
@@ -586,15 +509,11 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 "I'm sorry, I don't have access to that information. How can I assist you today?"
 ```
 
-
 As expected, the first message where we stated our name has been trimmed. Plus there's now two new messages in the chat history (our latest question and the latest response). This means that even more information that used to be accessible in our conversation history is no longer available! In this case our initial math question has been trimmed from the history as well, so the model no longer knows about it:
-
 
 ```python
 response = with_message_history.invoke(
@@ -608,12 +527,9 @@ response = with_message_history.invoke(
 response.content
 ```
 
-
-
 ```output
 "You haven't asked a math problem yet. Feel free to ask any math-related question you have, and I'll be happy to help you with it."
 ```
-
 
 If you take a look at LangSmith, you can see exactly what is happening under the hood in the [LangSmith trace](https://smith.langchain.com/public/a64b8b7c-1fd6-4dbb-b11a-47cd09a5e4f1/r).
 
@@ -624,7 +540,6 @@ Now we've got a function chatbot. However, one *really* important UX considerati
 It's actually super easy to do this!
 
 All chains expose a `.stream` method, and ones that use message history are no different. We can simply use that method to get back a streaming response.
-
 
 ```python
 config = {"configurable": {"session_id": "abc15"}}

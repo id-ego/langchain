@@ -14,11 +14,11 @@ This template allows you to balance precise embeddings and context retention by 
    - Instead of indexing entire documents, data is divided into smaller chunks, referred to as Parent and Child documents.
    - Child documents are indexed for better representation of specific concepts, while parent documents is retrieved to ensure context retention.
 3. **Hypothetical Questions**:
-     - Documents are processed to determine potential questions they might answer.
-     - These questions are then indexed for better representation of specific concepts, while parent documents are retrieved to ensure context retention.
+   - Documents are processed to determine potential questions they might answer.
+   - These questions are then indexed for better representation of specific concepts, while parent documents are retrieved to ensure context retention.
 4. **Summaries**:
-     - Instead of indexing the entire document, a summary of the document is created and indexed.
-     - Similarly, the parent document is retrieved in a RAG application.
+   - Instead of indexing the entire document, a summary of the document is created and indexed.
+   - Similarly, the parent document is retrieved in a RAG application.
 
 ## Environment Setup
 
@@ -37,7 +37,7 @@ If you want to populate the DB with some example data, you can run `python inges
 The script process and stores sections of the text from the file `dune.txt` into a Neo4j graph database.
 First, the text is divided into larger chunks ("parents") and then further subdivided into smaller chunks ("children"), where both parent and child chunks overlap slightly to maintain context.
 After storing these chunks in the database, embeddings for the child nodes are computed using OpenAI's embeddings and stored back in the graph for future retrieval or analysis.
-For every parent node, hypothetical questions and summaries are generated, embedded, and added to the database. 
+For every parent node, hypothetical questions and summaries are generated, embedded, and added to the database.
 Additionally, a vector index for each retrieval strategy is created for efficient querying of these embeddings.
 
 *Note that ingestion can take a minute or two due to LLMs velocity of generating hypothetical questions and summaries.*
@@ -69,9 +69,9 @@ from neo4j_advanced_rag import chain as neo4j_advanced_chain
 add_routes(app, neo4j_advanced_chain, path="/neo4j-advanced-rag")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
 
 ```shell
@@ -86,7 +86,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)

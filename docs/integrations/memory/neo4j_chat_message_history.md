@@ -9,7 +9,6 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 This notebook goes over how to use `Neo4j` to store chat message history.
 
-
 ```python
 <!--IMPORTS:[{"imported": "Neo4jChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.neo4j.Neo4jChatMessageHistory.html", "title": "Neo4j"}]-->
 from langchain_community.chat_message_histories import Neo4jChatMessageHistory
@@ -25,7 +24,6 @@ history.add_user_message("hi!")
 
 history.add_ai_message("whats up?")
 ```
-
 
 ```python
 history.messages

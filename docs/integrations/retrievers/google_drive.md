@@ -10,19 +10,18 @@ This notebook covers how to retrieve documents from `Google Drive`.
 ## Prerequisites
 
 1. Create a Google Cloud project or use an existing project
-1. Enable the [Google Drive API](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com)
-1. [Authorize credentials for desktop app](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)
-1. `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`
+2. Enable the [Google Drive API](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com)
+3. [Authorize credentials for desktop app](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)
+4. `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`
 
 ## Retrieve the Google Docs
 
-By default, the `GoogleDriveRetriever` expects the `credentials.json` file to be `~/.credentials/credentials.json`, but this is configurable using the `GOOGLE_ACCOUNT_FILE` environment variable. 
+By default, the `GoogleDriveRetriever` expects the `credentials.json` file to be `~/.credentials/credentials.json`, but this is configurable using the `GOOGLE_ACCOUNT_FILE` environment variable.
 The location of `token.json` uses the same directory (or use the parameter `token_path`). Note that `token.json` will be created automatically the first time you use the retriever.
 
 `GoogleDriveRetriever` can retrieve a selection of files with some requests. 
 
 By default, If you use a `folder_id`, all the files inside this folder can be retrieved to `Document`.
-
 
 You can obtain your folder and document id from the URL:
 
@@ -30,7 +29,6 @@ You can obtain your folder and document id from the URL:
 * Document: https://docs.google.com/document/d/1bfaMQ18_i56204VaQDVeAFpqEijJTgvurupdEDiaUQw/edit -> document id is `"1bfaMQ18_i56204VaQDVeAFpqEijJTgvurupdEDiaUQw"`
 
 The special value `root` is for your personal home.
-
 
 ```python
 from langchain_googledrive.retrievers import GoogleDriveRetriever
@@ -66,11 +64,9 @@ It's possible to update or customize this. See the documentation of `GoogleDrive
 
 But, the corresponding packages must be installed.
 
-
 ```python
 %pip install --upgrade --quiet  unstructured
 ```
-
 
 ```python
 retriever.invoke("machine learning")
@@ -89,7 +85,6 @@ You can customize the criteria to select the files. A set of predefined filter a
 | `gdrive-query-with-mime-type`            | Search `query` with a specific `mime_type`                            |
 | `gdrive-query-with-mime-type-and-folder` | Search `query` with a specific `mime_type` and in `folder_id`         |
 
-
 ```python
 retriever = GoogleDriveRetriever(
     template="gdrive-query",  # Search everywhere
@@ -101,7 +96,6 @@ for doc in retriever.invoke("machine learning"):
 ```
 
 Else, you can customize the prompt with a specialized `PromptTemplate`
-
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Google Drive"}]-->
@@ -132,8 +126,6 @@ for doc in retriever.invoke("machine learning"):
 Each Google Drive has a `description` field in metadata (see the *details of a file*).
 Use the `snippets` mode to return the description of selected files.
 
-
-
 ```python
 retriever = GoogleDriveRetriever(
     template="gdrive-mime-type-in-folder",
@@ -146,7 +138,6 @@ retriever = GoogleDriveRetriever(
 )
 retriever.invoke("machine learning")
 ```
-
 
 ## Related
 

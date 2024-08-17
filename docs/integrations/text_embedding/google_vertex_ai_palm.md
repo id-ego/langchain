@@ -3,9 +3,9 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/go
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/google_vertex_ai_palm.ipynb
 ---
 
-# Google Vertex AI PaLM 
+# Google Vertex AI PaLM
 
->[Vertex AI PaLM API](https://cloud.google.com/vertex-ai/docs/generative-ai/learn/overview) is a service on Google Cloud exposing the embedding models. 
+> [Vertex AI PaLM API](https://cloud.google.com/vertex-ai/docs/generative-ai/learn/overview) is a service on Google Cloud exposing the embedding models. 
 
 Note: This integration is separate from the Google PaLM integration.
 
@@ -21,38 +21,29 @@ For more information, see:
 - https://cloud.google.com/docs/authentication/application-default-credentials#GAC
 - https://googleapis.dev/python/google-auth/latest/reference/google.auth.html#module-google.auth
 
-
-
-
 ```python
 %pip install --upgrade --quiet langchain langchain-google-vertexai
 ```
-
 
 ```python
 from langchain_google_vertexai import VertexAIEmbeddings
 ```
 
-
 ```python
 embeddings = VertexAIEmbeddings()
 ```
-
 
 ```python
 text = "This is a test document."
 ```
 
-
 ```python
 query_result = embeddings.embed_query(text)
 ```
 
-
 ```python
 doc_result = embeddings.embed_documents([text])
 ```
-
 
 ## Related
 

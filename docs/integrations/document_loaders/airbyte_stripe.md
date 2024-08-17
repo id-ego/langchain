@@ -8,14 +8,13 @@ sidebar_class_name: hidden
 
 Note: This connector-specific loader is deprecated. Please use [`AirbyteLoader`](/docs/integrations/document_loaders/airbyte) instead.
 
->[Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs, databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
+> [Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs, databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
 
 This loader exposes the Stripe connector as a document loader, allowing you to load various Stripe objects as documents.
 
 ## Installation
 
 First, you need to install the `airbyte-source-stripe` python package.
-
 
 ```python
 %pip install --upgrade --quiet  airbyte-source-stripe
@@ -37,7 +36,6 @@ The general shape looks like this:
 
 By default all fields are stored as metadata in the documents and the text is set to an empty string. Construct the text of the document by transforming the documents returned by the reader.
 
-
 ```python
 <!--IMPORTS:[{"imported": "AirbyteStripeLoader", "source": "langchain_community.document_loaders.airbyte", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.airbyte.AirbyteStripeLoader.html", "title": "Airbyte Stripe (Deprecated)"}]-->
 from langchain_community.document_loaders.airbyte import AirbyteStripeLoader
@@ -53,20 +51,17 @@ loader = AirbyteStripeLoader(
 
 Now you can load documents the usual way
 
-
 ```python
 docs = loader.load()
 ```
 
 As `load` returns a list, it will block until all documents are loaded. To have better control over this process, you can also you the `lazy_load` method which returns an iterator instead:
 
-
 ```python
 docs_iterator = loader.lazy_load()
 ```
 
 Keep in mind that by default the page content is empty and the metadata object contains all the information from the record. To create documents in a different, pass in a record_handler function when creating the loader:
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Airbyte Stripe (Deprecated)"}]-->
@@ -89,7 +84,6 @@ Some streams allow incremental loading, this means the source keeps track of syn
 
 To take advantage of this, store the `last_state` property of the loader and pass it in when creating the loader again. This will ensure that only new records are loaded.
 
-
 ```python
 last_state = loader.last_state  # store safely
 
@@ -102,7 +96,6 @@ incremental_loader = AirbyteStripeLoader(
 
 new_docs = incremental_loader.load()
 ```
-
 
 ## Related
 

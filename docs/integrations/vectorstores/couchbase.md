@@ -3,7 +3,7 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/couc
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/couchbase.ipynb
 ---
 
-# Couchbase 
+# Couchbase
 [Couchbase](http://couchbase.com/) is an award-winning distributed NoSQL cloud database that delivers unmatched versatility, performance, scalability, and financial value for all of your cloud, mobile, AI, and edge computing applications. Couchbase embraces AI with coding assistance for developers and vector search for their applications.
 
 Vector Search is a part of the [Full Text Search Service](https://docs.couchbase.com/server/current/learn/services-and-indexes/services/search-service.html) (Search Service) in Couchbase.
@@ -14,7 +14,6 @@ This tutorial explains how to use Vector Search in Couchbase. You can work with 
 
 To access the `CouchbaseVectorStore` you first need to install the `langchain-couchbase` partner package:
 
-
 ```python
 pip install -qU langchain-couchbase
 ```
@@ -22,7 +21,6 @@ pip install -qU langchain-couchbase
 ### Credentials
 
 Head over to the Couchbase [website](https://cloud.couchbase.com) and create a new connection, making sure to save your database username and password:
-
 
 ```python
 import getpass
@@ -35,7 +33,6 @@ DB_PASSWORD = getpass.getpass("Enter the password for the Couchbase cluster: ")
 ```
 
 If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -53,7 +50,6 @@ We create a connection to the Couchbase cluster initially and then pass the clus
 Here, we are connecting using the username and password from above. You can also connect using any other supported way to your cluster. 
 
 For more information on connecting to the Couchbase cluster, please check the [documentation](https://docs.couchbase.com/python-sdk/current/hello-world/start-using-sdk.html#connect).
-
 
 ```python
 from datetime import timedelta
@@ -74,7 +70,6 @@ We will now set the bucket, scope, and collection names in the Couchbase cluster
 
 For this example, we are using the default scope & collections.
 
-
 ```python
 BUCKET_NAME = "langchain_bucket"
 SCOPE_NAME = "_default"
@@ -85,7 +80,6 @@ SEARCH_INDEX_NAME = "langchain-test-index"
 For details on how to create a Search index with support for Vector fields, please refer to the documentation.
 
 - [Couchbase Capella](https://docs.couchbase.com/cloud/vector-search/create-vector-search-index-ui.html)
-  
 - [Couchbase Server](https://docs.couchbase.com/server/current/vector-search/create-vector-search-index-ui.html)
 
 ### Simple Instantiation
@@ -114,7 +108,6 @@ vector_store = CouchbaseVectorStore(
 
 You can optionally specify the text & embeddings field for the document using the `text_key` and `embedding_key` fields.
 
-
 ```python
 vector_store_specific = CouchbaseVectorStore(
     cluster=cluster,
@@ -135,7 +128,6 @@ Once you have created your vector store, we can interact with it by adding and d
 ### Add items to vector store
 
 We can add items to our vector store by using the `add_documents` function.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Couchbase "}]-->
@@ -212,7 +204,6 @@ vector_store.add_documents(documents=documents, ids=uuids)
 
 ### Delete items from vector store
 
-
 ```python
 vector_store.delete(ids=[uuids[-1]])
 ```
@@ -227,7 +218,6 @@ Once your vector store has been created and the relevant documents have been add
 
 Performing a simple similarity search can be done as follows:
 
-
 ```python
 results = vector_store.similarity_search(
     "LangChain provides abstractions to make working with LLMs easy",
@@ -240,7 +230,6 @@ for res in results:
 #### Similarity search with Score
 
 You can also fetch the scores for the results by calling the `similarity_search_with_score` method.
-
 
 ```python
 results = vector_store.similarity_search_with_score("Will it be hot tomorrow?", k=1)
@@ -258,8 +247,6 @@ If you want to fetch one of the fields in the metadata, you need to specify it u
 
 For example, to fetch the `source` field in the metadata, you need to specify `metadata.source`.
 
-
-
 ```python
 query = "What did I eat for breakfast today?"
 results = vector_store.similarity_search(query, fields=["metadata.source"])
@@ -272,13 +259,12 @@ Couchbase allows you to do hybrid searches by combining Vector Search results wi
 
 The results will be based on the combination of the results from both Vector Search and the searches supported by Search Service. The scores of each of the component searches are added up to get the total score of the result.
 
-To perform hybrid searches, there is an optional parameter, `search_options` that can be passed to all the similarity searches.  
+To perform hybrid searches, there is an optional parameter, `search_options` that can be passed to all the similarity searches.\
 The different search/query possibilities for the `search_options` can be found [here](https://docs.couchbase.com/server/current/search/search-request-params.html#query-object).
 
 #### Create Diverse Metadata for Hybrid Search
-In order to simulate hybrid search, let us create some random metadata from the existing documents. 
+In order to simulate hybrid search, let us create some random metadata from the existing documents.
 We uniformly add three fields to the metadata, `date` between 2010 & 2020, `rating` between 1 & 5 and `author` set to either John Doe or Jane Doe. 
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Couchbase "}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Couchbase "}]-->
@@ -306,7 +292,6 @@ print(results[0].metadata)
 ### Query by Exact Value
 We can search for exact matches on a textual field like the author in the `metadata` object.
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 results = vector_store.similarity_search(
@@ -322,7 +307,6 @@ We can search for partial matches by specifying a fuzziness for the search. This
 
 Here, "Jae" is close (fuzziness of 1) to "Jane".
 
-
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 results = vector_store.similarity_search(
@@ -337,7 +321,6 @@ print(results[0])
 
 ### Query by Date Range Query
 We can search for documents that are within a date range query on a date field like `metadata.date`.
-
 
 ```python
 query = "Any mention about independence?"
@@ -358,7 +341,6 @@ print(results[0])
 
 ### Query by Numeric Range Query
 We can search for documents that are within a range for a numeric field like `metadata.rating`.
-
 
 ```python
 query = "Any mention about independence?"
@@ -381,7 +363,6 @@ print(results[0])
 Different search queries can be combined using AND (conjuncts) or OR (disjuncts) operators.
 
 In this example, we are checking for documents with a rating between 3 & 4 and dated between 2015 & 2018.
-
 
 ```python
 query = "Any mention about independence?"
@@ -411,7 +392,6 @@ You can also transform the vector store into a retriever for easier usage in you
 
 Here is how to transform your vector store into a retriever and then invoke the retreiever with a simple query and filter.
 
-
 ```python
 retriever = vector_store.as_retriever(
     search_type="similarity_score_threshold",
@@ -433,8 +413,7 @@ For guides on how to use this vector store for retrieval-augmented generation (R
 ## Question: Should I create the Search index before creating the CouchbaseVectorStore object?
 Yes, currently you need to create the Search index before creating the `CouchbaseVectoreStore` object.
 
-
-## Question: I am not seeing all the fields that I specified in my search results. 
+## Question: I am not seeing all the fields that I specified in my search results.
 
 In Couchbase, we can only return the fields stored in the Search index. Please ensure that the field that you are trying to access in the search results is part of the Search index.
 
@@ -447,8 +426,7 @@ Note that these options will increase the size of the index.
 
 For more details on dynamic mappings, please refer to the [documentation](https://docs.couchbase.com/cloud/search/customize-index.html).
 
-
-## Question: I am unable to see the metadata object in my search results. 
+## Question: I am unable to see the metadata object in my search results.
 This is most likely due to the `metadata` field in the document not being indexed and/or stored by the Couchbase Search index. In order to index the `metadata` field in the document, you need to add it to the index as a child mapping. 
 
 If you select to map all the fields in the mapping, you will be able to search by all metadata fields. Alternatively, to optimize the index, you can select the specific fields inside `metadata` object to be indexed. You can refer to the [docs](https://docs.couchbase.com/cloud/search/customize-index.html) to learn more about indexing child mappings.
@@ -461,7 +439,6 @@ Creating Child Mappings
 ## API reference
 
 For detailed documentation of all `CouchbaseVectorStore` features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_couchbase.vectorstores.CouchbaseVectorStore.html
-
 
 ## Related
 

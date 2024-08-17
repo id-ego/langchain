@@ -14,14 +14,12 @@ To use this toolkit, you need two API keys:
 `FINANCIAL_DATASETS_API_KEY`: Get it from [financialdatasets.ai](https://financialdatasets.ai/).
 `OPENAI_API_KEY`: Get it from [OpenAI](https://platform.openai.com/).
 
-
 ```python
 import getpass
 import os
 
 os.environ["FINANCIAL_DATASETS_API_KEY"] = getpass.getpass()
 ```
-
 
 ```python
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
@@ -31,7 +29,6 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 
 This toolkit lives in the `langchain-community` package.
 
-
 ```python
 %pip install -qU langchain-community
 ```
@@ -39,7 +36,6 @@ This toolkit lives in the `langchain-community` package.
 ## Instantiation
 
 Now we can instantiate our toolkit:
-
 
 ```python
 <!--IMPORTS:[{"imported": "FinancialDatasetsToolkit", "source": "langchain_community.agent_toolkits.financial_datasets.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.financial_datasets.toolkit.FinancialDatasetsToolkit.html", "title": "FinancialDatasets Toolkit"}, {"imported": "FinancialDatasetsAPIWrapper", "source": "langchain_community.utilities.financial_datasets", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.financial_datasets.FinancialDatasetsAPIWrapper.html", "title": "FinancialDatasets Toolkit"}]-->
@@ -58,7 +54,6 @@ toolkit = FinancialDatasetsToolkit(api_wrapper=api_wrapper)
 
 View available tools:
 
-
 ```python
 tools = toolkit.get_tools()
 ```
@@ -66,7 +61,6 @@ tools = toolkit.get_tools()
 ## Use within an agent
 
 Let's equip our agent with the FinancialDatasetsToolkit and ask financial questions.
-
 
 ```python
 system_prompt = """
@@ -105,7 +99,6 @@ help users make informed decisions. Always maintain a professional and objective
 
 Instantiate the LLM.
 
-
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "FinancialDatasets Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "FinancialDatasets Toolkit"}]-->
 from langchain_core.tools import tool
@@ -116,13 +109,11 @@ model = ChatOpenAI(model="gpt-4o")
 
 Define a user query.
 
-
 ```python
 query = "What was AAPL's revenue in 2023? What about it's total debt in Q1 2024?"
 ```
 
 Create the agent.
-
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "FinancialDatasets Toolkit"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "FinancialDatasets Toolkit"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "FinancialDatasets Toolkit"}]-->
@@ -145,7 +136,6 @@ agent_executor = AgentExecutor(agent=agent, tools=tools)
 
 Query the agent.
 
-
 ```python
 agent_executor.invoke({"input": query})
 ```
@@ -153,7 +143,6 @@ agent_executor.invoke({"input": query})
 ## API reference
 
 For detailed documentation of all `FinancialDatasetsToolkit` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.financial_datasets.toolkit.FinancialDatasetsToolkit.html).
-
 
 ## Related
 

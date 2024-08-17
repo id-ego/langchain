@@ -5,10 +5,9 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # FlashRank reranker
 
->[FlashRank](https://github.com/PrithivirajDamodaran/FlashRank) is the Ultra-lite & Super-fast Python library to add re-ranking to your existing search & retrieval pipelines. It is based on SoTA cross-encoders, with gratitude to all the model owners.
+> [FlashRank](https://github.com/PrithivirajDamodaran/FlashRank) is the Ultra-lite & Super-fast Python library to add re-ranking to your existing search & retrieval pipelines. It is based on SoTA cross-encoders, with gratitude to all the model owners.
 
 This notebook shows how to use [flashrank](https://github.com/PrithivirajDamodaran/FlashRank) for document compression and retrieval.
-
 
 ```python
 %pip install --upgrade --quiet  flashrank
@@ -18,7 +17,6 @@ This notebook shows how to use [flashrank](https://github.com/PrithivirajDamodar
 
 %pip install --upgrade --quiet  faiss_cpu
 ```
-
 
 ```python
 # Helper function for printing docs
@@ -38,14 +36,12 @@ def pretty_print_docs(docs):
 ## Set up the base vector store retriever
 Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
 
-
 ```python
 import getpass
 import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "FlashRank reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "FlashRank reranker"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "FlashRank reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "FlashRank reranker"}]-->
@@ -274,7 +270,6 @@ May God bless you all. May God protect our troops.
 ## Doing reranking with FlashRank
 Now let's wrap our base retriever with a `ContextualCompressionRetriever`, using `FlashrankRerank` as a compressor.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "FlashRank reranker"}, {"imported": "FlashrankRerank", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.flashrank_rerank.FlashrankRerank.html", "title": "FlashRank reranker"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "FlashRank reranker"}]-->
 from langchain.retrievers import ContextualCompressionRetriever
@@ -297,7 +292,6 @@ print([doc.metadata["id"] for doc in compressed_docs])
 [0, 5, 3]
 ```
 After reranking, the top 3 documents are different from the top 3 documents retrieved by the base retriever.
-
 
 ```python
 pretty_print_docs(compressed_docs)
@@ -335,7 +329,6 @@ It’s exploitation—and it drives up prices.
 ```
 ## QA reranking with FlashRank
 
-
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "FlashRank reranker"}]-->
 from langchain.chains import RetrievalQA
@@ -343,19 +336,14 @@ from langchain.chains import RetrievalQA
 chain = RetrievalQA.from_chain_type(llm=llm, retriever=compression_retriever)
 ```
 
-
 ```python
 chain.invoke(query)
 ```
-
-
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',
  'result': "The President mentioned that Ketanji Brown Jackson is one of the nation's top legal minds and will continue Justice Breyer's legacy of excellence."}
 ```
-
-
 
 ## Related
 

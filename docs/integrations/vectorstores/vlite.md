@@ -157,7 +157,6 @@ vlite.info()
 data = vlite.dump()
 ```
 
-
 ## Related
 
 - Vector store [conceptual guide](/docs/concepts/#vector-stores)

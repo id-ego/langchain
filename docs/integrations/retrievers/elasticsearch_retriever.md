@@ -6,7 +6,7 @@ sidebar_label: Elasticsearch
 
 # ElasticsearchRetriever
 
->[Elasticsearch](https://www.elastic.co/elasticsearch/) is a distributed, RESTful search and analytics engine. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents. It supports keyword search, vector search, hybrid search and complex filtering.
+> [Elasticsearch](https://www.elastic.co/elasticsearch/) is a distributed, RESTful search and analytics engine. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents. It supports keyword search, vector search, hybrid search and complex filtering.
 
 The `ElasticsearchRetriever` is a generic wrapper to enable flexible access to all `Elasticsearch` features through the [Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html).  For most use cases the other classes (`ElasticsearchStore`, `ElasticsearchEmbeddings`, etc.) should suffice, but if they don't you can use `ElasticsearchRetriever`.
 
@@ -25,11 +25,9 @@ There are two main ways to set up an Elasticsearch instance:
 
 - Elastic Cloud: [Elastic Cloud](https://cloud.elastic.co/) is a managed Elasticsearch service. Sign up for a [free trial](https://www.elastic.co/cloud/cloud-trial-overview).
 To connect to an Elasticsearch instance that does not require login credentials (starting the docker instance with security enabled), pass the Elasticsearch URL and index name along with the embedding object to the constructor.
-
 - Local Install Elasticsearch: Get started with Elasticsearch by running it locally. The easiest way is to use the official Elasticsearch Docker image. See the [Elasticsearch Docker documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html) for more information.
 
 If you want to get automated tracing from individual queries, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
-
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
@@ -40,11 +38,9 @@ If you want to get automated tracing from individual queries, you can also set y
 
 This retriever lives in the `langchain-elasticsearch` package. For demonstration purposes, we will also install `langchain-community` to generate text [embeddings](/docs/concepts/#embedding-models).
 
-
 ```python
 %pip install -qU langchain-community langchain-elasticsearch
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "DeterministicFakeEmbedding", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.fake.DeterministicFakeEmbedding.html", "title": "ElasticsearchRetriever"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "ElasticsearchRetriever"}, {"imported": "Embeddings", "source": "langchain_core.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_core.embeddings.embeddings.Embeddings.html", "title": "ElasticsearchRetriever"}, {"imported": "ElasticsearchRetriever", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_elasticsearch.retrievers.ElasticsearchRetriever.html", "title": "ElasticsearchRetriever"}]-->
@@ -62,7 +58,6 @@ from langchain_elasticsearch import ElasticsearchRetriever
 
 Here we define the conncection to Elasticsearch. In this example we use a locally running instance. Alternatively, you can make an account in [Elastic Cloud](https://cloud.elastic.co/) and start a [free trial](https://www.elastic.co/cloud/cloud-trial-overview).
 
-
 ```python
 es_url = "http://localhost:9200"
 es_client = Elasticsearch(hosts=[es_url])
@@ -71,13 +66,11 @@ es_client.info()
 
 For vector search, we are going to use random embeddings just for illustration. For real use cases, pick one of the available LangChain [Embeddings](/docs/integrations/text_embedding) classes.
 
-
 ```python
 embeddings = DeterministicFakeEmbedding(size=3)
 ```
 
 #### Define example data
-
 
 ```python
 index_name = "test-langchain-retriever"
@@ -98,7 +91,6 @@ texts = [
 #### Index data
 
 Typically, users make use of `ElasticsearchRetriever` when they already have data in an Elasticsearch index. Here we index some example text documents. If you created an index for example using `ElasticsearchStore.from_documents` that's also fine.
-
 
 ```python
 def create_index(
@@ -154,24 +146,19 @@ def index_data(
     return len(requests)
 ```
 
-
 ```python
 index_data(es_client, index_name, text_field, dense_vector_field, embeddings, texts)
 ```
 
-
-
 ```output
 7
 ```
-
 
 ## Instantiation
 
 ### Vector search
 
 Dense vector retrival using fake embeddings in this example.
-
 
 ```python
 def vector_query(search_query: str) -> Dict:
@@ -196,8 +183,6 @@ vector_retriever = ElasticsearchRetriever.from_es_params(
 vector_retriever.invoke("foo")
 ```
 
-
-
 ```output
 [Document(page_content='foo', metadata={'_index': 'test-langchain-index', '_id': '0', '_score': 1.0, '_source': {'fake_embedding': [-2.336764233933763, 0.27510289545940503, -0.7957597268194339], 'num_characters': 3}}),
  Document(page_content='world', metadata={'_index': 'test-langchain-index', '_id': '2', '_score': 0.6770179, '_source': {'fake_embedding': [-0.7041151202179595, -1.4652961969276497, -0.25786766898672847], 'num_characters': 5}}),
@@ -206,11 +191,9 @@ vector_retriever.invoke("foo")
  Document(page_content='foo bar', metadata={'_index': 'test-langchain-index', '_id': '5', '_score': 0.2086992, '_source': {'fake_embedding': [0.2533670476638539, 0.08100381646160418, 0.7763644080870179], 'num_characters': 7}})]
 ```
 
-
 ### BM25
 
 Traditional keyword matching.
-
 
 ```python
 def bm25_query(search_query: str) -> Dict:
@@ -233,19 +216,15 @@ bm25_retriever = ElasticsearchRetriever.from_es_params(
 bm25_retriever.invoke("foo")
 ```
 
-
-
 ```output
 [Document(page_content='foo', metadata={'_index': 'test-langchain-index', '_id': '0', '_score': 0.9711467, '_source': {'fake_embedding': [-2.336764233933763, 0.27510289545940503, -0.7957597268194339], 'num_characters': 3}}),
  Document(page_content='foo bar', metadata={'_index': 'test-langchain-index', '_id': '5', '_score': 0.7437035, '_source': {'fake_embedding': [0.2533670476638539, 0.08100381646160418, 0.7763644080870179], 'num_characters': 7}}),
  Document(page_content='bla bla foo', metadata={'_index': 'test-langchain-index', '_id': '6', '_score': 0.6025789, '_source': {'fake_embedding': [1.7365927060137358, -0.5230400847844948, 0.7978339724186192], 'num_characters': 11}})]
 ```
 
-
 ### Hybrid search
 
 The combination of vector search and BM25 search using [Reciprocal Rank Fusion](https://www.elastic.co/guide/en/elasticsearch/reference/current/rrf.html) (RRF) to combine the result sets.
-
 
 ```python
 def hybrid_query(search_query: str) -> Dict:
@@ -276,19 +255,15 @@ hybrid_retriever = ElasticsearchRetriever.from_es_params(
 hybrid_retriever.invoke("foo")
 ```
 
-
-
 ```output
 [Document(page_content='foo', metadata={'_index': 'test-langchain-index', '_id': '0', '_score': 0.9711467, '_source': {'fake_embedding': [-2.336764233933763, 0.27510289545940503, -0.7957597268194339], 'num_characters': 3}}),
  Document(page_content='foo bar', metadata={'_index': 'test-langchain-index', '_id': '5', '_score': 0.7437035, '_source': {'fake_embedding': [0.2533670476638539, 0.08100381646160418, 0.7763644080870179], 'num_characters': 7}}),
  Document(page_content='bla bla foo', metadata={'_index': 'test-langchain-index', '_id': '6', '_score': 0.6025789, '_source': {'fake_embedding': [1.7365927060137358, -0.5230400847844948, 0.7978339724186192], 'num_characters': 11}})]
 ```
 
-
 ### Fuzzy matching
 
 Keyword matching with typo tolerance.
-
 
 ```python
 def fuzzy_query(search_query: str) -> Dict:
@@ -314,19 +289,15 @@ fuzzy_retriever = ElasticsearchRetriever.from_es_params(
 fuzzy_retriever.invoke("fox")  # note the character tolernace
 ```
 
-
-
 ```output
 [Document(page_content='foo', metadata={'_index': 'test-langchain-index', '_id': '0', '_score': 0.6474311, '_source': {'fake_embedding': [-2.336764233933763, 0.27510289545940503, -0.7957597268194339], 'num_characters': 3}}),
  Document(page_content='foo bar', metadata={'_index': 'test-langchain-index', '_id': '5', '_score': 0.49580228, '_source': {'fake_embedding': [0.2533670476638539, 0.08100381646160418, 0.7763644080870179], 'num_characters': 7}}),
  Document(page_content='bla bla foo', metadata={'_index': 'test-langchain-index', '_id': '6', '_score': 0.40171927, '_source': {'fake_embedding': [1.7365927060137358, -0.5230400847844948, 0.7978339724186192], 'num_characters': 11}})]
 ```
 
-
 ### Complex filtering
 
 Combination of filters on different fields.
-
 
 ```python
 def filter_query_func(search_query: str) -> Dict:
@@ -357,8 +328,6 @@ filtering_retriever = ElasticsearchRetriever.from_es_params(
 filtering_retriever.invoke("foo")
 ```
 
-
-
 ```output
 [Document(page_content='foo bar', metadata={'_index': 'test-langchain-index', '_id': '5', '_score': 1.7437035, '_source': {'fake_embedding': [0.2533670476638539, 0.08100381646160418, 0.7763644080870179], 'num_characters': 7}}),
  Document(page_content='world', metadata={'_index': 'test-langchain-index', '_id': '2', '_score': 1.0, '_source': {'fake_embedding': [-0.7041151202179595, -1.4652961969276497, -0.25786766898672847], 'num_characters': 5}}),
@@ -366,13 +335,11 @@ filtering_retriever.invoke("foo")
  Document(page_content='hello', metadata={'_index': 'test-langchain-index', '_id': '4', '_score': 1.0, '_source': {'fake_embedding': [-0.28560441330564046, 0.9958894823084921, 1.5489829880195058], 'num_characters': 5}})]
 ```
 
-
 Note that the query match is on top. The other documents that got passed the filter are also in the result set, but they all have the same score.
 
 ### Custom document mapper
 
 It is possible to cusomize the function tha maps an Elasticsearch result (hit) to a LangChain document.
-
 
 ```python
 def num_characters_mapper(hit: Dict[str, Any]) -> Document:
@@ -394,15 +361,12 @@ custom_mapped_retriever = ElasticsearchRetriever.from_es_params(
 custom_mapped_retriever.invoke("foo")
 ```
 
-
-
 ```output
 [Document(page_content='This document has 7 characters', metadata={'text_content': 'foo bar'}),
  Document(page_content='This document has 5 characters', metadata={'text_content': 'world'}),
  Document(page_content='This document has 11 characters', metadata={'text_content': 'hello world'}),
  Document(page_content='This document has 5 characters', metadata={'text_content': 'hello'})]
 ```
-
 
 ## Usage
 
@@ -412,11 +376,9 @@ Following the above examples, we use `.invoke` to issue a single query. Because 
 
 We can also incorporate retrievers into [chains](/docs/how_to/sequence/) to build larger applications, such as a simple [RAG](/docs/tutorials/rag/) application. For demonstration purposes, we instantiate an OpenAI chat model as well.
 
-
 ```python
 %pip install -qU langchain-openai
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "ElasticsearchRetriever"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ElasticsearchRetriever"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "ElasticsearchRetriever"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "ElasticsearchRetriever"}]-->
@@ -448,7 +410,6 @@ chain = (
 )
 ```
 
-
 ```python
 chain.invoke("what is foo?")
 ```
@@ -456,7 +417,6 @@ chain.invoke("what is foo?")
 ## API reference
 
 For detailed documentation of all `ElasticsearchRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/retrievers/langchain_elasticsearch.retrievers.ElasticsearchRetriever.html).
-
 
 ## Related
 

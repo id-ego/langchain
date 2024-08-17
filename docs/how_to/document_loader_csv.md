@@ -9,7 +9,6 @@ A [comma-separated values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_v
 
 LangChain implements a [CSV Loader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.CSVLoader.html) that will load CSV files into a sequence of [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html#langchain_core.documents.base.Document) objects. Each row of the CSV file is translated to one document.
 
-
 ```python
 <!--IMPORTS:[{"imported": "CSVLoader", "source": "langchain_community.document_loaders.csv_loader", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.CSVLoader.html", "title": "How to load CSVs"}]-->
 from langchain_community.document_loaders.csv_loader import CSVLoader
@@ -31,7 +30,6 @@ page_content='Team: Reds\n"Payroll (millions)": 82.20\n"Wins": 97' metadata={'so
 ## Customizing the CSV parsing and loading
 
 `CSVLoader` will accept a `csv_args` kwarg that supports customization of arguments passed to Python's `csv.DictReader`. See the [csv module](https://docs.python.org/3/library/csv.html) documentation for more information of what csv args are supported.
-
 
 ```python
 loader = CSVLoader(
@@ -57,7 +55,6 @@ The `"source"` key on [Document](https://api.python.langchain.com/en/latest/docu
 
 This is useful when using documents loaded from CSV files for chains that answer questions using sources.
 
-
 ```python
 loader = CSVLoader(file_path=file_path, source_column="Team")
 
@@ -72,7 +69,6 @@ page_content='Team: Reds\n"Payroll (millions)": 82.20\n"Wins": 97' metadata={'so
 ## Load from a string
 
 Python's `tempfile` can be used when working with CSV strings directly.
-
 
 ```python
 import tempfile

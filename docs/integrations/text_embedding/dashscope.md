@@ -7,12 +7,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 Let's load the DashScope Embedding class.
 
-
 ```python
 <!--IMPORTS:[{"imported": "DashScopeEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.dashscope.DashScopeEmbeddings.html", "title": "DashScope"}]-->
 from langchain_community.embeddings import DashScopeEmbeddings
 ```
-
 
 ```python
 embeddings = DashScopeEmbeddings(
@@ -20,23 +18,19 @@ embeddings = DashScopeEmbeddings(
 )
 ```
 
-
 ```python
 text = "This is a test document."
 ```
-
 
 ```python
 query_result = embeddings.embed_query(text)
 print(query_result)
 ```
 
-
 ```python
 doc_results = embeddings.embed_documents(["foo"])
 print(doc_results)
 ```
-
 
 ## Related
 

@@ -4,11 +4,9 @@ canonical: https://python.langchain.com/v0.2/docs/integrations/providers/nuclia/
 
 # Nuclia
 
->[Nuclia](https://nuclia.com) automatically indexes your unstructured data from any internal
-> and external source, providing optimized search results and generative answers. 
-> It can handle video and audio transcription, image content extraction, and document parsing.
-
-
+> [Nuclia](https://nuclia.com) automatically indexes your unstructured data from any internal
+and external source, providing optimized search results and generative answers.
+It can handle video and audio transcription, image content extraction, and document parsing.
 
 ## Installation and Setup
 
@@ -18,17 +16,16 @@ We need to install the `nucliadb-protos` package to use the `Nuclia Understandin
 pip install nucliadb-protos
 ```
 
-We need to have a `Nuclia account`. 
-We can create one for free at [https://nuclia.cloud](https://nuclia.cloud), 
+We need to have a `Nuclia account`.
+We can create one for free at [https://nuclia.cloud](https://nuclia.cloud),
 and then [create a NUA key](https://docs.nuclia.dev/docs/docs/using/understanding/intro).
-
 
 ## Document Transformer
 
 ### Nuclia
 
->`Nuclia Understanding API` document transformer splits text into paragraphs and sentences, 
-> identifies entities, provides a summary of the text and generates embeddings for all the sentences.
+> `Nuclia Understanding API` document transformer splits text into paragraphs and sentences,
+identifies entities, provides a summary of the text and generates embeddings for all the sentences.
 
 To use the Nuclia document transformer, we need to instantiate a `NucliaUnderstandingAPI`
 tool with `enable_ml` set to `True`:

@@ -13,7 +13,6 @@ This notebook explains how to use the embeddings functionality of ApertureDB.
 
 This installs the [Python SDK](https://docs.aperturedata.io/category/aperturedb-python-sdk) used to write client code for ApertureDB.
 
-
 ```python
 %pip install --upgrade --quiet aperturedb
 ```
@@ -22,7 +21,7 @@ Note: you may need to restart the kernel to use updated packages.
 ```
 ## Run an ApertureDB instance
 
-To continue, you should have an [ApertureDB instance up and running](https://docs.aperturedata.io/HowToGuides/start/Setup) and configure your environment to use it.  
+To continue, you should have an [ApertureDB instance up and running](https://docs.aperturedata.io/HowToGuides/start/Setup) and configure your environment to use it.\
 There are various ways to do that, for example:
 
 ```bash
@@ -32,7 +31,6 @@ adb config create local --active --no-interactive
 
 ## Download some web documents
 We're going to do a mini-crawl here of one web page.
-
 
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "ApertureDB"}]-->
@@ -57,7 +55,6 @@ docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
 docker exec ollama ollama run llama2
 ```
 
-
 ```python
 <!--IMPORTS:[{"imported": "OllamaEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.ollama.OllamaEmbeddings.html", "title": "ApertureDB"}]-->
 from langchain_community.embeddings import OllamaEmbeddings
@@ -68,7 +65,6 @@ embeddings = OllamaEmbeddings()
 ## Split documents into segments
 
 We want to turn our single document into multiple segments.
-
 
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "ApertureDB"}]-->
@@ -84,7 +80,6 @@ This code creates a vectorstore in the ApertureDB instance.
 Within the instance, this vectorstore is represented as a "[descriptor set](https://docs.aperturedata.io/category/descriptorset-commands)".
 By default, the descriptor set is named `langchain`.  The following code will generate embeddings for each document and store them in ApertureDB as descriptors.  This will take a few seconds as the embeddings are bring generated.
 
-
 ```python
 <!--IMPORTS:[{"imported": "ApertureDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.aperturedb.ApertureDB.html", "title": "ApertureDB"}]-->
 from langchain_community.vectorstores import ApertureDB
@@ -95,7 +90,6 @@ vector_db = ApertureDB.from_documents(documents, embeddings)
 ## Select a large language model
 
 Again, we use the Ollama server we set up for local processing.
-
 
 ```python
 <!--IMPORTS:[{"imported": "Ollama", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.ollama.Ollama.html", "title": "ApertureDB"}]-->
@@ -111,7 +105,6 @@ Now we have all the components we need to create a RAG (Retrieval-Augmented Gene
 2. Find text segments that are similar to the user query using the vector store
 3. Pass user query and context documents to the LLM using a prompt template
 4. Return the LLM's answer
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ApertureDB"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "ApertureDB"}, {"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "ApertureDB"}]-->
@@ -148,7 +141,6 @@ Based on the provided context, ApertureDB can store images. In fact, it is speci
 ## Run the RAG chain
 
 Finally we pass a question to the chain and get our answer.  This will take a few seconds to run as the LLM generates an answer from the query and context documents.
-
 
 ```python
 user_query = "How can ApertureDB store images?"

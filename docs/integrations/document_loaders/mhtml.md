@@ -7,12 +7,10 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 MHTML is a is used both for emails but also for archived webpages. MHTML, sometimes referred as MHT, stands for MIME HTML is a single file in which entire webpage is archived. When one saves a webpage as MHTML format, this file extension will contain HTML code, images, audio files, flash animation etc.
 
-
 ```python
 <!--IMPORTS:[{"imported": "MHTMLLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.mhtml.MHTMLLoader.html", "title": "mhtml"}]-->
 from langchain_community.document_loaders import MHTMLLoader
 ```
-
 
 ```python
 # Create a new loader object for the MHTML file

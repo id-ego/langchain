@@ -50,11 +50,10 @@ from rag_mongo import ingest as rag_mongo_ingest
 add_routes(app, rag_mongo_ingest, path="/rag-mongo-ingest")
 ```
 
-(Optional) Let's now configure LangSmith. 
-LangSmith will help us trace, monitor and debug LangChain applications. 
-You can sign up for LangSmith [here](https://smith.langchain.com/). 
+(Optional) Let's now configure LangSmith.
+LangSmith will help us trace, monitor and debug LangChain applications.
+You can sign up for LangSmith [here](https://smith.langchain.com/).
 If you don't have access, you can skip this section
-
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -72,7 +71,7 @@ If you are inside this directory, then you can spin up a LangServe instance dire
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at 
+This will start the FastAPI app with a server is running locally at
 [http://localhost:8000](http://localhost:8000)
 
 We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
@@ -88,7 +87,6 @@ runnable = RemoteRunnable("http://localhost:8000/rag-mongo")
 
 For additional context, please refer to [this notebook](https://colab.research.google.com/drive/1cr2HBAHyBmwKUerJq2if0JaNhy-hIq7I#scrollTo=TZp7_CBfxTOB).
 
-
 ## MongoDB Setup
 
 Use this step if you need to setup your MongoDB account and ingest data.
@@ -100,15 +98,9 @@ We will first follow the standard MongoDB Atlas setup instructions [here](https:
 
 This can be done by going to the deployment overview page and connecting to you database
 
-
-
 We then look at the drivers available
 
-
-
 Among which we will see our URI listed
-
-
 
 Let's then set that as an environment variable locally:
 
@@ -134,23 +126,13 @@ Note that you can (and should!) change this to ingest data of your choice
 
 We can first connect to the cluster where our database lives
 
-
-
 We can then navigate to where all our collections are listed
-
-
 
 We can then find the collection we want and look at the search indexes for that collection
 
-
-
 That should likely be empty, and we want to create a new one:
 
-
-
 We will use the JSON editor to create it
-
-
 
 And we will paste the following JSON in:
 
@@ -168,6 +150,5 @@ And we will paste the following JSON in:
    }
  }
 ```
-
 
 From there, hit "Next" and then "Create Search Index". It will take a little bit but you should then have an index over your data!

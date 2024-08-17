@@ -48,7 +48,6 @@ with_message_history.invoke(
 )
 ```
 
-
 In order to properly set this up there are two main things to consider:
 
 1. How to store and load messages? (this is `get_session_history` in the example above)
@@ -72,11 +71,9 @@ This function should take in a `session_id` and return a `BaseChatMessageHistory
 
 Let's create a `get_session_history` object to use for this example. To keep things simple, we will use a simple SQLiteMessage
 
-
 ```python
 ! rm memory.db
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "SQLChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.sql.SQLChatMessageHistory.html", "title": "How to add message history"}]-->
@@ -112,9 +109,8 @@ First we construct a runnable (which here accepts a dict as input and returns a 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs
-  customVarName="llm"
+customVarName="llm"
 />
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add message history"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to add message history"}]-->
@@ -128,14 +124,12 @@ The simplest form is just adding memory to a ChatModel.
 ChatModels accept a list of messages as input and output a message.
 This makes it very easy to use `RunnableWithMessageHistory` - no additional configuration is needed!
 
-
 ```python
 runnable_with_history = RunnableWithMessageHistory(
     model,
     get_session_history,
 )
 ```
-
 
 ```python
 runnable_with_history.invoke(
@@ -144,13 +138,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content="It's nice to meet you, Bob! I'm Claude, an AI assistant created by Anthropic. How can I help you today?", response_metadata={'id': 'msg_01UHCCMiZz9yNYjt41xUJrtk', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 12, 'output_tokens': 32}}, id='run-55f6a451-606b-4e04-9e39-e03b81035c1f-0', usage_metadata={'input_tokens': 12, 'output_tokens': 32, 'total_tokens': 44})
 ```
-
-
 
 ```python
 runnable_with_history.invoke(
@@ -159,12 +149,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='I\'m afraid I don\'t actually know your name - you introduced yourself as Bob, but I don\'t have any other information about your identity. As an AI assistant, I don\'t have a way to independently verify people\'s names or identities. I\'m happy to continue our conversation, but I\'ll just refer to you as "Bob" since that\'s the name you provided.', response_metadata={'id': 'msg_018L96tAxiexMKsHBQz22CcE', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 52, 'output_tokens': 80}}, id='run-7399ddb5-bb06-444b-bfb2-2f65674105dd-0', usage_metadata={'input_tokens': 52, 'output_tokens': 80, 'total_tokens': 132})
 ```
-
 
 :::info
 
@@ -174,7 +161,6 @@ Note that in this case the context is preserved via the chat history for the pro
 
 We can now try this with a new session id and see that it does not remember.
 
-
 ```python
 runnable_with_history.invoke(
     [HumanMessage(content="whats my name?")],
@@ -182,12 +168,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content="I'm afraid I don't actually know your name. As an AI assistant, I don't have personal information about you unless you provide it to me directly.", response_metadata={'id': 'msg_01LhbWu7mSKTvKAx7iQpMPzd', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 12, 'output_tokens': 35}}, id='run-cf86cad2-21f2-4525-afc8-09bfd1e8af70-0', usage_metadata={'input_tokens': 12, 'output_tokens': 35, 'total_tokens': 47})
 ```
-
 
 :::info      
 
@@ -204,7 +187,6 @@ First: a dictionary can have multiple keys, but we only want to save ONE as inpu
 Second: once we load the messages, we need to know how to save them to the dictionary. That equates to know which key in the dictionary to save them in. Therefore, we need to specify a key to save the loaded messages in.
 
 Putting it all together, that ends up looking something like:
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add message history"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add message history"}]-->
@@ -237,7 +219,6 @@ Note that we've specified `input_messages_key` (the key to be treated as the lat
 
 :::
 
-
 ```python
 runnable_with_history.invoke(
     {"language": "italian", "input": "hi im bob!"},
@@ -245,13 +226,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Ciao Bob! È un piacere conoscerti. Come stai oggi?', response_metadata={'id': 'msg_0121ADUEe4G1hMC6zbqFWofr', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 29, 'output_tokens': 23}}, id='run-246a70df-aad6-43d6-a7e8-166d96e0d67e-0', usage_metadata={'input_tokens': 29, 'output_tokens': 23, 'total_tokens': 52})
 ```
-
-
 
 ```python
 runnable_with_history.invoke(
@@ -260,12 +237,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Bob, il tuo nome è Bob.', response_metadata={'id': 'msg_01EDUZG6nRLGeti9KhFN5cek', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 60, 'output_tokens': 12}}, id='run-294b4a72-81bc-4c43-b199-3aafdff87cb3-0', usage_metadata={'input_tokens': 60, 'output_tokens': 12, 'total_tokens': 72})
 ```
-
 
 :::info
 
@@ -275,7 +249,6 @@ Note that in this case the context is preserved via the chat history for the pro
 
 We can now try this with a new session id and see that it does not remember.
 
-
 ```python
 runnable_with_history.invoke(
     {"language": "italian", "input": "whats my name?"},
@@ -283,12 +256,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Mi dispiace, non so il tuo nome. Come posso aiutarti?', response_metadata={'id': 'msg_01Lyd9FAGQJTxxAZoFi3sQpQ', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 30, 'output_tokens': 23}}, id='run-19a82197-3b1c-4b5f-a68d-f91f4a2ba523-0', usage_metadata={'input_tokens': 30, 'output_tokens': 23, 'total_tokens': 53})
 ```
-
 
 :::info      
 
@@ -299,7 +269,6 @@ When we pass a different `session_id`, we start a new chat history, so the model
 ### Messages input, dict output
 
 This format is useful when you are using a model to generate one key in a dictionary.
-
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add message history"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "How to add message history"}]-->
@@ -322,7 +291,6 @@ Note that we've specified `output_messages_key` (the key to be treated as the ou
 
 :::
 
-
 ```python
 runnable_with_history.invoke(
     [HumanMessage(content="hi - im bob!")],
@@ -330,13 +298,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 {'output_message': AIMessage(content="It's nice to meet you, Bob! I'm Claude, an AI assistant created by Anthropic. How can I help you today?", response_metadata={'id': 'msg_01WWJSyUyGGKuBqTs3h18ZMM', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 12, 'output_tokens': 32}}, id='run-0f50cb43-a734-447c-b535-07c615a0984c-0', usage_metadata={'input_tokens': 12, 'output_tokens': 32, 'total_tokens': 44})}
 ```
-
-
 
 ```python
 runnable_with_history.invoke(
@@ -345,12 +309,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 {'output_message': AIMessage(content='I\'m afraid I don\'t actually know your name - you introduced yourself as Bob, but I don\'t have any other information about your identity. As an AI assistant, I don\'t have a way to independently verify people\'s names or identities. I\'m happy to continue our conversation, but I\'ll just refer to you as "Bob" since that\'s the name you provided.', response_metadata={'id': 'msg_01TEGrhfLXTwo36rC7svdTy4', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 52, 'output_tokens': 80}}, id='run-178e8f3f-da21-430d-9edc-ef07797a5e2d-0', usage_metadata={'input_tokens': 52, 'output_tokens': 80, 'total_tokens': 132})}
 ```
-
 
 :::info
 
@@ -360,7 +321,6 @@ Note that in this case the context is preserved via the chat history for the pro
 
 We can now try this with a new session id and see that it does not remember.
 
-
 ```python
 runnable_with_history.invoke(
     [HumanMessage(content="whats my name?")],
@@ -368,12 +328,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 {'output_message': AIMessage(content="I'm afraid I don't actually know your name. As an AI assistant, I don't have personal information about you unless you provide it to me directly.", response_metadata={'id': 'msg_0118ZBudDXAC9P6smf91NhCX', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 12, 'output_tokens': 35}}, id='run-deb14a3a-0336-42b4-8ace-ad1e52ca5910-0', usage_metadata={'input_tokens': 12, 'output_tokens': 35, 'total_tokens': 47})}
 ```
-
 
 :::info      
 
@@ -384,7 +341,6 @@ When we pass a different `session_id`, we start a new chat history, so the model
 ### Dict with single key for all messages input, messages output
 
 This is a specific case of "Dictionary input, message(s) output". In this situation, because there is only a single key we don't need to specify as much - we only need to specify the `input_messages_key`.
-
 
 ```python
 from operator import itemgetter
@@ -402,7 +358,6 @@ Note that we've specified `input_messages_key` (the key to be treated as the lat
 
 :::
 
-
 ```python
 runnable_with_history.invoke(
     {"input_messages": [HumanMessage(content="hi - im bob!")]},
@@ -410,13 +365,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content="It's nice to meet you, Bob! I'm Claude, an AI assistant created by Anthropic. How can I help you today?", response_metadata={'id': 'msg_01UdD5wz1J5xwoz5D94onaQC', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 12, 'output_tokens': 32}}, id='run-91bee6eb-0814-4557-ad71-fef9b0270358-0', usage_metadata={'input_tokens': 12, 'output_tokens': 32, 'total_tokens': 44})
 ```
-
-
 
 ```python
 runnable_with_history.invoke(
@@ -425,12 +376,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='I\'m afraid I don\'t actually know your name - you introduced yourself as Bob, but I don\'t have any other information about your identity. As an AI assistant, I don\'t have a way to independently verify people\'s names or identities. I\'m happy to continue our conversation, but I\'ll just refer to you as "Bob" since that\'s the name you provided.', response_metadata={'id': 'msg_012WUygxBKXcVJPeTW14LNrc', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 52, 'output_tokens': 80}}, id='run-fcbaaa1a-8c33-4eec-b0b0-5b800a47bddd-0', usage_metadata={'input_tokens': 52, 'output_tokens': 80, 'total_tokens': 132})
 ```
-
 
 :::info
 
@@ -440,7 +388,6 @@ Note that in this case the context is preserved via the chat history for the pro
 
 We can now try this with a new session id and see that it does not remember.
 
-
 ```python
 runnable_with_history.invoke(
     {"input_messages": [HumanMessage(content="whats my name?")]},
@@ -448,12 +395,9 @@ runnable_with_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content="I'm afraid I don't actually know your name. As an AI assistant, I don't have personal information about you unless you provide it to me directly.", response_metadata={'id': 'msg_017xW3Ki5y4UBYzCU9Mf1pgM', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 12, 'output_tokens': 35}}, id='run-d2f372f7-3679-4a5c-9331-a55b820ec03e-0', usage_metadata={'input_tokens': 12, 'output_tokens': 35, 'total_tokens': 47})
 ```
-
 
 :::info      
 
@@ -463,8 +407,7 @@ When we pass a different `session_id`, we start a new chat history, so the model
 
 ## Customization
 
-The configuration parameters by which we track message histories can be customized by passing in a list of ``ConfigurableFieldSpec`` objects to the ``history_factory_config`` parameter. Below, we use two parameters: a `user_id` and `conversation_id`.
-
+The configuration parameters by which we track message histories can be customized by passing in a list of `ConfigurableFieldSpec` objects to the `history_factory_config` parameter. Below, we use two parameters: a `user_id` and `conversation_id`.
 
 ```python
 <!--IMPORTS:[{"imported": "ConfigurableFieldSpec", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableFieldSpec.html", "title": "How to add message history"}]-->
@@ -506,13 +449,9 @@ with_message_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Ciao Bob! È un piacere conoscerti. Come stai oggi?', response_metadata={'id': 'msg_016RJebCoiAgWaNcbv9wrMNW', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 29, 'output_tokens': 23}}, id='run-40425414-8f72-47d4-bf1d-a84175d8b3f8-0', usage_metadata={'input_tokens': 29, 'output_tokens': 23, 'total_tokens': 52})
 ```
-
-
 
 ```python
 # remembers
@@ -522,13 +461,9 @@ with_message_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Bob, il tuo nome è Bob.', response_metadata={'id': 'msg_01Kktiy3auFDKESY54KtTWPX', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 60, 'output_tokens': 12}}, id='run-c7768420-3f30-43f5-8834-74b1979630dd-0', usage_metadata={'input_tokens': 60, 'output_tokens': 12, 'total_tokens': 72})
 ```
-
-
 
 ```python
 # New user_id --> does not remember
@@ -538,11 +473,8 @@ with_message_history.invoke(
 )
 ```
 
-
-
 ```output
 AIMessage(content='Mi dispiace, non so il tuo nome. Come posso aiutarti?', response_metadata={'id': 'msg_0178FpbpPNioB7kqvyHk7rjD', 'model': 'claude-3-haiku-20240307', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 30, 'output_tokens': 23}}, id='run-df1f1768-aab6-4aec-8bba-e33fc9e90b8d-0', usage_metadata={'input_tokens': 30, 'output_tokens': 23, 'total_tokens': 53})
 ```
-
 
 Note that in this case the context was preserved for the same `user_id`, but once we changed it, the new chat history was started, even though the `conversation_id` was the same.

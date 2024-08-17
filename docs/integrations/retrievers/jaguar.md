@@ -5,35 +5,31 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # JaguarDB Vector Database
 
->[JaguarDB Vector Database](http://www.jaguardb.com/windex.html
->
->1. It is a distributed vector database
->2. The “ZeroMove” feature of JaguarDB enables instant horizontal scalability
->3. Multimodal: embeddings, text, images, videos, PDFs, audio, time series, and geospatial
->4. All-masters: allows both parallel reads and writes
->5. Anomaly detection capabilities
->6. RAG support: combines LLM with proprietary and real-time data
->7. Shared metadata: sharing of metadata across multiple vector indexes
->8. Distance metrics: Euclidean, Cosine, InnerProduct, Manhatten, Chebyshev, Hamming, Jeccard, Minkowski
+> [JaguarDB Vector Database](http://www.jaguardb.com/windex.html
+> 
+> 1. It is a distributed vector database
+> 2. The “ZeroMove” feature of JaguarDB enables instant horizontal scalability
+> 3. Multimodal: embeddings, text, images, videos, PDFs, audio, time series, and geospatial
+> 4. All-masters: allows both parallel reads and writes
+> 5. Anomaly detection capabilities
+> 6. RAG support: combines LLM with proprietary and real-time data
+> 7. Shared metadata: sharing of metadata across multiple vector indexes
+> 8. Distance metrics: Euclidean, Cosine, InnerProduct, Manhatten, Chebyshev, Hamming, Jeccard, Minkowski
 
 ## Prerequisites
 
 There are two requirements for running the examples in this file.
 1. You must install and set up the JaguarDB server and its HTTP gateway server.
-   Please refer to the instructions in:
-   [www.jaguardb.com](http://www.jaguardb.com)
-
+Please refer to the instructions in:
+[www.jaguardb.com](http://www.jaguardb.com)
 2. You must install the http client package for JaguarDB:
    ```
        pip install -U jaguardb-http-client
    ```
 
-
 ## RAG With Langchain
 
 This section demonstrates chatting with LLM together with Jaguar in the langchain software stack.
-
-
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "JaguarDB Vector Database"}, {"imported": "Jaguar", "source": "langchain_community.vectorstores.jaguar", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.jaguar.Jaguar.html", "title": "JaguarDB Vector Database"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "JaguarDB Vector Database"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "JaguarDB Vector Database"}]-->
@@ -119,8 +115,6 @@ retriever = vectorstore.as_retriever()
 
 Users can interact directly with the Jaguar vector store for similarity search and anomaly detection.
 
-
-
 ```python
 <!--IMPORTS:[{"imported": "Jaguar", "source": "langchain_community.vectorstores.jaguar", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.jaguar.Jaguar.html", "title": "JaguarDB Vector Database"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "JaguarDB Vector Database"}]-->
 from langchain_community.vectorstores.jaguar import Jaguar
@@ -196,7 +190,6 @@ vectorstore.drop()
 # Logout
 vectorstore.logout()
 ```
-
 
 ## Related
 

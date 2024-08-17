@@ -18,7 +18,6 @@ Power your AI data retrievals with:
 - Get an API key and Project ID from [browserbase.com](https://browserbase.com) and set it in environment variables (`BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID`).
 - Install the [Browserbase SDK](http://github.com/browserbase/python-sdk):
 
-
 ```python
 % pip install browserbase
 ```
@@ -27,12 +26,10 @@ Power your AI data retrievals with:
 
 You can load webpages into LangChain using `BrowserbaseLoader`. Optionally, you can set `text_content` parameter to convert the pages to text-only representation.
 
-
 ```python
 <!--IMPORTS:[{"imported": "BrowserbaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.browserbase.BrowserbaseLoader.html", "title": "Browserbase"}]-->
 from langchain_community.document_loaders import BrowserbaseLoader
 ```
-
 
 ```python
 loader = BrowserbaseLoader(
@@ -62,7 +59,6 @@ You can also load screenshots of webpages (as bytes) for multi-modal models.
 
 Full example using GPT-4V:
 
-
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Browserbase"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Browserbase"}]-->
 from browserbase import Browserbase
@@ -88,7 +84,6 @@ result = chat.invoke(
 
 print(result.content)
 ```
-
 
 ## Related
 

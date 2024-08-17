@@ -14,12 +14,11 @@ This page covers how Shale-Serve API can be incorporated with LangChain.
 
 As of June 2023, the API supports Vicuna-13B by default. We are going to support more LLMs such as Falcon-40B in future releases. 
 
-
 ## How to
 
 ### 1. Find the link to our Discord on https://shaleprotocol.com. Generate an API key through the "Shale Bot" on our Discord. No credit card is required and no free trials. It's a forever free tier with 1K limit per day per API key.
 
-### 2. Use https://shale.live/v1 as OpenAI API drop-in replacement 
+### 2. Use https://shale.live/v1 as OpenAI API drop-in replacement
 
 For example
 ```python

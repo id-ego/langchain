@@ -13,7 +13,6 @@ This example goes over how to use LangChain to interact with Snowflake Cortex.
 
 We start by installing the `snowflake-snowpark-python` library, using the command below. Then we configure the credentials for connecting to Snowflake, as environment variables or pass them directly.
 
-
 ```python
 %pip install --upgrade --quiet snowflake-snowpark-python
 ```
@@ -49,7 +48,6 @@ if os.environ.get("SNOWFLAKE_WAREHOUSE") is None:
 if os.environ.get("SNOWFLAKE_ROLE") is None:
     os.environ["SNOWFLAKE_ROLE"] = getpass.getpass("Role: ")
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatSnowflakeCortex", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.snowflake.ChatSnowflakeCortex.html", "title": "Snowflake Cortex"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Snowflake Cortex"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Snowflake Cortex"}]-->
@@ -89,7 +87,6 @@ We can now call the model using the `invoke` or `generate` method.
 
 #### Generation
 
-
 ```python
 messages = [
     SystemMessage(content="You are a friendly assistant."),
@@ -98,16 +95,12 @@ messages = [
 chat.invoke(messages)
 ```
 
-
-
 ```output
 AIMessage(content=" Large language models are artificial intelligence systems designed to understand, generate, and manipulate human language. These models are typically based on deep learning techniques and are trained on vast amounts of text data to learn patterns and structures in language. They can perform a wide range of language-related tasks, such as language translation, text generation, sentiment analysis, and answering questions. Some well-known large language models include Google's BERT, OpenAI's GPT series, and Facebook's RoBERTa. These models have shown remarkable performance in various natural language processing tasks, and their applications continue to expand as research in AI progresses.", response_metadata={'completion_tokens': 131, 'prompt_tokens': 29, 'total_tokens': 160}, id='run-5435bd0a-83fd-4295-b237-66cbd1b5c0f3-0')
 ```
 
-
 ### Streaming
 `ChatSnowflakeCortex` doesn't support streaming as of now. Support for streaming will be coming in the later versions!
-
 
 ## Related
 

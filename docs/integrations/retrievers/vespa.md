@@ -5,18 +5,16 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 
 # Vespa
 
->[Vespa](https://vespa.ai/) is a fully featured search engine and vector database. It supports vector search (ANN), lexical search, and search in structured data, all in the same query.
+> [Vespa](https://vespa.ai/) is a fully featured search engine and vector database. It supports vector search (ANN), lexical search, and search in structured data, all in the same query.
 
 This notebook shows how to use `Vespa.ai` as a LangChain retriever.
 
 In order to create a retriever, we use [pyvespa](https://pyvespa.readthedocs.io/en/latest/index.html) to
 create a connection a `Vespa` service.
 
-
 ```python
 %pip install --upgrade --quiet  pyvespa
 ```
-
 
 ```python
 from vespa.application import Vespa
@@ -30,9 +28,7 @@ Using `pyvespa` package, you can also connect to a
 or a local
 [Docker instance](https://pyvespa.readthedocs.io/en/latest/deploy-docker.html).
 
-
 After connecting to the service, you can set up the retriever:
-
 
 ```python
 <!--IMPORTS:[{"imported": "VespaRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.vespa_retriever.VespaRetriever.html", "title": "Vespa"}]-->
@@ -58,11 +54,9 @@ for more information.
 
 Now you can return the results and continue using the results in LangChain.
 
-
 ```python
 retriever.invoke("what is vespa?")
 ```
-
 
 ## Related
 

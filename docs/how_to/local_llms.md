@@ -26,7 +26,7 @@ Running an LLM locally requires a few things:
 Users can now gain access to a rapidly growing set of [open-source LLMs](https://cameronrwolfe.substack.com/p/the-history-of-open-source-llms-better). 
 
 These LLMs can be assessed across at least two dimensions (see figure):
- 
+
 1. `Base model`: What is the base-model and how was it trained?
 2. `Fine-tuning approach`: Was the base-model fine-tuned and, if so, what [set of instructions](https://cameronrwolfe.substack.com/p/beyond-llama-the-power-of-open-llms#%C2%A7alpaca-an-instruction-following-llama-model) was used?
 
@@ -73,19 +73,16 @@ This can [require the inclusion of special tokens](https://huggingface.co/blog/l
 ## Quickstart
 
 [`Ollama`](https://ollama.ai/) is one way to easily run inference on macOS.
- 
+
 The instructions [here](https://github.com/jmorganca/ollama?tab=readme-ov-file#ollama) provide details, which we summarize:
- 
+
 * [Download and run](https://ollama.ai/download) the app
 * From command line, fetch a model from this [list of options](https://github.com/jmorganca/ollama): e.g., `ollama pull llama3.1:8b`
 * When the app is running, all models are automatically served on `localhost:11434`
 
-
-
 ```python
 %pip install -qU langchain_ollama
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "OllamaLLM", "source": "langchain_ollama", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_ollama.llms.OllamaLLM.html", "title": "Run models locally"}]-->
@@ -96,15 +93,11 @@ llm = OllamaLLM(model="llama3.1:8b")
 llm.invoke("The first man on the moon was ...")
 ```
 
-
-
 ```output
 '...Neil Armstrong!\n\nOn July 20, 1969, Neil Armstrong became the first person to set foot on the lunar surface, famously declaring "That\'s one small step for man, one giant leap for mankind" as he stepped off the lunar module Eagle onto the Moon\'s surface.\n\nWould you like to know more about the Apollo 11 mission or Neil Armstrong\'s achievements?'
 ```
 
-
 Stream tokens as they are being generated:
-
 
 ```python
 for chunk in llm.stream("The first man on the moon was ..."):
@@ -117,7 +110,6 @@ Neil| Armstrong|,| an| American| astronaut|.| He| stepped| out| of| the| lunar| 
 ```
 Ollama also includes a chat model wrapper that handles formatting conversation turns:
 
-
 ```python
 <!--IMPORTS:[{"imported": "ChatOllama", "source": "langchain_ollama", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_ollama.chat_models.ChatOllama.html", "title": "Run models locally"}]-->
 from langchain_ollama import ChatOllama
@@ -127,12 +119,9 @@ chat_model = ChatOllama(model="llama3.1:8b")
 chat_model.invoke("Who was the first man on the moon?")
 ```
 
-
-
 ```output
 AIMessage(content='The answer is a historic one!\n\nThe first man to walk on the Moon was Neil Armstrong, an American astronaut and commander of the Apollo 11 mission. On July 20, 1969, Armstrong stepped out of the lunar module Eagle onto the surface of the Moon, famously declaring:\n\n"That\'s one small step for man, one giant leap for mankind."\n\nArmstrong was followed by fellow astronaut Edwin "Buzz" Aldrin, who also walked on the Moon during the mission. Michael Collins remained in orbit around the Moon in the command module Columbia.\n\nNeil Armstrong passed away on August 25, 2012, but his legacy as a pioneering astronaut and engineer continues to inspire people around the world!', response_metadata={'model': 'llama3.1:8b', 'created_at': '2024-08-01T00:38:29.176717Z', 'message': {'role': 'assistant', 'content': ''}, 'done_reason': 'stop', 'done': True, 'total_duration': 10681861417, 'load_duration': 34270292, 'prompt_eval_count': 19, 'prompt_eval_duration': 6209448000, 'eval_count': 141, 'eval_duration': 4432022000}, id='run-7bed57c5-7f54-4092-912c-ae49073dcd48-0', usage_metadata={'input_tokens': 19, 'output_tokens': 141, 'total_tokens': 160})
 ```
-
 
 ## Environment
 
@@ -145,7 +134,7 @@ And even with GPU, the available GPU memory bandwidth (as noted above) is import
 ### Running Apple silicon GPU
 
 `Ollama` and [`llamafile`](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#gpu-support) will automatically utilize the GPU on Apple devices.
- 
+
 Other frameworks require the user to set up the environment to utilize the Apple GPU.
 
 For example, `llama.cpp` python bindings can be configured to use the GPU via [Metal](https://developer.apple.com/metal/).
@@ -184,18 +173,14 @@ With [Ollama](https://github.com/jmorganca/ollama), fetch a model via `ollama pu
 * We can also specify a particular version from the [model list](https://github.com/jmorganca/ollama?tab=readme-ov-file#model-library), e.g., `ollama pull llama2:13b`
 * See the full set of parameters on the [API reference page](https://api.python.langchain.com/en/latest/llms/langchain_community.llms.ollama.Ollama.html)
 
-
 ```python
 llm = OllamaLLM(model="llama2:13b")
 llm.invoke("The first man on the moon was ... think step by step")
 ```
 
-
-
 ```output
 ' Sure! Here\'s the answer, broken down step by step:\n\nThe first man on the moon was... Neil Armstrong.\n\nHere\'s how I arrived at that answer:\n\n1. The first manned mission to land on the moon was Apollo 11.\n2. The mission included three astronauts: Neil Armstrong, Edwin "Buzz" Aldrin, and Michael Collins.\n3. Neil Armstrong was the mission commander and the first person to set foot on the moon.\n4. On July 20, 1969, Armstrong stepped out of the lunar module Eagle and onto the moon\'s surface, famously declaring "That\'s one small step for man, one giant leap for mankind."\n\nSo, the first man on the moon was Neil Armstrong!'
 ```
-
 
 ### Llama.cpp
 
@@ -227,13 +212,11 @@ From the [llama.cpp API reference docs](https://api.python.langchain.com/en/late
 * Value: True
 * Meaning: The model will use half-precision, which can be more memory efficient; Metal only supports True.
 
-
 ```python
 %env CMAKE_ARGS="-DLLAMA_METAL=on"
 %env FORCE_CMAKE=1
 %pip install --upgrade --quiet  llama-cpp-python --no-cache-dirclear
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "LlamaCpp", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.llamacpp.LlamaCpp.html", "title": "Run models locally"}, {"imported": "CallbackManager", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManager.html", "title": "Run models locally"}, {"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "Run models locally"}]-->
@@ -256,7 +239,6 @@ The console log will show the below to indicate Metal was enabled properly from 
 ggml_metal_init: allocating
 ggml_metal_init: using MPS
 ```
-
 
 ```python
 llm.invoke("The first man on the moon was ... Let's think step by step")
@@ -284,11 +266,9 @@ llama_print_timings:        eval time =  6385.16 ms /   202 runs   (   31.61 ms 
 llama_print_timings:       total time =  7279.28 ms
 ```
 
-
 ```output
 " and use logical reasoning to figure out who the first man on the moon was.\n\nHere are some clues:\n\n1. The first man on the moon was an American.\n2. He was part of the Apollo 11 mission.\n3. He stepped out of the lunar module and became the first person to set foot on the moon's surface.\n4. His last name is Armstrong.\n\nNow, let's use our reasoning skills to figure out who the first man on the moon was. Based on clue #1, we know that the first man on the moon was an American. Clue #2 tells us that he was part of the Apollo 11 mission. Clue #3 reveals that he was the first person to set foot on the moon's surface. And finally, clue #4 gives us his last name: Armstrong.\nTherefore, the first man on the moon was Neil Armstrong!"
 ```
-
 
 ### GPT4All
 
@@ -296,11 +276,9 @@ We can use model weights downloaded from [GPT4All](/docs/integrations/llms/gpt4a
 
 Similar to what is shown above, we can run inference and use [the API reference](https://api.python.langchain.com/en/latest/llms/langchain_community.llms.gpt4all.GPT4All.html) to set parameters of interest.
 
-
 ```python
 %pip install gpt4all
 ```
-
 
 ```python
 <!--IMPORTS:[{"imported": "GPT4All", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.gpt4all.GPT4All.html", "title": "Run models locally"}]-->
@@ -311,25 +289,21 @@ llm = GPT4All(
 )
 ```
 
-
 ```python
 llm.invoke("The first man on the moon was ... Let's think step by step")
 ```
-
-
 
 ```output
 ".\n1) The United States decides to send a manned mission to the moon.2) They choose their best astronauts and train them for this specific mission.3) They build a spacecraft that can take humans to the moon, called the Lunar Module (LM).4) They also create a larger spacecraft, called the Saturn V rocket, which will launch both the LM and the Command Service Module (CSM), which will carry the astronauts into orbit.5) The mission is planned down to the smallest detail: from the trajectory of the rockets to the exact movements of the astronauts during their moon landing.6) On July 16, 1969, the Saturn V rocket launches from Kennedy Space Center in Florida, carrying the Apollo 11 mission crew into space.7) After one and a half orbits around the Earth, the LM separates from the CSM and begins its descent to the moon's surface.8) On July 20, 1969, at 2:56 pm EDT (GMT-4), Neil Armstrong becomes the first man on the moon. He speaks these"
 ```
 
-
 ### llamafile
 
 One of the simplest ways to run an LLM locally is using a [llamafile](https://github.com/Mozilla-Ocho/llamafile). All you need to do is:
 
-1) Download a llamafile from [HuggingFace](https://huggingface.co/models?other=llamafile)
-2) Make the file executable
-3) Run the file
+1. Download a llamafile from [HuggingFace](https://huggingface.co/models?other=llamafile)
+2. Make the file executable
+3. Run the file
 
 llamafiles bundle model weights and a [specially-compiled](https://github.com/Mozilla-Ocho/llamafile?tab=readme-ov-file#technical-details) version of [`llama.cpp`](https://github.com/ggerganov/llama.cpp) into a single file that can run on most computers any additional dependencies. They also come with an embedded inference server that provides an [API](https://github.com/Mozilla-Ocho/llamafile/blob/main/llama.cpp/server/README.md#api-endpoints) for interacting with your model. 
 
@@ -348,7 +322,6 @@ chmod +x TinyLlama-1.1B-Chat-v1.0.Q5_K_M.llamafile
 
 After you run the above setup steps, you can use LangChain to interact with your model:
 
-
 ```python
 <!--IMPORTS:[{"imported": "Llamafile", "source": "langchain_community.llms.llamafile", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.llamafile.Llamafile.html", "title": "Run models locally"}]-->
 from langchain_community.llms.llamafile import Llamafile
@@ -358,12 +331,9 @@ llm = Llamafile()
 llm.invoke("The first man on the moon was ... Let's think step by step.")
 ```
 
-
-
 ```output
 "\nFirstly, let's imagine the scene where Neil Armstrong stepped onto the moon. This happened in 1969. The first man on the moon was Neil Armstrong. We already know that.\n2nd, let's take a step back. Neil Armstrong didn't have any special powers. He had to land his spacecraft safely on the moon without injuring anyone or causing any damage. If he failed to do this, he would have been killed along with all those people who were on board the spacecraft.\n3rd, let's imagine that Neil Armstrong successfully landed his spacecraft on the moon and made it back to Earth safely. The next step was for him to be hailed as a hero by his people back home. It took years before Neil Armstrong became an American hero.\n4th, let's take another step back. Let's imagine that Neil Armstrong wasn't hailed as a hero, and instead, he was just forgotten. This happened in the 1970s. Neil Armstrong wasn't recognized for his remarkable achievement on the moon until after he died.\n5th, let's take another step back. Let's imagine that Neil Armstrong didn't die in the 1970s and instead, lived to be a hundred years old. This happened in 2036. In the year 2036, Neil Armstrong would have been a centenarian.\nNow, let's think about the present. Neil Armstrong is still alive. He turned 95 years old on July 20th, 2018. If he were to die now, his achievement of becoming the first human being to set foot on the moon would remain an unforgettable moment in history.\nI hope this helps you understand the significance and importance of Neil Armstrong's achievement on the moon!"
 ```
-
 
 ## Prompts
 
@@ -372,7 +342,6 @@ Some LLMs will benefit from specific prompts.
 For example, LLaMA will use [special tokens](https://twitter.com/RLanceMartin/status/1681879318493003776?s=20).
 
 We can use `ConditionalPromptSelector` to set prompt based on the model type.
-
 
 ```python
 # Set our LLM
@@ -388,7 +357,6 @@ llm = LlamaCpp(
 ```
 
 Set the associated prompt based upon the model version.
-
 
 ```python
 <!--IMPORTS:[{"imported": "ConditionalPromptSelector", "source": "langchain.chains.prompt_selector", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.prompt_selector.ConditionalPromptSelector.html", "title": "Run models locally"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Run models locally"}]-->
@@ -420,13 +388,9 @@ prompt = QUESTION_PROMPT_SELECTOR.get_prompt(llm)
 prompt
 ```
 
-
-
 ```output
 PromptTemplate(input_variables=['question'], output_parser=None, partial_variables={}, template='<<SYS>> \n You are an assistant tasked with improving Google search results. \n <</SYS>> \n\n [INST] Generate THREE Google search queries that are similar to this question. The output should be a numbered list of questions and each should have a question mark at the end: \n\n {question} [/INST]', template_format='f-string', validate_template=True)
 ```
-
-
 
 ```python
 # Chain
@@ -449,11 +413,9 @@ llama_print_timings:        eval time =  3430.85 ms /   100 runs   (   34.31 ms 
 llama_print_timings:       total time = 18578.26 ms
 ```
 
-
 ```output
 '  Sure! Here are three similar search queries with a question mark at the end:\n\n1. Which NBA team did LeBron James lead to a championship in the year he was drafted?\n2. Who won the Grammy Awards for Best New Artist and Best Female Pop Vocal Performance in the same year that Lady Gaga was born?\n3. What MLB team did Babe Ruth play for when he hit 60 home runs in a single season?'
 ```
-
 
 We also can use the LangChain Prompt Hub to fetch and / or store prompts that are model specific.
 
