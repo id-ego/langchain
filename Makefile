@@ -1,5 +1,5 @@
 .PHONY: build
-build: copy-infra
+build:
 	yarn build
 	mv build v0.2
 	mkdir build
