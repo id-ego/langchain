@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/tencent_hunyuan/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/tencent_hunyuan.ipynb
+description: 텐센트의 혼합 모델 API인 Hunyuan은 대화, 콘텐츠 생성, 분석 등 다양한 시나리오에 활용될 수 있습니다.
 sidebar_label: Tencent Hunyuan
 ---
 
-# Tencent Hunyuan
+# 텐센트 혼위안
 
-> [Tencent's hybrid model API](https://cloud.tencent.com/document/product/1729) (`Hunyuan API`)
-implements dialogue communication, content generation,
-analysis and understanding, and can be widely used in various scenarios such as intelligent
-customer service, intelligent marketing, role playing, advertising copywriting, product description,
-script creation, resume generation, article writing, code generation, data analysis, and content
-analysis.
+> [텐센트의 하이브리드 모델 API](https://cloud.tencent.com/document/product/1729) (`Hunyuan API`)
+대화 통신, 콘텐츠 생성,
+분석 및 이해를 구현하며, 지능형
+고객 서비스, 지능형 마케팅, 역할 놀이, 광고 카피 작성, 제품 설명,
+스크립트 생성, 이력서 생성, 기사 작성, 코드 생성, 데이터 분석 및 콘텐츠
+분석과 같은 다양한 시나리오에서 널리 사용될 수 있습니다.
 
-See for [more information](https://cloud.tencent.com/document/product/1729).
+자세한 내용은 [여기](https://cloud.tencent.com/document/product/1729)를 참조하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatHunyuan", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.hunyuan.ChatHunyuan.html", "title": "Tencent Hunyuan"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Tencent Hunyuan"}]-->
 from langchain_community.chat_models import ChatHunyuan
 from langchain_core.messages import HumanMessage
 ```
+
 
 ```python
 chat = ChatHunyuan(
@@ -28,6 +29,7 @@ chat = ChatHunyuan(
     hunyuan_secret_key="YOUR_SECRET_KEY",
 )
 ```
+
 
 ```python
 chat(
@@ -39,11 +41,13 @@ chat(
 )
 ```
 
+
 ```output
 AIMessage(content="J'aime programmer.")
 ```
 
-## For ChatHunyuan with Streaming
+
+## 스트리밍을 통한 ChatHunyuan
 
 ```python
 chat = ChatHunyuan(
@@ -54,6 +58,7 @@ chat = ChatHunyuan(
 )
 ```
 
+
 ```python
 chat(
     [
@@ -64,11 +69,13 @@ chat(
 )
 ```
 
+
 ```output
 AIMessageChunk(content="J'aime programmer.")
 ```
 
-## Related
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

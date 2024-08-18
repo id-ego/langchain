@@ -1,21 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/google_vertex_ai_vector_search/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/google_vertex_ai_vector_search.ipynb
+description: 이 문서는 Google Cloud Vertex AI Vector Search를 활용한 벡터 데이터베이스 기능 사용법을 설명합니다.
 ---
 
-# Google Vertex AI Vector Search
+# 구글 버텍스 AI 벡터 검색
 
-This notebook shows how to use functionality related to the `Google Cloud Vertex AI Vector Search` vector database.
+이 노트북은 `Google Cloud Vertex AI Vector Search` 벡터 데이터베이스와 관련된 기능을 사용하는 방법을 보여줍니다.
 
-> [Google Vertex AI Vector Search](https://cloud.google.com/vertex-ai/docs/vector-search/overview), formerly known as Vertex AI Matching Engine, provides the industry's leading high-scale low latency vector database. These vector databases are commonly referred to as vector similarity-matching or an approximate nearest neighbor (ANN) service.
+> [Google Vertex AI Vector Search](https://cloud.google.com/vertex-ai/docs/vector-search/overview), 이전에 Vertex AI Matching Engine으로 알려졌던, 업계 최고의 고규모 저지연 벡터 데이터베이스를 제공합니다. 이러한 벡터 데이터베이스는 일반적으로 벡터 유사성 매칭 또는 근사 최근접 이웃(ANN) 서비스라고 불립니다.
 
-**Note**: Langchain API expects an endpoint and deployed index already created.Index creation time can take upto one hour.
+**참고**: Langchain API는 이미 생성된 엔드포인트와 배포된 인덱스를 기대합니다. 인덱스 생성 시간은 최대 1시간이 소요될 수 있습니다.
 
-> To see how to create an index refer to the section [Create Index and deploy it to an Endpoint](#create-index-and-deploy-it-to-an-endpoint)\
-If you already have an index deployed , skip to [Create VectorStore from texts](#create-vector-store-from-texts)
+> 인덱스를 생성하는 방법은 [Create Index and deploy it to an Endpoint](#create-index-and-deploy-it-to-an-endpoint) 섹션을 참조하세요.\
+이미 배포된 인덱스가 있는 경우 [Create VectorStore from texts](#create-vector-store-from-texts)로 건너뛰세요.
 
-## Create Index and deploy it to an Endpoint
-- This section demonstrates creating a new index and deploying it to an endpoint
+## 인덱스 생성 및 엔드포인트에 배포
+- 이 섹션에서는 새로운 인덱스를 생성하고 이를 엔드포인트에 배포하는 방법을 보여줍니다.
 
 ```python
 # TODO : Set values as per your requirements
@@ -34,32 +34,37 @@ DISPLAY_NAME = "<my_matching_engine_index_id>"
 DEPLOYED_INDEX_ID = "<my_matching_engine_endpoint_id>"
 ```
 
+
 ```python
 # Create a bucket.
 ! gsutil mb -l $REGION -p $PROJECT_ID $BUCKET_URI
 ```
 
-### Use [VertexAIEmbeddings](https://python.langchain.com/docs/integrations/text_embedding/google_vertex_ai_palm/) as the embeddings model
+
+### [VertexAIEmbeddings](https://python.langchain.com/docs/integrations/text_embedding/google_vertex_ai_palm/)를 임베딩 모델로 사용
 
 ```python
 from google.cloud import aiplatform
 from langchain_google_vertexai import VertexAIEmbeddings
 ```
 
+
 ```python
 aiplatform.init(project=PROJECT_ID, location=REGION, staging_bucket=BUCKET_URI)
 ```
+
 
 ```python
 embedding_model = VertexAIEmbeddings(model_name="textembedding-gecko@003")
 ```
 
-### Create an empty Index
 
-**Note :** While creating an index you should specify an "index_update_method" from either a "BATCH_UPDATE" or "STREAM_UPDATE"
-> A batch index is for when you want to update your index in a batch, with data which has been stored over a set amount of time, like systems which are processed weekly or monthly. A streaming index is when you want index data to be updated as new data is added to your datastore, for instance, if you have a bookstore and want to show new inventory online as soon as possible. Which type you choose is important, since setup and requirements are different.
+### 빈 인덱스 생성
 
-Refer [Official Documentation](https://cloud.google.com/vertex-ai/docs/vector-search/create-manage-index#create-index-batch) for more details on configuring indexes
+**참고:** 인덱스를 생성할 때 "BATCH_UPDATE" 또는 "STREAM_UPDATE" 중 하나에서 "index_update_method"를 지정해야 합니다.
+> 배치 인덱스는 정해진 시간 동안 저장된 데이터로 인덱스를 일괄 업데이트하려는 경우에 사용됩니다. 예를 들어, 주간 또는 월간으로 처리되는 시스템입니다. 스트리밍 인덱스는 새로운 데이터가 데이터 저장소에 추가될 때 인덱스 데이터를 업데이트하려는 경우에 사용됩니다. 예를 들어, 서점이 있고 가능한 한 빨리 새로운 재고를 온라인에 표시하려는 경우입니다. 어떤 유형을 선택하느냐가 중요하며, 설정 및 요구 사항이 다릅니다.
+
+인덱스 구성에 대한 자세한 내용은 [공식 문서](https://cloud.google.com/vertex-ai/docs/vector-search/create-manage-index#create-index-batch)를 참조하세요.
 
 ```python
 # NOTE : This operation can take upto 30 seconds
@@ -72,7 +77,8 @@ my_index = aiplatform.MatchingEngineIndex.create_tree_ah_index(
 )
 ```
 
-### Create an Endpoint
+
+### 엔드포인트 생성
 
 ```python
 # Create an endpoint
@@ -81,7 +87,8 @@ my_index_endpoint = aiplatform.MatchingEngineIndexEndpoint.create(
 )
 ```
 
-### Deploy Index to the Endpoint
+
+### 인덱스를 엔드포인트에 배포
 
 ```python
 # NOTE : This operation can take upto 20 minutes
@@ -92,9 +99,10 @@ my_index_endpoint = my_index_endpoint.deploy_index(
 my_index_endpoint.deployed_indexes
 ```
 
-## Create Vector Store from texts
 
-NOTE : If you have existing Index and Endpoints, you can load them using below code
+## 텍스트에서 벡터 저장소 생성
+
+참고: 기존 인덱스와 엔드포인트가 있는 경우 아래 코드를 사용하여 로드할 수 있습니다.
 
 ```python
 # TODO : replace 1234567890123456789 with your acutial index ID
@@ -104,6 +112,7 @@ my_index = aiplatform.MatchingEngineIndex("1234567890123456789")
 my_index_endpoint = aiplatform.MatchingEngineIndexEndpoint("1234567890123456789")
 ```
 
+
 ```python
 from langchain_google_vertexai import (
     VectorSearchVectorStore,
@@ -111,9 +120,10 @@ from langchain_google_vertexai import (
 )
 ```
 
+
 ![Langchainassets.png](/img/31e8d56b9f1cb1311c147e4d56ac21d2.png)
 
-### Create simple vectorstore ( without filters)
+### 필터 없이 간단한 벡터 저장소 생성
 
 ```python
 # Input texts
@@ -142,7 +152,8 @@ vector_store = VectorSearchVectorStore.from_components(
 vector_store.add_texts(texts=texts)
 ```
 
-### OPTIONAL : You can also create vectore and store chunks in a Datastore
+
+### 선택 사항: 벡터를 생성하고 데이터 저장소에 청크 저장
 
 ```python
 # NOTE : This operation can take upto 20 mins
@@ -158,12 +169,14 @@ vector_store = VectorSearchVectorStoreDatastore.from_components(
 vector_store.add_texts(texts=texts, is_complete_overwrite=True)
 ```
 
+
 ```python
 # Try running a simialarity search
 vector_store.similarity_search("pizza")
 ```
 
-### Create vectorstore with metadata filters
+
+### 메타데이터 필터로 벡터 저장소 생성
 
 ```python
 # Input text with metadata
@@ -210,6 +223,7 @@ record_data = [
 ]
 ```
 
+
 ```python
 # Parse and prepare input data
 
@@ -224,10 +238,12 @@ for record in record_data:
         metadatas.append(metadata)
 ```
 
+
 ```python
 # Inspect metadatas
 metadatas
 ```
+
 
 ```python
 # NOTE : This operation can take more than 20 mins
@@ -243,12 +259,14 @@ vector_store = VectorSearchVectorStore.from_components(
 vector_store.add_texts(texts=texts, metadatas=metadatas, is_complete_overwrite=True)
 ```
 
+
 ```python
 from google.cloud.aiplatform.matching_engine.matching_engine_index_endpoint import (
     Namespace,
     NumericNamespace,
 )
 ```
+
 
 ```python
 # Try running a simple similarity search
@@ -257,6 +275,7 @@ from google.cloud.aiplatform.matching_engine.matching_engine_index_endpoint impo
 vector_store.similarity_search("shirt", k=5)
 ```
 
+
 ```python
 # Try running a similarity search with text filter
 filters = [Namespace(name="season", allow_tokens=["spring"])]
@@ -264,6 +283,7 @@ filters = [Namespace(name="season", allow_tokens=["spring"])]
 # Below code should return 4 results now
 vector_store.similarity_search("shirt", k=5, filter=filters)
 ```
+
 
 ```python
 # Try running a similarity search with combination of text and numeric filter
@@ -276,17 +296,20 @@ vector_store.similarity_search(
 )
 ```
 
-### Use Vector Store as retriever
+
+### 검색기로서 벡터 저장소 사용
 
 ```python
 # Initialize the vectore_store as retriever
 retriever = vector_store.as_retriever()
 ```
 
+
 ```python
 # perform simple similarity search on retriever
 retriever.invoke("What are my options in breathable fabric?")
 ```
+
 
 ```python
 # Try running a similarity search with text filter
@@ -297,6 +320,7 @@ retriever.search_kwargs = {"filter": filters}
 # perform similarity search with filters on retriever
 retriever.invoke("What are my options in breathable fabric?")
 ```
+
 
 ```python
 # Try running a similarity search with combination of text and numeric filter
@@ -309,13 +333,15 @@ retriever.search_kwargs = {"filter": filters, "numeric_filter": numeric_filters}
 retriever.invoke("What are my options in breathable fabric?")
 ```
 
-### Use filters with retriever in Question Answering Chains
+
+### 질문 응답 체인에서 검색기와 함께 필터 사용
 
 ```python
 from langchain_google_vertexai import VertexAI
 
 llm = VertexAI(model_name="gemini-pro")
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Google Vertex AI Vector Search"}]-->
@@ -340,11 +366,13 @@ print("REFERENCES")
 print(f"{response['source_documents']}")
 ```
 
-## Read , Chunk , Vectorise and Index PDFs
+
+## PDF 읽기, 청크화, 벡터화 및 인덱스화
 
 ```python
 !pip install pypdf
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "PyPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html", "title": "Google Vertex AI Vector Search"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Google Vertex AI Vector Search"}]-->
@@ -352,10 +380,12 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 ```
 
+
 ```python
 loader = PyPDFLoader("https://arxiv.org/pdf/1706.03762.pdf")
 pages = loader.load()
 ```
+
 
 ```python
 text_splitter = RecursiveCharacterTextSplitter(
@@ -368,19 +398,23 @@ text_splitter = RecursiveCharacterTextSplitter(
 doc_splits = text_splitter.split_documents(pages)
 ```
 
+
 ```python
 texts = [doc.page_content for doc in doc_splits]
 metadatas = [doc.metadata for doc in doc_splits]
 ```
 
+
 ```python
 texts[0]
 ```
+
 
 ```python
 # Inspect Metadata of 1st page
 metadatas[0]
 ```
+
 
 ```python
 vector_store = VectorSearchVectorStore.from_components(
@@ -395,6 +429,7 @@ vector_store = VectorSearchVectorStore.from_components(
 vector_store.add_texts(texts=texts, metadatas=metadatas, is_complete_overwrite=True)
 ```
 
+
 ```python
 vector_store = VectorSearchVectorStore.from_components(
     project_id=PROJECT_ID,
@@ -406,7 +441,8 @@ vector_store = VectorSearchVectorStore.from_components(
 )
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

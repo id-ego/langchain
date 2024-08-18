@@ -1,36 +1,35 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/sklearn/
+description: scikit-learn은 기계 학습 알고리즘의 오픈 소스 모음으로, KNN 구현을 포함하며, SKLearnVectorStore를
+  통해 벡터 저장소를 제공합니다.
 ---
 
 # scikit-learn
 
-> [scikit-learn](https://scikit-learn.org/stable/) is an open-source collection of machine learning algorithms,
-including some implementations of the [k nearest neighbors](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html). `SKLearnVectorStore` wraps this implementation and adds the possibility to persist the vector store in json, bson (binary json) or Apache Parquet format.
+> [scikit-learn](https://scikit-learn.org/stable/)은 기계 학습 알고리즘의 오픈 소스 모음으로, [k 최근접 이웃](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html)의 일부 구현을 포함합니다. `SKLearnVectorStore`는 이 구현을 감싸고 벡터 저장소를 json, bson(이진 json) 또는 Apache Parquet 형식으로 지속할 수 있는 기능을 추가합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the Python package with `pip install scikit-learn`
+- `pip install scikit-learn`로 Python 패키지를 설치합니다.
 
-## Vector Store
+## 벡터 저장소
 
-`SKLearnVectorStore` provides a simple wrapper around the nearest neighbor implementation in the
-scikit-learn package, allowing you to use it as a vectorstore.
+`SKLearnVectorStore`는 scikit-learn 패키지의 최근접 이웃 구현을 간단하게 감싸며, 이를 벡터 저장소로 사용할 수 있게 해줍니다.
 
-To import this vectorstore:
+이 벡터 저장소를 가져오려면:
 
 ```python
 <!--IMPORTS:[{"imported": "SKLearnVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.sklearn.SKLearnVectorStore.html", "title": "scikit-learn"}]-->
 from langchain_community.vectorstores import SKLearnVectorStore
 ```
 
-For a more detailed walkthrough of the SKLearnVectorStore wrapper, see [this notebook](/docs/integrations/vectorstores/sklearn).
 
-## Retriever
+SKLearnVectorStore 래퍼에 대한 더 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/sklearn)을 참조하세요.
 
-`Support vector machines (SVMs)` are the supervised learning
-methods used for classification, regression and outliers detection.
+## 검색기
 
-See a [usage example](/docs/integrations/retrievers/svm).
+`서포트 벡터 머신(SVM)`은 분류, 회귀 및 이상치 탐지를 위해 사용되는 감독 학습 방법입니다.
+
+[사용 예제](/docs/integrations/retrievers/svm)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SVMRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.svm.SVMRetriever.html", "title": "scikit-learn"}]-->

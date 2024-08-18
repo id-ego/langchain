@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/query_no_queries/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/query_no_queries.ipynb
+description: 쿼리가 생성되지 않는 경우를 처리하는 방법에 대한 문서로, 쿼리 분석 및 검색 호출 여부를 결정하는 방법을 설명합니다.
 sidebar_position: 3
 ---
 
-# How to handle cases where no queries are generated
+# 쿼리가 생성되지 않는 경우 처리 방법
 
-Sometimes, a query analysis technique may allow for any number of queries to be generated - including no queries! In this case, our overall chain will need to inspect the result of the query analysis before deciding whether to call the retriever or not.
+때때로 쿼리 분석 기술은 쿼리가 생성될 수 있는 모든 수를 허용할 수 있습니다 - 쿼리가 전혀 생성되지 않는 경우도 포함해서요! 이 경우, 우리의 전체 체인은 쿼리 분석의 결과를 검사한 후 리트리버를 호출할지 여부를 결정해야 합니다.
 
-We will use mock data for this example.
+이 예제에서는 모의 데이터를 사용할 것입니다.
 
-## Setup
-#### Install dependencies
+## 설정
+#### 의존성 설치
 
 ```python
 # %pip install -qU langchain langchain-community langchain-openai langchain-chroma
 ```
 
-#### Set environment variables
 
-We'll use OpenAI in this example:
+#### 환경 변수 설정
+
+이 예제에서는 OpenAI를 사용할 것입니다:
 
 ```python
 import getpass
@@ -32,9 +33,10 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-### Create Index
 
-We will create a vectorstore over fake information.
+### 인덱스 생성
+
+우리는 가짜 정보를 기반으로 벡터 스토어를 생성할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to handle cases where no queries are generated"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to handle cases where no queries are generated"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to handle cases where no queries are generated"}]-->
@@ -51,9 +53,10 @@ vectorstore = Chroma.from_texts(
 retriever = vectorstore.as_retriever()
 ```
 
-## Query analysis
 
-We will use function calling to structure the output. However, we will configure the LLM such that is doesn't NEED to call the function representing a search query (should it decide not to). We will also then use a prompt to do query analysis that explicitly lays when it should and shouldn't make a search.
+## 쿼리 분석
+
+우리는 함수 호출을 사용하여 출력을 구조화할 것입니다. 그러나 우리는 LLM을 구성하여 검색 쿼리를 나타내는 함수를 반드시 호출할 필요가 없도록 할 것입니다 (그렇게 결정하지 않는 경우). 우리는 또한 언제 검색을 해야 하고 하지 말아야 하는지를 명시적으로 설명하는 프롬프트를 사용하여 쿼리 분석을 수행할 것입니다.
 
 ```python
 from typing import Optional
@@ -69,6 +72,7 @@ class Search(BaseModel):
         description="Similarity search query applied to job record.",
     )
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to handle cases where no queries are generated"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to handle cases where no queries are generated"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to handle cases where no queries are generated"}]-->
@@ -90,27 +94,32 @@ structured_llm = llm.bind_tools([Search])
 query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
 
-We can see that by invoking this we get an message that sometimes - but not always - returns a tool call.
+
+이것을 호출함으로써 때때로 - 그러나 항상은 아닌 - 도구 호출을 반환하는 메시지를 얻을 수 있음을 알 수 있습니다.
 
 ```python
 query_analyzer.invoke("where did Harrison Work")
 ```
 
+
 ```output
 AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_ZnoVX4j9Mn8wgChaORyd1cvq', 'function': {'arguments': '{"query":"Harrison"}', 'name': 'Search'}, 'type': 'function'}]})
 ```
+
 
 ```python
 query_analyzer.invoke("hi!")
 ```
 
+
 ```output
 AIMessage(content='Hello! How can I assist you today?')
 ```
 
-## Retrieval with query analysis
 
-So how would we include this in a chain? Let's look at an example below.
+## 쿼리 분석을 통한 검색
+
+그렇다면 이것을 체인에 어떻게 포함시킬 수 있을까요? 아래 예제를 살펴보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticToolsParser", "source": "langchain_core.output_parsers.openai_tools", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html", "title": "How to handle cases where no queries are generated"}, {"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to handle cases where no queries are generated"}]-->
@@ -119,6 +128,7 @@ from langchain_core.runnables import chain
 
 output_parser = PydanticToolsParser(tools=[Search])
 ```
+
 
 ```python
 @chain
@@ -133,20 +143,25 @@ def custom_chain(question):
         return response
 ```
 
+
 ```python
 custom_chain.invoke("where did Harrison Work")
 ```
+
 ```output
 Number of requested results 4 is greater than number of elements in index 1, updating n_results = 1
 ```
+
 
 ```output
 [Document(page_content='Harrison worked at Kensho')]
 ```
 
+
 ```python
 custom_chain.invoke("hi!")
 ```
+
 
 ```output
 AIMessage(content='Hello! How can I assist you today?')

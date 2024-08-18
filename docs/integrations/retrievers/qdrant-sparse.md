@@ -1,19 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/qdrant-sparse/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/qdrant-sparse.ipynb
+description: Qdrant Sparse Vector는 Qdrant v1.7.0에서 도입된 희소 벡터를 사용하여 문서 검색을 수행하는 고성능
+  벡터 검색 엔진입니다.
 ---
 
-# Qdrant Sparse Vector
+# Qdrant 희소 벡터
 
-> [Qdrant](https://qdrant.tech/) is an open-source, high-performance vector search engine/database.
+> [Qdrant](https://qdrant.tech/)는 오픈 소스 고성능 벡터 검색 엔진/데이터베이스입니다.
 
-> `QdrantSparseVectorRetriever` uses [sparse vectors](https://qdrant.tech/articles/sparse-vectors/) introduced in `Qdrant` [v1.7.0](https://qdrant.tech/articles/qdrant-1.7.x/) for document retrieval.
+> `QdrantSparseVectorRetriever`는 문서 검색을 위해 `Qdrant` [v1.7.0](https://qdrant.tech/articles/qdrant-1.7.x/)에서 도입된 [희소 벡터](https://qdrant.tech/articles/sparse-vectors/)를 사용합니다.
 
-Install the 'qdrant_client' package:
+'qdrant_client' 패키지를 설치하세요:
 
 ```python
 %pip install --upgrade --quiet  qdrant_client
 ```
+
 
 ```python
 from qdrant_client import QdrantClient, models
@@ -35,9 +37,11 @@ client.create_collection(
 )
 ```
 
+
 ```output
 True
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "QdrantSparseVectorRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.qdrant_sparse_vector_retriever.QdrantSparseVectorRetriever.html", "title": "Qdrant Sparse Vector"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Qdrant Sparse Vector"}]-->
@@ -47,7 +51,8 @@ from langchain_community.retrievers import (
 from langchain_core.documents import Document
 ```
 
-Create a demo encoder function:
+
+데모 인코더 함수를 생성하세요:
 
 ```python
 import random
@@ -69,7 +74,8 @@ retriever = QdrantSparseVectorRetriever(
 )
 ```
 
-Add some documents:
+
+문서를 추가하세요:
 
 ```python
 docs = [
@@ -111,11 +117,13 @@ docs = [
 ]
 ```
 
-Perform a retrieval:
+
+검색을 수행하세요:
 
 ```python
 retriever.add_documents(docs)
 ```
+
 
 ```output
 ['1a3e0d292e6444d39451d0588ce746dc',
@@ -125,11 +133,13 @@ retriever.add_documents(docs)
  'c1a6249d005d4abd9192b1d0b829cebe']
 ```
 
+
 ```python
 retriever.invoke(
     "Life and ethical dilemmas of AI",
 )
 ```
+
 
 ```output
 [Document(page_content="In 'Sentient Threads,' Professor Bennett unravels the enigma of AI consciousness, presenting a tapestry of arguments that scrutinize the very essence of machine sentience. The book ignites contemplation on the ethical and philosophical dimensions surrounding the quest for true AI awareness.", metadata={'title': 'Sentient Threads: Weaving AI Consciousness', 'author': 'Prof. Alexander J. Bennett'}),
@@ -138,7 +148,8 @@ retriever.invoke(
  Document(page_content='An in-depth exploration of the fascinating journey of artificial intelligence, narrated by Dr. Mitchell. This captivating account spans the historical roots, current advancements, and speculative futures of AI, offering a gripping narrative that intertwines technology, ethics, and societal implications.', metadata={'title': 'Beyond Horizons: AI Chronicles', 'author': 'Dr. Cassandra Mitchell'})]
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

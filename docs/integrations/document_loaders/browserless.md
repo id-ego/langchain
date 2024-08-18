@@ -1,22 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/browserless/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/browserless.ipynb
+description: Browserless는 클라우드에서 헤드리스 Chrome 인스턴스를 실행할 수 있는 서비스로, 자동화를 손쉽게 관리할 수 있게
+  해줍니다.
 ---
 
-# Browserless
+# 브라우저리스
 
-Browserless is a service that allows you to run headless Chrome instances in the cloud. It's a great way to run browser-based automation at scale without having to worry about managing your own infrastructure.
+브라우저리스는 클라우드에서 헤드리스 크롬 인스턴스를 실행할 수 있는 서비스입니다. 이는 자체 인프라를 관리할 필요 없이 대규모로 브라우저 기반 자동화를 실행하는 훌륭한 방법입니다.
 
-To use Browserless as a document loader, initialize a `BrowserlessLoader` instance as shown in this notebook. Note that by default, `BrowserlessLoader` returns the `innerText` of the page's `body` element. To disable this and get the raw HTML, set `text_content` to `False`.
+브라우저리스를 문서 로더로 사용하려면, 이 노트북에 표시된 대로 `BrowserlessLoader` 인스턴스를 초기화하세요. 기본적으로 `BrowserlessLoader`는 페이지의 `body` 요소의 `innerText`를 반환합니다. 이를 비활성화하고 원시 HTML을 얻으려면 `text_content`를 `False`로 설정하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "BrowserlessLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.browserless.BrowserlessLoader.html", "title": "Browserless"}]-->
 from langchain_community.document_loaders import BrowserlessLoader
 ```
 
+
 ```python
 BROWSERLESS_API_TOKEN = "YOUR_BROWSERLESS_API_TOKEN"
 ```
+
 
 ```python
 loader = BrowserlessLoader(
@@ -31,6 +34,7 @@ documents = loader.load()
 
 print(documents[0].page_content[:1000])
 ```
+
 ```output
 Jump to content
 Main menu
@@ -56,7 +60,8 @@ The documents to be classified may be texts, images, music, etc. Each kind of do
 Do
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

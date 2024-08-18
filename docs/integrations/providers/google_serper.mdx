@@ -1,29 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/google_serper/
+description: Serper Google Search API를 LangChain에서 사용하는 방법을 다루며, 설정 및 Google Serper
+  래퍼에 대한 정보를 제공합니다.
 ---
 
-# Serper - Google Search API
+# Serper - 구글 검색 API
 
-This page covers how to use the [Serper](https://serper.dev) Google Search API within LangChain. Serper is a low-cost Google Search API that can be used to add answer box, knowledge graph, and organic results data from Google Search.
-It is broken into two parts: setup, and then references to the specific Google Serper wrapper.
+이 페이지는 LangChain 내에서 [Serper](https://serper.dev) 구글 검색 API를 사용하는 방법을 다룹니다. Serper는 구글 검색에서 답변 상자, 지식 그래프 및 유기적 결과 데이터를 추가하는 데 사용할 수 있는 저비용 구글 검색 API입니다. 이는 설정과 특정 구글 Serper 래퍼에 대한 참조의 두 부분으로 나뉩니다.
 
-## Setup
+## 설정
 
-- Go to [serper.dev](https://serper.dev) to sign up for a free account
-- Get the api key and set it as an environment variable (`SERPER_API_KEY`)
+- [serper.dev](https://serper.dev)로 가서 무료 계정을 등록하세요.
+- API 키를 가져와서 환경 변수로 설정하세요 (`SERPER_API_KEY`).
 
-## Wrappers
+## 래퍼
 
-### Utility
+### 유틸리티
 
-There exists a GoogleSerperAPIWrapper utility which wraps this API. To import this utility:
+이 API를 래핑하는 GoogleSerperAPIWrapper 유틸리티가 존재합니다. 이 유틸리티를 가져오려면:
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleSerperAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_serper.GoogleSerperAPIWrapper.html", "title": "Serper - Google Search API"}]-->
 from langchain_community.utilities import GoogleSerperAPIWrapper
 ```
 
-You can use it as part of a Self Ask chain:
+
+Self Ask 체인의 일부로 사용할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleSerperAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_serper.GoogleSerperAPIWrapper.html", "title": "Serper - Google Search API"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Serper - Google Search API"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Serper - Google Search API"}, {"imported": "Tool", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Serper - Google Search API"}, {"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Serper - Google Search API"}]-->
@@ -51,7 +52,8 @@ self_ask_with_search = initialize_agent(tools, llm, agent=AgentType.SELF_ASK_WIT
 self_ask_with_search.run("What is the hometown of the reigning men's U.S. Open champion?")
 ```
 
-#### Output
+
+#### 출력
 ```
 Entering new AgentExecutor chain...
  Yes.
@@ -66,16 +68,18 @@ So the final answer is: El Palmar, Spain
 'El Palmar, Spain'
 ```
 
-For a more detailed walkthrough of this wrapper, see [this notebook](/docs/integrations/tools/google_serper).
 
-### Tool
+이 래퍼에 대한 보다 자세한 설명은 [이 노트북](/docs/integrations/tools/google_serper)을 참조하세요.
 
-You can also easily load this wrapper as a Tool (to use with an Agent).
-You can do this with:
+### 도구
+
+이 래퍼를 도구로 쉽게 로드할 수도 있습니다 (에이전트와 함께 사용하기 위해).
+다음과 같이 할 수 있습니다:
 ```python
 <!--IMPORTS:[{"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Serper - Google Search API"}]-->
 from langchain.agents import load_tools
 tools = load_tools(["google-serper"])
 ```
 
-For more information on tools, see [this page](/docs/how_to/tools_builtin).
+
+도구에 대한 더 많은 정보는 [이 페이지](/docs/how_to/tools_builtin)를 참조하세요.

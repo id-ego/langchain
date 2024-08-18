@@ -1,15 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/tsv/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/tsv.ipynb
+description: TSV 파일 형식은 표 형식 데이터를 저장하기 위한 간단한 텍스트 기반 파일 형식입니다. 레코드는 줄 바꿈으로 구분됩니다.
 ---
 
 # TSV
 
-> A [tab-separated values (TSV)](https://en.wikipedia.org/wiki/Tab-separated_values) file is a simple, text-based file format for storing tabular data.[3] Records are separated by newlines, and values within a record are separated by tab characters.
+> [탭으로 구분된 값(TSV)](https://en.wikipedia.org/wiki/Tab-separated_values) 파일은 표 형식 데이터를 저장하기 위한 간단한 텍스트 기반 파일 형식입니다.[3] 레코드는 줄 바꿈으로 구분되며, 레코드 내의 값은 탭 문자로 구분됩니다.
 
 ## `UnstructuredTSVLoader`
 
-You can also load the table using the `UnstructuredTSVLoader`. One advantage of using `UnstructuredTSVLoader` is that if you use it in `"elements"` mode, an HTML representation of the table will be available in the metadata.
+`UnstructuredTSVLoader`를 사용하여 테이블을 로드할 수도 있습니다. `UnstructuredTSVLoader`를 사용하는 한 가지 장점은 `"elements"` 모드에서 사용할 경우 메타데이터에 테이블의 HTML 표현이 제공된다는 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredTSVLoader", "source": "langchain_community.document_loaders.tsv", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.tsv.UnstructuredTSVLoader.html", "title": "TSV"}]-->
@@ -22,6 +22,7 @@ docs = loader.load()
 
 print(docs[0].metadata["text_as_html"])
 ```
+
 ```output
 <table border="1" class="dataframe">
   <tbody>
@@ -122,7 +123,8 @@ print(docs[0].metadata["text_as_html"])
 </table>
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

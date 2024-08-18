@@ -1,26 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/zep_cloud/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/zep_cloud.ipynb
+description: Zep Cloud는 AI 비서 앱을 위한 장기 기억 서비스로, 대화 기록을 기억하고 개인화된 AI 경험을 제공합니다.
 ---
 
 # Zep Cloud
-> Recall, understand, and extract data from chat histories. Power personalized AI experiences.
+> 대화 기록에서 데이터를 기억하고 이해하며 추출합니다. 개인화된 AI 경험을 강화합니다.
 
-> [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-while also reducing hallucinations, latency, and cost.
+> [Zep](https://www.getzep.com)은 AI Assistant 앱을 위한 장기 기억 서비스입니다.
+Zep을 사용하면 AI 어시스턴트가 과거 대화를 기억할 수 있는 능력을 제공할 수 있으며, 
+이로 인해 환각, 지연 및 비용을 줄일 수 있습니다.
 
-> See [Zep Cloud Installation Guide](https://help.getzep.com/sdks)
+> [Zep Cloud 설치 가이드](https://help.getzep.com/sdks)를 참조하세요.
 
-## Usage
+## 사용법
 
-In the examples below, we're using Zep's auto-embedding feature which automatically embeds documents on the Zep server
-using low-latency embedding models.
+아래 예제에서는 Zep 서버에서 문서를 자동으로 임베딩하는 Zep의 자동 임베딩 기능을 사용하고 있습니다.
+저지연 임베딩 모델을 사용합니다.
 
-## Note
-- These examples use Zep's async interfaces. Call sync interfaces by removing the `a` prefix from the method names.
+## 주의
+- 이 예제는 Zep의 비동기 인터페이스를 사용합니다. 메서드 이름에서 `a` 접두사를 제거하여 동기 인터페이스를 호출하세요.
 
-## Load or create a Collection from documents
+## 문서에서 컬렉션 로드 또는 생성
 
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Zep Cloud"}, {"imported": "ZepCloudVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.zep_cloud.ZepCloudVectorStore.html", "title": "Zep Cloud"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Zep Cloud"}]-->
@@ -52,6 +52,7 @@ vs = ZepCloudVectorStore.from_documents(
 )
 ```
 
+
 ```python
 # wait for the collection embedding to complete
 
@@ -76,10 +77,12 @@ async def wait_for_ready(collection_name: str) -> None:
 
 await wait_for_ready(collection_name)
 ```
+
 ```output
 Embedding status: 401/401 documents embedded
 ```
-## Simarility Search Query over the Collection
+
+## 컬렉션에 대한 유사성 검색 쿼리
 
 ```python
 # query it
@@ -90,6 +93,7 @@ docs_scores = await vs.asimilarity_search_with_relevance_scores(query, k=3)
 for d, s in docs_scores:
     print(d.page_content, " -> ", s, "\n====\n")
 ```
+
 ```output
 the positions of the two principal planets, (and these the most
 necessary for the navigator,) Jupiter and Saturn, require each not less
@@ -122,9 +126,10 @@ We have thus attempted to convey some notion (though necessarily a very
 inadequate one) of the immense extent of numerical tables which it has  ->  0.7840130925178528 
 ====
 ```
-## Search over Collection Re-ranked by MMR
 
-Zep offers native, hardware-accelerated MMR re-ranking of search results.
+## MMR로 재정렬된 컬렉션 검색
+
+Zep은 검색 결과의 네이티브 하드웨어 가속 MMR 재정렬을 제공합니다.
 
 ```python
 query = "what is the structure of our solar system?"
@@ -133,6 +138,7 @@ docs = await vs.asearch(query, search_type="mmr", k=3)
 for d in docs:
     print(d.page_content, "\n====\n")
 ```
+
 ```output
 the positions of the two principal planets, (and these the most
 necessary for the navigator,) Jupiter and Saturn, require each not less
@@ -162,9 +168,10 @@ multiplicity and complexity of the tables necessary for the purposes of
 the astronomer and navigator. We feel, nevertheless, that the truly 
 ====
 ```
-# Filter by Metadata
 
-Use a metadata filter to narrow down results. First, load another book: "Adventures of Sherlock Holmes"
+# 메타데이터로 필터링
+
+메타데이터 필터를 사용하여 결과를 좁힙니다. 먼저 다른 책을 로드합니다: "셜록 홈즈의 모험"
 
 ```python
 # Let's add more content to the existing Collection
@@ -180,6 +187,7 @@ await vs.aadd_documents(docs)
 
 await wait_for_ready(collection_name)
 ```
+
 ```output
 Adding documents
 generated documents 1290
@@ -192,7 +200,8 @@ Embedding status: 1211/1691 documents embedded
 Embedding status: 1431/1691 documents embedded
 Embedding status: 1691/1691 documents embedded
 ```
-We see results from both books. Note the `source` metadata
+
+두 책의 결과를 확인할 수 있습니다. `source` 메타데이터에 주목하세요.
 
 ```python
 query = "Was he interested in astronomy?"
@@ -201,6 +210,7 @@ docs = await vs.asearch(query, search_type="similarity", k=3)
 for d in docs:
     print(d.page_content, " -> ", d.metadata, "\n====\n")
 ```
+
 ```output
 of astronomy, and its kindred sciences, with the various arts dependent
 on them. In none are computations more operose than those which
@@ -230,7 +240,8 @@ slightest disrespect for these distinguished persons, when we express
 our regret, that a discovery of such paramount practical value, in a  ->  {'source': 'https://www.gutenberg.org/cache/epub/71292/pg71292.txt'} 
 ====
 ```
-Now, we set up a filter
+
+이제 필터를 설정합니다.
 
 ```python
 filter = {
@@ -246,6 +257,7 @@ docs = await vs.asearch(query, search_type="similarity", metadata=filter, k=3)
 for d in docs:
     print(d.page_content, " -> ", d.metadata, "\n====\n")
 ```
+
 ```output
 possess all knowledge which is likely to be useful to him in his work,
 and this I have endeavored in my case to do. If I remember rightly, you
@@ -276,7 +288,8 @@ evil days. He had foresight, but has less now than formerly, pointing  ->  {'sou
 ====
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

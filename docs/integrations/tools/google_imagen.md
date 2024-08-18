@@ -1,22 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/google_imagen/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/google_imagen.ipynb
+description: 구글 이미지는 Vertex AI에서 텍스트 프롬프트로 고품질 이미지를 생성하고 편집할 수 있는 최첨단 AI 기능을 제공합니다.
 ---
 
-# Google Imagen
+# 구글 이미지
 
-> [Imagen on Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview) brings Google's state of the art image generative AI capabilities to application developers. With Imagen on Vertex AI, application developers can build next-generation AI products that transform their user's imagination into high quality visual assets using AI generation, in seconds.
+> [Vertex AI의 Imagen](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview)은 구글의 최첨단 이미지 생성 AI 기능을 애플리케이션 개발자에게 제공합니다. Vertex AI의 Imagen을 사용하면 애플리케이션 개발자는 AI 생성을 통해 사용자의 상상을 고품질 시각 자산으로 변환하는 차세대 AI 제품을 몇 초 만에 구축할 수 있습니다.
 
-With Imagen on Langchain , You can do the following tasks
+Langchain의 Imagen을 사용하면 다음 작업을 수행할 수 있습니다.
 
-- [VertexAIImageGeneratorChat](#image-generation) : Generate novel images using only a text prompt (text-to-image AI generation).
-- [VertexAIImageEditorChat](#image-editing) : Edit an entire uploaded or generated image with a text prompt.
-- [VertexAIImageCaptioning](#image-captioning) : Get text descriptions of images with visual captioning.
-- [VertexAIVisualQnAChat](#visual-question-answering-vqa) : Get answers to a question about an image with Visual Question Answering (VQA).
-  * NOTE : Currently we support only only single-turn chat for Visual QnA (VQA)
+- [VertexAIImageGeneratorChat](#image-generation) : 텍스트 프롬프트만 사용하여 새로운 이미지를 생성합니다 (텍스트-투-이미지 AI 생성).
+- [VertexAIImageEditorChat](#image-editing) : 텍스트 프롬프트로 전체 업로드된 이미지 또는 생성된 이미지를 편집합니다.
+- [VertexAIImageCaptioning](#image-captioning) : 시각적 캡션을 사용하여 이미지에 대한 텍스트 설명을 얻습니다.
+- [VertexAIVisualQnAChat](#visual-question-answering-vqa) : 시각적 질문 응답(VQA)을 통해 이미지에 대한 질문에 대한 답변을 얻습니다.
+  * 참고 : 현재 우리는 시각적 QnA(VQA)에 대해 단일 턴 채팅만 지원합니다.
 
-## Image Generation
-Generate novel images using only a text prompt (text-to-image AI generation)
+## 이미지 생성
+텍스트 프롬프트만 사용하여 새로운 이미지를 생성합니다 (텍스트-투-이미지 AI 생성).
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Google Imagen"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Google Imagen"}]-->
@@ -24,20 +24,24 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_google_vertexai.vision_models import VertexAIImageGeneratorChat
 ```
 
+
 ```python
 # Create Image Gentation model Object
 generator = VertexAIImageGeneratorChat()
 ```
+
 
 ```python
 messages = [HumanMessage(content=["a cat at the beach"])]
 response = generator.invoke(messages)
 ```
 
+
 ```python
 # To view the generated Image
 generated_image = response.content[0]
 ```
+
 
 ```python
 import base64
@@ -55,12 +59,13 @@ img = Image.open(io.BytesIO(base64.decodebytes(bytes(img_base64, "utf-8"))))
 img
 ```
 
+
 ![](/img/e76fbff9938a3435103e20a32884e775.png)
 
-## Image Editing
-Edit an entire uploaded or generated image with a text prompt.
+## 이미지 편집
+텍스트 프롬프트로 전체 업로드된 이미지 또는 생성된 이미지를 편집합니다.
 
-### Edit Generated Image
+### 생성된 이미지 편집
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Google Imagen"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Google Imagen"}]-->
@@ -70,6 +75,7 @@ from langchain_google_vertexai.vision_models import (
     VertexAIImageGeneratorChat,
 )
 ```
+
 
 ```python
 # Create Image Gentation model Object
@@ -85,10 +91,12 @@ response = generator.invoke(messages)
 generated_image = response.content[0]
 ```
 
+
 ```python
 # Create Image Editor model Object
 editor = VertexAIImageEditorChat()
 ```
+
 
 ```python
 # Write prompt for editing and pass the "generated_image"
@@ -97,6 +105,7 @@ messages = [HumanMessage(content=[generated_image, "a dog at the beach "])]
 # Call the model for editing Image
 editor_response = editor.invoke(messages)
 ```
+
 
 ```python
 import base64
@@ -116,9 +125,10 @@ edited_img = Image.open(
 edited_img
 ```
 
+
 ![](/img/d0f2fe028cdc86a81c8941731cc1e63f.png)
 
-## Image Captioning
+## 이미지 캡셔닝
 
 ```python
 from langchain_google_vertexai import VertexAIImageCaptioning
@@ -127,7 +137,8 @@ from langchain_google_vertexai import VertexAIImageCaptioning
 model = VertexAIImageCaptioning()
 ```
 
-NOTE :  we're using generated image in [Image Generation Section](#image-generation)
+
+참고 : [이미지 생성 섹션](#image-generation)에서 생성된 이미지를 사용하고 있습니다.
 
 ```python
 # use image egenarted in Image Generation Section
@@ -143,13 +154,15 @@ img = Image.open(
 # display Image
 img
 ```
+
 ```output
 Generated Cpation : a cat sitting on the beach looking at the camera
 ```
 
+
 ![](/img/41e1ec2a77baa5b8e990268a2cf510f5.png)
 
-## Visual Question Answering (VQA)
+## 시각적 질문 응답 (VQA)
 
 ```python
 from langchain_google_vertexai import VertexAIVisualQnAChat
@@ -157,7 +170,8 @@ from langchain_google_vertexai import VertexAIVisualQnAChat
 model = VertexAIVisualQnAChat()
 ```
 
-NOTE :  we're using generated image in [Image Generation Section](#image-generation)
+
+참고 : [이미지 생성 섹션](#image-generation)에서 생성된 이미지를 사용하고 있습니다.
 
 ```python
 question = "What animal is shown in the image?"
@@ -182,14 +196,16 @@ img = Image.open(
 # display Image
 img
 ```
+
 ```output
 question : What animal is shown in the image?
 answer : cat
 ```
 
+
 ![](/img/41e1ec2a77baa5b8e990268a2cf510f5.png)
 
-## Related
+## 관련
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

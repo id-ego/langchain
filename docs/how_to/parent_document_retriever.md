@@ -1,31 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/parent_document_retriever/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/parent_document_retriever.ipynb
+description: 부모 문서 검색기를 사용하여 작은 데이터 청크를 분할하고, 검색 시 원본 문서를 효율적으로 반환하는 방법을 설명합니다.
 ---
 
-# How to use the Parent Document Retriever
+# 부모 문서 검색기 사용 방법
 
-When splitting documents for retrieval, there are often conflicting desires:
+문서를 검색을 위해 분할할 때, 종종 상충하는 욕구가 존재합니다:
 
-1. You may want to have small documents, so that their embeddings can most
-accurately reflect their meaning. If too long, then the embeddings can
-lose meaning.
-2. You want to have long enough documents that the context of each chunk is
-retained.
+1. 의미를 가장 정확하게 반영할 수 있도록 작은 문서를 원할 수 있습니다. 너무 길면 임베딩이 의미를 잃을 수 있습니다.
+2. 각 청크의 맥락이 유지될 수 있도록 충분히 긴 문서를 원합니다.
 
-The `ParentDocumentRetriever` strikes that balance by splitting and storing
-small chunks of data. During retrieval, it first fetches the small chunks
-but then looks up the parent ids for those chunks and returns those larger
-documents.
+`ParentDocumentRetriever`는 작은 데이터 청크를 분할하고 저장함으로써 그 균형을 맞춥니다. 검색 중에는 먼저 작은 청크를 가져온 후, 해당 청크의 부모 ID를 조회하여 더 큰 문서를 반환합니다.
 
-Note that "parent document" refers to the document that a small chunk
-originated from. This can either be the whole raw document OR a larger
-chunk.
+"부모 문서"는 작은 청크가 유래한 문서를 의미합니다. 이는 전체 원본 문서 또는 더 큰 청크일 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ParentDocumentRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.parent_document_retriever.ParentDocumentRetriever.html", "title": "How to use the Parent Document Retriever"}]-->
 from langchain.retrievers import ParentDocumentRetriever
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryStore.html", "title": "How to use the Parent Document Retriever"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to use the Parent Document Retriever"}, {"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "How to use the Parent Document Retriever"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use the Parent Document Retriever"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to use the Parent Document Retriever"}]-->
@@ -35,6 +28,7 @@ from langchain_community.document_loaders import TextLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 ```
+
 
 ```python
 loaders = [
@@ -46,9 +40,10 @@ for loader in loaders:
     docs.extend(loader.load())
 ```
 
-## Retrieving full documents
 
-In this mode, we want to retrieve the full documents. Therefore, we only specify a child splitter.
+## 전체 문서 검색
+
+이 모드에서는 전체 문서를 검색하고자 합니다. 따라서 자식 분할기만 지정합니다.
 
 ```python
 # This text splitter is used to create the child documents
@@ -66,52 +61,62 @@ retriever = ParentDocumentRetriever(
 )
 ```
 
+
 ```python
 retriever.add_documents(docs, ids=None)
 ```
 
-This should yield two keys, because we added two documents.
+
+이로 인해 두 개의 키가 생성되어야 합니다. 왜냐하면 두 개의 문서를 추가했기 때문입니다.
 
 ```python
 list(store.yield_keys())
 ```
+
 
 ```output
 ['9a63376c-58cc-42c9-b0f7-61f0e1a3a688',
  '40091598-e918-4a18-9be0-f46413a95ae4']
 ```
 
-Let's now call the vector store search functionality - we should see that it returns small chunks (since we're storing the small chunks).
+
+이제 벡터 저장소 검색 기능을 호출해 보겠습니다 - 작은 청크를 저장하고 있으므로 작은 청크가 반환되는 것을 볼 수 있어야 합니다.
 
 ```python
 sub_docs = vectorstore.similarity_search("justice breyer")
 ```
 
+
 ```python
 print(sub_docs[0].page_content)
 ```
+
 ```output
 Tonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. 
 
 One of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court.
 ```
-Let's now retrieve from the overall retriever. This should return large documents - since it returns the documents where the smaller chunks are located.
+
+이제 전체 검색기에서 검색해 보겠습니다. 이는 작은 청크가 위치한 문서를 반환하므로 큰 문서를 반환해야 합니다.
 
 ```python
 retrieved_docs = retriever.invoke("justice breyer")
 ```
 
+
 ```python
 len(retrieved_docs[0].page_content)
 ```
+
 
 ```output
 38540
 ```
 
-## Retrieving larger chunks
 
-Sometimes, the full documents can be too big to want to retrieve them as is. In that case, what we really want to do is to first split the raw documents into larger chunks, and then split it into smaller chunks. We then index the smaller chunks, but on retrieval we retrieve the larger chunks (but still not the full documents).
+## 더 큰 청크 검색
+
+때때로 전체 문서는 너무 커서 그대로 검색하고 싶지 않을 수 있습니다. 그런 경우, 우리가 정말로 원하는 것은 원본 문서를 먼저 더 큰 청크로 분할한 다음, 이를 더 작은 청크로 다시 분할하는 것입니다. 그런 다음 작은 청크를 인덱싱하지만, 검색 시에는 더 큰 청크를 검색합니다(하지만 여전히 전체 문서는 아닙니다).
 
 ```python
 # This text splitter is used to create the parent documents
@@ -127,6 +132,7 @@ vectorstore = Chroma(
 store = InMemoryStore()
 ```
 
+
 ```python
 retriever = ParentDocumentRetriever(
     vectorstore=vectorstore,
@@ -136,50 +142,61 @@ retriever = ParentDocumentRetriever(
 )
 ```
 
+
 ```python
 retriever.add_documents(docs)
 ```
 
-We can see that there are much more than two documents now - these are the larger chunks.
+
+이제 두 개 이상의 문서가 있는 것을 볼 수 있습니다 - 이것들이 더 큰 청크입니다.
 
 ```python
 len(list(store.yield_keys()))
 ```
 
+
 ```output
 66
 ```
 
-Let's make sure the underlying vector store still retrieves the small chunks.
+
+기본 벡터 저장소가 여전히 작은 청크를 검색하는지 확인해 보겠습니다.
 
 ```python
 sub_docs = vectorstore.similarity_search("justice breyer")
 ```
 
+
 ```python
 print(sub_docs[0].page_content)
 ```
+
 ```output
 Tonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. 
 
 One of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court.
 ```
 
+
 ```python
 retrieved_docs = retriever.invoke("justice breyer")
 ```
+
 
 ```python
 len(retrieved_docs[0].page_content)
 ```
 
+
 ```output
 1849
 ```
 
+
 ```python
 print(retrieved_docs[0].page_content)
 ```
+
 ```output
 In state after state, new laws have been passed, not only to suppress the vote, but to subvert entire elections. 
 

@@ -1,38 +1,39 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/minimax/
+description: Minimax는 기업과 개인을 위한 자연어 처리 모델을 제공하는 중국 스타트업입니다. API 키와 그룹 ID로 설정하여 사용하세요.
 ---
 
-# Minimax
+# 미니맥스
 
-> [Minimax](https://api.minimax.chat) is a Chinese startup that provides natural language processing models
-for companies and individuals.
+> [미니맥스](https://api.minimax.chat)는 기업과 개인을 위한 자연어 처리 모델을 제공하는 중국 스타트업입니다.
 
-## Installation and Setup
-Get a [Minimax api key](https://api.minimax.chat/user-center/basic-information/interface-key) and set it as an environment variable (`MINIMAX_API_KEY`)
-Get a [Minimax group id](https://api.minimax.chat/user-center/basic-information) and set it as an environment variable (`MINIMAX_GROUP_ID`)
+## 설치 및 설정
+[미니맥스 API 키](https://api.minimax.chat/user-center/basic-information/interface-key)를 얻고 이를 환경 변수(`MINIMAX_API_KEY`)로 설정하세요.  
+[미니맥스 그룹 ID](https://api.minimax.chat/user-center/basic-information)를 얻고 이를 환경 변수(`MINIMAX_GROUP_ID`)로 설정하세요.
 
 ## LLM
 
-There exists a Minimax LLM wrapper, which you can access with
-See a [usage example](/docs/integrations/llms/minimax).
+미니맥스 LLM 래퍼가 존재하며, 이를 통해 접근할 수 있습니다.  
+[사용 예시](/docs/integrations/llms/minimax)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "Minimax", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.minimax.Minimax.html", "title": "Minimax"}]-->
 from langchain_community.llms import Minimax
 ```
 
-## Chat Models
 
-See a [usage example](/docs/integrations/chat/minimax)
+## 채팅 모델
+
+[사용 예시](/docs/integrations/chat/minimax)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "MiniMaxChat", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.minimax.MiniMaxChat.html", "title": "Minimax"}]-->
 from langchain_community.chat_models import MiniMaxChat
 ```
 
-## Text Embedding Model
 
-There exists a Minimax Embedding model, which you can access with
+## 텍스트 임베딩 모델
+
+미니맥스 임베딩 모델이 존재하며, 이를 통해 접근할 수 있습니다.  
 ```python
 <!--IMPORTS:[{"imported": "MiniMaxEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.minimax.MiniMaxEmbeddings.html", "title": "Minimax"}]-->
 from langchain_community.embeddings import MiniMaxEmbeddings

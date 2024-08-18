@@ -1,30 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/few_shot_examples/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/few_shot_examples.ipynb
+description: 이 가이드는 LLM에 예시 입력 및 출력을 제공하는 몇 가지 샷 프롬프트 템플릿을 만드는 방법을 설명합니다.
 sidebar_position: 3
 ---
 
-# How to use few shot examples
+# 몇 가지 샷 예제 사용 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [Prompt templates](/docs/concepts/#prompt-templates)
-- [Example selectors](/docs/concepts/#example-selectors)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [프롬프트 템플릿](/docs/concepts/#prompt-templates)
+- [예제 선택기](/docs/concepts/#example-selectors)
 - [LLMs](/docs/concepts/#llms)
-- [Vectorstores](/docs/concepts/#vector-stores)
+- [벡터 저장소](/docs/concepts/#vector-stores)
 
 :::
 
-In this guide, we'll learn how to create a simple prompt template that provides the model with example inputs and outputs when generating. Providing the LLM with a few such examples is called few-shotting, and is a simple yet powerful way to guide generation and in some cases drastically improve model performance.
+이 가이드에서는 모델이 생성할 때 예제 입력 및 출력을 제공하는 간단한 프롬프트 템플릿을 만드는 방법을 배웁니다. LLM에 이러한 몇 가지 예제를 제공하는 것을 몇 샷(few-shot)이라고 하며, 생성 과정을 안내하고 경우에 따라 모델 성능을 극적으로 향상시키는 간단하면서도 강력한 방법입니다.
 
-A few-shot prompt template can be constructed from either a set of examples, or from an [Example Selector](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.base.BaseExampleSelector.html) class responsible for choosing a subset of examples from the defined set.
+몇 샷 프롬프트 템플릿은 예제 집합 또는 정의된 집합에서 예제의 하위 집합을 선택하는 책임이 있는 [예제 선택기](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.base.BaseExampleSelector.html) 클래스를 통해 구성할 수 있습니다.
 
-This guide will cover few-shotting with string prompt templates. For a guide on few-shotting with chat messages for chat models, see [here](/docs/how_to/few_shot_examples_chat/).
+이 가이드는 문자열 프롬프트 템플릿을 사용한 몇 샷에 대해 다룰 것입니다. 채팅 모델을 위한 채팅 메시지로 몇 샷을 사용하는 방법에 대한 가이드는 [여기](/docs/how_to/few_shot_examples_chat/)를 참조하세요.
 
-## Create a formatter for the few-shot examples
+## 몇 샷 예제를 위한 포매터 만들기
 
-Configure a formatter that will format the few-shot examples into a string. This formatter should be a `PromptTemplate` object.
+몇 샷 예제를 문자열로 포맷할 포매터를 구성합니다. 이 포매터는 `PromptTemplate` 객체여야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to use few shot examples"}]-->
@@ -33,9 +33,10 @@ from langchain_core.prompts import PromptTemplate
 example_prompt = PromptTemplate.from_template("Question: {question}\n{answer}")
 ```
 
-## Creating the example set
 
-Next, we'll create a list of few-shot examples. Each example should be a dictionary representing an example input to the formatter prompt we defined above.
+## 예제 집합 만들기
+
+다음으로, 몇 샷 예제의 목록을 만듭니다. 각 예제는 위에서 정의한 포매터 프롬프트에 대한 예제 입력을 나타내는 사전이어야 합니다.
 
 ```python
 examples = [
@@ -90,11 +91,13 @@ So the final answer is: No
 ]
 ```
 
-Let's test the formatting prompt with one of our examples:
+
+우리의 예제 중 하나로 포매팅 프롬프트를 테스트해 봅시다:
 
 ```python
 print(example_prompt.invoke(examples[0]).to_string())
 ```
+
 ```output
 Question: Who lived longer, Muhammad Ali or Alan Turing?
 
@@ -105,9 +108,10 @@ Follow up: How old was Alan Turing when he died?
 Intermediate answer: Alan Turing was 41 years old when he died.
 So the final answer is: Muhammad Ali
 ```
-### Pass the examples and formatter to `FewShotPromptTemplate`
 
-Finally, create a [`FewShotPromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html) object. This object takes in the few-shot examples and the formatter for the few-shot examples. When this `FewShotPromptTemplate` is formatted, it formats the passed examples using the `example_prompt`, then and adds them to the final prompt before `suffix`:
+### 예제와 포매터를 `FewShotPromptTemplate`에 전달하기
+
+마지막으로, [`FewShotPromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html) 객체를 만듭니다. 이 객체는 몇 샷 예제와 몇 샷 예제를 위한 포매터를 입력으로 받습니다. 이 `FewShotPromptTemplate`가 포맷될 때, 전달된 예제를 `example_prompt`를 사용하여 포맷한 다음 `suffix` 이전에 최종 프롬프트에 추가합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to use few shot examples"}]-->
@@ -124,6 +128,7 @@ print(
     prompt.invoke({"input": "Who was the father of Mary Ball Washington?"}).to_string()
 )
 ```
+
 ```output
 Question: Who lived longer, Muhammad Ali or Alan Turing?
 
@@ -171,13 +176,14 @@ So the final answer is: No
 
 Question: Who was the father of Mary Ball Washington?
 ```
-By providing the model with examples like this, we can guide the model to a better response.
 
-## Using an example selector
+이렇게 모델에 예제를 제공함으로써, 우리는 모델이 더 나은 응답을 하도록 안내할 수 있습니다.
 
-We will reuse the example set and the formatter from the previous section. However, instead of feeding the examples directly into the `FewShotPromptTemplate` object, we will feed them into an implementation of `ExampleSelector` called [`SemanticSimilarityExampleSelector`](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html) instance. This class selects few-shot examples from the initial set based on their similarity to the input. It uses an embedding model to compute the similarity between the input and the few-shot examples, as well as a vector store to perform the nearest neighbor search.
+## 예제 선택기 사용하기
 
-To show what it looks like, let's initialize an instance and call it in isolation:
+우리는 이전 섹션에서 예제 집합과 포매터를 재사용할 것입니다. 그러나 예제를 `FewShotPromptTemplate` 객체에 직접 제공하는 대신, [`SemanticSimilarityExampleSelector`](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html)라는 `ExampleSelector`의 구현에 제공합니다. 이 클래스는 입력과의 유사성에 따라 초기 집합에서 몇 샷 예제를 선택합니다. 입력과 몇 샷 예제 간의 유사성을 계산하기 위해 임베딩 모델을 사용하고, 최근접 이웃 검색을 수행하기 위해 벡터 저장소를 사용합니다.
+
+어떻게 생겼는지 보여주기 위해 인스턴스를 초기화하고 독립적으로 호출해 보겠습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to use few shot examples"}, {"imported": "SemanticSimilarityExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html", "title": "How to use few shot examples"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use few shot examples"}]-->
@@ -205,6 +211,7 @@ for example in selected_examples:
     for k, v in example.items():
         print(f"{k}: {v}")
 ```
+
 ```output
 Examples most similar to the input: Who was the father of Mary Ball Washington?
 
@@ -219,7 +226,8 @@ So the final answer is: Joseph Ball
 
 question: Who was the maternal grandfather of George Washington?
 ```
-Now, let's create a `FewShotPromptTemplate` object. This object takes in the example selector and the formatter prompt for the few-shot examples.
+
+이제 `FewShotPromptTemplate` 객체를 생성해 보겠습니다. 이 객체는 예제 선택기와 몇 샷 예제를 위한 포매터 프롬프트를 입력으로 받습니다.
 
 ```python
 prompt = FewShotPromptTemplate(
@@ -233,6 +241,7 @@ print(
     prompt.invoke({"input": "Who was the father of Mary Ball Washington?"}).to_string()
 )
 ```
+
 ```output
 Question: Who was the maternal grandfather of George Washington?
 
@@ -246,8 +255,9 @@ So the final answer is: Joseph Ball
 
 Question: Who was the father of Mary Ball Washington?
 ```
-## Next steps
 
-You've now learned how to add few-shot examples to your prompts.
+## 다음 단계
 
-Next, check out the other how-to guides on prompt templates in this section, the related how-to guide on [few shotting with chat models](/docs/how_to/few_shot_examples_chat), or the other [example selector how-to guides](/docs/how_to/example_selectors/).
+이제 프롬프트에 몇 샷 예제를 추가하는 방법을 배웠습니다.
+
+다음으로, 이 섹션의 프롬프트 템플릿에 대한 다른 방법 가이드를 확인하거나, [채팅 모델로 몇 샷 사용하기](/docs/how_to/few_shot_examples_chat)에 대한 관련 방법 가이드 또는 다른 [예제 선택기 방법 가이드](/docs/how_to/example_selectors/)를 확인하세요.

@@ -1,13 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/searx_search/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/searx_search.ipynb
+description: 이 문서는 self-hosted SearxNG 검색 API를 사용하여 웹 검색을 수행하는 방법을 설명합니다. 다양한 검색 엔진과
+  사용자 지정 매개변수를 지원합니다.
 ---
 
-# SearxNG Search
+# SearxNG 검색
 
-This notebook goes over how to use a self hosted `SearxNG` search API to search the web.
+이 노트북은 자체 호스팅된 `SearxNG` 검색 API를 사용하여 웹을 검색하는 방법에 대해 설명합니다.
 
-You can [check this link](https://docs.searxng.org/dev/search_api.html) for more informations about `Searx API` parameters.
+`Searx API` 매개변수에 대한 자세한 정보는 [이 링크](https://docs.searxng.org/dev/search_api.html)를 확인하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SearxSearchWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.searx_search.SearxSearchWrapper.html", "title": "SearxNG Search"}]-->
@@ -16,25 +17,29 @@ import pprint
 from langchain_community.utilities import SearxSearchWrapper
 ```
 
+
 ```python
 search = SearxSearchWrapper(searx_host="http://127.0.0.1:8888")
 ```
 
-For some engines, if a direct `answer` is available the warpper will print the answer instead of the full list of search results. You can use the `results` method of the wrapper if you want to obtain all the results.
+
+일부 엔진의 경우, 직접적인 `answer`가 사용 가능한 경우 래퍼는 전체 검색 결과 목록 대신 답변을 출력합니다. 모든 결과를 얻으려면 래퍼의 `results` 메서드를 사용할 수 있습니다.
 
 ```python
 search.run("What is the capital of France")
 ```
 
+
 ```output
 'Paris is the capital of France, the largest country of Europe with 550 000 km2 (65 millions inhabitants). Paris has 2.234 million inhabitants end 2011. She is the core of Ile de France region (12 million people).'
 ```
 
-## Custom Parameters
 
-SearxNG supports [135 search engines](https://docs.searxng.org/user/configured_engines.html). You can also customize the Searx wrapper with arbitrary named parameters that will be passed to the Searx search API . In the below example we will making a more interesting use of custom search parameters from searx search api.
+## 사용자 정의 매개변수
 
-In this example we will be using the `engines` parameters to query wikipedia
+SearxNG는 [135개의 검색 엔진](https://docs.searxng.org/user/configured_engines.html)을 지원합니다. 또한 Searx 검색 API에 전달될 임의의 이름이 지정된 매개변수로 Searx 래퍼를 사용자 정의할 수 있습니다. 아래 예제에서는 Searx 검색 API의 사용자 정의 검색 매개변수를 더 흥미롭게 사용하는 방법을 보여줍니다.
+
+이 예제에서는 `engines` 매개변수를 사용하여 위키피디아를 쿼리할 것입니다.
 
 ```python
 search = SearxSearchWrapper(
@@ -42,34 +47,40 @@ search = SearxSearchWrapper(
 )  # k is for max number of items
 ```
 
+
 ```python
 search.run("large language model ", engines=["wiki"])
 ```
+
 
 ```output
 'Large language models (LLMs) represent a major advancement in AI, with the promise of transforming domains through learned knowledge. LLM sizes have been increasing 10X every year for the last few years, and as these models grow in complexity and size, so do their capabilities.\n\nGPT-3 can translate language, write essays, generate computer code, and more — all with limited to no supervision. In July 2020, OpenAI unveiled GPT-3, a language model that was easily the largest known at the time. Put simply, GPT-3 is trained to predict the next word in a sentence, much like how a text message autocomplete feature works.\n\nA large language model, or LLM, is a deep learning algorithm that can recognize, summarize, translate, predict and generate text and other content based on knowledge gained from massive datasets. Large language models are among the most successful applications of transformer models.\n\nAll of today’s well-known language models—e.g., GPT-3 from OpenAI, PaLM or LaMDA from Google, Galactica or OPT from Meta, Megatron-Turing from Nvidia/Microsoft, Jurassic-1 from AI21 Labs—are...\n\nLarge language models (LLMs) such as GPT-3are increasingly being used to generate text. These tools should be used with care, since they can generate content that is biased, non-verifiable, constitutes original research, or violates copyrights.'
 ```
 
-Passing other Searx parameters for searx like `language`
+
+Searx의 다른 매개변수인 `language`를 전달합니다.
 
 ```python
 search = SearxSearchWrapper(searx_host="http://127.0.0.1:8888", k=1)
 search.run("deep learning", language="es", engines=["wiki"])
 ```
 
+
 ```output
 'Aprendizaje profundo (en inglés, deep learning) es un conjunto de algoritmos de aprendizaje automático (en inglés, machine learning) que intenta modelar abstracciones de alto nivel en datos usando arquitecturas computacionales que admiten transformaciones no lineales múltiples e iterativas de datos expresados en forma matricial o tensorial. 1'
 ```
 
-## Obtaining results with metadata
 
-In this example we will be looking for scientific paper using the `categories` parameter and limiting the results to a `time_range` (not all engines support the time range option).
+## 메타데이터와 함께 결과 얻기
 
-We also would like to obtain the results in a structured way including metadata. For this we will be using the `results` method of the wrapper.
+이 예제에서는 `categories` 매개변수를 사용하여 과학 논문을 검색하고 결과를 `time_range`로 제한합니다(모든 엔진이 시간 범위 옵션을 지원하는 것은 아님).
+
+우리는 또한 메타데이터를 포함하여 구조화된 방식으로 결과를 얻고 싶습니다. 이를 위해 래퍼의 `results` 메서드를 사용할 것입니다.
 
 ```python
 search = SearxSearchWrapper(searx_host="http://127.0.0.1:8888")
 ```
+
 
 ```python
 results = search.results(
@@ -80,6 +91,7 @@ results = search.results(
 )
 pprint.pp(results)
 ```
+
 ```output
 [{'snippet': '… on natural language instructions, large language models (… the '
              'prompt used to steer the model, and most effective prompts … to '
@@ -122,7 +134,8 @@ pprint.pp(results)
   'engines': ['google scholar'],
   'category': 'science'}]
 ```
-Get papers from arxiv
+
+arxiv에서 논문 가져오기
 
 ```python
 results = search.results(
@@ -130,6 +143,7 @@ results = search.results(
 )
 pprint.pp(results)
 ```
+
 ```output
 [{'snippet': 'Thanks to the advanced improvement of large pre-trained language '
              'models, prompt-based fine-tuning is shown to be effective on a '
@@ -243,12 +257,14 @@ pprint.pp(results)
   'engines': ['arxiv'],
   'category': 'science'}]
 ```
-In this example we query for `large language models` under the `it` category. We then filter the results that come from github.
+
+이 예제에서는 `it` 카테고리 아래에서 `large language models`를 쿼리합니다. 그런 다음 github에서 오는 결과를 필터링합니다.
 
 ```python
 results = search.results("large language model", num_results=20, categories="it")
 pprint.pp(list(filter(lambda r: r["engines"][0] == "github", results)))
 ```
+
 ```output
 [{'snippet': 'Guide to using pre-trained large language models of source code',
   'title': 'Code-LMs',
@@ -262,7 +278,8 @@ pprint.pp(list(filter(lambda r: r["engines"][0] == "github", results)))
   'engines': ['github'],
   'category': 'it'}]
 ```
-We could also directly query for results from `github` and other source forges.
+
+우리는 또한 `github` 및 기타 소스 포지에서 직접 결과를 쿼리할 수 있습니다.
 
 ```python
 results = search.results(
@@ -270,6 +287,7 @@ results = search.results(
 )
 pprint.pp(results)
 ```
+
 ```output
 [{'snippet': "Implementation of 'A Watermark for Large Language Models' paper "
              'by Kirchenbauer & Geiping et. al.',
@@ -395,7 +413,8 @@ pprint.pp(results)
   'category': 'it'}]
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

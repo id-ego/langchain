@@ -1,31 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/baidu_qianfan_endpoint/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/baidu_qianfan_endpoint.ipynb
+description: 바이두 AI 클라우드 Qianfan 플랫폼은 기업 개발자를 위한 대규모 모델 개발 및 서비스 운영의 원스톱 플랫폼입니다.
 ---
 
 # Baidu Qianfan
 
-Baidu AI Cloud Qianfan Platform is a one-stop large model development and service operation platform for enterprise developers. Qianfan not only provides including the model of Wenxin Yiyan (ERNIE-Bot) and the third-party open-source models, but also provides various AI development tools and the whole set of development environment, which facilitates customers to use and develop large model applications easily.
+Baidu AI Cloud Qianfan 플랫폼은 기업 개발자를 위한 원스톱 대형 모델 개발 및 서비스 운영 플랫폼입니다. Qianfan은 Wenxin Yiyan(ERNIE-Bot) 모델과 제3자 오픈 소스 모델을 포함할 뿐만 아니라, 다양한 AI 개발 도구와 전체 개발 환경을 제공하여 고객이 대형 모델 애플리케이션을 쉽게 사용하고 개발할 수 있도록 합니다.
 
-Basically, those model are split into the following type:
+기본적으로 이러한 모델은 다음과 같은 유형으로 나뉩니다:
 
-- Embedding
-- Chat
-- Completion
+- 임베딩
+- 채팅
+- 완성
 
-In this notebook, we will introduce how to use langchain with [Qianfan](https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html) mainly in `Embedding` corresponding
-to the package `langchain/embeddings` in langchain:
+이 노트북에서는 `langchain/embeddings` 패키지에 해당하는 `Embedding`을 주로 사용하여 [Qianfan](https://cloud.baidu.com/doc/WENXINWORKSHOP/index.html)과 함께 langchain을 사용하는 방법을 소개합니다:
 
-## API Initialization
+## API 초기화
 
-To use the LLM services based on Baidu Qianfan, you have to initialize these parameters:
+Baidu Qianfan을 기반으로 한 LLM 서비스를 사용하려면 다음 매개변수를 초기화해야 합니다:
 
-You could either choose to init the AK,SK in environment variables or init params:
+환경 변수에서 AK, SK를 초기화하거나 매개변수를 초기화할 수 있습니다:
 
 ```base
 export QIANFAN_AK=XXX
 export QIANFAN_SK=XXX
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "QianfanEmbeddingsEndpoint", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.baidu_qianfan_endpoint.QianfanEmbeddingsEndpoint.html", "title": "Baidu Qianfan"}]-->
@@ -60,6 +60,7 @@ async def aioEmbedDocs():
 
 await aioEmbedDocs()
 ```
+
 ```output
 [INFO] [09-15 20:01:35] logging.py:55 [t:140292313159488]: trying to refresh access_token
 [INFO] [09-15 20:01:35] logging.py:55 [t:140292313159488]: successfully refresh access_token
@@ -71,12 +72,13 @@ await aioEmbedDocs()
  [0.0427522286772728, -0.030367236584424973, -0.14847028255462646, 0.055074431002140045, -0.04177454113960266, -0.059512972831726074, -0.043774791061878204, 0.0028191760648041964]
  [0.03803155943751335, -0.013231384567916393, 0.0032379645854234695, 0.015074018388986588, -0.006529552862048149, -0.13813287019729614, 0.03297128155827522, 0.044519297778606415]
 ```
-## Use different models in Qianfan
 
-In the case you want to deploy your own model based on Ernie Bot or third-party open sources model, you could follow these steps:
+## Qianfan에서 다양한 모델 사용하기
 
-- 1. （Optional, if the model are included in the default models, skip it）Deploy your model in Qianfan Console, get your own customized deploy endpoint.
-- 2. Set up the field called `endpoint` in the initialization:
+Ernie Bot 또는 제3자 오픈 소스 모델을 기반으로 자신의 모델을 배포하려는 경우 다음 단계를 따르십시오:
+
+- 1. (선택 사항, 모델이 기본 모델에 포함된 경우 건너뛰기) Qianfan 콘솔에서 모델을 배포하고 사용자 정의 배포 엔드포인트를 가져옵니다.
+- 2. 초기화에서 `endpoint`라는 필드를 설정합니다:
 
 ```python
 embed = QianfanEmbeddingsEndpoint(model="bge_large_zh", endpoint="bge_large_zh")
@@ -85,6 +87,7 @@ res = embed.embed_documents(["hi", "world"])
 for r in res:
     print(r[:8])
 ```
+
 ```output
 [INFO] [09-15 20:01:40] logging.py:55 [t:140292313159488]: requesting llm api endpoint: /embeddings/bge_large_zh
 ``````output
@@ -92,7 +95,8 @@ for r in res:
 [0.0019113451708108187, -0.008625439368188381, -0.0531032420694828, -0.0018436014652252197, -0.01818147301673889, 0.010310115292668343, -0.008867680095136166, -0.021067561581730843]
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

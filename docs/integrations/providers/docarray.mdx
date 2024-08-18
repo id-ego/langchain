@@ -1,31 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/docarray/
+description: DocArray는 텍스트, 이미지, 오디오 등 다양한 비정형 데이터를 효율적으로 처리하고 검색할 수 있는 파이썬 라이브러리입니다.
 ---
 
 # DocArray
 
-> [DocArray](https://docarray.jina.ai/) is a library for nested, unstructured, multimodal data in transit,
-including text, image, audio, video, 3D mesh, etc. It allows deep-learning engineers to efficiently process,
-embed, search, recommend, store, and transfer multimodal data with a Pythonic API.
+> [DocArray](https://docarray.jina.ai/)는 텍스트, 이미지, 오디오, 비디오, 3D 메쉬 등과 같은 중첩된 비구조적 다중 모드 데이터를 전송하는 라이브러리입니다. 이는 딥러닝 엔지니어가 파이썬 API를 사용하여 다중 모드 데이터를 효율적으로 처리, 임베드, 검색, 추천, 저장 및 전송할 수 있도록 합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-We need to install `docarray` python package.
+`docarray` 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install docarray
 ```
 
-## Vector Store
 
-LangChain provides an access to the `In-memory` and `HNSW` vector stores from the `DocArray` library.
+## 벡터 저장소
 
-See a [usage example](/docs/integrations/vectorstores/docarray_hnsw).
+LangChain은 `DocArray` 라이브러리의 `In-memory` 및 `HNSW` 벡터 저장소에 대한 접근을 제공합니다.
+
+[사용 예제](/docs/integrations/vectorstores/docarray_hnsw)를 참조하세요.
 
 ```python
 from langchain_community.vectorstores DocArrayHnswSearch
 ```
-See a [usage example](/docs/integrations/vectorstores/docarray_in_memory).
+
+[사용 예제](/docs/integrations/vectorstores/docarray_in_memory)를 참조하세요.
 
 ```python
 from langchain_community.vectorstores DocArrayInMemorySearch

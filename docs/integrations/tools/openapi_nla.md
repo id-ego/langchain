@@ -1,15 +1,16 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/openapi_nla/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/openapi_nla.ipynb
+description: 자연어 API 툴킷(NLAToolkits)을 사용하여 LangChain 에이전트가 다양한 API 호출을 효율적으로 계획하고
+  결합하는 방법을 보여줍니다.
 ---
 
-# Natural Language API Toolkits
+# 자연어 API 툴킷
 
-`Natural Language API` Toolkits (`NLAToolkits`) permit LangChain Agents to efficiently plan and combine calls across endpoints. 
+`자연어 API` 툴킷(`NLAToolkits`)은 LangChain 에이전트가 엔드포인트 간의 호출을 효율적으로 계획하고 결합할 수 있도록 허용합니다.
 
-This notebook demonstrates a sample composition of the `Speak`, `Klarna`, and `Spoonacluar` APIs.
+이 노트북은 `Speak`, `Klarna`, 및 `Spoonacular` API의 샘플 구성을 보여줍니다.
 
-### First, import dependencies and load the LLM
+### 먼저, 의존성을 가져오고 LLM을 로드합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Natural Language API Toolkits"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Natural Language API Toolkits"}, {"imported": "NLAToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.nla.toolkit.NLAToolkit.html", "title": "Natural Language API Toolkits"}, {"imported": "Requests", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.requests.Requests.html", "title": "Natural Language API Toolkits"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Natural Language API Toolkits"}]-->
@@ -19,6 +20,7 @@ from langchain_community.utilities import Requests
 from langchain_openai import OpenAI
 ```
 
+
 ```python
 # Select the LLM to use. Here, we use gpt-3.5-turbo-instruct
 llm = OpenAI(
@@ -26,7 +28,8 @@ llm = OpenAI(
 )  # You can swap between different core LLM's here.
 ```
 
-### Next, load the Natural Language API Toolkits
+
+### 다음, 자연어 API 툴킷을 로드합니다.
 
 ```python
 speak_toolkit = NLAToolkit.from_llm_and_url(llm, "https://api.speak.com/openapi.yaml")
@@ -34,12 +37,15 @@ klarna_toolkit = NLAToolkit.from_llm_and_url(
     llm, "https://www.klarna.com/us/shopping/public/openai/v0/api-docs/"
 )
 ```
+
 ```output
 Attempting to load an OpenAPI 3.0.1 spec.  This may result in degraded performance. Convert your OpenAPI spec to 3.1.* spec for better support.
 Attempting to load an OpenAPI 3.0.1 spec.  This may result in degraded performance. Convert your OpenAPI spec to 3.1.* spec for better support.
 Attempting to load an OpenAPI 3.0.1 spec.  This may result in degraded performance. Convert your OpenAPI spec to 3.1.* spec for better support.
 ```
-### Create the Agent
+
+
+### 에이전트 생성
 
 ```python
 # Slightly tweak the instructions from the default agent
@@ -57,6 +63,7 @@ Final Answer: the final answer to the original input question with the right amo
 When responding with your Final Answer, remember that the person you are responding to CANNOT see any of your Thought/Action/Action Input/Observations, so if there is any relevant information there you need to include it explicitly in your response."""
 ```
 
+
 ```python
 natural_language_tools = speak_toolkit.get_tools() + klarna_toolkit.get_tools()
 mrkl = initialize_agent(
@@ -68,11 +75,13 @@ mrkl = initialize_agent(
 )
 ```
 
+
 ```python
 mrkl.run(
     "I have an end of year party for my Italian class and have to buy some Italian clothes for it"
 )
 ```
+
 ```output
 
 
@@ -87,24 +96,27 @@ Final Answer: You can buy two products from the Alé brand in Italian Blue for y
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'You can buy two products from the Alé brand in Italian Blue for your end of year party. The Alé Colour Block Short Sleeve Jersey Men - Italian Blue costs $86.49, and the Alé Dolid Flash Jersey Men - Italian Blue costs $40.00.'
 ```
 
-### Use Auth and add more Endpoints
 
-Some endpoints may require user authentication via things like access tokens. Here we show how to pass in the authentication information via the `Requests` wrapper object.
+### 인증을 사용하고 더 많은 엔드포인트 추가
 
-Since each NLATool exposes a concisee natural language interface to its wrapped API, the top level conversational agent has an easier job incorporating each endpoint to satisfy a user's request.
+일부 엔드포인트는 액세스 토큰과 같은 사용자 인증을 요구할 수 있습니다. 여기에서는 `Requests` 래퍼 객체를 통해 인증 정보를 전달하는 방법을 보여줍니다.
 
-**Adding the Spoonacular endpoints.**
+각 NLATool은 래핑된 API에 대한 간결한 자연어 인터페이스를 제공하므로, 최상위 대화형 에이전트는 사용자의 요청을 충족하기 위해 각 엔드포인트를 통합하는 작업이 더 쉬워집니다.
 
-1. Go to the [Spoonacular API Console](https://spoonacular.com/food-api/console#Profile) and make a free account.
-2. Click on `Profile` and copy your API key below.
+**Spoonacular 엔드포인트 추가하기.**
+
+1. [Spoonacular API 콘솔](https://spoonacular.com/food-api/console#Profile)로 이동하여 무료 계정을 만드세요.
+2. `Profile`을 클릭하고 아래에 API 키를 복사하세요.
 
 ```python
 spoonacular_api_key = ""  # Copy from the API Console
 ```
+
 
 ```python
 requests = Requests(headers={"x-api-key": spoonacular_api_key})
@@ -115,6 +127,7 @@ spoonacular_toolkit = NLAToolkit.from_llm_and_url(
     max_text_length=1800,  # If you want to truncate the response text
 )
 ```
+
 ```output
 Attempting to load an OpenAPI 3.0.0 spec.  This may result in degraded performance. Convert your OpenAPI spec to 3.1.* spec for better support.
 Unsupported APIPropertyLocation "header" for parameter Content-Type. Valid values are ['path', 'query'] Ignoring optional parameter
@@ -137,6 +150,7 @@ Unsupported APIPropertyLocation "header" for parameter Accept. Valid values are 
 Unsupported APIPropertyLocation "header" for parameter Content-Type. Valid values are ['path', 'query'] Ignoring optional parameter
 ```
 
+
 ```python
 natural_language_api_tools = (
     speak_toolkit.get_tools()
@@ -145,9 +159,11 @@ natural_language_api_tools = (
 )
 print(f"{len(natural_language_api_tools)} tools loaded.")
 ```
+
 ```output
 34 tools loaded.
 ```
+
 
 ```python
 # Create an agent with the new tools
@@ -160,6 +176,7 @@ mrkl = initialize_agent(
 )
 ```
 
+
 ```python
 # Make the query more complex!
 user_input = (
@@ -169,9 +186,11 @@ user_input = (
 )
 ```
 
+
 ```python
 mrkl.run(user_input)
 ```
+
 ```output
 
 
@@ -190,11 +209,13 @@ Final Answer: To present for your Italian language class, you could wear an Ital
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'To present for your Italian language class, you could wear an Italian Gold Sparkle Perfectina Necklace - Gold, an Italian Design Miami Cuban Link Chain Necklace - Gold, or an Italian Gold Miami Cuban Link Chain Necklace - Gold. For a recipe, you could make Turkey Tomato Cheese Pizza, Broccolini Quinoa Pilaf, Bruschetta Style Pork & Pasta, Salmon Quinoa Risotto, Italian Tuna Pasta, Roasted Brussels Sprouts With Garlic, Asparagus Lemon Risotto, Italian Steamed Artichokes, Crispy Italian Cauliflower Poppers Appetizer, or Pappa Al Pomodoro.'
 ```
 
-## Thank you!
+
+## 감사합니다!
 
 ```python
 natural_language_api_tools[1].run(
@@ -202,11 +223,13 @@ natural_language_api_tools[1].run(
 )
 ```
 
+
 ```output
 "In Italian, you can say 'Buon appetito' to someone to wish them to enjoy their meal. This phrase is commonly used in Italy when someone is about to eat, often at the beginning of a meal. It's similar to saying 'Bon appétit' in French or 'Guten Appetit' in German."
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

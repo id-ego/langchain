@@ -1,39 +1,41 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/hybrid/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/hybrid.ipynb
+description: 하이브리드 검색은 벡터 유사성 검색과 다른 검색 기술을 결합하여 더 정교한 검색을 가능하게 합니다. LangChain에서의
+  사용법을 안내합니다.
 ---
 
-# Hybrid Search
+# 하이브리드 검색
 
-The standard search in LangChain is done by vector similarity. However, a number of vectorstores implementations (Astra DB, ElasticSearch, Neo4J, AzureSearch, Qdrant...) also support more advanced search combining vector similarity search and other search techniques (full-text, BM25, and so on). This is generally referred to as "Hybrid" search.
+LangChain의 표준 검색은 벡터 유사성에 의해 수행됩니다. 그러나 여러 벡터 저장소 구현(Astra DB, ElasticSearch, Neo4J, AzureSearch, Qdrant 등)은 벡터 유사성 검색과 다른 검색 기술(전체 텍스트, BM25 등)을 결합한 보다 고급 검색을 지원합니다. 이것은 일반적으로 "하이브리드" 검색이라고 합니다.
 
-**Step 1: Make sure the vectorstore you are using supports hybrid search**
+**1단계: 사용 중인 벡터 저장소가 하이브리드 검색을 지원하는지 확인하세요**
 
-At the moment, there is no unified way to perform hybrid search in LangChain. Each vectorstore may have their own way to do it. This is generally exposed as a keyword argument that is passed in during `similarity_search`.
+현재 LangChain에서 하이브리드 검색을 수행하는 통일된 방법은 없습니다. 각 벡터 저장소는 이를 수행하는 고유한 방법이 있을 수 있습니다. 이는 일반적으로 `similarity_search` 중에 전달되는 키워드 인수로 노출됩니다.
 
-By reading the documentation or source code, figure out whether the vectorstore you are using supports hybrid search, and, if so, how to use it.
+문서나 소스 코드를 읽어 사용 중인 벡터 저장소가 하이브리드 검색을 지원하는지, 그렇다면 어떻게 사용하는지 확인하세요.
 
-**Step 2: Add that parameter as a configurable field for the chain**
+**2단계: 해당 매개변수를 체인의 구성 가능한 필드로 추가하세요**
 
-This will let you easily call the chain and configure any relevant flags at runtime. See [this documentation](/docs/how_to/configure) for more information on configuration.
+이렇게 하면 체인을 쉽게 호출하고 런타임에 관련 플래그를 구성할 수 있습니다. 구성에 대한 자세한 정보는 [이 문서](/docs/how_to/configure)를 참조하세요.
 
-**Step 3: Call the chain with that configurable field**
+**3단계: 해당 구성 가능한 필드로 체인을 호출하세요**
 
-Now, at runtime you can call this chain with configurable field.
+이제 런타임에 이 체인을 구성 가능한 필드로 호출할 수 있습니다.
 
-## Code Example
+## 코드 예제
 
-Let's see a concrete example of what this looks like in code. We will use the Cassandra/CQL interface of Astra DB for this example.
+이 코드에서 이것이 어떻게 보이는지 구체적인 예를 살펴보겠습니다. 이 예제에서는 Astra DB의 Cassandra/CQL 인터페이스를 사용할 것입니다.
 
-Install the following Python package:
+다음 Python 패키지를 설치하세요:
 
 ```python
 !pip install "cassio>=0.1.7"
 ```
 
-Get the [connection secrets](https://docs.datastax.com/en/astra/astra-db-vector/get-started/quickstart.html).
 
-Initialize cassio:
+[연결 비밀](https://docs.datastax.com/en/astra/astra-db-vector/get-started/quickstart.html)을 가져옵니다.
+
+cassio를 초기화합니다:
 
 ```python
 import cassio
@@ -45,7 +47,8 @@ cassio.init(
 )
 ```
 
-Create the Cassandra VectorStore with a standard [index analyzer](https://docs.datastax.com/en/astra/astra-db-vector/cql/use-analyzers-with-cql.html). The index analyzer is needed to enable term matching.
+
+표준 [인덱스 분석기](https://docs.datastax.com/en/astra/astra-db-vector/cql/use-analyzers-with-cql.html)를 사용하여 Cassandra VectorStore를 생성합니다. 인덱스 분석기는 용어 일치를 활성화하는 데 필요합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Cassandra", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.cassandra.Cassandra.html", "title": "Hybrid Search"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Hybrid Search"}]-->
@@ -71,11 +74,13 @@ vectorstore.add_texts(
 )
 ```
 
-If we do a standard similarity search, we get all the documents:
+
+표준 유사성 검색을 수행하면 모든 문서를 얻습니다:
 
 ```python
 vectorstore.as_retriever().invoke("What city did I visit last?")
 ```
+
 
 ```output
 [Document(page_content='In 2022, I visited New York'),
@@ -83,7 +88,8 @@ Document(page_content='In 2023, I visited Paris'),
 Document(page_content='In 2021, I visited New Orleans')]
 ```
 
-The Astra DB vectorstore `body_search` argument can be used to filter the search on the term `new`.
+
+Astra DB 벡터 저장소의 `body_search` 인수를 사용하여 `new` 용어에 대한 검색을 필터링할 수 있습니다.
 
 ```python
 vectorstore.as_retriever(search_kwargs={"body_search": "new"}).invoke(
@@ -91,12 +97,14 @@ vectorstore.as_retriever(search_kwargs={"body_search": "new"}).invoke(
 )
 ```
 
+
 ```output
 [Document(page_content='In 2022, I visited New York'),
 Document(page_content='In 2021, I visited New Orleans')]
 ```
 
-We can now create the chain that we will use to do question-answering over
+
+이제 질문-응답을 수행하는 데 사용할 체인을 생성할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Hybrid Search"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Hybrid Search"}, {"imported": "ConfigurableField", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableField.html", "title": "Hybrid Search"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Hybrid Search"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Hybrid Search"}]-->
@@ -109,7 +117,8 @@ from langchain_core.runnables import (
 from langchain_openai import ChatOpenAI
 ```
 
-This is basic question-answering chain set up.
+
+이것은 기본 질문-응답 체인 설정입니다.
 
 ```python
 template = """Answer the question based only on the following context:
@@ -123,7 +132,8 @@ model = ChatOpenAI()
 retriever = vectorstore.as_retriever()
 ```
 
-Here we mark the retriever as having a configurable field. All vectorstore retrievers have `search_kwargs` as a field. This is just a dictionary, with vectorstore specific fields
+
+여기에서 검색기를 구성 가능한 필드로 표시합니다. 모든 벡터 저장소 검색기는 `search_kwargs`를 필드로 가집니다. 이는 벡터 저장소 특정 필드가 있는 단순한 사전입니다.
 
 ```python
 configurable_retriever = retriever.configurable_fields(
@@ -135,7 +145,8 @@ configurable_retriever = retriever.configurable_fields(
 )
 ```
 
-We can now create the chain using our configurable retriever
+
+이제 구성 가능한 검색기를 사용하여 체인을 생성할 수 있습니다.
 
 ```python
 chain = (
@@ -146,15 +157,18 @@ chain = (
 )
 ```
 
+
 ```python
 chain.invoke("What city did I visit last?")
 ```
+
 
 ```output
 Paris
 ```
 
-We can now invoke the chain with configurable options. `search_kwargs` is the id of the configurable field. The value is the search kwargs to use for Astra DB.
+
+이제 구성 가능한 옵션으로 체인을 호출할 수 있습니다. `search_kwargs`는 구성 가능한 필드의 ID입니다. 값은 Astra DB에 사용할 검색 kwargs입니다.
 
 ```python
 chain.invoke(
@@ -162,6 +176,7 @@ chain.invoke(
     config={"configurable": {"search_kwargs": {"body_search": "new"}}},
 )
 ```
+
 
 ```output
 New York

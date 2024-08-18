@@ -1,26 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/zilliz/
+description: Zilliz Cloud는 LF AI Milvus®를 위한 완전 관리형 클라우드 서비스로, Python SDK 설치 및 벡터
+  저장소 사용 방법을 안내합니다.
 ---
 
 # Zilliz
 
-> [Zilliz Cloud](https://zilliz.com/doc/quick_start) is a fully managed service on cloud for `LF AI Milvus®`,
+> [Zilliz Cloud](https://zilliz.com/doc/quick_start)는 `LF AI Milvus®`를 위한 완전 관리형 클라우드 서비스입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the Python SDK:
+Python SDK를 설치하세요:
 ```bash
 pip install pymilvus
 ```
 
-## Vectorstore
 
-A wrapper around Zilliz indexes allows you to use it as a vectorstore,
-whether for semantic search or example selection.
+## 벡터 저장소
+
+Zilliz 인덱스를 감싸는 래퍼는 의미 검색이나 예제 선택을 위해 벡터 저장소로 사용할 수 있게 해줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Milvus", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.milvus.Milvus.html", "title": "Zilliz"}]-->
 from langchain_community.vectorstores import Milvus
 ```
 
-For a more detailed walkthrough of the Miluvs wrapper, see [this notebook](/docs/integrations/vectorstores/zilliz)
+
+Miluvs 래퍼에 대한 더 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/zilliz)을 참조하세요.

@@ -1,19 +1,16 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/blackboard/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/blackboard.ipynb
+description: 블랙보드 학습 관리 시스템에 대한 개요와 데이터 로딩 방법을 설명하는 문서입니다. 특정 블랙보드 과정과의 호환성에 대한 정보도
+  포함되어 있습니다.
 ---
 
-# Blackboard
+# 블랙보드
 
-> [Blackboard Learn](https://en.wikipedia.org/wiki/Blackboard_Learn) (previously the Blackboard Learning Management System) is a web-based virtual learning environment and learning management system developed by Blackboard Inc. The software features course management, customizable open architecture, and scalable design that allows integration with student information systems and authentication protocols. It may be installed on local servers, hosted by `Blackboard ASP Solutions`, or provided as Software as a Service hosted on Amazon Web Services. Its main purposes are stated to include the addition of online elements to courses traditionally delivered face-to-face and development of completely online courses with few or no face-to-face meetings
+> [블랙보드 학습](https://en.wikipedia.org/wiki/Blackboard_Learn) (이전에는 블랙보드 학습 관리 시스템) 은 블랙보드 주식회사에서 개발한 웹 기반 가상 학습 환경 및 학습 관리 시스템입니다. 이 소프트웨어는 과정 관리, 사용자 정의 가능한 개방형 아키텍처 및 학생 정보 시스템 및 인증 프로토콜과의 통합을 허용하는 확장 가능한 디자인을 특징으로 합니다. 로컬 서버에 설치하거나 `Blackboard ASP Solutions`에서 호스팅하거나 Amazon Web Services에서 호스팅되는 서비스형 소프트웨어로 제공될 수 있습니다. 그 주요 목적은 전통적으로 대면으로 제공되는 과정에 온라인 요소를 추가하고 대면 회의가 거의 없거나 전혀 없는 완전 온라인 과정을 개발하는 것을 포함한다고 명시되어 있습니다.
 
-This covers how to load data from a [Blackboard Learn](https://www.anthology.com/products/teaching-and-learning/learning-effectiveness/blackboard-learn) instance.
+이 문서는 [블랙보드 학습](https://www.anthology.com/products/teaching-and-learning/learning-effectiveness/blackboard-learn) 인스턴스에서 데이터를 로드하는 방법을 다룹니다.
 
-This loader is not compatible with all `Blackboard` courses. It is only
-compatible with courses that use the new `Blackboard` interface.
-To use this loader, you must have the BbRouter cookie. You can get this
-cookie by logging into the course and then copying the value of the
-BbRouter cookie from the browser's developer tools.
+이 로더는 모든 `블랙보드` 과정과 호환되지 않습니다. 새로운 `블랙보드` 인터페이스를 사용하는 과정과만 호환됩니다. 이 로더를 사용하려면 BbRouter 쿠키가 필요합니다. 이 쿠키는 과정에 로그인한 후 브라우저의 개발자 도구에서 BbRouter 쿠키의 값을 복사하여 얻을 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "BlackboardLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.blackboard.BlackboardLoader.html", "title": "Blackboard"}]-->
@@ -27,7 +24,8 @@ loader = BlackboardLoader(
 documents = loader.load()
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

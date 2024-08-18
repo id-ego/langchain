@@ -1,47 +1,49 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/konko/
+description: Konko는 애플리케이션 개발자를 위한 관리형 API를 제공하며, LLM 선택, 애플리케이션 구축, 성능 조정 및 배포를 지원합니다.
 ---
 
 # Konko
-All functionality related to Konko
+Konko와 관련된 모든 기능
 
-> [Konko AI](https://www.konko.ai/) provides a fully managed API to help application developers
+> [Konko AI](https://www.konko.ai/)는 애플리케이션 개발자를 돕기 위해 완전히 관리되는 API를 제공합니다.
 
-> 1. **Select** the right open source or proprietary LLMs for their application
-> 2. **Build** applications faster with integrations to leading application frameworks and fully managed APIs
-> 3. **Fine tune** smaller open-source LLMs to achieve industry-leading performance at a fraction of the cost
-> 4. **Deploy production-scale APIs** that meet security, privacy, throughput, and latency SLAs without infrastructure set-up or administration using Konko AI's SOC 2 compliant, multi-cloud infrastructure
+> 1. **적절한** 오픈 소스 또는 독점 LLM을 애플리케이션에 맞게 선택합니다.
+> 2. **통합**을 통해 주요 애플리케이션 프레임워크와 완전히 관리되는 API로 애플리케이션을 더 빠르게 구축합니다.
+> 3. **미세 조정**을 통해 더 작은 오픈 소스 LLM을 조정하여 업계 최고의 성능을 비용의 일부로 달성합니다.
+> 4. **생산 규모의 API를 배포**하여 보안, 개인 정보 보호, 처리량 및 지연 SLA를 충족하며, Konko AI의 SOC 2 준수 다중 클라우드 인프라를 사용하여 인프라 설정이나 관리 없이 가능합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-1. Sign in to our web app to [create an API key](https://platform.konko.ai/settings/api-keys) to access models via our endpoints for [chat completions](https://docs.konko.ai/reference/post-chat-completions) and [completions](https://docs.konko.ai/reference/post-completions).
-2. Enable a Python3.8+ environment
-3. Install the SDK
+1. 웹 앱에 로그인하여 [API 키를 생성](https://platform.konko.ai/settings/api-keys)하여 [채팅 완료](https://docs.konko.ai/reference/post-chat-completions) 및 [완료](https://docs.konko.ai/reference/post-completions) 엔드포인트를 통해 모델에 접근합니다.
+2. Python3.8+ 환경을 활성화합니다.
+3. SDK를 설치합니다.
 
 ```bash
 pip install konko
 ```
 
-4. Set API Keys as environment variables(`KONKO_API_KEY`,`OPENAI_API_KEY`)
+
+4. API 키를 환경 변수로 설정합니다(`KONKO_API_KEY`, `OPENAI_API_KEY`).
 
 ```bash
 export KONKO_API_KEY={your_KONKO_API_KEY_here}
 export OPENAI_API_KEY={your_OPENAI_API_KEY_here} #Optional
 ```
 
-Please see [the Konko docs](https://docs.konko.ai/docs/getting-started) for more details.
+
+자세한 내용은 [Konko 문서](https://docs.konko.ai/docs/getting-started)를 참조하십시오.
 
 ## LLM
 
-**Explore Available Models:** Start by browsing through the [available models](https://docs.konko.ai/docs/list-of-models) on Konko. Each model caters to different use cases and capabilities.
+**사용 가능한 모델 탐색:** Konko에서 [사용 가능한 모델](https://docs.konko.ai/docs/list-of-models)을 통해 시작합니다. 각 모델은 다양한 사용 사례와 기능에 맞춰져 있습니다.
 
-Another way to find the list of models running on the Konko instance is through this [endpoint](https://docs.konko.ai/reference/get-models).
+Konko 인스턴스에서 실행 중인 모델 목록을 찾는 또 다른 방법은 이 [엔드포인트](https://docs.konko.ai/reference/get-models)를 통해 확인하는 것입니다.
 
-See a usage [example](/docs/integrations/llms/konko).
+사용 예시를 보려면 [예시](/docs/integrations/llms/konko)를 참조하십시오.
 
-### Examples of Endpoint Usage
+### 엔드포인트 사용 예시
 
-- **Completion with mistralai/Mistral-7B-v0.1:**
+- **mistralai/Mistral-7B-v0.1로 완료하기:**
   
   ```python
   from langchain_community.llms import Konko
@@ -50,11 +52,12 @@ See a usage [example](/docs/integrations/llms/konko).
   response = llm.invoke(prompt)
   ```
 
-## Chat Models
 
-See a usage [example](/docs/integrations/chat/konko).
+## 채팅 모델
 
-- **ChatCompletion with Mistral-7B:**
+사용 예시를 보려면 [예시](/docs/integrations/chat/konko)를 참조하십시오.
+
+- **Mistral-7B로 채팅 완료하기:**
   
   ```python
   from langchain_core.messages import HumanMessage
@@ -64,4 +67,5 @@ See a usage [example](/docs/integrations/chat/konko).
   chat_response = chat_instance([msg])
   ```
 
-For further assistance, contact [support@konko.ai](mailto:support@konko.ai) or join our [Discord](https://discord.gg/TXV2s3z7RZ).
+
+추가 지원이 필요하시면 [support@konko.ai](mailto:support@konko.ai)로 문의하시거나 [Discord](https://discord.gg/TXV2s3z7RZ)에 참여하세요.

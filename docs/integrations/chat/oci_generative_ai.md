@@ -1,49 +1,50 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/oci_generative_ai/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/oci_generative_ai.ipynb
+description: 이 문서는 OCIGenAI 채팅 모델을 시작하는 방법과 API 참조에 대한 정보를 제공합니다. OCI 생성 AI 서비스의 기능을
+  탐색하세요.
 sidebar_label: OCIGenAI
 ---
 
 # ChatOCIGenAI
 
-This notebook provides a quick overview for getting started with OCIGenAI [chat models](/docs/concepts/#chat-models). For detailed documentation of all ChatOCIGenAI features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html).
+이 노트북은 OCIGenAI [채팅 모델](/docs/concepts/#chat-models)을 시작하는 데 필요한 간단한 개요를 제공합니다. 모든 ChatOCIGenAI 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html)에서 확인할 수 있습니다.
 
-Oracle Cloud Infrastructure (OCI) Generative AI is a fully managed service that provides a set of state-of-the-art, customizable large language models (LLMs) that cover a wide range of use cases, and which is available through a single API.
-Using the OCI Generative AI service you can access ready-to-use pretrained models, or create and host your own fine-tuned custom models based on your own data on dedicated AI clusters. Detailed documentation of the service and API is available **[here](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm)** and **[here](https://docs.oracle.com/en-us/iaas/api/#/en/generative-ai/20231130/)**.
+Oracle Cloud Infrastructure (OCI) Generative AI는 다양한 사용 사례를 포괄하는 최첨단의 사용자 정의 가능한 대형 언어 모델(LLM) 세트를 제공하는 완전 관리형 서비스로, 단일 API를 통해 제공됩니다. OCI Generative AI 서비스를 사용하면 즉시 사용할 수 있는 사전 훈련된 모델에 접근하거나, 전용 AI 클러스터에서 자신의 데이터에 기반하여 세밀하게 조정된 사용자 정의 모델을 생성하고 호스팅할 수 있습니다. 서비스 및 API에 대한 자세한 문서는 **[여기](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm)** 및 **[여기](https://docs.oracle.com/en-us/iaas/api/#/en/generative-ai/20231130/)**에서 확인할 수 있습니다.
 
-## Overview
-### Integration details
+## 개요
+### 통합 세부정보
 
-| Class | Package | Local | Serializable | [JS support](https://js.langchain.com/v0.2/docs/integrations/chat/oci_generative_ai) | Package downloads | Package latest |
+| 클래스 | 패키지 | 로컬 | 직렬화 가능 | [JS 지원](https://js.langchain.com/v0.2/docs/integrations/chat/oci_generative_ai) | 패키지 다운로드 | 패키지 최신 |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [ChatOCIGenAI](https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html) | [langchain-community](https://api.python.langchain.com/en/latest/community_api_reference.html) | ❌ | ❌ | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-oci-generative-ai?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-oci-generative-ai?style=flat-square&label=%20) |
 
-### Model features
-| [Tool calling](/docs/how_to/tool_calling/) | [Structured output](/docs/how_to/structured_output/) | JSON mode | [Image input](/docs/how_to/multimodal_inputs/) | Audio input | Video input | [Token-level streaming](/docs/how_to/chat_streaming/) | Native async | [Token usage](/docs/how_to/chat_token_usage_tracking/) | [Logprobs](/docs/how_to/logprobs/) |
+### 모델 기능
+| [도구 호출](/docs/how_to/tool_calling/) | [구조화된 출력](/docs/how_to/structured_output/) | JSON 모드 | [이미지 입력](/docs/how_to/multimodal_inputs/) | 오디오 입력 | 비디오 입력 | [토큰 수준 스트리밍](/docs/how_to/chat_streaming/) | 네이티브 비동기 | [토큰 사용](/docs/how_to/chat_token_usage_tracking/) | [로그 확률](/docs/how_to/logprobs/) |
 | :---: | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | 
 
-## Setup
+## 설정
 
-To access OCIGenAI models you'll need to install the `oci` and `langchain-community` packages.
+OCIGenAI 모델에 접근하려면 `oci` 및 `langchain-community` 패키지를 설치해야 합니다.
 
-### Credentials
+### 자격 증명
 
-The credentials and authentication methods supported for this integration are equivalent to those used with other OCI services and follow the **[standard SDK authentication](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdk_authentication_methods.htm)** methods, specifically API Key, session token, instance principal, and resource principal.
+이 통합에 대해 지원되는 자격 증명 및 인증 방법은 다른 OCI 서비스와 동일하며 **[표준 SDK 인증](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdk_authentication_methods.htm)** 방법을 따릅니다. 구체적으로 API 키, 세션 토큰, 인스턴스 주체 및 리소스 주체가 있습니다.
 
-API key is the default authentication method used in the examples above. The following example demonstrates how to use a different authentication method (session token)
+API 키는 위의 예제에서 사용되는 기본 인증 방법입니다. 다음 예제는 다른 인증 방법(세션 토큰)을 사용하는 방법을 보여줍니다.
 
-### Installation
+### 설치
 
-The LangChain OCIGenAI integration lives in the `langchain-community` package and you will also need to install the `oci` package:
+LangChain OCIGenAI 통합은 `langchain-community` 패키지에 있으며 `oci` 패키지도 설치해야 합니다:
 
 ```python
 %pip install -qU langchain-community oci
 ```
 
-## Instantiation
 
-Now we can instantiate our model object and generate chat completions:
+## 인스턴스화
+
+이제 모델 객체를 인스턴스화하고 채팅 완성을 생성할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOCIGenAI", "source": "langchain_community.chat_models.oci_generative_ai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html", "title": "ChatOCIGenAI"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "ChatOCIGenAI"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatOCIGenAI"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "ChatOCIGenAI"}]-->
@@ -58,7 +59,8 @@ chat = ChatOCIGenAI(
 )
 ```
 
-## Invocation
+
+## 호출
 
 ```python
 messages = [
@@ -69,13 +71,15 @@ messages = [
 response = chat.invoke(messages)
 ```
 
+
 ```python
 print(response.content)
 ```
 
-## Chaining
 
-We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
+## 체이닝
+
+프롬프트 템플릿과 함께 모델을 [체인](/docs/how_to/sequence/)할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatOCIGenAI"}]-->
@@ -88,11 +92,12 @@ response = chain.invoke({"topic": "dogs"})
 print(response.content)
 ```
 
-## API reference
 
-For detailed documentation of all ChatOCIGenAI features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html
+## API 참조
 
-## Related
+모든 ChatOCIGenAI 기능 및 구성에 대한 자세한 문서는 API 참조에서 확인할 수 있습니다: https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

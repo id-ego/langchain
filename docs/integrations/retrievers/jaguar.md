@@ -1,35 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/jaguar/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/jaguar.ipynb
+description: JaguarDB 벡터 데이터베이스는 분산형으로, 즉각적인 수평 확장성과 다양한 데이터 유형을 지원합니다.
 ---
 
-# JaguarDB Vector Database
+# JaguarDB 벡터 데이터베이스
 
-> [JaguarDB Vector Database](http://www.jaguardb.com/windex.html
+> [JaguarDB 벡터 데이터베이스](http://www.jaguardb.com/windex.html)
 > 
-> 1. It is a distributed vector database
-> 2. The “ZeroMove” feature of JaguarDB enables instant horizontal scalability
-> 3. Multimodal: embeddings, text, images, videos, PDFs, audio, time series, and geospatial
-> 4. All-masters: allows both parallel reads and writes
-> 5. Anomaly detection capabilities
-> 6. RAG support: combines LLM with proprietary and real-time data
-> 7. Shared metadata: sharing of metadata across multiple vector indexes
-> 8. Distance metrics: Euclidean, Cosine, InnerProduct, Manhatten, Chebyshev, Hamming, Jeccard, Minkowski
+> 1. 분산 벡터 데이터베이스입니다.
+> 2. JaguarDB의 “ZeroMove” 기능은 즉각적인 수평 확장을 가능하게 합니다.
+> 3. 다중 모드: 임베딩, 텍스트, 이미지, 비디오, PDF, 오디오, 시계열, 지리공간
+> 4. 올-마스터: 병렬 읽기 및 쓰기를 허용합니다.
+> 5. 이상 탐지 기능
+> 6. RAG 지원: LLM과 독점적이고 실시간 데이터를 결합합니다.
+> 7. 공유 메타데이터: 여러 벡터 인덱스 간의 메타데이터 공유
+> 8. 거리 측정: 유클리드, 코사인, 내적, 맨해튼, 체비셰프, 해밍, 제카드, 민코프스키
 
-## Prerequisites
+## 전제 조건
 
-There are two requirements for running the examples in this file.
-1. You must install and set up the JaguarDB server and its HTTP gateway server.
-Please refer to the instructions in:
+이 파일의 예제를 실행하기 위한 두 가지 요구 사항이 있습니다.
+1. JaguarDB 서버와 HTTP 게이트웨이 서버를 설치하고 설정해야 합니다.
+다음의 지침을 참조하십시오:
 [www.jaguardb.com](http://www.jaguardb.com)
-2. You must install the http client package for JaguarDB:
+2. JaguarDB용 HTTP 클라이언트 패키지를 설치해야 합니다:
    ```
        pip install -U jaguardb-http-client
    ```
 
-## RAG With Langchain
 
-This section demonstrates chatting with LLM together with Jaguar in the langchain software stack.
+## Langchain과 함께하는 RAG
+
+이 섹션에서는 langchain 소프트웨어 스택에서 Jaguar와 함께 LLM과 대화하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "JaguarDB Vector Database"}, {"imported": "Jaguar", "source": "langchain_community.vectorstores.jaguar", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.jaguar.Jaguar.html", "title": "JaguarDB Vector Database"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "JaguarDB Vector Database"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "JaguarDB Vector Database"}]-->
@@ -111,9 +112,10 @@ retriever = vectorstore.as_retriever()
 """ The retriever object can be used with LangChain and LLM """
 ```
 
-## Interaction With Jaguar Vector Store
 
-Users can interact directly with the Jaguar vector store for similarity search and anomaly detection.
+## Jaguar 벡터 저장소와의 상호작용
+
+사용자는 유사성 검색 및 이상 탐지를 위해 Jaguar 벡터 저장소와 직접 상호작용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Jaguar", "source": "langchain_community.vectorstores.jaguar", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.jaguar.Jaguar.html", "title": "JaguarDB Vector Database"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "JaguarDB Vector Database"}]-->
@@ -191,7 +193,8 @@ vectorstore.drop()
 vectorstore.logout()
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

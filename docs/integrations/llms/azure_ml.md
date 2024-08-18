@@ -1,47 +1,50 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/azure_ml/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/azure_ml.ipynb
+description: Azure ML 플랫폼을 사용하여 기계 학습 모델을 구축, 훈련 및 배포하는 방법을 설명하는 노트북입니다. LLM을 Azure
+  ML 온라인 엔드포인트에서 사용하는 방법을 다룹니다.
 ---
 
 # Azure ML
 
-[Azure ML](https://azure.microsoft.com/en-us/products/machine-learning/) is a platform used to build, train, and deploy machine learning models. Users can explore the types of models to deploy in the Model Catalog, which provides foundational and general purpose models from different providers.
+[Azure ML](https://azure.microsoft.com/en-us/products/machine-learning/)은 기계 학습 모델을 구축, 훈련 및 배포하는 데 사용되는 플랫폼입니다. 사용자는 다양한 제공업체의 기본 및 일반 목적 모델을 제공하는 모델 카탈로그에서 배포할 모델의 유형을 탐색할 수 있습니다.
 
-This notebook goes over how to use an LLM hosted on an `Azure ML Online Endpoint`.
+이 노트북에서는 `Azure ML Online Endpoint`에서 호스팅되는 LLM을 사용하는 방법을 설명합니다.
 
 ```python
 ##Installing the langchain packages needed to use the integration
 %pip install -qU langchain-community
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "AzureMLOnlineEndpoint", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.AzureMLOnlineEndpoint.html", "title": "Azure ML"}]-->
 from langchain_community.llms.azureml_endpoint import AzureMLOnlineEndpoint
 ```
 
-## Set up
 
-You must [deploy a model on Azure ML](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-use-foundation-models?view=azureml-api-2#deploying-foundation-models-to-endpoints-for-inferencing) or [to Azure AI studio](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/deploy-models-open) and obtain the following parameters:
+## 설정
 
-* `endpoint_url`: The REST endpoint url provided by the endpoint.
-* `endpoint_api_type`: Use `endpoint_type='dedicated'` when deploying models to **Dedicated endpoints** (hosted managed infrastructure). Use `endpoint_type='serverless'` when deploying models using the **Pay-as-you-go** offering (model as a service).
-* `endpoint_api_key`: The API key provided by the endpoint.
-* `deployment_name`: (Optional) The deployment name of the model using the endpoint.
+[Azure ML에 모델을 배포해야 합니다](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-use-foundation-models?view=azureml-api-2#deploying-foundation-models-to-endpoints-for-inferencing) 또는 [Azure AI 스튜디오에 배포](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/deploy-models-open)하고 다음 매개변수를 얻어야 합니다:
 
-## Content Formatter
+* `endpoint_url`: 엔드포인트에서 제공하는 REST 엔드포인트 URL.
+* `endpoint_api_type`: **전용 엔드포인트**(호스팅 관리 인프라)에 모델을 배포할 때는 `endpoint_type='dedicated'`를 사용합니다. **사용한 만큼 지불** 제공(모델 서비스)을 사용하는 모델을 배포할 때는 `endpoint_type='serverless'`를 사용합니다.
+* `endpoint_api_key`: 엔드포인트에서 제공하는 API 키.
+* `deployment_name`: (선택 사항) 엔드포인트를 사용하는 모델의 배포 이름.
 
-The `content_formatter` parameter is a handler class for transforming the request and response of an AzureML endpoint to match with required schema. Since there are a wide range of models in the model catalog, each of which may process data differently from one another, a `ContentFormatterBase` class is provided to allow users to transform data to their liking. The following content formatters are provided:
+## 콘텐츠 포맷터
 
-* `GPT2ContentFormatter`: Formats request and response data for GPT2
-* `DollyContentFormatter`: Formats request and response data for the Dolly-v2
-* `HFContentFormatter`: Formats request and response data for text-generation Hugging Face models
-* `CustomOpenAIContentFormatter`: Formats request and response data for models like LLaMa2 that follow OpenAI API compatible scheme.
+`content_formatter` 매개변수는 AzureML 엔드포인트의 요청 및 응답을 필요한 스키마에 맞게 변환하는 핸들러 클래스입니다. 모델 카탈로그에는 다양한 모델이 있으며, 각 모델은 서로 다른 방식으로 데이터를 처리할 수 있으므로 사용자가 원하는 대로 데이터를 변환할 수 있도록 `ContentFormatterBase` 클래스가 제공됩니다. 다음 콘텐츠 포맷터가 제공됩니다:
 
-*Note: `OSSContentFormatter` is being deprecated and replaced with `GPT2ContentFormatter`. The logic is the same but `GPT2ContentFormatter` is a more suitable name. You can still continue to use `OSSContentFormatter` as the changes are backwards compatible.*
+* `GPT2ContentFormatter`: GPT2의 요청 및 응답 데이터를 포맷합니다.
+* `DollyContentFormatter`: Dolly-v2의 요청 및 응답 데이터를 포맷합니다.
+* `HFContentFormatter`: 텍스트 생성 Hugging Face 모델의 요청 및 응답 데이터를 포맷합니다.
+* `CustomOpenAIContentFormatter`: OpenAI API 호환 스키마를 따르는 LLaMa2와 같은 모델의 요청 및 응답 데이터를 포맷합니다.
 
-## Examples
+*참고: `OSSContentFormatter`는 더 이상 사용되지 않으며 `GPT2ContentFormatter`로 대체됩니다. 로직은 동일하지만 `GPT2ContentFormatter`가 더 적합한 이름입니다. 변경 사항이 이전 버전과 호환되므로 여전히 `OSSContentFormatter`를 사용할 수 있습니다.*
 
-### Example: LlaMa 2 completions with real-time endpoints
+## 예제
+
+### 예제: 실시간 엔드포인트를 통한 LlaMa 2 완성
 
 ```python
 <!--IMPORTS:[{"imported": "AzureMLEndpointApiType", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.AzureMLEndpointApiType.html", "title": "Azure ML"}, {"imported": "CustomOpenAIContentFormatter", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.CustomOpenAIContentFormatter.html", "title": "Azure ML"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Azure ML"}]-->
@@ -62,14 +65,16 @@ response = llm.invoke("Write me a song about sparkling water:")
 response
 ```
 
-Model parameters can also be indicated during invocation:
+
+모델 매개변수는 호출 중에 지정할 수도 있습니다:
 
 ```python
 response = llm.invoke("Write me a song about sparkling water:", temperature=0.5)
 response
 ```
 
-### Example: Chat completions with pay-as-you-go deployments (model as a service)
+
+### 예제: 사용한 만큼 지불하는 배포(모델 서비스)로 채팅 완성
 
 ```python
 <!--IMPORTS:[{"imported": "AzureMLEndpointApiType", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.AzureMLEndpointApiType.html", "title": "Azure ML"}, {"imported": "CustomOpenAIContentFormatter", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.CustomOpenAIContentFormatter.html", "title": "Azure ML"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Azure ML"}]-->
@@ -90,9 +95,10 @@ response = llm.invoke("Write me a song about sparkling water:")
 response
 ```
 
-### Example: Custom content formatter
 
-Below is an example using a summarization model from Hugging Face.
+### 예제: 사용자 정의 콘텐츠 포맷터
+
+아래는 Hugging Face의 요약 모델을 사용하는 예제입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AzureMLOnlineEndpoint", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.AzureMLOnlineEndpoint.html", "title": "Azure ML"}, {"imported": "ContentFormatterBase", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.ContentFormatterBase.html", "title": "Azure ML"}]-->
@@ -161,7 +167,8 @@ summarized_text = llm.invoke(large_text)
 print(summarized_text)
 ```
 
-### Example: Dolly with LLMChain
+
+### 예제: LLMChain을 사용한 Dolly
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Azure ML"}, {"imported": "DollyContentFormatter", "source": "langchain_community.llms.azureml_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.azureml_endpoint.DollyContentFormatter.html", "title": "Azure ML"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Azure ML"}]-->
@@ -188,8 +195,9 @@ chain = LLMChain(llm=llm, prompt=prompt)
 print(chain.invoke({"word_count": 100, "topic": "how to make friends"}))
 ```
 
-## Serializing an LLM
-You can also save and load LLM configurations
+
+## LLM 직렬화
+LLM 구성을 저장하고 로드할 수도 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "load_llm", "source": "langchain_community.llms.loading", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.loading.load_llm.html", "title": "Azure ML"}]-->
@@ -211,7 +219,8 @@ loaded_llm = load_llm("azureml.json")
 print(loaded_llm)
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

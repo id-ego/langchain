@@ -1,36 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/qa_chat_history_how_to/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/qa_chat_history_how_to.ipynb
+description: 사용자가 과거 질문과 답변을 기억할 수 있도록 Q&A 애플리케이션에 대화 이력을 추가하는 방법을 안내합니다.
 ---
 
-# How to add chat history
+# 채팅 기록 추가하는 방법
 
-In many Q&A applications we want to allow the user to have a back-and-forth conversation, meaning the application needs some sort of "memory" of past questions and answers, and some logic for incorporating those into its current thinking.
+많은 Q&A 애플리케이션에서는 사용자가 상호작용할 수 있는 대화를 허용하고자 하며, 이는 애플리케이션이 과거 질문과 답변에 대한 "기억"과 이를 현재 사고에 통합하는 논리를 필요로 함을 의미합니다.
 
-In this guide we focus on **adding logic for incorporating historical messages.**
+이 가이드에서는 **역사적 메시지를 통합하는 논리 추가**에 중점을 둡니다.
 
-This is largely a condensed version of the [Conversational RAG tutorial](/docs/tutorials/qa_chat_history).
+이는 [대화형 RAG 튜토리얼](/docs/tutorials/qa_chat_history)의 요약 버전입니다.
 
-We will cover two approaches:
-1. [Chains](/docs/how_to/qa_chat_history_how_to#chains), in which we always execute a retrieval step;
-2. [Agents](/docs/how_to/qa_chat_history_how_to#agents), in which we give an LLM discretion over whether and how to execute a retrieval step (or multiple steps).
+두 가지 접근 방식을 다룰 것입니다:
+1. [체인](/docs/how_to/qa_chat_history_how_to#chains), 항상 검색 단계를 실행하는 경우;
+2. [에이전트](/docs/how_to/qa_chat_history_how_to#agents), 검색 단계를 실행할지 여부와 방법에 대한 재량을 LLM에 부여하는 경우.
 
-For the external knowledge source, we will use the same [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng from the [RAG tutorial](/docs/tutorials/rag).
+외부 지식 소스로는 Lilian Weng의 [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) 블로그 게시물을 사용할 것입니다.
 
-## Setup
+## 설정
 
-### Dependencies
+### 의존성
 
-We'll use OpenAI embeddings and a Chroma vector store in this walkthrough, but everything shown here works with any [Embeddings](/docs/concepts#embedding-models), and [VectorStore](/docs/concepts#vectorstores) or [Retriever](/docs/concepts#retrievers). 
+이 walkthrough에서는 OpenAI 임베딩과 Chroma 벡터 저장소를 사용할 것이지만, 여기서 보여지는 모든 것은 어떤 [임베딩](/docs/concepts#embedding-models) 및 [벡터 저장소](/docs/concepts#vectorstores) 또는 [검색기](/docs/concepts#retrievers)와도 작동합니다.
 
-We'll use the following packages:
+다음 패키지를 사용할 것입니다:
 
 ```python
 %%capture --no-stderr
 %pip install --upgrade --quiet  langchain langchain-community langchain-chroma bs4
 ```
 
-We need to set environment variable `OPENAI_API_KEY`, which can be done directly or loaded from a `.env` file like so:
+
+환경 변수 `OPENAI_API_KEY`를 설정해야 하며, 이는 직접 설정하거나 다음과 같이 `.env` 파일에서 로드할 수 있습니다:
 
 ```python
 import getpass
@@ -44,11 +45,12 @@ if not os.environ.get("OPENAI_API_KEY"):
 # dotenv.load_dotenv()
 ```
 
+
 ### LangSmith
 
-Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls. As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent. The best way to do this is with [LangSmith](https://smith.langchain.com).
+LangChain으로 구축하는 많은 애플리케이션은 여러 단계와 여러 LLM 호출을 포함합니다. 이러한 애플리케이션이 점점 더 복잡해짐에 따라 체인이나 에이전트 내부에서 정확히 무슨 일이 일어나고 있는지를 검사할 수 있는 것이 중요해집니다. 이를 가장 잘 수행하는 방법은 [LangSmith](https://smith.langchain.com)입니다.
 
-Note that LangSmith is not needed, but it is helpful. If you do want to use LangSmith, after you sign up at the link above, make sure to set your environment variables to start logging traces:
+LangSmith는 필요하지 않지만 유용합니다. LangSmith를 사용하고 싶다면, 위 링크에서 가입한 후 환경 변수를 설정하여 추적 로그를 시작해야 합니다:
 
 ```python
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -56,28 +58,28 @@ if not os.environ.get("LANGCHAIN_API_KEY"):
     os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-## Chains {#chains}
 
-In a conversational RAG application, queries issued to the retriever should be informed by the context of the conversation. LangChain provides a [create_history_aware_retriever](https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html) constructor to simplify this. It constructs a chain that accepts keys `input` and `chat_history` as input, and has the same output schema as a retriever. `create_history_aware_retriever` requires as inputs:  
+## 체인 {#chains}
+
+대화형 RAG 애플리케이션에서 검색기에 발행된 쿼리는 대화의 맥락에 의해 정보가 제공되어야 합니다. LangChain은 이를 단순화하기 위해 [create_history_aware_retriever](https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html) 생성자를 제공합니다. 이는 `input` 및 `chat_history` 키를 입력으로 받아들이고 검색기와 동일한 출력 스키마를 갖는 체인을 구성합니다. `create_history_aware_retriever`는 다음을 입력으로 요구합니다:
 
 1. LLM;
-2. Retriever;
-3. Prompt.
+2. 검색기;
+3. 프롬프트.
 
-First we obtain these objects:
+먼저 이러한 객체를 얻습니다:
 
 ### LLM
 
-We can use any supported chat model:
+지원되는 채팅 모델을 사용할 수 있습니다:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
+### 검색기
 
-### Retriever
-
-For the retriever, we will use [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html) to load the content of a web page. Here we instantiate a `Chroma` vectorstore and then use its [.as_retriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html#langchain_core.vectorstores.VectorStore.as_retriever) method to build a retriever that can be incorporated into [LCEL](/docs/concepts/#langchain-expression-language) chains.
+검색기에는 [WebBaseLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html)를 사용하여 웹 페이지의 내용을 로드합니다. 여기에서 `Chroma` 벡터 저장소를 인스턴스화한 다음, [.as_retriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html#langchain_core.vectorstores.VectorStore.as_retriever) 메서드를 사용하여 [LCEL](/docs/concepts/#langchain-expression-language) 체인에 통합할 수 있는 검색기를 구축합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "How to add chat history"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to add chat history"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to add chat history"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to add chat history"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to add chat history"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add chat history"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add chat history"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add chat history"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add chat history"}]-->
@@ -108,9 +110,10 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings
 retriever = vectorstore.as_retriever()
 ```
 
-### Prompt
 
-We'll use a prompt that includes a `MessagesPlaceholder` variable under the name "chat_history". This allows us to pass in a list of Messages to the prompt using the "chat_history" input key, and these messages will be inserted after the system message and before the human message containing the latest question.
+### 프롬프트
+
+`MessagesPlaceholder` 변수를 "chat_history"라는 이름으로 포함하는 프롬프트를 사용할 것입니다. 이를 통해 "chat_history" 입력 키를 사용하여 메시지 목록을 프롬프트에 전달할 수 있으며, 이러한 메시지는 시스템 메시지 뒤와 최신 질문을 포함하는 인간 메시지 앞에 삽입됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "create_history_aware_retriever", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html", "title": "How to add chat history"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add chat history"}]-->
@@ -134,9 +137,10 @@ contextualize_q_prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-### Assembling the chain
 
-We can then instantiate the history-aware retriever:
+### 체인 조립
+
+그런 다음 역사 인식 검색기를 인스턴스화할 수 있습니다:
 
 ```python
 history_aware_retriever = create_history_aware_retriever(
@@ -144,13 +148,14 @@ history_aware_retriever = create_history_aware_retriever(
 )
 ```
 
-This chain prepends a rephrasing of the input query to our retriever, so that the retrieval incorporates the context of the conversation.
 
-Now we can build our full QA chain.
+이 체인은 입력 쿼리의 재구성을 검색기 앞에 추가하여 검색이 대화의 맥락을 통합하도록 합니다.
 
-As in the [RAG tutorial](/docs/tutorials/rag), we will use [create_stuff_documents_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html) to generate a `question_answer_chain`, with input keys `context`, `chat_history`, and `input`-- it accepts the retrieved context alongside the conversation history and query to generate an answer.
+이제 전체 QA 체인을 구축할 수 있습니다.
 
-We build our final `rag_chain` with [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html). This chain applies the `history_aware_retriever` and `question_answer_chain` in sequence, retaining intermediate outputs such as the retrieved context for convenience. It has input keys `input` and `chat_history`, and includes `input`, `chat_history`, `context`, and `answer` in its output.
+[RAG 튜토리얼](/docs/tutorials/rag)와 마찬가지로, [create_stuff_documents_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html)을 사용하여 `question_answer_chain`을 생성합니다. 입력 키는 `context`, `chat_history`, `input`이며, 검색된 컨텍스트와 대화 기록 및 쿼리를 함께 수용하여 답변을 생성합니다.
+
+최종 `rag_chain`을 [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html)으로 구축합니다. 이 체인은 `history_aware_retriever`와 `question_answer_chain`을 순차적으로 적용하여 편의를 위해 검색된 컨텍스트와 같은 중간 출력을 유지합니다. 입력 키는 `input` 및 `chat_history`이며, 출력에는 `input`, `chat_history`, `context`, `answer`가 포함됩니다.
 
 ```python
 system_prompt = (
@@ -174,20 +179,21 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 ```
 
-### Adding chat history
 
-To manage the chat history, we will need:
+### 채팅 기록 추가
 
-1. An object for storing the chat history;
-2. An object that wraps our chain and manages updates to the chat history.
+채팅 기록을 관리하기 위해 다음이 필요합니다:
 
-For these we will use [BaseChatMessageHistory](https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html) and [RunnableWithMessageHistory](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html). The latter is a wrapper for an LCEL chain and a `BaseChatMessageHistory` that handles injecting chat history into inputs and updating it after each invocation.
+1. 채팅 기록을 저장할 객체;
+2. 체인을 래핑하고 채팅 기록 업데이트를 관리하는 객체.
 
-For a detailed walkthrough of how to use these classes together to create a stateful conversational chain, head to the [How to add message history (memory)](/docs/how_to/message_history/) LCEL how-to guide.
+이를 위해 [BaseChatMessageHistory](https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html)와 [RunnableWithMessageHistory](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html)를 사용할 것입니다. 후자는 LCEL 체인과 `BaseChatMessageHistory`를 래핑하여 입력에 채팅 기록을 주입하고 각 호출 후 이를 업데이트하는 역할을 합니다.
 
-Below, we implement a simple example of the second option, in which chat histories are stored in a simple dict. LangChain manages memory integrations with [Redis](/docs/integrations/memory/redis_chat_message_history/) and other technologies to provide for more robust persistence.
+이러한 클래스를 함께 사용하여 상태 유지 대화형 체인을 만드는 방법에 대한 자세한 설명은 [메시지 기록 추가하는 방법 (메모리)](/docs/how_to/message_history/) LCEL 가이드를 참조하십시오.
 
-Instances of `RunnableWithMessageHistory` manage the chat history for you. They accept a config with a key (`"session_id"` by default) that specifies what conversation history to fetch and prepend to the input, and append the output to the same conversation history. Below is an example:
+아래는 채팅 기록이 간단한 dict에 저장되는 두 번째 옵션의 간단한 예를 구현합니다. LangChain은 [Redis](/docs/integrations/memory/redis_chat_message_history/) 및 기타 기술과 함께 메모리 통합을 관리하여 더 강력한 지속성을 제공합니다.
+
+`RunnableWithMessageHistory`의 인스턴스는 채팅 기록을 관리합니다. 이들은 입력에 추가할 대화 기록을 가져오고 같은 대화 기록에 출력을 추가하는 키(`"session_id"` 기본값)를 포함하는 구성을 수용합니다. 아래는 예시입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "How to add chat history"}, {"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "How to add chat history"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to add chat history"}]-->
@@ -213,6 +219,7 @@ conversational_rag_chain = RunnableWithMessageHistory(
 )
 ```
 
+
 ```python
 conversational_rag_chain.invoke(
     {"input": "What is Task Decomposition?"},
@@ -222,9 +229,11 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
+
 ```output
 'Task decomposition involves breaking down a complex task into smaller and simpler steps to make it more manageable and easier to accomplish. This process can be done using techniques like Chain of Thought (CoT) or Tree of Thoughts to guide the model in breaking down tasks effectively. Task decomposition can be facilitated by providing simple prompts to a language model, task-specific instructions, or human inputs.'
 ```
+
 
 ```python
 conversational_rag_chain.invoke(
@@ -233,11 +242,13 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
+
 ```output
 'Task decomposition can be achieved through various methods, including using techniques like Chain of Thought (CoT) or Tree of Thoughts to guide the model in breaking down tasks effectively. Common ways of task decomposition include providing simple prompts to a language model, task-specific instructions, or human inputs to break down complex tasks into smaller and more manageable steps. Additionally, task decomposition can involve utilizing resources like internet access for information gathering, long-term memory management, and GPT-3.5 powered agents for delegation of simple tasks.'
 ```
 
-The conversation history can be inspected in the `store` dict:
+
+대화 기록은 `store` dict에서 검사할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to add chat history"}]-->
@@ -251,6 +262,7 @@ for message in store["abc123"].messages:
 
     print(f"{prefix}: {message.content}\n")
 ```
+
 ```output
 User: What is Task Decomposition?
 
@@ -260,11 +272,12 @@ User: What are common ways of doing it?
 
 AI: Task decomposition can be achieved through various methods, including using techniques like Chain of Thought (CoT) or Tree of Thoughts to guide the model in breaking down tasks effectively. Common ways of task decomposition include providing simple prompts to a language model, task-specific instructions, or human inputs to break down complex tasks into smaller and more manageable steps. Additionally, task decomposition can involve utilizing resources like internet access for information gathering, long-term memory management, and GPT-3.5 powered agents for delegation of simple tasks.
 ```
-### Tying it together
+
+### 모든 것을 연결하기
 
 ![](../../static/img/conversational_retrieval_chain.png)
 
-For convenience, we tie together all of the necessary steps in a single code cell:
+편의를 위해 모든 필요한 단계를 단일 코드 셀에 연결합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "create_history_aware_retriever", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html", "title": "How to add chat history"}, {"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "How to add chat history"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to add chat history"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to add chat history"}, {"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "How to add chat history"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to add chat history"}, {"imported": "BaseChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.BaseChatMessageHistory.html", "title": "How to add chat history"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add chat history"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add chat history"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to add chat history"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add chat history"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add chat history"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add chat history"}]-->
@@ -361,6 +374,7 @@ conversational_rag_chain = RunnableWithMessageHistory(
 )
 ```
 
+
 ```python
 conversational_rag_chain.invoke(
     {"input": "What is Task Decomposition?"},
@@ -370,9 +384,11 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
+
 ```output
 'Task decomposition involves breaking down a complex task into smaller and simpler steps to make it more manageable. Techniques like Chain of Thought (CoT) and Tree of Thoughts help in decomposing hard tasks into multiple manageable tasks by instructing models to think step by step and explore multiple reasoning possibilities at each step. Task decomposition can be achieved through various methods such as using prompting techniques, task-specific instructions, or human inputs.'
 ```
+
 
 ```python
 conversational_rag_chain.invoke(
@@ -381,19 +397,21 @@ conversational_rag_chain.invoke(
 )["answer"]
 ```
 
+
 ```output
 'Task decomposition can be done in common ways such as using prompting techniques like Chain of Thought (CoT) or Tree of Thoughts, which instruct models to think step by step and explore multiple reasoning possibilities at each step. Another way is to provide task-specific instructions, such as asking to "Write a story outline" for writing a novel, to guide the decomposition process. Additionally, task decomposition can also involve human inputs to break down complex tasks into smaller and simpler steps.'
 ```
 
-## Agents {#agents}
 
-Agents leverage the reasoning capabilities of LLMs to make decisions during execution. Using agents allow you to offload some discretion over the retrieval process. Although their behavior is less predictable than chains, they offer some advantages in this context:
-- Agents generate the input to the retriever directly, without necessarily needing us to explicitly build in contextualization, as we did above;
-- Agents can execute multiple retrieval steps in service of a query, or refrain from executing a retrieval step altogether (e.g., in response to a generic greeting from a user).
+## 에이전트 {#agents}
 
-### Retrieval tool
+에이전트는 실행 중에 결정을 내리기 위해 LLM의 추론 능력을 활용합니다. 에이전트를 사용하면 검색 프로세스에 대한 일부 재량을 오프로드할 수 있습니다. 그들의 행동은 체인보다 덜 예측 가능하지만, 이 맥락에서 몇 가지 장점을 제공합니다:
+- 에이전트는 검색기에 대한 입력을 직접 생성하므로 우리가 위에서 했던 것처럼 맥락화를 명시적으로 구축할 필요가 없습니다;
+- 에이전트는 쿼리를 위해 여러 검색 단계를 실행하거나 검색 단계를 전혀 실행하지 않을 수 있습니다(예: 사용자의 일반적인 인사에 응답할 때).
 
-Agents can access "tools" and manage their execution. In this case, we will convert our retriever into a LangChain tool to be wielded by the agent:
+### 검색 도구
+
+에이전트는 "도구"에 접근하고 실행을 관리할 수 있습니다. 이 경우, 검색기를 LangChain 도구로 변환하여 에이전트가 사용할 수 있도록 합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "create_retriever_tool", "source": "langchain.tools.retriever", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "How to add chat history"}]-->
@@ -407,10 +425,10 @@ tool = create_retriever_tool(
 tools = [tool]
 ```
 
-### Agent constructor
 
-Now that we have defined the tools and the LLM, we can create the agent. We will be using [LangGraph](/docs/concepts/#langgraph) to construct the agent.
-Currently we are using a high level interface to construct the agent, but the nice thing about LangGraph is that this high-level interface is backed by a low-level, highly controllable API in case you want to modify the agent logic.
+### 에이전트 생성자
+
+이제 도구와 LLM을 정의했으므로 에이전트를 생성할 수 있습니다. 에이전트를 구성하기 위해 [LangGraph](/docs/concepts/#langgraph)를 사용할 것입니다. 현재 우리는 에이전트를 구성하기 위해 높은 수준의 인터페이스를 사용하고 있지만, LangGraph의 좋은 점은 이 높은 수준의 인터페이스가 에이전트 논리를 수정하고자 할 때 사용할 수 있는 낮은 수준의 매우 제어 가능한 API에 의해 지원된다는 것입니다.
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -418,7 +436,8 @@ from langgraph.prebuilt import create_react_agent
 agent_executor = create_react_agent(llm, tools)
 ```
 
-We can now try it out. Note that so far it is not stateful (we still need to add in memory)
+
+이제 시험해 볼 수 있습니다. 지금까지는 상태가 유지되지 않으며(여전히 메모리를 추가해야 함) 
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add chat history"}]-->
@@ -432,6 +451,7 @@ for s in agent_executor.stream(
     print(s)
     print("----")
 ```
+
 ```output
 Error in LangChainTracer.on_tool_end callback: TracerException("Found chain run at ID 5cd28d13-88dd-4eac-a465-3770ac27eff6, but expected {'tool'} run.")
 ``````output
@@ -442,9 +462,10 @@ Error in LangChainTracer.on_tool_end callback: TracerException("Found chain run 
 {'agent': {'messages': [AIMessage(content='Task decomposition is a technique used to break down complex tasks into smaller and simpler steps. This approach helps in transforming big tasks into multiple manageable tasks, making it easier for autonomous agents to handle and interpret the thinking process. One common method for task decomposition is the Chain of Thought (CoT) technique, where models are instructed to "think step by step" to decompose hard tasks. Another extension of CoT is the Tree of Thoughts, which explores multiple reasoning possibilities at each step by creating a tree structure of multiple thoughts per step. Task decomposition can be facilitated through various methods such as using simple prompts, task-specific instructions, or human inputs.', response_metadata={'token_usage': {'completion_tokens': 130, 'prompt_tokens': 636, 'total_tokens': 766}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-3ef17638-65df-4030-a7fe-795e6da91c69-0')]}}
 ----
 ```
-LangGraph comes with built in persistence, so we don't need to use ChatMessageHistory! Rather, we can pass in a checkpointer to our LangGraph agent directly.
 
-Distinct conversations are managed by specifying a key for a conversation thread in the config dict, as shown below.
+LangGraph는 내장된 지속성을 제공하므로 ChatMessageHistory를 사용할 필요가 없습니다! 대신, LangGraph 에이전트에 직접 체크포인터를 전달할 수 있습니다.
+
+구별된 대화는 구성 dict에서 대화 스레드에 대한 키를 지정하여 관리됩니다. 아래와 같이 보여집니다.
 
 ```python
 from langgraph.checkpoint.memory import MemorySaver
@@ -454,9 +475,10 @@ memory = MemorySaver()
 agent_executor = create_react_agent(llm, tools, checkpointer=memory)
 ```
 
-This is all we need to construct a conversational RAG agent.
 
-Let's observe its behavior. Note that if we input a query that does not require a retrieval step, the agent does not execute one:
+이것이 대화형 RAG 에이전트를 구성하는 데 필요한 모든 것입니다.
+
+그 행동을 관찰해 보겠습니다. 검색 단계가 필요하지 않은 쿼리를 입력하면 에이전트는 검색 단계를 실행하지 않습니다:
 
 ```python
 config = {"configurable": {"thread_id": "abc123"}}
@@ -467,11 +489,13 @@ for s in agent_executor.stream(
     print(s)
     print("----")
 ```
+
 ```output
 {'agent': {'messages': [AIMessage(content='Hello Bob! How can I assist you today?', response_metadata={'token_usage': {'completion_tokens': 11, 'prompt_tokens': 67, 'total_tokens': 78}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-1cd17562-18aa-4839-b41b-403b17a0fc20-0')]}}
 ----
 ```
-Further, if we input a query that does require a retrieval step, the agent generates the input to the tool:
+
+또한 검색 단계가 필요한 쿼리를 입력하면 에이전트는 도구에 대한 입력을 생성합니다:
 
 ```python
 query = "What is Task Decomposition?"
@@ -482,6 +506,7 @@ for s in agent_executor.stream(
     print(s)
     print("----")
 ```
+
 ```output
 Error in LangChainTracer.on_tool_end callback: TracerException("Found chain run at ID c54381c0-c5d9-495a-91a0-aca4ae755663, but expected {'tool'} run.")
 ``````output
@@ -492,9 +517,10 @@ Error in LangChainTracer.on_tool_end callback: TracerException("Found chain run 
 {'agent': {'messages': [AIMessage(content='Task decomposition is a technique used to break down complex tasks into smaller and simpler steps. This approach helps in managing and solving intricate problems by dividing them into more manageable components. By decomposing tasks, agents or models can better understand the steps involved and plan their actions accordingly. Techniques like Chain of Thought (CoT) and Tree of Thoughts are examples of methods that enhance model performance on complex tasks by breaking them down into smaller steps.', response_metadata={'token_usage': {'completion_tokens': 87, 'prompt_tokens': 659, 'total_tokens': 746}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-b9166386-83e5-4b82-9a4b-590e5fa76671-0')]}}
 ----
 ```
-Above, instead of inserting our query verbatim into the tool, the agent stripped unnecessary words like "what" and "is".
 
-This same principle allows the agent to use the context of the conversation when necessary:
+위에서 에이전트는 쿼리를 도구에 그대로 삽입하는 대신 "what"과 "is"와 같은 불필요한 단어를 제거했습니다.
+
+이 동일한 원칙은 에이전트가 필요할 때 대화의 맥락을 사용할 수 있게 합니다:
 
 ```python
 query = "What according to the blog post are common ways of doing it? redo the search"
@@ -505,6 +531,7 @@ for s in agent_executor.stream(
     print(s)
     print("----")
 ```
+
 ```output
 {'agent': {'messages': [AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_6kbxTU5CDWLmF9mrvR7bWSkI', 'function': {'arguments': '{"query":"Common ways of task decomposition"}', 'name': 'blog_post_retriever'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 21, 'prompt_tokens': 769, 'total_tokens': 790}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': None, 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-2d2c8327-35cd-484a-b8fd-52436657c2d8-0', tool_calls=[{'name': 'blog_post_retriever', 'args': {'query': 'Common ways of task decomposition'}, 'id': 'call_6kbxTU5CDWLmF9mrvR7bWSkI'}])]}}
 ----
@@ -516,11 +543,12 @@ Error in LangChainTracer.on_tool_end callback: TracerException("Found chain run 
 {'agent': {'messages': [AIMessage(content='Common ways of task decomposition include:\n1. Using LLM with simple prompting like "Steps for XYZ" or "What are the subgoals for achieving XYZ?"\n2. Using task-specific instructions, for example, "Write a story outline" for writing a novel.\n3. Involving human inputs in the task decomposition process.', response_metadata={'token_usage': {'completion_tokens': 67, 'prompt_tokens': 1339, 'total_tokens': 1406}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-9ad14cde-ca75-4238-a868-f865e0fc50dd-0')]}}
 ----
 ```
-Note that the agent was able to infer that "it" in our query refers to "task decomposition", and generated a reasonable search query as a result-- in this case, "common ways of task decomposition".
 
-### Tying it together
+에이전트는 쿼리에서 "it"이 "task decomposition"을 참조한다는 것을 추론할 수 있었으며, 그 결과 합리적인 검색 쿼리를 생성했습니다. 이 경우 "common ways of task decomposition"입니다.
 
-For convenience, we tie together all of the necessary steps in a single code cell:
+### 모든 것을 연결하기
+
+편의를 위해 모든 필요한 단계를 단일 코드 셀에 연결합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "create_retriever_tool", "source": "langchain.tools.retriever", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.retriever.create_retriever_tool.html", "title": "How to add chat history"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to add chat history"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to add chat history"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add chat history"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add chat history"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add chat history"}]-->
@@ -565,15 +593,16 @@ tools = [tool]
 agent_executor = create_react_agent(llm, tools, checkpointer=memory)
 ```
 
-## Next steps
 
-We've covered the steps to build a basic conversational Q&A application:
+## 다음 단계
 
-- We used chains to build a predictable application that generates search queries for each user input;
-- We used agents to build an application that "decides" when and how to generate search queries.
+기본적인 대화형 Q&A 애플리케이션을 구축하는 단계를 다루었습니다:
 
-To explore different types of retrievers and retrieval strategies, visit the [retrievers](/docs/how_to#retrievers) section of the how-to guides.
+- 우리는 체인을 사용하여 각 사용자 입력에 대한 검색 쿼리를 생성하는 예측 가능한 애플리케이션을 구축했습니다;
+- 우리는 에이전트를 사용하여 검색 쿼리를 생성할 시기와 방법을 "결정하는" 애플리케이션을 구축했습니다.
 
-For a detailed walkthrough of LangChain's conversation memory abstractions, visit the [How to add message history (memory)](/docs/how_to/message_history) LCEL page.
+다양한 유형의 검색기와 검색 전략을 탐색하려면 [검색기](/docs/how_to#retrievers) 섹션의 가이드를 방문하십시오.
 
-To learn more about agents, head to the [Agents Modules](/docs/tutorials/agents).
+LangChain의 대화 메모리 추상화에 대한 자세한 설명은 [메시지 기록 추가하는 방법 (메모리)](/docs/how_to/message_history) LCEL 페이지를 방문하십시오.
+
+에이전트에 대해 더 알고 싶다면 [에이전트 모듈](/docs/tutorials/agents)로 이동하십시오.

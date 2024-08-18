@@ -1,19 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/predibase/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/predibase.ipynb
+description: Predibase를 사용하여 ML 모델을 훈련, 미세 조정 및 배포하는 방법을 Langchain과 함께 보여주는 예제입니다.
 ---
 
 # Predibase
 
-[Predibase](https://predibase.com/) allows you to train, fine-tune, and deploy any ML model—from linear regression to large language model. 
+[Predibase](https://predibase.com/)는 선형 회귀부터 대형 언어 모델에 이르기까지 모든 ML 모델을 학습, 미세 조정 및 배포할 수 있게 해줍니다.
 
-This example demonstrates using Langchain with models deployed on Predibase
+이 예제는 Predibase에 배포된 모델과 함께 Langchain을 사용하는 방법을 보여줍니다.
 
-# Setup
+# 설정
 
-To run this notebook, you'll need a [Predibase account](https://predibase.com/free-trial/?utm_source=langchain) and an [API key](https://docs.predibase.com/sdk-guide/intro).
+이 노트북을 실행하려면 [Predibase 계정](https://predibase.com/free-trial/?utm_source=langchain)과 [API 키](https://docs.predibase.com/sdk-guide/intro)가 필요합니다.
 
-You'll also need to install the Predibase Python package:
+또한 Predibase Python 패키지를 설치해야 합니다:
 
 ```python
 %pip install --upgrade --quiet  predibase
@@ -22,7 +22,8 @@ import os
 os.environ["PREDIBASE_API_TOKEN"] = "{PREDIBASE_API_TOKEN}"
 ```
 
-## Initial Call
+
+## 초기 호출
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -33,6 +34,7 @@ model = Predibase(
     predibase_api_key=os.environ.get("PREDIBASE_API_TOKEN"),
 )
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -47,6 +49,7 @@ model = Predibase(
     adapter_version=1,
 )
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -61,12 +64,14 @@ model = Predibase(
 )
 ```
 
+
 ```python
 response = model.invoke("Can you recommend me a nice dry wine?")
 print(response)
 ```
 
-## Chain Call Setup
+
+## 체인 호출 설정
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -79,6 +84,7 @@ model = Predibase(
 )
 ```
 
+
 ```python
 # With a fine-tuned adapter hosted at Predibase (adapter_version must be specified).
 model = Predibase(
@@ -89,6 +95,7 @@ model = Predibase(
     adapter_version=1,
 )
 ```
+
 
 ```python
 # With a fine-tuned adapter hosted at HuggingFace (adapter_version does not apply and will be ignored).
@@ -100,6 +107,7 @@ llm = Predibase(
 )
 ```
 
+
 ## SequentialChain
 
 ```python
@@ -107,6 +115,7 @@ llm = Predibase(
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
 ```
+
 
 ```python
 # This is an LLMChain to write a synopsis given a title of a play.
@@ -117,6 +126,7 @@ Playwright: This is a synopsis for the above play:"""
 prompt_template = PromptTemplate(input_variables=["title"], template=template)
 synopsis_chain = LLMChain(llm=llm, prompt=prompt_template)
 ```
+
 
 ```python
 # This is an LLMChain to write a review of a play given a synopsis.
@@ -129,6 +139,7 @@ prompt_template = PromptTemplate(input_variables=["synopsis"], template=template
 review_chain = LLMChain(llm=llm, prompt=prompt_template)
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "SimpleSequentialChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.sequential.SimpleSequentialChain.html", "title": "Predibase"}]-->
 # This is the overall chain where we run these two chains in sequence.
@@ -139,11 +150,13 @@ overall_chain = SimpleSequentialChain(
 )
 ```
 
+
 ```python
 review = overall_chain.run("Tragedy at sunset on the beach")
 ```
 
-## Fine-tuned LLM (Use your own fine-tuned LLM from Predibase)
+
+## 미세 조정된 LLM (Predibase에서 미세 조정한 LLM 사용)
 
 ```python
 <!--IMPORTS:[{"imported": "Predibase", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predibase.Predibase.html", "title": "Predibase"}]-->
@@ -161,11 +174,13 @@ model = Predibase(
 # replace my-base-LLM with the name of your choice of a serverless base model in Predibase
 ```
 
+
 ```python
 # response = model.invoke("Can you help categorize the following emails into positive, negative, and neutral?")
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

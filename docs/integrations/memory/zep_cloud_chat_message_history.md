@@ -1,20 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/zep_cloud_chat_message_history/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/zep_cloud_chat_message_history.ipynb
+description: ZepCloudChatMessageHistory는 AI 비서의 대화 기록을 기억하고 이해하여 개인화된 AI 경험을 제공합니다.
 ---
 
 # ZepCloudChatMessageHistory
-> Recall, understand, and extract data from chat histories. Power personalized AI experiences.
+> 대화 기록에서 데이터를 기억하고 이해하며 추출합니다. 개인화된 AI 경험을 강화합니다.
 
-> [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-while also reducing hallucinations, latency, and cost.
+> [Zep](https://www.getzep.com)는 AI 어시스턴트 앱을 위한 장기 기억 서비스입니다.
+Zep를 사용하면 AI 어시스턴트가 과거의 대화를 기억할 수 있는 능력을 제공하며, 이는 얼마나 먼 대화라도 상관없습니다.
+또한 환각, 지연 및 비용을 줄이는 데 도움을 줍니다.
 
-> See [Zep Cloud Installation Guide](https://help.getzep.com/sdks) and more [Zep Cloud Langchain Examples](https://github.com/getzep/zep-python/tree/main/examples)
+> [Zep Cloud 설치 가이드](https://help.getzep.com/sdks)와 더 많은 [Zep Cloud Langchain 예제](https://github.com/getzep/zep-python/tree/main/examples)를 참조하세요.
 
-## Example
+## 예제
 
-This notebook demonstrates how to use [Zep](https://www.getzep.com/) to persist chat history and use Zep Memory with your chain.
+이 노트북은 [Zep](https://www.getzep.com/)를 사용하여 대화 기록을 지속하고 Zep 메모리를 체인과 함께 사용하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ZepCloudChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.zep_cloud.ZepCloudChatMessageHistory.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "ZepCloudMemory", "source": "langchain_community.memory.zep_cloud_memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain_community.memory.zep_cloud_memory.ZepCloudMemory.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "ZepCloudChatMessageHistory"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "ZepCloudChatMessageHistory"}]-->
@@ -34,7 +34,8 @@ from langchain_openai import ChatOpenAI
 session_id = str(uuid4())  # This is a unique identifier for the session
 ```
 
-Provide your OpenAI key
+
+OpenAI 키를 제공하세요.
 
 ```python
 import getpass
@@ -42,13 +43,15 @@ import getpass
 openai_key = getpass.getpass()
 ```
 
-Provide your Zep API key. See https://help.getzep.com/projects#api-keys
+
+Zep API 키를 제공하세요. https://help.getzep.com/projects#api-keys를 참조하세요.
 
 ```python
 zep_api_key = getpass.getpass()
 ```
 
-Preload some messages into the memory. The default message window is 4 messages. We want to push beyond this to demonstrate auto-summarization.
+
+메모리에 일부 메시지를 미리 로드합니다. 기본 메시지 창은 4개의 메시지입니다. 자동 요약을 시연하기 위해 이보다 더 많은 메시지를 추가하고자 합니다.
 
 ```python
 test_history = [
@@ -130,10 +133,11 @@ time.sleep(
 )  # Wait for the messages to be embedded and summarized, this happens asynchronously.
 ```
 
-**MessagesPlaceholder** - We’re using the variable name chat_history here. This will incorporate the chat history into the prompt.
-It’s important that this variable name aligns with the history_messages_key in the RunnableWithMessageHistory chain for seamless integration.
 
-**question** must match input_messages_key in `RunnableWithMessageHistory“ chain.
+**MessagesPlaceholder** - 여기서 변수 이름 chat_history를 사용하고 있습니다. 이는 프롬프트에 대화 기록을 통합합니다.
+이 변수 이름이 RunnableWithMessageHistory 체인의 history_messages_key와 일치하는 것이 중요합니다.
+
+**question**은 `RunnableWithMessageHistory` 체인의 input_messages_key와 일치해야 합니다.
 
 ```python
 template = """Be helpful and answer the question below using the provided context:
@@ -147,7 +151,8 @@ answer_prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-We use RunnableWithMessageHistory to incorporate Zep’s Chat History into our chain. This class requires a session_id as a parameter when you activate the chain.
+
+RunnableWithMessageHistory를 사용하여 Zep의 대화 기록을 체인에 통합합니다. 이 클래스는 체인을 활성화할 때 session_id를 매개변수로 요구합니다.
 
 ```python
 inputs = RunnableParallel(
@@ -168,6 +173,7 @@ chain = RunnableWithMessageHistory(
 )
 ```
 
+
 ```python
 chain.invoke(
     {
@@ -176,9 +182,11 @@ chain.invoke(
     config={"configurable": {"session_id": session_id}},
 )
 ```
+
 ```output
 Parent run 622c6f75-3e4a-413d-ba20-558c1fea0d50 not found for run af12a4b1-e882-432d-834f-e9147465faf6. Treating as a root run.
 ```
+
 
 ```output
 '"Parable of the Sower" is relevant to the challenges facing contemporary society as it explores themes of environmental degradation, economic inequality, social unrest, and the search for hope and community in the face of chaos. The novel\'s depiction of a dystopian future where society has collapsed due to environmental and economic crises serves as a cautionary tale about the potential consequences of our current societal and environmental challenges. By addressing issues such as climate change, social injustice, and the impact of technology on humanity, Octavia Butler\'s work prompts readers to reflect on the pressing issues of our time and the importance of resilience, empathy, and collective action in building a better future.'

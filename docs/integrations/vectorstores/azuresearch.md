@@ -1,26 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/azuresearch/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/azuresearch.ipynb
+description: Azure AI Search는 대규모 정보 검색을 위한 클라우드 서비스로, 개발자에게 API와 도구를 제공합니다.
 ---
 
 # Azure AI Search
 
-[Azure AI Search](https://learn.microsoft.com/azure/search/search-what-is-azure-search) (formerly known as `Azure Search` and `Azure Cognitive Search`) is a cloud search service that gives developers infrastructure, APIs, and tools for information retrieval of vector, keyword, and hybrid queries at scale.
+[Azure AI Search](https://learn.microsoft.com/azure/search/search-what-is-azure-search) (이전 명칭: `Azure Search` 및 `Azure Cognitive Search`)는 개발자에게 대규모 벡터, 키워드 및 하이브리드 쿼리 정보 검색을 위한 인프라, API 및 도구를 제공하는 클라우드 검색 서비스입니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-## Install Azure AI Search SDK
+## Azure AI Search SDK 설치
 
-Use azure-search-documents package version 11.4.0 or later.
+azure-search-documents 패키지 버전 11.4.0 이상을 사용하세요.
 
 ```python
 %pip install --upgrade --quiet  azure-search-documents
 %pip install --upgrade --quiet  azure-identity
 ```
 
-## Import required libraries
 
-`OpenAIEmbeddings` is assumed, but if you're using Azure OpenAI, import `AzureOpenAIEmbeddings` instead.
+## 필요한 라이브러리 가져오기
+
+`OpenAIEmbeddings`를 가정하지만, Azure OpenAI를 사용하는 경우 대신 `AzureOpenAIEmbeddings`를 가져옵니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AzureSearch", "source": "langchain_community.vectorstores.azuresearch", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azuresearch.AzureSearch.html", "title": "Azure AI Search"}, {"imported": "AzureOpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.azure.AzureOpenAIEmbeddings.html", "title": "Azure AI Search"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Azure AI Search"}]-->
@@ -30,8 +31,9 @@ from langchain_community.vectorstores.azuresearch import AzureSearch
 from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings
 ```
 
-## Configure OpenAI settings
-Set variables for your OpenAI provider. You need either an [OpenAI account](https://platform.openai.com/docs/quickstart?context=python) or an [Azure OpenAI account](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource) to generate the embeddings. 
+
+## OpenAI 설정 구성
+OpenAI 제공자를 위한 변수를 설정합니다. 임베딩을 생성하려면 [OpenAI 계정](https://platform.openai.com/docs/quickstart?context=python) 또는 [Azure OpenAI 계정](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to-create-resource)이 필요합니다.
 
 ```python
 # Option 1: use an OpenAI account
@@ -39,6 +41,7 @@ openai_api_key: str = "PLACEHOLDER FOR YOUR API KEY"
 openai_api_version: str = "2023-05-15"
 model: str = "text-embedding-ada-002"
 ```
+
 
 ```python
 # Option 2: use an Azure OpenAI account with a deployment of an embedding model
@@ -48,20 +51,22 @@ azure_openai_api_version: str = "2023-05-15"
 azure_deployment: str = "text-embedding-ada-002"
 ```
 
-## Configure vector store settings
 
-You need an [Azure subscription](https://azure.microsoft.com/en-us/free/search) and [Azure AI Search service](https://learn.microsoft.com/azure/search/search-create-service-portal) to use this vector store integration. No-cost versions are available for small and limited workloads.
+## 벡터 저장소 설정 구성
 
-Set variables for your Azure AI Search URL and admin API key. You can get these variables from the [Azure portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceBlade/resourceType/Microsoft.Search%2FsearchServices).
+이 벡터 저장소 통합을 사용하려면 [Azure 구독](https://azure.microsoft.com/en-us/free/search) 및 [Azure AI Search 서비스](https://learn.microsoft.com/azure/search/search-create-service-portal)가 필요합니다. 소규모 및 제한된 작업량에 대한 무료 버전이 제공됩니다.
+
+Azure AI Search URL 및 관리자 API 키에 대한 변수를 설정합니다. 이러한 변수는 [Azure 포털](https://portal.azure.com/#blade/HubsExtension/BrowseResourceBlade/resourceType/Microsoft.Search%2FsearchServices)에서 가져올 수 있습니다.
 
 ```python
 vector_store_address: str = "YOUR_AZURE_SEARCH_ENDPOINT"
 vector_store_password: str = "YOUR_AZURE_SEARCH_ADMIN_KEY"
 ```
 
-## Create embeddings and vector store instances
 
-Create instances of the OpenAIEmbeddings and AzureSearch classes. When you complete this step, you should have an empty search index on your Azure AI Search resource. The integration module provides a default schema.
+## 임베딩 및 벡터 저장소 인스턴스 생성
+
+OpenAIEmbeddings 및 AzureSearch 클래스의 인스턴스를 생성합니다. 이 단계를 완료하면 Azure AI Search 리소스에 빈 검색 인덱스가 있어야 합니다. 통합 모듈은 기본 스키마를 제공합니다.
 
 ```python
 # Option 1: Use OpenAIEmbeddings with OpenAI account
@@ -69,6 +74,7 @@ embeddings: OpenAIEmbeddings = OpenAIEmbeddings(
     openai_api_key=openai_api_key, openai_api_version=openai_api_version, model=model
 )
 ```
+
 
 ```python
 # Option 2: Use AzureOpenAIEmbeddings with an Azure account
@@ -80,9 +86,10 @@ embeddings: AzureOpenAIEmbeddings = AzureOpenAIEmbeddings(
 )
 ```
 
-## Create vector store instance
 
-Create instance of the AzureSearch class using the embeddings from above
+## 벡터 저장소 인스턴스 생성
+
+위의 임베딩을 사용하여 AzureSearch 클래스의 인스턴스를 생성합니다.
 
 ```python
 index_name: str = "langchain-vector-demo"
@@ -93,6 +100,7 @@ vector_store: AzureSearch = AzureSearch(
     embedding_function=embeddings.embed_query,
 )
 ```
+
 
 ```python
 # Specify additional properties for the Azure client such as the following https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/core/azure-core/README.md#configurations
@@ -106,9 +114,10 @@ vector_store: AzureSearch = AzureSearch(
 )
 ```
 
-## Insert text and embeddings into vector store
 
-This step loads, chunks, and vectorizes the sample document, and then indexes the content into a search index on Azure AI Search.
+## 텍스트 및 임베딩을 벡터 저장소에 삽입
+
+이 단계에서는 샘플 문서를 로드하고, 청크화하고, 벡터화한 다음, Azure AI Search의 검색 인덱스에 내용을 인덱싱합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Azure AI Search"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Azure AI Search"}]-->
@@ -123,6 +132,7 @@ docs = text_splitter.split_documents(documents)
 
 vector_store.add_documents(documents=docs)
 ```
+
 
 ```output
 ['M2U1OGM4YzAtYjMxYS00Nzk5LTlhNDgtZTc3MGVkNTg1Mjc0',
@@ -169,9 +179,10 @@ vector_store.add_documents(documents=docs)
  'ZTQ3NDMwODEtMTQwMy00NDFkLWJhZDQtM2UxN2RkOTU1MTdl']
 ```
 
-## Perform a vector similarity search
 
-Execute a pure vector similarity search using the similarity_search() method:
+## 벡터 유사성 검색 수행
+
+similarity_search() 메서드를 사용하여 순수 벡터 유사성 검색을 실행합니다:
 
 ```python
 # Perform a similarity search
@@ -182,6 +193,7 @@ docs = vector_store.similarity_search(
 )
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -191,9 +203,11 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
-## Perform a vector similarity search with relevance scores
 
-Execute a pure vector similarity search using the similarity_search_with_relevance_scores() method. Queries that don't meet the threshold requirements are exluded.
+
+## 관련 점수가 있는 벡터 유사성 검색 수행
+
+similarity_search_with_relevance_scores() 메서드를 사용하여 순수 벡터 유사성 검색을 실행합니다. 기준 요구 사항을 충족하지 않는 쿼리는 제외됩니다.
 
 ```python
 docs_and_scores = vector_store.similarity_search_with_relevance_scores(
@@ -205,6 +219,7 @@ from pprint import pprint
 
 pprint(docs_and_scores)
 ```
+
 ```output
 [(Document(page_content='Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. \n\nTonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. \n\nOne of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court. \n\nAnd I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
   0.84402436),
@@ -215,9 +230,11 @@ pprint(docs_and_scores)
  (Document(page_content='Tonight, I’m announcing a crackdown on these companies overcharging American businesses and consumers. \n\nAnd as Wall Street firms take over more nursing homes, quality in those homes has gone down and costs have gone up.  \n\nThat ends on my watch. \n\nMedicare is going to set higher standards for nursing homes and make sure your loved ones get the care they deserve and expect. \n\nWe’ll also cut costs and keep the economy going strong by giving workers a fair shot, provide more training and apprenticeships, hire them based on their skills not degrees. \n\nLet’s pass the Paycheck Fairness Act and paid leave.  \n\nRaise the minimum wage to $15 an hour and extend the Child Tax Credit, so no one has to raise a family in poverty. \n\nLet’s increase Pell Grants and increase our historic support of HBCUs, and invest in what Jill—our First Lady who teaches full-time—calls America’s best-kept secret: community colleges.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
   0.8148832)]
 ```
-## Perform a hybrid search
 
-Execute hybrid search using the search_type or hybrid_search() method. Vector and nonvector text fields are queried in parallel, results are merged, and top matches of the unified result set are returned.
+
+## 하이브리드 검색 수행
+
+search_type 또는 hybrid_search() 메서드를 사용하여 하이브리드 검색을 실행합니다. 벡터 및 비벡터 텍스트 필드가 병렬로 쿼리되고, 결과가 병합되며, 통합 결과 집합의 상위 일치 항목이 반환됩니다.
 
 ```python
 # Perform a hybrid search using the search_type parameter
@@ -228,6 +245,7 @@ docs = vector_store.similarity_search(
 )
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -237,6 +255,7 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
+
 
 ```python
 # Perform a hybrid search using the hybrid_search method
@@ -245,6 +264,7 @@ docs = vector_store.hybrid_search(
 )
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -254,15 +274,17 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
-## Custom schemas and queries
 
-This section shows you how to replace the default schema with a custom schema.
 
-### Create a new index with custom filterable fields
+## 사용자 정의 스키마 및 쿼리
 
-This schema shows field definitions. It's the default schema, plus several new fields attributed as filterable. Because it's using the default vector configuration, you won't see vector configuration or vector profile overrides here. The name of the default vector profile is "myHnswProfile" and it's using a vector configuration of Hierarchical Navigable Small World (HNSW) for indexing and queries against the content_vector field.
+이 섹션에서는 기본 스키마를 사용자 정의 스키마로 교체하는 방법을 보여줍니다.
 
-There's no data for this schema in this step. When you execute the cell, you should get an empty index on Azure AI Search.
+### 필터링 가능한 사용자 정의 필드로 새 인덱스 생성
+
+이 스키마는 필드 정의를 보여줍니다. 기본 스키마에 필터링 가능한 여러 새로운 필드가 추가된 것입니다. 기본 벡터 구성을 사용하고 있으므로 여기서는 벡터 구성이나 벡터 프로필 오버라이드가 보이지 않습니다. 기본 벡터 프로필의 이름은 "myHnswProfile"이며, content_vector 필드에 대한 인덱싱 및 쿼리를 위해 계층적 탐색 가능한 소형 세계(HNSW) 벡터 구성을 사용하고 있습니다.
+
+이 단계에서는 이 스키마에 대한 데이터가 없습니다. 셀을 실행하면 Azure AI Search에서 빈 인덱스를 얻을 수 있습니다.
 
 ```python
 from azure.search.documents.indexes.models import (
@@ -329,9 +351,10 @@ vector_store: AzureSearch = AzureSearch(
 )
 ```
 
-### Add data and perform a query that includes a filter
 
-This example adds data to the vector store based on the custom schema. It loads text into the title and source fields. The source field is filterable. The sample query in this section filters the results based on content in the source field.
+### 데이터를 추가하고 필터를 포함한 쿼리 수행
+
+이 예제는 사용자 정의 스키마를 기반으로 벡터 저장소에 데이터를 추가합니다. 제목 및 출처 필드에 텍스트를 로드합니다. 출처 필드는 필터링 가능합니다. 이 섹션의 샘플 쿼리는 출처 필드의 내용을 기반으로 결과를 필터링합니다.
 
 ```python
 # Data in the metadata dictionary with a corresponding field in the index will be added to the index.
@@ -348,22 +371,26 @@ vector_store.add_texts(
 )
 ```
 
+
 ```output
 ['ZjhmMTg0NTEtMjgwNC00N2M0LWFiZGEtMDllMGU1Mzk1NWRm',
  'MzQwYWUwZDEtNDJkZC00MzgzLWIwMzItYzMwOGZkYTRiZGRi',
  'ZjFmOWVlYTQtODRiMC00YTY3LTk2YjUtMzY1NDBjNjY5ZmQ2']
 ```
 
+
 ```python
 res = vector_store.similarity_search(query="Test 3 source1", k=3, search_type="hybrid")
 res
 ```
+
 
 ```output
 [Document(page_content='Test 3', metadata={'title': 'Title 3', 'source': 'B', 'random': '32893'}),
  Document(page_content='Test 1', metadata={'title': 'Title 1', 'source': 'A', 'random': '10290'}),
  Document(page_content='Test 2', metadata={'title': 'Title 2', 'source': 'A', 'random': '48392'})]
 ```
+
 
 ```python
 res = vector_store.similarity_search(
@@ -372,14 +399,16 @@ res = vector_store.similarity_search(
 res
 ```
 
+
 ```output
 [Document(page_content='Test 1', metadata={'title': 'Title 1', 'source': 'A', 'random': '10290'}),
  Document(page_content='Test 2', metadata={'title': 'Title 2', 'source': 'A', 'random': '48392'})]
 ```
 
-### Create a new index with a scoring profile
 
-Here's another custom schema that includes a scoring profile definition. A scoring profile is used for relevance tuning of nonvector content, which is helpful in hybrid search scenarios.
+### 점수 프로필이 포함된 새 인덱스 생성
+
+여기에는 점수 프로필 정의가 포함된 또 다른 사용자 정의 스키마가 있습니다. 점수 프로필은 비벡터 콘텐츠의 관련성 조정에 사용되며, 하이브리드 검색 시나리오에서 유용합니다.
 
 ```python
 from azure.search.documents.indexes.models import (
@@ -472,6 +501,7 @@ vector_store: AzureSearch = AzureSearch(
 )
 ```
 
+
 ```python
 # Adding same data with different last_update to show Scoring Profile effect
 from datetime import datetime, timedelta
@@ -507,16 +537,19 @@ vector_store.add_texts(
 )
 ```
 
+
 ```output
 ['NjUwNGQ5ZDUtMGVmMy00OGM4LWIxMGYtY2Y2MDFmMTQ0MjE5',
  'NWFjN2YwY2UtOWQ4Yi00OTNhLTg2MGEtOWE0NGViZTVjOGRh',
  'N2Y2NWUyZjctMDBjZC00OGY4LWJlZDEtNTcxYjQ1MmI1NjYx']
 ```
 
+
 ```python
 res = vector_store.similarity_search(query="Test 1", k=3, search_type="similarity")
 res
 ```
+
 
 ```output
 [Document(page_content='Test 1', metadata={'title': 'Title 1', 'source': 'source1', 'random': '32893', 'last_update': '2024-01-24T22:18:51-00:00'}),
@@ -524,7 +557,8 @@ res
  Document(page_content='Test 1', metadata={'title': 'Title 1', 'source': 'source1', 'random': '10290', 'last_update': '2024-02-23T22:18:51-00:00'})]
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

@@ -1,15 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/cross_encoder_reranker/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/cross_encoder_reranker.ipynb
+description: 이 문서는 Hugging Face의 크로스 인코더 모델을 사용하여 리트리버에서 리랭커를 구현하는 방법을 설명합니다.
 ---
 
-# Cross Encoder Reranker
+# 크로스 인코더 리랭커
 
-This notebook shows how to implement reranker in a retriever with your own cross encoder from [Hugging Face cross encoder models](https://huggingface.co/cross-encoder) or Hugging Face models that implements cross encoder function ([example: BAAI/bge-reranker-base](https://huggingface.co/BAAI/bge-reranker-base)). `SagemakerEndpointCrossEncoder` enables you to use these HuggingFace models loaded on Sagemaker.
+이 노트북은 [Hugging Face 크로스 인코더 모델](https://huggingface.co/cross-encoder) 또는 크로스 인코더 기능을 구현하는 Hugging Face 모델([예: BAAI/bge-reranker-base](https://huggingface.co/BAAI/bge-reranker-base))을 사용하여 리랭커를 구현하는 방법을 보여줍니다. `SagemakerEndpointCrossEncoder`를 사용하면 Sagemaker에 로드된 이러한 HuggingFace 모델을 사용할 수 있습니다.
 
-This builds on top of ideas in the [ContextualCompressionRetriever](/docs/how_to/contextual_compression). Overall structure of this document came from [Cohere Reranker documentation](/docs/integrations/retrievers/cohere-reranker).
+이는 [ContextualCompressionRetriever](/docs/how_to/contextual_compression)의 아이디어를 기반으로 합니다. 이 문서의 전체 구조는 [Cohere Reranker 문서](/docs/integrations/retrievers/cohere-reranker)에서 가져왔습니다.
 
-For more about why cross encoder can be used as reranking mechanism in conjunction with embeddings for better retrieval, refer to [Hugging Face Cross-Encoders documentation](https://www.sbert.net/examples/applications/cross-encoder/README.html).
+크로스 인코더가 더 나은 검색을 위해 임베딩과 함께 리랭킹 메커니즘으로 사용될 수 있는 이유에 대한 자세한 내용은 [Hugging Face Cross-Encoders 문서](https://www.sbert.net/examples/applications/cross-encoder/README.html)를 참조하십시오.
 
 ```python
 #!pip install faiss sentence_transformers
@@ -18,6 +18,7 @@ For more about why cross encoder can be used as reranking mechanism in conjuncti
 
 #!pip install faiss-cpu sentence_transformers
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -31,8 +32,9 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+
+## 기본 벡터 저장소 리트리버 설정
+간단한 벡터 저장소 리트리버를 초기화하고 2023년 국정 연설을 (청크로) 저장하는 것으로 시작합시다. 리트리버를 설정하여 많은 수(20)의 문서를 검색할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Cross Encoder Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Cross Encoder Reranker"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Cross Encoder Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Cross Encoder Reranker"}]-->
@@ -56,8 +58,9 @@ docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
 
-## Doing reranking with CrossEncoderReranker
-Now let's wrap our base retriever with a `ContextualCompressionRetriever`. `CrossEncoderReranker` uses `HuggingFaceCrossEncoder` to rerank the returned results.
+
+## CrossEncoderReranker로 리랭킹 수행
+이제 기본 리트리버를 `ContextualCompressionRetriever`로 감쌉니다. `CrossEncoderReranker`는 반환된 결과를 리랭크하기 위해 `HuggingFaceCrossEncoder`를 사용합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Cross Encoder Reranker"}, {"imported": "CrossEncoderReranker", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.cross_encoder_rerank.CrossEncoderReranker.html", "title": "Cross Encoder Reranker"}, {"imported": "HuggingFaceCrossEncoder", "source": "langchain_community.cross_encoders", "docs": "https://api.python.langchain.com/en/latest/cross_encoders/langchain_community.cross_encoders.huggingface.HuggingFaceCrossEncoder.html", "title": "Cross Encoder Reranker"}]-->
@@ -74,6 +77,7 @@ compression_retriever = ContextualCompressionRetriever(
 compressed_docs = compression_retriever.invoke("What is the plan for the economy?")
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 
@@ -119,11 +123,13 @@ More infrastructure and innovation in America.
 
 More goods moving faster and cheaper in America.
 ```
-## Uploading Hugging Face model to SageMaker endpoint
 
-Here is a sample `inference.py` for creating an endpoint that works with `SagemakerEndpointCrossEncoder`. For more details with step-by-step guidance, refer to [this article](https://huggingface.co/blog/kchoe/deploy-any-huggingface-model-to-sagemaker). 
 
-It downloads Hugging Face model on the fly, so you do not need to keep the model artifacts such as `pytorch_model.bin` in your `model.tar.gz`.
+## Hugging Face 모델을 SageMaker 엔드포인트에 업로드
+
+다음은 `SagemakerEndpointCrossEncoder`와 함께 작동하는 엔드포인트를 생성하기 위한 샘플 `inference.py`입니다. 단계별 안내에 대한 자세한 내용은 [이 기사](https://huggingface.co/blog/kchoe/deploy-any-huggingface-model-to-sagemaker)를 참조하십시오.
+
+이 코드는 Hugging Face 모델을 즉시 다운로드하므로 `pytorch_model.bin`과 같은 모델 아티팩트를 `model.tar.gz`에 보관할 필요가 없습니다.
 
 ```python
 import json

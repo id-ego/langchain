@@ -1,35 +1,33 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/chat_model_rate_limiting/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/chat_model_rate_limiting.ipynb
+description: 모델 제공 API의 속도 제한을 처리하는 방법과 Langchain의 내장 속도 제한기를 사용하는 방법에 대한 가이드입니다.
 ---
 
-# How to handle rate limits
+# 속도 제한 처리 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [Chat models](/docs/concepts/#chat-models)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [채팅 모델](/docs/concepts/#chat-models)
 - [LLMs](/docs/concepts/#llms)
 :::
 
-You may find yourself in a situation where you are getting rate limited by the model provider API because you're making too many requests.
+모델 제공 API에서 너무 많은 요청을 보내고 있어 속도 제한을 받는 상황에 처할 수 있습니다.
 
-For example, this might happen if you are running many parallel queries to benchmark the chat model on a test dataset.
+예를 들어, 테스트 데이터셋에서 채팅 모델을 벤치마킹하기 위해 많은 병렬 쿼리를 실행하는 경우 이러한 일이 발생할 수 있습니다.
 
-If you are facing such a situation, you can use a rate limiter to help match the rate at which you're making request to the rate allowed
-by the API.
+이런 상황에 직면한 경우, 요청을 보내는 속도를 API에서 허용하는 속도와 일치시키기 위해 속도 제한기를 사용할 수 있습니다.
 
-:::info Requires `langchain-core >= 0.2.24`
+:::info `langchain-core >= 0.2.24` 필요
 
-This functionality was added in `langchain-core == 0.2.24`. Please make sure your package is up to date.
+이 기능은 `langchain-core == 0.2.24`에 추가되었습니다. 패키지가 최신인지 확인하세요.
 :::
 
-## Initialize a rate limiter
+## 속도 제한기 초기화
 
-Langchain comes with a built-in in memory rate limiter. This rate limiter is thread safe and can be shared by multiple threads in the same process.
+Langchain은 내장 메모리 속도 제한기를 제공합니다. 이 속도 제한기는 스레드 안전하며 동일한 프로세스 내의 여러 스레드에서 공유할 수 있습니다.
 
-The provided rate limiter can only limit the number of requests per unit time. It will not help if you need to also limited based on the size
-of the requests.
+제공된 속도 제한기는 단위 시간당 요청 수만 제한할 수 있습니다. 요청의 크기를 기준으로 제한해야 하는 경우에는 도움이 되지 않습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryRateLimiter", "source": "langchain_core.rate_limiters", "docs": "https://api.python.langchain.com/en/latest/rate_limiters/langchain_core.rate_limiters.InMemoryRateLimiter.html", "title": "How to handle rate limits"}]-->
@@ -42,9 +40,10 @@ rate_limiter = InMemoryRateLimiter(
 )
 ```
 
-## Choose a model
 
-Choose any model and pass to it the rate_limiter via the `rate_limiter` attribute.
+## 모델 선택
+
+모델을 선택하고 `rate_limiter` 속성을 통해 속도 제한기를 전달합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to handle rate limits"}]-->
@@ -61,7 +60,8 @@ from langchain_anthropic import ChatAnthropic
 model = ChatAnthropic(model_name="claude-3-opus-20240229", rate_limiter=rate_limiter)
 ```
 
-Let's confirm that the rate limiter works. We should only be able to invoke the model once per 10 seconds.
+
+속도 제한기가 작동하는지 확인해 봅시다. 우리는 10초에 한 번만 모델을 호출할 수 있어야 합니다.
 
 ```python
 for _ in range(5):
@@ -70,6 +70,7 @@ for _ in range(5):
     toc = time.time()
     print(toc - tic)
 ```
+
 ```output
 11.599073648452759
 10.7502121925354

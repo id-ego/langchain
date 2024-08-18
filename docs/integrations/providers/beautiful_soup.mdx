@@ -1,23 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/beautiful_soup/
+description: Beautiful Soup는 HTML 및 XML 문서를 파싱하는 파이썬 패키지로, 웹 스크래핑에 유용한 데이터 추출을 위한
+  구문 트리를 생성합니다.
 ---
 
-# Beautiful Soup
+# 아름다운 수프
 
-> [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) is a Python package for parsing
-HTML and XML documents (including having malformed markup, i.e. non-closed tags, so named after tag soup).
-It creates a parse tree for parsed pages that can be used to extract data from HTML,[3] which
-is useful for web scraping.
+> [아름다운 수프](https://www.crummy.com/software/BeautifulSoup/)는 HTML 및 XML 문서를 파싱하기 위한 파이썬 패키지입니다(형태가 잘못된 마크업, 즉 닫히지 않은 태그를 포함하여, 태그 수프(tag soup)라는 이름이 붙었습니다). 파싱된 페이지에 대한 파싱 트리를 생성하여 HTML에서 데이터를 추출하는 데 사용할 수 있으며,[3] 이는 웹 스크래핑에 유용합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```bash
 pip install beautifulsoup4
 ```
 
-## Document Transformer
 
-See a [usage example](/docs/integrations/document_transformers/beautiful_soup).
+## 문서 변환기
+
+[사용 예시](/docs/integrations/document_transformers/beautiful_soup)를 참조하세요.
 
 ```python
 from langchain_community.document_loaders import BeautifulSoupTransformer

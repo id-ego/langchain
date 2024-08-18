@@ -1,38 +1,39 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/stores/redis/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/stores/redis.ipynb
+description: RedisStore는 Redis 인스턴스에 모든 데이터를 저장하는 ByteStore 구현체로, 간편한 키-값 저장소를 제공합니다.
 sidebar_label: Redis
 ---
 
 # RedisStore
 
-This will help you get started with Redis [key-value stores](/docs/concepts/#key-value-stores). For detailed documentation of all `RedisStore` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/storage/langchain_community.storage.redis.RedisStore.html).
+이 문서는 Redis [키-값 저장소](/docs/concepts/#key-value-stores)를 시작하는 데 도움이 됩니다. 모든 `RedisStore` 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/storage/langchain_community.storage.redis.RedisStore.html)에서 확인하세요.
 
-## Overview
+## 개요
 
-The `RedisStore` is an implementation of `ByteStore` that stores everything in your Redis instance.
+`RedisStore`는 모든 것을 Redis 인스턴스에 저장하는 `ByteStore`의 구현입니다.
 
-### Integration details
+### 통합 세부정보
 
-| Class | Package | Local | [JS support](https://js.langchain.com/v0.2/docs/integrations/stores/ioredis_storage) | Package downloads | Package latest |
+| 클래스 | 패키지 | 로컬 | [JS 지원](https://js.langchain.com/v0.2/docs/integrations/stores/ioredis_storage) | 패키지 다운로드 | 패키지 최신 |
 | :--- | :--- | :---: | :---: |  :---: | :---: |
 | [RedisStore](https://api.python.langchain.com/en/latest/storage/langchain_community.storage.redis.RedisStore.html) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) | ✅ | ✅ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain_community?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain_community?style=flat-square&label=%20) |
 
-## Setup
+## 설정
 
-To create a Redis byte store, you'll need to set up a Redis instance. You can do this locally or via a provider - see our [Redis guide](/docs/integrations/providers/redis) for an overview of options.
+Redis 바이트 저장소를 생성하려면 Redis 인스턴스를 설정해야 합니다. 로컬에서 또는 제공자를 통해 설정할 수 있습니다. 옵션에 대한 개요는 [Redis 가이드](/docs/integrations/providers/redis)를 참조하세요.
 
-### Installation
+### 설치
 
-The LangChain `RedisStore` integration lives in the `langchain_community` package:
+LangChain `RedisStore` 통합은 `langchain_community` 패키지에 있습니다:
 
 ```python
 %pip install -qU langchain_community redis
 ```
 
-## Instantiation
 
-Now we can instantiate our byte store:
+## 인스턴스화
+
+이제 바이트 저장소를 인스턴스화할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "RedisStore", "source": "langchain_community.storage", "docs": "https://api.python.langchain.com/en/latest/storage/langchain_community.storage.redis.RedisStore.html", "title": "RedisStore"}]-->
@@ -41,9 +42,10 @@ from langchain_community.storage import RedisStore
 kv_store = RedisStore(redis_url="redis://localhost:6379")
 ```
 
-## Usage
 
-You can set data under keys like this using the `mset` method:
+## 사용법
+
+다음과 같이 `mset` 메서드를 사용하여 키 아래에 데이터를 설정할 수 있습니다:
 
 ```python
 kv_store.mset(
@@ -61,11 +63,13 @@ kv_store.mget(
 )
 ```
 
+
 ```output
 [b'value1', b'value2']
 ```
 
-And you can delete data using the `mdelete` method:
+
+그리고 `mdelete` 메서드를 사용하여 데이터를 삭제할 수 있습니다:
 
 ```python
 kv_store.mdelete(
@@ -83,14 +87,16 @@ kv_store.mget(
 )
 ```
 
+
 ```output
 [None, None]
 ```
 
-## API reference
 
-For detailed documentation of all `RedisStore` features and configurations, head to the API reference: https://api.python.langchain.com/en/latest/storage/langchain_community.storage.redis.RedisStore.html
+## API 참조
 
-## Related
+모든 `RedisStore` 기능 및 구성에 대한 자세한 문서는 API 참조에서 확인하세요: https://api.python.langchain.com/en/latest/storage/langchain_community.storage.redis.RedisStore.html
 
-- [Key-value store conceptual guide](/docs/concepts/#key-value-stores)
+## 관련
+
+- [키-값 저장소 개념 가이드](/docs/concepts/#key-value-stores)

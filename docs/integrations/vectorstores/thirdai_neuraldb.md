@@ -1,23 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/thirdai_neuraldb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/thirdai_neuraldb.ipynb
+description: ThirdAI NeuralDB는 CPU 친화적이고 세밀하게 조정 가능한 벡터 저장소로, 간편한 초기화 및 유사성 검색 기능을
+  제공합니다.
 ---
 
 # ThirdAI NeuralDB
 
-> [NeuralDB](https://www.thirdai.com/neuraldb-enterprise/) is a CPU-friendly and fine-tunable vector store developed by [ThirdAI](https://www.thirdai.com/).
+> [NeuralDB](https://www.thirdai.com/neuraldb-enterprise/)는 [ThirdAI](https://www.thirdai.com/)에서 개발한 CPU 친화적이고 세밀하게 조정 가능한 벡터 저장소입니다.
 
-## Initialization
+## 초기화
 
-There are two initialization methods:
-- From Scratch: Basic model
-- From Checkpoint: Load a model that was previously saved
+초기화 방법은 두 가지가 있습니다:
+- 처음부터: 기본 모델
+- 체크포인트에서: 이전에 저장된 모델 로드
 
-For all of the following initialization methods, the `thirdai_key` parameter can be omitted if the `THIRDAI_KEY` environment variable is set.
+다음의 모든 초기화 방법에 대해, `THIRDAI_KEY` 환경 변수가 설정되어 있으면 `thirdai_key` 매개변수를 생략할 수 있습니다.
 
-ThirdAI API keys can be obtained at https://www.thirdai.com/try-bolt/
+ThirdAI API 키는 https://www.thirdai.com/try-bolt/에서 얻을 수 있습니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "NeuralDBVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.thirdai_neuraldb.NeuralDBVectorStore.html", "title": "ThirdAI NeuralDB"}]-->
@@ -37,7 +38,8 @@ vectorstore = NeuralDBVectorStore.from_checkpoint(
 )
 ```
 
-## Inserting document sources
+
+## 문서 소스 삽입
 
 ```python
 vectorstore.insert(
@@ -68,20 +70,22 @@ vectorstore.insert(
 )
 ```
 
-## Similarity search
 
-To query the vectorstore, you can use the standard LangChain vectorstore method `similarity_search`, which returns a list of LangChain Document objects. Each document object represents a chunk of text from the indexed files. For example, it may contain a paragraph from one of the indexed PDF files. In addition to the text, the document's metadata field contains information such as the document's ID, the source of this document (which file it came from), and the score of the document.
+## 유사성 검색
+
+벡터 저장소를 쿼리하려면 표준 LangChain 벡터 저장소 메서드인 `similarity_search`를 사용할 수 있으며, 이는 LangChain 문서 객체의 목록을 반환합니다. 각 문서 객체는 인덱싱된 파일에서 텍스트의 조각을 나타냅니다. 예를 들어, 인덱싱된 PDF 파일 중 하나의 단락을 포함할 수 있습니다. 텍스트 외에도 문서의 메타데이터 필드는 문서의 ID, 이 문서의 출처(어떤 파일에서 왔는지) 및 문서의 점수와 같은 정보를 포함합니다.
 
 ```python
 # This returns a list of LangChain Document objects
 documents = vectorstore.similarity_search("query", k=10)
 ```
 
-## Fine tuning
 
-NeuralDBVectorStore can be fine-tuned to user behavior and domain-specific knowledge. It can be fine-tuned in two ways:
-1. Association: the vectorstore associates a source phrase with a target phrase. When the vectorstore sees the source phrase, it will also consider results that are relevant to the target phrase.
-2. Upvoting: the vectorstore upweights the score of a document for a specific query. This is useful when you want to fine-tune the vectorstore to user behavior. For example, if a user searches "how is a car manufactured" and likes the returned document with id 52, then we can upvote the document with id 52 for the query "how is a car manufactured".
+## 세밀 조정
+
+NeuralDBVectorStore는 사용자 행동 및 도메인 특정 지식에 맞게 세밀하게 조정할 수 있습니다. 두 가지 방법으로 세밀 조정할 수 있습니다:
+1. 연관: 벡터 저장소가 소스 문구를 대상 문구와 연관시킵니다. 벡터 저장소가 소스 문구를 볼 때, 대상 문구와 관련된 결과도 고려합니다.
+2. 업보팅: 벡터 저장소가 특정 쿼리에 대해 문서의 점수를 높입니다. 이는 사용자의 행동에 맞게 벡터 저장소를 세밀 조정할 때 유용합니다. 예를 들어, 사용자가 "자동차는 어떻게 제조되나요"를 검색하고 ID가 52인 반환된 문서를 좋아하면, "자동차는 어떻게 제조되나요" 쿼리에 대해 ID가 52인 문서를 업보팅할 수 있습니다.
 
 ```python
 vectorstore.associate(source="source phrase", target="target phrase")
@@ -101,7 +105,8 @@ vectorstore.upvote_batch(
 )
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

@@ -1,20 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/kinetica/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/kinetica.ipynb
+description: Kinetica 벡터 저장소 API를 사용하여 유사성 검색을 수행하고, OpenAI 임베딩을 활용하여 문서의 다양성을 최적화하는
+  방법을 보여줍니다.
 sidebar_label: Kinetica
 ---
 
 # Kinetica Vectorstore API
 
-> [Kinetica](https://www.kinetica.com/) is a database with integrated support for vector similarity search
+> [Kinetica](https://www.kinetica.com/)는 벡터 유사성 검색을 통합 지원하는 데이터베이스입니다.
 
-It supports:
-- exact and approximate nearest neighbor search
-- L2 distance, inner product, and cosine distance
+지원하는 기능:
+- 정확한 및 근사 최근접 이웃 검색
+- L2 거리, 내적, 코사인 거리
 
-This notebook shows how to use the Kinetica vector store (`Kinetica`).
+이 노트북은 Kinetica 벡터 저장소(`Kinetica`)를 사용하는 방법을 보여줍니다.
 
-This needs an instance of Kinetica which can easily be setup using the instructions given here - [installation instruction](https://www.kinetica.com/developer-edition/).
+Kinetica의 인스턴스가 필요하며, 이는 여기에서 제공된 지침을 사용하여 쉽게 설정할 수 있습니다 - [설치 지침](https://www.kinetica.com/developer-edition/).
 
 ```python
 # Pip install necessary package
@@ -22,6 +23,7 @@ This needs an instance of Kinetica which can easily be setup using the instructi
 %pip install gpudb==7.2.0.9
 %pip install --upgrade --quiet  tiktoken
 ```
+
 ```output
 
 [1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m23.2.1[0m[39;49m -> [0m[32;49m24.0[0m
@@ -39,7 +41,8 @@ Note: you may need to restart the kernel to use updated packages.
 [1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpip install --upgrade pip[0m
 Note: you may need to restart the kernel to use updated packages.
 ```
-We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
+
+우리는 `OpenAIEmbeddings`를 사용하고 싶으므로 OpenAI API 키를 받아야 합니다.
 
 ```python
 import getpass
@@ -48,6 +51,7 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
+
 ```python
 ## Loading Environment Variables
 from dotenv import load_dotenv
@@ -55,9 +59,11 @@ from dotenv import load_dotenv
 load_dotenv()
 ```
 
+
 ```output
 False
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Kinetica Vectorstore API"}, {"imported": "DistanceStrategy", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.DistanceStrategy.html", "title": "Kinetica Vectorstore API"}, {"imported": "Kinetica", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.Kinetica.html", "title": "Kinetica Vectorstore API"}, {"imported": "KineticaSettings", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.KineticaSettings.html", "title": "Kinetica Vectorstore API"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Kinetica Vectorstore API"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Kinetica Vectorstore API"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Kinetica Vectorstore API"}]-->
@@ -72,6 +78,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
+
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
 documents = loader.load()
@@ -80,6 +87,7 @@ docs = text_splitter.split_documents(documents)
 
 embeddings = OpenAIEmbeddings()
 ```
+
 
 ```python
 # Kinetica needs the connection to the database.
@@ -94,7 +102,8 @@ def create_config() -> KineticaSettings:
     return KineticaSettings(host=HOST, username=USERNAME, password=PASSWORD)
 ```
 
-## Similarity Search with Euclidean Distance (Default)
+
+## 유클리드 거리로 유사성 검색 (기본값)
 
 ```python
 # The Kinetica Module will try to create a table with the name of the collection.
@@ -111,10 +120,12 @@ db = Kinetica.from_documents(
 )
 ```
 
+
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db.similarity_search_with_score(query)
 ```
+
 
 ```python
 for doc, score in docs_with_score:
@@ -123,6 +134,7 @@ for doc, score in docs_with_score:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Score:  0.6077010035514832
@@ -173,12 +185,14 @@ We’re putting in place dedicated immigration judges so families fleeing persec
 We’re securing commitments and supporting partners in South and Central America to host more refugees and secure their own borders.
 --------------------------------------------------------------------------------
 ```
-## Maximal Marginal Relevance Search (MMR)
-Maximal marginal relevance optimizes for similarity to query AND diversity among selected documents.
+
+## 최대 한계 관련성 검색 (MMR)
+최대 한계 관련성은 쿼리에 대한 유사성과 선택된 문서 간의 다양성을 최적화합니다.
 
 ```python
 docs_with_score = db.max_marginal_relevance_search_with_score(query)
 ```
+
 
 ```python
 for doc, score in docs_with_score:
@@ -187,6 +201,7 @@ for doc, score in docs_with_score:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Score:  0.6077010035514832
@@ -259,10 +274,11 @@ This is personal to me and Jill, to Kamala, and to so many of you.
 Cancer is the #2 cause of death in America–second only to heart disease.
 --------------------------------------------------------------------------------
 ```
-## Working with vectorstore
 
-Above, we created a vectorstore from scratch. However, often times we want to work with an existing vectorstore.
-In order to do that, we can initialize it directly.
+## 벡터 저장소 작업하기
+
+위에서는 처음부터 벡터 저장소를 만들었습니다. 그러나 종종 기존 벡터 저장소와 작업하고 싶습니다.
+이를 위해 우리는 직접 초기화할 수 있습니다.
 
 ```python
 store = Kinetica(
@@ -272,41 +288,49 @@ store = Kinetica(
 )
 ```
 
-### Add documents
-We can add documents to the existing vectorstore.
+
+### 문서 추가
+기존 벡터 저장소에 문서를 추가할 수 있습니다.
 
 ```python
 store.add_documents([Document(page_content="foo")])
 ```
 
+
 ```output
 ['b94dc67c-ce7e-11ee-b8cb-b940b0e45762']
 ```
+
 
 ```python
 docs_with_score = db.similarity_search_with_score("foo")
 ```
 
+
 ```python
 docs_with_score[0]
 ```
+
 
 ```output
 (Document(page_content='foo'), 0.0)
 ```
 
+
 ```python
 docs_with_score[1]
 ```
+
 
 ```output
 (Document(page_content='A former top litigator in private practice. A former federal public defender. And from a family of public school educators and police officers. A consensus builder. Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democrats and Republicans. \n\nAnd if we are to advance liberty and justice, we need to secure the Border and fix the immigration system. \n\nWe can do both. At our border, we’ve installed new technology like cutting-edge scanners to better detect drug smuggling.  \n\nWe’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.  \n\nWe’re putting in place dedicated immigration judges so families fleeing persecution and violence can have their cases heard faster. \n\nWe’re securing commitments and supporting partners in South and Central America to host more refugees and secure their own borders.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
  0.6946534514427185)
 ```
 
-### Overriding a vectorstore
 
-If you have an existing collection, you override it by doing `from_documents` and setting `pre_delete_collection` = True
+### 벡터 저장소 덮어쓰기
+
+기존 컬렉션이 있는 경우 `from_documents`를 사용하여 덮어쓰고 `pre_delete_collection` = True로 설정합니다.
 
 ```python
 db = Kinetica.from_documents(
@@ -318,33 +342,40 @@ db = Kinetica.from_documents(
 )
 ```
 
+
 ```python
 docs_with_score = db.similarity_search_with_score("foo")
 ```
 
+
 ```python
 docs_with_score[0]
 ```
+
 
 ```output
 (Document(page_content='A former top litigator in private practice. A former federal public defender. And from a family of public school educators and police officers. A consensus builder. Since she’s been nominated, she’s received a broad range of support—from the Fraternal Order of Police to former judges appointed by Democrats and Republicans. \n\nAnd if we are to advance liberty and justice, we need to secure the Border and fix the immigration system. \n\nWe can do both. At our border, we’ve installed new technology like cutting-edge scanners to better detect drug smuggling.  \n\nWe’ve set up joint patrols with Mexico and Guatemala to catch more human traffickers.  \n\nWe’re putting in place dedicated immigration judges so families fleeing persecution and violence can have their cases heard faster. \n\nWe’re securing commitments and supporting partners in South and Central America to host more refugees and secure their own borders.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
  0.6946534514427185)
 ```
 
-### Using a VectorStore as a Retriever
+
+### 검색기로서의 벡터 저장소 사용하기
 
 ```python
 retriever = store.as_retriever()
 ```
 
+
 ```python
 print(retriever)
 ```
+
 ```output
 tags=['Kinetica', 'OpenAIEmbeddings'] vectorstore=<langchain_community.vectorstores.kinetica.Kinetica object at 0x7f1644375e20>
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

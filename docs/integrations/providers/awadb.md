@@ -1,31 +1,34 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/awadb/
+description: AwaDB는 LLM 애플리케이션에서 사용되는 임베딩 벡터의 검색 및 저장을 위한 AI 네이티브 데이터베이스입니다.
 ---
 
 # AwaDB
 
-> [AwaDB](https://github.com/awa-ai/awadb) is an AI Native database for the search and storage of embedding vectors used by LLM Applications.
+> [AwaDB](https://github.com/awa-ai/awadb)는 LLM 애플리케이션에서 사용되는 임베딩 벡터의 검색 및 저장을 위한 AI 네이티브 데이터베이스입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```bash
 pip install awadb
 ```
 
-## Vector store
+
+## 벡터 저장소
 
 ```python
 <!--IMPORTS:[{"imported": "AwaDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.awadb.AwaDB.html", "title": "AwaDB"}]-->
 from langchain_community.vectorstores import AwaDB
 ```
 
-See a [usage example](/docs/integrations/vectorstores/awadb).
 
-## Embedding models
+[사용 예제](/docs/integrations/vectorstores/awadb)를 참조하세요.
+
+## 임베딩 모델
 
 ```python
 <!--IMPORTS:[{"imported": "AwaEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.awa.AwaEmbeddings.html", "title": "AwaDB"}]-->
 from langchain_community.embeddings import AwaEmbeddings
 ```
 
-See a [usage example](/docs/integrations/text_embedding/awadb).
+
+[사용 예제](/docs/integrations/text_embedding/awadb)를 참조하세요.

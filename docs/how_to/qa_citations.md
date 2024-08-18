@@ -1,31 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/qa_citations/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/qa_citations.ipynb
+description: 이 가이드는 RAG 애플리케이션에서 응답 생성 시 출처 문서의 인용 방법을 다룹니다. 다섯 가지 방법을 소개합니다.
 ---
 
-# How to get a RAG application to add citations
+# RAG 애플리케이션에 인용 추가하는 방법
 
-This guide reviews methods to get a model to cite which parts of the source documents it referenced in generating its response.
+이 가이드는 모델이 응답을 생성할 때 참조한 소스 문서의 어떤 부분을 인용하는지에 대한 방법을 검토합니다.
 
-We will cover five methods:
+다섯 가지 방법을 다룰 것입니다:
 
-1. Using tool-calling to cite document IDs;
-2. Using tool-calling to cite documents IDs and provide text snippets;
-3. Direct prompting;
-4. Retrieval post-processing (i.e., compressing the retrieved context to make it more relevant);
-5. Generation post-processing (i.e., issuing a second LLM call to annotate a generated answer with citations).
+1. 도구 호출을 사용하여 문서 ID 인용하기;
+2. 도구 호출을 사용하여 문서 ID와 텍스트 스니펫 인용하기;
+3. 직접 프롬프트하기;
+4. 검색 후 처리(즉, 검색된 맥락을 압축하여 더 관련성 있게 만들기);
+5. 생성 후 처리(즉, 생성된 답변에 인용을 추가하기 위해 두 번째 LLM 호출하기).
 
-We generally suggest using the first item of the list that works for your use-case. That is, if your model supports tool-calling, try methods 1 or 2; otherwise, or if those fail, advance down the list.
+일반적으로 귀하의 사용 사례에 맞는 첫 번째 항목을 사용하는 것을 권장합니다. 즉, 모델이 도구 호출을 지원하는 경우 방법 1 또는 2를 시도하고, 그렇지 않거나 실패할 경우 목록을 따라 진행하십시오.
 
-Let's first create a simple RAG chain. To start we'll just retrieve from Wikipedia using the [WikipediaRetriever](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.wikipedia.WikipediaRetriever.html).
+먼저 간단한 RAG 체인을 만들어 보겠습니다. 시작하기 위해 [WikipediaRetriever](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.wikipedia.WikipediaRetriever.html)를 사용하여 위키피디아에서 검색할 것입니다.
 
-## Setup
+## 설정
 
-First we'll need to install some dependencies and set environment vars for the models we'll be using.
+먼저 사용할 모델에 대한 종속성을 설치하고 환경 변수를 설정해야 합니다.
 
 ```python
 %pip install -qU langchain langchain-openai langchain-anthropic langchain-community wikipedia
 ```
+
 
 ```python
 import getpass
@@ -39,12 +40,12 @@ os.environ["ANTHROPIC_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-Let's first select a LLM:
+
+먼저 LLM을 선택합시다:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
-
 
 ```python
 <!--IMPORTS:[{"imported": "WikipediaRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.wikipedia.WikipediaRetriever.html", "title": "How to get a RAG application to add citations"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to get a RAG application to add citations"}]-->
@@ -69,6 +70,7 @@ prompt = ChatPromptTemplate.from_messages(
 )
 prompt.pretty_print()
 ```
+
 ```output
 ================================[1m System Message [0m================================
 
@@ -80,7 +82,8 @@ Here are the Wikipedia articles: [33;1m[1;3m{context}[0m
 
 [33;1m[1;3m{input}[0m
 ```
-Now that we've got a model, retriver and prompt, let's chain them all together. We'll need to add some logic for formatting our retrieved Documents to a string that can be passed to our prompt. Following the how-to guide on [adding citations](/docs/how_to/qa_citations) to a RAG application, we'll make it so our chain returns both the answer and the retrieved Documents.
+
+모델, 검색기 및 프롬프트를 준비했으니 이제 이들을 모두 연결해 보겠습니다. 검색된 문서를 프롬프트에 전달할 수 있는 문자열로 포맷하는 논리를 추가해야 합니다. [인용 추가하기](/docs/how_to/qa_citations)에 대한 가이드를 따라 체인이 답변과 검색된 문서를 모두 반환하도록 만들겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to get a RAG application to add citations"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to get a RAG application to add citations"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to get a RAG application to add citations"}]-->
@@ -109,41 +112,49 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 )
 ```
 
+
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
 
+
 ```python
 print(result.keys())
 ```
+
 ```output
 dict_keys(['input', 'context', 'answer'])
 ```
 
+
 ```python
 print(result["context"][0])
 ```
+
 ```output
 page_content='The cheetah (Acinonyx jubatus) is a large cat and the fastest land animal. It has a tawny to creamy white or pale buff fur that is marked with evenly spaced, solid black spots. The head is small and rounded, with a short snout and black tear-like facial streaks. It reaches 67–94 cm (26–37 in) at the shoulder, and the head-and-body length is between 1.1 and 1.5 m (3 ft 7 in and 4 ft 11 in). Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.\nThe cheetah was first described in the late 18th century. Four subspecies are recognised today that are native to Africa and central Iran. An African subspecies was introduced to India in 2022. It is now distributed mainly in small, fragmented populations in northwestern, eastern and southern Africa and central Iran. It lives in a variety of habitats such as savannahs in the Serengeti, arid mountain ranges in the Sahara, and hilly desert terrain.\nThe cheetah lives in three main social groups: females and their cubs, male "coalitions", and solitary males. While females lead a nomadic life searching for prey in large home ranges, males are more sedentary and instead establish much smaller territories in areas with plentiful prey and access to females. The cheetah is active during the day, with peaks during dawn and dusk. It feeds on small- to medium-sized prey, mostly weighing under 40 kg (88 lb), and prefers medium-sized ungulates such as impala, springbok and Thomson\'s gazelles. The cheetah typically stalks its prey within 60–100 m (200–330 ft) before charging towards it, trips it during the chase and bites its throat to suffocate it to death. It breeds throughout the year. After a gestation of nearly three months, females give birth to a litter of three or four cubs. Cheetah cubs are highly vulnerable to predation by other large carnivores. They are weaned a' metadata={'title': 'Cheetah', 'summary': 'The cheetah (Acinonyx jubatus) is a large cat and the fastest land animal. It has a tawny to creamy white or pale buff fur that is marked with evenly spaced, solid black spots. The head is small and rounded, with a short snout and black tear-like facial streaks. It reaches 67–94 cm (26–37 in) at the shoulder, and the head-and-body length is between 1.1 and 1.5 m (3 ft 7 in and 4 ft 11 in). Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.\nThe cheetah was first described in the late 18th century. Four subspecies are recognised today that are native to Africa and central Iran. An African subspecies was introduced to India in 2022. It is now distributed mainly in small, fragmented populations in northwestern, eastern and southern Africa and central Iran. It lives in a variety of habitats such as savannahs in the Serengeti, arid mountain ranges in the Sahara, and hilly desert terrain.\nThe cheetah lives in three main social groups: females and their cubs, male "coalitions", and solitary males. While females lead a nomadic life searching for prey in large home ranges, males are more sedentary and instead establish much smaller territories in areas with plentiful prey and access to females. The cheetah is active during the day, with peaks during dawn and dusk. It feeds on small- to medium-sized prey, mostly weighing under 40 kg (88 lb), and prefers medium-sized ungulates such as impala, springbok and Thomson\'s gazelles. The cheetah typically stalks its prey within 60–100 m (200–330 ft) before charging towards it, trips it during the chase and bites its throat to suffocate it to death. It breeds throughout the year. After a gestation of nearly three months, females give birth to a litter of three or four cubs. Cheetah cubs are highly vulnerable to predation by other large carnivores. They are weaned at around four months and are independent by around 20 months of age.\nThe cheetah is threatened by habitat loss, conflict with humans, poaching and high susceptibility to diseases. In 2016, the global cheetah population was estimated at 7,100 individuals in the wild; it is listed as Vulnerable on the IUCN Red List. It has been widely depicted in art, literature, advertising, and animation. It was tamed in ancient Egypt and trained for hunting ungulates in the Arabian Peninsula and India. It has been kept in zoos since the early 19th century.', 'source': 'https://en.wikipedia.org/wiki/Cheetah'}
 ```
 
+
 ```python
 print(result["answer"])
 ```
+
 ```output
 Cheetahs are capable of running at speeds of 93 to 104 km/h (58 to 65 mph). They have evolved specialized adaptations for speed, including a light build, long thin legs, and a long tail.
 ```
-LangSmith trace: https://smith.langchain.com/public/0472c5d1-49dc-4c1c-8100-61910067d7ed/r
 
-## Function-calling
+LangSmith 추적: https://smith.langchain.com/public/0472c5d1-49dc-4c1c-8100-61910067d7ed/r
 
-If your LLM of choice implements a [tool-calling](/docs/concepts#functiontool-calling) feature, you can use it to make the model specify which of the provided documents it's referencing when generating its answer. LangChain tool-calling models implement a `.with_structured_output` method which will force generation adhering to a desired schema (see for example [here](https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html#langchain_openai.chat_models.base.ChatOpenAI.with_structured_output)).
+## 함수 호출
 
-### Cite documents
+선택한 LLM이 [도구 호출](/docs/concepts#functiontool-calling) 기능을 구현하는 경우, 모델이 응답을 생성할 때 참조하는 제공된 문서 중 어떤 것을 명시하도록 사용할 수 있습니다. LangChain 도구 호출 모델은 원하는 스키마를 준수하도록 생성을 강제하는 `.with_structured_output` 메서드를 구현합니다(예를 들어 [여기](https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html#langchain_openai.chat_models.base.ChatOpenAI.with_structured_output)를 참조하십시오).
 
-To cite documents using an identifier, we format the identifiers into the prompt, then use `.with_structured_output` to coerce the LLM to reference these identifiers in its output.
+### 문서 인용하기
 
-First we define a schema for the output. The `.with_structured_output` supports multiple formats, including JSON schema and Pydantic. Here we will use Pydantic:
+식별자를 사용하여 문서를 인용하려면, 식별자를 프롬프트에 포맷한 다음, `.with_structured_output`을 사용하여 LLM이 출력에서 이러한 식별자를 참조하도록 강제합니다.
+
+먼저 출력에 대한 스키마를 정의합니다. `.with_structured_output`은 JSON 스키마 및 Pydantic을 포함한 여러 형식을 지원합니다. 여기서는 Pydantic을 사용할 것입니다:
 
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -162,7 +173,8 @@ class CitedAnswer(BaseModel):
     )
 ```
 
-Let's see what the model output is like when we pass in our functions and a user input:
+
+사용자 입력과 함께 함수와 함께 전달할 때 모델 출력이 어떤지 살펴보겠습니다:
 
 ```python
 structured_llm = llm.with_structured_output(CitedAnswer)
@@ -182,25 +194,29 @@ result = structured_llm.invoke(example_q)
 result
 ```
 
+
 ```output
 CitedAnswer(answer='Brian\'s height is 5\'11".', citations=[1, 3])
 ```
 
-Or as a dict:
+
+또는 사전 형식으로:
 
 ```python
 result.dict()
 ```
 
+
 ```output
 {'answer': 'Brian\'s height is 5\'11".', 'citations': [1, 3]}
 ```
 
-Now we structure the source identifiers into the prompt to replicate with our chain. We will make three changes:
 
-1. Update the prompt to include source identifiers;
-2. Use the `structured_llm` (i.e., `llm.with_structured_output(CitedAnswer));
-3. Remove the `StrOutputParser`, to retain the Pydantic object in the output.
+이제 소스 식별자를 프롬프트에 구조화하여 체인과 함께 복제합니다. 세 가지 변경을 하겠습니다:
+
+1. 프롬프트를 소스 식별자를 포함하도록 업데이트합니다;
+2. `structured_llm`을 사용합니다(즉, `llm.with_structured_output(CitedAnswer)`);
+3. `StrOutputParser`를 제거하여 출력에서 Pydantic 객체를 유지합니다.
 
 ```python
 def format_docs_with_id(docs: List[Document]) -> str:
@@ -224,31 +240,37 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 )
 ```
 
+
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
 
+
 ```python
 print(result["answer"])
 ```
+
 ```output
 answer='Cheetahs can run at speeds of 93 to 104 km/h (58 to 65 mph). They are known as the fastest land animals.' citations=[0]
 ```
-We can inspect the document at index 0, which the model cited:
+
+모델이 인용한 문서의 인덱스 0을 검사할 수 있습니다:
 
 ```python
 print(result["context"][0])
 ```
+
 ```output
 page_content='The cheetah (Acinonyx jubatus) is a large cat and the fastest land animal. It has a tawny to creamy white or pale buff fur that is marked with evenly spaced, solid black spots. The head is small and rounded, with a short snout and black tear-like facial streaks. It reaches 67–94 cm (26–37 in) at the shoulder, and the head-and-body length is between 1.1 and 1.5 m (3 ft 7 in and 4 ft 11 in). Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.\nThe cheetah was first described in the late 18th century. Four subspecies are recognised today that are native to Africa and central Iran. An African subspecies was introduced to India in 2022. It is now distributed mainly in small, fragmented populations in northwestern, eastern and southern Africa and central Iran. It lives in a variety of habitats such as savannahs in the Serengeti, arid mountain ranges in the Sahara, and hilly desert terrain.\nThe cheetah lives in three main social groups: females and their cubs, male "coalitions", and solitary males. While females lead a nomadic life searching for prey in large home ranges, males are more sedentary and instead establish much smaller territories in areas with plentiful prey and access to females. The cheetah is active during the day, with peaks during dawn and dusk. It feeds on small- to medium-sized prey, mostly weighing under 40 kg (88 lb), and prefers medium-sized ungulates such as impala, springbok and Thomson\'s gazelles. The cheetah typically stalks its prey within 60–100 m (200–330 ft) before charging towards it, trips it during the chase and bites its throat to suffocate it to death. It breeds throughout the year. After a gestation of nearly three months, females give birth to a litter of three or four cubs. Cheetah cubs are highly vulnerable to predation by other large carnivores. They are weaned a' metadata={'title': 'Cheetah', 'summary': 'The cheetah (Acinonyx jubatus) is a large cat and the fastest land animal. It has a tawny to creamy white or pale buff fur that is marked with evenly spaced, solid black spots. The head is small and rounded, with a short snout and black tear-like facial streaks. It reaches 67–94 cm (26–37 in) at the shoulder, and the head-and-body length is between 1.1 and 1.5 m (3 ft 7 in and 4 ft 11 in). Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.\nThe cheetah was first described in the late 18th century. Four subspecies are recognised today that are native to Africa and central Iran. An African subspecies was introduced to India in 2022. It is now distributed mainly in small, fragmented populations in northwestern, eastern and southern Africa and central Iran. It lives in a variety of habitats such as savannahs in the Serengeti, arid mountain ranges in the Sahara, and hilly desert terrain.\nThe cheetah lives in three main social groups: females and their cubs, male "coalitions", and solitary males. While females lead a nomadic life searching for prey in large home ranges, males are more sedentary and instead establish much smaller territories in areas with plentiful prey and access to females. The cheetah is active during the day, with peaks during dawn and dusk. It feeds on small- to medium-sized prey, mostly weighing under 40 kg (88 lb), and prefers medium-sized ungulates such as impala, springbok and Thomson\'s gazelles. The cheetah typically stalks its prey within 60–100 m (200–330 ft) before charging towards it, trips it during the chase and bites its throat to suffocate it to death. It breeds throughout the year. After a gestation of nearly three months, females give birth to a litter of three or four cubs. Cheetah cubs are highly vulnerable to predation by other large carnivores. They are weaned at around four months and are independent by around 20 months of age.\nThe cheetah is threatened by habitat loss, conflict with humans, poaching and high susceptibility to diseases. In 2016, the global cheetah population was estimated at 7,100 individuals in the wild; it is listed as Vulnerable on the IUCN Red List. It has been widely depicted in art, literature, advertising, and animation. It was tamed in ancient Egypt and trained for hunting ungulates in the Arabian Peninsula and India. It has been kept in zoos since the early 19th century.', 'source': 'https://en.wikipedia.org/wiki/Cheetah'}
 ```
-LangSmith trace: https://smith.langchain.com/public/aff39dc7-3e09-4d64-8083-87026d975534/r
 
-### Cite snippets
+LangSmith 추적: https://smith.langchain.com/public/aff39dc7-3e09-4d64-8083-87026d975534/r
 
-To return text spans (perhaps in addition to source identifiers), we can use the same approach. The only change will be to build a more complex output schema, here using Pydantic, that includes a "quote" alongside a source identifier.
+### 스니펫 인용하기
 
-*Aside: Note that if we break up our documents so that we have many documents with only a sentence or two instead of a few long documents, citing documents becomes roughly equivalent to citing snippets, and may be easier for the model because the model just needs to return an identifier for each snippet instead of the actual text. Probably worth trying both approaches and evaluating.*
+텍스트 범위를 반환하려면(아마도 소스 식별자와 함께), 동일한 접근 방식을 사용할 수 있습니다. 유일한 변경 사항은 소스 식별자와 함께 "인용"을 포함하는 더 복잡한 출력 스키마를 Pydantic을 사용하여 구축하는 것입니다.
+
+*참고: 문서를 문장이나 두 개로 나누어 긴 문서 몇 개 대신 많은 문서가 있는 경우, 문서를 인용하는 것은 대략적으로 스니펫을 인용하는 것과 동등해지며, 모델이 실제 텍스트 대신 각 스니펫에 대한 식별자만 반환하면 되므로 모델에게 더 쉬울 수 있습니다. 두 가지 접근 방식을 모두 시도하고 평가할 가치가 있습니다.*
 
 ```python
 class Citation(BaseModel):
@@ -274,6 +296,7 @@ class QuotedAnswer(BaseModel):
     )
 ```
 
+
 ```python
 rag_chain_from_docs = (
     RunnablePassthrough.assign(context=(lambda x: format_docs_with_id(x["context"])))
@@ -288,25 +311,29 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 )
 ```
 
+
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
 
-Here we see that the model has extracted a relevant snippet of text from source 0:
+
+여기에서 모델이 소스 0에서 관련 스니펫을 추출한 것을 볼 수 있습니다:
 
 ```python
 result["answer"]
 ```
 
+
 ```output
 QuotedAnswer(answer='Cheetahs can run at speeds of 93 to 104 km/h (58 to 65 mph).', citations=[Citation(source_id=0, quote='The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.')])
 ```
 
-LangSmith trace: https://smith.langchain.com/public/0f638cc9-8409-4a53-9010-86ac28144129/r
 
-## Direct prompting
+LangSmith 추적: https://smith.langchain.com/public/0f638cc9-8409-4a53-9010-86ac28144129/r
 
-Many models don't support function-calling. We can achieve similar results with direct prompting. Let's try instructing a model to generate structured XML for its output:
+## 직접 프롬프트하기
+
+많은 모델이 함수 호출을 지원하지 않습니다. 직접 프롬프트를 통해 유사한 결과를 얻을 수 있습니다. 모델에게 출력에 대한 구조화된 XML을 생성하도록 지시해 보겠습니다:
 
 ```python
 xml_system = """You're a helpful AI assistant. Given a user question and some Wikipedia article snippets, \
@@ -331,11 +358,12 @@ xml_prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-We now make similar small updates to our chain:
 
-1. We update the formatting function to wrap the retrieved context in XML tags;
-2. We do not use `.with_structured_output` (e.g., because it does not exist for a model);
-3. We use [XMLOutputParser](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.xml.XMLOutputParser.html) in place of `StrOutputParser` to parse the answer into a dict.
+이제 체인에 대해 유사한 작은 업데이트를 합니다:
+
+1. 검색된 맥락을 XML 태그로 감싸도록 포맷팅 함수를 업데이트합니다;
+2. 모델에 대해 `.with_structured_output`을 사용하지 않습니다(예: 모델에 존재하지 않기 때문에);
+3. `StrOutputParser` 대신 [XMLOutputParser](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.xml.XMLOutputParser.html)를 사용하여 답변을 사전으로 구문 분석합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "XMLOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.xml.XMLOutputParser.html", "title": "How to get a RAG application to add citations"}]-->
@@ -368,15 +396,18 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 )
 ```
 
+
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
 
-Note that citations are again structured into the answer:
+
+인용이 다시 답변에 구조화되어 있다는 점에 유의하십시오:
 
 ```python
 result["answer"]
 ```
+
 
 ```output
 {'cited_answer': [{'answer': 'Cheetahs are capable of running at 93 to 104 km/h (58 to 65 mph).'},
@@ -384,13 +415,14 @@ result["answer"]
       {'quote': 'The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.'}]}]}]}
 ```
 
-LangSmith trace: https://smith.langchain.com/public/a3636c70-39c6-4c8f-bc83-1c7a174c237e/r
 
-## Retrieval post-processing
+LangSmith 추적: https://smith.langchain.com/public/a3636c70-39c6-4c8f-bc83-1c7a174c237e/r
 
-Another approach is to post-process our retrieved documents to compress the content, so that the source content is already minimal enough that we don't need the model to cite specific sources or spans. For example, we could break up each document into a sentence or two, embed those and keep only the most relevant ones. LangChain has some built-in components for this. Here we'll use a [RecursiveCharacterTextSplitter](https://api.python.langchain.com/en/latest/text_splitter/langchain_text_splitters.RecursiveCharacterTextSplitter.html#langchain_text_splitters.RecursiveCharacterTextSplitter), which creates chunks of a sepacified size by splitting on separator substrings, and an [EmbeddingsFilter](https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter.html#langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter), which keeps only the texts with the most relevant embeddings.
+## 검색 후 처리
 
-This approach effectively swaps our original retriever with an updated one that compresses the documents. To start, we build the retriever:
+또 다른 접근 방식은 검색된 문서를 후처리하여 내용을 압축하여 소스 내용이 이미 최소화되어 모델이 특정 소스나 범위를 인용할 필요가 없도록 하는 것입니다. 예를 들어, 각 문서를 한두 문장으로 나누고 이를 임베드하여 가장 관련성이 높은 것만 유지할 수 있습니다. LangChain에는 이를 위한 몇 가지 내장 구성 요소가 있습니다. 여기서는 구분자 하위 문자열을 기준으로 지정된 크기로 청크를 생성하는 [RecursiveCharacterTextSplitter](https://api.python.langchain.com/en/latest/text_splitter/langchain_text_splitters.RecursiveCharacterTextSplitter.html#langchain_text_splitters.RecursiveCharacterTextSplitter)와 가장 관련성이 높은 임베딩만 유지하는 [EmbeddingsFilter](https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter.html#langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter)를 사용할 것입니다.
+
+이 접근 방식은 원래 검색기를 업데이트된 것으로 교체하여 문서를 압축합니다. 시작하기 위해 검색기를 구축합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "EmbeddingsFilter", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.document_compressors.embeddings_filter.EmbeddingsFilter.html", "title": "How to get a RAG application to add citations"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "How to get a RAG application to add citations"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to get a RAG application to add citations"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to get a RAG application to add citations"}]-->
@@ -424,6 +456,7 @@ for doc in docs:
     print(doc.page_content)
     print("\n\n")
 ```
+
 ```output
 Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail
 
@@ -464,7 +497,8 @@ In India, four cheetahs of the subspecies are living in Kuno National Park in Ma
 Acinonyx jubatus velox proposed in 1913 by Edmund Heller on basis of a cheetah that was shot by Kermit Roosevelt in June 1909 in the Kenyan highlands.
 Acinonyx rex proposed in 1927 by Reginald Innes Pocock on basis of a specimen from the Umvukwe Range in Rhodesia.
 ```
-Next, we assemble it into our chain as before:
+
+다음으로 이전과 같이 체인에 조립합니다:
 
 ```python
 rag_chain_from_docs = (
@@ -479,39 +513,46 @@ chain = RunnablePassthrough.assign(
 ).assign(answer=rag_chain_from_docs)
 ```
 
+
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 
 print(result["answer"])
 ```
+
 ```output
 Cheetahs are capable of running at speeds between 93 to 104 km/h (58 to 65 mph), making them the fastest land animals.
 ```
-Note that the document content is now compressed, although the document objects retain the original content in a "summary" key in their metadata. These summaries are not passed to the model; only the condensed content is.
+
+문서 내용이 이제 압축되었지만, 문서 객체는 메타데이터의 "요약" 키에 원래 내용을 유지한다는 점에 유의하십시오. 이러한 요약은 모델에 전달되지 않으며, 오직 압축된 내용만 전달됩니다.
 
 ```python
 result["context"][0].page_content  # passed to model
 ```
 
+
 ```output
 'Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail'
 ```
+
 
 ```python
 result["context"][0].metadata["summary"]  # original document
 ```
 
+
 ```output
 'The cheetah (Acinonyx jubatus) is a large cat and the fastest land animal. It has a tawny to creamy white or pale buff fur that is marked with evenly spaced, solid black spots. The head is small and rounded, with a short snout and black tear-like facial streaks. It reaches 67–94 cm (26–37 in) at the shoulder, and the head-and-body length is between 1.1 and 1.5 m (3 ft 7 in and 4 ft 11 in). Adults weigh between 21 and 72 kg (46 and 159 lb). The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.\nThe cheetah was first described in the late 18th century. Four subspecies are recognised today that are native to Africa and central Iran. An African subspecies was introduced to India in 2022. It is now distributed mainly in small, fragmented populations in northwestern, eastern and southern Africa and central Iran. It lives in a variety of habitats such as savannahs in the Serengeti, arid mountain ranges in the Sahara, and hilly desert terrain.\nThe cheetah lives in three main social groups: females and their cubs, male "coalitions", and solitary males. While females lead a nomadic life searching for prey in large home ranges, males are more sedentary and instead establish much smaller territories in areas with plentiful prey and access to females. The cheetah is active during the day, with peaks during dawn and dusk. It feeds on small- to medium-sized prey, mostly weighing under 40 kg (88 lb), and prefers medium-sized ungulates such as impala, springbok and Thomson\'s gazelles. The cheetah typically stalks its prey within 60–100 m (200–330 ft) before charging towards it, trips it during the chase and bites its throat to suffocate it to death. It breeds throughout the year. After a gestation of nearly three months, females give birth to a litter of three or four cubs. Cheetah cubs are highly vulnerable to predation by other large carnivores. They are weaned at around four months and are independent by around 20 months of age.\nThe cheetah is threatened by habitat loss, conflict with humans, poaching and high susceptibility to diseases. In 2016, the global cheetah population was estimated at 7,100 individuals in the wild; it is listed as Vulnerable on the IUCN Red List. It has been widely depicted in art, literature, advertising, and animation. It was tamed in ancient Egypt and trained for hunting ungulates in the Arabian Peninsula and India. It has been kept in zoos since the early 19th century.'
 ```
 
-LangSmith trace: https://smith.langchain.com/public/a61304fa-e5a5-4c64-a268-b0aef1130d53/r
 
-## Generation post-processing
+LangSmith 추적: https://smith.langchain.com/public/a61304fa-e5a5-4c64-a268-b0aef1130d53/r
 
-Another approach is to post-process our model generation. In this example we'll first generate just an answer, and then we'll ask the model to annotate it's own answer with citations. The downside of this approach is of course that it is slower and more expensive, because two model calls need to be made.
+## 생성 후 처리
 
-Let's apply this to our initial chain.
+또 다른 접근 방식은 모델 생성을 후처리하는 것입니다. 이 예제에서는 먼저 답변만 생성한 다음, 모델에게 자신의 답변에 인용을 추가하도록 요청할 것입니다. 이 접근 방식의 단점은 물론 두 개의 모델 호출이 필요하기 때문에 느리고 비용이 더 많이 든다는 것입니다.
+
+이를 초기 체인에 적용해 보겠습니다.
 
 ```python
 class Citation(BaseModel):
@@ -535,6 +576,7 @@ class AnnotatedAnswer(BaseModel):
 
 structured_llm = llm.with_structured_output(AnnotatedAnswer)
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to get a RAG application to add citations"}]-->
@@ -565,23 +607,29 @@ chain = (
 )
 ```
 
+
 ```python
 result = chain.invoke({"input": "How fast are cheetahs?"})
 ```
 
+
 ```python
 print(result["answer"])
 ```
+
 ```output
 Cheetahs are capable of running at speeds between 93 to 104 km/h (58 to 65 mph). Their specialized adaptations for speed, such as a light build, long thin legs, and a long tail, allow them to be the fastest land animals.
 ```
+
 
 ```python
 result["annotations"]
 ```
 
+
 ```output
 AnnotatedAnswer(citations=[Citation(source_id=0, quote='The cheetah is capable of running at 93 to 104 km/h (58 to 65 mph); it has evolved specialized adaptations for speed, including a light build, long thin legs and a long tail.')])
 ```
 
-LangSmith trace: https://smith.langchain.com/public/bf5e8856-193b-4ff2-af8d-c0f4fbd1d9cb/r
+
+LangSmith 추적: https://smith.langchain.com/public/bf5e8856-193b-4ff2-af8d-c0f4fbd1d9cb/r

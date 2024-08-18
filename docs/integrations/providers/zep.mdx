@@ -1,125 +1,129 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/zep/
+description: Zep은 AI 비서 앱을 위한 장기 기억 서비스로, 과거 대화를 기억하고 요약하여 개인화된 AI 경험을 제공합니다.
 ---
 
 # Zep
-> Recall, understand, and extract data from chat histories. Power personalized AI experiences.
+> 대화 기록에서 데이터를 기억하고 이해하며 추출합니다. 개인화된 AI 경험을 강화합니다.
 
-> [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-while also reducing hallucinations, latency, and cost.
+> [Zep](https://www.getzep.com)는 AI 어시스턴트 앱을 위한 장기 기억 서비스입니다.
+Zep를 사용하면 AI 어시스턴트가 과거 대화를 기억할 수 있는 능력을 제공하며, 이로 인해 환각, 지연 및 비용을 줄일 수 있습니다.
 
-## How Zep works
+## Zep의 작동 방식
 
-Zep persists and recalls chat histories, and automatically generates summaries and other artifacts from these chat histories.
-It also embeds messages and summaries, enabling you to search Zep for relevant context from past conversations.
-Zep does all of this asynchronously, ensuring these operations don't impact your user's chat experience.
-Data is persisted to database, allowing you to scale out when growth demands.
+Zep는 대화 기록을 지속하고 기억하며, 이러한 대화 기록에서 자동으로 요약 및 기타 아티팩트를 생성합니다.
+또한 메시지와 요약을 포함하여 과거 대화에서 관련된 맥락을 검색할 수 있도록 합니다.
+Zep는 이러한 모든 작업을 비동기적으로 수행하여 이러한 작업이 사용자의 대화 경험에 영향을 미치지 않도록 합니다.
+데이터는 데이터베이스에 지속되어 성장 요구에 따라 확장할 수 있습니다.
 
-Zep also provides a simple, easy to use abstraction for document vector search called Document Collections.
-This is designed to complement Zep's core memory features, but is not designed to be a general purpose vector database.
+Zep는 문서 벡터 검색을 위한 간단하고 사용하기 쉬운 추상화인 Document Collections를 제공합니다.
+이는 Zep의 핵심 기억 기능을 보완하도록 설계되었지만, 일반 목적의 벡터 데이터베이스로 설계된 것은 아닙니다.
 
-Zep allows you to be more intentional about constructing your prompt:
-- automatically adding a few recent messages, with the number customized for your app;
-- a summary of recent conversations prior to the messages above;
-- and/or contextually relevant summaries or messages surfaced from the entire chat session.
-- and/or relevant Business data from Zep Document Collections.
+Zep는 프롬프트를 구성하는 데 더 의도적일 수 있도록 합니다:
+- 앱에 맞게 사용자 정의된 최근 메시지를 자동으로 추가합니다;
+- 위의 메시지 이전의 최근 대화 요약;
+- 및/또는 전체 대화 세션에서 표출된 맥락적으로 관련된 요약 또는 메시지.
+- 및/또는 Zep Document Collections에서의 관련 비즈니스 데이터.
 
-## What is Zep Cloud?
-[Zep Cloud](https://www.getzep.com) is a managed service with Zep Open Source at its core.
-In addition to Zep Open Source's memory management features, Zep Cloud offers:
-- **Fact Extraction**: Automatically build fact tables from conversations, without having to define a data schema upfront.
-- **Dialog Classification**: Instantly and accurately classify chat dialog. Understand user intent and emotion, segment users, and more. Route chains based on semantic context, and trigger events.
-- **Structured Data Extraction**: Quickly extract business data from chat conversations using a schema you define. Understand what your Assistant should ask for next in order to complete its task.
+## Zep Cloud란?
+[Zep Cloud](https://www.getzep.com)는 Zep 오픈 소스를 핵심으로 하는 관리 서비스입니다.
+Zep 오픈 소스의 메모리 관리 기능 외에도 Zep Cloud는 다음을 제공합니다:
+- **사실 추출**: 대화에서 사실 테이블을 자동으로 구축하며, 데이터 스키마를 미리 정의할 필요가 없습니다.
+- **대화 분류**: 대화 다이얼로그를 즉시 정확하게 분류합니다. 사용자 의도와 감정을 이해하고, 사용자를 세분화하며, 더 많은 것을 수행합니다. 의미론적 맥락에 따라 경로 체인을 라우팅하고 이벤트를 트리거합니다.
+- **구조화된 데이터 추출**: 정의한 스키마를 사용하여 대화에서 비즈니스 데이터를 신속하게 추출합니다. 어시스턴트가 작업을 완료하기 위해 다음에 무엇을 요청해야 하는지 이해합니다.
 
-## Zep Open Source
-Zep offers an open source version with a self-hosted option.
-Please refer to the [Zep Open Source](https://github.com/getzep/zep) repo for more information.
-You can also find Zep Open Source compatible [Retriever](/docs/integrations/retrievers/zep_memorystore), [Vector Store](/docs/integrations/vectorstores/zep) and [Memory](/docs/integrations/memory/zep_memory) examples
+## Zep 오픈 소스
+Zep는 자가 호스팅 옵션이 있는 오픈 소스 버전을 제공합니다.
+자세한 내용은 [Zep 오픈 소스](https://github.com/getzep/zep) 저장소를 참조하십시오.
+Zep 오픈 소스와 호환되는 [Retriever](/docs/integrations/retrievers/zep_memorystore), [Vector Store](/docs/integrations/vectorstores/zep) 및 [Memory](/docs/integrations/memory/zep_memory) 예제도 찾을 수 있습니다.
 
-## Zep Cloud Installation and Setup
+## Zep Cloud 설치 및 설정
 
-[Zep Cloud Docs](https://help.getzep.com)
+[Zep Cloud 문서](https://help.getzep.com)
 
-1. Install the Zep Cloud SDK:
+1. Zep Cloud SDK를 설치합니다:
 
 ```bash
 pip install zep_cloud
 ```
-or
+
+또는
 ```bash
 poetry add zep_cloud
 ```
 
-## Memory
 
-Zep's Memory API persists your users' chat history and metadata to a [Session](https://help.getzep.com/chat-history-memory/sessions), enriches the memory, and
-enables vector similarity search over historical chat messages and dialog summaries.
+## 메모리
 
-Zep offers several approaches to populating prompts with context from historical conversations.
+Zep의 메모리 API는 사용자의 대화 기록과 메타데이터를 [세션](https://help.getzep.com/chat-history-memory/sessions)에 지속하고, 메모리를 풍부하게 하며,
+역사적 대화 메시지 및 다이얼로그 요약에 대한 벡터 유사성 검색을 가능하게 합니다.
 
-### Perpetual Memory
-This is the default memory type.
-Salient facts from the dialog are extracted and stored in a Fact Table.
-This is updated in real-time as new messages are added to the Session.
-Every time you call the Memory API to get a Memory, Zep returns the Fact Table, the most recent messages (per your Message Window setting), and a summary of the most recent messages prior to the Message Window.
-The combination of the Fact Table, summary, and the most recent messages in a prompts provides both factual context and nuance to the LLM.
+Zep는 역사적 대화에서 맥락을 포함하여 프롬프트를 채우는 여러 가지 접근 방식을 제공합니다.
 
-### Summary Retriever Memory
-Returns the most recent messages and a summary of past messages relevant to the current conversation,
-enabling you to provide your Assistant with helpful context from past conversations
+### 영구 메모리
+이것은 기본 메모리 유형입니다.
+대화에서 중요한 사실이 추출되어 사실 테이블에 저장됩니다.
+새 메시지가 세션에 추가될 때 실시간으로 업데이트됩니다.
+메모리 API를 호출하여 메모리를 가져올 때마다 Zep는 사실 테이블, 가장 최근 메시지(메시지 창 설정에 따라) 및 메시지 창 이전의 가장 최근 메시지 요약을 반환합니다.
+사실 테이블, 요약 및 가장 최근 메시지의 조합은 LLM에 사실적 맥락과 뉘앙스를 제공합니다.
 
-### Message Window Buffer Memory
-Returns the most recent N messages from the current conversation.
+### 요약 검색기 메모리
+현재 대화와 관련된 과거 메시지의 가장 최근 메시지 및 요약을 반환하여,
+어시스턴트에게 과거 대화에서 유용한 맥락을 제공할 수 있게 합니다.
 
-Additionally, Zep enables vector similarity searches for Messages or Summaries stored within its system.
+### 메시지 창 버퍼 메모리
+현재 대화에서 가장 최근 N 메시지를 반환합니다.
 
-This feature lets you populate prompts with past conversations that are contextually similar to a specific query,
-organizing the results by a similarity Score.
+또한, Zep는 시스템 내에 저장된 메시지 또는 요약에 대한 벡터 유사성 검색을 가능하게 합니다.
 
-`ZepCloudChatMessageHistory` and `ZepCloudMemory` classes can be imported to interact with Zep Cloud APIs.
+이 기능은 특정 쿼리와 맥락적으로 유사한 과거 대화로 프롬프트를 채울 수 있도록 하며,
+결과를 유사성 점수로 정리합니다.
 
-`ZepCloudChatMessageHistory` is compatible with `RunnableWithMessageHistory`.
+`ZepCloudChatMessageHistory` 및 `ZepCloudMemory` 클래스를 가져와 Zep Cloud API와 상호작용할 수 있습니다.
+
+`ZepCloudChatMessageHistory`는 `RunnableWithMessageHistory`와 호환됩니다.
 ```python
 <!--IMPORTS:[{"imported": "ZepCloudChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.zep_cloud.ZepCloudChatMessageHistory.html", "title": "Zep"}]-->
 from langchain_community.chat_message_histories import ZepCloudChatMessageHistory
 ```
 
-See a [Perpetual Memory Example here](/docs/integrations/memory/zep_cloud_chat_message_history).
 
-You can use `ZepCloudMemory` together with agents that support Memory.
+[영구 메모리 예제 보기](/docs/integrations/memory/zep_cloud_chat_message_history).
+
+`ZepCloudMemory`를 메모리를 지원하는 에이전트와 함께 사용할 수 있습니다.
 ```python
 from langchain_community.memory import ZepCloudMemory
 ```
 
-See a [Memory RAG Example here](/docs/integrations/memory/zep_memory_cloud).
 
-## Retriever
+[메모리 RAG 예제 보기](/docs/integrations/memory/zep_memory_cloud).
 
-Zep's Memory Retriever is a LangChain Retriever that enables you to retrieve messages from a Zep Session and use them to construct your prompt.
+## 검색기
 
-The Retriever supports searching over both individual messages and summaries of conversations. The latter is useful for providing rich, but succinct context to the LLM as to relevant past conversations.
+Zep의 메모리 검색기는 Zep 세션에서 메시지를 검색하고 이를 사용하여 프롬프트를 구성할 수 있는 LangChain 검색기입니다.
 
-Zep's Memory Retriever supports both similarity search and [Maximum Marginal Relevance (MMR) reranking](https://help.getzep.com/working-with-search#how-zeps-mmr-re-ranking-works). MMR search is useful for ensuring that the retrieved messages are diverse and not too similar to each other
+검색기는 개별 메시지와 대화 요약 모두에 대한 검색을 지원합니다. 후자는 LLM에 관련된 과거 대화에 대한 풍부하지만 간결한 맥락을 제공하는 데 유용합니다.
 
-See a [usage example](/docs/integrations/retrievers/zep_cloud_memorystore).
+Zep의 메모리 검색기는 유사성 검색과 [최대 한계 관련성(MMR) 재순위](https://help.getzep.com/working-with-search#how-zeps-mmr-re-ranking-works)를 지원합니다. MMR 검색은 검색된 메시지가 다양하고 서로 너무 유사하지 않도록 보장하는 데 유용합니다.
+
+[사용 예제 보기](/docs/integrations/retrievers/zep_cloud_memorystore).
 
 ```python
 <!--IMPORTS:[{"imported": "ZepCloudRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.zep_cloud.ZepCloudRetriever.html", "title": "Zep"}]-->
 from langchain_community.retrievers import ZepCloudRetriever
 ```
 
-## Vector store
 
-Zep's [Document VectorStore API](https://help.getzep.com/document-collections) enables you to store and retrieve documents using vector similarity search. Zep doesn't require you to understand
-distance functions, types of embeddings, or indexing best practices. You just pass in your chunked documents, and Zep handles the rest.
+## 벡터 저장소
 
-Zep supports both similarity search and [Maximum Marginal Relevance (MMR) reranking](https://help.getzep.com/working-with-search#how-zeps-mmr-re-ranking-works).
-MMR search is useful for ensuring that the retrieved documents are diverse and not too similar to each other.
+Zep의 [문서 벡터 저장소 API](https://help.getzep.com/document-collections)는 벡터 유사성 검색을 사용하여 문서를 저장하고 검색할 수 있게 해줍니다. Zep는 거리 함수, 임베딩 유형 또는 인덱싱 모범 사례를 이해할 필요가 없습니다. 청크된 문서를 전달하기만 하면 Zep가 나머지를 처리합니다.
+
+Zep는 유사성 검색과 [최대 한계 관련성(MMR) 재순위](https://help.getzep.com/working-with-search#how-zeps-mmr-re-ranking-works)를 지원합니다.
+MMR 검색은 검색된 문서가 다양하고 서로 너무 유사하지 않도록 보장하는 데 유용합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ZepCloudVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.zep_cloud.ZepCloudVectorStore.html", "title": "Zep"}]-->
 from langchain_community.vectorstores import ZepCloudVectorStore
 ```
 
-See a [usage example](/docs/integrations/vectorstores/zep_cloud).
+
+[사용 예제 보기](/docs/integrations/vectorstores/zep_cloud).

@@ -1,19 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/doctran_interrogate_document/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/doctran_interrogate_document.ipynb
+description: 문서를 Q&A 형식으로 변환하여 벡터 저장소에서 관련 문서를 더 쉽게 검색할 수 있도록 하는 Doctran 라이브러리에 대한
+  설명입니다.
 ---
 
-# Doctran: interrogate documents
+# Doctran: 문서 조사
 
-Documents used in a vector store knowledge base are typically stored in a narrative or conversational format. However, most user queries are in question format. If we **convert documents into Q&A format** before vectorizing them, we can increase the likelihood of retrieving relevant documents, and decrease the likelihood of retrieving irrelevant documents.
+벡터 저장소 지식 기반에서 사용되는 문서는 일반적으로 내러티브 또는 대화 형식으로 저장됩니다. 그러나 대부분의 사용자 쿼리는 질문 형식입니다. 문서를 벡터화하기 전에 **문서를 Q&A 형식으로 변환**하면 관련 문서를 검색할 가능성을 높이고, 관련 없는 문서를 검색할 가능성을 줄일 수 있습니다.
 
-We can accomplish this using the [Doctran](https://github.com/psychic-api/doctran) library, which uses OpenAI's function calling feature to "interrogate" documents.
+우리는 OpenAI의 기능 호출 기능을 사용하여 문서를 "조사"하는 [Doctran](https://github.com/psychic-api/doctran) 라이브러리를 사용하여 이를 수행할 수 있습니다.
 
-See [this notebook](https://github.com/psychic-api/doctran/blob/main/benchmark.ipynb) for benchmarks on vector similarity scores for various queries based on raw documents versus interrogated documents.
+원시 문서와 조사된 문서를 기반으로 한 다양한 쿼리에 대한 벡터 유사성 점수의 벤치마크는 [이 노트북](https://github.com/psychic-api/doctran/blob/main/benchmark.ipynb)에서 확인할 수 있습니다.
 
 ```python
 %pip install --upgrade --quiet  doctran
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "DoctranQATransformer", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.doctran_text_qa.DoctranQATransformer.html", "title": "Doctran: interrogate documents"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Doctran: interrogate documents"}]-->
@@ -23,18 +25,21 @@ from langchain_community.document_transformers import DoctranQATransformer
 from langchain_core.documents import Document
 ```
 
+
 ```python
 from dotenv import load_dotenv
 
 load_dotenv()
 ```
 
+
 ```output
 True
 ```
 
-## Input
-This is the document we'll interrogate
+
+## 입력
+우리가 조사할 문서입니다.
 
 ```python
 sample_text = """[Generated with ChatGPT]
@@ -74,6 +79,7 @@ jason@psychic.dev
 """
 print(sample_text)
 ```
+
 ```output
 [Generated with ChatGPT]
 
@@ -111,19 +117,22 @@ Psychic
 jason@psychic.dev
 ```
 
+
 ```python
 documents = [Document(page_content=sample_text)]
 qa_transformer = DoctranQATransformer()
 transformed_document = qa_transformer.transform_documents(documents)
 ```
 
-## Output
-After interrogating a document, the result will be returned as a new document with questions and answers provided in the metadata.
+
+## 출력
+문서를 조사한 후, 결과는 메타데이터에 질문과 답변이 제공된 새로운 문서로 반환됩니다.
 
 ```python
 transformed_document = qa_transformer.transform_documents(documents)
 print(json.dumps(transformed_document[0].metadata, indent=2))
 ```
+
 ```output
 {
   "questions_and_answers": [

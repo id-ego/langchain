@@ -1,22 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat_loaders/gmail/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat_loaders/gmail.ipynb
+description: GMail에서 데이터를 로드하는 방법을 설명하며, 이메일 응답을 기반으로 훈련 예제를 생성하는 로더에 대해 안내합니다.
 ---
 
 # GMail
 
-This loader goes over how to load data from GMail. There are many ways you could want to load data from GMail. This loader is currently fairly opinionated in how to do so. The way it does it is it first looks for all messages that you have sent. It then looks for messages where you are responding to a previous email. It then fetches that previous email, and creates a training example of that email, followed by your email.
+이 로더는 GMail에서 데이터를 로드하는 방법에 대해 설명합니다. GMail에서 데이터를 로드하는 방법은 여러 가지가 있을 수 있습니다. 이 로더는 현재 이를 수행하는 방법에 대해 상당히 특정한 의견을 가지고 있습니다. 이 로더는 먼저 사용자가 보낸 모든 메시지를 찾습니다. 그런 다음 이전 이메일에 응답하는 메시지를 찾습니다. 이후 그 이전 이메일을 가져와서 해당 이메일과 사용자의 이메일로 구성된 학습 예제를 생성합니다.
 
-Note that there are clear limitations here. For example, all examples created are only looking at the previous email for context.
+여기에는 명확한 한계가 있습니다. 예를 들어, 생성된 모든 예제는 이전 이메일만을 컨텍스트로 보고 있습니다.
 
-To use:
+사용 방법:
 
-- Set up a Google Developer Account: Go to the Google Developer Console, create a project, and enable the Gmail API for that project. This will give you a credentials.json file that you'll need later.
-- Install the Google Client Library: Run the following command to install the Google Client Library:
+- Google 개발자 계정 설정: Google 개발자 콘솔로 이동하여 프로젝트를 생성하고 해당 프로젝트에 대해 Gmail API를 활성화합니다. 이렇게 하면 나중에 필요할 credentials.json 파일이 생성됩니다.
+- Google 클라이언트 라이브러리 설치: 다음 명령어를 실행하여 Google 클라이언트 라이브러리를 설치합니다:
 
 ```python
 %pip install --upgrade --quiet  google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 ```
+
 
 ```python
 import os.path
@@ -50,27 +51,33 @@ if not creds or not creds.valid:
         token.write(creds.to_json())
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "GMailLoader", "source": "langchain_community.chat_loaders.gmail", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.gmail.GMailLoader.html", "title": "GMail"}]-->
 from langchain_community.chat_loaders.gmail import GMailLoader
 ```
 
+
 ```python
 loader = GMailLoader(creds=creds, n=3)
 ```
 
+
 ```python
 data = loader.load()
 ```
+
 
 ```python
 # Sometimes there can be errors which we silently ignore
 len(data)
 ```
 
+
 ```output
 2
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "map_ai_messages", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.map_ai_messages.html", "title": "GMail"}]-->
@@ -78,6 +85,7 @@ from langchain_community.chat_loaders.utils import (
     map_ai_messages,
 )
 ```
+
 
 ```python
 # This makes messages sent by hchase@langchain.com the AI Messages

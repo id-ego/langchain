@@ -1,52 +1,56 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/rag-timescale-conversation/
+description: 이 문서는 대화형 검색을 위한 템플릿으로, 대화 기록과 검색된 문서를 LLM에 전달하여 통합하는 방법을 설명합니다.
 ---
 
 # rag-timescale-conversation
 
-This template is used for [conversational](https://python.langchain.com/docs/expression_language/cookbook/retrieval#conversational-retrieval-chain) [retrieval](https://python.langchain.com/docs/use_cases/question_answering/), which is one of the most popular LLM use-cases.
+이 템플릿은 가장 인기 있는 LLM 사용 사례 중 하나인 [대화형](https://python.langchain.com/docs/expression_language/cookbook/retrieval#conversational-retrieval-chain) [검색](https://python.langchain.com/docs/use_cases/question_answering/)에 사용됩니다.
 
-It passes both a conversation history and retrieved documents into an LLM for synthesis.
+대화 기록과 검색된 문서를 LLM에 전달하여 통합합니다.
 
-## Environment Setup
+## 환경 설정
 
-This template uses Timescale Vector as a vectorstore and requires that `TIMESCALES_SERVICE_URL`. Signup for a 90-day trial [here](https://console.cloud.timescale.com/signup?utm_campaign=vectorlaunch&utm_source=langchain&utm_medium=referral) if you don't yet have an account.
+이 템플릿은 벡터 저장소로 Timescale Vector를 사용하며 `TIMESCALES_SERVICE_URL`이 필요합니다. 계정이 없으신 경우 [여기](https://console.cloud.timescale.com/signup?utm_campaign=vectorlaunch&utm_source=langchain&utm_medium=referral)에서 90일 무료 체험에 가입하세요.
 
-To load the sample dataset, set `LOAD_SAMPLE_DATA=1`. To load your own dataset see the section below.
+샘플 데이터 세트를 로드하려면 `LOAD_SAMPLE_DATA=1`로 설정합니다. 자신의 데이터 세트를 로드하려면 아래 섹션을 참조하세요.
 
-Set the `OPENAI_API_KEY` environment variable to access the OpenAI models.
+OpenAI 모델에 접근하려면 `OPENAI_API_KEY` 환경 변수를 설정하세요.
 
-## Usage
+## 사용법
 
-To use this package, you should first have the LangChain CLI installed:
+이 패키지를 사용하려면 먼저 LangChain CLI를 설치해야 합니다:
 
 ```shell
 pip install -U "langchain-cli[serve]"
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새로운 LangChain 프로젝트를 생성하고 이것을 유일한 패키지로 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package rag-timescale-conversation
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하고 싶다면 다음을 실행하면 됩니다:
 
 ```shell
 langchain app add rag-timescale-conversation
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가하세요:
 ```python
 from rag_timescale_conversation import chain as rag_timescale_conversation_chain
 
 add_routes(app, rag_timescale_conversation_chain, path="/rag-timescale_conversation")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줍니다.
+LangSmith에 [여기](https://smith.langchain.com/)에서 가입할 수 있습니다.
+접근 권한이 없으시면 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -54,19 +58,21 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+
+이 디렉토리 내에 있다면 다음을 통해 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버가 로컬에서 실행됩니다.
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/rag-timescale-conversation/playground](http://127.0.0.1:8000/rag-timescale-conversation/playground)
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 확인할 수 있습니다.
+플레이그라운드는 [http://127.0.0.1:8000/rag-timescale-conversation/playground](http://127.0.0.1:8000/rag-timescale-conversation/playground)에서 접근할 수 있습니다.
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable
@@ -74,10 +80,9 @@ from langserve.client import RemoteRunnable
 runnable = RemoteRunnable("http://localhost:8000/rag-timescale-conversation")
 ```
 
-See the `rag_conversation.ipynb` notebook for example usage.
 
-## Loading your own dataset
+예제 사용법은 `rag_conversation.ipynb` 노트북을 참조하세요.
 
-To load your own dataset you will have to create a `load_dataset` function. You can see an example, in the
-`load_ts_git_dataset` function defined in the `load_sample_dataset.py` file. You can then run this as a
-standalone function (e.g. in a bash script) or add it to chain.py (but then you should run it just once).
+## 자신의 데이터 세트 로드하기
+
+자신의 데이터 세트를 로드하려면 `load_dataset` 함수를 생성해야 합니다. `load_sample_dataset.py` 파일에 정의된 `load_ts_git_dataset` 함수에서 예제를 확인할 수 있습니다. 그런 다음 이 함수를 독립 실행형 함수(예: bash 스크립트)로 실행하거나 chain.py에 추가할 수 있습니다(단, 이 경우 한 번만 실행해야 합니다).

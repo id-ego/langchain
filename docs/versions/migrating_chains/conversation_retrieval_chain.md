@@ -1,23 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/migrating_chains/conversation_retrieval_chain/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/versions/migrating_chains/conversation_retrieval_chain.ipynb
+description: 이 문서는 ConversationalRetrievalChain의 장점과 LCEL 구현에 대한 설명을 제공하며, 사용자 정의
+  프롬프트를 통한 예제를 포함합니다.
 title: Migrating from ConversationalRetrievalChain
 ---
 
-The [`ConversationalRetrievalChain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.conversational_retrieval.base.ConversationalRetrievalChain.html) was an all-in one way that combined retrieval-augmented generation with chat history, allowing you to "chat with" your documents.
+[`ConversationalRetrievalChain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.conversational_retrieval.base.ConversationalRetrievalChain.html)는 검색 증강 생성과 채팅 기록을 결합한 올인원 방식으로, 문서와 "채팅"할 수 있게 해줍니다.
 
-Advantages of switching to the LCEL implementation are similar to the `RetrievalQA` section above:
+LCEL 구현으로 전환하는 장점은 위의 `RetrievalQA` 섹션과 유사합니다:
 
-- Clearer internals. The `ConversationalRetrievalChain` chain hides an entire question rephrasing step which dereferences the initial query against the chat history.
-  - This means the class contains two sets of configurable prompts, LLMs, etc.
-- More easily return source documents.
-- Support for runnable methods like streaming and async operations.
+- 더 명확한 내부 구조. `ConversationalRetrievalChain` 체인은 초기 쿼리를 채팅 기록에 대해 역참조하는 전체 질문 재구성 단계를 숨깁니다.
+  - 이는 클래스가 두 세트의 구성 가능한 프롬프트, LLM 등을 포함하고 있음을 의미합니다.
+- 소스 문서를 더 쉽게 반환할 수 있습니다.
+- 스트리밍 및 비동기 작업과 같은 실행 가능한 메서드를 지원합니다.
 
-Here are side-by-side implementations with custom prompts. We'll reuse the loaded documents and vector store from the previous section:
+여기 사용자 정의 프롬프트와 함께 나란히 구현된 예가 있습니다. 이전 섹션에서 로드된 문서와 벡터 저장소를 재사용할 것입니다:
 
 ```python
 %pip install --upgrade --quiet langchain-community langchain langchain-openai faiss-cpu
 ```
+
 
 ```python
 import os
@@ -25,6 +27,7 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Load docs"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Load docs"}, {"imported": "ChatOpenAI", "source": "langchain_openai.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Load docs"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Load docs"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Load docs"}]-->
@@ -49,10 +52,10 @@ vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddi
 llm = ChatOpenAI()
 ```
 
+
 ## Legacy
 
 <details open>
-
 
 ```python
 <!--IMPORTS:[{"imported": "ConversationalRetrievalChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.conversational_retrieval.base.ConversationalRetrievalChain.html", "title": "Load docs"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Load docs"}]-->
@@ -104,19 +107,19 @@ convo_qa_chain(
 )
 ```
 
+
 ```output
 {'question': 'What are autonomous agents?',
  'chat_history': '',
  'answer': 'Autonomous agents are entities empowered with capabilities like planning, task decomposition, and memory to perform complex tasks independently. These agents can leverage tools like browsing the internet, reading documentation, executing code, and calling APIs to achieve their objectives. They are designed to handle tasks like scientific discovery and experimentation autonomously.'}
 ```
 
-</details>
 
+</details>
 
 ## LCEL
 
 <details open>
-
 
 ```python
 <!--IMPORTS:[{"imported": "create_history_aware_retriever", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.history_aware_retriever.create_history_aware_retriever.html", "title": "Load docs"}, {"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Load docs"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Load docs"}]-->
@@ -171,6 +174,7 @@ convo_qa_chain.invoke(
 )
 ```
 
+
 ```output
 {'input': 'What are autonomous agents?',
  'chat_history': [],
@@ -181,11 +185,11 @@ convo_qa_chain.invoke(
  'answer': 'Autonomous agents are entities that can act independently to achieve specific goals or tasks without direct human intervention. These agents have the ability to perceive their environment, make decisions, and take actions based on their programming or learning. They can perform tasks such as planning, execution, and problem-solving autonomously.'}
 ```
 
-</details>
 
+</details>
 
 ## Next steps
 
-You've now seen how to migrate existing usage of some legacy chains to LCEL.
+이제 일부 레거시 체인의 기존 사용을 LCEL로 마이그레이션하는 방법을 보았습니다.
 
-Next, check out the [LCEL conceptual docs](/docs/concepts/#langchain-expression-language-lcel) for more background information.
+다음으로, 더 많은 배경 정보를 위해 [LCEL 개념 문서](/docs/concepts/#langchain-expression-language-lcel)를 확인하세요.

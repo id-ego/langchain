@@ -1,22 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/migrating_chains/map_rerank_docs_chain/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/versions/migrating_chains/map_rerank_docs_chain.ipynb
+description: 이 문서는 MapRerankDocumentsChain의 전략과 LangGraph 구현을 통해 긴 텍스트 분석 및 질문-답변
+  프로세스를 설명합니다.
 title: Migrating from MapRerankDocumentsChain
 ---
 
-[MapRerankDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.map_rerank.MapRerankDocumentsChain.html) implements a strategy for analyzing long texts. The strategy is as follows:
+[MapRerankDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.map_rerank.MapRerankDocumentsChain.html)은 긴 텍스트를 분석하기 위한 전략을 구현합니다. 전략은 다음과 같습니다:
 
-- Split a text into smaller documents;
-- Map a process to the set of documents, where the process includes generating a score;
-- Rank the results by score and return the maximum.
+- 텍스트를 더 작은 문서로 나누기;
+- 문서 집합에 프로세스를 매핑하고, 이 프로세스에는 점수 생성이 포함됨;
+- 점수에 따라 결과를 순위 매기고 최대값을 반환.
 
-A common process in this scenario is question-answering using pieces of context from a document. Forcing the model to generate score along with its answer helps to select for answers generated only by relevant context.
+이 시나리오에서 일반적인 프로세스는 문서의 맥락 조각을 사용한 질문-답변입니다. 모델이 답변과 함께 점수를 생성하도록 강제하는 것은 관련 맥락에 의해 생성된 답변을 선택하는 데 도움이 됩니다.
 
-An [LangGraph](https://langchain-ai.github.io/langgraph/) implementation allows for the incorporation of [tool calling](/docs/concepts/#functiontool-calling) and other features for this problem. Below we will go through both `MapRerankDocumentsChain` and a corresponding LangGraph implementation on a simple example for illustrative purposes.
+[LangGraph](https://langchain-ai.github.io/langgraph/) 구현은 이 문제에 대해 [도구 호출](/docs/concepts/#functiontool-calling) 및 기타 기능을 통합할 수 있게 해줍니다. 아래에서는 `MapRerankDocumentsChain`과 이에 해당하는 LangGraph 구현을 간단한 예제를 통해 설명하겠습니다.
 
-## Example
+## 예제
 
-Let's go through an example where we analyze a set of documents. We first generate some simple documents for illustrative purposes:
+문서 집합을 분석하는 예제를 살펴보겠습니다. 설명을 위해 간단한 문서를 먼저 생성합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "# Example"}]-->
@@ -31,12 +32,12 @@ documents = [
 ]
 ```
 
-### Legacy
+
+### 레거시
 
 <details open>
 
-
-Below we show an implementation with `MapRerankDocumentsChain`. We define the prompt template for a question-answering task and instantiate a [LLMChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html) object for this purpose. We define how documents are formatted into the prompt and ensure consistency among the keys in the various prompts.
+아래에서는 `MapRerankDocumentsChain`을 사용한 구현을 보여줍니다. 질문-답변 작업을 위한 프롬프트 템플릿을 정의하고, 이를 위해 [LLMChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html) 객체를 인스턴스화합니다. 문서가 프롬프트에 어떻게 포맷되는지 정의하고, 다양한 프롬프트의 키 간 일관성을 보장합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "# Example"}, {"imported": "MapRerankDocumentsChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.map_rerank.MapRerankDocumentsChain.html", "title": "# Example"}, {"imported": "RegexParser", "source": "langchain.output_parsers.regex", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.regex.RegexParser.html", "title": "# Example"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "# Example"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "# Example"}]-->
@@ -76,38 +77,41 @@ chain = MapRerankDocumentsChain(
 )
 ```
 
+
 ```python
 response = chain.invoke(documents)
 response["output_text"]
 ```
+
 ```output
 /langchain/libs/langchain/langchain/chains/llm.py:369: UserWarning: The apply_and_parse method is deprecated, instead pass an output parser directly to LLMChain.
   warnings.warn(
 ```
 
+
 ```output
 'Brown'
 ```
 
-Inspecting the [LangSmith trace](https://smith.langchain.com/public/7a071bd1-0283-4b90-898c-6e4a2b5a0593/r) for the above run, we can see three LLM calls-- one for each document-- and that the scoring mechanism mitigated against hallucinations.
+
+위 실행에 대한 [LangSmith trace](https://smith.langchain.com/public/7a071bd1-0283-4b90-898c-6e4a2b5a0593/r)를 검사하면, 각 문서에 대해 하나씩 총 세 번의 LLM 호출이 있었고, 점수 매기기 메커니즘이 환각을 완화했음을 알 수 있습니다.
 
 </details>
-
 
 ### LangGraph
 
 <details open>
 
+아래에서는 이 프로세스의 LangGraph 구현을 보여줍니다. 우리의 템플릿은 단순화되어 있으며, 포맷팅 지침을 채팅 모델의 도구 호출 기능에 위임합니다 [.with_structured_output](/docs/how_to/structured_output/) 메서드를 통해.
 
-Below we show a LangGraph implementation of this process. Note that our template is simplified, as we delegate the formatting instructions to the chat model's tool-calling features via the [.with_structured_output](/docs/how_to/structured_output/) method.
+여기서는 기본 [map-reduce](https://langchain-ai.github.io/langgraph/how-tos/map-reduce/) 워크플로우를 따라 LLM 호출을 병렬로 실행합니다.
 
-Here we follow a basic [map-reduce](https://langchain-ai.github.io/langgraph/how-tos/map-reduce/) workflow to execute the LLM calls in parallel.
-
-We will need to install `langgraph`:
+`langgraph`를 설치해야 합니다:
 
 ```python
 pip install -qU langgraph
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "# Example"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "# Example"}]-->
@@ -187,11 +191,13 @@ graph.add_edge("pick_top_ranked", END)
 app = graph.compile()
 ```
 
+
 ```python
 from IPython.display import Image
 
 Image(app.get_graph().draw_mermaid_png())
 ```
+
 
 ![](/img/8e2154549da7bbbf4d5bc287a2ce627e.jpg)
 
@@ -200,17 +206,18 @@ result = await app.ainvoke({"contents": [doc.page_content for doc in documents]}
 result["answer"]
 ```
 
+
 ```output
 {'answer': 'Bob has brown eyes.', 'score': 10}
 ```
 
-Inspecting the [LangSmith trace](https://smith.langchain.com/public/b64bf9aa-7558-4c1b-be5c-ba8924069039/r) for the above run, we can see three LLM calls as before. Using the model's tool-calling features have also enabled us to remove the parsing step.
+
+위 실행에 대한 [LangSmith trace](https://smith.langchain.com/public/b64bf9aa-7558-4c1b-be5c-ba8924069039/r)를 검사하면, 이전과 같이 세 번의 LLM 호출이 있었음을 알 수 있습니다. 모델의 도구 호출 기능을 사용함으로써 파싱 단계를 제거할 수 있었습니다.
 
 </details>
 
+## 다음 단계
 
-## Next steps
+질문-답변 작업에 대한 RAG에 대한 더 많은 정보는 이 [사용 가이드](/docs/how_to/#qa-with-rag)를 참조하세요.
 
-See these [how-to guides](/docs/how_to/#qa-with-rag) for more on question-answering tasks with RAG.
-
-Check out the [LangGraph documentation](https://langchain-ai.github.io/langgraph/) for detail on building with LangGraph, including [this guide](https://langchain-ai.github.io/langgraph/how-tos/map-reduce/) on the details of map-reduce in LangGraph.
+LangGraph로 구축하는 방법에 대한 자세한 내용은 [LangGraph 문서](https://langchain-ai.github.io/langgraph/)를 확인하고, LangGraph의 map-reduce 세부 사항에 대한 [이 가이드](https://langchain-ai.github.io/langgraph/how-tos/map-reduce/)를 참조하세요.

@@ -1,48 +1,47 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/tool_calling/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/tool_calling.ipynb
+description: 챗 모델을 사용하여 도구를 호출하는 방법에 대한 가이드입니다. 도구 호출의 개념과 활용 사례를 설명합니다.
 keywords:
 - tool calling
 - tool call
 ---
 
-# How to use chat models to call tools
+# 도구 호출을 위한 채팅 모델 사용 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
 
-- [Chat models](/docs/concepts/#chat-models)
-- [Tool calling](/docs/concepts/#functiontool-calling)
-- [Tools](/docs/concepts/#tools)
-- [Output parsers](/docs/concepts/#output-parsers)
+- [채팅 모델](/docs/concepts/#chat-models)
+- [도구 호출](/docs/concepts/#functiontool-calling)
+- [도구](/docs/concepts/#tools)
+- [출력 파서](/docs/concepts/#output-parsers)
 :::
 
-[Tool calling](/docs/concepts/#functiontool-calling) allows a chat model to respond to a given prompt by "calling a tool".
+[도구 호출](/docs/concepts/#functiontool-calling)은 채팅 모델이 주어진 프롬프트에 응답하기 위해 "도구를 호출"하는 기능을 제공합니다.
 
-Remember, while the name "tool calling" implies that the model is directly performing some action, this is actually not the case! The model only generates the arguments to a tool, and actually running the tool (or not) is up to the user.
+"도구 호출"이라는 이름은 모델이 직접 어떤 작업을 수행하는 것처럼 보이지만, 실제로는 그렇지 않습니다! 모델은 도구에 대한 인수만 생성하며, 도구를 실행하는 것은 사용자에게 달려 있습니다.
 
-Tool calling is a general technique that generates structured output from a model, and you can use it even when you don't intend to invoke any tools. An example use-case of that is [extraction from unstructured text](/docs/tutorials/extraction/).
+도구 호출은 모델에서 구조화된 출력을 생성하는 일반적인 기술이며, 도구를 호출할 의도가 없더라도 사용할 수 있습니다. 그 예로는 [비구조적 텍스트에서의 추출](/docs/tutorials/extraction/)이 있습니다.
 
-![Diagram of calling a tool](/img/tool_call.png)
+![도구 호출 다이어그램](/img/tool_call.png)
 
-If you want to see how to use the model-generated tool call to actually run a tool [check out this guide](/docs/how_to/tool_results_pass_to_model/).
+모델이 생성한 도구 호출을 실제로 실행하는 방법을 보려면 [이 가이드를 확인하세요](/docs/how_to/tool_results_pass_to_model/) .
 
-:::note Supported models
+:::note 지원되는 모델
 
-Tool calling is not universal, but is supported by many popular LLM providers. You can find a [list of all models that support tool calling here](/docs/integrations/chat/).
+도구 호출은 보편적이지 않지만 많은 인기 있는 LLM 제공업체에서 지원됩니다. 도구 호출을 지원하는 모든 모델의 [목록은 여기에서 확인할 수 있습니다](/docs/integrations/chat/) .
 
 :::
 
-LangChain implements standard interfaces for defining tools, passing them to LLMs, and representing tool calls.
-This guide will cover how to bind tools to an LLM, then invoke the LLM to generate these arguments.
+LangChain은 도구를 정의하고 LLM에 전달하며 도구 호출을 나타내기 위한 표준 인터페이스를 구현합니다. 이 가이드는 도구를 LLM에 바인딩한 다음, 이러한 인수를 생성하기 위해 LLM을 호출하는 방법을 다룰 것입니다.
 
-## Defining tool schemas
+## 도구 스키마 정의
 
-For a model to be able to call tools, we need to pass in tool schemas that describe what the tool does and what it's arguments are. Chat models that support tool calling features implement a `.bind_tools()` method for passing tool schemas to the model. Tool schemas can be passed in as Python functions (with typehints and docstrings), Pydantic models, TypedDict classes, or LangChain [Tool objects](https://api.python.langchain.com/en/latest/tools/langchain_core.tools.BaseTool.html#langchain_core.tools.BaseTool). Subsequent invocations of the model will pass in these tool schemas along with the prompt.
+모델이 도구를 호출할 수 있도록 하려면 도구가 수행하는 작업과 그 인수를 설명하는 도구 스키마를 전달해야 합니다. 도구 호출 기능을 지원하는 채팅 모델은 모델에 도구 스키마를 전달하기 위한 `.bind_tools()` 메서드를 구현합니다. 도구 스키마는 Python 함수(타입 힌트 및 문서 문자열 포함), Pydantic 모델, TypedDict 클래스 또는 LangChain [Tool 객체](https://api.python.langchain.com/en/latest/tools/langchain_core.tools.BaseTool.html#langchain_core.tools.BaseTool)로 전달될 수 있습니다. 이후 모델 호출 시 이러한 도구 스키마가 프롬프트와 함께 전달됩니다.
 
-### Python functions
-Our tool schemas can be Python functions:
+### Python 함수
+우리의 도구 스키마는 Python 함수로 정의할 수 있습니다:
 
 ```python
 # The function name, type hints, and docstring are all part of the tool
@@ -69,13 +68,14 @@ def multiply(a: int, b: int) -> int:
     return a * b
 ```
 
-### LangChain Tool
 
-LangChain also implements a `@tool` decorator that allows for further control of the tool schema, such as tool names and argument descriptions. See the how-to guide [here](/docs/how_to/custom_tools/#creating-tools-from-functions) for details.
+### LangChain 도구
 
-### Pydantic class
+LangChain은 도구 이름 및 인수 설명과 같은 도구 스키마에 대한 추가 제어를 허용하는 `@tool` 데코레이터도 구현합니다. 자세한 내용은 [여기](https://docs/langchain.com/docs/how_to/custom_tools/#creating-tools-from-functions)에서 확인하세요.
 
-You can equivalently define the schemas without the accompanying functions using [Pydantic](https://docs.pydantic.dev):
+### Pydantic 클래스
+
+동일하게 [Pydantic](https://docs.pydantic.dev)을 사용하여 함수 없이 스키마를 정의할 수 있습니다:
 
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -95,12 +95,13 @@ class multiply(BaseModel):
     b: int = Field(..., description="Second integer")
 ```
 
-### TypedDict class
 
-:::info Requires `langchain-core>=0.2.25`
+### TypedDict 클래스
+
+:::info `langchain-core>=0.2.25` 필요
 :::
 
-Or using TypedDicts and annotations:
+또는 TypedDict와 주석을 사용하여 정의할 수 있습니다:
 
 ```python
 from typing_extensions import Annotated, TypedDict
@@ -124,8 +125,8 @@ class multiply(BaseModel):
 tools = [add, multiply]
 ```
 
-To actually bind those schemas to a chat model, we'll use the `.bind_tools()` method. This handles converting
-the `add` and `multiply` schemas to the proper format for the model. The tool schema will then be passed it in each time the model is invoked.
+
+실제로 이러한 스키마를 채팅 모델에 바인딩하려면 `.bind_tools()` 메서드를 사용합니다. 이는 `add` 및 `multiply` 스키마를 모델에 맞는 형식으로 변환하는 작업을 처리합니다. 도구 스키마는 모델이 호출될 때마다 전달됩니다.
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -142,31 +143,28 @@ query = "What is 3 * 12?"
 llm_with_tools.invoke(query)
 ```
 
+
 ```output
 AIMessage(content='', additional_kwargs={'tool_calls': [{'id': 'call_BwYJ4UgU5pRVCBOUmiu7NhF9', 'function': {'arguments': '{"a":3,"b":12}', 'name': 'multiply'}, 'type': 'function'}]}, response_metadata={'token_usage': {'completion_tokens': 17, 'prompt_tokens': 80, 'total_tokens': 97}, 'model_name': 'gpt-4o-mini-2024-07-18', 'system_fingerprint': 'fp_ba606877f9', 'finish_reason': 'tool_calls', 'logprobs': None}, id='run-7f05e19e-4561-40e2-a2d0-8f4e28e9a00f-0', tool_calls=[{'name': 'multiply', 'args': {'a': 3, 'b': 12}, 'id': 'call_BwYJ4UgU5pRVCBOUmiu7NhF9', 'type': 'tool_call'}], usage_metadata={'input_tokens': 80, 'output_tokens': 17, 'total_tokens': 97})
 ```
 
-As we can see our LLM generated arguments to a tool! You can look at the docs for [bind_tools()](https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.BaseChatOpenAI.html#langchain_openai.chat_models.base.BaseChatOpenAI.bind_tools) to learn about all the ways to customize how your LLM selects tools, as well as [this guide on how to force the LLM to call a tool](/docs/how_to/tool_choice/) rather than letting it decide.
 
-## Tool calls
+우리의 LLM이 도구에 대한 인수를 생성했음을 볼 수 있습니다! LLM이 도구를 선택하는 방식을 사용자 정의하는 모든 방법에 대해 배우려면 [bind_tools() 문서](https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.BaseChatOpenAI.html#langchain_openai.chat_models.base.BaseChatOpenAI.bind_tools)를 참조하고, LLM이 도구를 호출하도록 강제하는 방법에 대한 [이 가이드](/docs/how_to/tool_choice/)를 확인하세요.
 
-If tool calls are included in a LLM response, they are attached to the corresponding
-[message](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage)
-or [message chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk)
-as a list of [tool call](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCall.html#langchain_core.messages.tool.ToolCall)
-objects in the `.tool_calls` attribute.
+## 도구 호출
 
-Note that chat models can call multiple tools at once.
+LLM 응답에 도구 호출이 포함되면, 이는 해당 [메시지](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage) 또는 [메시지 청크](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html#langchain_core.messages.ai.AIMessageChunk)에 `.tool_calls` 속성의 [도구 호출](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCall.html#langchain_core.messages.tool.ToolCall) 객체 목록으로 첨부됩니다.
 
-A `ToolCall` is a typed dict that includes a
-tool name, dict of argument values, and (optionally) an identifier. Messages with no
-tool calls default to an empty list for this attribute.
+채팅 모델은 여러 도구를 동시에 호출할 수 있습니다.
+
+`ToolCall`은 도구 이름, 인수 값의 딕셔너리 및 (선택적으로) 식별자를 포함하는 타입 딕셔너리입니다. 도구 호출이 없는 메시지는 이 속성에 대해 기본적으로 빈 목록으로 설정됩니다.
 
 ```python
 query = "What is 3 * 12? Also, what is 11 + 49?"
 
 llm_with_tools.invoke(query).tool_calls
 ```
+
 
 ```output
 [{'name': 'multiply',
@@ -179,17 +177,12 @@ llm_with_tools.invoke(query).tool_calls
   'type': 'tool_call'}]
 ```
 
-The `.tool_calls` attribute should contain valid tool calls. Note that on occasion,
-model providers may output malformed tool calls (e.g., arguments that are not
-valid JSON). When parsing fails in these cases, instances
-of [InvalidToolCall](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.InvalidToolCall.html#langchain_core.messages.tool.InvalidToolCall)
-are populated in the `.invalid_tool_calls` attribute. An `InvalidToolCall` can have
-a name, string arguments, identifier, and error message.
 
-## Parsing
+`.tool_calls` 속성에는 유효한 도구 호출이 포함되어야 합니다. 때때로 모델 제공자가 잘못된 형식의 도구 호출(예: 유효하지 않은 JSON 인수)을 출력할 수 있습니다. 이러한 경우 파싱이 실패하면 [InvalidToolCall](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.InvalidToolCall.html#langchain_core.messages.tool.InvalidToolCall) 인스턴스가 `.invalid_tool_calls` 속성에 채워집니다. `InvalidToolCall`은 이름, 문자열 인수, 식별자 및 오류 메시지를 가질 수 있습니다.
 
-If desired, [output parsers](/docs/how_to#output-parsers) can further process the output. For example, we can convert existing values populated on the `.tool_calls` to Pydantic objects using the
-[PydanticToolsParser](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html):
+## 파싱
+
+원하는 경우 [출력 파서](/docs/how_to#output-parsers)를 사용하여 출력을 추가로 처리할 수 있습니다. 예를 들어, `.tool_calls`에 채워진 기존 값을 Pydantic 객체로 변환할 수 있습니다 [PydanticToolsParser](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html):
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticToolsParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html", "title": "How to use chat models to call tools"}]-->
@@ -215,21 +208,23 @@ chain = llm_with_tools | PydanticToolsParser(tools=[add, multiply])
 chain.invoke(query)
 ```
 
+
 ```output
 [multiply(a=3, b=12), add(a=11, b=49)]
 ```
 
-## Next steps
 
-Now you've learned how to bind tool schemas to a chat model and have the model call the tool.
+## 다음 단계
 
-Next, check out this guide on actually using the tool by invoking the function and passing the results back to the model:
+이제 도구 스키마를 채팅 모델에 바인딩하고 모델이 도구를 호출하는 방법을 배웠습니다.
 
-- Pass [tool results back to model](/docs/how_to/tool_results_pass_to_model)
+다음으로, 함수를 호출하고 결과를 모델에 다시 전달하여 도구를 실제로 사용하는 방법에 대한 이 가이드를 확인하세요:
 
-You can also check out some more specific uses of tool calling:
+- [도구 결과를 모델에 다시 전달하기](/docs/how_to/tool_results_pass_to_model)
 
-- Getting [structured outputs](/docs/how_to/structured_output/) from models
-- Few shot prompting [with tools](/docs/how_to/tools_few_shot/)
-- Stream [tool calls](/docs/how_to/tool_streaming/)
-- Pass [runtime values to tools](/docs/how_to/tool_runtime)
+또한 도구 호출의 보다 구체적인 사용 사례를 확인할 수 있습니다:
+
+- 모델에서 [구조화된 출력](/docs/how_to/structured_output/) 얻기
+- 도구와 함께 [Few shot prompting](/docs/how_to/tools_few_shot/)
+- [도구 호출 스트리밍](/docs/how_to/tool_streaming/)
+- [런타임 값을 도구에 전달하기](/docs/how_to/tool_runtime)

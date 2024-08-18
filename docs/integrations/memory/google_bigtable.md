@@ -1,37 +1,39 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/google_bigtable/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/google_bigtable.ipynb
+description: 구글 클라우드 빅테이블을 사용하여 채팅 메시지 기록을 저장하는 방법을 다루며, Langchain 통합을 활용한 AI 경험 구축을
+  안내합니다.
 ---
 
-# Google Bigtable
+# 구글 빅테이블
 
-> [Google Cloud Bigtable](https://cloud.google.com/bigtable) is a key-value and wide-column store, ideal for fast access to structured, semi-structured, or unstructured data. Extend your database application to build AI-powered experiences leveraging Bigtable's Langchain integrations.
+> [구글 클라우드 빅테이블](https://cloud.google.com/bigtable)은 구조화된, 반구조화된 또는 비구조화된 데이터에 대한 빠른 접근을 위해 이상적인 키-값 및 와이드 컬럼 저장소입니다. 빅테이블의 Langchain 통합을 활용하여 AI 기반 경험을 구축하기 위해 데이터베이스 애플리케이션을 확장하세요.
 
-This notebook goes over how to use [Google Cloud Bigtable](https://cloud.google.com/bigtable) to store chat message history with the `BigtableChatMessageHistory` class.
+이 노트북은 `BigtableChatMessageHistory` 클래스를 사용하여 채팅 메시지 기록을 저장하는 방법을 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-bigtable-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-bigtable-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-bigtable-python/blob/main/docs/chat_message_history.ipynb)
 
-## Before You Begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the Bigtable API](https://console.cloud.google.com/flows/enableapi?apiid=bigtable.googleapis.com)
-* [Create a Bigtable instance](https://cloud.google.com/bigtable/docs/creating-instance)
-* [Create a Bigtable table](https://cloud.google.com/bigtable/docs/managing-tables)
-* [Create Bigtable access credentials](https://developers.google.com/workspace/guides/create-credentials)
+* [구글 클라우드 프로젝트 생성하기](https://developers.google.com/workspace/guides/create-project)
+* [빅테이블 API 활성화하기](https://console.cloud.google.com/flows/enableapi?apiid=bigtable.googleapis.com)
+* [빅테이블 인스턴스 생성하기](https://cloud.google.com/bigtable/docs/creating-instance)
+* [빅테이블 테이블 생성하기](https://cloud.google.com/bigtable/docs/managing-tables)
+* [빅테이블 접근 자격 증명 생성하기](https://developers.google.com/workspace/guides/create-credentials)
 
-### 🦜🔗 Library Installation
+### 🦜🔗 라이브러리 설치
 
-The integration lives in its own `langchain-google-bigtable` package, so we need to install it.
+통합은 자체 `langchain-google-bigtable` 패키지에 있으므로 설치해야 합니다.
 
 ```python
 %pip install -upgrade --quiet langchain-google-bigtable
 ```
 
-**Colab only**: Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**Colab 전용**: 다음 셀의 주석을 제거하여 커널을 재시작하거나 버튼을 사용하여 커널을 재시작하세요. Vertex AI Workbench의 경우 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -41,14 +43,15 @@ The integration lives in its own `langchain-google-bigtable` package, so we need
 # app.kernel.do_shutdown(True)
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ 구글 클라우드 프로젝트 설정
+이 노트북 내에서 구글 클라우드 리소스를 활용할 수 있도록 구글 클라우드 프로젝트를 설정하세요.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list` 실행.
+* `gcloud projects list` 실행.
+* 지원 페이지 참조: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
@@ -59,12 +62,13 @@ PROJECT_ID = "my-project-id"  # @param {type:"string"}
 !gcloud config set project {PROJECT_ID}
 ```
 
-### 🔐 Authentication
 
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
+### 🔐 인증
 
-- If you are using Colab to run this notebook, use the cell below and continue.
-- If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+구글 클라우드에 인증하여 이 노트북에 로그인한 IAM 사용자로서 구글 클라우드 프로젝트에 접근하세요.
+
+- 이 노트북을 실행하기 위해 Colab을 사용하는 경우 아래 셀을 사용하고 계속 진행하세요.
+- Vertex AI Workbench를 사용하는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -72,11 +76,12 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-## Basic Usage
 
-### Initialize Bigtable schema
+## 기본 사용법
 
-The schema for BigtableChatMessageHistory requires the instance and table to exist, and have a column family called `langchain`.
+### 빅테이블 스키마 초기화
+
+BigtableChatMessageHistory의 스키마는 인스턴스와 테이블이 존재해야 하며, `langchain`이라는 컬럼 패밀리가 있어야 합니다.
 
 ```python
 # @markdown Please specify an instance and a table for demo purpose.
@@ -84,7 +89,8 @@ INSTANCE_ID = "my_instance"  # @param {type:"string"}
 TABLE_ID = "my_table"  # @param {type:"string"}
 ```
 
-If the table or the column family do not exist, you can use the following function to create them:
+
+테이블이나 컬럼 패밀리가 존재하지 않는 경우 다음 함수를 사용하여 생성할 수 있습니다:
 
 ```python
 from google.cloud import bigtable
@@ -96,13 +102,14 @@ create_chat_history_table(
 )
 ```
 
+
 ### BigtableChatMessageHistory
 
-To initialize the `BigtableChatMessageHistory` class you need to provide only 3 things:
+`BigtableChatMessageHistory` 클래스를 초기화하려면 다음 3가지만 제공하면 됩니다:
 
-1. `instance_id` - The Bigtable instance to use for chat message history.
-2. `table_id` : The Bigtable table to store the chat message history.
-3. `session_id` - A unique identifier string that specifies an id for the session.
+1. `instance_id` - 채팅 메시지 기록에 사용할 빅테이블 인스턴스.
+2. `table_id` : 채팅 메시지 기록을 저장할 빅테이블 테이블.
+3. `session_id` - 세션을 위한 고유 식별자 문자열.
 
 ```python
 from langchain_google_bigtable import BigtableChatMessageHistory
@@ -117,24 +124,27 @@ message_history.add_user_message("hi!")
 message_history.add_ai_message("whats up?")
 ```
 
+
 ```python
 message_history.messages
 ```
 
-#### Cleaning up
 
-When the history of a specific session is obsolete and can be deleted, it can be done the following way.
+#### 정리하기
 
-**Note:** Once deleted, the data is no longer stored in Bigtable and is gone forever.
+특정 세션의 기록이 더 이상 필요하지 않으면 다음과 같은 방법으로 삭제할 수 있습니다.
+
+**참고:** 삭제되면 데이터는 더 이상 빅테이블에 저장되지 않으며 영원히 사라집니다.
 
 ```python
 message_history.clear()
 ```
 
-## Advanced Usage
 
-### Custom client
-The client created by default is the default client, using only admin=True option. To use a non-default, a [custom client](https://cloud.google.com/python/docs/reference/bigtable/latest/client#class-googlecloudbigtableclientclientprojectnone-credentialsnone-readonlyfalse-adminfalse-clientinfonone-clientoptionsnone-adminclientoptionsnone-channelnone) can be passed to the constructor.
+## 고급 사용법
+
+### 사용자 정의 클라이언트
+기본적으로 생성된 클라이언트는 admin=True 옵션만 사용하는 기본 클라이언트입니다. 비기본 클라이언트를 사용하려면 [사용자 정의 클라이언트](https://cloud.google.com/python/docs/reference/bigtable/latest/client#class-googlecloudbigtableclientclientprojectnone-credentialsnone-readonlyfalse-adminfalse-clientinfonone-clientoptionsnone-adminclientoptionsnone-channelnone)를 생성자에 전달할 수 있습니다.
 
 ```python
 from google.cloud import bigtable

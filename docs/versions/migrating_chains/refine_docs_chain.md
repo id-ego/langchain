@@ -1,36 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/migrating_chains/refine_docs_chain/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/versions/migrating_chains/refine_docs_chain.ipynb
+description: RefineDocumentsChain은 긴 텍스트를 분석하기 위한 전략으로, 문서를 나누고 요약을 통해 결과를 개선하는 과정을
+  포함합니다.
 title: Migrating from RefineDocumentsChain
 ---
 
-[RefineDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.refine.RefineDocumentsChain.html) implements a strategy for analyzing long texts. The strategy is as follows:
+[RefineDocumentsChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.refine.RefineDocumentsChain.html)은 긴 텍스트를 분석하기 위한 전략을 구현합니다. 전략은 다음과 같습니다:
 
-- Split a text into smaller documents;
-- Apply a process to the first document;
-- Refine or update the result based on the next document;
-- Repeat through the sequence of documents until finished.
+- 텍스트를 더 작은 문서로 나누기;
+- 첫 번째 문서에 프로세스 적용하기;
+- 다음 문서를 기반으로 결과를 정제하거나 업데이트하기;
+- 완료될 때까지 문서의 순서를 반복하기.
 
-A common process applied in this context is summarization, in which a running summary is modified as we proceed through chunks of a long text. This is particularly useful for texts that are large compared to the context window of a given LLM.
+이 맥락에서 적용되는 일반적인 프로세스는 요약으로, 긴 텍스트의 조각을 진행하면서 실행 중인 요약을 수정합니다. 이는 주어진 LLM의 컨텍스트 창에 비해 큰 텍스트에 특히 유용합니다.
 
-A [LangGraph](https://langchain-ai.github.io/langgraph/) implementation confers a number of advantages for this problem:
+[LangGraph](https://langchain-ai.github.io/langgraph/) 구현은 이 문제에 대해 여러 가지 장점을 제공합니다:
 
-- Where `RefineDocumentsChain` refines the summary via a `for` loop inside the class, a LangGraph implementation lets you step through the execution to monitor or otherwise steer it if needed.
-- The LangGraph implementation supports streaming of both execution steps and individual tokens.
-- Because it is assembled from modular components, it is also simple to extend or modify (e.g., to incorporate [tool calling](/docs/concepts/#functiontool-calling) or other behavior).
+- `RefineDocumentsChain`이 클래스 내부의 `for` 루프를 통해 요약을 정제하는 반면, LangGraph 구현은 필요에 따라 실행을 모니터링하거나 조정할 수 있도록 단계별로 진행할 수 있습니다.
+- LangGraph 구현은 실행 단계와 개별 토큰의 스트리밍을 지원합니다.
+- 모듈형 구성 요소로 조립되어 있기 때문에 [도구 호출](/docs/concepts/#functiontool-calling) 또는 기타 동작을 통합하는 등의 확장이나 수정이 간단합니다.
 
-Below we will go through both `RefineDocumentsChain` and a corresponding LangGraph implementation on a simple example for illustrative purposes.
+아래에서는 설명을 위해 간단한 예제를 통해 `RefineDocumentsChain`과 해당 LangGraph 구현을 살펴보겠습니다.
 
-Let's first load a chat model:
+먼저 채팅 모델을 로드해 보겠습니다:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
 
-## Example
+## 예제
 
-Let's go through an example where we summarize a sequence of documents. We first generate some simple documents for illustrative purposes:
+문서의 시퀀스를 요약하는 예제를 살펴보겠습니다. 설명을 위해 간단한 문서를 먼저 생성합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "# Example"}]-->
@@ -43,12 +44,13 @@ documents = [
 ]
 ```
 
-### Legacy
+
+### 레거시
 
 <details open>
 
 
-Below we show an implementation with `RefineDocumentsChain`. We define the prompt templates for the initial summarization and successive refinements, instantiate separate [LLMChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html) objects for these two purposes, and instantiate `RefineDocumentsChain` with these components.
+아래에서는 `RefineDocumentsChain`을 사용한 구현을 보여줍니다. 초기 요약 및 후속 정제를 위한 프롬프트 템플릿을 정의하고, 이 두 가지 목적을 위해 별도의 [LLMChain](https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html) 객체를 인스턴스화하며, 이러한 구성 요소로 `RefineDocumentsChain`을 인스턴스화합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "# Example"}, {"imported": "RefineDocumentsChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.refine.RefineDocumentsChain.html", "title": "# Example"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "# Example"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "# Example"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "# Example"}]-->
@@ -98,18 +100,21 @@ chain = RefineDocumentsChain(
 )
 ```
 
-We can now invoke our chain:
+
+이제 체인을 호출할 수 있습니다:
 
 ```python
 result = chain.invoke(documents)
 result["output_text"]
 ```
 
+
 ```output
 'Apples are typically red in color, blueberries are blue, and bananas are yellow.'
 ```
 
-The [LangSmith trace](https://smith.langchain.com/public/8ec51479-9420-412f-bb21-cb8c9f59dfde/r) is composed of three LLM calls: one for the initial summary, and two more updates of that summary. The process completes when we update the summary with content from the final document.
+
+[LangSmith trace](https://smith.langchain.com/public/8ec51479-9420-412f-bb21-cb8c9f59dfde/r)는 초기 요약을 위한 하나의 LLM 호출과 그 요약을 업데이트하는 두 개의 호출로 구성됩니다. 최종 문서의 내용을 사용하여 요약을 업데이트할 때 프로세스가 완료됩니다.
 
 </details>
 
@@ -119,17 +124,18 @@ The [LangSmith trace](https://smith.langchain.com/public/8ec51479-9420-412f-bb21
 <details open>
 
 
-Below we show a LangGraph implementation of this process:
+아래에서는 이 프로세스의 LangGraph 구현을 보여줍니다:
 
-- We use the same two templates as before.
-- We generate a simple chain for the initial summary that plucks out the first document, formats it into a prompt and runs inference with our LLM.
-- We generate a second `refine_summary_chain` that operates on each successive document, refining the initial summary.
+- 이전과 동일한 두 개의 템플릿을 사용합니다.
+- 첫 번째 문서를 추출하고 이를 프롬프트로 포맷하여 LLM으로 추론을 실행하는 초기 요약을 위한 간단한 체인을 생성합니다.
+- 초기 요약을 정제하는 각 후속 문서에서 작동하는 두 번째 `refine_summary_chain`을 생성합니다.
 
-We will need to install `langgraph`:
+`langgraph`를 설치해야 합니다:
 
 ```python
 pip install -qU langgraph
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "# Example"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "# Example"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "# Example"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "# Example"}]-->
@@ -220,15 +226,17 @@ graph.add_conditional_edges("refine_summary", should_refine)
 app = graph.compile()
 ```
 
+
 ```python
 from IPython.display import Image
 
 Image(app.get_graph().draw_mermaid_png())
 ```
 
+
 ![](/img/25f912b8bd6c29a6818aa760ebf47b27.jpg)
 
-We can step through the execution as follows, printing out the summary as it is refined:
+다음과 같이 실행을 단계별로 진행하며 요약이 정제되는 과정을 출력할 수 있습니다:
 
 ```python
 async for step in app.astream(
@@ -238,14 +246,16 @@ async for step in app.astream(
     if summary := step.get("summary"):
         print(summary)
 ```
+
 ```output
 Apples are typically red in color.
 Apples are typically red in color, while blueberries are blue.
 Apples are typically red in color, blueberries are blue, and bananas are yellow.
 ```
-In the [LangSmith trace](https://smith.langchain.com/public/d6656f49-4fa1-44b9-b6d3-10af921037fa/r) we again recover three LLM calls, performing the same functions as before.
 
-Note that we can stream tokens from the application, including from intermediate steps:
+[LangSmith trace](https://smith.langchain.com/public/d6656f49-4fa1-44b9-b6d3-10af921037fa/r)에서도 세 개의 LLM 호출을 다시 확인할 수 있으며, 이전과 동일한 기능을 수행합니다.
+
+중간 단계에서 애플리케이션으로부터 토큰을 스트리밍할 수 있다는 점에 유의하세요:
 
 ```python
 async for event in app.astream_events(
@@ -259,6 +269,7 @@ async for event in app.astream_events(
     elif kind == "on_chat_model_end":
         print("\n\n")
 ```
+
 ```output
 Ap|ples| are| characterized| by| their| red| color|.|
 
@@ -268,11 +279,12 @@ Ap|ples| are| characterized| by| their| red| color|,| while| blueberries| are| k
 
 Ap|ples| are| characterized| by| their| red| color|,| blueberries| are| known| for| their| blue| hue|,| and| bananas| are| recognized| for| their| yellow| color|.|
 ```
+
 </details>
 
 
-## Next steps
+## 다음 단계
 
-See [this tutorial](/docs/tutorials/summarization/) for more LLM-based summarization strategies.
+LLM 기반 요약 전략에 대한 [이 튜토리얼](/docs/tutorials/summarization/)을 참조하세요.
 
-Check out the [LangGraph documentation](https://langchain-ai.github.io/langgraph/) for detail on building with LangGraph.
+LangGraph로 빌드하는 방법에 대한 자세한 내용은 [LangGraph 문서](https://langchain-ai.github.io/langgraph/)를 확인하세요.

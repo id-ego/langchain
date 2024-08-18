@@ -1,16 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/installation/
+description: LangChain 패키지 설치 방법을 안내하며, 다양한 통합 기능을 위해 필요한 추가 종속성 설치 방법도 설명합니다.
 sidebar_position: 2
 ---
 
-# How to install LangChain packages
+# LangChain 패키지 설치 방법
 
-The LangChain ecosystem is split into different packages, which allow you to choose exactly which pieces of
-functionality to install.
+LangChain 생태계는 다양한 패키지로 나뉘어 있어, 설치할 기능의 조각을 정확히 선택할 수 있습니다.
 
-## Official release
+## 공식 릴리스
 
-To install the main LangChain package, run:
+주요 LangChain 패키지를 설치하려면 다음 명령어를 실행하세요:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -25,84 +24,76 @@ import CodeBlock from "@theme/CodeBlock";
   </TabItem>
 </Tabs>
 
+이 패키지는 LangChain 사용의 합리적인 시작점을 제공하지만, LangChain의 많은 가치는 다양한 모델 제공자, 데이터 저장소 등과 통합할 때 발생합니다. 기본적으로 이를 수행하는 데 필요한 종속성은 설치되지 않습니다. 특정 통합을 위해 필요한 종속성을 별도로 설치해야 합니다. 이 가이드의 다음 섹션에서 그 방법을 보여드리겠습니다.
 
-While this package acts as a sane starting point to using LangChain,
-much of the value of LangChain comes when integrating it with various model providers, datastores, etc.
-By default, the dependencies needed to do that are NOT installed. You will need to install the dependencies for specific integrations separately.
-We'll show how to do that in the next sections of this guide.
+## 생태계 패키지
 
-## Ecosystem packages
-
-With the exception of the `langsmith` SDK, all packages in the LangChain ecosystem depend on `langchain-core`, which contains base
-classes and abstractions that other packages use. The dependency graph below shows how the difference packages are related.
-A directed arrow indicates that the source package depends on the target package:
+`langsmith` SDK를 제외한 모든 LangChain 생태계의 패키지는 기본 클래스와 다른 패키지에서 사용하는 추상화를 포함하는 `langchain-core`에 의존합니다. 아래의 종속성 그래프는 서로 다른 패키지들이 어떻게 연결되어 있는지를 보여줍니다. 방향 화살표는 소스 패키지가 대상 패키지에 의존하고 있음을 나타냅니다:
 
 ![](/img/ecosystem_packages.png)
 
-When installing a package, you do not need to explicitly install that package's explicit dependencies (such as `langchain-core`).
-However, you may choose to if you are using a feature only available in a certain version of that dependency.
-If you do, you should make sure that the installed or pinned version is compatible with any other integration packages you use.
+패키지를 설치할 때 해당 패키지의 명시적 종속성(예: `langchain-core`)을 명시적으로 설치할 필요는 없습니다. 그러나 특정 버전의 종속성에서만 사용할 수 있는 기능을 사용하는 경우 선택적으로 설치할 수 있습니다. 이 경우, 설치된 버전 또는 고정된 버전이 사용하는 다른 통합 패키지와 호환되는지 확인해야 합니다.
 
-### From source
+### 소스에서 설치
 
-If you want to install from source, you can do so by cloning the repo and be sure that the directory is `PATH/TO/REPO/langchain/libs/langchain` running:
+소스에서 설치하려면, 레포를 클론하고 디렉토리가 `PATH/TO/REPO/langchain/libs/langchain`인지 확인한 후 다음을 실행하세요:
 
 ```bash
 pip install -e .
 ```
 
-### LangChain core
-The `langchain-core` package contains base abstractions that the rest of the LangChain ecosystem uses, along with the LangChain Expression Language. It is automatically installed by `langchain`, but can also be used separately. Install with:
+
+### LangChain 코어
+`langchain-core` 패키지는 나머지 LangChain 생태계에서 사용하는 기본 추상화를 포함하며, LangChain 표현 언어도 포함되어 있습니다. `langchain`에 의해 자동으로 설치되지만, 별도로 사용할 수도 있습니다. 다음과 같이 설치하세요:
 
 ```bash
 pip install langchain-core
 ```
 
-### LangChain community
-The `langchain-community` package contains third-party integrations. Install with:
+
+### LangChain 커뮤니티
+`langchain-community` 패키지는 서드파티 통합을 포함합니다. 다음과 같이 설치하세요:
 
 ```bash
 pip install langchain-community
 ```
 
-### LangChain experimental
-The `langchain-experimental` package holds experimental LangChain code, intended for research and experimental uses.
-Install with:
+
+### LangChain 실험적
+`langchain-experimental` 패키지는 연구 및 실험적 사용을 위한 실험적인 LangChain 코드를 포함합니다. 다음과 같이 설치하세요:
 
 ```bash
 pip install langchain-experimental
 ```
 
+
 ### LangGraph
-`langgraph` is a library for building stateful, multi-actor applications with LLMs. It integrates smoothly with LangChain, but can be used without it.
-Install with:
+`langgraph`는 LLM을 사용하여 상태를 유지하는 다중 액터 애플리케이션을 구축하기 위한 라이브러리입니다. LangChain과 원활하게 통합되지만, LangChain 없이도 사용할 수 있습니다. 다음과 같이 설치하세요:
 
 ```bash
 pip install langgraph
 ```
 
+
 ### LangServe
-LangServe helps developers deploy LangChain runnables and chains as a REST API.
-LangServe is automatically installed by LangChain CLI.
-If not using LangChain CLI, install with:
+LangServe는 개발자가 LangChain 실행 가능 항목 및 체인을 REST API로 배포하는 데 도움을 줍니다. LangServe는 LangChain CLI에 의해 자동으로 설치됩니다. LangChain CLI를 사용하지 않는 경우, 다음과 같이 설치하세요:
 
 ```bash
 pip install "langserve[all]"
 ```
-for both client and server dependencies. Or `pip install "langserve[client]"` for client code, and `pip install "langserve[server]"` for server code.
+
+클라이언트 및 서버 종속성을 모두 위해서입니다. 또는 클라이언트 코드를 위해 `pip install "langserve[client]"`를, 서버 코드를 위해 `pip install "langserve[server]"`를 사용하세요.
 
 ## LangChain CLI
-The LangChain CLI is useful for working with LangChain templates and other LangServe projects.
-Install with:
+LangChain CLI는 LangChain 템플릿 및 기타 LangServe 프로젝트 작업에 유용합니다. 다음과 같이 설치하세요:
 
 ```bash
 pip install langchain-cli
 ```
 
+
 ### LangSmith SDK
-The LangSmith SDK is automatically installed by LangChain. However, it does not depend on
-`langchain-core`, and can be installed and used independently if desired.
-If you are not using LangChain, you can install it with:
+LangSmith SDK는 LangChain에 의해 자동으로 설치됩니다. 그러나 `langchain-core`에 의존하지 않으며, 원할 경우 독립적으로 설치하고 사용할 수 있습니다. LangChain을 사용하지 않는 경우, 다음과 같이 설치할 수 있습니다:
 
 ```bash
 pip install langsmith

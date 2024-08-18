@@ -1,27 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/sagemaker-endpoint/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/sagemaker-endpoint.ipynb
+description: SageMaker에서 Hugging Face 모델을 호스팅하고 배치 요청을 처리하는 방법에 대한 안내 및 코드 수정 사항을
+  제공합니다.
 ---
 
 # SageMaker
 
-Let's load the `SageMaker Endpoints Embeddings` class. The class can be used if you host, e.g. your own Hugging Face model on SageMaker.
+`SageMaker Endpoints Embeddings` 클래스를 로드해 보겠습니다. 이 클래스는 SageMaker에서 예를 들어, 자신의 Hugging Face 모델을 호스팅하는 경우 사용할 수 있습니다.
 
-For instructions on how to do this, please see [here](https://www.philschmid.de/custom-inference-huggingface-sagemaker). 
+이 방법에 대한 지침은 [여기](https://www.philschmid.de/custom-inference-huggingface-sagemaker)를 참조하십시오.
 
-**Note**: In order to handle batched requests, you will need to adjust the return line in the `predict_fn()` function within the custom `inference.py` script:
+**참고**: 배치 요청을 처리하려면, 사용자 정의 `inference.py` 스크립트 내의 `predict_fn()` 함수에서 반환 라인을 조정해야 합니다:
 
-Change from
+다음에서 변경:
 
 `return {"vectors": sentence_embeddings[0].tolist()}`
 
-to:
+다음으로:
 
 `return {"vectors": sentence_embeddings.tolist()}`.
 
 ```python
 !pip3 install langchain boto3
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "SagemakerEndpointEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sagemaker_endpoint.SagemakerEndpointEmbeddings.html", "title": "SageMaker"}, {"imported": "EmbeddingsContentHandler", "source": "langchain_community.embeddings.sagemaker_endpoint", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sagemaker_endpoint.EmbeddingsContentHandler.html", "title": "SageMaker"}]-->
@@ -88,19 +90,23 @@ embeddings = SagemakerEndpointEmbeddings(
 # )
 ```
 
+
 ```python
 query_result = embeddings.embed_query("foo")
 ```
+
 
 ```python
 doc_results = embeddings.embed_documents(["foo"])
 ```
 
+
 ```python
 doc_results
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

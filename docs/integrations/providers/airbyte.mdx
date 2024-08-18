@@ -1,35 +1,35 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/airbyte/
+description: Airbyte는 API, 데이터베이스 및 파일에서 데이터 웨어하우스 및 데이터 레이크로 ELT 파이프라인을 위한 데이터 통합
+  플랫폼입니다.
 ---
 
-# Airbyte
+# 에어바이트
 
-> [Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs,
-databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
+> [에어바이트](https://github.com/airbytehq/airbyte)는 API, 데이터베이스 및 파일에서 데이터 웨어하우스 및 데이터 레이크로의 ELT 파이프라인을 위한 데이터 통합 플랫폼입니다. 데이터 웨어하우스 및 데이터베이스에 대한 가장 큰 ELT 커넥터 카탈로그를 보유하고 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```bash
 pip install -U langchain-airbyte
 ```
 
+
 :::note
 
-Currently, the `langchain-airbyte` library does not support Pydantic v2.
-Please downgrade to Pydantic v1 to use this package.
+현재 `langchain-airbyte` 라이브러리는 Pydantic v2를 지원하지 않습니다.
+이 패키지를 사용하려면 Pydantic v1로 다운그레이드하십시오.
 
-This package also currently requires Python 3.10+.
+이 패키지는 또한 현재 Python 3.10+가 필요합니다.
 
 :::
 
-The integration package doesn't require any global environment variables that need to be
-set, but some integrations (e.g. `source-github`) may need credentials passed in.
+통합 패키지는 설정해야 할 전역 환경 변수가 필요하지 않지만, 일부 통합(예: `source-github`)은 전달된 자격 증명이 필요할 수 있습니다.
 
-## Document loader
+## 문서 로더
 
 ### AirbyteLoader
 
-See a [usage example](/docs/integrations/document_loaders/airbyte).
+[사용 예시](/docs/integrations/document_loaders/airbyte)를 참조하십시오.
 
 ```python
 from langchain_airbyte import AirbyteLoader

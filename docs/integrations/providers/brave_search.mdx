@@ -1,37 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/brave_search/
+description: 브레이브 서치는 브레이브 소프트웨어에서 개발한 검색 엔진으로, 자체 웹 인덱스를 사용하여 광고 없는 검색 경험을 제공합니다.
 ---
 
-# Brave Search
+# 브레이브 서치
 
-> [Brave Search](https://en.wikipedia.org/wiki/Brave_Search) is a search engine developed by Brave Software.
-> - `Brave Search` uses its own web index. As of May 2022, it covered over 10 billion pages and was used to serve 92%
-of search results without relying on any third-parties, with the remainder being retrieved
-server-side from the Bing API or (on an opt-in basis) client-side from Google. According
-to Brave, the index was kept "intentionally smaller than that of Google or Bing" in order to
-help avoid spam and other low-quality content, with the disadvantage that "Brave Search is
-not yet as good as Google in recovering long-tail queries."
-> - `Brave Search Premium`: As of April 2023 Brave Search is an ad-free website, but it will
-eventually switch to a new model that will include ads and premium users will get an ad-free experience.
-User data including IP addresses won't be collected from its users by default. A premium account
-will be required for opt-in data-collection.
+> [브레이브 서치](https://en.wikipedia.org/wiki/Brave_Search)는 브레이브 소프트웨어에서 개발한 검색 엔진입니다.
+> - `브레이브 서치`는 자체 웹 인덱스를 사용합니다. 2022년 5월 기준으로 100억 개 이상의 페이지를 포함하고 있으며, 92%의 검색 결과를 제3자에 의존하지 않고 제공했습니다. 나머지는 서버 측에서 Bing API를 통해 또는 (선택적으로) 클라이언트 측에서 Google로부터 검색됩니다. 브레이브에 따르면, 인덱스는 스팸 및 기타 저품질 콘텐츠를 피하기 위해 "구글이나 빙보다 의도적으로 작게 유지"되었으며, 그 단점은 "브레이브 서치가 긴 꼬리 쿼리를 회복하는 데 있어 아직 구글만큼 좋지 않다"는 것입니다.
+> - `브레이브 서치 프리미엄`: 2023년 4월 기준으로 브레이브 서치는 광고 없는 웹사이트이지만, 결국 광고가 포함된 새로운 모델로 전환될 예정이며, 프리미엄 사용자는 광고 없는 경험을 제공받게 됩니다. IP 주소를 포함한 사용자 데이터는 기본적으로 수집되지 않습니다. 선택적 데이터 수집을 위해 프리미엄 계정이 필요합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-To get access to the Brave Search API, you need to [create an account and get an API key](https://api.search.brave.com/app/dashboard).
+브레이브 서치 API에 접근하려면 [계정을 생성하고 API 키를 받아야](https://api.search.brave.com/app/dashboard) 합니다.
 
-## Document Loader
+## 문서 로더
 
-See a [usage example](/docs/integrations/document_loaders/brave_search).
+[사용 예제](/docs/integrations/document_loaders/brave_search)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "BraveSearchLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.brave_search.BraveSearchLoader.html", "title": "Brave Search"}]-->
 from langchain_community.document_loaders import BraveSearchLoader
 ```
 
-## Tool
 
-See a [usage example](/docs/integrations/tools/brave_search).
+## 도구
+
+[사용 예제](/docs/integrations/tools/brave_search)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "BraveSearch", "source": "langchain.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.brave_search.tool.BraveSearch.html", "title": "Brave Search"}]-->

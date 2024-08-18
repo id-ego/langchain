@@ -1,31 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/self_query/myscale_self_query/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/self_query/myscale_self_query.ipynb
+description: MyScale은 SQL과 LangChain을 통해 접근할 수 있는 통합 벡터 데이터베이스로, LLM 앱의 성능을 향상시킵니다.
 ---
 
 # MyScale
 
-> [MyScale](https://docs.myscale.com/en/) is an integrated vector database. You can access your database in SQL and also from here, LangChain.
-`MyScale` can make use of [various data types and functions for filters](https://blog.myscale.com/2023/06/06/why-integrated-database-solution-can-boost-your-llm-apps/#filter-on-anything-without-constraints). It will boost up your LLM app no matter if you are scaling up your data or expand your system to broader application.
+> [MyScale](https://docs.myscale.com/en/)는 통합 벡터 데이터베이스입니다. SQL에서 데이터베이스에 접근할 수 있으며, 여기 LangChain에서도 접근할 수 있습니다.  
+`MyScale`은 [필터를 위한 다양한 데이터 유형과 함수](https://blog.myscale.com/2023/06/06/why-integrated-database-solution-can-boost-your-llm-apps/#filter-on-anything-without-constraints)를 활용할 수 있습니다. 데이터 규모를 확장하든 시스템을 더 넓은 애플리케이션으로 확장하든, LLM 앱을 향상시킬 것입니다.
 
-In the notebook, we'll demo the `SelfQueryRetriever` wrapped around a `MyScale` vector store with some extra pieces we contributed to LangChain. 
+노트북에서는 LangChain에 기여한 몇 가지 추가 요소와 함께 `MyScale` 벡터 저장소를 감싼 `SelfQueryRetriever`를 시연할 것입니다.
 
-In short, it can be condensed into 4 points:
-1. Add `contain` comparator to match the list of any if there is more than one element matched
-2. Add `timestamp` data type for datetime match (ISO-format, or YYYY-MM-DD)
-3. Add `like` comparator for string pattern search
-4. Add arbitrary function capability
+간단히 4가지 요점으로 요약할 수 있습니다:
+1. 여러 요소가 일치할 경우 목록을 일치시키기 위해 `contain` 비교자를 추가합니다.
+2. 날짜 일치를 위한 `timestamp` 데이터 유형을 추가합니다 (ISO 형식 또는 YYYY-MM-DD).
+3. 문자열 패턴 검색을 위한 `like` 비교자를 추가합니다.
+4. 임의의 함수 기능을 추가합니다.
 
-## Creating a MyScale vector store
-MyScale has already been integrated to LangChain for a while. So you can follow [this notebook](/docs/integrations/vectorstores/myscale) to create your own vectorstore for a self-query retriever.
+## MyScale 벡터 저장소 생성하기
+MyScale은 이미 LangChain에 통합되어 있습니다. 따라서 [이 노트북](/docs/integrations/vectorstores/myscale)을 따라 자기 쿼리 검색기를 위한 벡터 저장소를 생성할 수 있습니다.
 
-**Note:** All self-query retrievers requires you to have `lark` installed (`pip install lark`). We use `lark` for grammar definition. Before you proceed to the next step, we also want to remind you that `clickhouse-connect` is also needed to interact with your MyScale backend.
+**참고:** 모든 자기 쿼리 검색기에는 `lark`가 설치되어 있어야 합니다 (`pip install lark`). 우리는 문법 정의를 위해 `lark`를 사용합니다. 다음 단계로 진행하기 전에, `MyScale` 백엔드와 상호작용하기 위해 `clickhouse-connect`도 필요하다는 점을 상기시켜 드립니다.
 
 ```python
 %pip install --upgrade --quiet  lark clickhouse-connect
 ```
 
-In this tutorial we follow other example's setting and use `OpenAIEmbeddings`. Remember to get an OpenAI API Key for valid access to LLMs.
+
+이 튜토리얼에서는 다른 예제의 설정을 따르고 `OpenAIEmbeddings`를 사용합니다. LLM에 유효하게 접근하기 위해 OpenAI API 키를 받는 것을 잊지 마세요.
 
 ```python
 import getpass
@@ -38,6 +39,7 @@ os.environ["MYSCALE_USERNAME"] = getpass.getpass("MyScale Username:")
 os.environ["MYSCALE_PASSWORD"] = getpass.getpass("MyScale Password:")
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "MyScale", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.myscale.MyScale.html", "title": "MyScale"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "MyScale"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "MyScale"}]-->
 from langchain_community.vectorstores import MyScale
@@ -47,10 +49,11 @@ from langchain_openai import OpenAIEmbeddings
 embeddings = OpenAIEmbeddings()
 ```
 
-## Create some sample data
-As you can see, the data we created has some differences compared to other self-query retrievers. We replaced the keyword `year` with `date` which gives you finer control on timestamps. We also changed the type of the keyword `gerne` to a list of strings, where an LLM can use a new `contain` comparator to construct filters. We also provide the `like` comparator and arbitrary function support to filters, which will be introduced in next few cells.
 
-Now let's look at the data first.
+## 샘플 데이터 생성하기
+보시다시피, 우리가 생성한 데이터는 다른 자기 쿼리 검색기와 비교할 때 몇 가지 차이점이 있습니다. 우리는 키워드 `year`를 `date`로 교체하여 타임스탬프에 대한 세밀한 제어를 제공합니다. 또한 키워드 `gerne`의 유형을 문자열 목록으로 변경하여 LLM이 새로운 `contain` 비교자를 사용하여 필터를 구성할 수 있도록 했습니다. 우리는 또한 필터에 `like` 비교자와 임의 함수 지원을 제공하며, 이는 다음 몇 개의 셀에서 소개될 것입니다.
+
+이제 먼저 데이터를 살펴보겠습니다.
 
 ```python
 docs = [
@@ -90,8 +93,9 @@ vectorstore = MyScale.from_documents(
 )
 ```
 
-## Creating our self-querying retriever
-Just like other retrievers... simple and nice.
+
+## 자기 쿼리 검색기 생성하기
+다른 검색기와 마찬가지로... 간단하고 멋집니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "MyScale"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "MyScale"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "MyScale"}]-->
@@ -136,28 +140,33 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
-## Testing it out with self-query retriever's existing functionalities
-And now we can try actually using our retriever!
+
+## 자기 쿼리 검색기의 기존 기능으로 테스트하기
+이제 실제로 우리의 검색기를 사용해 볼 수 있습니다!
 
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are some movies about dinosaurs")
 ```
 
+
 ```python
 # This example only specifies a filter
 retriever.invoke("I want to watch a movie rated higher than 8.5")
 ```
+
 
 ```python
 # This example specifies a query and a filter
 retriever.invoke("Has Greta Gerwig directed any movies about women")
 ```
 
+
 ```python
 # This example specifies a composite filter
 retriever.invoke("What's a highly rated (above 8.5) science fiction film?")
 ```
+
 
 ```python
 # This example specifies a query and composite filter
@@ -166,35 +175,40 @@ retriever.invoke(
 )
 ```
 
-# Wait a second... what else?
 
-Self-query retriever with MyScale can do more! Let's find out.
+# 잠깐만... 또 무엇이 있을까요?
+
+MyScale과 함께하는 자기 쿼리 검색기는 더 많은 기능을 수행할 수 있습니다! 알아봅시다.
 
 ```python
 # You can use length(genres) to do anything you want
 retriever.invoke("What's a movie that have more than 1 genres?")
 ```
 
+
 ```python
 # Fine-grained datetime? You got it already.
 retriever.invoke("What's a movie that release after feb 1995?")
 ```
+
 
 ```python
 # Don't know what your exact filter should be? Use string pattern match!
 retriever.invoke("What's a movie whose name is like Andrei?")
 ```
 
+
 ```python
 # Contain works for lists: so you can match a list with contain comparator!
 retriever.invoke("What's a movie who has genres science fiction and adventure?")
 ```
 
-## Filter k
 
-We can also use the self query retriever to specify `k`: the number of documents to fetch.
+## k 필터
 
-We can do this by passing `enable_limit=True` to the constructor.
+자기 쿼리 검색기를 사용하여 `k`: 가져올 문서 수를 지정할 수도 있습니다.
+
+이는 생성자에게 `enable_limit=True`를 전달하여 수행할 수 있습니다.
 
 ```python
 retriever = SelfQueryRetriever.from_llm(
@@ -206,6 +220,7 @@ retriever = SelfQueryRetriever.from_llm(
     verbose=True,
 )
 ```
+
 
 ```python
 # This example only specifies a relevant query

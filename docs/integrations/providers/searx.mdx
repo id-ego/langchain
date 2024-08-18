@@ -1,46 +1,43 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/searx/
+description: SearxNG 검색 API를 LangChain에서 사용하는 방법을 다루며, 설치 및 설정과 SearxNG API 래퍼에 대한
+  참고자료를 제공합니다.
 ---
 
-# SearxNG Search API
+# SearxNG 검색 API
 
-This page covers how to use the SearxNG search API within LangChain.
-It is broken into two parts: installation and setup, and then references to the specific SearxNG API wrapper.
+이 페이지는 LangChain 내에서 SearxNG 검색 API를 사용하는 방법을 다룹니다. 설치 및 설정과 특정 SearxNG API 래퍼에 대한 참조로 두 부분으로 나뉩니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-While it is possible to utilize the wrapper in conjunction with  [public searx
-instances](https://searx.space/) these instances frequently do not permit API
-access (see note on output format below) and have limitations on the frequency
-of requests. It is recommended to opt for a self-hosted instance instead.
+[공식 Searx 인스턴스](https://searx.space/)와 함께 래퍼를 사용하는 것이 가능하지만, 이러한 인스턴스는 종종 API 접근을 허용하지 않으며(아래 출력 형식에 대한 주석 참조) 요청 빈도에 제한이 있습니다. 대신 자체 호스팅 인스턴스를 선택하는 것이 권장됩니다.
 
-### Self Hosted Instance:
+### 자체 호스팅 인스턴스:
 
-See [this page](https://searxng.github.io/searxng/admin/installation.html) for installation instructions.
+설치 지침은 [이 페이지](https://searxng.github.io/searxng/admin/installation.html)를 참조하세요.
 
-When you install SearxNG, the only active output format by default is the HTML format.
-You need to activate the `json` format to use the API. This can be done by adding the following line to the `settings.yml` file:
+SearxNG를 설치하면 기본적으로 활성화된 출력 형식은 HTML 형식뿐입니다. API를 사용하려면 `json` 형식을 활성화해야 합니다. 이는 `settings.yml` 파일에 다음 줄을 추가하여 수행할 수 있습니다:
 ```yaml
 search:
     formats:
         - html
         - json
 ```
-You can make sure that the API is working by issuing a curl request to the API endpoint:
+
+API 엔드포인트에 curl 요청을 발행하여 API가 작동하는지 확인할 수 있습니다:
 
 `curl -kLX GET --data-urlencode q='langchain' -d format=json http://localhost:8888`
 
-This should return a JSON object with the results.
+이 요청은 결과와 함께 JSON 객체를 반환해야 합니다.
 
-## Wrappers
+## 래퍼
 
-### Utility
+### 유틸리티
 
-To use the wrapper we need to pass the host of the SearxNG instance to the wrapper with:
-1. the named parameter `searx_host` when creating the instance.
-2. exporting the environment variable `SEARXNG_HOST`.
+래퍼를 사용하려면 SearxNG 인스턴스의 호스트를 래퍼에 전달해야 합니다:
+1. 인스턴스를 생성할 때 명명된 매개변수 `searx_host`를 사용합니다.
+2. 환경 변수 `SEARXNG_HOST`를 내보냅니다.
 
-You can use the wrapper to get results from a SearxNG instance. 
+래퍼를 사용하여 SearxNG 인스턴스에서 결과를 가져올 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "SearxSearchWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.searx_search.SearxSearchWrapper.html", "title": "SearxNG Search API"}]-->
@@ -49,11 +46,12 @@ s = SearxSearchWrapper(searx_host="http://localhost:8888")
 s.run("what is a large language model?")
 ```
 
-### Tool
 
-You can also load this wrapper as a Tool (to use with an Agent).
+### 도구
 
-You can do this with:
+이 래퍼를 도구로 로드하여 에이전트와 함께 사용할 수도 있습니다.
+
+다음과 같이 할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "SearxNG Search API"}]-->
@@ -63,19 +61,20 @@ tools = load_tools(["searx-search"],
                     engines=["github"])
 ```
 
-Note that we could *optionally* pass custom engines to use.
 
-If you want to obtain results with metadata as *json* you can use:
+사용할 사용자 정의 엔진을 *선택적으로* 전달할 수 있다는 점에 유의하세요.
+
+메타데이터와 함께 *json* 형식으로 결과를 얻으려면 다음을 사용할 수 있습니다:
 ```python
 tools = load_tools(["searx-search-results-json"],
                     searx_host="http://localhost:8888",
                     num_results=5)
 ```
 
-#### Quickly creating tools
 
-This examples showcases a quick way to create multiple tools from the same
-wrapper.
+#### 도구 빠르게 생성하기
+
+이 예제는 동일한 래퍼에서 여러 도구를 빠르게 생성하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "SearxSearchResults", "source": "langchain_community.tools.searx_search.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.searx_search.tool.SearxSearchResults.html", "title": "SearxNG Search API"}]-->
@@ -93,4 +92,5 @@ arxiv_tool = SearxSearchResults(name="Arxiv", wrapper=wrapper,
                                 })
 ```
 
-For more information on tools, see [this page](/docs/how_to/tools_builtin).
+
+도구에 대한 자세한 정보는 [이 페이지](/docs/how_to/tools_builtin)를 참조하세요.

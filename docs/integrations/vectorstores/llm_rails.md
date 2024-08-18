@@ -1,35 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/llm_rails/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/llm_rails.ipynb
+description: LLMRails는 GenAI 애플리케이션 구축을 위한 API 플랫폼으로, 문서 인덱싱 및 쿼리를 위한 간편한 API를 제공합니다.
 ---
 
 # LLMRails
 
-> [LLMRails](https://www.llmrails.com/) is a API platform for building GenAI applications. It provides an easy-to-use API for document indexing and querying that is managed by LLMRails and is optimized for performance and accuracy.
-See the [LLMRails API documentation ](https://docs.llmrails.com/) for more information on how to use the API.
+> [LLMRails](https://www.llmrails.com/)는 GenAI 애플리케이션을 구축하기 위한 API 플랫폼입니다. LLMRails에서 관리하며 성능과 정확성을 최적화한 문서 인덱싱 및 쿼리를 위한 사용하기 쉬운 API를 제공합니다. API 사용 방법에 대한 자세한 내용은 [LLMRails API 문서](https://docs.llmrails.com/)를 참조하세요.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-This notebook shows how to use functionality related to the `LLMRails`'s integration with langchain.
-Note that unlike many other integrations in this category, LLMRails provides an end-to-end managed service for retrieval augmented generation, which includes:
-1. A way to extract text from document files and chunk them into sentences.
-2. Its own embeddings model and vector store - each text segment is encoded into a vector embedding and stored in the LLMRails internal vector store
-3. A query service that automatically encodes the query into embedding, and retrieves the most relevant text segments (including support for [Hybrid Search](https://docs.llmrails.com/datastores/search))
+이 노트북은 `LLMRails`의 langchain 통합과 관련된 기능을 사용하는 방법을 보여줍니다. 이 범주의 다른 많은 통합과 달리 LLMRails는 검색 보강 생성에 대한 종단 간 관리 서비스를 제공하며, 여기에는 다음이 포함됩니다:
+1. 문서 파일에서 텍스트를 추출하고 이를 문장으로 나누는 방법.
+2. 자체 임베딩 모델과 벡터 저장소 - 각 텍스트 세그먼트는 벡터 임베딩으로 인코딩되어 LLMRails 내부 벡터 저장소에 저장됩니다.
+3. 쿼리를 자동으로 임베딩으로 인코딩하고 가장 관련성이 높은 텍스트 세그먼트를 검색하는 쿼리 서비스( [하이브리드 검색](https://docs.llmrails.com/datastores/search) 지원 포함)
 
-All of these are supported in this LangChain integration.
+이 모든 것은 이 LangChain 통합에서 지원됩니다.
 
-# Setup
+# 설정
 
-You will need a LLMRails account to use LLMRails with LangChain. To get started, use the following steps:
-1. [Sign up](https://console.llmrails.com/signup) for a LLMRails account if you don't already have one.
-2. Next you'll need to create API keys to access the API. Click on the **"API Keys"** tab in the corpus view and then the **"Create API Key"** button. Give your key a name. Click "Create key" and you now have an active API key. Keep this key confidential. 
+LangChain과 함께 LLMRails를 사용하려면 LLMRails 계정이 필요합니다. 시작하려면 다음 단계를 따르세요:
+1. LLMRails 계정이 없는 경우 [가입](https://console.llmrails.com/signup)하세요.
+2. 다음으로 API에 접근하기 위해 API 키를 생성해야 합니다. 코퍼스 보기에서 **"API Keys"** 탭을 클릭한 다음 **"Create API Key"** 버튼을 클릭합니다. 키에 이름을 지정하세요. "Create key"를 클릭하면 이제 활성 API 키가 생성됩니다. 이 키는 비밀로 유지하세요.
 
-To use LangChain with LLMRails, you'll need to have this value: api_key.
-You can provide those to LangChain in two ways:
+LangChain과 함께 LLMRails를 사용하려면 이 값을 가져야 합니다: api_key. 이 값을 LangChain에 두 가지 방법으로 제공할 수 있습니다:
 
-1. Include in your environment these two variables: `LLM_RAILS_API_KEY`, `LLM_RAILS_DATASTORE_ID`.
+1. 환경에 이 두 변수를 포함합니다: `LLM_RAILS_API_KEY`, `LLM_RAILS_DATASTORE_ID`.
 
-> For example, you can set these variables using os.environ and getpass as follows:
+> 예를 들어, 다음과 같이 os.environ 및 getpass를 사용하여 이러한 변수를 설정할 수 있습니다:
 
 ```python
 import os
@@ -39,7 +36,8 @@ os.environ["LLM_RAILS_API_KEY"] = getpass.getpass("LLMRails API Key:")
 os.environ["LLM_RAILS_DATASTORE_ID"] = getpass.getpass("LLMRails Datastore Id:")
 ```
 
-1. Provide them as arguments when creating the LLMRails vectorstore object:
+
+1. LLMRails 벡터 저장소 객체를 생성할 때 인수로 제공합니다:
 
 ```python
 vectorstore = LLMRails(
@@ -48,13 +46,15 @@ vectorstore = LLMRails(
 )
 ```
 
-## Adding text
 
-For adding text to your datastore first you have to go to [Datastores](https://console.llmrails.com/datastores) page and create one. Click Create Datastore button and choose a name and embedding model for your datastore. Then get your datastore id from newly created  datatore settings.
+## 텍스트 추가
+
+데이터 저장소에 텍스트를 추가하려면 먼저 [Datastores](https://console.llmrails.com/datastores) 페이지로 이동하여 하나를 생성해야 합니다. Create Datastore 버튼을 클릭하고 데이터 저장소의 이름과 임베딩 모델을 선택합니다. 그런 다음 새로 생성된 데이터 저장소 설정에서 데이터 저장소 ID를 가져옵니다.
 
 ```python
 %pip install tika
 ```
+
 ```output
 Collecting tika
   Downloading tika-2.6.0.tar.gz (27 kB)
@@ -78,6 +78,7 @@ Successfully installed tika-2.6.0
 Note: you may need to restart the kernel to use updated packages.
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "LLMRails", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.llm_rails.LLMRails.html", "title": "LLMRails"}]-->
 import os
@@ -90,18 +91,21 @@ os.environ["LLM_RAILS_API_KEY"] = "Your API Key"
 llm_rails = LLMRails.from_texts(["Your text here"])
 ```
 
-## Similarity search
 
-The simplest scenario for using LLMRails is to perform a similarity search. 
+## 유사성 검색
+
+LLMRails를 사용하는 가장 간단한 시나리오는 유사성 검색을 수행하는 것입니다.
 
 ```python
 query = "What do you plan to do about national security?"
 found_docs = llm_rails.similarity_search(query, k=5)
 ```
 
+
 ```python
 print(found_docs[0].page_content)
 ```
+
 ```output
 6  N A T I O N A L S E C U R I T Y S T R A T E G Y Page 7 
 
@@ -135,9 +139,10 @@ The scale of these changes grows with each passing year, as do the risks of inac
 
 Although the international environment has become more contested, the United States remains the world’s leading power.
 ```
-## Similarity search with score
 
-Sometimes we might want to perform the search, but also obtain a relevancy score to know how good is a particular result.
+## 점수가 있는 유사성 검색
+
+때때로 검색을 수행하고 특정 결과가 얼마나 좋은지 알기 위해 관련성 점수를 얻고 싶을 수 있습니다.
 
 ```python
 query = "What is your approach to national defense"
@@ -147,11 +152,13 @@ found_docs = llm_rails.similarity_search_with_score(
 )
 ```
 
+
 ```python
 document, score = found_docs[0]
 print(document.page_content)
 print(f"\nScore: {score}")
 ```
+
 ```output
 But we will do so as the last resort and only when the objectives and mission are clear and achievable, consistent with our values and laws, alongside non-military tools, and the mission is undertaken with the informed consent of the American people.
 
@@ -179,23 +186,27 @@ A combat-credible military is the foundation of deterrence and America’s abili
 
 Score: 0.5040982687179959
 ```
-## LLMRails as a Retriever
 
-LLMRails, as all the other LangChain vectorstores, is most often used as a LangChain Retriever:
+## LLMRails를 검색기로 사용하기
+
+LLMRails는 다른 LangChain 벡터 저장소와 마찬가지로 가장 자주 LangChain 검색기로 사용됩니다:
 
 ```python
 retriever = llm_rails.as_retriever()
 retriever
 ```
 
+
 ```output
 LLMRailsRetriever(vectorstore=<langchain_community.vectorstores.llm_rails.LLMRails object at 0x1235b0e50>)
 ```
+
 
 ```python
 query = "What is your approach to national defense"
 retriever.invoke(query)
 ```
+
 
 ```output
 [Document(page_content='But we will do so as the last resort and only when the objectives and mission are clear and achievable, consistent with our values and laws, alongside non-military tools, and the mission is undertaken with the informed consent of the American people.\n\nOur approach to national defense is described in detail in the 2022 National Defense Strategy.\n\nOur starting premise is that a powerful U.S. military helps advance and safeguard vital U.S. national interests by backstopping diplomacy, confronting aggression, deterring conflict, projecting strength, and protecting the American people and their economic interests.\n\nAmid intensifying competition, the military’s role is to maintain and gain warfighting advantages while limiting those of our competitors.\n\nThe military will act urgently to sustain and strengthen deterrence, with the PRC as its pacing challenge.\n\nWe will make disciplined choices regarding our national defense and focus our attention on the military’s primary responsibilities: to defend the homeland, and deter attacks and aggression against the United States, our allies and partners, while being prepared to fight and win the Nation’s wars should diplomacy and deterrence fail.\n\nTo do so, we will combine our strengths to achieve maximum effect in deterring acts of aggression—an approach we refer to as integrated deterrence (see text box on page 22).\n\nWe will operate our military using a campaigning mindset—sequencing logically linked military activities to advance strategy-aligned priorities.\n\nAnd, we will build a resilient force and defense ecosystem to ensure we can perform these functions for decades to come.\n\nWe ended America’s longest war in Afghanistan, and with it an era of major military operations to remake other societies, even as we have maintained the capacity to address terrorist threats to the American people as they emerge.\n\n20  NATIONAL SECURITY STRATEGY Page 21 \x90\x90\x90\x90\x90\x90\n\nA combat-credible military is the foundation of deterrence and America’s ability to prevail in conflict.', metadata={'type': 'file', 'url': 'https://cdn.llmrails.com/dst_466092be-e79a-49f3-b3e6-50e51ddae186/a63892afdee3469d863520351bd5af9f', 'name': 'Biden-Harris-Administrations-National-Security-Strategy-10.2022.pdf', 'filters': {}}),
@@ -205,7 +216,8 @@ retriever.invoke(query)
  Document(page_content='To ensure our nuclear deterrent remains responsive to the threats we face, we are modernizing the nuclear Triad, nuclear command, control, and communications, and our nuclear weapons infrastructure, as well as strengthening our extended deterrence commitments to our Allies.\n\nWe remain equally committed to reducing the risks of nuclear war.\n\nThis includes taking further steps to reduce the role of nuclear weapons in our strategy and pursuing realistic goals for mutual, verifiable arms control, which contribute to our deterrence strategy and strengthen the global non-proliferation regime.\n\nThe most important investments are those made in the extraordinary All-Volunteer Force of the Army, Marine Corps, Navy, Air Force, Space Force, Coast Guard—together with our Department of Defense civilian workforce.\n\nOur service members are the backbone of America’s national defense and we are committed to their wellbeing and their families while in service and beyond.\n\nWe will maintain our foundational principle of civilian control of the military, recognizing that healthy civil-military relations rooted in mutual respect are essential to military effectiveness.\n\nWe will strengthen the effectiveness of the force by promoting diversity and inclusion; intensifying our suicide prevention efforts; eliminating the scourges of sexual assault, harassment, and other forms of violence, abuse, and discrimination; and rooting out violent extremism.\n\nWe will also uphold our Nation’s sacred obligation to care for veterans and their families when our troops return home.\n\nNATIONAL SECURITY STRATEGY 21 Page 22 \x90\x90\x90\x90\x90\x90\n\nIntegrated Deterrence The United States has a vital interest in deterring aggression by the PRC, Russia, and other states.\n\nMore capable competitors and new strategies of threatening behavior below and above the traditional threshold of conflict mean we cannot afford to rely solely on conventional forces and nuclear deterrence.\n\nOur defense strategy must sustain and strengthen deterrence, with the PRC as our pacing challenge.', metadata={'type': 'file', 'url': 'https://cdn.llmrails.com/dst_466092be-e79a-49f3-b3e6-50e51ddae186/a63892afdee3469d863520351bd5af9f', 'name': 'Biden-Harris-Administrations-National-Security-Strategy-10.2022.pdf', 'filters': {}})]
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

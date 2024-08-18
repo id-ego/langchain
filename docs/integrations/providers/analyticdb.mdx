@@ -1,34 +1,34 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/analyticdb/
+description: AnalyticDB는 대량의 데이터를 온라인으로 분석하기 위한 Alibaba Cloud의 MPP 데이터 웨어하우스 서비스입니다.
 ---
 
 # AnalyticDB
 
 > [AnalyticDB for PostgreSQL](https://www.alibabacloud.com/help/en/analyticdb-for-postgresql/latest/product-introduction-overview)
-is a massively parallel processing (MPP) data warehousing service
-from [Alibaba Cloud](https://www.alibabacloud.com/)
-that is designed to analyze large volumes of data online.
+는 대량의 데이터를 온라인으로 분석하기 위해 설계된
+[Alibaba Cloud](https://www.alibabacloud.com/)의 대규모 병렬 처리(MPP) 데이터 웨어하우징 서비스입니다.
 
-> `AnalyticDB for PostgreSQL` is developed based on the open-source `Greenplum Database`
-project and is enhanced with in-depth extensions by `Alibaba Cloud`. AnalyticDB
-for PostgreSQL is compatible with the ANSI SQL 2003 syntax and the PostgreSQL and
-Oracle database ecosystems. AnalyticDB for PostgreSQL also supports row store and
-column store. AnalyticDB for PostgreSQL processes petabytes of data offline at a
-high performance level and supports highly concurrent.
+> `AnalyticDB for PostgreSQL`은 오픈 소스 `Greenplum Database`
+프로젝트를 기반으로 개발되었으며, `Alibaba Cloud`의 심층 확장으로 강화되었습니다. AnalyticDB
+for PostgreSQL은 ANSI SQL 2003 구문 및 PostgreSQL과
+Oracle 데이터베이스 생태계와 호환됩니다. AnalyticDB for PostgreSQL은 또한 행 저장소와
+열 저장소를 지원합니다. AnalyticDB for PostgreSQL은 페타바이트의 데이터를 오프라인에서
+고성능으로 처리하며, 높은 동시성을 지원합니다.
 
-This page covers how to use the AnalyticDB ecosystem within LangChain.
+이 페이지에서는 LangChain 내에서 AnalyticDB 생태계를 사용하는 방법을 다룹니다.
 
 ## Installation and Setup
 
-You need to install the `sqlalchemy` python package.
+`sqlalchemy` 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install sqlalchemy
 ```
 
+
 ## VectorStore
 
-See a [usage example](/docs/integrations/vectorstores/analyticdb).
+[사용 예제](/docs/integrations/vectorstores/analyticdb)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AnalyticDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.analyticdb.AnalyticDB.html", "title": "AnalyticDB"}]-->

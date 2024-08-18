@@ -1,28 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/twitter/
+description: 트위터는 온라인 소셜 미디어 및 소셜 네트워킹 서비스로, API 토큰을 사용하여 문서 및 채팅 로더를 설정하는 방법을 안내합니다.
 ---
 
-# Twitter
+# 트위터
 
-> [Twitter](https://twitter.com/) is an online social media and social networking service.
+> [트위터](https://twitter.com/)는 온라인 소셜 미디어 및 소셜 네트워킹 서비스입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```bash
 pip install tweepy
 ```
 
-We must initialize the loader with the `Twitter API` token, and we need to set up the Twitter `username`.
 
-## Document Loader
+우리는 `Twitter API` 토큰으로 로더를 초기화해야 하며, 트위터 `사용자 이름`을 설정해야 합니다.
 
-See a [usage example](/docs/integrations/document_loaders/twitter).
+## 문서 로더
+
+[사용 예시](/docs/integrations/document_loaders/twitter)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "TwitterTweetLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.twitter.TwitterTweetLoader.html", "title": "Twitter"}]-->
 from langchain_community.document_loaders import TwitterTweetLoader
 ```
 
-## Chat loader
 
-See a [usage example](/docs/integrations/chat_loaders/twitter).
+## 채팅 로더
+
+[사용 예시](/docs/integrations/chat_loaders/twitter)를 참조하세요.

@@ -1,12 +1,12 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/perplexity/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/perplexity.ipynb
+description: 이 문서는 `Perplexity` 채팅 모델을 시작하는 방법과 API 키 설정, 모델 선택, 프롬프트 구조화 방법을 다룹니다.
 sidebar_label: Perplexity
 ---
 
 # ChatPerplexity
 
-This notebook covers how to get started with `Perplexity` chat models.
+이 노트북은 `Perplexity` 채팅 모델을 시작하는 방법을 다룹니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPerplexity", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.perplexity.ChatPerplexity.html", "title": "ChatPerplexity"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatPerplexity"}]-->
@@ -14,7 +14,8 @@ from langchain_community.chat_models import ChatPerplexity
 from langchain_core.prompts import ChatPromptTemplate
 ```
 
-The code provided assumes that your PPLX_API_KEY is set in your environment variables. If you would like to manually specify your API key and also choose a different model, you can use the following code:
+
+제공된 코드는 PPLX_API_KEY가 환경 변수에 설정되어 있다고 가정합니다. API 키를 수동으로 지정하고 다른 모델을 선택하려면 다음 코드를 사용할 수 있습니다:
 
 ```python
 chat = ChatPerplexity(
@@ -22,7 +23,8 @@ chat = ChatPerplexity(
 )
 ```
 
-You can check a list of available models [here](https://docs.perplexity.ai/docs/model-cards). For reproducibility, we can set the API key dynamically by taking it as an input in this notebook.
+
+사용 가능한 모델 목록은 [여기](https://docs.perplexity.ai/docs/model-cards)에서 확인할 수 있습니다. 재현성을 위해, 이 노트북에서 입력으로 API 키를 동적으로 설정할 수 있습니다.
 
 ```python
 import os
@@ -32,9 +34,11 @@ PPLX_API_KEY = getpass()
 os.environ["PPLX_API_KEY"] = PPLX_API_KEY
 ```
 
+
 ```python
 chat = ChatPerplexity(temperature=0, model="llama-3-sonar-small-32k-online")
 ```
+
 
 ```python
 system = "You are a helpful assistant."
@@ -46,11 +50,13 @@ response = chain.invoke({"input": "Why is the Higgs Boson important?"})
 response.content
 ```
 
+
 ```output
 'The Higgs Boson is an elementary subatomic particle that plays a crucial role in the Standard Model of particle physics, which accounts for three of the four fundamental forces governing the behavior of our universe: the strong and weak nuclear forces, electromagnetism, and gravity. The Higgs Boson is important for several reasons:\n\n1. **Final Elementary Particle**: The Higgs Boson is the last elementary particle waiting to be discovered under the Standard Model. Its detection helps complete the Standard Model and further our understanding of the fundamental forces in the universe.\n\n2. **Mass Generation**: The Higgs Boson is responsible for giving mass to other particles, a process that occurs through its interaction with the Higgs field. This mass generation is essential for the formation of atoms, molecules, and the visible matter we observe in the universe.\n\n3. **Implications for New Physics**: While the detection of the Higgs Boson has confirmed many aspects of the Standard Model, it also opens up new possibilities for discoveries beyond the Standard Model. Further research on the Higgs Boson could reveal insights into the nature of dark matter, supersymmetry, and other exotic phenomena.\n\n4. **Advancements in Technology**: The search for the Higgs Boson has led to significant advancements in technology, such as the development of artificial intelligence and machine learning algorithms used in particle accelerators like the Large Hadron Collider (LHC). These advancements have not only contributed to the discovery of the Higgs Boson but also have potential applications in various other fields.\n\nIn summary, the Higgs Boson is important because it completes the Standard Model, plays a crucial role in mass generation, hints at new physics phenomena beyond the Standard Model, and drives advancements in technology.\n'
 ```
 
-You can format and structure the prompts like you would typically. In the following example, we ask the model to tell us a joke about cats.
+
+프롬프트를 일반적으로 하듯이 형식화하고 구조화할 수 있습니다. 다음 예제에서는 모델에게 고양이에 대한 농담을 해달라고 요청합니다.
 
 ```python
 chat = ChatPerplexity(temperature=0, model="llama-3-sonar-small-32k-online")
@@ -60,11 +66,13 @@ response = chain.invoke({"topic": "cats"})
 response.content
 ```
 
+
 ```output
 'Here\'s a joke about cats:\n\nWhy did the cat want math lessons from a mermaid?\n\nBecause it couldn\'t find its "core purpose" in life!\n\nRemember, cats are unique and fascinating creatures, and each one has its own special traits and abilities. While some may see them as mysterious or even a bit aloof, they are still beloved pets that bring joy and companionship to their owners. So, if your cat ever seeks guidance from a mermaid, just remember that they are on their own journey to self-discovery!\n'
 ```
 
-## `ChatPerplexity` also supports streaming functionality:
+
+## `ChatPerplexity`는 스트리밍 기능도 지원합니다:
 
 ```python
 chat = ChatPerplexity(temperature=0.7, model="llama-3-sonar-small-32k-online")
@@ -75,6 +83,7 @@ chain = prompt | chat
 for chunk in chain.stream({}):
     print(chunk.content, end="", flush=True)
 ```
+
 ```output
 Here is a list of some famous tourist attractions in Pakistan:
 
@@ -92,7 +101,8 @@ Here is a list of some famous tourist attractions in Pakistan:
 These attractions showcase the rich history, diverse culture, and natural beauty of Pakistan, making them popular destinations for both local and international tourists.
 ```
 
-## Related
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

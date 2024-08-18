@@ -1,46 +1,41 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/cassandra_database/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/cassandra_database.ipynb
+description: Apache Cassandra® 데이터베이스 툴킷은 AI 엔지니어가 Cassandra 데이터와 효율적으로 통합할 수 있도록
+  지원하는 기능을 제공합니다.
 ---
 
-# Cassandra Database Toolkit
+# 카산드라 데이터베이스 툴킷
 
-> `Apache Cassandra®` is a widely used database for storing transactional application data. The introduction of functions and >tooling in Large Language Models has opened up some exciting use cases for existing data in Generative AI applications. 
+> `Apache Cassandra®`는 트랜잭션 애플리케이션 데이터를 저장하는 데 널리 사용되는 데이터베이스입니다. 대형 언어 모델에서 함수와 도구의 도입은 생성 AI 애플리케이션에서 기존 데이터에 대한 흥미로운 사용 사례를 열어주었습니다.
 
-> The `Cassandra Database` toolkit enables AI engineers to integrate agents with Cassandra data efficiently, offering
-the following features: 
-> - Fast data access through optimized queries. Most queries should run in single-digit ms or less.
-> - Schema introspection to enhance LLM reasoning capabilities
-> - Compatibility with various Cassandra deployments, including Apache Cassandra®, DataStax Enterprise™, and DataStax Astra™
-> - Currently, the toolkit is limited to SELECT queries and schema introspection operations. (Safety first)
+> `Cassandra Database` 툴킷은 AI 엔지니어가 카산드라 데이터와 에이전트를 효율적으로 통합할 수 있도록 하며, 다음과 같은 기능을 제공합니다:
+> - 최적화된 쿼리를 통한 빠른 데이터 접근. 대부분의 쿼리는 단일 자릿수 ms 또는 그 이하로 실행되어야 합니다.
+> - LLM 추론 능력을 향상시키기 위한 스키마 내성
+> - Apache Cassandra®, DataStax Enterprise™ 및 DataStax Astra™를 포함한 다양한 카산드라 배포와의 호환성
+> - 현재 툴킷은 SELECT 쿼리 및 스키마 내성 작업으로 제한됩니다. (안전이 최우선)
 
-For more information on creating a Cassandra DB agent see the [CQL agent cookbook](https://github.com/langchain-ai/langchain/blob/master/cookbook/cql_agent.ipynb)
+카산드라 DB 에이전트를 만드는 방법에 대한 자세한 정보는 [CQL 에이전트 요리책](https://github.com/langchain-ai/langchain/blob/master/cookbook/cql_agent.ipynb)을 참조하십시오.
 
-## Quick Start
-- Install the `cassio` library
-- Set environment variables for the Cassandra database you are connecting to
-- Initialize `CassandraDatabase`
-- Pass the tools to your agent with `toolkit.get_tools()`
-- Sit back and watch it do all your work for you
+## 빠른 시작
+- `cassio` 라이브러리 설치
+- 연결할 카산드라 데이터베이스에 대한 환경 변수 설정
+- `CassandraDatabase` 초기화
+- `toolkit.get_tools()`로 도구를 에이전트에 전달
+- 편안히 앉아 모든 작업이 자동으로 수행되는 것을 지켜보세요
 
-## Theory of Operation
+## 작동 이론
 
-`Cassandra Query Language (CQL)` is the primary *human-centric* way of interacting with a Cassandra database. While offering some flexibility when generating queries, it requires knowledge of Cassandra data modeling best practices. LLM function calling gives an agent the ability to reason and then choose a tool to satisfy the request. Agents using LLMs should reason using Cassandra-specific logic when choosing the appropriate toolkit or chain of toolkits. This reduces the randomness introduced when LLMs are forced to provide a top-down solution. Do you want an LLM to have complete unfettered access to your database? Yeah. Probably not. To accomplish this, we provide a prompt for use when constructing questions for the agent: 
+`Cassandra Query Language (CQL)`은 카산드라 데이터베이스와 상호작용하는 주요 *인간 중심* 방법입니다. 쿼리를 생성할 때 어느 정도의 유연성을 제공하지만, 카산드라 데이터 모델링 모범 사례에 대한 지식이 필요합니다. LLM 함수 호출은 에이전트가 추론하고 요청을 충족시키기 위해 도구를 선택할 수 있는 능력을 부여합니다. LLM을 사용하는 에이전트는 적절한 툴킷이나 툴킷 체인을 선택할 때 카산드라 특정 논리를 사용하여 추론해야 합니다. 이는 LLM이 상향식 솔루션을 제공해야 할 때 도입되는 무작위성을 줄입니다. LLM이 데이터베이스에 완전한 자유로운 접근을 갖기를 원하십니까? 네. 아마도 아닐 것입니다. 이를 달성하기 위해, 에이전트를 위한 질문을 구성할 때 사용할 프롬프트를 제공합니다:
 
-You are an Apache Cassandra expert query analysis bot with the following features
-and rules:
-- You will take a question from the end user about finding specific
-data in the database.
-- You will examine the schema of the database and create a query path. 
-- You will provide the user with the correct query to find the data they are looking
-for, showing the steps provided by the query path.
-- You will use best practices for querying Apache Cassandra using partition keys
-and clustering columns.
-- Avoid using ALLOW FILTERING in the query.
-- The goal is to find a query path, so it may take querying other tables to get
-to the final answer. 
+당신은 다음 기능과 규칙을 가진 Apache Cassandra 전문가 쿼리 분석 봇입니다:
+- 데이터베이스에서 특정 데이터를 찾는 것에 대한 최종 사용자로부터 질문을 받습니다.
+- 데이터베이스의 스키마를 검사하고 쿼리 경로를 생성합니다.
+- 사용자가 찾고 있는 데이터를 찾기 위한 올바른 쿼리를 제공하며, 쿼리 경로에 의해 제공된 단계를 보여줍니다.
+- 파티션 키와 클러스터링 열을 사용하여 Apache Cassandra에 대한 쿼리 모범 사례를 따릅니다.
+- 쿼리에서 ALLOW FILTERING 사용을 피합니다.
+- 목표는 쿼리 경로를 찾는 것이므로, 최종 답변에 도달하기 위해 다른 테이블을 쿼리해야 할 수도 있습니다.
 
-The following is an example of a query path in JSON format:
+다음은 JSON 형식의 쿼리 경로 예시입니다:
 
 ```json
  {
@@ -63,29 +58,31 @@ The following is an example of a query path in JSON format:
 }
 ```
 
-## Tools Provided
+
+## 제공된 도구
 
 ### `cassandra_db_schema`
-Gathers all schema information for the connected database or a specific schema. Critical for the agent when determining actions. 
+연결된 데이터베이스 또는 특정 스키마에 대한 모든 스키마 정보를 수집합니다. 에이전트가 작업을 결정할 때 중요합니다.
 
 ### `cassandra_db_select_table_data`
-Selects data from a specific keyspace and table. The agent can pass paramaters for a predicate and limits on the number of returned records. 
+특정 키스페이스와 테이블에서 데이터를 선택합니다. 에이전트는 프레디케이트 및 반환된 레코드 수에 대한 제한을 위한 매개변수를 전달할 수 있습니다.
 
 ### `cassandra_db_query`
-Expiriemental alternative to `cassandra_db_select_table_data` which takes a query string completely formed by the agent instead of parameters. *Warning*: This can lead to unusual queries that may not be as performant(or even work). This may be removed in future releases. If it does something cool, we want to know about that too. You never know!
+매개변수 대신 에이전트가 완전히 형성된 쿼리 문자열을 사용하는 `cassandra_db_select_table_data`의 실험적 대안입니다. *경고*: 이는 성능이 떨어지거나 작동하지 않을 수 있는 비정상적인 쿼리로 이어질 수 있습니다. 이는 향후 릴리스에서 제거될 수 있습니다. 만약 멋진 일을 한다면, 그것에 대해서도 알고 싶습니다. 당신은 결코 알 수 없습니다!
 
-## Environment Setup
+## 환경 설정
 
-Install the following Python modules:
+다음 Python 모듈을 설치하십시오:
 
 ```bash
 pip install ipykernel python-dotenv cassio langchain_openai langchain langchain-community langchainhub
 ```
 
-### .env file
-Connection is via `cassio` using `auto=True` parameter, and the notebook uses OpenAI. You should create a `.env` file accordingly.
 
-For Casssandra, set:
+### .env 파일
+연결은 `cassio`를 통해 `auto=True` 매개변수를 사용하며, 노트북은 OpenAI를 사용합니다. 따라서 `.env` 파일을 적절히 생성해야 합니다.
+
+카산드라의 경우, 설정:
 ```bash
 CASSANDRA_CONTACT_POINTS
 CASSANDRA_USERNAME
@@ -93,14 +90,16 @@ CASSANDRA_PASSWORD
 CASSANDRA_KEYSPACE
 ```
 
-For Astra, set:
+
+아스트라의 경우, 설정:
 ```bash
 ASTRA_DB_APPLICATION_TOKEN
 ASTRA_DB_DATABASE_ID
 ASTRA_DB_KEYSPACE
 ```
 
-For example:
+
+예를 들어:
 
 ```bash
 # Connection to Astra:
@@ -112,13 +111,15 @@ ASTRA_DB_KEYSPACE=notebooks
 OPENAI_API_KEY=sk-....
 ```
 
-(You may also modify the below code to directly connect with `cassio`.)
+
+(아래 코드를 수정하여 `cassio`와 직접 연결할 수도 있습니다.)
 
 ```python
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Cassandra Database Toolkit"}, {"imported": "create_openai_tools_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_tools.base.create_openai_tools_agent.html", "title": "Cassandra Database Toolkit"}, {"imported": "CassandraDatabaseToolkit", "source": "langchain_community.agent_toolkits.cassandra_database.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.cassandra_database.toolkit.CassandraDatabaseToolkit.html", "title": "Cassandra Database Toolkit"}, {"imported": "CassandraDatabase", "source": "langchain_community.utilities.cassandra_database", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.cassandra_database.CassandraDatabase.html", "title": "Cassandra Database Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Cassandra Database Toolkit"}]-->
@@ -136,7 +137,8 @@ from langchain_community.utilities.cassandra_database import CassandraDatabase
 from langchain_openai import ChatOpenAI
 ```
 
-## Connect to a Cassandra Database
+
+## 카산드라 데이터베이스에 연결
 
 ```python
 cassio.init(auto=True)
@@ -146,6 +148,7 @@ if not session:
         "Check environment configuration or manually configure cassio connection parameters"
     )
 ```
+
 
 ```python
 # Test data pep
@@ -219,11 +222,13 @@ session.execute(
 session.set_keyspace("langchain_agent_test")
 ```
 
+
 ```python
 # Create a CassandraDatabase instance
 # Uses the cassio session to connect to the database
 db = CassandraDatabase()
 ```
+
 
 ```python
 # Choose the LLM that will drive the agent
@@ -237,6 +242,7 @@ print("Available tools:")
 for tool in tools:
     print(tool.name + "\t- " + tool.description)
 ```
+
 ```output
 Available tools:
 cassandra_db_schema	- 
@@ -259,12 +265,14 @@ cassandra_db_select_table_data	-
     return all rows.
 ```
 
+
 ```python
 prompt = hub.pull("hwchase17/openai-tools-agent")
 
 # Construct the OpenAI Tools agent
 agent = create_openai_tools_agent(llm, tools, prompt)
 ```
+
 
 ```python
 input = (
@@ -278,6 +286,7 @@ response = agent_executor.invoke({"input": input})
 
 print(response["output"])
 ```
+
 ```output
 
 
@@ -350,15 +359,16 @@ Here is the query path in JSON format:
 }
 ```
 
-Following this query path, we found that the user with the user_id `522b1fe2-2e36-4cef-a667-cd4237d08b89` has uploaded at least one video with the title 'DataStax Academy' and the description 'DataStax Academy is a free resource for learning Apache Cassandra.' The video_id for this video is `27066014-bad7-9f58-5a30-f63fe03718f6`. If there are more videos, the same query can be used to retrieve them, possibly with an increased limit if necessary.[0m
 
-[1m> Finished chain.[0m
-To find all the videos that the user with the email address 'patrick@datastax.com' has uploaded to the `langchain_agent_test` keyspace, we can follow these steps:
+이 쿼리 경로를 따라, 사용자 ID `522b1fe2-2e36-4cef-a667-cd4237d08b89`를 가진 사용자가 제목이 'DataStax Academy'이고 설명이 'DataStax Academy는 Apache Cassandra를 배우기 위한 무료 리소스입니다.'인 비디오를 최소한 하나 업로드했음을 발견했습니다. 이 비디오의 video_id는 `27066014-bad7-9f58-5a30-f63fe03718f6`입니다. 더 많은 비디오가 있다면, 동일한 쿼리를 사용하여 이를 검색할 수 있으며, 필요에 따라 제한을 늘릴 수 있습니다.
 
-1. Query the `user_credentials` table to find the `user_id` associated with the email 'patrick@datastax.com'.
-2. Use the `user_id` obtained from the first step to query the `user_videos` table to retrieve all the videos uploaded by the user.
+[1m> 체인 완료.[0m
+이메일 주소 'patrick@datastax.com'을 가진 사용자가 `langchain_agent_test` 키스페이스에 업로드한 모든 비디오를 찾기 위해, 다음 단계를 따를 수 있습니다:
 
-Here is the query path in JSON format:
+1. `user_credentials` 테이블을 쿼리하여 이메일 'patrick@datastax.com'과 관련된 `user_id`를 찾습니다.
+2. 첫 번째 단계에서 얻은 `user_id`를 사용하여 `user_videos` 테이블을 쿼리하여 사용자가 업로드한 모든 비디오를 검색합니다.
+
+여기 JSON 형식의 쿼리 경로가 있습니다:
 
 ```json
 {
@@ -380,7 +390,8 @@ Here is the query path in JSON format:
 }
 ```
 
-Following this query path, we found that the user with the user_id `522b1fe2-2e36-4cef-a667-cd4237d08b89` has uploaded at least one video with the title 'DataStax Academy' and the description 'DataStax Academy is a free resource for learning Apache Cassandra.' The video_id for this video is `27066014-bad7-9f58-5a30-f63fe03718f6`. If there are more videos, the same query can be used to retrieve them, possibly with an increased limit if necessary.
+
+이 쿼리 경로를 따라, 사용자 ID `522b1fe2-2e36-4cef-a667-cd4237d08b89`를 가진 사용자가 제목이 'DataStax Academy'이고 설명이 'DataStax Academy는 Apache Cassandra를 배우기 위한 무료 리소스입니다.'인 비디오를 최소한 하나 업로드했음을 발견했습니다. 이 비디오의 video_id는 `27066014-bad7-9f58-5a30-f63fe03718f6`입니다. 더 많은 비디오가 있다면, 동일한 쿼리를 사용하여 이를 검색할 수 있으며, 필요에 따라 제한을 늘릴 수 있습니다.
 ```
 
 ## Related

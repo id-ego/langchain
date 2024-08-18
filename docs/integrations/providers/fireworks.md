@@ -1,41 +1,42 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/fireworks/
+description: 이 문서는 Langchain에서 Fireworks 모델을 사용하는 방법과 설치, 인증 절차를 안내합니다.
 ---
 
-# Fireworks
+# 불꽃놀이
 
-This page covers how to use [Fireworks](https://fireworks.ai/) models within
-Langchain.
+이 페이지는 Langchain 내에서 [Fireworks](https://fireworks.ai/) 모델을 사용하는 방법을 다룹니다.
 
-## Installation and setup
+## 설치 및 설정
 
-- Install the Fireworks integration package.
+- Fireworks 통합 패키지를 설치합니다.
   
   ```
   pip install langchain-fireworks
   ```
-- Get a Fireworks API key by signing up at [fireworks.ai](https://fireworks.ai).
-- Authenticate by setting the FIREWORKS_API_KEY environment variable.
 
-## Authentication
+- [fireworks.ai](https://fireworks.ai)에서 가입하여 Fireworks API 키를 받습니다.
+- FIREWORKS_API_KEY 환경 변수를 설정하여 인증합니다.
 
-There are two ways to authenticate using your Fireworks API key:
+## 인증
 
-1. Setting the `FIREWORKS_API_KEY` environment variable.
+Fireworks API 키를 사용하여 인증하는 방법은 두 가지가 있습니다:
+
+1. `FIREWORKS_API_KEY` 환경 변수를 설정합니다.
    
    ```python
    os.environ["FIREWORKS_API_KEY"] = "<KEY>"
    ```
-2. Setting `api_key` field in the Fireworks LLM module.
+
+2. Fireworks LLM 모듈의 `api_key` 필드를 설정합니다.
    
    ```python
    llm = Fireworks(api_key="<KEY>")
    ```
 
-## Using the Fireworks LLM module
 
-Fireworks integrates with Langchain through the LLM module. In this example, we
-will work the mixtral-8x7b-instruct model. 
+## Fireworks LLM 모듈 사용하기
+
+Fireworks는 LLM 모듈을 통해 Langchain과 통합됩니다. 이 예제에서는 mixtral-8x7b-instruct 모델을 사용할 것입니다. 
 
 ```python
 <!--IMPORTS:[{"imported": "Fireworks", "source": "langchain_fireworks", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_fireworks.llms.Fireworks.html", "title": "Fireworks"}]-->
@@ -48,4 +49,5 @@ llm = Fireworks(
 llm("Name 3 sports.")
 ```
 
-For a more detailed walkthrough, see [here](/docs/integrations/llms/Fireworks).
+
+자세한 안내는 [여기](/docs/integrations/llms/Fireworks)를 참조하세요.

@@ -1,25 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/platforms/
+description: LangChain은 다양한 제공업체와 통합되어 있으며, 각 제공업체에 대한 패키지 및 문서를 제공합니다.
 sidebar_class_name: hidden
 sidebar_position: 0
 ---
 
-# Providers
+# 공급자
 
 :::info
 
-If you'd like to write your own integration, see [Extending LangChain](/docs/how_to/#custom).
-If you'd like to contribute an integration, see [Contributing integrations](/docs/contributing/integrations/).
+자신만의 통합을 작성하고 싶다면 [LangChain 확장하기](/docs/how_to/#custom)를 참조하세요.  
+통합에 기여하고 싶다면 [통합 기여하기](/docs/contributing/integrations/)를 참조하세요.
 
 :::
 
-LangChain integrates with many providers.
+LangChain은 많은 공급자와 통합됩니다.
+## 통합 패키지
 
-## Integration Packages
+이 제공자는 버전 관리, 의존성 관리 및 테스트를 개선하기 위해 독립형 `langchain-{provider}` 패키지를 제공합니다.
 
-These providers have standalone `langchain-{provider}` packages for improved versioning, dependency management and testing.
-
-| Provider | Package | Downloads | Latest | [JS](https://js.langchain.com/v0.2/docs/integrations/platforms/) |
+| 제공자 | 패키지 | 다운로드 | 최신 | [JS](https://js.langchain.com/v0.2/docs/integrations/platforms/) |
 | :--- | :---: | :---: | :---: | :---: |
 | [AI21](/docs/integrations/providers/ai21/) | [langchain-ai21](https://api.python.langchain.com/en/latest/ai21_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-ai21?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-ai21?style=flat-square&label=%20&color=orange) | ❌ |
 | [Airbyte](/docs/integrations/providers/airbyte/) | [langchain-airbyte](https://api.python.langchain.com/en/latest/airbyte_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-airbyte?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-airbyte?style=flat-square&label=%20&color=orange) | ❌ |
@@ -45,18 +44,17 @@ These providers have standalone `langchain-{provider}` packages for improved ver
 | [Nvidia AI Endpoints](/docs/integrations/providers/nvidia/) | [langchain-nvidia-ai-endpoints](https://api.python.langchain.com/en/latest/nvidia_ai_endpoints_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-nvidia-ai-endpoints?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-nvidia-ai-endpoints?style=flat-square&label=%20&color=orange) | ❌ |
 | [Ollama](/docs/integrations/providers/ollama/) | [langchain-ollama](https://api.python.langchain.com/en/latest/ollama_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-ollama?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-ollama?style=flat-square&label=%20&color=orange) | ✅ |
 | [OpenAI](/docs/integrations/platforms/openai/) | [langchain-openai](https://api.python.langchain.com/en/latest/openai_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-openai?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-openai?style=flat-square&label=%20&color=orange) | ✅ |
-| [Pinecone](/docs/integrations/providers/pinecone/) | [langchain-pinecone](https://api.python.langchain.com/en/latest/pinecone_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-pinecone?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-pinecone?style=flat-square&label=%20&color=orange) | ✅ |
-| Postgres | [langchain-postgres](https://api.python.langchain.com/en/latest/postgres_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-postgres?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-postgres?style=flat-square&label=%20&color=orange) | ❌ |
-| Prompty | [langchain-prompty](https://api.python.langchain.com/en/latest/prompty_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-prompty?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-prompty?style=flat-square&label=%20&color=orange) | ❌ |
-| [Qdrant](/docs/integrations/providers/qdrant/) | [langchain-qdrant](https://api.python.langchain.com/en/latest/qdrant_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-qdrant?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-qdrant?style=flat-square&label=%20&color=orange) | ✅ |
-| [Redis](/docs/integrations/providers/redis/) | [langchain-redis](https://api.python.langchain.com/en/latest/redis_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-redis?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-redis?style=flat-square&label=%20&color=orange) | ✅ |
-| [Robocorp](/docs/integrations/providers/robocorp/) | [langchain-robocorp](https://api.python.langchain.com/en/latest/robocorp_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-robocorp?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-robocorp?style=flat-square&label=%20&color=orange) | ❌ |
-| [Together](/docs/integrations/providers/together/) | [langchain-together](https://api.python.langchain.com/en/latest/together_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-together?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-together?style=flat-square&label=%20&color=orange) | ❌ |
-| [Unstructured](/docs/integrations/providers/unstructured/) | [langchain-unstructured](https://api.python.langchain.com/en/latest/unstructured_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-unstructured?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-unstructured?style=flat-square&label=%20&color=orange) | ❌ |
-| [Upstage](/docs/integrations/providers/upstage/) | [langchain-upstage](https://api.python.langchain.com/en/latest/upstage_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-upstage?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-upstage?style=flat-square&label=%20&color=orange) | ❌ |
-| [VoyageAI](/docs/integrations/providers/voyageai/) | [langchain-voyageai](https://api.python.langchain.com/en/latest/voyageai_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-voyageai?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-voyageai?style=flat-square&label=%20&color=orange) | ❌ |
-| [Weaviate](/docs/integrations/providers/weaviate/) | [langchain-weaviate](https://api.python.langchain.com/en/latest/weaviate_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-weaviate?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-weaviate?style=flat-square&label=%20&color=orange) | ✅ |
+| [파인콘](/docs/integrations/providers/pinecone/) | [langchain-pinecone](https://api.python.langchain.com/en/latest/pinecone_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-pinecone?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-pinecone?style=flat-square&label=%20&color=orange) | ✅ |
+| 포스트그레스 | [langchain-postgres](https://api.python.langchain.com/en/latest/postgres_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-postgres?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-postgres?style=flat-square&label=%20&color=orange) | ❌ |
+| 프롬프티 | [langchain-prompty](https://api.python.langchain.com/en/latest/prompty_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-prompty?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-prompty?style=flat-square&label=%20&color=orange) | ❌ |
+| [큐드란트](/docs/integrations/providers/qdrant/) | [langchain-qdrant](https://api.python.langchain.com/en/latest/qdrant_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-qdrant?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-qdrant?style=flat-square&label=%20&color=orange) | ✅ |
+| [레디스](/docs/integrations/providers/redis/) | [langchain-redis](https://api.python.langchain.com/en/latest/redis_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-redis?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-redis?style=flat-square&label=%20&color=orange) | ✅ |
+| [로보코프](/docs/integrations/providers/robocorp/) | [langchain-robocorp](https://api.python.langchain.com/en/latest/robocorp_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-robocorp?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-robocorp?style=flat-square&label=%20&color=orange) | ❌ |
+| [투게더](/docs/integrations/providers/together/) | [langchain-together](https://api.python.langchain.com/en/latest/together_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-together?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-together?style=flat-square&label=%20&color=orange) | ❌ |
+| [비구조적](/docs/integrations/providers/unstructured/) | [langchain-unstructured](https://api.python.langchain.com/en/latest/unstructured_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-unstructured?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-unstructured?style=flat-square&label=%20&color=orange) | ❌ |
+| [업스테이지](/docs/integrations/providers/upstage/) | [langchain-upstage](https://api.python.langchain.com/en/latest/upstage_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-upstage?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-upstage?style=flat-square&label=%20&color=orange) | ❌ |
+| [보야지AI](/docs/integrations/providers/voyageai/) | [langchain-voyageai](https://api.python.langchain.com/en/latest/voyageai_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-voyageai?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-voyageai?style=flat-square&label=%20&color=orange) | ❌ |
+| [위비에이트](/docs/integrations/providers/weaviate/) | [langchain-weaviate](https://api.python.langchain.com/en/latest/weaviate_api_reference.html) | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-weaviate?style=flat-square&label=%20&color=blue) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-weaviate?style=flat-square&label=%20&color=orange) | ✅ |
+## 모든 제공자
 
-## All Providers
-
-Click [here](/docs/integrations/providers/) to see all providers.
+[여기](/docs/integrations/providers/)를 클릭하여 모든 제공자를 확인하세요.

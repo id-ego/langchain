@@ -1,55 +1,55 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/example_data/example/
+description: 이 문서는 Markdown의 기본 개념과 기능을 소개하며, 헤더, 목록, 링크, 이미지 및 코드 사용법을 설명합니다.
 ---
 
-# Sample Markdown Document
+# 샘플 마크다운 문서
 
-## Introduction
+## 소개
 
-Welcome to this sample Markdown document. Markdown is a lightweight markup language used for formatting text. It's widely used for documentation, readme files, and more.
+이 샘플 마크다운 문서에 오신 것을 환영합니다. 마크다운은 텍스트 형식을 지정하는 데 사용되는 경량 마크업 언어입니다. 문서화, README 파일 등에서 널리 사용됩니다.
 
-## Features
+## 특징
 
-### Headers
+### 헤더
 
-Markdown supports multiple levels of headers:
+마크다운은 여러 수준의 헤더를 지원합니다:
 
-- **Header 1**: `# Header 1`
-- **Header 2**: `## Header 2`
-- **Header 3**: `### Header 3`
+- **헤더 1**: `# 헤더 1`
+- **헤더 2**: `## 헤더 2`
+- **헤더 3**: `### 헤더 3`
 
-### Lists
+### 목록
 
-#### Unordered List
+#### 비순서 목록
 
-- Item 1
-- Item 2
-  - Subitem 2.1
-  - Subitem 2.2
+- 항목 1
+- 항목 2
+  - 하위 항목 2.1
+  - 하위 항목 2.2
 
-#### Ordered List
+#### 순서 목록
 
-1. First item
-2. Second item
-3. Third item
+1. 첫 번째 항목
+2. 두 번째 항목
+3. 세 번째 항목
 
-### Links
+### 링크
 
-[OpenAI](https://www.openai.com) is an AI research organization.
+[OpenAI](https://www.openai.com)는 AI 연구 조직입니다.
 
-### Images
+### 이미지
 
-Here's an example image:
+다음은 예시 이미지입니다:
 
-![Sample Image](https://via.placeholder.com/150)
+![샘플 이미지](https://via.placeholder.com/150)
 
-### Code
+### 코드
 
-#### Inline Code
+#### 인라인 코드
 
-Use `code` for inline code snippets.
+인라인 코드 조각에는 `code`를 사용하세요.
 
-#### Code Block
+#### 코드 블록
 
 ```python
 def greet(name):

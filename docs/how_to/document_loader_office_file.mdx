@@ -1,26 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/document_loader_office_file/
+description: Microsoft Office 파일(DOCX, XLSX, PPTX)을 LangChain Document 객체로 로드하는 방법과
+  Azure AI Document Intelligence 사용법을 설명합니다.
 ---
 
-# How to load Microsoft Office files
+# Microsoft Office 파일 로드하는 방법
 
-The [Microsoft Office](https://www.office.com/) suite of productivity software includes Microsoft Word, Microsoft Excel, Microsoft PowerPoint, Microsoft Outlook, and Microsoft OneNote. It is available for Microsoft Windows and macOS operating systems. It is also available on Android and iOS.
+[Microsoft Office](https://www.office.com/) 생산성 소프트웨어 모음에는 Microsoft Word, Microsoft Excel, Microsoft PowerPoint, Microsoft Outlook 및 Microsoft OneNote가 포함됩니다. 이는 Microsoft Windows 및 macOS 운영 체제에서 사용할 수 있습니다. 또한 Android 및 iOS에서도 사용할 수 있습니다.
 
-This covers how to load commonly used file formats including `DOCX`, `XLSX` and `PPTX` documents into a LangChain
+이 문서는 `DOCX`, `XLSX` 및 `PPTX` 문서와 같은 일반적으로 사용되는 파일 형식을 LangChain
 [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html#langchain_core.documents.base.Document)
-object that we can use downstream.
+객체로 로드하는 방법을 다룹니다. 이 객체는 이후에 사용할 수 있습니다.
 
-## Loading DOCX, XLSX, PPTX with AzureAIDocumentIntelligenceLoader
+## AzureAIDocumentIntelligenceLoader로 DOCX, XLSX, PPTX 로드하기
 
-[Azure AI Document Intelligence](https://aka.ms/doc-intelligence) (formerly known as `Azure Form Recognizer`) is machine-learning
-based service that extracts texts (including handwriting), tables, document structures (e.g., titles, section headings, etc.) and key-value-pairs from
-digital or scanned PDFs, images, Office and HTML files. Document Intelligence supports `PDF`, `JPEG/JPG`, `PNG`, `BMP`, `TIFF`, `HEIF`, `DOCX`, `XLSX`, `PPTX` and `HTML`.
+[Azure AI Document Intelligence](https://aka.ms/doc-intelligence) (이전 이름: `Azure Form Recognizer`)는 디지털 또는 스캔된 PDF, 이미지, Office 및 HTML 파일에서 텍스트(손글씨 포함), 표, 문서 구조(예: 제목, 섹션 제목 등) 및 키-값 쌍을 추출하는 기계 학습 기반 서비스입니다. Document Intelligence는 `PDF`, `JPEG/JPG`, `PNG`, `BMP`, `TIFF`, `HEIF`, `DOCX`, `XLSX`, `PPTX` 및 `HTML`을 지원합니다.
 
-This [current implementation](https://aka.ms/di-langchain) of a loader using `Document Intelligence` can incorporate content page-wise and turn it into LangChain documents. The default output format is markdown, which can be easily chained with `MarkdownHeaderTextSplitter` for semantic document chunking. You can also use `mode="single"` or `mode="page"` to return pure texts in a single page or document split by page.
+이 [현재 구현](https://aka.ms/di-langchain)은 `Document Intelligence`를 사용하는 로더로, 콘텐츠를 페이지별로 통합하고 LangChain 문서로 변환할 수 있습니다. 기본 출력 형식은 마크다운이며, 이는 `MarkdownHeaderTextSplitter`와 쉽게 연결되어 의미론적 문서 청크로 나눌 수 있습니다. 또한 `mode="single"` 또는 `mode="page"`를 사용하여 단일 페이지 또는 페이지별로 분할된 순수 텍스트를 반환할 수 있습니다.
 
-### Prerequisite
+### 전제 조건
 
-An Azure AI Document Intelligence resource in one of the 3 preview regions: **East US**, **West US2**, **West Europe** - follow [this document](https://learn.microsoft.com/azure/ai-services/document-intelligence/create-document-intelligence-resource?view=doc-intel-4.0.0) to create one if you don't have. You will be passing `<endpoint>` and `<key>` as parameters to the loader.
+**East US**, **West US2**, **West Europe** 중 하나의 3개 미리 보기 지역에 Azure AI Document Intelligence 리소스가 필요합니다. 리소스가 없는 경우 [이 문서](https://learn.microsoft.com/azure/ai-services/document-intelligence/create-document-intelligence-resource?view=doc-intel-4.0.0)를 따라 생성하세요. `<endpoint>` 및 `<key>`를 로더의 매개변수로 전달해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AzureAIDocumentIntelligenceLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.doc_intelligence.AzureAIDocumentIntelligenceLoader.html", "title": "How to load Microsoft Office files"}]-->

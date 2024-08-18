@@ -1,15 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/spreedly/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/spreedly.ipynb
+description: Spreedly는 신용카드를 안전하게 저장하고 다양한 결제 게이트웨이와 API를 통해 거래할 수 있는 서비스입니다.
 ---
 
 # Spreedly
 
-> [Spreedly](https://docs.spreedly.com/) is a service that allows you to securely store credit cards and use them to transact against any number of payment gateways and third party APIs. It does this by simultaneously providing a card tokenization/vault service as well as a gateway and receiver integration service. Payment methods tokenized by Spreedly are stored at `Spreedly`, allowing you to independently store a card and then pass that card to different end points based on your business requirements.
+> [Spreedly](https://docs.spreedly.com/)는 신용 카드를 안전하게 저장하고 이를 통해 여러 결제 게이트웨이 및 제3자 API와 거래할 수 있는 서비스입니다. 이는 카드 토큰화/금고 서비스와 게이트웨이 및 수신자 통합 서비스를 동시에 제공함으로써 이루어집니다. Spreedly에 의해 토큰화된 결제 방법은 `Spreedly`에 저장되어, 비즈니스 요구 사항에 따라 카드를 독립적으로 저장하고 이를 다양한 엔드 포인트로 전달할 수 있습니다.
 
-This notebook covers how to load data from the [Spreedly REST API](https://docs.spreedly.com/reference/api/v1/) into a format that can be ingested into LangChain, along with example usage for vectorization.
+이 노트북은 [Spreedly REST API](https://docs.spreedly.com/reference/api/v1/)에서 LangChain에 적재할 수 있는 형식으로 데이터를 로드하는 방법과 벡터화에 대한 예제 사용법을 다룹니다.
 
-Note: this notebook assumes the following packages are installed: `openai`, `chromadb`, and `tiktoken`.
+참고: 이 노트북은 다음 패키지가 설치되어 있다고 가정합니다: `openai`, `chromadb`, 및 `tiktoken`.
 
 ```python
 <!--IMPORTS:[{"imported": "VectorstoreIndexCreator", "source": "langchain.indexes", "docs": "https://api.python.langchain.com/en/latest/indexes/langchain.indexes.vectorstore.VectorstoreIndexCreator.html", "title": "Spreedly"}, {"imported": "SpreedlyLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.spreedly.SpreedlyLoader.html", "title": "Spreedly"}]-->
@@ -19,25 +19,27 @@ from langchain.indexes import VectorstoreIndexCreator
 from langchain_community.document_loaders import SpreedlyLoader
 ```
 
-Spreedly API requires an access token, which can be found inside the Spreedly Admin Console.
 
-This document loader does not currently support pagination, nor access to more complex objects which require additional parameters. It also requires a `resource` option which defines what objects you want to load.
+Spreedly API는 액세스 토큰을 요구하며, 이는 Spreedly 관리 콘솔 내에서 찾을 수 있습니다.
 
-Following resources are available:
-- `gateways_options`: [Documentation](https://docs.spreedly.com/reference/api/v1/#list-supported-gateways)
-- `gateways`: [Documentation](https://docs.spreedly.com/reference/api/v1/#list-created-gateways)
-- `receivers_options`: [Documentation](https://docs.spreedly.com/reference/api/v1/#list-supported-receivers)
-- `receivers`: [Documentation](https://docs.spreedly.com/reference/api/v1/#list-created-receivers)
-- `payment_methods`: [Documentation](https://docs.spreedly.com/reference/api/v1/#list)
-- `certificates`: [Documentation](https://docs.spreedly.com/reference/api/v1/#list-certificates)
-- `transactions`: [Documentation](https://docs.spreedly.com/reference/api/v1/#list49)
-- `environments`: [Documentation](https://docs.spreedly.com/reference/api/v1/#list-environments)
+이 문서 로더는 현재 페이지 매김을 지원하지 않으며, 추가 매개변수를 요구하는 더 복잡한 객체에 대한 접근도 지원하지 않습니다. 또한 로드할 객체를 정의하는 `resource` 옵션이 필요합니다.
+
+다음 리소스를 사용할 수 있습니다:
+- `gateways_options`: [문서](https://docs.spreedly.com/reference/api/v1/#list-supported-gateways)
+- `gateways`: [문서](https://docs.spreedly.com/reference/api/v1/#list-created-gateways)
+- `receivers_options`: [문서](https://docs.spreedly.com/reference/api/v1/#list-supported-receivers)
+- `receivers`: [문서](https://docs.spreedly.com/reference/api/v1/#list-created-receivers)
+- `payment_methods`: [문서](https://docs.spreedly.com/reference/api/v1/#list)
+- `certificates`: [문서](https://docs.spreedly.com/reference/api/v1/#list-certificates)
+- `transactions`: [문서](https://docs.spreedly.com/reference/api/v1/#list49)
+- `environments`: [문서](https://docs.spreedly.com/reference/api/v1/#list-environments)
 
 ```python
 spreedly_loader = SpreedlyLoader(
     os.environ["SPREEDLY_ACCESS_TOKEN"], "gateways_options"
 )
 ```
+
 
 ```python
 # Create a vectorstore retriever from the loader
@@ -46,14 +48,17 @@ spreedly_loader = SpreedlyLoader(
 index = VectorstoreIndexCreator().from_loaders([spreedly_loader])
 spreedly_doc_retriever = index.vectorstore.as_retriever()
 ```
+
 ```output
 Using embedded DuckDB without persistence: data will be transient
 ```
+
 
 ```python
 # Test the retriever
 spreedly_doc_retriever.invoke("CRC")
 ```
+
 
 ```output
 [Document(page_content='installment_grace_period_duration\nreference_data_code\ninvoice_number\ntax_management_indicator\noriginal_amount\ninvoice_amount\nvat_tax_rate\nmobile_remote_payment_type\ngratuity_amount\nmdd_field_1\nmdd_field_2\nmdd_field_3\nmdd_field_4\nmdd_field_5\nmdd_field_6\nmdd_field_7\nmdd_field_8\nmdd_field_9\nmdd_field_10\nmdd_field_11\nmdd_field_12\nmdd_field_13\nmdd_field_14\nmdd_field_15\nmdd_field_16\nmdd_field_17\nmdd_field_18\nmdd_field_19\nmdd_field_20\nsupported_countries: US\nAE\nBR\nCA\nCN\nDK\nFI\nFR\nDE\nIN\nJP\nMX\nNO\nSE\nGB\nSG\nLB\nPK\nsupported_cardtypes: visa\nmaster\namerican_express\ndiscover\ndiners_club\njcb\ndankort\nmaestro\nelo\nregions: asia_pacific\neurope\nlatin_america\nnorth_america\nhomepage: http://www.cybersource.com\ndisplay_api_url: https://ics2wsa.ic3.com/commerce/1.x/transactionProcessor\ncompany_name: CyberSource', metadata={'source': 'https://core.spreedly.com/v1/gateways_options.json'}),
@@ -62,7 +67,8 @@ spreedly_doc_retriever.invoke("CRC")
  Document(page_content='mdd_field_57\nmdd_field_58\nmdd_field_59\nmdd_field_60\nmdd_field_61\nmdd_field_62\nmdd_field_63\nmdd_field_64\nmdd_field_65\nmdd_field_66\nmdd_field_67\nmdd_field_68\nmdd_field_69\nmdd_field_70\nmdd_field_71\nmdd_field_72\nmdd_field_73\nmdd_field_74\nmdd_field_75\nmdd_field_76\nmdd_field_77\nmdd_field_78\nmdd_field_79\nmdd_field_80\nmdd_field_81\nmdd_field_82\nmdd_field_83\nmdd_field_84\nmdd_field_85\nmdd_field_86\nmdd_field_87\nmdd_field_88\nmdd_field_89\nmdd_field_90\nmdd_field_91\nmdd_field_92\nmdd_field_93\nmdd_field_94\nmdd_field_95\nmdd_field_96\nmdd_field_97\nmdd_field_98\nmdd_field_99\nmdd_field_100\nsupported_countries: US\nAE\nBR\nCA\nCN\nDK\nFI\nFR\nDE\nIN\nJP\nMX\nNO\nSE\nGB\nSG\nLB\nPK\nsupported_cardtypes: visa\nmaster\namerican_express\ndiscover\ndiners_club\njcb\nmaestro\nelo\nunion_pay\ncartes_bancaires\nmada\nregions: asia_pacific\neurope\nlatin_america\nnorth_america\nhomepage: http://www.cybersource.com\ndisplay_api_url: https://api.cybersource.com\ncompany_name: CyberSource REST', metadata={'source': 'https://core.spreedly.com/v1/gateways_options.json'})]
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

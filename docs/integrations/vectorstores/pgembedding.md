@@ -1,22 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/pgembedding/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/pgembedding.ipynb
+description: Postgres Embedding은 HNSW를 사용하여 Postgres에서 벡터 유사성 검색을 지원하는 오픈 소스 도구입니다.
+  정확하고 근사적인 이웃 검색을 제공합니다.
 ---
 
 # Postgres Embedding
 
-> [Postgres Embedding](https://github.com/neondatabase/pg_embedding) is an open-source vector similarity search for `Postgres` that uses  `Hierarchical Navigable Small Worlds (HNSW)` for approximate nearest neighbor search.
+> [Postgres Embedding](https://github.com/neondatabase/pg_embedding)는 `Postgres`를 위한 오픈 소스 벡터 유사성 검색으로, 근사 최근접 이웃 검색을 위해 `Hierarchical Navigable Small Worlds (HNSW)`를 사용합니다.
 
-> It supports:
-> - exact and approximate nearest neighbor search using HNSW
-> - L2 distance
+> 지원하는 기능:
+> - HNSW를 사용한 정확하고 근사적인 최근접 이웃 검색
+> - L2 거리
 
-This notebook shows how to use the Postgres vector database (`PGEmbedding`).
+이 노트북은 Postgres 벡터 데이터베이스(`PGEmbedding`)를 사용하는 방법을 보여줍니다.
 
-> The PGEmbedding integration creates the pg_embedding extension for you, but you run the following Postgres query to add it:
+> PGEmbedding 통합은 pg_embedding 확장을 생성하지만, 다음 Postgres 쿼리를 실행하여 추가해야 합니다:
 ```sql
 CREATE EXTENSION embedding;
 ```
+
 
 ```python
 # Pip install necessary package
@@ -25,7 +27,8 @@ CREATE EXTENSION embedding;
 %pip install --upgrade --quiet  tiktoken
 ```
 
-Add the OpenAI API Key to the environment variables to use `OpenAIEmbeddings`.
+
+`OpenAIEmbeddings`를 사용하기 위해 OpenAI API 키를 환경 변수에 추가하세요.
 
 ```python
 import getpass
@@ -33,14 +36,17 @@ import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
+
 ```output
 OpenAI API Key:········
 ```
+
 
 ```python
 ## Loading Environment Variables
 from typing import List, Tuple
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Postgres Embedding"}, {"imported": "PGEmbedding", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.pgembedding.PGEmbedding.html", "title": "Postgres Embedding"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Postgres Embedding"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Postgres Embedding"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Postgres Embedding"}]-->
@@ -51,12 +57,15 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
+
 ```python
 os.environ["DATABASE_URL"] = getpass.getpass("Database Url:")
 ```
+
 ```output
 Database Url:········
 ```
+
 
 ```python
 loader = TextLoader("state_of_the_union.txt")
@@ -68,6 +77,7 @@ embeddings = OpenAIEmbeddings()
 connection_string = os.environ.get("DATABASE_URL")
 collection_name = "state_of_the_union"
 ```
+
 
 ```python
 db = PGEmbedding.from_documents(
@@ -81,6 +91,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score: List[Tuple[Document, float]] = db.similarity_search_with_score(query)
 ```
 
+
 ```python
 for doc, score in docs_with_score:
     print("-" * 80)
@@ -89,9 +100,10 @@ for doc, score in docs_with_score:
     print("-" * 80)
 ```
 
-## Working with vectorstore in Postgres
 
-### Uploading a vectorstore in PG
+## Postgres에서 벡터 저장소 작업하기
+
+### PG에 벡터 저장소 업로드
 
 ```python
 db = PGEmbedding.from_documents(
@@ -103,8 +115,9 @@ db = PGEmbedding.from_documents(
 )
 ```
 
-### Create HNSW Index
-By default, the extension performs a sequential scan search, with 100% recall. You might consider creating an HNSW index for approximate nearest neighbor (ANN) search to speed up `similarity_search_with_score` execution time. To create the HNSW index on your vector column, use a `create_hnsw_index` function:
+
+### HNSW 인덱스 생성
+기본적으로, 이 확장은 100% 재현율로 순차 스캔 검색을 수행합니다. `similarity_search_with_score` 실행 시간을 단축하기 위해 근사 최근접 이웃(ANN) 검색을 위한 HNSW 인덱스를 생성하는 것을 고려할 수 있습니다. 벡터 열에 HNSW 인덱스를 생성하려면 `create_hnsw_index` 함수를 사용하세요:
 
 ```python
 PGEmbedding.create_hnsw_index(
@@ -112,21 +125,23 @@ PGEmbedding.create_hnsw_index(
 )
 ```
 
-The function above is equivalent to running the below SQL query:
+
+위의 함수는 아래 SQL 쿼리를 실행하는 것과 같습니다:
 ```sql
 CREATE INDEX ON vectors USING hnsw(vec) WITH (maxelements=10000, dims=1536, m=3, efconstruction=16, efsearch=16);
 ```
-The HNSW index options used in the statement above include:
 
-- maxelements: Defines the maximum number of elements indexed. This is a required parameter. The example shown above has a value of 3. A real-world example would have a much large value, such as 1000000. An "element" refers to a data point (a vector) in the dataset, which is represented as a node in the HNSW graph. Typically, you would set this option to a value able to accommodate the number of rows in your in your dataset.
-- dims: Defines the number of dimensions in your vector data. This is a required parameter. A small value is used in the example above. If you are storing data generated using OpenAI's text-embedding-ada-002 model, which supports 1536 dimensions, you would define a value of 1536, for example.
-- m: Defines the maximum number of bi-directional links (also referred to as "edges") created for each node during graph construction.
-The following additional index options are supported:
-- efConstruction: Defines the number of nearest neighbors considered during index construction. The default value is 32.
-- efsearch: Defines the number of nearest neighbors considered during index search. The default value is 32.
-For information about how you can configure these options to influence the HNSW algorithm, refer to [Tuning the HNSW algorithm](https://neon.tech/docs/extensions/pg_embedding#tuning-the-hnsw-algorithm).
+위의 문장에서 사용된 HNSW 인덱스 옵션은 다음과 같습니다:
 
-### Retrieving a vectorstore in PG
+- maxelements: 인덱싱된 최대 요소 수를 정의합니다. 필수 매개변수입니다. 위의 예에서는 값이 3입니다. 실제 예제에서는 1000000과 같은 훨씬 큰 값을 가질 것입니다. "요소"는 데이터 세트의 데이터 포인트(벡터)를 나타내며, HNSW 그래프에서 노드로 표현됩니다. 일반적으로 이 옵션은 데이터 세트의 행 수를 수용할 수 있는 값으로 설정합니다.
+- dims: 벡터 데이터의 차원 수를 정의합니다. 필수 매개변수입니다. 위의 예에서는 작은 값이 사용됩니다. OpenAI의 text-embedding-ada-002 모델을 사용하여 생성된 데이터를 저장하는 경우, 1536 차원을 지원하므로 예를 들어 1536으로 정의합니다.
+- m: 그래프 구성 중 각 노드에 대해 생성되는 양방향 링크(또는 "엣지")의 최대 수를 정의합니다.
+다음 추가 인덱스 옵션이 지원됩니다:
+- efConstruction: 인덱스 구성 중 고려되는 최근접 이웃의 수를 정의합니다. 기본값은 32입니다.
+- efsearch: 인덱스 검색 중 고려되는 최근접 이웃의 수를 정의합니다. 기본값은 32입니다.
+HNSW 알고리즘에 영향을 주기 위해 이러한 옵션을 구성하는 방법에 대한 정보는 [HNSW 알고리즘 조정](https://neon.tech/docs/extensions/pg_embedding#tuning-the-hnsw-algorithm)을 참조하세요.
+
+### PG에서 벡터 저장소 검색하기
 
 ```python
 store = PGEmbedding(
@@ -138,13 +153,16 @@ store = PGEmbedding(
 retriever = store.as_retriever()
 ```
 
+
 ```python
 retriever
 ```
 
+
 ```output
 VectorStoreRetriever(vectorstore=<langchain_community.vectorstores.pghnsw.HNSWVectoreStore object at 0x121d3c8b0>, search_type='similarity', search_kwargs={})
 ```
+
 
 ```python
 db1 = PGEmbedding.from_existing_index(
@@ -158,6 +176,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score: List[Tuple[Document, float]] = db1.similarity_search_with_score(query)
 ```
 
+
 ```python
 for doc, score in docs_with_score:
     print("-" * 80)
@@ -166,7 +185,8 @@ for doc, score in docs_with_score:
     print("-" * 80)
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

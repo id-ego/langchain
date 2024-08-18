@@ -1,31 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/astradb/
+description: Astra DB는 Apache Cassandra® 기반의 서버리스 벡터 데이터베이스로, 간편한 JSON API를 통해 제공됩니다.
 ---
 
 # Astra DB
 
-> [DataStax Astra DB](https://docs.datastax.com/en/astra/home/astra.html) is a serverless
-vector-capable database built on `Apache Cassandra®`and made conveniently available
-through an easy-to-use JSON API.
+> [DataStax Astra DB](https://docs.datastax.com/en/astra/home/astra.html)는 `Apache Cassandra®`를 기반으로 구축된 서버리스 벡터 기능을 갖춘 데이터베이스로, 사용하기 쉬운 JSON API를 통해 편리하게 제공됩니다.
 
-See a [tutorial provided by DataStax](https://docs.datastax.com/en/astra/astra-db-vector/tutorials/chatbot.html).
+[DataStax에서 제공하는 튜토리얼](https://docs.datastax.com/en/astra/astra-db-vector/tutorials/chatbot.html)을 참조하세요.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the following Python package:
+다음 Python 패키지를 설치하세요:
 ```bash
 pip install "langchain-astradb>=0.1.0"
 ```
 
-Get the [connection secrets](https://docs.datastax.com/en/astra/astra-db-vector/get-started/quickstart.html).
-Set up the following environment variables:
+
+[연결 비밀](https://docs.datastax.com/en/astra/astra-db-vector/get-started/quickstart.html)을 가져옵니다.
+다음 환경 변수를 설정하세요:
 
 ```python
 ASTRA_DB_APPLICATION_TOKEN="TOKEN"
 ASTRA_DB_API_ENDPOINT="API_ENDPOINT"
 ```
 
-## Vector Store
+
+## 벡터 저장소
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDBVectorStore", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html", "title": "Astra DB"}]-->
@@ -39,11 +39,12 @@ vector_store = AstraDBVectorStore(
 )
 ```
 
-Learn more in the [example notebook](/docs/integrations/vectorstores/astradb).
 
-See the [example provided by DataStax](https://docs.datastax.com/en/astra/astra-db-vector/integrations/langchain.html).
+[예제 노트북](/docs/integrations/vectorstores/astradb)에서 더 알아보세요.
 
-## Chat message history
+[DataStax에서 제공하는 예제](https://docs.datastax.com/en/astra/astra-db-vector/integrations/langchain.html)를 참조하세요.
+
+## 채팅 메시지 기록
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDBChatMessageHistory", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_astradb.chat_message_histories.AstraDBChatMessageHistory.html", "title": "Astra DB"}]-->
@@ -56,9 +57,10 @@ message_history = AstraDBChatMessageHistory(
 )
 ```
 
-See the [usage example](/docs/integrations/memory/astradb_chat_message_history#example).
 
-## LLM Cache
+[사용 예제](/docs/integrations/memory/astradb_chat_message_history#example)를 참조하세요.
+
+## LLM 캐시
 
 ```python
 <!--IMPORTS:[{"imported": "set_llm_cache", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_llm_cache.html", "title": "Astra DB"}, {"imported": "AstraDBCache", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_astradb.cache.AstraDBCache.html", "title": "Astra DB"}]-->
@@ -71,9 +73,10 @@ set_llm_cache(AstraDBCache(
 ))
 ```
 
-Learn more in the [example notebook](/docs/integrations/llm_caching#astra-db-caches) (scroll to the Astra DB section).
 
-## Semantic LLM Cache
+[예제 노트북](/docs/integrations/llm_caching#astra-db-caches)에서 더 알아보세요 (Astra DB 섹션으로 스크롤).
+
+## 의미론적 LLM 캐시
 
 ```python
 <!--IMPORTS:[{"imported": "set_llm_cache", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_llm_cache.html", "title": "Astra DB"}, {"imported": "AstraDBSemanticCache", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_astradb.cache.AstraDBSemanticCache.html", "title": "Astra DB"}]-->
@@ -87,11 +90,12 @@ set_llm_cache(AstraDBSemanticCache(
 ))
 ```
 
-Learn more in the [example notebook](/docs/integrations/llm_caching#astra-db-caches) (scroll to the appropriate section).
 
-Learn more in the [example notebook](/docs/integrations/memory/astradb_chat_message_history).
+[예제 노트북](/docs/integrations/llm_caching#astra-db-caches)에서 더 알아보세요 (적절한 섹션으로 스크롤).
 
-## Document loader
+[예제 노트북](/docs/integrations/memory/astradb_chat_message_history)에서 더 알아보세요.
+
+## 문서 로더
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDBLoader", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_astradb.document_loaders.AstraDBLoader.html", "title": "Astra DB"}]-->
@@ -104,9 +108,10 @@ loader = AstraDBLoader(
 )
 ```
 
-Learn more in the [example notebook](/docs/integrations/document_loaders/astradb).
 
-## Self-querying retriever
+[예제 노트북](/docs/integrations/document_loaders/astradb)에서 더 알아보세요.
+
+## 자기 질의 검색기
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDBVectorStore", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html", "title": "Astra DB"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "Astra DB"}]-->
@@ -128,9 +133,10 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
-Learn more in the [example notebook](/docs/integrations/retrievers/self_query/astradb).
 
-## Store
+[예제 노트북](/docs/integrations/retrievers/self_query/astradb)에서 더 알아보세요.
+
+## 저장소
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDBStore", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/storage/langchain_astradb.storage.AstraDBStore.html", "title": "Astra DB"}]-->
@@ -143,9 +149,10 @@ store = AstraDBStore(
 )
 ```
 
-Learn more in the [example notebook](/docs/integrations/stores/astradb#astradbstore).
 
-## Byte Store
+[예제 노트북](/docs/integrations/stores/astradb#astradbstore)에서 더 알아보세요.
+
+## 바이트 저장소
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDBByteStore", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/storage/langchain_astradb.storage.AstraDBByteStore.html", "title": "Astra DB"}]-->
@@ -158,4 +165,5 @@ store = AstraDBByteStore(
 )
 ```
 
-Learn more in the [example notebook](/docs/integrations/stores/astradb#astradbbytestore).
+
+[예제 노트북](/docs/integrations/stores/astradb#astradbbytestore)에서 더 알아보세요.

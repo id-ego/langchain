@@ -1,23 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/llmlingua/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/llmlingua.ipynb
+description: LLMLingua를 사용하여 문서를 압축하는 방법을 보여주는 노트북입니다. 효율적인 추론을 위한 간결한 언어 모델 활용법을
+  설명합니다.
 ---
 
-# LLMLingua Document Compressor
+# LLMLingua 문서 압축기
 
-> [LLMLingua](https://github.com/microsoft/LLMLingua) utilizes a compact, well-trained language model (e.g., GPT2-small, LLaMA-7B) to identify and remove non-essential tokens in prompts. This approach enables efficient inference with large language models (LLMs), achieving up to 20x compression with minimal performance loss.
+> [LLMLingua](https://github.com/microsoft/LLMLingua)는 컴팩트하고 잘 훈련된 언어 모델(예: GPT2-small, LLaMA-7B)을 활용하여 프롬프트에서 비필수 토큰을 식별하고 제거합니다. 이 접근 방식은 대형 언어 모델(LLM)로 효율적인 추론을 가능하게 하여 성능 손실을 최소화하면서 최대 20배 압축을 달성합니다.
 
-This notebook shows how to use LLMLingua as a document compressor.
+이 노트북은 LLMLingua를 문서 압축기로 사용하는 방법을 보여줍니다.
 
 ```python
 %pip install --upgrade --quiet  llmlingua accelerate
 ```
+
 ```output
 
 [1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m23.3.2[0m[39;49m -> [0m[32;49m24.0[0m
 [1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpython -m pip install --upgrade pip[0m
 Note: you may need to restart the kernel to use updated packages.
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -31,8 +34,9 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+
+## 기본 벡터 저장소 검색기 설정
+2023년 국정 연설을 (청크로) 저장하면서 간단한 벡터 저장소 검색기를 초기화하는 것부터 시작하겠습니다. 검색기를 설정하여 많은 수(20)의 문서를 검색할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "LLMLingua Document Compressor"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "LLMLingua Document Compressor"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "LLMLingua Document Compressor"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "LLMLingua Document Compressor"}]-->
@@ -55,6 +59,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 Document 1:
 
@@ -257,8 +262,9 @@ The United States of America.
 
 May God bless you all. May God protect our troops.
 ```
-## Doing compression with LLMLingua
-Now let’s wrap our base retriever with a `ContextualCompressionRetriever`, using `LLMLinguaCompressor` as a compressor.
+
+## LLMLingua를 사용한 압축 수행
+이제 `LLMLinguaCompressor`를 압축기로 사용하여 기본 검색기를 `ContextualCompressionRetriever`로 감싸보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "LLMLingua Document Compressor"}, {"imported": "LLMLinguaCompressor", "source": "langchain_community.document_compressors", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.llmlingua_filter.LLMLinguaCompressor.html", "title": "LLMLingua Document Compressor"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "LLMLingua Document Compressor"}]-->
@@ -278,6 +284,7 @@ compressed_docs = compression_retriever.invoke(
 )
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 
@@ -296,9 +303,10 @@ Document 4:
 <# The Sergeant Class Combat froms widow us toBut burn pits ravaged Heath’s lungs and body. 
 Danielle says Heath was a fighter to the very end.
 ```
-## QA generation with LLMLingua
 
-We can see what it looks like to use this in the generation step now
+## LLMLingua를 이용한 QA 생성
+
+이제 생성 단계에서 이를 사용하는 모습이 어떻게 보이는지 확인해봅시다.
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "LLMLingua Document Compressor"}]-->
@@ -307,16 +315,19 @@ from langchain.chains import RetrievalQA
 chain = RetrievalQA.from_chain_type(llm=llm, retriever=compression_retriever)
 ```
 
+
 ```python
 chain.invoke({"query": query})
 ```
+
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',
  'result': "The President mentioned that Ketanji Brown Jackson is one of the nation's top legal minds and will continue Justice Breyer's legacy of excellence."}
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

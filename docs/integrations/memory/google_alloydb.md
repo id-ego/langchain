@@ -1,36 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/google_alloydb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/google_alloydb.ipynb
+description: Google Cloud AlloyDB for PostgreSQL를 사용하여 채팅 메시지 기록을 저장하는 방법을 설명하는 노트북입니다.
+  AI 기반 경험을 구축하세요.
 ---
 
 # Google AlloyDB for PostgreSQL
 
-> [Google Cloud AlloyDB for PostgreSQL](https://cloud.google.com/alloydb) is a fully managed `PostgreSQL` compatible database service for your most demanding enterprise workloads. `AlloyDB` combines the best of `Google Cloud` with `PostgreSQL`, for superior performance, scale, and availability. Extend your database application to build AI-powered experiences leveraging `AlloyDB` Langchain integrations.
+> [Google Cloud AlloyDB for PostgreSQL](https://cloud.google.com/alloydb)는 가장 까다로운 기업 워크로드를 위한 완전 관리형 `PostgreSQL` 호환 데이터베이스 서비스입니다. `AlloyDB`는 `Google Cloud`와 `PostgreSQL`의 장점을 결합하여 뛰어난 성능, 확장성 및 가용성을 제공합니다. `AlloyDB` Langchain 통합을 활용하여 AI 기반 경험을 구축하기 위해 데이터베이스 애플리케이션을 확장하세요.
 
-This notebook goes over how to use `Google Cloud AlloyDB for PostgreSQL` to store chat message history with the `AlloyDBChatMessageHistory` class.
+이 노트북은 `AlloyDBChatMessageHistory` 클래스를 사용하여 채팅 메시지 기록을 저장하는 방법을 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-alloydb-pg-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-alloydb-pg-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-alloydb-pg-python/blob/main/docs/chat_message_history.ipynb)
 
-## Before You Begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the AlloyDB API](https://console.cloud.google.com/flows/enableapi?apiid=alloydb.googleapis.com)
-* [Create a AlloyDB instance](https://cloud.google.com/alloydb/docs/instance-primary-create)
-* [Create a AlloyDB database](https://cloud.google.com/alloydb/docs/database-create)
-* [Add an IAM database user to the database](https://cloud.google.com/alloydb/docs/manage-iam-authn) (Optional)
+* [Google Cloud 프로젝트 만들기](https://developers.google.com/workspace/guides/create-project)
+* [AlloyDB API 활성화](https://console.cloud.google.com/flows/enableapi?apiid=alloydb.googleapis.com)
+* [AlloyDB 인스턴스 만들기](https://cloud.google.com/alloydb/docs/instance-primary-create)
+* [AlloyDB 데이터베이스 만들기](https://cloud.google.com/alloydb/docs/database-create)
+* [데이터베이스에 IAM 데이터베이스 사용자 추가](https://cloud.google.com/alloydb/docs/manage-iam-authn) (선택 사항)
 
-### 🦜🔗 Library Installation
-The integration lives in its own `langchain-google-alloydb-pg` package, so we need to install it.
+### 🦜🔗 라이브러리 설치
+통합은 자체 `langchain-google-alloydb-pg` 패키지에 있으므로 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet langchain-google-alloydb-pg langchain-google-vertexai
 ```
 
-**Colab only:** Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**Colab 전용:** 다음 셀의 주석을 제거하여 커널을 재시작하거나 버튼을 사용하여 커널을 재시작하세요. Vertex AI Workbench의 경우 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -40,11 +42,12 @@ The integration lives in its own `langchain-google-alloydb-pg` package, so we ne
 # app.kernel.do_shutdown(True)
 ```
 
-### 🔐 Authentication
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
 
-* If you are using Colab to run this notebook, use the cell below and continue.
-* If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+### 🔐 인증
+이 노트북에 로그인한 IAM 사용자로 Google Cloud에 인증하여 Google Cloud 프로젝트에 접근하세요.
+
+* Colab을 사용하여 이 노트북을 실행하는 경우 아래 셀을 사용하고 계속 진행하세요.
+* Vertex AI Workbench를 사용하는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -52,14 +55,15 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ Google Cloud 프로젝트 설정
+이 노트북 내에서 Google Cloud 리소스를 활용할 수 있도록 Google Cloud 프로젝트를 설정하세요.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list` 실행.
+* `gcloud projects list` 실행.
+* 지원 페이지 참조: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
@@ -70,18 +74,20 @@ PROJECT_ID = "my-project-id"  # @param {type:"string"}
 !gcloud config set project {PROJECT_ID}
 ```
 
-### 💡 API Enablement
-The `langchain-google-alloydb-pg` package requires that you [enable the AlloyDB Admin API](https://console.cloud.google.com/flows/enableapi?apiid=alloydb.googleapis.com) in your Google Cloud Project.
+
+### 💡 API 활성화
+`langchain-google-alloydb-pg` 패키지는 Google Cloud 프로젝트에서 [AlloyDB Admin API](https://console.cloud.google.com/flows/enableapi?apiid=alloydb.googleapis.com)를 활성화해야 합니다.
 
 ```python
 # enable AlloyDB API
 !gcloud services enable alloydb.googleapis.com
 ```
 
-## Basic Usage
 
-### Set AlloyDB database values
-Find your database values, in the [AlloyDB cluster page](https://console.cloud.google.com/alloydb?_ga=2.223735448.2062268965.1707700487-2088871159.1707257687).
+## 기본 사용법
+
+### AlloyDB 데이터베이스 값 설정
+[AlloyDB 클러스터 페이지](https://console.cloud.google.com/alloydb?_ga=2.223735448.2062268965.1707700487-2088871159.1707257687)에서 데이터베이스 값을 찾으세요.
 
 ```python
 # @title Set Your Values Here { display-mode: "form" }
@@ -92,24 +98,25 @@ DATABASE = "my-database"  # @param {type: "string"}
 TABLE_NAME = "message_store"  # @param {type: "string"}
 ```
 
-### AlloyDBEngine Connection Pool
 
-One of the requirements and arguments to establish AlloyDB as a ChatMessageHistory memory store is a `AlloyDBEngine` object. The `AlloyDBEngine`  configures a connection pool to your AlloyDB database, enabling successful connections from your application and following industry best practices.
+### AlloyDBEngine 연결 풀
 
-To create a `AlloyDBEngine` using `AlloyDBEngine.from_instance()` you need to provide only 5 things:
+`ChatMessageHistory` 메모리 저장소로 AlloyDB를 설정하기 위한 요구 사항 및 인수 중 하나는 `AlloyDBEngine` 객체입니다. `AlloyDBEngine`은 AlloyDB 데이터베이스에 대한 연결 풀을 구성하여 애플리케이션에서 성공적인 연결을 가능하게 하고 업계 모범 사례를 따릅니다.
 
-1. `project_id` : Project ID of the Google Cloud Project where the AlloyDB instance is located.
-2. `region` : Region where the AlloyDB instance is located.
-3. `cluster`: The name of the AlloyDB cluster.
-4. `instance` : The name of the AlloyDB instance.
-5. `database` : The name of the database to connect to on the AlloyDB instance.
+`AlloyDBEngine.from_instance()`를 사용하여 `AlloyDBEngine`을 생성하려면 다음 5가지만 제공하면 됩니다:
 
-By default, [IAM database authentication](https://cloud.google.com/alloydb/docs/manage-iam-authn) will be used as the method of database authentication. This library uses the IAM principal belonging to the [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/application-default-credentials) sourced from the envionment.
+1. `project_id` : AlloyDB 인스턴스가 위치한 Google Cloud 프로젝트의 프로젝트 ID.
+2. `region` : AlloyDB 인스턴스가 위치한 지역.
+3. `cluster`: AlloyDB 클러스터의 이름.
+4. `instance` : AlloyDB 인스턴스의 이름.
+5. `database` : AlloyDB 인스턴스에서 연결할 데이터베이스의 이름.
 
-Optionally, [built-in database authentication](https://cloud.google.com/alloydb/docs/database-users/about) using a username and password to access the AlloyDB database can also be used. Just provide the optional `user` and `password` arguments to `AlloyDBEngine.from_instance()`:
+기본적으로 [IAM 데이터베이스 인증](https://cloud.google.com/alloydb/docs/manage-iam-authn)이 데이터베이스 인증 방법으로 사용됩니다. 이 라이브러리는 환경에서 가져온 [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/application-default-credentials)에 속한 IAM 주체를 사용합니다.
 
-* `user` : Database user to use for built-in database authentication and login
-* `password` : Database password to use for built-in database authentication and login.
+선택적으로, AlloyDB 데이터베이스에 접근하기 위해 사용자 이름과 비밀번호를 사용하는 [내장 데이터베이스 인증](https://cloud.google.com/alloydb/docs/database-users/about)도 사용할 수 있습니다. `AlloyDBEngine.from_instance()`에 선택적 `user` 및 `password` 인수를 제공하면 됩니다:
+
+* `user` : 내장 데이터베이스 인증 및 로그인에 사용할 데이터베이스 사용자
+* `password` : 내장 데이터베이스 인증 및 로그인에 사용할 데이터베이스 비밀번호.
 
 ```python
 from langchain_google_alloydb_pg import AlloyDBEngine
@@ -123,22 +130,24 @@ engine = AlloyDBEngine.from_instance(
 )
 ```
 
-### Initialize a table
-The `AlloyDBChatMessageHistory` class requires a database table with a specific schema in order to store the chat message history.
 
-The `AlloyDBEngine` engine has a helper method `init_chat_history_table()` that can be used to create a table with the proper schema for you.
+### 테이블 초기화
+`AlloyDBChatMessageHistory` 클래스는 채팅 메시지 기록을 저장하기 위해 특정 스키마를 가진 데이터베이스 테이블이 필요합니다.
+
+`AlloyDBEngine` 엔진에는 적절한 스키마로 테이블을 생성하는 데 사용할 수 있는 도우미 메서드 `init_chat_history_table()`가 있습니다.
 
 ```python
 engine.init_chat_history_table(table_name=TABLE_NAME)
 ```
 
+
 ### AlloyDBChatMessageHistory
 
-To initialize the `AlloyDBChatMessageHistory` class you need to provide only 3 things:
+`AlloyDBChatMessageHistory` 클래스를 초기화하려면 다음 3가지만 제공하면 됩니다:
 
-1. `engine` - An instance of a `AlloyDBEngine` engine.
-2. `session_id` - A unique identifier string that specifies an id for the session.
-3. `table_name` : The name of the table within the AlloyDB database to store the chat message history.
+1. `engine` - `AlloyDBEngine` 엔진의 인스턴스.
+2. `session_id` - 세션의 ID를 지정하는 고유 식별자 문자열.
+3. `table_name` : 채팅 메시지 기록을 저장할 AlloyDB 데이터베이스 내의 테이블 이름.
 
 ```python
 from langchain_google_alloydb_pg import AlloyDBChatMessageHistory
@@ -150,29 +159,33 @@ history.add_user_message("hi!")
 history.add_ai_message("whats up?")
 ```
 
+
 ```python
 history.messages
 ```
 
-#### Cleaning up
-When the history of a specific session is obsolete and can be deleted, it can be done the following way.
 
-**Note:** Once deleted, the data is no longer stored in AlloyDB and is gone forever.
+#### 정리
+특정 세션의 기록이 더 이상 필요하지 않고 삭제할 수 있는 경우 다음과 같이 수행할 수 있습니다.
+
+**참고:** 삭제되면 데이터는 더 이상 AlloyDB에 저장되지 않으며 영원히 사라집니다.
 
 ```python
 history.clear()
 ```
 
-## 🔗 Chaining
 
-We can easily combine this message history class with [LCEL Runnables](/docs/how_to/message_history)
+## 🔗 체이닝
 
-To do this we will use one of [Google's Vertex AI chat models](/docs/integrations/chat/google_vertex_ai_palm) which requires that you [enable the Vertex AI API](https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com) in your Google Cloud Project.
+이 메시지 기록 클래스를 [LCEL Runnables](/docs/how_to/message_history)와 쉽게 결합할 수 있습니다.
+
+이를 위해 [Google의 Vertex AI 채팅 모델](/docs/integrations/chat/google_vertex_ai_palm)을 사용하며, Google Cloud 프로젝트에서 [Vertex AI API](https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com)를 활성화해야 합니다.
 
 ```python
 # enable Vertex AI API
 !gcloud services enable aiplatform.googleapis.com
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Google AlloyDB for PostgreSQL"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Google AlloyDB for PostgreSQL"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "Google AlloyDB for PostgreSQL"}]-->
@@ -180,6 +193,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_google_vertexai import ChatVertexAI
 ```
+
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -192,6 +206,7 @@ prompt = ChatPromptTemplate.from_messages(
 
 chain = prompt | ChatVertexAI(project=PROJECT_ID)
 ```
+
 
 ```python
 chain_with_history = RunnableWithMessageHistory(
@@ -206,14 +221,17 @@ chain_with_history = RunnableWithMessageHistory(
 )
 ```
 
+
 ```python
 # This is where we configure the session id
 config = {"configurable": {"session_id": "test_session"}}
 ```
 
+
 ```python
 chain_with_history.invoke({"question": "Hi! I'm bob"}, config=config)
 ```
+
 
 ```python
 chain_with_history.invoke({"question": "Whats my name"}, config=config)

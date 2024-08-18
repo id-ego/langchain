@@ -1,34 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/portkey/
+description: 포트키는 AI 앱을 위한 제어판으로, Langchain에 생산 준비성을 제공하여 신뢰성 있고 비용 효율적인 앱을 빠르게 배포할
+  수 있게 합니다.
 ---
 
-# Portkey
+# 포트키
 
-[Portkey](https://portkey.ai) is the Control Panel for AI apps. With it's popular AI Gateway and Observability Suite, hundreds of teams ship **reliable**, **cost-efficient**, and **fast** apps.
+[Portkey](https://portkey.ai)는 AI 앱을 위한 제어판입니다. 인기 있는 AI 게이트웨이와 관찰 가능성 스위트를 통해 수백 개 팀이 **신뢰할 수 있는**, **비용 효율적인**, **빠른** 앱을 배포합니다.
 
 ## LLMOps for Langchain
 
-Portkey brings production readiness to Langchain. With Portkey, you can 
-- [x] Connect to 150+ models through a unified API,
-- [x] View 42+ **metrics & logs** for all requests, 
-- [x] Enable **semantic cache** to reduce latency & costs, 
-- [x] Implement automatic **retries & fallbacks** for failed requests, 
-- [x] Add **custom tags** to requests for better tracking and analysis and [more](https://portkey.ai/docs).
+Portkey는 Langchain의 생산 준비성을 제공합니다. Portkey를 사용하면 
+- [x] 통합 API를 통해 150개 이상의 모델에 연결할 수 있습니다,
+- [x] 모든 요청에 대한 42개 이상의 **메트릭 및 로그**를 볼 수 있습니다,
+- [x] 지연 시간 및 비용을 줄이기 위해 **시맨틱 캐시**를 활성화할 수 있습니다,
+- [x] 실패한 요청에 대해 자동 **재시도 및 대체**를 구현할 수 있습니다,
+- [x] 더 나은 추적 및 분석을 위해 요청에 **사용자 정의 태그**를 추가할 수 있습니다. [더 많은 정보는 여기를 클릭하세요](https://portkey.ai/docs).
 
-## Quickstart - Portkey & Langchain
-Since Portkey is fully compatible with the OpenAI signature, you can connect to the Portkey AI Gateway through the `ChatOpenAI` interface.
+## 빠른 시작 - Portkey & Langchain
+Portkey는 OpenAI 서명과 완전히 호환되므로 `ChatOpenAI` 인터페이스를 통해 Portkey AI 게이트웨이에 연결할 수 있습니다.
 
-- Set the `base_url` as `PORTKEY_GATEWAY_URL`
-- Add `default_headers` to consume the headers needed by Portkey using the `createHeaders` helper method.
+- `base_url`을 `PORTKEY_GATEWAY_URL`로 설정합니다.
+- `createHeaders` 헬퍼 메서드를 사용하여 Portkey에서 필요한 헤더를 소비하기 위해 `default_headers`를 추가합니다.
 
-To start, get your Portkey API key by [signing up here](https://app.portkey.ai/signup). (Click the profile icon on the bottom left, then click on "Copy API Key") or deploy the open source AI gateway in [your own environment](https://github.com/Portkey-AI/gateway/blob/main/docs/installation-deployments.md).
+시작하려면 [여기에서 가입하여](https://app.portkey.ai/signup) Portkey API 키를 받으세요. (왼쪽 하단의 프로필 아이콘을 클릭한 다음 "API 키 복사"를 클릭하세요) 또는 [자신의 환경에 오픈 소스 AI 게이트웨이를 배포하세요](https://github.com/Portkey-AI/gateway/blob/main/docs/installation-deployments.md).
 
-Next, install the Portkey SDK
+다음으로, Portkey SDK를 설치합니다.
 ```python
 pip install -U portkey_ai
 ```
 
-We can now connect to the Portkey AI Gateway by updating the `ChatOpenAI` model in Langchain
+
+이제 Langchain에서 `ChatOpenAI` 모델을 업데이트하여 Portkey AI 게이트웨이에 연결할 수 있습니다.
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Portkey"}]-->
 from langchain_openai import ChatOpenAI
@@ -44,20 +46,21 @@ llm = ChatOpenAI(api_key=PROVIDER_API_KEY, base_url=PORTKEY_GATEWAY_URL, default
 llm.invoke("What is the meaning of life, universe and everything?")
 ```
 
-The request is routed through your Portkey AI Gateway to the specified `provider`. Portkey will also start logging all the requests in your account that makes debugging extremely simple.
 
-![View logs from Langchain in Portkey](https://assets.portkey.ai/docs/langchain-logs.gif)
+요청은 지정된 `provider`로 Portkey AI 게이트웨이를 통해 라우팅됩니다. Portkey는 또한 디버깅을 매우 간단하게 만드는 모든 요청을 귀하의 계정에 기록하기 시작합니다.
 
-## Using 150+ models through the AI Gateway
-The power of the AI gateway comes when you're able to use the above code snippet to connect with 150+ models across 20+ providers supported through the AI gateway.
+![Langchain에서 Portkey의 로그 보기](https://assets.portkey.ai/docs/langchain-logs.gif)
 
-Let's modify the code above to make a call to Anthropic's `claude-3-opus-20240229` model.
+## AI 게이트웨이를 통한 150개 이상의 모델 사용
+AI 게이트웨이의 힘은 위의 코드 스니펫을 사용하여 20개 이상의 제공업체에서 지원하는 150개 이상의 모델에 연결할 수 있을 때 나타납니다.
 
-Portkey supports **[Virtual Keys](https://docs.portkey.ai/docs/product/ai-gateway-streamline-llm-integrations/virtual-keys)** which are an easy way to store and manage API keys in a secure vault. Lets try using a Virtual Key to make LLM calls. You can navigate to the Virtual Keys tab in Portkey and create a new key for Anthropic.
+위의 코드를 수정하여 Anthropic의 `claude-3-opus-20240229` 모델에 호출해 보겠습니다.
 
-The `virtual_key` parameter sets the authentication and provider for the AI provider being used. In our case we're using the Anthropic Virtual key.
+Portkey는 API 키를 안전한 금고에 저장하고 관리하는 쉬운 방법인 **[가상 키](https://docs.portkey.ai/docs/product/ai-gateway-streamline-llm-integrations/virtual-keys)**를 지원합니다. LLM 호출을 위해 가상 키를 사용해 보겠습니다. Portkey의 가상 키 탭으로 이동하여 Anthropic에 대한 새 키를 생성할 수 있습니다.
 
-> Notice that the `api_key` can be left blank as that authentication won't be used.
+`virtual_key` 매개변수는 사용 중인 AI 제공업체에 대한 인증 및 제공업체를 설정합니다. 우리의 경우 Anthropic 가상 키를 사용하고 있습니다.
+
+> `api_key`는 인증이 사용되지 않으므로 비워둘 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Portkey"}]-->
@@ -74,14 +77,15 @@ llm = ChatOpenAI(api_key="X", base_url=PORTKEY_GATEWAY_URL, default_headers=port
 llm.invoke("What is the meaning of life, universe and everything?")
 ```
 
-The Portkey AI gateway will authenticate the API request to Anthropic and get the response back in the OpenAI format for you to consume.
 
-The AI gateway extends Langchain's `ChatOpenAI` class making it a single interface to call any provider and any model.
+Portkey AI 게이트웨이는 Anthropic에 대한 API 요청을 인증하고 OpenAI 형식으로 응답을 반환합니다.
 
-## Advanced Routing - Load Balancing, Fallbacks, Retries
-The Portkey AI Gateway brings capabilities like load-balancing, fallbacks, experimentation and canary testing to Langchain through a configuration-first approach.
+AI 게이트웨이는 Langchain의 `ChatOpenAI` 클래스를 확장하여 모든 제공업체와 모든 모델을 호출할 수 있는 단일 인터페이스를 만듭니다.
 
-Let's take an **example** where we might want to split traffic between `gpt-4` and `claude-opus` 50:50 to test the two large models. The gateway configuration for this would look like the following:
+## 고급 라우팅 - 로드 밸런싱, 대체, 재시도
+Portkey AI 게이트웨이는 구성 우선 접근 방식을 통해 Langchain에 로드 밸런싱, 대체, 실험 및 카나리 테스트와 같은 기능을 제공합니다.
+
+`gpt-4`와 `claude-opus` 간의 트래픽을 50:50으로 나누어 두 개의 대형 모델을 테스트하고자 하는 **예제**를 살펴보겠습니다. 이 경우의 게이트웨이 구성은 다음과 같습니다:
 
 ```python
 config = {
@@ -100,7 +104,8 @@ config = {
 }
 ```
 
-We can then use this config in our requests being made from langchain.
+
+이 구성을 Langchain에서 이루어지는 요청에 사용할 수 있습니다.
 
 ```python
 portkey_headers = createHeaders(
@@ -113,15 +118,16 @@ llm = ChatOpenAI(api_key="X", base_url=PORTKEY_GATEWAY_URL, default_headers=port
 llm.invoke("What is the meaning of life, universe and everything?")
 ```
 
-When the LLM is invoked, Portkey will distribute the requests to `gpt-4` and `claude-3-opus-20240229` in the ratio of the defined weights.
 
-You can find more config examples [here](https://docs.portkey.ai/docs/api-reference/config-object#examples).
+LLM이 호출되면 Portkey는 정의된 비율에 따라 요청을 `gpt-4`와 `claude-3-opus-20240229`에 분배합니다.
 
-## **Tracing Chains & Agents**
+더 많은 구성 예제는 [여기](https://docs.portkey.ai/docs/api-reference/config-object#examples)에서 확인할 수 있습니다.
 
-Portkey's Langchain integration gives you full visibility into the running of an agent. Let's take an example of a [popular agentic workflow](https://python.langchain.com/docs/use_cases/tool_use/quickstart/#agents).
+## **체인 및 에이전트 추적**
 
-We only need to modify the `ChatOpenAI` class to use the AI Gateway as above.
+Portkey의 Langchain 통합은 에이전트의 실행에 대한 완전한 가시성을 제공합니다. [인기 있는 에이전트 워크플로우](https://python.langchain.com/docs/use_cases/tool_use/quickstart/#agents)의 예를 살펴보겠습니다.
+
+위와 같이 AI 게이트웨이를 사용하기 위해 `ChatOpenAI` 클래스를 수정하기만 하면 됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Portkey"}, {"imported": "create_openai_tools_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_tools.base.create_openai_tools_agent.html", "title": "Portkey"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Portkey"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "Portkey"}]-->
@@ -166,14 +172,15 @@ agent_executor.invoke({
 })
 ```
 
-**You can see the requests' logs along with the trace id on Portkey dashboard:**
-![Langchain Agent Logs on Portkey](https://assets.portkey.ai/docs/agent_tracing.gif)
 
-Additional Docs are available here:
-- Observability - https://portkey.ai/docs/product/observability-modern-monitoring-for-llms
-- AI Gateway - https://portkey.ai/docs/product/ai-gateway-streamline-llm-integrations
-- Prompt Library - https://portkey.ai/docs/product/prompt-library
+**Portkey 대시보드에서 요청 로그와 함께 추적 ID를 확인할 수 있습니다:**
+![Portkey의 Langchain 에이전트 로그](https://assets.portkey.ai/docs/agent_tracing.gif)
 
-You can check out our popular Open Source AI Gateway here - https://github.com/portkey-ai/gateway
+추가 문서는 여기에서 확인할 수 있습니다:
+- 관찰 가능성 - https://portkey.ai/docs/product/observability-modern-monitoring-for-llms
+- AI 게이트웨이 - https://portkey.ai/docs/product/ai-gateway-streamline-llm-integrations
+- 프롬프트 라이브러리 - https://portkey.ai/docs/product/prompt-library
 
-For detailed information on each feature and how to use it, [please refer to the Portkey docs](https://portkey.ai/docs). If you have any questions or need further assistance, [reach out to us on Twitter.](https://twitter.com/portkeyai) or our [support email](mailto:hello@portkey.ai).
+우리의 인기 있는 오픈 소스 AI 게이트웨이는 여기에서 확인할 수 있습니다 - https://github.com/portkey-ai/gateway
+
+각 기능에 대한 자세한 정보와 사용 방법은 [Portkey 문서를 참조하세요](https://portkey.ai/docs). 질문이 있거나 추가 도움이 필요하시면 [트위터에서 문의하세요.](https://twitter.com/portkeyai) 또는 [지원 이메일](mailto:hello@portkey.ai)로 연락해 주세요.

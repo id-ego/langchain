@@ -1,18 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/voyageai-reranker/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/voyageai-reranker.ipynb
+description: 이 문서는 Voyage AI의 rerank 엔드포인트를 사용하여 벡터 저장소 검색기를 설정하고 2023년 국정 연설을 처리하는
+  방법을 보여줍니다.
 ---
 
 # VoyageAI Reranker
 
-> [Voyage AI](https://www.voyageai.com/) provides cutting-edge embedding/vectorizations models.
+> [Voyage AI](https://www.voyageai.com/)는 최첨단 임베딩/벡터화 모델을 제공합니다.
 
-This notebook shows how to use [Voyage AI's rerank endpoint](https://api.voyageai.com/v1/rerank) in a retriever. This builds on top of ideas in the [ContextualCompressionRetriever](/docs/how_to/contextual_compression).
+이 노트북은 검색기에서 [Voyage AI의 재정렬 엔드포인트](https://api.voyageai.com/v1/rerank)를 사용하는 방법을 보여줍니다. 이는 [ContextualCompressionRetriever](/docs/how_to/contextual_compression)에서의 아이디어를 기반으로 합니다.
 
 ```python
 %pip install --upgrade --quiet  voyageai
 %pip install --upgrade --quiet  langchain-voyageai
 ```
+
 
 ```python
 %pip install --upgrade --quiet  faiss
@@ -22,6 +24,7 @@ This notebook shows how to use [Voyage AI's rerank endpoint](https://api.voyagea
 %pip install --upgrade --quiet  faiss-cpu
 ```
 
+
 ```python
 # To obtain your key, create an account on https://www.voyageai.com
 
@@ -30,6 +33,7 @@ import os
 
 os.environ["VOYAGE_API_KEY"] = getpass.getpass("Voyage AI API Key:")
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -43,10 +47,11 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs. You can use any of the following Embeddings models: ([source](https://docs.voyageai.com/docs/embeddings)):
 
-- `voyage-large-2` (default)
+## 기본 벡터 저장소 검색기 설정
+간단한 벡터 저장소 검색기를 초기화하고 2023년 국정 연설을 (조각으로) 저장하는 것으로 시작하겠습니다. 검색기를 설정하여 많은 수(20)의 문서를 검색할 수 있습니다. 다음의 임베딩 모델 중 하나를 사용할 수 있습니다: ([source](https://docs.voyageai.com/docs/embeddings)):
+
+- `voyage-large-2` (기본값)
 - `voyage-code-2`
 - `voyage-2`
 - `voyage-law-2`
@@ -72,6 +77,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 Document 1:
 
@@ -280,8 +286,9 @@ And we will, as one people.
 
 One America.
 ```
-## Doing reranking with VoyageAIRerank
-Now let's wrap our base retriever with a `ContextualCompressionRetriever`. We'll use the Voyage AI reranker to rerank the returned results. You can use any of the following Reranking models: ([source](https://docs.voyageai.com/docs/reranker)):
+
+## VoyageAIRerank로 재정렬 수행
+이제 기본 검색기를 `ContextualCompressionRetriever`로 감싸겠습니다. 반환된 결과를 재정렬하기 위해 Voyage AI 재정렬기를 사용할 것입니다. 다음의 재정렬 모델 중 하나를 사용할 수 있습니다: ([source](https://docs.voyageai.com/docs/reranker)):
 
 - `rerank-1`
 - `rerank-lite-1`
@@ -305,6 +312,7 @@ compressed_docs = compression_retriever.invoke(
 )
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 
@@ -330,12 +338,14 @@ I know what works: Investing in crime prevention and community police officers w
 
 So let’s not abandon our streets. Or choose between safety and equal justice.
 ```
-You can of course use this retriever within a QA pipeline
+
+물론 이 검색기를 QA 파이프라인 내에서 사용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "VoyageAI Reranker"}]-->
 from langchain.chains import RetrievalQA
 ```
+
 
 ```python
 chain = RetrievalQA.from_chain_type(
@@ -343,9 +353,11 @@ chain = RetrievalQA.from_chain_type(
 )
 ```
 
+
 ```python
 chain({"query": query})
 ```
+
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',

@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/infobip/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/infobip.ipynb
+description: 이 문서는 Infobip API 래퍼를 사용하여 SMS 및 이메일 메시지를 전송하는 방법을 보여줍니다. API에 대한 자세한
+  정보도 포함되어 있습니다.
 ---
 
 # Infobip
-This notebook that shows how to use [Infobip](https://www.infobip.com/) API wrapper to send SMS messages, emails.
+이 노트북은 [Infobip](https://www.infobip.com/) API 래퍼를 사용하여 SMS 메시지 및 이메일을 보내는 방법을 보여줍니다.
 
-Infobip provides many services, but this notebook will focus on SMS and Email services. You can find more information about the API and other channels [here](https://www.infobip.com/docs/api).
+Infobip은 많은 서비스를 제공하지만, 이 노트북은 SMS 및 이메일 서비스에 중점을 두고 있습니다. API 및 기타 채널에 대한 자세한 정보는 [여기](https://www.infobip.com/docs/api)에서 확인할 수 있습니다.
 
-## Setup
+## 설정
 
-To use this tool you need to have an Infobip account. You can create [free trial account](https://www.infobip.com/docs/essentials/free-trial).
+이 도구를 사용하려면 Infobip 계정이 필요합니다. [무료 체험 계정](https://www.infobip.com/docs/essentials/free-trial)을 생성할 수 있습니다.
 
-`InfobipAPIWrapper` uses name parameters where you can provide credentials:
+`InfobipAPIWrapper`는 자격 증명을 제공할 수 있는 이름 매개변수를 사용합니다:
 
-- `infobip_api_key` - [API Key](https://www.infobip.com/docs/essentials/api-authentication#api-key-header) that you can find in your [developer tools](https://portal.infobip.com/dev/api-keys)
-- `infobip_base_url` - [Base url](https://www.infobip.com/docs/essentials/base-url) for Infobip API. You can use the default value `https://api.infobip.com/`.
+- `infobip_api_key` - [API 키](https://www.infobip.com/docs/essentials/api-authentication#api-key-header)는 [개발자 도구](https://portal.infobip.com/dev/api-keys)에서 찾을 수 있습니다.
+- `infobip_base_url` - Infobip API의 [기본 URL](https://www.infobip.com/docs/essentials/base-url). 기본값인 `https://api.infobip.com/`를 사용할 수 있습니다.
 
-You can also provide `infobip_api_key` and `infobip_base_url` as environment variables `INFOBIP_API_KEY` and `INFOBIP_BASE_URL`.
+또한 `infobip_api_key`와 `infobip_base_url`을 환경 변수 `INFOBIP_API_KEY` 및 `INFOBIP_BASE_URL`로 제공할 수 있습니다.
 
-## Sending a SMS
+## SMS 보내기
 
 ```python
 <!--IMPORTS:[{"imported": "InfobipAPIWrapper", "source": "langchain_community.utilities.infobip", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.infobip.InfobipAPIWrapper.html", "title": "Infobip"}]-->
@@ -35,7 +36,8 @@ infobip.run(
 )
 ```
 
-## Sending an Email
+
+## 이메일 보내기
 
 ```python
 <!--IMPORTS:[{"imported": "InfobipAPIWrapper", "source": "langchain_community.utilities.infobip", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.infobip.InfobipAPIWrapper.html", "title": "Infobip"}]-->
@@ -52,7 +54,8 @@ infobip.run(
 )
 ```
 
-# How to use it inside an Agent
+
+# 에이전트 내에서 사용 방법
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Infobip"}, {"imported": "create_openai_functions_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.create_openai_functions_agent.html", "title": "Infobip"}, {"imported": "InfobipAPIWrapper", "source": "langchain_community.utilities.infobip", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.infobip.InfobipAPIWrapper.html", "title": "Infobip"}, {"imported": "StructuredTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.structured.StructuredTool.html", "title": "Infobip"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Infobip"}]-->
@@ -102,6 +105,7 @@ agent_executor.invoke(
 )
 ```
 
+
 ```bash
 > Entering new AgentExecutor chain...
 
@@ -113,7 +117,8 @@ I have sent an example of Python recursion to your email. Please check your inbo
 > Finished chain.
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

@@ -1,120 +1,113 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/contributing/testing/
+description: 이 문서는 단위 테스트와 통합 테스트의 중요성을 설명하며, 각 테스트의 설치 및 실행 방법을 안내합니다.
 sidebar_position: 6
 ---
 
-# Testing
+# 테스트
 
-All of our packages have unit tests and integration tests, and we favor unit tests over integration tests.
+우리의 모든 패키지는 단위 테스트와 통합 테스트를 가지고 있으며, 우리는 통합 테스트보다 단위 테스트를 선호합니다.
 
-Unit tests run on every pull request, so they should be fast and reliable.
+단위 테스트는 모든 풀 리퀘스트에서 실행되므로 빠르고 신뢰할 수 있어야 합니다.
 
-Integration tests run once a day, and they require more setup, so they should be reserved for confirming interface points with external services.
+통합 테스트는 하루에 한 번 실행되며, 더 많은 설정이 필요하므로 외부 서비스와의 인터페이스 포인트를 확인하는 데 예약해야 합니다.
 
-## Unit Tests
+## 단위 테스트
 
-Unit tests cover modular logic that does not require calls to outside APIs.
-If you add new logic, please add a unit test.
+단위 테스트는 외부 API 호출이 필요하지 않은 모듈 논리를 다룹니다.
+새로운 논리를 추가하는 경우, 단위 테스트를 추가해 주세요.
 
-To install dependencies for unit tests:
+단위 테스트의 종속성을 설치하려면:
 
 ```bash
 poetry install --with test
 ```
 
-To run unit tests:
+
+단위 테스트를 실행하려면:
 
 ```bash
 make test
 ```
 
-To run unit tests in Docker:
+
+Docker에서 단위 테스트를 실행하려면:
 
 ```bash
 make docker_tests
 ```
 
-To run a specific test:
+
+특정 테스트를 실행하려면:
 
 ```bash
 TEST_FILE=tests/unit_tests/test_imports.py make test
 ```
 
-## Integration Tests
 
-Integration tests cover logic that requires making calls to outside APIs (often integration with other services).
-If you add support for a new external API, please add a new integration test.
+## 통합 테스트
 
-**Warning:** Almost no tests should be integration tests.
+통합 테스트는 외부 API에 대한 호출이 필요한 논리를 다룹니다(종종 다른 서비스와의 통합).
+새로운 외부 API에 대한 지원을 추가하는 경우, 새로운 통합 테스트를 추가해 주세요.
 
-Tests that require making network connections make it difficult for other
-developers to test the code.
+**경고:** 거의 모든 테스트는 통합 테스트여서는 안 됩니다.
 
-Instead favor relying on `responses` library and/or mock.patch to mock
-requests using small fixtures.
+네트워크 연결을 요구하는 테스트는 다른 개발자들이 코드를 테스트하는 데 어려움을 줍니다.
 
-To install dependencies for integration tests:
+대신 `responses` 라이브러리와/또는 mock.patch를 사용하여 작은 픽스처를 이용해 요청을 모의하는 것을 선호합니다.
+
+통합 테스트의 종속성을 설치하려면:
 
 ```bash
 poetry install --with test,test_integration
 ```
 
-To run integration tests:
+
+통합 테스트를 실행하려면:
 
 ```bash
 make integration_tests
 ```
 
-### Prepare
 
-The integration tests use several search engines and databases. The tests
-aim to verify the correct behavior of the engines and databases according to
-their specifications and requirements.
+### 준비
 
-To run some integration tests, such as tests located in
-`tests/integration_tests/vectorstores/`, you will need to install the following
-software:
+통합 테스트는 여러 검색 엔진과 데이터베이스를 사용합니다. 테스트는 엔진과 데이터베이스가 그들의 사양과 요구 사항에 따라 올바르게 동작하는지를 검증하는 것을 목표로 합니다.
+
+`tests/integration_tests/vectorstores/`에 위치한 테스트와 같은 일부 통합 테스트를 실행하려면 다음 소프트웨어를 설치해야 합니다:
 
 - Docker
-- Python 3.8.1 or later
+- Python 3.8.1 이상
 
-Any new dependencies should be added by running:
+새로운 종속성은 다음을 실행하여 추가해야 합니다:
 
 ```bash
 # add package and install it after adding:
 poetry add tiktoken@latest --group "test_integration" && poetry install --with test_integration
 ```
 
-Before running any tests, you should start a specific Docker container that has all the
-necessary dependencies installed. For instance, we use the `elasticsearch.yml` container
-for `test_elasticsearch.py`:
+
+테스트를 실행하기 전에 모든 필요한 종속성이 설치된 특정 Docker 컨테이너를 시작해야 합니다. 예를 들어, 우리는 `test_elasticsearch.py`에 대해 `elasticsearch.yml` 컨테이너를 사용합니다:
 
 ```bash
 cd tests/integration_tests/vectorstores/docker-compose
 docker-compose -f elasticsearch.yml up
 ```
 
-For environments that requires more involving preparation, look for `*.sh`. For instance,
-`opensearch.sh` builds a required docker image and then launch opensearch.
 
-### Prepare environment variables for local testing:
+더 많은 준비가 필요한 환경의 경우, `*.sh`를 찾아보세요. 예를 들어, `opensearch.sh`는 필요한 도커 이미지를 빌드한 다음 opensearch를 시작합니다.
 
-- copy `tests/integration_tests/.env.example` to `tests/integration_tests/.env`
-- set variables in `tests/integration_tests/.env` file, e.g `OPENAI_API_KEY`
+### 로컬 테스트를 위한 환경 변수 준비:
 
-Additionally, it's important to note that some integration tests may require certain
-environment variables to be set, such as `OPENAI_API_KEY`. Be sure to set any required
-environment variables before running the tests to ensure they run correctly.
+- `tests/integration_tests/.env.example`을 `tests/integration_tests/.env`로 복사
+- `tests/integration_tests/.env` 파일에서 변수 설정, 예: `OPENAI_API_KEY`
 
-### Recording HTTP interactions with pytest-vcr
+추가로, 일부 통합 테스트는 `OPENAI_API_KEY`와 같은 특정 환경 변수가 설정되어야 할 수 있습니다. 테스트를 실행하기 전에 필요한 환경 변수를 설정하여 테스트가 올바르게 실행되도록 해야 합니다.
 
-Some of the integration tests in this repository involve making HTTP requests to
-external services. To prevent these requests from being made every time the tests are
-run, we use pytest-vcr to record and replay HTTP interactions.
+### pytest-vcr로 HTTP 상호작용 기록
 
-When running tests in a CI/CD pipeline, you may not want to modify the existing
-cassettes. You can use the --vcr-record=none command-line option to disable recording
-new cassettes. Here's an example:
+이 저장소의 일부 통합 테스트는 외부 서비스에 HTTP 요청을 하는 것을 포함합니다. 테스트가 실행될 때마다 이러한 요청이 발생하지 않도록 하기 위해 pytest-vcr을 사용하여 HTTP 상호작용을 기록하고 재생합니다.
+
+CI/CD 파이프라인에서 테스트를 실행할 때 기존 카세트를 수정하고 싶지 않을 수 있습니다. --vcr-record=none 명령줄 옵션을 사용하여 새로운 카세트 기록을 비활성화할 수 있습니다. 예를 들면:
 
 ```bash
 pytest --log-cli-level=10 tests/integration_tests/vectorstores/test_pinecone.py --vcr-record=none
@@ -122,7 +115,8 @@ pytest tests/integration_tests/vectorstores/test_elasticsearch.py --vcr-record=n
 
 ```
 
-### Run some tests with coverage:
+
+### 커버리지와 함께 일부 테스트 실행:
 
 ```bash
 pytest tests/integration_tests/vectorstores/test_elasticsearch.py --cov=langchain --cov-report=html
@@ -130,17 +124,19 @@ start "" htmlcov/index.html || open htmlcov/index.html
 
 ```
 
-## Coverage
 
-Code coverage (i.e. the amount of code that is covered by unit tests) helps identify areas of the code that are potentially more or less brittle.
+## 커버리지
 
-Coverage requires the dependencies for integration tests:
+코드 커버리지(즉, 단위 테스트로 커버된 코드의 양)는 코드의 잠재적으로 더 부서지기 쉬운 부분을 식별하는 데 도움을 줍니다.
+
+커버리지에는 통합 테스트의 종속성이 필요합니다:
 
 ```bash
 poetry install --with test_integration
 ```
 
-To get a report of current coverage, run the following:
+
+현재 커버리지 보고서를 얻으려면 다음을 실행하세요:
 
 ```bash
 make coverage

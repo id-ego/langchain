@@ -1,6 +1,6 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/solar/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/solar.ipynb
+description: 이 문서는 챗 모델에 대한 개념적 가이드와 활용 방법을 제공합니다. 챗 모델의 이해를 돕기 위한 자료입니다.
 ---
 
 ```python
@@ -26,11 +26,13 @@ messages = [
 chat.invoke(messages)
 ```
 
+
 ```output
 AIMessage(content='저는 대형 언어 모델 프로젝트를 구축하고 싶습니다.')
 ```
 
-## Related
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

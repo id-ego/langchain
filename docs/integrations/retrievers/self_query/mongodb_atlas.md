@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/self_query/mongodb_atlas/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/self_query/mongodb_atlas.ipynb
+description: MongoDB Atlas는 벡터 데이터베이스로 사용할 수 있는 문서 데이터베이스입니다. SelfQueryRetriever와
+  함께 사용하는 방법을 안내합니다.
 ---
 
 # MongoDB Atlas
 
-> [MongoDB Atlas](https://www.mongodb.com/) is a document database that can be
-used as a vector database.
+> [MongoDB Atlas](https://www.mongodb.com/)는 벡터 데이터베이스로 사용할 수 있는 문서 데이터베이스입니다.
 
-In the walkthrough, we'll demo the `SelfQueryRetriever` with a `MongoDB Atlas` vector store.
+이 안내서에서는 `MongoDB Atlas` 벡터 저장소와 함께 `SelfQueryRetriever`를 시연할 것입니다.
 
-## Creating a MongoDB Atlas vectorstore
-First we'll want to create a MongoDB Atlas VectorStore and seed it with some data. We've created a small demo set of documents that contain summaries of movies.
+## MongoDB Atlas 벡터 저장소 생성
+먼저 MongoDB Atlas VectorStore를 생성하고 일부 데이터로 초기화해야 합니다. 우리는 영화 요약을 포함하는 작은 데모 문서 세트를 만들었습니다.
 
-NOTE: The self-query retriever requires you to have `lark` installed (`pip install lark`). We also need the `pymongo` package.
+참고: self-query retriever를 사용하려면 `lark`가 설치되어 있어야 합니다 (`pip install lark`). 또한 `pymongo` 패키지가 필요합니다.
 
 ```python
 %pip install --upgrade --quiet  lark pymongo
 ```
 
-We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
+
+`OpenAIEmbeddings`를 사용하려면 OpenAI API 키를 받아야 합니다.
 
 ```python
 import os
@@ -28,6 +29,7 @@ OPENAI_API_KEY = "Use your OpenAI key"
 
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "MongoDBAtlasVectorSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.mongodb_atlas.MongoDBAtlasVectorSearch.html", "title": "MongoDB Atlas"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "MongoDB Atlas"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "MongoDB Atlas"}]-->
@@ -46,6 +48,7 @@ collection = MongoClient[DB_NAME][COLLECTION_NAME]
 
 embeddings = OpenAIEmbeddings()
 ```
+
 
 ```python
 docs = [
@@ -83,8 +86,9 @@ vectorstore = MongoDBAtlasVectorSearch.from_documents(
 )
 ```
 
-Now, let's create a vector search index on your cluster. In the below example, `embedding` is the name of the field that contains the embedding vector. Please refer to the [documentation](https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector) to get more details on how to define an Atlas Vector Search index.
-You can name the index `{COLLECTION_NAME}` and create the index on the namespace `{DB_NAME}.{COLLECTION_NAME}`. Finally, write the following definition in the JSON editor on MongoDB Atlas:
+
+이제 클러스터에서 벡터 검색 인덱스를 생성해 보겠습니다. 아래 예제에서 `embedding`은 임베딩 벡터를 포함하는 필드의 이름입니다. Atlas Vector Search 인덱스를 정의하는 방법에 대한 자세한 내용은 [문서](https://www.mongodb.com/docs/atlas/atlas-search/field-types/knn-vector)를 참조하십시오.
+인덱스 이름을 `{COLLECTION_NAME}`으로 지정하고 네임스페이스 `{DB_NAME}.{COLLECTION_NAME}`에서 인덱스를 생성할 수 있습니다. 마지막으로 MongoDB Atlas의 JSON 편집기에 다음 정의를 작성하십시오:
 
 ```json
 {
@@ -110,8 +114,9 @@ You can name the index `{COLLECTION_NAME}` and create the index on the namespace
 }
 ```
 
-## Creating our self-querying retriever
-Now we can instantiate our retriever. To do this we'll need to provide some information upfront about the metadata fields that our documents support and a short description of the document contents.
+
+## 자기 쿼리 검색기 생성
+이제 검색기를 인스턴스화할 수 있습니다. 이를 위해 문서가 지원하는 메타데이터 필드에 대한 정보를 미리 제공하고 문서 내용에 대한 간단한 설명이 필요합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "MongoDB Atlas"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "MongoDB Atlas"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "MongoDB Atlas"}]-->
@@ -137,6 +142,7 @@ metadata_field_info = [
 document_content_description = "Brief summary of a movie"
 ```
 
+
 ```python
 llm = OpenAI(temperature=0)
 retriever = SelfQueryRetriever.from_llm(
@@ -144,28 +150,33 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
-## Testing it out
-And now we can try actually using our retriever!
+
+## 테스트해 보기
+이제 실제로 검색기를 사용해 볼 수 있습니다!
 
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are some movies about dinosaurs")
 ```
 
+
 ```python
 # This example specifies a filter
 retriever.invoke("What are some highly rated movies (above 9)?")
 ```
+
 
 ```python
 # This example only specifies a query and a filter
 retriever.invoke("I want to watch a movie about toys rated higher than 9")
 ```
 
+
 ```python
 # This example specifies a composite filter
 retriever.invoke("What's a highly rated (above or equal 9) thriller film?")
 ```
+
 
 ```python
 # This example specifies a query and composite filter
@@ -175,11 +186,12 @@ retriever.invoke(
 )
 ```
 
-## Filter k
 
-We can also use the self query retriever to specify `k`: the number of documents to fetch.
+## k 필터
 
-We can do this by passing `enable_limit=True` to the constructor.
+self query retriever를 사용하여 `k`: 가져올 문서 수를 지정할 수도 있습니다.
+
+이를 위해 생성자에 `enable_limit=True`를 전달하면 됩니다.
 
 ```python
 retriever = SelfQueryRetriever.from_llm(
@@ -191,6 +203,7 @@ retriever = SelfQueryRetriever.from_llm(
     enable_limit=True,
 )
 ```
+
 
 ```python
 # This example only specifies a relevant query

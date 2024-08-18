@@ -1,27 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/kdbai/
+description: KDB.AI는 실시간 데이터를 활용하여 확장 가능하고 신뢰할 수 있는 AI 애플리케이션을 구축할 수 있는 지식 기반 벡터 데이터베이스입니다.
 ---
 
 # KDB.AI
 
-> [KDB.AI](https://kdb.ai) is a powerful knowledge-based vector database and search engine that allows you to build scalable, reliable AI applications, using real-time data, by providing advanced search, recommendation and personalization.
+> [KDB.AI](https://kdb.ai)는 고급 검색, 추천 및 개인화를 제공하여 실시간 데이터를 사용하여 확장 가능하고 신뢰할 수 있는 AI 애플리케이션을 구축할 수 있는 강력한 지식 기반 벡터 데이터베이스 및 검색 엔진입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the Python SDK:
+Python SDK를 설치하세요:
 
 ```bash
 pip install kdbai-client
 ```
 
-## Vector store
 
-There exists a wrapper around KDB.AI indexes, allowing you to use it as a vectorstore,
-whether for semantic search or example selection.
+## 벡터 저장소
+
+KDB.AI 인덱스를 감싸는 래퍼가 존재하여 의미 검색이나 예제 선택을 위해 벡터 저장소로 사용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "KDBAI", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kdbai.KDBAI.html", "title": "KDB.AI"}]-->
 from langchain_community.vectorstores import KDBAI
 ```
 
-For a more detailed walkthrough of the KDB.AI vectorstore, see [this notebook](/docs/integrations/vectorstores/kdbai)
+
+KDB.AI 벡터 저장소에 대한 더 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/kdbai)을 참조하세요.

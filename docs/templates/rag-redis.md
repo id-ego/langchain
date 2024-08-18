@@ -1,22 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/rag-redis/
+description: 이 템플릿은 Redis와 OpenAI를 사용하여 Nike의 재무 10K 보고서에 대한 RAG를 수행합니다. 문서와 질문을 임베딩합니다.
 ---
 
 # rag-redis
 
-This template performs RAG using Redis (vector database) and OpenAI (LLM) on financial 10k filings docs for Nike.
+이 템플릿은 Nike의 재무 10k 제출 문서에 대해 Redis(벡터 데이터베이스)와 OpenAI(LLM)를 사용하여 RAG를 수행합니다.
 
-It relies on the sentence transformer `all-MiniLM-L6-v2` for embedding chunks of the pdf and user questions.
+이 템플릿은 PDF의 청크와 사용자 질문을 임베딩하기 위해 문장 변환기 `all-MiniLM-L6-v2`에 의존합니다.
 
-## Environment Setup
+## 환경 설정
 
-Set the `OPENAI_API_KEY` environment variable to access the [OpenAI](https://platform.openai.com) models:
+`OPENAI_API_KEY` 환경 변수를 설정하여 [OpenAI](https://platform.openai.com) 모델에 접근합니다:
 
 ```bash
 export OPENAI_API_KEY= <YOUR OPENAI API KEY>
 ```
 
-Set the following [Redis](https://redis.com/try-free) environment variables:
+
+다음 [Redis](https://redis.com/try-free) 환경 변수를 설정합니다:
 
 ```bash
 export REDIS_HOST = <YOUR REDIS HOST>
@@ -25,49 +26,54 @@ export REDIS_USER = <YOUR REDIS USER NAME>
 export REDIS_PASSWORD = <YOUR REDIS PASSWORD>
 ```
 
-## Supported Settings
-We use a variety of environment variables to configure this application
 
-| Environment Variable | Description                       | Default Value |
+## 지원되는 설정
+이 애플리케이션을 구성하기 위해 다양한 환경 변수를 사용합니다.
+
+| 환경 변수              | 설명                              | 기본값        |
 |----------------------|-----------------------------------|---------------|
-| `DEBUG`            | Enable or disable Langchain debugging logs       | True         |
-| `REDIS_HOST`           | Hostname for the Redis server     | "localhost"   |
-| `REDIS_PORT`           | Port for the Redis server         | 6379          |
-| `REDIS_USER`           | User for the Redis server         | "" |
-| `REDIS_PASSWORD`       | Password for the Redis server     | "" |
-| `REDIS_URL`            | Full URL for connecting to Redis  | `None`, Constructed from user, password, host, and port if not provided |
-| `INDEX_NAME`           | Name of the vector index          | "rag-redis"   |
+| `DEBUG`            | Langchain 디버깅 로그 활성화 또는 비활성화       | True         |
+| `REDIS_HOST`           | Redis 서버의 호스트 이름         | "localhost"   |
+| `REDIS_PORT`           | Redis 서버의 포트                 | 6379          |
+| `REDIS_USER`           | Redis 서버의 사용자               | "" |
+| `REDIS_PASSWORD`       | Redis 서버의 비밀번호             | "" |
+| `REDIS_URL`            | Redis에 연결하기 위한 전체 URL    | `None`, 제공되지 않으면 사용자, 비밀번호, 호스트 및 포트로 구성됨 |
+| `INDEX_NAME`           | 벡터 인덱스의 이름               | "rag-redis"   |
 
-## Usage
+## 사용법
 
-To use this package, you should first have the LangChain CLI and Pydantic installed in a Python virtual environment:
+이 패키지를 사용하려면 먼저 Python 가상 환경에 LangChain CLI와 Pydantic이 설치되어 있어야 합니다:
 
 ```shell
 pip install -U langchain-cli pydantic==1.10.13
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새 LangChain 프로젝트를 만들고 이를 유일한 패키지로 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package rag-redis
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음을 실행하면 됩니다:
 ```shell
 langchain app add rag-redis
 ```
 
-And add the following code snippet to your `app/server.py` file:
+
+그리고 `app/server.py` 파일에 다음 코드 스니펫을 추가합니다:
 ```python
 from rag_redis.chain import chain as rag_redis_chain
 
 add_routes(app, rag_redis_chain, path="/rag-redis")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줄 것입니다.
+LangSmith에 [여기](https://smith.langchain.com/)에서 가입할 수 있습니다.
+접근 권한이 없는 경우 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -75,19 +81,21 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+
+이 디렉토리 내에 있다면 다음과 같이 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버가 로컬에서 실행됩니다.
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/rag-redis/playground](http://127.0.0.1:8000/rag-redis/playground)
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 볼 수 있습니다.
+플레이그라운드는 [http://127.0.0.1:8000/rag-redis/playground](http://127.0.0.1:8000/rag-redis/playground)에서 접근할 수 있습니다.
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable

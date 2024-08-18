@@ -1,15 +1,16 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/sklearn/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/sklearn.ipynb
+description: scikit-learn은 기계 학습 알고리즘 모음으로, SKLearnVectorStore를 통해 벡터 저장소를 JSON, BSON,
+  Apache Parquet 형식으로 저장할 수 있습니다.
 ---
 
 # scikit-learn
 
-> [scikit-learn](https://scikit-learn.org/stable/) is an open-source collection of machine learning algorithms, including some implementations of the [k nearest neighbors](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html). `SKLearnVectorStore` wraps this implementation and adds the possibility to persist the vector store in json, bson (binary json) or Apache Parquet format.
+> [scikit-learn](https://scikit-learn.org/stable/)은 [k 최근접 이웃](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html)의 일부 구현을 포함한 오픈 소스 머신 러닝 알고리즘 모음입니다. `SKLearnVectorStore`는 이 구현을 감싸고 벡터 저장소를 json, bson(이진 json) 또는 Apache Parquet 형식으로 지속할 수 있는 가능성을 추가합니다.
 
-This notebook shows how to use the `SKLearnVectorStore` vector database.
+이 노트북은 `SKLearnVectorStore` 벡터 데이터베이스를 사용하는 방법을 보여줍니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet  scikit-learn
@@ -21,7 +22,8 @@ You'll need to install `langchain-community` with `pip install -qU langchain-com
 %pip install --upgrade --quiet  pandas pyarrow
 ```
 
-To use OpenAI embeddings, you will need an OpenAI key. You can get one at https://platform.openai.com/account/api-keys or feel free to use any other embeddings.
+
+OpenAI 임베딩을 사용하려면 OpenAI 키가 필요합니다. https://platform.openai.com/account/api-keys에서 하나를 얻거나 다른 임베딩을 자유롭게 사용하세요.
 
 ```python
 import os
@@ -30,9 +32,10 @@ from getpass import getpass
 os.environ["OPENAI_API_KEY"] = getpass("Enter your OpenAI key:")
 ```
 
-## Basic usage
 
-### Load a sample document corpus
+## 기본 사용법
+
+### 샘플 문서 코퍼스 로드
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "scikit-learn"}, {"imported": "SKLearnVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.sklearn.SKLearnVectorStore.html", "title": "scikit-learn"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "scikit-learn"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "scikit-learn"}]-->
@@ -48,7 +51,8 @@ docs = text_splitter.split_documents(documents)
 embeddings = OpenAIEmbeddings()
 ```
 
-### Create the SKLearnVectorStore, index the document corpus and run a sample query
+
+### SKLearnVectorStore 생성, 문서 코퍼스 인덱싱 및 샘플 쿼리 실행
 
 ```python
 import tempfile
@@ -66,6 +70,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = vector_store.similarity_search(query)
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -75,15 +80,18 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
-## Saving and loading a vector store
+
+## 벡터 저장소 저장 및 로드
 
 ```python
 vector_store.persist()
 print("Vector store was persisted to", persist_path)
 ```
+
 ```output
 Vector store was persisted to /var/folders/6r/wc15p6m13nl_nl_n_xfqpc5c0000gp/T/union.parquet
 ```
+
 
 ```python
 vector_store2 = SKLearnVectorStore(
@@ -91,14 +99,17 @@ vector_store2 = SKLearnVectorStore(
 )
 print("A new instance of vector store was loaded from", persist_path)
 ```
+
 ```output
 A new instance of vector store was loaded from /var/folders/6r/wc15p6m13nl_nl_n_xfqpc5c0000gp/T/union.parquet
 ```
+
 
 ```python
 docs = vector_store2.similarity_search(query)
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -108,13 +119,15 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
-## Clean-up
+
+## 정리
 
 ```python
 os.remove(persist_path)
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

@@ -1,28 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat_loaders/langsmith_llm_runs/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat_loaders/langsmith_llm_runs.ipynb
+description: 이 문서는 LangSmith의 LLM 실행 데이터를 로드하고 모델을 미세 조정하는 방법을 설명합니다. 간단한 3단계 프로세스를
+  따릅니다.
 ---
 
-# LangSmith LLM Runs
+# LangSmith LLM 실행
 
-This notebook demonstrates how to directly load data from LangSmith's LLM runs and fine-tune a model on that data.
-The process is simple and comprises 3 steps.
+이 노트북은 LangSmith의 LLM 실행에서 데이터를 직접 로드하고 해당 데이터로 모델을 미세 조정하는 방법을 보여줍니다. 이 과정은 간단하며 3단계로 구성됩니다.
 
-1. Select the LLM runs to train on.
-2. Use the LangSmithRunChatLoader to load runs as chat sessions.
-3. Fine-tune your model.
+1. 학습할 LLM 실행 선택하기.
+2. LangSmithRunChatLoader를 사용하여 실행을 채팅 세션으로 로드하기.
+3. 모델 미세 조정하기.
 
-Then you can use the fine-tuned model in your LangChain app.
+그런 다음 미세 조정된 모델을 LangChain 앱에서 사용할 수 있습니다.
 
-Before diving in, let's install our prerequisites.
+시작하기 전에 필수 조건을 설치합시다.
 
-## Prerequisites
+## 필수 조건
 
-Ensure you've installed langchain >= 0.0.311 and have configured your environment with your LangSmith API key.
+langchain >= 0.0.311을 설치하고 LangSmith API 키로 환경을 구성했는지 확인하세요.
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-openai
 ```
+
 
 ```python
 import os
@@ -35,12 +36,11 @@ os.environ["LANGCHAIN_API_KEY"] = "YOUR API KEY"
 os.environ["LANGCHAIN_PROJECT"] = project_name
 ```
 
-## 1. Select Runs
-The first step is selecting which runs to fine-tune on. A common case would be to select LLM runs within
-traces that have received positive user feedback. You can find examples of this in the[LangSmith Cookbook](https://github.com/langchain-ai/langsmith-cookbook/blob/main/exploratory-data-analysis/exporting-llm-runs-and-feedback/llm_run_etl.ipynb) and in the [docs](https://docs.smith.langchain.com/tracing/use-cases/export-runs/local).
 
-For the sake of this tutorial, we will generate some runs for you to use here. Let's try fine-tuning a
-simple function-calling chain.
+## 1. 실행 선택
+첫 번째 단계는 미세 조정할 실행을 선택하는 것입니다. 일반적인 경우는 긍정적인 사용자 피드백을 받은 트레이스 내의 LLM 실행을 선택하는 것입니다. 이에 대한 예시는 [LangSmith Cookbook](https://github.com/langchain-ai/langsmith-cookbook/blob/main/exploratory-data-analysis/exporting-llm-runs-and-feedback/llm_run_etl.ipynb)와 [docs](https://docs.smith.langchain.com/tracing/use-cases/export-runs/local)에서 찾을 수 있습니다.
+
+이 튜토리얼을 위해 여기서 사용할 몇 가지 실행을 생성하겠습니다. 간단한 함수 호출 체인을 미세 조정해 보겠습니다.
 
 ```python
 from enum import Enum
@@ -76,6 +76,7 @@ class Calculator(BaseModel):
                 return "Cannot divide by zero"
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "convert_pydantic_to_openai_function", "source": "langchain_core.utils.function_calling", "docs": "https://api.python.langchain.com/en/latest/utils/langchain_core.utils.function_calling.convert_pydantic_to_openai_function.html", "title": "LangSmith LLM Runs"}]-->
 from pprint import pprint
@@ -86,6 +87,7 @@ from langchain_core.utils.function_calling import convert_pydantic_to_openai_fun
 openai_function_def = convert_pydantic_to_openai_function(Calculator)
 pprint(openai_function_def)
 ```
+
 ```output
 {'description': 'A calculator function',
  'name': 'Calculator',
@@ -104,6 +106,7 @@ pprint(openai_function_def)
                 'title': 'Calculator',
                 'type': 'object'}}
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticOutputFunctionsParser", "source": "langchain_core.output_parsers.openai_functions", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_functions.PydanticOutputFunctionsParser.html", "title": "LangSmith LLM Runs"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "LangSmith LLM Runs"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "LangSmith LLM Runs"}]-->
@@ -124,6 +127,7 @@ chain = (
     | (lambda x: x.calculate())
 )
 ```
+
 
 ```python
 math_questions = [
@@ -151,15 +155,17 @@ math_questions = [
 results = chain.batch([{"input": q} for q in math_questions], return_exceptions=True)
 ```
 
-#### Load runs that did not error
 
-Now we can select the successful runs to fine-tune on.
+#### 오류가 발생하지 않은 실행 로드
+
+이제 미세 조정할 성공적인 실행을 선택할 수 있습니다.
 
 ```python
 from langsmith.client import Client
 
 client = Client()
 ```
+
 
 ```python
 successful_traces = {
@@ -181,8 +187,9 @@ llm_runs = [
 ]
 ```
 
-## 2. Prepare data
-Now we can create an instance of LangSmithRunChatLoader and load the chat sessions using its lazy_load() method.
+
+## 2. 데이터 준비
+이제 LangSmithRunChatLoader의 인스턴스를 생성하고 lazy_load() 메서드를 사용하여 채팅 세션을 로드할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LangSmithRunChatLoader", "source": "langchain_community.chat_loaders.langsmith", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.langsmith.LangSmithRunChatLoader.html", "title": "LangSmith LLM Runs"}]-->
@@ -193,7 +200,8 @@ loader = LangSmithRunChatLoader(runs=llm_runs)
 chat_sessions = loader.lazy_load()
 ```
 
-#### With the chat sessions loaded, convert them into a format suitable for fine-tuning.
+
+#### 채팅 세션이 로드되었으므로 미세 조정에 적합한 형식으로 변환합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "convert_messages_for_finetuning", "source": "langchain_community.adapters.openai", "docs": "https://api.python.langchain.com/en/latest/adapters/langchain_community.adapters.openai.convert_messages_for_finetuning.html", "title": "LangSmith LLM Runs"}]-->
@@ -202,8 +210,9 @@ from langchain_community.adapters.openai import convert_messages_for_finetuning
 training_data = convert_messages_for_finetuning(chat_sessions)
 ```
 
-## 3. Fine-tune the model
-Now, initiate the fine-tuning process using the OpenAI library.
+
+## 3. 모델 미세 조정
+이제 OpenAI 라이브러리를 사용하여 미세 조정 프로세스를 시작합니다.
 
 ```python
 import json
@@ -234,12 +243,14 @@ while status != "succeeded":
 
 # Now your model is fine-tuned!
 ```
+
 ```output
 Status=[running]... 349.84s. 17.72s
 ```
-## 4. Use in LangChain
 
-After fine-tuning, use the resulting model ID with the ChatOpenAI model class in your LangChain app.
+## 4. LangChain에서 사용
+
+미세 조정 후, LangChain 앱에서 ChatOpenAI 모델 클래스와 함께 결과 모델 ID를 사용하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "LangSmith LLM Runs"}]-->
@@ -256,12 +267,15 @@ model = ChatOpenAI(
 )
 ```
 
+
 ```python
 (prompt | model).invoke({"input": "What's 56/7?"})
 ```
+
 
 ```output
 AIMessage(content='Let me calculate that for you.')
 ```
 
-Now you have successfully fine-tuned a model using data from LangSmith LLM runs!
+
+이제 LangSmith LLM 실행의 데이터를 사용하여 모델을 성공적으로 미세 조정했습니다!

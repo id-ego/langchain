@@ -1,25 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/vectorstore_retriever/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/vectorstore_retriever.ipynb
+description: 벡터 저장소를 사용하여 문서를 검색하는 방법에 대한 가이드입니다. 검색기 생성, 검색 유형 지정 및 추가 검색 매개변수 설정을
+  다룹니다.
 sidebar_position: 0
 ---
 
-# How to use a vectorstore as a retriever
+# 벡터 저장소를 검색기로 사용하는 방법
 
-A vector store retriever is a retriever that uses a vector store to retrieve documents. It is a lightweight wrapper around the vector store class to make it conform to the retriever interface.
-It uses the search methods implemented by a vector store, like similarity search and MMR, to query the texts in the vector store.
+벡터 저장소 검색기는 문서를 검색하기 위해 벡터 저장소를 사용하는 검색기입니다. 이는 검색기 인터페이스에 맞추기 위해 벡터 저장소 클래스 주위에 가벼운 래퍼를 제공합니다. 벡터 저장소에서 텍스트를 쿼리하기 위해 유사성 검색 및 MMR과 같은 벡터 저장소에서 구현된 검색 방법을 사용합니다.
 
-In this guide we will cover:
+이 가이드에서는 다음을 다룰 것입니다:
 
-1. How to instantiate a retriever from a vectorstore;
-2. How to specify the search type for the retriever;
-3. How to specify additional search parameters, such as threshold scores and top-k.
+1. 벡터 저장소에서 검색기를 인스턴스화하는 방법;
+2. 검색기의 검색 유형을 지정하는 방법;
+3. 임계값 점수 및 top-k와 같은 추가 검색 매개변수를 지정하는 방법.
 
-## Creating a retriever from a vectorstore
+## 벡터 저장소에서 검색기 생성하기
 
-You can build a retriever from a vectorstore using its [.as_retriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html#langchain_core.vectorstores.VectorStore.as_retriever) method. Let's walk through an example.
+벡터 저장소의 [.as_retriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStore.html#langchain_core.vectorstores.VectorStore.as_retriever) 메서드를 사용하여 벡터 저장소에서 검색기를 구축할 수 있습니다. 예제를 살펴보겠습니다.
 
-First we instantiate a vectorstore. We will use an in-memory [FAISS](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html) vectorstore:
+먼저 벡터 저장소를 인스턴스화합니다. 우리는 인메모리 [FAISS](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html) 벡터 저장소를 사용할 것입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "How to use a vectorstore as a retriever"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to use a vectorstore as a retriever"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use a vectorstore as a retriever"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to use a vectorstore as a retriever"}]-->
@@ -37,38 +37,43 @@ embeddings = OpenAIEmbeddings()
 vectorstore = FAISS.from_documents(texts, embeddings)
 ```
 
-We can then instantiate a retriever:
+
+그런 다음 검색기를 인스턴스화할 수 있습니다:
 
 ```python
 retriever = vectorstore.as_retriever()
 ```
 
-This creates a retriever (specifically a [VectorStoreRetriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStoreRetriever.html)), which we can use in the usual way:
+
+이렇게 하면 일반적인 방식으로 사용할 수 있는 검색기(특히 [VectorStoreRetriever](https://api.python.langchain.com/en/latest/vectorstores/langchain_core.vectorstores.VectorStoreRetriever.html))가 생성됩니다:
 
 ```python
 docs = retriever.invoke("what did the president say about ketanji brown jackson?")
 ```
 
-## Maximum marginal relevance retrieval
-By default, the vector store retriever uses similarity search. If the underlying vector store supports maximum marginal relevance search, you can specify that as the search type.
 
-This effectively specifies what method on the underlying vectorstore is used (e.g., `similarity_search`, `max_marginal_relevance_search`, etc.).
+## 최대 한계 관련성 검색
+기본적으로 벡터 저장소 검색기는 유사성 검색을 사용합니다. 기본 벡터 저장소가 최대 한계 관련성 검색을 지원하는 경우, 이를 검색 유형으로 지정할 수 있습니다.
+
+이는 기본 벡터 저장소에서 사용되는 방법을 효과적으로 지정합니다(예: `similarity_search`, `max_marginal_relevance_search` 등).
 
 ```python
 retriever = vectorstore.as_retriever(search_type="mmr")
 ```
 
+
 ```python
 docs = retriever.invoke("what did the president say about ketanji brown jackson?")
 ```
 
-## Passing search parameters
 
-We can pass parameters to the underlying vectorstore's search methods using `search_kwargs`.
+## 검색 매개변수 전달하기
 
-### Similarity score threshold retrieval
+`search_kwargs`를 사용하여 기본 벡터 저장소의 검색 방법에 매개변수를 전달할 수 있습니다.
 
-For example, we can set a similarity score threshold and only return documents with a score above that threshold.
+### 유사성 점수 임계값 검색
+
+예를 들어, 유사성 점수 임계값을 설정하고 해당 임계값을 초과하는 점수를 가진 문서만 반환할 수 있습니다.
 
 ```python
 retriever = vectorstore.as_retriever(
@@ -76,22 +81,26 @@ retriever = vectorstore.as_retriever(
 )
 ```
 
+
 ```python
 docs = retriever.invoke("what did the president say about ketanji brown jackson?")
 ```
 
-### Specifying top k
 
-We can also limit the number of documents `k` returned by the retriever.
+### 상위 k 지정하기
+
+검색기가 반환하는 문서 수 `k`를 제한할 수도 있습니다.
 
 ```python
 retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
 ```
 
+
 ```python
 docs = retriever.invoke("what did the president say about ketanji brown jackson?")
 len(docs)
 ```
+
 
 ```output
 1

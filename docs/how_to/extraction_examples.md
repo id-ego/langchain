@@ -1,28 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/extraction_examples/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/extraction_examples.ipynb
+description: 이 문서는 LLM을 활용한 데이터 추출에서 참조 예제를 사용하는 방법과 도구 호출 모델의 활용을 안내합니다.
 ---
 
-# How to use reference examples when doing extraction
+# 참조 예제를 사용하여 추출하는 방법
 
-The quality of extractions can often be improved by providing reference examples to the LLM.
+추출의 품질은 종종 LLM에 참조 예제를 제공함으로써 향상될 수 있습니다.
 
-Data extraction attempts to generate structured representations of information found in text and other unstructured or semi-structured formats. [Tool-calling](/docs/concepts#functiontool-calling) LLM features are often used in this context. This guide demonstrates how to build few-shot examples of tool calls to help steer the behavior of extraction and similar applications.
+데이터 추출은 텍스트 및 기타 비구조적 또는 반구조적 형식에서 발견된 정보의 구조화된 표현을 생성하려고 시도합니다. [도구 호출](/docs/concepts#functiontool-calling) LLM 기능은 종종 이 맥락에서 사용됩니다. 이 가이드는 추출 및 유사한 애플리케이션의 행동을 유도하는 데 도움이 되는 도구 호출의 몇 가지 예를 만드는 방법을 보여줍니다.
 
 :::tip
-While this guide focuses how to use examples with a tool calling model, this technique is generally applicable, and will work
-also with JSON more or prompt based techniques.
+이 가이드는 도구 호출 모델과 함께 예제를 사용하는 방법에 중점을 두지만, 이 기술은 일반적으로 적용 가능하며 JSON 또는 프롬프트 기반 기술에서도 작동합니다.
 :::
 
-LangChain implements a [tool-call attribute](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.tool_calls) on messages from LLMs that include tool calls. See our [how-to guide on tool calling](/docs/how_to/tool_calling) for more detail. To build reference examples for data extraction, we build a chat history containing a sequence of: 
+LangChain은 도구 호출을 포함하는 LLM의 메시지에 [tool-call 속성](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.tool_calls)을 구현합니다. 데이터 추출을 위한 참조 예제를 만들기 위해, 우리는 다음의 순서를 포함하는 채팅 기록을 구축합니다:
 
-- [HumanMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html) containing example inputs;
-- [AIMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html) containing example tool calls;
-- [ToolMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html) containing example tool outputs.
+- [HumanMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html) 예제 입력을 포함;
+- [AIMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html) 예제 도구 호출을 포함;
+- [ToolMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html) 예제 도구 출력을 포함.
 
-LangChain adopts this convention for structuring tool calls into conversation across LLM model providers.
+LangChain은 LLM 모델 제공자 간의 대화에서 도구 호출을 구조화하기 위해 이 관습을 채택합니다.
 
-First we build a prompt template that includes a placeholder for these messages:
+먼저 이러한 메시지에 대한 자리 표시자가 포함된 프롬프트 템플릿을 만듭니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use reference examples when doing extraction"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to use reference examples when doing extraction"}]-->
@@ -49,7 +48,8 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-Test out the template:
+
+템플릿을 테스트해 보세요:
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to use reference examples when doing extraction"}]-->
@@ -62,13 +62,15 @@ prompt.invoke(
 )
 ```
 
+
 ```output
 ChatPromptValue(messages=[SystemMessage(content="You are an expert extraction algorithm. Only extract relevant information from the text. If you do not know the value of an attribute asked to extract, return null for the attribute's value."), HumanMessage(content='testing 1 2 3'), HumanMessage(content='this is some text')])
 ```
 
-## Define the schema
 
-Let's re-use the person schema from the [extraction tutorial](/docs/tutorials/extraction).
+## 스키마 정의
+
+[추출 튜토리얼](/docs/tutorials/extraction)에서 사람 스키마를 재사용해 보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use reference examples when doing extraction"}]-->
@@ -103,18 +105,19 @@ class Data(BaseModel):
     people: List[Person]
 ```
 
-## Define reference examples
 
-Examples can be defined as a list of input-output pairs. 
+## 참조 예제 정의
 
-Each example contains an example `input` text and an example `output` showing what should be extracted from the text.
+예제는 입력-출력 쌍의 목록으로 정의할 수 있습니다.
+
+각 예제는 예제 `input` 텍스트와 텍스트에서 추출해야 할 내용을 보여주는 예제 `output`을 포함합니다.
 
 :::important
-This is a bit in the weeds, so feel free to skip.
+이 부분은 다소 복잡하므로 건너뛰셔도 됩니다.
 
-The format of the example needs to match the API used (e.g., tool calling or JSON mode etc.).
+예제의 형식은 사용되는 API와 일치해야 합니다 (예: 도구 호출 또는 JSON 모드 등).
 
-Here, the formatted examples will match the format expected for the tool calling API since that's what we're using.
+여기서 형식화된 예제는 우리가 사용하고 있는 도구 호출 API에서 기대되는 형식과 일치합니다.
 :::
 
 ```python
@@ -180,7 +183,8 @@ def tool_example_to_messages(example: Example) -> List[BaseMessage]:
     return messages
 ```
 
-Next let's define our examples and then convert them into message format.
+
+다음으로 우리의 예제를 정의한 후 메시지 형식으로 변환해 보겠습니다.
 
 ```python
 examples = [
@@ -203,7 +207,8 @@ for text, tool_call in examples:
     )
 ```
 
-Let's test out the prompt
+
+프롬프트를 테스트해 보겠습니다.
 
 ```python
 example_prompt = prompt.invoke({"text": "this is some text", "examples": messages})
@@ -211,6 +216,7 @@ example_prompt = prompt.invoke({"text": "this is some text", "examples": message
 for message in example_prompt.messages:
     print(f"{message.type}: {message}")
 ```
+
 ```output
 system: content="You are an expert extraction algorithm. Only extract relevant information from the text. If you do not know the value of an attribute asked to extract, return null for the attribute's value."
 human: content="The ocean is vast and blue. It's more than 20,000 feet deep. There are many fish in it."
@@ -221,9 +227,11 @@ ai: content='' tool_calls=[{'name': 'Person', 'args': {'name': 'Fiona', 'hair_co
 tool: content='You have correctly called this tool.' tool_call_id='46f00d6b-50e5-4482-9406-b07bb10340f6'
 human: content='this is some text'
 ```
-## Create an extractor
 
-Let's select an LLM. Because we are using tool-calling, we will need a model that supports a tool-calling feature. See [this table](/docs/integrations/chat) for available LLMs.
+
+## 추출기 생성
+
+LLM을 선택해 보겠습니다. 도구 호출을 사용하고 있기 때문에 도구 호출 기능을 지원하는 모델이 필요합니다. 사용 가능한 LLM에 대한 [이 표](/docs/integrations/chat)를 참조하세요.
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -232,7 +240,7 @@ customVarName="llm"
 openaiParams={`model="gpt-4-0125-preview", temperature=0`}
 />
 
-Following the [extraction tutorial](/docs/tutorials/extraction), we use the `.with_structured_output` method to structure model outputs according to the desired schema:
+[추출 튜토리얼](/docs/tutorials/extraction)을 따르면서, 우리는 `.with_structured_output` 메서드를 사용하여 원하는 스키마에 따라 모델 출력을 구조화합니다:
 
 ```python
 runnable = prompt | llm.with_structured_output(
@@ -242,15 +250,17 @@ runnable = prompt | llm.with_structured_output(
 )
 ```
 
-## Without examples 😿
 
-Notice that even capable models can fail with a **very simple** test case!
+## 예제 없이 😿
+
+유능한 모델조차도 **매우 간단한** 테스트 사례에서 실패할 수 있음을 주목하세요!
 
 ```python
 for _ in range(5):
     text = "The solar system is large, but earth has only 1 moon."
     print(runnable.invoke({"text": text, "examples": []}))
 ```
+
 ```output
 people=[Person(name='earth', hair_color='null', height_in_meters='null')]
 people=[Person(name='earth', hair_color='null', height_in_meters='null')]
@@ -258,15 +268,18 @@ people=[]
 people=[Person(name='earth', hair_color='null', height_in_meters='null')]
 people=[]
 ```
-## With examples 😻
 
-Reference examples helps to fix the failure!
+
+## 예제와 함께 😻
+
+참조 예제가 실패를 수정하는 데 도움이 됩니다!
 
 ```python
 for _ in range(5):
     text = "The solar system is large, but earth has only 1 moon."
     print(runnable.invoke({"text": text, "examples": messages}))
 ```
+
 ```output
 people=[]
 people=[]
@@ -274,9 +287,11 @@ people=[]
 people=[]
 people=[]
 ```
-Note that we can see the few-shot examples as tool-calls in the [Langsmith trace](https://smith.langchain.com/public/4c436bc2-a1ce-440b-82f5-093947542e40/r).
 
-And we retain performance on a positive sample:
+
+우리는 몇 가지 샷 예제를 [Langsmith trace](https://smith.langchain.com/public/4c436bc2-a1ce-440b-82f5-093947542e40/r)에서 도구 호출로 확인할 수 있습니다.
+
+그리고 긍정적인 샘플에서 성능을 유지합니다:
 
 ```python
 runnable.invoke(
@@ -286,6 +301,7 @@ runnable.invoke(
     }
 )
 ```
+
 
 ```output
 Data(people=[Person(name='Harrison', hair_color='black', height_in_meters=None)])

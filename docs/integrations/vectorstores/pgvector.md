@@ -1,56 +1,58 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/pgvector/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/pgvector.ipynb
+description: PGVector는 `postgres`를 백엔드로 사용하고 `pgvector` 확장을 활용하는 LangChain 벡터 저장소
+  추상화 구현입니다.
 ---
 
 # PGVector
 
-> An implementation of LangChain vectorstore abstraction using `postgres` as the backend and utilizing the `pgvector` extension.
+> `postgres`를 백엔드로 사용하고 `pgvector` 확장을 활용한 LangChain 벡터 저장소 추상화의 구현입니다.
 
-The code lives in an integration package called: [langchain_postgres](https://github.com/langchain-ai/langchain-postgres/).
+코드는 [langchain_postgres](https://github.com/langchain-ai/langchain-postgres/)라는 통합 패키지에 있습니다.
 
-## Status
+## 상태
 
-This code has been ported over from `langchain_community` into a dedicated package called `langchain-postgres`. The following changes have been made:
+이 코드는 `langchain_community`에서 `langchain-postgres`라는 전용 패키지로 포팅되었습니다. 다음과 같은 변경 사항이 있습니다:
 
-* langchain_postgres works only with psycopg3. Please update your connnecion strings from `postgresql+psycopg2://...` to `postgresql+psycopg://langchain:langchain@...` (yes, it's the driver name is `psycopg` not `psycopg3`, but it'll use `psycopg3`.
-* The schema of the embedding store and collection have been changed to make add_documents work correctly with user specified ids.
-* One has to pass an explicit connection object now.
+* langchain_postgres는 psycopg3와만 작동합니다. 연결 문자열을 `postgresql+psycopg2://...`에서 `postgresql+psycopg://langchain:langchain@...`로 업데이트하십시오 (예, 드라이버 이름은 `psycopg`이며 `psycopg3`가 아닙니다. 그러나 `psycopg3`를 사용할 것입니다).
+* 임베딩 저장소 및 컬렉션의 스키마가 변경되어 사용자 지정 ID로 add_documents가 올바르게 작동합니다.
+* 이제 명시적인 연결 객체를 전달해야 합니다.
 
-Currently, there is **no mechanism** that supports easy data migration on schema changes. So any schema changes in the vectorstore will require the user to recreate the tables and re-add the documents.
-If this is a concern, please use a different vectorstore. If not, this implementation should be fine for your use case.
+현재 스키마 변경에 대한 쉬운 데이터 마이그레이션을 지원하는 **메커니즘**은 없습니다. 따라서 벡터 저장소의 스키마 변경은 사용자가 테이블을 재생성하고 문서를 다시 추가해야 합니다. 이것이 걱정된다면 다른 벡터 저장소를 사용하십시오. 그렇지 않다면 이 구현은 귀하의 사용 사례에 적합할 것입니다.
 
-## Setup
+## 설정
 
-First donwload the partner package:
+먼저 파트너 패키지를 다운로드하십시오:
 
 ```python
 pip install -qU langchain_postgres
 ```
 
-You can run the following command to spin up a a postgres container with the `pgvector` extension:
+
+다음 명령을 실행하여 `pgvector` 확장이 포함된 postgres 컨테이너를 시작할 수 있습니다:
 
 ```python
 %docker run --name pgvector-container -e POSTGRES_USER=langchain -e POSTGRES_PASSWORD=langchain -e POSTGRES_DB=langchain -p 6024:5432 -d pgvector/pgvector:pg16
 ```
 
-### Credentials
 
-There are no credentials needed to run this notebook, just make sure you downloaded the `langchain_postgres` package and correctly started the postgres container.
+### 자격 증명
 
-If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+이 노트북을 실행하는 데 필요한 자격 증명은 없으며, `langchain_postgres` 패키지를 다운로드하고 postgres 컨테이너를 올바르게 시작했는지 확인하십시오.
+
+모델 호출에 대한 최상의 자동 추적을 원하신다면 아래의 [LangSmith](https://docs.smith.langchain.com/) API 키를 주석 해제하여 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-## Instantiation
+
+## 인스턴스화
 
 import EmbeddingTabs from "@theme/EmbeddingTabs";
 
 <EmbeddingTabs/>
-
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "PGVector"}]-->
@@ -71,11 +73,12 @@ vector_store = PGVector(
 )
 ```
 
-## Manage vector store
 
-### Add items to vector store
+## 벡터 저장소 관리
 
-Note that adding documents by ID will over-write any existing documents that match that ID.
+### 벡터 저장소에 항목 추가
+
+ID로 문서를 추가하면 해당 ID와 일치하는 기존 문서가 덮어씌워집니다.
 
 ```python
 docs = [
@@ -124,43 +127,46 @@ docs = [
 vector_store.add_documents(docs, ids=[doc.metadata["id"] for doc in docs])
 ```
 
+
 ```output
 [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ```
 
-### Delete items from vector store
+
+### 벡터 저장소에서 항목 삭제
 
 ```python
 vector_store.delete(ids=["3"])
 ```
 
-## Query vector store
 
-Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent. 
+## 벡터 저장소 쿼리
 
-### Filtering Support
+벡터 저장소가 생성되고 관련 문서가 추가되면 체인 또는 에이전트를 실행하는 동안 쿼리하고 싶을 것입니다.
 
-The vectorstore supports a set of filters that can be applied against the metadata fields of the documents.
+### 필터링 지원
 
-| Operator | Meaning/Category        |
-|----------|-------------------------|
-| \$eq      | Equality (==)           |
-| \$ne      | Inequality (!=)         |
-| \$lt      | Less than (<)           |
-| \$lte     | Less than or equal (<=) |
-| \$gt      | Greater than (>)        |
-| \$gte     | Greater than or equal (>=) |
-| \$in      | Special Cased (in)      |
-| \$nin     | Special Cased (not in)  |
-| \$between | Special Cased (between) |
-| \$like    | Text (like)             |
-| \$ilike   | Text (case-insensitive like) |
-| \$and     | Logical (and)           |
-| \$or      | Logical (or)            |
+벡터 저장소는 문서의 메타데이터 필드에 적용할 수 있는 필터 집합을 지원합니다.
 
-### Query directly
+| 연산자 | 의미/카테고리        |
+|--------|---------------------|
+| \$eq   | 동등성 (==)         |
+| \$ne   | 불평등 (!=)         |
+| \$lt   | 미만 (<)            |
+| \$lte  | 이하 (<=)           |
+| \$gt   | 초과 (>)            |
+| \$gte  | 이상 (>=)           |
+| \$in   | 특별한 경우 (in)    |
+| \$nin  | 특별한 경우 (not in)|
+| \$between | 특별한 경우 (between) |
+| \$like | 텍스트 (like)       |
+| \$ilike| 텍스트 (대소문자 구분 없음 like) |
+| \$and  | 논리적 (and)       |
+| \$or   | 논리적 (or)        |
 
-Performing a simple similarity search can be done as follows:
+### 직접 쿼리
+
+간단한 유사성 검색은 다음과 같이 수행할 수 있습니다:
 
 ```python
 results = vector_store.similarity_search(
@@ -169,13 +175,15 @@ results = vector_store.similarity_search(
 for doc in results:
     print(f"* {doc.page_content} [{doc.metadata}]")
 ```
+
 ```output
 * there are cats in the pond [{'id': 1, 'topic': 'animals', 'location': 'pond'}]
 * the library hosts a weekly story time for kids [{'id': 9, 'topic': 'reading', 'location': 'library'}]
 * ducks are also found in the pond [{'id': 2, 'topic': 'animals', 'location': 'pond'}]
 * the new art exhibit is fascinating [{'id': 5, 'topic': 'art', 'location': 'museum'}]
 ```
-If you provide a dict with multiple fields, but no operators, the top level will be interpreted as a logical **AND** filter
+
+여러 필드가 포함된 dict를 제공하지만 연산자가 없는 경우 최상위 수준은 논리적 **AND** 필터로 해석됩니다.
 
 ```python
 vector_store.similarity_search(
@@ -185,10 +193,12 @@ vector_store.similarity_search(
 )
 ```
 
+
 ```output
 [Document(metadata={'id': 1, 'topic': 'animals', 'location': 'pond'}, page_content='there are cats in the pond'),
  Document(metadata={'id': 2, 'topic': 'animals', 'location': 'pond'}, page_content='ducks are also found in the pond')]
 ```
+
 
 ```python
 vector_store.similarity_search(
@@ -203,49 +213,55 @@ vector_store.similarity_search(
 )
 ```
 
+
 ```output
 [Document(metadata={'id': 1, 'topic': 'animals', 'location': 'pond'}, page_content='there are cats in the pond'),
  Document(metadata={'id': 2, 'topic': 'animals', 'location': 'pond'}, page_content='ducks are also found in the pond')]
 ```
 
-If you want to execute a similarity search and receive the corresponding scores you can run:
+
+유사성 검색을 실행하고 해당 점수를 받으려면 다음을 실행할 수 있습니다:
 
 ```python
 results = vector_store.similarity_search_with_score(query="cats", k=1)
 for doc, score in results:
     print(f"* [SIM={score:3f}] {doc.page_content} [{doc.metadata}]")
 ```
+
 ```output
 * [SIM=0.763449] there are cats in the pond [{'id': 1, 'topic': 'animals', 'location': 'pond'}]
 ```
-For a full list of the different searches you can execute on a `PGVector` vector store, please refer to the [API reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_postgres.vectorstores.PGVector.html).
 
-### Query by turning into retriever
+`PGVector` 벡터 저장소에서 실행할 수 있는 다양한 검색의 전체 목록은 [API 참조](https://api.python.langchain.com/en/latest/vectorstores/langchain_postgres.vectorstores.PGVector.html)를 참조하십시오.
 
-You can also transform the vector store into a retriever for easier usage in your chains. 
+### 검색기로 변환하여 쿼리
+
+벡터 저장소를 체인에서 더 쉽게 사용하기 위해 검색기로 변환할 수 있습니다.
 
 ```python
 retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 1})
 retriever.invoke("kitty")
 ```
 
+
 ```output
 [Document(metadata={'id': 1, 'topic': 'animals', 'location': 'pond'}, page_content='there are cats in the pond')]
 ```
 
-## Usage for retrieval-augmented generation
 
-For guides on how to use this vector store for retrieval-augmented generation (RAG), see the following sections:
+## 검색 증강 생성 사용법
 
-- [Tutorials: working with external knowledge](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
-- [How-to: Question and answer with RAG](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
-- [Retrieval conceptual docs](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
+이 벡터 저장소를 검색 증강 생성(RAG)에 사용하는 방법에 대한 가이드는 다음 섹션을 참조하십시오:
 
-## API reference
+- [튜토리얼: 외부 지식과 작업하기](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
+- [방법: RAG로 질문 및 답변](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
+- [검색 개념 문서](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
 
-For detailed documentation of all __ModuleName__VectorStore features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_postgres.vectorstores.PGVector.html
+## API 참조
 
-## Related
+모든 __ModuleName__VectorStore 기능 및 구성에 대한 자세한 문서는 API 참조를 참조하십시오: https://api.python.langchain.com/en/latest/vectorstores/langchain_postgres.vectorstores.PGVector.html
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

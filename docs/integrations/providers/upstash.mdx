@@ -1,33 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/upstash/
+description: 업스태시는 개발자에게 서버리스 데이터베이스와 메시징 플랫폼을 제공하여 복잡한 운영 없이 강력한 애플리케이션을 구축할 수 있게
+  합니다.
 ---
 
-Upstash offers developers serverless databases and messaging
-platforms to build powerful applications without having to worry
-about the operational complexity of running databases at scale.
+Upstash는 개발자에게 서버리스 데이터베이스와 메시징 플랫폼을 제공하여 데이터베이스를 대규모로 운영하는 복잡성에 대해 걱정하지 않고도 강력한 애플리케이션을 구축할 수 있도록 합니다.
 
-One significant advantage of Upstash is that their databases support HTTP and all of their SDKs use HTTP.
-This means that you can run this in serverless platforms, edge or any platform that does not support TCP connections.
+Upstash의 주요 장점 중 하나는 그들의 데이터베이스가 HTTP를 지원하고 모든 SDK가 HTTP를 사용한다는 점입니다. 이는 서버리스 플랫폼, 엣지 또는 TCP 연결을 지원하지 않는 모든 플랫폼에서 실행할 수 있음을 의미합니다.
 
-Currently, there are two Upstash integrations available for LangChain:
-Upstash Vector as a vector embedding database and Upstash Redis as a cache and memory store.
+현재 LangChain을 위한 두 가지 Upstash 통합이 제공됩니다:
+Upstash Vector는 벡터 임베딩 데이터베이스로, Upstash Redis는 캐시 및 메모리 저장소로 사용됩니다.
 
 # Upstash Vector
 
-Upstash Vector is a serverless vector database that can be used to store and query vectors.
+Upstash Vector는 벡터를 저장하고 쿼리하는 데 사용할 수 있는 서버리스 벡터 데이터베이스입니다.
 
-## Installation
+## 설치
 
-Create a new serverless vector database at the [Upstash Console](https://console.upstash.com/vector).
-Select your preferred distance metric and dimension count according to your model.
+[Upstash Console](https://console.upstash.com/vector)에서 새로운 서버리스 벡터 데이터베이스를 생성합니다. 모델에 따라 선호하는 거리 측정 기준과 차원 수를 선택합니다.
 
-Install the Upstash Vector Python SDK with `pip install upstash-vector`.
-The Upstash Vector integration in langchain is a wrapper for the Upstash Vector Python SDK. That's why the `upstash-vector` package is required.
+`pip install upstash-vector`로 Upstash Vector Python SDK를 설치합니다. LangChain의 Upstash Vector 통합은 Upstash Vector Python SDK의 래퍼입니다. 따라서 `upstash-vector` 패키지가 필요합니다.
 
-## Integrations
+## 통합
 
-Create a `UpstashVectorStore` object using credentials from the Upstash Console.
-You also need to pass in an `Embeddings` object which can turn text into vector embeddings.
+Upstash Console의 자격 증명을 사용하여 `UpstashVectorStore` 객체를 생성합니다. 텍스트를 벡터 임베딩으로 변환할 수 있는 `Embeddings` 객체도 전달해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "UpstashVectorStore", "source": "langchain_community.vectorstores.upstash", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.upstash.UpstashVectorStore.html", "title": "Upstash Vector"}]-->
@@ -42,13 +37,8 @@ store = UpstashVectorStore(
 )
 ```
 
-An alternative way of `UpstashVectorStore` is to pass `embedding=True`. This is a unique
-feature of the `UpstashVectorStore` thanks to the ability of the Upstash Vector indexes
-to have an associated embedding model. In this configuration, documents we want to insert or
-queries we want to search for are simply sent to Upstash Vector as text. In the background,
-Upstash Vector embeds these text and executes the request with these embeddings. To use this
-feature, [create an Upstash Vector index by selecting a model](https://upstash.com/docs/vector/features/embeddingmodels#using-a-model)
-and simply pass `embedding=True`:
+
+`UpstashVectorStore`의 대안 방법은 `embedding=True`를 전달하는 것입니다. 이는 Upstash Vector 인덱스가 관련된 임베딩 모델을 가질 수 있는 능력 덕분에 `UpstashVectorStore`의 독특한 기능입니다. 이 구성에서는 삽입하려는 문서나 검색하려는 쿼리가 단순히 텍스트로 Upstash Vector에 전송됩니다. 백그라운드에서 Upstash Vector는 이 텍스트를 임베딩하고 이러한 임베딩으로 요청을 실행합니다. 이 기능을 사용하려면 [모델을 선택하여 Upstash Vector 인덱스를 생성](https://upstash.com/docs/vector/features/embeddingmodels#using-a-model)하고 `embedding=True`를 전달합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "UpstashVectorStore", "source": "langchain_community.vectorstores.upstash", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.upstash.UpstashVectorStore.html", "title": "Upstash Vector"}]-->
@@ -63,11 +53,11 @@ store = UpstashVectorStore(
 )
 ```
 
-See [Upstash Vector documentation](https://upstash.com/docs/vector/features/embeddingmodels)
-for more detail on embedding models.
 
-## Namespaces
-You can use namespaces to partition your data in the index. Namespaces are useful when you want to query over huge amount of data, and you want to partition the data to make the queries faster. When you use namespaces, there won't be post-filtering on the results which will make the query results more precise.
+임베딩 모델에 대한 자세한 내용은 [Upstash Vector 문서](https://upstash.com/docs/vector/features/embeddingmodels)를 참조하세요.
+
+## 네임스페이스
+네임스페이스를 사용하여 인덱스에서 데이터를 분할할 수 있습니다. 네임스페이스는 대량의 데이터를 쿼리할 때 유용하며, 쿼리를 더 빠르게 만들기 위해 데이터를 분할하고자 할 때 유용합니다. 네임스페이스를 사용할 경우 결과에 대한 후처리가 없으므로 쿼리 결과가 더 정확해집니다.
 
 ```python
 <!--IMPORTS:[{"imported": "UpstashVectorStore", "source": "langchain_community.vectorstores.upstash", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.upstash.UpstashVectorStore.html", "title": "Upstash Vector"}]-->
@@ -83,7 +73,8 @@ store = UpstashVectorStore(
 )
 ```
 
-### Inserting Vectors
+
+### 벡터 삽입
 
 ```python
 <!--IMPORTS:[{"imported": "CharacterTextSplitter", "source": "langchain.text_splitter", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Upstash Vector"}, {"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Upstash Vector"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Upstash Vector"}]-->
@@ -108,13 +99,12 @@ store = UpstashVectorStore(
 store.add_documents(docs)
 ```
 
-When inserting documents, first they are embedded using the `Embeddings` object.
 
-Most embedding models can embed multiple documents at once, so the documents are batched and embedded in parallel.
-The size of the batch can be controlled using the `embedding_chunk_size` parameter.
+문서를 삽입할 때, 먼저 `Embeddings` 객체를 사용하여 임베딩됩니다.
 
-The embedded vectors are then stored in the Upstash Vector database. When they are sent, multiple vectors are batched together to reduce the number of HTTP requests.
-The size of the batch can be controlled using the `batch_size` parameter. Upstash Vector has a limit of 1000 vectors per batch in the free tier.
+대부분의 임베딩 모델은 여러 문서를 한 번에 임베딩할 수 있으므로, 문서는 배치 처리되어 병렬로 임베딩됩니다. 배치 크기는 `embedding_chunk_size` 매개변수를 사용하여 제어할 수 있습니다.
+
+임베딩된 벡터는 Upstash Vector 데이터베이스에 저장됩니다. 전송할 때 여러 벡터가 함께 배치되어 HTTP 요청 수를 줄입니다. 배치 크기는 `batch_size` 매개변수를 사용하여 제어할 수 있습니다. Upstash Vector는 무료 요금제에서 배치당 1000개의 벡터 제한이 있습니다.
 
 ```python
 store.add_documents(
@@ -124,11 +114,12 @@ store.add_documents(
 )
 ```
 
-### Querying Vectors
 
-Vectors can be queried using a text query or another vector.
+### 벡터 쿼리
 
-The returned value is a list of Document objects.
+벡터는 텍스트 쿼리 또는 다른 벡터를 사용하여 쿼리할 수 있습니다.
+
+반환 값은 Document 객체의 목록입니다.
 
 ```python
 result = store.similarity_search(
@@ -137,7 +128,8 @@ result = store.similarity_search(
 )
 ```
 
-Or using a vector:
+
+또는 벡터를 사용하여:
 
 ```python
 vector = embeddings.embed_query("Hello world")
@@ -148,7 +140,8 @@ result = store.similarity_search_by_vector(
 )
 ```
 
-When searching, you can also utilize the `filter` parameter which will allow you to filter by metadata:
+
+검색할 때 메타데이터로 필터링할 수 있는 `filter` 매개변수를 활용할 수 있습니다:
 
 ```python
 result = store.similarity_search(
@@ -158,22 +151,23 @@ result = store.similarity_search(
 )
 ```
 
-See [Upstash Vector documentation](https://upstash.com/docs/vector/features/filtering)
-for more details on metadata filtering.
 
-### Deleting Vectors
+메타데이터 필터링에 대한 자세한 내용은 [Upstash Vector 문서](https://upstash.com/docs/vector/features/filtering)를 참조하세요.
 
-Vectors can be deleted by their IDs.
+### 벡터 삭제
+
+벡터는 ID로 삭제할 수 있습니다.
 
 ```python
 store.delete(["id1", "id2"])
 ```
 
-### Getting information about the store
 
-You can get information about your database like the distance metric dimension using the info function.
+### 저장소 정보 가져오기
 
-When an insert happens, the database an indexing takes place. While this is happening new vectors can not be queried. `pendingVectorCount` represents the number of vector that are currently being indexed. 
+info 함수를 사용하여 거리 측정 기준 차원과 같은 데이터베이스 정보를 가져올 수 있습니다.
+
+삽입이 발생하면 데이터베이스에서 인덱싱이 진행됩니다. 이 과정이 진행되는 동안 새로운 벡터는 쿼리할 수 없습니다. `pendingVectorCount`는 현재 인덱싱 중인 벡터의 수를 나타냅니다.
 
 ```python
 info = store.info()
@@ -183,29 +177,30 @@ print(info)
 # {'vectorCount': 44, 'pendingVectorCount': 0, 'indexSize': 2642412, 'dimension': 1536, 'similarityFunction': 'COSINE'}
 ```
 
+
 # Upstash Redis
 
-This page covers how to use [Upstash Redis](https://upstash.com/redis) with LangChain.
+이 페이지는 LangChain과 함께 [Upstash Redis](https://upstash.com/redis)를 사용하는 방법을 다룹니다.
 
-## Installation and Setup
-- Upstash Redis Python SDK can be installed with `pip install upstash-redis`
-- A globally distributed, low-latency and highly available database can be created at the [Upstash Console](https://console.upstash.com)
+## 설치 및 설정
+- Upstash Redis Python SDK는 `pip install upstash-redis`로 설치할 수 있습니다.
+- [Upstash Console](https://console.upstash.com)에서 전 세계적으로 분산된 저지연 및 고가용성 데이터베이스를 생성할 수 있습니다.
 
-## Integrations
-All of Upstash-LangChain integrations are based on `upstash-redis` Python SDK being utilized as wrappers for LangChain.
-This SDK utilizes Upstash Redis DB by giving UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN parameters from the console.
+## 통합
+모든 Upstash-LangChain 통합은 `upstash-redis` Python SDK를 래퍼로 사용하여 이루어집니다. 이 SDK는 콘솔에서 UPSTASH_REDIS_REST_URL 및 UPSTASH_REDIS_REST_TOKEN 매개변수를 제공하여 Upstash Redis DB를 사용합니다.
 
-### Cache
+### 캐시
 
-[Upstash Redis](https://upstash.com/redis) can be used as a cache for LLM prompts and responses.
+[Upstash Redis](https://upstash.com/redis)는 LLM 프롬프트 및 응답의 캐시로 사용할 수 있습니다.
 
-To import this cache:
+이 캐시를 가져오려면:
 ```python
 <!--IMPORTS:[{"imported": "UpstashRedisCache", "source": "langchain.cache", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_community.cache.UpstashRedisCache.html", "title": "Upstash Vector"}]-->
 from langchain.cache import UpstashRedisCache
 ```
 
-To use with your LLMs:
+
+LLM과 함께 사용하려면:
 ```python
 import langchain
 from upstash_redis import Redis
@@ -216,9 +211,10 @@ TOKEN = "<UPSTASH_REDIS_REST_TOKEN>"
 langchain.llm_cache = UpstashRedisCache(redis_=Redis(url=URL, token=TOKEN))
 ```
 
-### Memory
 
-See a [usage example](/docs/integrations/memory/upstash_redis_chat_message_history).
+### 메모리
+
+[사용 예시](https://docs/integrations/memory/upstash_redis_chat_message_history)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "UpstashRedisChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.upstash_redis.UpstashRedisChatMessageHistory.html", "title": "Upstash Vector"}]-->

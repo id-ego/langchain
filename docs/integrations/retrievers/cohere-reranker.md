@@ -1,17 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/cohere-reranker/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/cohere-reranker.ipynb
+description: 이 문서는 Cohere의 rerank 엔드포인트를 사용하여 검색 결과를 재정렬하는 방법을 보여줍니다. 벡터 저장소 검색기를
+  설정하는 방법도 포함되어 있습니다.
 ---
 
 # Cohere reranker
 
-> [Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models that help companies improve human-machine interactions.
+> [Cohere](https://cohere.ai/about)는 기업이 인간-기계 상호작용을 개선하는 데 도움을 주는 자연어 처리 모델을 제공하는 캐나다 스타트업입니다.
 
-This notebook shows how to use [Cohere's rerank endpoint](https://docs.cohere.com/docs/reranking) in a retriever. This builds on top of ideas in the [ContextualCompressionRetriever](/docs/how_to/contextual_compression).
+이 노트북은 검색기에서 [Cohere의 rerank 엔드포인트](https://docs.cohere.com/docs/reranking)를 사용하는 방법을 보여줍니다. 이는 [ContextualCompressionRetriever](/docs/how_to/contextual_compression)의 아이디어를 기반으로 합니다.
 
 ```python
 %pip install --upgrade --quiet  cohere
 ```
+
 
 ```python
 %pip install --upgrade --quiet  faiss
@@ -21,6 +23,7 @@ This notebook shows how to use [Cohere's rerank endpoint](https://docs.cohere.co
 %pip install --upgrade --quiet  faiss-cpu
 ```
 
+
 ```python
 # get a new token: https://dashboard.cohere.ai/
 
@@ -29,6 +32,7 @@ import os
 
 os.environ["COHERE_API_KEY"] = getpass.getpass("Cohere API Key:")
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -42,8 +46,9 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+
+## 기본 벡터 저장소 검색기 설정
+간단한 벡터 저장소 검색기를 초기화하고 2023년 국정 연설을 (조각으로) 저장하는 것으로 시작하겠습니다. 검색기를 설정하여 많은 수(20)의 문서를 검색할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Cohere reranker"}, {"imported": "CohereEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.cohere.CohereEmbeddings.html", "title": "Cohere reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Cohere reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Cohere reranker"}]-->
@@ -63,6 +68,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 Document 1:
 
@@ -266,9 +272,10 @@ With a duty to one another to the American people to the Constitution.
 
 And with an unwavering resolve that freedom will always triumph over tyranny.
 ```
-## Doing reranking with CohereRerank
-Now let's wrap our base retriever with a `ContextualCompressionRetriever`. We'll add an `CohereRerank`, uses the Cohere rerank endpoint to rerank the returned results.
-Do note that it is mandatory to specify the model name in CohereRerank!
+
+## CohereRerank로 재정렬 수행
+이제 기본 검색기를 `ContextualCompressionRetriever`로 감싸겠습니다. Cohere rerank 엔드포인트를 사용하여 반환된 결과를 재정렬하는 `CohereRerank`를 추가할 것입니다.
+CohereRerank에서 모델 이름을 지정하는 것은 필수임을 유의하세요!
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers.contextual_compression", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Cohere reranker"}, {"imported": "CohereRerank", "source": "langchain_cohere", "docs": "https://api.python.langchain.com/en/latest/rerank/langchain_cohere.rerank.CohereRerank.html", "title": "Cohere reranker"}, {"imported": "Cohere", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.cohere.Cohere.html", "title": "Cohere reranker"}]-->
@@ -288,12 +295,14 @@ compressed_docs = compression_retriever.invoke(
 pretty_print_docs(compressed_docs)
 ```
 
-You can of course use this retriever within a QA pipeline
+
+물론 이 검색기를 QA 파이프라인 내에서 사용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Cohere reranker"}]-->
 from langchain.chains import RetrievalQA
 ```
+
 
 ```python
 chain = RetrievalQA.from_chain_type(
@@ -301,16 +310,19 @@ chain = RetrievalQA.from_chain_type(
 )
 ```
 
+
 ```python
 chain({"query": query})
 ```
+
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',
  'result': " The president speaks highly of Ketanji Brown Jackson, stating that she is one of the nation's top legal minds, and will continue the legacy of excellence of Justice Breyer. The president also mentions that he worked with her family and that she comes from a family of public school educators and police officers. Since her nomination, she has received support from various groups, including the Fraternal Order of Police and judges from both major political parties. \n\nWould you like me to extract another sentence from the provided text? "}
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

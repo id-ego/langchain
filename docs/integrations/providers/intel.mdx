@@ -1,114 +1,120 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/intel/
+description: 이 문서는 Intel의 Optimum Intel 및 ITREX를 LangChain과 함께 사용하는 방법에 대해 설명합니다.
+  성능 최적화를 위한 가이드를 제공합니다.
 ---
 
-# Intel
+# 인텔
 
-> [Optimum Intel](https://github.com/huggingface/optimum-intel?tab=readme-ov-file#optimum-intel) is the interface between the 🤗 Transformers and Diffusers libraries and the different tools and libraries provided by Intel to accelerate end-to-end pipelines on Intel architectures.
+> [Optimum Intel](https://github.com/huggingface/optimum-intel?tab=readme-ov-file#optimum-intel)은 🤗 Transformers 및 Diffusers 라이브러리와 Intel이 제공하는 다양한 도구 및 라이브러리 간의 인터페이스로, Intel 아키텍처에서 엔드 투 엔드 파이프라인을 가속화합니다.
 
-> [Intel® Extension for Transformers](https://github.com/intel/intel-extension-for-transformers?tab=readme-ov-file#intel-extension-for-transformers) (ITREX) is an innovative toolkit designed to accelerate GenAI/LLM everywhere with the optimal performance of Transformer-based models on various Intel platforms, including Intel Gaudi2, Intel CPU, and Intel GPU.
+> [Intel® Extension for Transformers](https://github.com/intel/intel-extension-for-transformers?tab=readme-ov-file#intel-extension-for-transformers) (ITREX)은 Intel Gaudi2, Intel CPU 및 Intel GPU를 포함한 다양한 Intel 플랫폼에서 Transformer 기반 모델의 최적 성능으로 GenAI/LLM을 어디서나 가속화하기 위해 설계된 혁신적인 툴킷입니다.
 
-This page covers how to use optimum-intel and ITREX with LangChain.
+이 페이지에서는 LangChain과 함께 optimum-intel 및 ITREX를 사용하는 방법을 다룹니다.
 
 ## Optimum-intel
 
-All functionality related to the [optimum-intel](https://github.com/huggingface/optimum-intel.git) and [IPEX](https://github.com/intel/intel-extension-for-pytorch).
+모든 기능은 [optimum-intel](https://github.com/huggingface/optimum-intel.git) 및 [IPEX](https://github.com/intel/intel-extension-for-pytorch)와 관련이 있습니다.
 
-### Installation
+### 설치
 
-Install using optimum-intel and ipex using:
+optimum-intel 및 ipex를 사용하여 설치합니다:
 
 ```bash
 pip install optimum[neural-compressor]
 pip install intel_extension_for_pytorch
 ```
 
-Please follow the installation instructions as specified below:
 
-* Install optimum-intel as shown [here](https://github.com/huggingface/optimum-intel).
-* Install IPEX as shown [here](https://intel.github.io/intel-extension-for-pytorch/index.html#installation?platform=cpu&version=v2.2.0%2Bcpu).
+아래에 명시된 설치 지침을 따르십시오:
 
-### Embedding Models
+* [여기](https://github.com/huggingface/optimum-intel)에서 보여준 대로 optimum-intel을 설치합니다.
+* [여기](https://intel.github.io/intel-extension-for-pytorch/index.html#installation?platform=cpu&version=v2.2.0%2Bcpu)에서 보여준 대로 IPEX를 설치합니다.
 
-See a [usage example](/docs/integrations/text_embedding/optimum_intel).
-We also offer a full tutorial notebook "rag_with_quantized_embeddings.ipynb" for using the embedder in a RAG pipeline in the cookbook dir.
+### 임베딩 모델
+
+[사용 예시](/docs/integrations/text_embedding/optimum_intel)를 참조하십시오.
+우리는 또한 요리책 디렉토리에서 RAG 파이프라인에서 임베더를 사용하는 "rag_with_quantized_embeddings.ipynb"라는 전체 튜토리얼 노트북을 제공합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "QuantizedBiEncoderEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.optimum_intel.QuantizedBiEncoderEmbeddings.html", "title": "Intel"}]-->
 from langchain_community.embeddings import QuantizedBiEncoderEmbeddings
 ```
 
+
 ## Intel® Extension for Transformers (ITREX)
-(ITREX) is an innovative toolkit to accelerate Transformer-based models on Intel platforms, in particular, effective on 4th Intel Xeon Scalable processor Sapphire Rapids (codenamed Sapphire Rapids).
+(ITREX)은 Intel 플랫폼에서 Transformer 기반 모델을 가속화하기 위한 혁신적인 툴킷으로, 특히 4세대 Intel Xeon Scalable 프로세서 Sapphire Rapids(코드명 Sapphire Rapids)에서 효과적입니다.
 
-Quantization is a process that involves reducing the precision of these weights by representing them using a smaller number of bits. Weight-only quantization specifically focuses on quantizing the weights of the neural network while keeping other components, such as activations, in their original precision.
+양자화는 이러한 가중치의 정밀도를 줄여 더 적은 수의 비트로 표현하는 과정입니다. 가중치 전용 양자화는 활성화와 같은 다른 구성 요소를 원래 정밀도로 유지하면서 신경망의 가중치 양자화에 특히 중점을 둡니다.
 
-As large language models (LLMs) become more prevalent, there is a growing need for new and improved quantization methods that can meet the computational demands of these modern architectures while maintaining the accuracy. Compared to [normal quantization](https://github.com/intel/intel-extension-for-transformers/blob/main/docs/quantization.md) like W8A8, weight only quantization is probably a better trade-off to balance the performance and the accuracy, since we will see below that the bottleneck of deploying LLMs is the memory bandwidth and normally weight only quantization could lead to better accuracy.
+대형 언어 모델(LLM)이 보편화됨에 따라 이러한 현대 아키텍처의 계산 요구를 충족하면서 정확성을 유지할 수 있는 새로운 개선된 양자화 방법에 대한 필요성이 증가하고 있습니다. [정상 양자화](https://github.com/intel/intel-extension-for-transformers/blob/main/docs/quantization.md)와 비교할 때 W8A8와 같은 가중치 전용 양자화는 성능과 정확성을 균형 있게 조절하는 더 나은 절충안일 수 있습니다. LLM 배포의 병목 현상이 메모리 대역폭이라는 점을 고려할 때, 일반적으로 가중치 전용 양자화는 더 나은 정확도를 가져올 수 있습니다.
 
-Here, we will introduce Embedding Models and Weight-only quantization for Transformers large language models with ITREX. Weight-only quantization is a technique used in deep learning to reduce the memory and computational requirements of neural networks. In the context of deep neural networks, the model parameters, also known as weights, are typically represented using floating-point numbers, which can consume a significant amount of memory and require intensive computational resources.
+여기에서는 ITREX를 사용하여 임베딩 모델과 가중치 전용 양자화를 소개합니다. 가중치 전용 양자화는 신경망의 메모리 및 계산 요구 사항을 줄이기 위해 딥 러닝에서 사용되는 기술입니다. 딥 신경망의 맥락에서 모델 매개변수, 즉 가중치는 일반적으로 부동 소수점 숫자로 표현되며, 이는 상당한 양의 메모리를 소비하고 집중적인 계산 자원을 요구할 수 있습니다.
 
-All functionality related to the [intel-extension-for-transformers](https://github.com/intel/intel-extension-for-transformers).
+모든 기능은 [intel-extension-for-transformers](https://github.com/intel/intel-extension-for-transformers)와 관련이 있습니다.
 
-### Installation
+### 설치
 
-Install intel-extension-for-transformers. For system requirements and other installation tips, please refer to [Installation Guide](https://github.com/intel/intel-extension-for-transformers/blob/main/docs/installation.md)
+intel-extension-for-transformers를 설치합니다. 시스템 요구 사항 및 기타 설치 팁은 [설치 가이드](https://github.com/intel/intel-extension-for-transformers/blob/main/docs/installation.md)를 참조하십시오.
 
 ```bash
 pip install intel-extension-for-transformers
 ```
-Install other required packages.
+
+필요한 다른 패키지를 설치합니다.
 
 ```bash
 pip install -U torch onnx accelerate datasets
 ```
 
-### Embedding Models
 
-See a [usage example](/docs/integrations/text_embedding/itrex).
+### 임베딩 모델
+
+[사용 예시](/docs/integrations/text_embedding/itrex)를 참조하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "QuantizedBgeEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.itrex.QuantizedBgeEmbeddings.html", "title": "Intel"}]-->
 from langchain_community.embeddings import QuantizedBgeEmbeddings
 ```
 
-### Weight-Only Quantization with ITREX
 
-See a [usage example](/docs/integrations/llms/weight_only_quantization).
+### ITREX를 통한 가중치 전용 양자화
 
-## Detail of Configuration Parameters
+[사용 예시](/docs/integrations/llms/weight_only_quantization)를 참조하십시오.
 
-Here is the detail of the `WeightOnlyQuantConfig` class.
+## 구성 매개변수의 세부 사항
 
-#### weight_dtype (string): Weight Data Type, default is "nf4".
-We support quantize the weights to following data types for storing(weight_dtype in WeightOnlyQuantConfig):
-* **int8**: Uses 8-bit data type.
-* **int4_fullrange**: Uses the -8 value of int4 range compared with the normal int4 range [-7,7].
-* **int4_clip**: Clips and retains the values within the int4 range, setting others to zero.
-* **nf4**: Uses the normalized float 4-bit data type.
-* **fp4_e2m1**: Uses regular float 4-bit data type. "e2" means that 2 bits are used for the exponent, and "m1" means that 1 bits are used for the mantissa.
+여기 `WeightOnlyQuantConfig` 클래스의 세부 사항이 있습니다.
 
-#### compute_dtype (string): Computing Data Type, Default is "fp32".
-While these techniques store weights in 4 or 8 bit, the computation still happens in float32, bfloat16 or int8(compute_dtype in WeightOnlyQuantConfig):
-* **fp32**: Uses the float32 data type to compute.
-* **bf16**: Uses the bfloat16 data type to compute.
-* **int8**: Uses 8-bit data type to compute.
+#### weight_dtype (문자열): 가중치 데이터 유형, 기본값은 "nf4".
+다음 데이터 유형으로 가중치를 양자화하는 것을 지원합니다(weight_dtype in WeightOnlyQuantConfig):
+* **int8**: 8비트 데이터 유형을 사용합니다.
+* **int4_fullrange**: 정상 int4 범위 [-7,7]와 비교하여 int4 범위의 -8 값을 사용합니다.
+* **int4_clip**: int4 범위 내에서 값을 클립하고 나머지는 0으로 설정합니다.
+* **nf4**: 정규화된 부동 소수점 4비트 데이터 유형을 사용합니다.
+* **fp4_e2m1**: 일반 부동 소수점 4비트 데이터 유형을 사용합니다. "e2"는 지수에 2비트를 사용하고, "m1"은 가수에 1비트를 사용함을 의미합니다.
 
-#### llm_int8_skip_modules (list of module's name): Modules to Skip Quantization, Default is None.
-It is a list of modules to be skipped quantization.
+#### compute_dtype (문자열): 계산 데이터 유형, 기본값은 "fp32".
+이 기술들은 4비트 또는 8비트로 가중치를 저장하지만, 계산은 여전히 float32, bfloat16 또는 int8(compute_dtype in WeightOnlyQuantConfig)로 수행됩니다:
+* **fp32**: 계산에 float32 데이터 유형을 사용합니다.
+* **bf16**: 계산에 bfloat16 데이터 유형을 사용합니다.
+* **int8**: 계산에 8비트 데이터 유형을 사용합니다.
 
-#### scale_dtype (string): The Scale Data Type, Default is "fp32".
-Now only support "fp32"(float32).
+#### llm_int8_skip_modules (모듈 이름의 목록): 양자화를 건너뛸 모듈, 기본값은 없음.
+양자화를 건너뛸 모듈의 목록입니다.
 
-#### mse_range (boolean): Whether to Search for The Best Clip Range from Range [0.805, 1.0, 0.005], default is False.
-#### use_double_quant (boolean): Whether to Quantize Scale, Default is False.
-Not support yet.
-#### double_quant_dtype (string): Reserve for Double Quantization.
-#### double_quant_scale_dtype (string): Reserve for Double Quantization.
-#### group_size (int): Group Size When Auantization.
-#### scheme (string): Which Format Weight Be Quantize to. Default is "sym".
-* **sym**: Symmetric.
-* **asym**: Asymmetric.
-#### algorithm (string): Which Algorithm to Improve the Accuracy . Default is "RTN"
-* **RTN**: Round-to-nearest (RTN) is a quantification method that we can think of very intuitively.
-* **AWQ**: Protecting only 1% of salient weights can greatly reduce quantization error. the salient weight channels are selected by observing the distribution of activation and weight per channel. The salient weights are also quantized after multiplying a big scale factor before quantization for preserving. .
-* **TEQ**: A trainable equivalent transformation that preserves the FP32 precision in weight-only quantization.
+#### scale_dtype (문자열): 스케일 데이터 유형, 기본값은 "fp32".
+현재 "fp32"(float32)만 지원합니다.
+
+#### mse_range (부울): [0.805, 1.0, 0.005] 범위에서 최적의 클립 범위를 검색할지 여부, 기본값은 False.
+#### use_double_quant (부울): 스케일을 양자화할지 여부, 기본값은 False.
+아직 지원되지 않습니다.
+#### double_quant_dtype (문자열): 이중 양자화를 위한 예약.
+#### double_quant_scale_dtype (문자열): 이중 양자화를 위한 예약.
+#### group_size (정수): 양자화 시 그룹 크기.
+#### scheme (문자열): 가중치를 양자화할 형식. 기본값은 "sym".
+* **sym**: 대칭.
+* **asym**: 비대칭.
+#### algorithm (문자열): 정확도를 개선할 알고리즘. 기본값은 "RTN"
+* **RTN**: Round-to-nearest (RTN)은 우리가 매우 직관적으로 생각할 수 있는 양자화 방법입니다.
+* **AWQ**: 두드러진 가중치의 1%만 보호하면 양자화 오류를 크게 줄일 수 있습니다. 두드러진 가중치 채널은 채널당 활성화 및 가중치의 분포를 관찰하여 선택됩니다. 두드러진 가중치는 양자화 전에 큰 스케일 팩터를 곱한 후 양자화됩니다.
+* **TEQ**: 가중치 전용 양자화에서 FP32 정밀도를 유지하는 학습 가능한 동등 변환입니다.

@@ -1,29 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/dspy/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/providers/dspy.ipynb
+description: DSPy는 LLM을 위한 프레임워크로, 프로그램의 선언적 단계를 자동으로 컴파일하여 고품질 프롬프트를 생성합니다.
 ---
 
 # DSPy
 
-[DSPy](https://github.com/stanfordnlp/dspy) is a fantastic framework for LLMs that introduces an automatic compiler that teaches LMs how to conduct the declarative steps in your program. Specifically, the DSPy compiler will internally trace your program and then craft high-quality prompts for large LMs (or train automatic finetunes for small LMs) to teach them the steps of your task.
+[DSPy](https://github.com/stanfordnlp/dspy)는 LLM을 위한 환상적인 프레임워크로, 프로그램의 선언적 단계를 수행하는 방법을 LMs에게 가르치는 자동 컴파일러를 도입합니다. 구체적으로, DSPy 컴파일러는 내부적으로 프로그램을 추적한 다음 대형 LMs를 위한 고품질 프롬프트를 작성하거나 소형 LMs를 위한 자동 미세 조정을 훈련시켜 작업의 단계를 가르칩니다.
 
-Thanks to [Omar Khattab](https://twitter.com/lateinteraction) we have an integration! It works with any LCEL chains with some minor modifications.
+[Omar Khattab](https://twitter.com/lateinteraction) 덕분에 통합이 이루어졌습니다! 이는 약간의 수정으로 모든 LCEL 체인과 함께 작동합니다.
 
-This short tutorial demonstrates how this proof-of-concept feature works. *This will not give you the full power of DSPy or LangChain yet, but we will expand it if there's high demand.*
+이 짧은 튜토리얼은 이 개념 증명 기능이 어떻게 작동하는지를 보여줍니다. *이것은 아직 DSPy나 LangChain의 전체 기능을 제공하지 않지만, 수요가 많으면 확장할 것입니다.*
 
-Note: this was slightly modified from the original example Omar wrote for DSPy. If you are interested in LangChain \<\> DSPy but coming from the DSPy side, I'd recommend checking that out. You can find that [here](https://github.com/stanfordnlp/dspy/blob/main/examples/tweets/compiling_langchain.ipynb).
+참고: 이것은 Omar가 DSPy를 위해 작성한 원래 예제에서 약간 수정된 것입니다. DSPy 측에서 LangChain \<\> DSPy에 관심이 있다면, 그것을 확인하는 것을 추천합니다. [여기](https://github.com/stanfordnlp/dspy/blob/main/examples/tweets/compiling_langchain.ipynb)에서 찾을 수 있습니다.
 
-Let's take a look at an example. In this example we will make a simple RAG pipeline. We will use DSPy to "compile" our program and learn an optimized prompt.
+예제를 살펴보겠습니다. 이 예제에서는 간단한 RAG 파이프라인을 만들 것입니다. DSPy를 사용하여 프로그램을 "컴파일"하고 최적화된 프롬프트를 학습할 것입니다.
 
-## Install dependencies
+## 종속성 설치
 
-!pip install -U dspy-ai
-!pip install -U openai jinja2
-!pip install -U langchain langchain-community langchain-openai langchain-core
+!pip install -U dspy-ai  
+!pip install -U openai jinja2  
+!pip install -U langchain langchain-community langchain-openai langchain-core  
 
-## Setup
+## 설정
 
-We will be using OpenAI, so we should set an API key
+OpenAI를 사용할 것이므로 API 키를 설정해야 합니다.
 
 ```python
 import getpass
@@ -32,13 +32,15 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ```
 
-We can now set up our retriever. For our retriever we will use a ColBERT retriever through DSPy, though this will work with any retriever.
+
+이제 검색기를 설정할 수 있습니다. 검색기에는 DSPy를 통해 ColBERT 검색기를 사용할 것이며, 이는 모든 검색기와 함께 작동합니다.
 
 ```python
 import dspy
 
 colbertv2 = dspy.ColBERTv2(url="http://20.102.90.50:2017/wiki17_abstracts")
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "set_llm_cache", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_llm_cache.html", "title": "DSPy"}, {"imported": "SQLiteCache", "source": "langchain_community.cache", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_community.cache.SQLiteCache.html", "title": "DSPy"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "DSPy"}]-->
@@ -55,9 +57,11 @@ def retrieve(inputs):
     return [doc["text"] for doc in colbertv2(inputs["question"], k=5)]
 ```
 
+
 ```python
 colbertv2("cycling")
 ```
+
 
 ```output
 [{'text': 'Cycling | Cycling, also called bicycling or biking, is the use of bicycles for transport, recreation, exercise or sport. Persons engaged in cycling are referred to as "cyclists", "bikers", or less commonly, as "bicyclists". Apart from two-wheeled bicycles, "cycling" also includes the riding of unicycles, tricycles, quadracycles, recumbent and similar human-powered vehicles (HPVs).',
@@ -122,20 +126,21 @@ colbertv2("cycling")
   'long_text': 'Cycling in the Netherlands | Cycling is a ubiquitous mode of transport in the Netherlands, with 36% of the people listing the bicycle as their most frequent mode of transport on a typical day as opposed to the car by 45% and public transport by 11%. Cycling has a modal share of 27% of all trips (urban and rural) nationwide. In cities this is even higher, such as Amsterdam which has 38%, though the smaller Dutch cities well exceed that: for instance Zwolle (pop. ~123,000) has 46% and the university town of Groningen (pop. ~198,000) has 31%. This high modal share for bicycle travel is enabled by excellent cycling infrastructure such as cycle paths, cycle tracks, protected intersections, ubiquitous bicycle parking and by making cycling routes shorter, quicker and more direct than car routes.'}]
 ```
 
-## Normal LCEL
 
-First, let's create a simple RAG pipeline with LCEL like we would normally.
+## 일반 LCEL
 
-For illustration, let's tackle the following task.
+먼저, 일반적으로 LCEL로 간단한 RAG 파이프라인을 생성해 보겠습니다.
 
-**Task:** Build a RAG system for generating informative tweets.
+예시로, 다음 작업을 다뤄보겠습니다.
 
-- **Input:** A factual question, which may be fairly complex.
-- **Output:** An engaging tweet that correctly answers the question from the retrieved info.
+**작업:** 정보성 트윗을 생성하기 위한 RAG 시스템 구축.
 
-Let's use LangChain's expression language (LCEL) to illustrate this. Any prompt here will do, we will optimize the final prompt with DSPy.
+- **입력:** 다소 복잡할 수 있는 사실 질문.
+- **출력:** 검색된 정보에서 질문에 올바르게 답변하는 매력적인 트윗.
 
-Considering that, let's just keep it to the barebones: **Given {context}, answer the question {question} as a tweet.**
+이것을 설명하기 위해 LangChain의 표현 언어(LCEL)를 사용하겠습니다. 여기서 어떤 프롬프트라도 괜찮으며, DSPy로 최종 프롬프트를 최적화할 것입니다.
+
+이를 고려하여, 기본적인 형태로 유지하겠습니다: **주어진 {context}, 질문 {question}에 대해 트윗으로 답변하시오.**
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "DSPy"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "DSPy"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "DSPy"}]-->
@@ -155,19 +160,20 @@ vanilla_chain = (
 )
 ```
 
+
 ## LCEL \<\> DSPy
 
-In order to use LangChain with DSPy, you need to make two minor modifications
+LangChain을 DSPy와 함께 사용하려면 두 가지 작은 수정을 해야 합니다.
 
 **LangChainPredict**
 
-You need to change from doing `prompt | llm` to using `LangChainPredict(prompt, llm)` from `dspy`. 
+`prompt | llm` 대신 `dspy`의 `LangChainPredict(prompt, llm)`를 사용해야 합니다.
 
-This is a wrapper which will bind your prompt and llm together so you can optimize them
+이는 프롬프트와 llm을 함께 묶어 최적화할 수 있는 래퍼입니다.
 
 **LangChainModule**
 
-This is a wrapper which wraps your final LCEL chain so that DSPy can optimize the whole thing
+이는 DSPy가 전체를 최적화할 수 있도록 최종 LCEL 체인을 래핑하는 래퍼입니다.
 
 ```python
 # From DSPy, import the modules that know how to interact with LangChain LCEL.
@@ -186,9 +192,10 @@ zeroshot_chain = LangChainModule(
 )  # then wrap the chain in a DSPy module.
 ```
 
-## Trying the Module
 
-After this, we can use it as both a LangChain runnable and a DSPy module!
+## 모듈 사용하기
+
+이후에는 LangChain 실행 가능성과 DSPy 모듈로 사용할 수 있습니다!
 
 ```python
 question = "In what region was Eddy Mazzoleni born?"
@@ -196,23 +203,25 @@ question = "In what region was Eddy Mazzoleni born?"
 zeroshot_chain.invoke({"question": question})
 ```
 
+
 ```output
 ' Eddy Mazzoleni, born in Bergamo, Italy, is a professional road cyclist who rode for UCI ProTour Astana Team. #cyclist #Italy'
 ```
 
-Ah that sounds about right! (It's technically not perfect: we asked for the region not the city. We can do better below.)
 
-Inspecting questions and answers manually is very important to get a sense of your system. However, a good system designer always looks to iteratively benchmark their work to quantify progress!
+아, 그럴듯하네요! (기술적으로 완벽하지는 않지만: 우리는 도시가 아닌 지역을 요청했습니다. 아래에서 더 나은 결과를 얻을 수 있습니다.)
 
-To do this, we need two things: the metric we want to maximize and a (tiny) dataset of examples for our system.
+질문과 답변을 수동으로 검사하는 것은 시스템을 이해하는 데 매우 중요합니다. 그러나 좋은 시스템 설계자는 항상 작업을 반복적으로 벤치마킹하여 진행 상황을 정량화하려고 합니다!
 
-Are there pre-defined metrics for good tweets? Should I label 100,000 tweets by hand? Probably not. We can easily do something reasonable, though, until you start getting data in production!
+이를 위해서는 두 가지가 필요합니다: 최대화하려는 메트릭과 시스템을 위한 (작은) 데이터셋입니다.
 
-## Load Data
+좋은 트윗에 대한 미리 정의된 메트릭이 있나요? 100,000개의 트윗을 수작업으로 라벨링해야 하나요? 아마도 아닐 것입니다. 그러나 생산에서 데이터를 얻기 시작할 때까지 합리적인 방법으로 할 수 있습니다!
 
-In order to compile our chain, we need a dataset to work with. This dataset just needs to be raw inputs and outputs. For our purposes, we will use HotPotQA dataset
+## 데이터 로드
 
-Note: Notice that our dataset doesn't actually include any tweets! It only has questions and answers. That's OK, our metric will take care of evaluating outputs in tweet form.
+체인을 컴파일하기 위해 작업할 데이터셋이 필요합니다. 이 데이터셋은 원시 입력과 출력만 필요합니다. 우리의 목적을 위해 HotPotQA 데이터셋을 사용할 것입니다.
+
+참고: 우리의 데이터셋에는 실제로 트윗이 포함되어 있지 않습니다! 질문과 답변만 있습니다. 괜찮습니다, 우리의 메트릭이 트윗 형식의 출력을 평가하는 데 신경 쓸 것입니다.
 
 ```python
 import dspy
@@ -233,13 +242,15 @@ trainset = [x.without("id", "type").with_inputs("question") for x in dataset.tra
 devset = [x.without("id", "type").with_inputs("question") for x in dataset.dev]
 valset, devset = devset[:50], devset[50:]
 ```
+  
 ```output
 /Users/harrisonchase/.pyenv/versions/3.11.1/envs/langchain-3-11/lib/python3.11/site-packages/datasets/table.py:1421: FutureWarning: promote has been superseded by mode='default'.
   table = cls._concat_blocks(blocks, axis=0)
 ```
-## Define a metric
+  
+## 메트릭 정의
 
-We now need to define a metric. This will be used to determine which runs were successful and we can learn from. Here we will use DSPy's metrics, though you can write your own.
+이제 메트릭을 정의해야 합니다. 이는 어떤 실행이 성공적이었는지 판단하는 데 사용됩니다. 여기서는 DSPy의 메트릭을 사용할 것이지만, 자신만의 메트릭을 작성할 수도 있습니다.
 
 ```python
 # Define the signature for autoamtic assessments.
@@ -297,20 +308,22 @@ def metric(gold, pred, trace=None):
     return score / 3.0
 ```
 
-## Evaluate Baseline
 
-Okay, let's evaluate the unoptimized "zero-shot" version of our chain, converted from our LangChain LCEL object.
+## 기준선 평가
+
+좋습니다, 이제 LangChain LCEL 객체에서 변환된 최적화되지 않은 "제로샷" 버전을 평가해 보겠습니다.
 
 ```python
 from dspy.evaluate.evaluate import Evaluate
 ```
-
+  
 ```python
 evaluate = Evaluate(
     metric=metric, devset=devset, num_threads=8, display_progress=True, display_table=5
 )
 evaluate(zeroshot_chain)
 ```
+  
 ```output
 Average Metric: 62.99999999999998 / 150  (42.0): 100%|██| 150/150 [01:14<00:00,  2.02it/s]
 ``````output
@@ -320,6 +333,7 @@ Average Metric: 62.99999999999998 / 150  (42.0%)
 /Users/harrisonchase/.pyenv/versions/3.11.1/envs/langchain-3-11/lib/python3.11/site-packages/dspy/evaluate/evaluate.py:126: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.
   df = df.applymap(truncate_cell)
 ```
+  
 ```html
 <style type="text/css">
 #T_390d8 th {
@@ -397,6 +411,7 @@ Average Metric: 62.99999999999998 / 150  (42.0%)
 </table>
  
 ```
+  
 
 ```html
 
@@ -410,29 +425,31 @@ Average Metric: 62.99999999999998 / 150  (42.0%)
 </div>
  
 ```
+  
 
 ```output
 42.0
 ```
 
-Okay, cool. Our zeroshot_chain gets about 42.00% on the 150 questions from the devset.
 
-The table above shows some examples. For instance:
+좋습니다. 우리의 zeroshot_chain은 개발 세트의 150개 질문에서 약 42.00%를 기록합니다.
 
-- Question: Who was a producer who produced albums for both rock bands Juke Karten and Thirty Seconds to Mars?
-- Tweet: Brian Virtue, who has worked with bands like Jane's Addiction and Velvet Revolver, produced albums for both Juke Kartel and Thirty Seconds to Mars, showcasing... [truncated]
-- Metric: 1.0 (A tweet that is correct, faithful, and engaging!*)
+위 표는 몇 가지 예를 보여줍니다. 예를 들어:
 
-footnote: * At least according to our metric, which is just a DSPy program, so it too can be optimized if you'd like! Topic for another notebook, though.
+- 질문: Juke Karten과 Thirty Seconds to Mars 두 록 밴드를 위해 앨범을 제작한 프로듀서는 누구인가요?
+- 트윗: Brian Virtue는 Jane's Addiction과 Velvet Revolver와 함께 작업했으며, Juke Kartel과 Thirty Seconds to Mars를 위해 앨범을 제작했습니다, 보여주면서... [생략됨]
+- 메트릭: 1.0 (올바르고, 충실하며, 매력적인 트윗!*)
 
-## Optimize
+각주: * 적어도 우리의 메트릭에 따르면, 이는 DSPy 프로그램이므로 최적화할 수 있습니다! 그러나 이는 다른 노트북의 주제입니다.
 
-Now, let's optimize performance
+## 최적화
+
+이제 성능을 최적화해 보겠습니다.
 
 ```python
 from dspy.teleprompt import BootstrapFewShotWithRandomSearch
 ```
-
+  
 ```python
 # Set up the optimizer. We'll use very minimal hyperparameters for this example.
 # Just do random search with ~3 attempts, and in each attempt, bootstrap <= 3 traces.
@@ -443,6 +460,7 @@ optimizer = BootstrapFewShotWithRandomSearch(
 # Now use the optimizer to *compile* the chain. This could take 5-10 minutes, unless it's cached.
 optimized_chain = optimizer.compile(zeroshot_chain, trainset=trainset, valset=valset)
 ```
+  
 ```output
 Going to sample between 1 and 3 traces per predictor.
 Will attempt to train 3 candidate sets.
@@ -548,13 +566,15 @@ Average of max per entry across top 9999 scores: 0.6133333333333334
 /Users/harrisonchase/.pyenv/versions/3.11.1/envs/langchain-3-11/lib/python3.11/site-packages/dspy/evaluate/evaluate.py:126: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.
   df = df.applymap(truncate_cell)
 ```
-## Evaluating the optimized chain
+  
+## 최적화된 체인 평가
 
-Well, how good is this? Let's do some proper evals!
+좋습니다, 얼마나 좋은가요? 제대로 평가해 보겠습니다!
 
 ```python
 evaluate(optimized_chain)
 ```
+  
 ```output
 Average Metric: 74.66666666666666 / 150  (49.8): 100%|██| 150/150 [00:54<00:00,  2.74it/s]
 ``````output
@@ -564,6 +584,7 @@ Average Metric: 74.66666666666666 / 150  (49.8%)
 /Users/harrisonchase/.pyenv/versions/3.11.1/envs/langchain-3-11/lib/python3.11/site-packages/dspy/evaluate/evaluate.py:126: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.
   df = df.applymap(truncate_cell)
 ```
+  
 ```html
 <style type="text/css">
 #T_b4366 th {
@@ -641,6 +662,7 @@ Average Metric: 74.66666666666666 / 150  (49.8%)
 </table>
  
 ```
+  
 
 ```html
 
@@ -654,28 +676,31 @@ Average Metric: 74.66666666666666 / 150  (49.8%)
 </div>
  
 ```
-
+  
 ```output
 49.78
 ```
 
-Alright! We've improved our chain from 42% to nearly 50%!
 
-## Inspect the optimized chain
+좋습니다! 우리는 체인을 42%에서 거의 50%로 개선했습니다!
 
-So what actually happened to improve this? We can take a look at this by looking at the optimized chain. We can do this in two ways
+## 최적화된 체인 검사
 
-### Look at the prompt used
+그렇다면 실제로 무엇이 개선되었을까요? 최적화된 체인을 살펴보며 확인할 수 있습니다. 두 가지 방법으로 이를 수행할 수 있습니다.
 
-We can look at what prompt was actually used. We can do this by looking at `dspy.settings`.
+### 사용된 프롬프트 보기
+
+실제로 어떤 프롬프트가 사용되었는지 살펴볼 수 있습니다. 이는 `dspy.settings`를 통해 확인할 수 있습니다.
 
 ```python
 prompt_used, output = dspy.settings.langchain_history[-1]
 ```
+  
 
 ```python
 print(prompt_used)
 ```
+  
 ```output
 Essential Instructions: Respond to the provided question based on the given context in the style of a tweet, ensuring the response is concise and within the character limit of a tweet (up to 280 characters).
 
@@ -709,9 +734,10 @@ Context:
 Question: Which maximum security jail housed the killer of Julissa brisman?
 Tweet Response:
 ```
-### Look at the demos
+  
+### 데모 보기
 
-The way this was optimized was that we collected examples (or "demos") to put in the prompt. We can inspect the optmized_chain to get a sense for what those are.
+이것이 최적화된 방법은 프롬프트에 넣을 예시(또는 "데모")를 수집한 것입니다. 최적화된 체인을 검사하여 그것들이 무엇인지 감을 잡을 수 있습니다.
 
 ```python
 demos = [
@@ -720,10 +746,12 @@ demos = [
     if hasattr(eg, "augmented") and eg.augmented
 ]
 ```
+  
 
 ```python
 demos
 ```
+  
 
 ```output
 [Example({'augmented': True, 'question': 'What is the nickname for this United States drag racer who drove Brutus?', 'context': ['Brutus (Funny Car) | Brutus is a pioneering funny car driven by Jim Liberman and prepared by crew chief Lew Arrington in the middle 1960s.', 'USS Brutus (AC-15) | USS "Brutus", formerly the steamer "Peter Jebsen", was a collier in the United States Navy. She was built in 1894 at South Shields-on-Tyne, England, by John Readhead & Sons and was acquired by the U.S. Navy early in 1898 from L. F. Chapman & Company. She was renamed "Brutus" and commissioned at the Mare Island Navy Yard on 27 May 1898, with Lieutenant Vincendon L. Cottman, commanding officer and Lieutenant Randolph H. Miner, executive officer.', 'Brutus Beefcake | Ed Leslie is an American semi-retired professional wrestler, best known for his work in the World Wrestling Federation (WWF) under the ring name Brutus "The Barber" Beefcake. He later worked for World Championship Wrestling (WCW) under a variety of names.', 'Brutus Hamilton | Brutus Kerr Hamilton (July 19, 1900 – December 28, 1970) was an American track and field athlete, coach and athletics administrator.', 'Big Brutus | Big Brutus is the nickname of the Bucyrus-Erie model 1850B electric shovel, which was the second largest of its type in operation in the 1960s and 1970s. Big Brutus is the centerpiece of a mining museum in West Mineral, Kansas where it was used in coal strip mining operations. The shovel was designed to dig from 20 to in relatively shallow coal seams.'], 'tweet_response': ' Jim Liberman, also known as "Jungle Jim", drove the pioneering funny car Brutus in the 1960s. #Brutus #FunnyCar #DragRacing'}) (input_keys=None)]

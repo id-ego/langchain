@@ -1,15 +1,16 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/arcgis/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/arcgis.ipynb
+description: 이 노트북은 `langchain_community.document_loaders.ArcGISLoader` 클래스를 사용하여
+  ArcGIS 데이터를 로드하는 방법을 보여줍니다.
 ---
 
 # ArcGIS
 
-This notebook demonstrates the use of the `langchain_community.document_loaders.ArcGISLoader` class.
+이 노트북은 `langchain_community.document_loaders.ArcGISLoader` 클래스를 사용하는 방법을 보여줍니다.
 
-You will need to install the ArcGIS API for Python `arcgis` and, optionally, `bs4.BeautifulSoup`.
+Python용 ArcGIS API `arcgis`와 선택적으로 `bs4.BeautifulSoup`를 설치해야 합니다.
 
-You can use an `arcgis.gis.GIS` object for authenticated data loading, or leave it blank to access public data.
+인증된 데이터 로딩을 위해 `arcgis.gis.GIS` 객체를 사용할 수 있으며, 공용 데이터에 접근하려면 비워둘 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ArcGISLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.arcgis_loader.ArcGISLoader.html", "title": "ArcGIS"}]-->
@@ -21,21 +22,25 @@ loader = ArcGISLoader(URL)
 docs = loader.load()
 ```
 
-Let's measure loader latency.
+
+로더 지연 시간을 측정해 봅시다.
 
 ```python
 %%time
 
 docs = loader.load()
 ```
+
 ```output
 CPU times: user 2.37 ms, sys: 5.83 ms, total: 8.19 ms
 Wall time: 1.05 s
 ```
 
+
 ```python
 docs[0].metadata
 ```
+
 
 ```output
 {'accessed': '2023-09-13T19:58:32.546576+00:00Z',
@@ -213,29 +218,34 @@ docs[0].metadata
  }}
 ```
 
-### Retrieving Geometries
 
-If you want to retrieve feature geometries, you may do so with the `return_geometry` keyword.
+### 기하학 정보 검색
 
-Each document's geometry will be stored in its metadata dictionary.
+피처 기하학을 검색하려면 `return_geometry` 키워드를 사용할 수 있습니다.
+
+각 문서의 기하학 정보는 메타데이터 사전에 저장됩니다.
 
 ```python
 loader_geom = ArcGISLoader(URL, return_geometry=True)
 ```
+
 
 ```python
 %%time
 
 docs = loader_geom.load()
 ```
+
 ```output
 CPU times: user 9.6 ms, sys: 5.84 ms, total: 15.4 ms
 Wall time: 1.06 s
 ```
 
+
 ```python
 docs[0].metadata["geometry"]
 ```
+
 
 ```output
 {'x': -81.01508803280349,
@@ -243,10 +253,12 @@ docs[0].metadata["geometry"]
  'spatialReference': {'wkid': 4326, 'latestWkid': 4326}}
 ```
 
+
 ```python
 for doc in docs:
     print(doc.page_content)
 ```
+
 ```output
 {"OBJECTID": 4, "AccessName": "UNIVERSITY BLVD", "AccessID": "DB-048", "AccessType": "OPEN VEHICLE RAMP", "GeneralLoc": "900 BLK N ATLANTIC AV", "MilePost": 13.74, "City": "DAYTONA BEACH", "AccessStatus": "OPEN", "Entry_Date_Time": 1694597536000, "DrivingZone": "BOTH"}
 {"OBJECTID": 18, "AccessName": "BEACHWAY AV", "AccessID": "NS-106", "AccessType": "OPEN VEHICLE RAMP", "GeneralLoc": "1400 N ATLANTIC AV", "MilePost": 1.57, "City": "NEW SMYRNA BEACH", "AccessStatus": "OPEN", "Entry_Date_Time": 1694600478000, "DrivingZone": "YES"}
@@ -273,7 +285,8 @@ for doc in docs:
 {"OBJECTID": 174, "AccessName": "EL PORTAL ST", "AccessID": "DBS-076", "AccessType": "OPEN VEHICLE RAMP", "GeneralLoc": "3200 BLK S ATLANTIC AV", "MilePost": 20.04, "City": "DAYTONA BEACH SHORES", "AccessStatus": "OPEN", "Entry_Date_Time": 1694601124000, "DrivingZone": "YES"}
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

@@ -1,64 +1,67 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/baidu/
+description: 바이두 클라우드는 클라우드 저장소, 파일 관리 및 리소스 공유를 제공하는 바이두의 서비스입니다. Qianfan API를 통해
+  다양한 모델을 사용할 수 있습니다.
 ---
 
 # Baidu
 
-> [Baidu Cloud](https://cloud.baidu.com/) is a cloud service provided by `Baidu, Inc.`,
-headquartered in Beijing. It offers a cloud storage service, client software,
-file management, resource sharing, and Third Party Integration.
+> [Baidu Cloud](https://cloud.baidu.com/)는 베이징에 본사를 둔 `Baidu, Inc.`에서 제공하는 클라우드 서비스입니다. 클라우드 저장 서비스, 클라이언트 소프트웨어, 파일 관리, 리소스 공유 및 제3자 통합을 제공합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Register and get the `Qianfan` `AK` and `SK` keys [here](https://cloud.baidu.com/product/wenxinworkshop).
+`Qianfan` `AK` 및 `SK` 키를 [여기](https://cloud.baidu.com/product/wenxinworkshop)에서 등록하고 받으세요.
 
 ## LLMs
 
 ### Baidu Qianfan
 
-See a [usage example](/docs/integrations/llms/baidu_qianfan_endpoint).
+[사용 예시](/docs/integrations/llms/baidu_qianfan_endpoint)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "QianfanLLMEndpoint", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.baidu_qianfan_endpoint.QianfanLLMEndpoint.html", "title": "Baidu"}]-->
 from langchain_community.llms import QianfanLLMEndpoint
 ```
 
-## Chat models
 
-### Qianfan Chat Endpoint
+## 채팅 모델
 
-See a [usage example](/docs/integrations/chat/baidu_qianfan_endpoint).
+### Qianfan 채팅 엔드포인트
+
+[사용 예시](/docs/integrations/chat/baidu_qianfan_endpoint)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "QianfanChatEndpoint", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.baidu_qianfan_endpoint.QianfanChatEndpoint.html", "title": "Baidu"}]-->
 from langchain_community.chat_models import QianfanChatEndpoint
 ```
 
-## Embedding models
+
+## 임베딩 모델
 
 ### Baidu Qianfan
 
-See a [usage example](/docs/integrations/text_embedding/baidu_qianfan_endpoint).
+[사용 예시](/docs/integrations/text_embedding/baidu_qianfan_endpoint)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "QianfanEmbeddingsEndpoint", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.baidu_qianfan_endpoint.QianfanEmbeddingsEndpoint.html", "title": "Baidu"}]-->
 from langchain_community.embeddings import QianfanEmbeddingsEndpoint
 ```
 
-## Vector stores
+
+## 벡터 저장소
 
 ### Baidu Cloud ElasticSearch VectorSearch
 
-See a [usage example](/docs/integrations/vectorstores/baiducloud_vector_search).
+[사용 예시](/docs/integrations/vectorstores/baiducloud_vector_search)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "BESVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.baiducloud_vector_search.BESVectorStore.html", "title": "Baidu"}]-->
 from langchain_community.vectorstores import BESVectorStore
 ```
 
+
 ### Baidu VectorDB
 
-See a [usage example](/docs/integrations/vectorstores/baiduvectordb).
+[사용 예시](/docs/integrations/vectorstores/baiduvectordb)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "BaiduVectorDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.baiduvectordb.BaiduVectorDB.html", "title": "Baidu"}]-->

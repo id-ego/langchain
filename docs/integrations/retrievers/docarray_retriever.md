@@ -1,14 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/docarray_retriever/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/docarray_retriever.ipynb
+description: DocArray는 다중 모드 데이터를 관리하기 위한 오픈 소스 도구로, 다양한 문서 인덱스 백엔드를 통해 데이터를 저장하고
+  검색할 수 있습니다.
 ---
 
 # DocArray
 
-> [DocArray](https://github.com/docarray/docarray) is a versatile, open-source tool for managing your multi-modal data. It lets you shape your data however you want, and offers the flexibility to store and search it using various document index backends. Plus, it gets even better - you can utilize your `DocArray` document index to create a `DocArrayRetriever`, and build awesome Langchain apps!
+> [DocArray](https://github.com/docarray/docarray)는 다중 모드 데이터를 관리하기 위한 다재다능한 오픈 소스 도구입니다. 데이터를 원하는 대로 형성할 수 있으며, 다양한 문서 인덱스 백엔드를 사용하여 저장하고 검색할 수 있는 유연성을 제공합니다. 게다가 더 나아져서, `DocArray` 문서 인덱스를 활용하여 `DocArrayRetriever`를 생성하고 멋진 Langchain 앱을 구축할 수 있습니다!
 
-This notebook is split into two sections. The [first section](#document-index-backends) offers an introduction to all five supported document index backends. It provides guidance on setting up and indexing each backend and also instructs you on how to build a `DocArrayRetriever` for finding relevant documents.
-In the [second section](#movie-retrieval-using-hnswdocumentindex), we'll select one of these backends and illustrate how to use it through a basic example.
+이 노트북은 두 개의 섹션으로 나뉘어 있습니다. [첫 번째 섹션](#document-index-backends)은 지원되는 다섯 가지 문서 인덱스 백엔드에 대한 소개를 제공합니다. 각 백엔드를 설정하고 인덱싱하는 방법에 대한 안내를 제공하며, 관련 문서를 찾기 위한 `DocArrayRetriever`를 구축하는 방법도 설명합니다. [두 번째 섹션](#movie-retrieval-using-hnswdocumentindex)에서는 이러한 백엔드 중 하나를 선택하고 기본 예제를 통해 사용하는 방법을 설명합니다.
 
 ## Document Index Backends
 
@@ -24,9 +24,10 @@ from langchain_community.retrievers import DocArrayRetriever
 embeddings = FakeEmbeddings(size=32)
 ```
 
-Before you start building the index, it's important to define your document schema. This determines what fields your documents will have and what type of data each field will hold.
 
-For this demonstration, we'll create a somewhat random schema containing 'title' (str), 'title_embedding' (numpy array), 'year' (int), and 'color' (str)
+인덱스를 구축하기 전에 문서 스키마를 정의하는 것이 중요합니다. 이는 문서가 가질 필드와 각 필드가 보유할 데이터 유형을 결정합니다.
+
+이 시연을 위해 'title' (str), 'title_embedding' (numpy array), 'year' (int), 'color' (str)를 포함하는 다소 임의의 스키마를 생성할 것입니다.
 
 ```python
 class MyDoc(BaseDoc):
@@ -36,11 +37,12 @@ class MyDoc(BaseDoc):
     color: str
 ```
 
+
 ### InMemoryExactNNIndex
 
-`InMemoryExactNNIndex` stores all Documents in memory. It is a great starting point for small datasets, where you may not want to launch a database server.
+`InMemoryExactNNIndex`는 모든 문서를 메모리에 저장합니다. 데이터베이스 서버를 시작하고 싶지 않은 작은 데이터 세트에 적합한 훌륭한 시작점입니다.
 
-Learn more here: https://docs.docarray.org/user_guide/storing/index_in_memory/
+자세히 알아보려면 여기를 방문하세요: https://docs.docarray.org/user_guide/storing/index_in_memory/
 
 ```python
 from docarray.index import InMemoryExactNNIndex
@@ -63,6 +65,7 @@ db.index(
 filter_query = {"year": {"$lte": 90}}
 ```
 
+
 ```python
 # create a retriever
 retriever = DocArrayRetriever(
@@ -77,14 +80,16 @@ retriever = DocArrayRetriever(
 doc = retriever.invoke("some query")
 print(doc)
 ```
+
 ```output
 [Document(page_content='My document 56', metadata={'id': '1f33e58b6468ab722f3786b96b20afe6', 'year': 56, 'color': 'red'})]
 ```
+
 ### HnswDocumentIndex
 
-`HnswDocumentIndex` is a lightweight Document Index implementation that runs fully locally and is best suited for small- to medium-sized datasets. It stores vectors on disk in [hnswlib](https://github.com/nmslib/hnswlib), and stores all other data in [SQLite](https://www.sqlite.org/index.html).
+`HnswDocumentIndex`는 완전히 로컬에서 실행되는 경량 문서 인덱스 구현으로, 소규모에서 중규모 데이터 세트에 가장 적합합니다. [hnswlib](https://github.com/nmslib/hnswlib)에서 벡터를 디스크에 저장하고, 모든 다른 데이터는 [SQLite](https://www.sqlite.org/index.html)에 저장합니다.
 
-Learn more here: https://docs.docarray.org/user_guide/storing/index_hnswlib/
+자세히 알아보려면 여기를 방문하세요: https://docs.docarray.org/user_guide/storing/index_hnswlib/
 
 ```python
 from docarray.index import HnswDocumentIndex
@@ -108,6 +113,7 @@ db.index(
 filter_query = {"year": {"$lte": 90}}
 ```
 
+
 ```python
 # create a retriever
 retriever = DocArrayRetriever(
@@ -122,14 +128,16 @@ retriever = DocArrayRetriever(
 doc = retriever.invoke("some query")
 print(doc)
 ```
+
 ```output
 [Document(page_content='My document 28', metadata={'id': 'ca9f3f4268eec7c97a7d6e77f541cb82', 'year': 28, 'color': 'red'})]
 ```
+
 ### WeaviateDocumentIndex
 
-`WeaviateDocumentIndex` is a document index that is built upon [Weaviate](https://weaviate.io/) vector database.
+`WeaviateDocumentIndex`는 [Weaviate](https://weaviate.io/) 벡터 데이터베이스를 기반으로 구축된 문서 인덱스입니다.
 
-Learn more here: https://docs.docarray.org/user_guide/storing/index_weaviate/
+자세히 알아보려면 여기를 방문하세요: https://docs.docarray.org/user_guide/storing/index_weaviate/
 
 ```python
 # There's a small difference with the Weaviate backend compared to the others.
@@ -145,6 +153,7 @@ class WeaviateDoc(BaseDoc):
     year: int
     color: str
 ```
+
 
 ```python
 from docarray.index import WeaviateDocumentIndex
@@ -169,6 +178,7 @@ db.index(
 filter_query = {"path": ["year"], "operator": "LessThanEqual", "valueInt": "90"}
 ```
 
+
 ```python
 # create a retriever
 retriever = DocArrayRetriever(
@@ -183,14 +193,16 @@ retriever = DocArrayRetriever(
 doc = retriever.invoke("some query")
 print(doc)
 ```
+
 ```output
 [Document(page_content='My document 17', metadata={'id': '3a5b76e85f0d0a01785dc8f9d965ce40', 'year': 17, 'color': 'red'})]
 ```
+
 ### ElasticDocIndex
 
-`ElasticDocIndex` is a document index that is built upon [ElasticSearch](https://github.com/elastic/elasticsearch)
+`ElasticDocIndex`는 [ElasticSearch](https://github.com/elastic/elasticsearch)를 기반으로 구축된 문서 인덱스입니다.
 
-Learn more [here](https://docs.docarray.org/user_guide/storing/index_elastic/)
+자세히 알아보려면 [여기](https://docs.docarray.org/user_guide/storing/index_elastic/)를 방문하세요.
 
 ```python
 from docarray.index import ElasticDocIndex
@@ -216,6 +228,7 @@ db.index(
 filter_query = {"range": {"year": {"lte": 90}}}
 ```
 
+
 ```python
 # create a retriever
 retriever = DocArrayRetriever(
@@ -230,14 +243,16 @@ retriever = DocArrayRetriever(
 doc = retriever.invoke("some query")
 print(doc)
 ```
+
 ```output
 [Document(page_content='My document 46', metadata={'id': 'edbc721bac1c2ad323414ad1301528a4', 'year': 46, 'color': 'green'})]
 ```
+
 ### QdrantDocumentIndex
 
-`QdrantDocumentIndex` is a document index that is built upon [Qdrant](https://qdrant.tech/) vector database
+`QdrantDocumentIndex`는 [Qdrant](https://qdrant.tech/) 벡터 데이터베이스를 기반으로 구축된 문서 인덱스입니다.
 
-Learn more [here](https://docs.docarray.org/user_guide/storing/index_qdrant/)
+자세히 알아보려면 [여기](https://docs.docarray.org/user_guide/storing/index_qdrant/)를 방문하세요.
 
 ```python
 from docarray.index import QdrantDocumentIndex
@@ -272,9 +287,11 @@ filter_query = rest.Filter(
     ]
 )
 ```
+
 ```output
 WARNING:root:Payload indexes have no effect in the local Qdrant. Please use server Qdrant if you need payload indexes.
 ```
+
 
 ```python
 # create a retriever
@@ -290,9 +307,11 @@ retriever = DocArrayRetriever(
 doc = retriever.invoke("some query")
 print(doc)
 ```
+
 ```output
 [Document(page_content='My document 80', metadata={'id': '97465f98d0810f1f330e4ecc29b13d20', 'year': 80, 'color': 'blue'})]
 ```
+
 ## Movie Retrieval using HnswDocumentIndex
 
 ```python
@@ -336,15 +355,18 @@ movies = [
 ]
 ```
 
+
 ```python
 import getpass
 import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
+
 ```output
 OpenAI API Key: ········
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "DocArray"}]-->
@@ -376,6 +398,7 @@ docs = DocList[MyDoc](
 )
 ```
 
+
 ```python
 from docarray.index import HnswDocumentIndex
 
@@ -385,6 +408,7 @@ db = HnswDocumentIndex[MyDoc](work_dir="movie_search")
 # add data
 db.index(docs)
 ```
+
 
 ### Normal Retriever
 
@@ -404,9 +428,11 @@ retriever = DocArrayRetriever(
 doc = retriever.invoke("movie about dreams")
 print(doc)
 ```
+
 ```output
 [Document(page_content='A thief who steals corporate secrets through the use of dream-sharing technology is given the task of planting an idea into the mind of a CEO.', metadata={'id': 'f1649d5b6776db04fec9a116bbb6bbe5', 'title': 'Inception', 'rating': 8.8, 'director': 'Christopher Nolan'})]
 ```
+
 ### Retriever with Filters
 
 ```python
@@ -427,9 +453,11 @@ retriever = DocArrayRetriever(
 docs = retriever.invoke("space travel")
 print(docs)
 ```
+
 ```output
 [Document(page_content='Interstellar explores the boundaries of human exploration as a group of astronauts venture through a wormhole in space. In their quest to ensure the survival of humanity, they confront the vastness of space-time and grapple with love and sacrifice.', metadata={'id': 'ab704cc7ae8573dc617f9a5e25df022a', 'title': 'Interstellar', 'rating': 8.6, 'director': 'Christopher Nolan'}), Document(page_content='A thief who steals corporate secrets through the use of dream-sharing technology is given the task of planting an idea into the mind of a CEO.', metadata={'id': 'f1649d5b6776db04fec9a116bbb6bbe5', 'title': 'Inception', 'rating': 8.8, 'director': 'Christopher Nolan'})]
 ```
+
 ### Retriever with MMR search
 
 ```python
@@ -451,11 +479,13 @@ retriever = DocArrayRetriever(
 docs = retriever.invoke("action movies")
 print(docs)
 ```
+
 ```output
 [Document(page_content="The lives of two mob hitmen, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption.", metadata={'id': 'e6aa313bbde514e23fbc80ab34511afd', 'title': 'Pulp Fiction', 'rating': 8.9, 'director': 'Quentin Tarantino'}), Document(page_content='A thief who steals corporate secrets through the use of dream-sharing technology is given the task of planting an idea into the mind of a CEO.', metadata={'id': 'f1649d5b6776db04fec9a116bbb6bbe5', 'title': 'Inception', 'rating': 8.8, 'director': 'Christopher Nolan'}), Document(page_content='When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.', metadata={'id': '91dec17d4272041b669fd113333a65f7', 'title': 'The Dark Knight', 'rating': 9.0, 'director': 'Christopher Nolan'})]
 ```
 
+
 ## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+- Retriever [개념 가이드](/docs/concepts/#retrievers)
+- Retriever [사용 방법 가이드](/docs/how_to/#retrievers)

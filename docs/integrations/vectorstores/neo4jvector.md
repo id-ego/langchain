@@ -1,21 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/neo4jvector/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/neo4jvector.ipynb
+description: Neo4j 벡터 인덱스 사용법을 소개하며, 유사도 검색 및 기존 벡터 저장소와의 작업 방법을 설명합니다.
 ---
 
-# Neo4j Vector Index
+# Neo4j 벡터 인덱스
 
-> [Neo4j](https://neo4j.com/) is an open-source graph database with integrated support for vector similarity search
+> [Neo4j](https://neo4j.com/)는 벡터 유사성 검색을 통합 지원하는 오픈 소스 그래프 데이터베이스입니다.
 
-It supports:
+다음과 같은 기능을 지원합니다:
 
-- approximate nearest neighbor search
-- Euclidean similarity and cosine similarity
-- Hybrid search combining vector and keyword searches
+- 근사 최근접 이웃 검색
+- 유클리드 유사성 및 코사인 유사성
+- 벡터 검색과 키워드 검색을 결합한 하이브리드 검색
 
-This notebook shows how to use the Neo4j vector index (`Neo4jVector`).
+이 노트북에서는 Neo4j 벡터 인덱스(`Neo4jVector`)를 사용하는 방법을 보여줍니다.
 
-See the [installation instruction](https://neo4j.com/docs/operations-manual/current/installation/).
+[설치 지침](https://neo4j.com/docs/operations-manual/current/installation/)을 참조하세요.
 
 ```python
 # Pip install necessary package
@@ -24,7 +24,8 @@ See the [installation instruction](https://neo4j.com/docs/operations-manual/curr
 %pip install --upgrade --quiet  tiktoken
 ```
 
-We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
+
+`OpenAIEmbeddings`를 사용하려면 OpenAI API 키를 받아야 합니다.
 
 ```python
 import getpass
@@ -32,9 +33,11 @@ import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
+
 ```output
 OpenAI API Key: ········
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Neo4j Vector Index"}, {"imported": "Neo4jVector", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.neo4j_vector.Neo4jVector.html", "title": "Neo4j Vector Index"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Neo4j Vector Index"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Neo4j Vector Index"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Neo4j Vector Index"}]-->
@@ -45,6 +48,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
+
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
 
@@ -54,6 +58,7 @@ docs = text_splitter.split_documents(documents)
 
 embeddings = OpenAIEmbeddings()
 ```
+
 
 ```python
 # Neo4jVector requires the Neo4j database credentials
@@ -68,7 +73,8 @@ password = "password"
 # os.environ["NEO4J_PASSWORD"] = "pleaseletmein"
 ```
 
-## Similarity Search with Cosine Distance (Default)
+
+## 코사인 거리로 유사성 검색 (기본값)
 
 ```python
 # The Neo4jVector Module will connect to Neo4j and create a vector index if needed.
@@ -78,10 +84,12 @@ db = Neo4jVector.from_documents(
 )
 ```
 
+
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db.similarity_search_with_score(query, k=2)
 ```
+
 
 ```python
 for doc, score in docs_with_score:
@@ -90,6 +98,7 @@ for doc, score in docs_with_score:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Score:  0.9076391458511353
@@ -116,10 +125,11 @@ We’re putting in place dedicated immigration judges so families fleeing persec
 We’re securing commitments and supporting partners in South and Central America to host more refugees and secure their own borders.
 --------------------------------------------------------------------------------
 ```
-## Working with vectorstore
 
-Above, we created a vectorstore from scratch. However, often times we want to work with an existing vectorstore.
-In order to do that, we can initialize it directly.
+
+## 벡터 저장소 작업하기
+
+위에서는 처음부터 벡터 저장소를 생성했습니다. 그러나 종종 기존 벡터 저장소로 작업하고 싶습니다. 이를 위해 직접 초기화할 수 있습니다.
 
 ```python
 index_name = "vector"  # default index name
@@ -133,7 +143,8 @@ store = Neo4jVector.from_existing_index(
 )
 ```
 
-We can also initialize a vectorstore from existing graph using the `from_existing_graph` method. This method pulls relevant text information from the database, and calculates and stores the text embeddings back to the database.
+
+기존 그래프에서 `from_existing_graph` 메서드를 사용하여 벡터 저장소를 초기화할 수도 있습니다. 이 메서드는 데이터베이스에서 관련 텍스트 정보를 가져오고, 텍스트 임베딩을 계산하여 데이터베이스에 다시 저장합니다.
 
 ```python
 # First we create sample data in graph
@@ -142,9 +153,11 @@ store.query(
 )
 ```
 
+
 ```output
 []
 ```
+
 
 ```python
 # Now we initialize from existing graph
@@ -161,15 +174,18 @@ existing_graph = Neo4jVector.from_existing_graph(
 result = existing_graph.similarity_search("Slovenia", k=1)
 ```
 
+
 ```python
 result[0]
 ```
+
 
 ```output
 Document(page_content='\nname: Tomaz\nlocation: Slovenia', metadata={'age': 33, 'hobby': 'Bicycle'})
 ```
 
-Neo4j also supports relationship vector indexes, where an embedding is stored as a relationship property and indexed. A relationship vector index cannot be populated via LangChain, but you can connect it to existing relationship vector indexes.
+
+Neo4j는 또한 관계 벡터 인덱스를 지원하며, 여기서 임베딩은 관계 속성으로 저장되고 인덱싱됩니다. 관계 벡터 인덱스는 LangChain을 통해 채울 수 없지만, 기존 관계 벡터 인덱스에 연결할 수 있습니다.
 
 ```python
 # First we create sample data and index in graph
@@ -195,9 +211,11 @@ OPTIONS {indexConfig: {
 )
 ```
 
+
 ```output
 []
 ```
+
 
 ```python
 relationship_vector = Neo4jVector.from_existing_relationship_index(
@@ -211,16 +229,18 @@ relationship_vector = Neo4jVector.from_existing_relationship_index(
 relationship_vector.similarity_search("Example")
 ```
 
+
 ```output
 [Document(page_content='example text')]
 ```
 
-### Metadata filtering
 
-Neo4j vector store also supports metadata filtering by combining parallel runtime and exact nearest neighbor search.
-*Requires Neo4j 5.18 or greater version.*
+### 메타데이터 필터링
 
-Equality filtering has the following syntax.
+Neo4j 벡터 저장소는 병렬 런타임과 정확한 최근접 이웃 검색을 결합하여 메타데이터 필터링을 지원합니다.
+*Neo4j 5.18 이상 버전 필요.*
+
+동등성 필터링은 다음과 같은 구문을 가집니다.
 
 ```python
 existing_graph.similarity_search(
@@ -229,23 +249,25 @@ existing_graph.similarity_search(
 )
 ```
 
+
 ```output
 [Document(page_content='\nname: Tomaz\nlocation: Slovenia', metadata={'age': 33, 'hobby': 'Bicycle'})]
 ```
 
-Metadata filtering also support the following operators:
 
-* `$eq: Equal`
-* `$ne: Not Equal`
-* `$lt: Less than`
-* `$lte: Less than or equal`
-* `$gt: Greater than`
-* `$gte: Greater than or equal`
-* `$in: In a list of values`
-* `$nin: Not in a list of values`
-* `$between: Between two values`
-* `$like: Text contains value`
-* `$ilike: lowered text contains value`
+메타데이터 필터링은 다음 연산자도 지원합니다:
+
+* `$eq: 같음`
+* `$ne: 같지 않음`
+* `$lt: 미만`
+* `$lte: 이하`
+* `$gt: 초과`
+* `$gte: 이상`
+* `$in: 값 목록에 포함`
+* `$nin: 값 목록에 포함되지 않음`
+* `$between: 두 값 사이`
+* `$like: 텍스트에 값 포함`
+* `$ilike: 소문자 텍스트에 값 포함`
 
 ```python
 existing_graph.similarity_search(
@@ -254,11 +276,13 @@ existing_graph.similarity_search(
 )
 ```
 
+
 ```output
 [Document(page_content='\nname: Tomaz\nlocation: Slovenia', metadata={'age': 33, 'hobby': 'Bicycle'})]
 ```
 
-You can also use `OR` operator between filters
+
+필터 간에 `OR` 연산자를 사용할 수도 있습니다.
 
 ```python
 existing_graph.similarity_search(
@@ -267,37 +291,44 @@ existing_graph.similarity_search(
 )
 ```
 
+
 ```output
 [Document(page_content='\nname: Tomaz\nlocation: Slovenia', metadata={'age': 33, 'hobby': 'Bicycle'})]
 ```
 
-### Add documents
-We can add documents to the existing vectorstore.
+
+### 문서 추가
+기존 벡터 저장소에 문서를 추가할 수 있습니다.
 
 ```python
 store.add_documents([Document(page_content="foo")])
 ```
 
+
 ```output
 ['acbd18db4cc2f85cedef654fccc4a4d8']
 ```
+
 
 ```python
 docs_with_score = store.similarity_search_with_score("foo")
 ```
 
+
 ```python
 docs_with_score[0]
 ```
+
 
 ```output
 (Document(page_content='foo'), 0.9999997615814209)
 ```
 
-## Customize response with retrieval query
 
-You can also customize responses by using a custom Cypher snippet that can fetch other information from the graph.
-Under the hood, the final Cypher statement is constructed like so:
+## 검색 쿼리로 응답 사용자 정의
+
+사용자 정의 Cypher 스니펫을 사용하여 그래프에서 다른 정보를 가져옴으로써 응답을 사용자 정의할 수 있습니다.
+내부적으로 최종 Cypher 문은 다음과 같이 구성됩니다:
 
 ```
 read_query = (
@@ -306,13 +337,14 @@ read_query = (
 ) + retrieval_query
 ```
 
-The retrieval query must return the following three columns:
 
-* `text`: Union[str, Dict] = Value used to populate `page_content` of a document
-* `score`: Float = Similarity score
-* `metadata`: Dict = Additional metadata of a document
+검색 쿼리는 다음 세 가지 열을 반환해야 합니다:
 
-Learn more in this [blog post](https://medium.com/neo4j/implementing-rag-how-to-write-a-graph-retrieval-query-in-langchain-74abf13044f2).
+* `text`: Union[str, Dict] = 문서의 `page_content`를 채우는 데 사용되는 값
+* `score`: Float = 유사성 점수
+* `metadata`: Dict = 문서의 추가 메타데이터
+
+자세한 내용은 이 [블로그 게시물](https://medium.com/neo4j/implementing-rag-how-to-write-a-graph-retrieval-query-in-langchain-74abf13044f2)에서 확인하세요.
 
 ```python
 retrieval_query = """
@@ -329,11 +361,13 @@ retrieval_example = Neo4jVector.from_existing_index(
 retrieval_example.similarity_search("Foo", k=1)
 ```
 
+
 ```output
 [Document(page_content='Name:Tomaz', metadata={'foo': 'bar'})]
 ```
 
-Here is an example of passing all node properties except for `embedding` as a dictionary to `text` column,
+
+다음은 `embedding`을 제외한 모든 노드 속성을 사전으로 `text` 열에 전달하는 예입니다.
 
 ```python
 retrieval_query = """
@@ -350,12 +384,14 @@ retrieval_example = Neo4jVector.from_existing_index(
 retrieval_example.similarity_search("Foo", k=1)
 ```
 
+
 ```output
 [Document(page_content='name: Tomaz\nage: 33\nhobby: Bicycle\n', metadata={'foo': 'bar'})]
 ```
 
-You can also pass Cypher parameters to the retrieval query.
-Parameters can be used for additional filtering, traversals, etc...
+
+검색 쿼리에 Cypher 매개변수를 전달할 수도 있습니다.
+매개변수는 추가 필터링, 탐색 등에 사용할 수 있습니다...
 
 ```python
 retrieval_query = """
@@ -372,13 +408,15 @@ retrieval_example = Neo4jVector.from_existing_index(
 retrieval_example.similarity_search("Foo", k=1, params={"extra": "ParamInfo"})
 ```
 
+
 ```output
 [Document(page_content='location: Slovenia\nextra: ParamInfo\nname: Tomaz\nage: 33\nhobby: Bicycle\nembedding: None\n', metadata={'foo': 'bar'})]
 ```
 
-## Hybrid search (vector + keyword)
 
-Neo4j integrates both vector and keyword indexes, which allows you to use a hybrid search approach
+## 하이브리드 검색 (벡터 + 키워드)
+
+Neo4j는 벡터 인덱스와 키워드 인덱스를 통합하여 하이브리드 검색 접근 방식을 사용할 수 있습니다.
 
 ```python
 # The Neo4jVector Module will connect to Neo4j and create a vector and keyword indices if needed.
@@ -392,7 +430,8 @@ hybrid_db = Neo4jVector.from_documents(
 )
 ```
 
-To load the hybrid search from existing indexes, you have to provide both the vector and keyword indices
+
+기존 인덱스에서 하이브리드 검색을 로드하려면 벡터 인덱스와 키워드 인덱스를 모두 제공해야 합니다.
 
 ```python
 index_name = "vector"  # default index name
@@ -409,22 +448,25 @@ store = Neo4jVector.from_existing_index(
 )
 ```
 
-## Retriever options
 
-This section shows how to use `Neo4jVector` as a retriever.
+## 검색기 옵션
+
+이 섹션에서는 `Neo4jVector`를 검색기로 사용하는 방법을 보여줍니다.
 
 ```python
 retriever = store.as_retriever()
 retriever.invoke(query)[0]
 ```
 
+
 ```output
 Document(page_content='Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. \n\nTonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. \n\nOne of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court. \n\nAnd I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.', metadata={'source': '../../how_to/state_of_the_union.txt'})
 ```
 
-## Question Answering with Sources
 
-This section goes over how to do question-answering with sources over an Index. It does this by using the `RetrievalQAWithSourcesChain`, which does the lookup of the documents from an Index. 
+## 출처가 있는 질문 답변
+
+이 섹션에서는 인덱스에 대한 출처가 있는 질문-답변을 수행하는 방법을 설명합니다. 이는 인덱스에서 문서를 조회하는 `RetrievalQAWithSourcesChain`을 사용하여 수행됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQAWithSourcesChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.qa_with_sources.retrieval.RetrievalQAWithSourcesChain.html", "title": "Neo4j Vector Index"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Neo4j Vector Index"}]-->
@@ -432,11 +474,13 @@ from langchain.chains import RetrievalQAWithSourcesChain
 from langchain_openai import ChatOpenAI
 ```
 
+
 ```python
 chain = RetrievalQAWithSourcesChain.from_chain_type(
     ChatOpenAI(temperature=0), chain_type="stuff", retriever=retriever
 )
 ```
+
 
 ```python
 chain.invoke(
@@ -445,12 +489,14 @@ chain.invoke(
 )
 ```
 
+
 ```output
 {'answer': 'The president honored Justice Stephen Breyer for his service to the country and mentioned his retirement from the United States Supreme Court.\n',
  'sources': '../../how_to/state_of_the_union.txt'}
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련 자료
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

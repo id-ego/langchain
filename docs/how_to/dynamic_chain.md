@@ -1,19 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/dynamic_chain/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/dynamic_chain.ipynb
+description: 체인 입력에 따라 런타임에 동적으로 체인을 구성하는 방법을 설명합니다. RunnableLambda의 유용한 속성을 활용합니다.
 ---
 
-# How to create a dynamic (self-constructing) chain
+# 동적(자기 생성) 체인 만드는 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following:
-- [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language)
-- [How to turn any function into a runnable](/docs/how_to/functions)
+이 가이드는 다음에 대한 이해를 가정합니다:
+- [LangChain 표현 언어(LCEL)](/docs/concepts/#langchain-expression-language)
+- [모든 함수를 실행 가능하게 만드는 방법](/docs/how_to/functions)
 
 :::
 
-Sometimes we want to construct parts of a chain at runtime, depending on the chain inputs ([routing](/docs/how_to/routing/) is the most common example of this). We can create dynamic chains like this using a very useful property of RunnableLambda's, which is that if a RunnableLambda returns a Runnable, that Runnable is itself invoked. Let's see an example.
+때때로 우리는 체인 입력에 따라 런타임에 체인의 일부를 구성하고 싶습니다([라우팅](/docs/how_to/routing/)이 가장 일반적인 예입니다). 우리는 RunnableLambda의 매우 유용한 속성을 사용하여 이렇게 동적 체인을 만들 수 있습니다. 즉, RunnableLambda가 Runnable을 반환하면, 그 Runnable이 자체적으로 호출됩니다. 예를 들어 보겠습니다.
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -29,6 +29,7 @@ from langchain_anthropic import ChatAnthropic
 
 llm = ChatAnthropic(model="claude-3-sonnet-20240229")
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to create a dynamic (self-constructing) chain"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to create a dynamic (self-constructing) chain"}, {"imported": "Runnable", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html", "title": "How to create a dynamic (self-constructing) chain"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to create a dynamic (self-constructing) chain"}, {"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to create a dynamic (self-constructing) chain"}]-->
@@ -90,15 +91,17 @@ full_chain.invoke(
 )
 ```
 
+
 ```output
 "According to the context provided, Egypt's population in 2024 is estimated to be about 111 million."
 ```
 
-The key here is that `contextualize_if_needed` returns another Runnable and not an actual output. This returned Runnable is itself run when the full chain is executed.
 
-Looking at the trace we can see that, since we passed in chat_history, we executed the contextualize_question chain as part of the full chain: https://smith.langchain.com/public/9e0ae34c-4082-4f3f-beed-34a2a2f4c991/r
+여기서 핵심은 `contextualize_if_needed`가 실제 출력이 아닌 또 다른 Runnable을 반환한다는 것입니다. 이 반환된 Runnable은 전체 체인이 실행될 때 자체적으로 실행됩니다.
 
-Note that the streaming, batching, etc. capabilities of the returned Runnable are all preserved
+추적을 살펴보면, 우리가 chat_history를 전달했기 때문에 전체 체인의 일부로 contextualize_question 체인을 실행했음을 알 수 있습니다: https://smith.langchain.com/public/9e0ae34c-4082-4f3f-beed-34a2a2f4c991/r
+
+반환된 Runnable의 스트리밍, 배치 처리 등의 기능이 모두 보존된다는 점에 유의하세요.
 
 ```python
 for chunk in contextualize_if_needed.stream(
@@ -112,6 +115,7 @@ for chunk in contextualize_if_needed.stream(
 ):
     print(chunk)
 ```
+
 ```output
 What
  is

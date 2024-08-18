@@ -1,13 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/lcel_cheatsheet/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/lcel_cheatsheet.ipynb
+description: 이 문서는 LangChain 표현 언어(LCEL)의 주요 원칙을 간략하게 정리한 참고 자료입니다. 고급 사용법은 추가 가이드를
+  참조하세요.
 ---
 
-# LangChain Expression Language Cheatsheet
+# LangChain 표현 언어 요약
 
-This is a quick reference for all the most important LCEL primitives. For more advanced usage see the [LCEL how-to guides](/docs/how_to/#langchain-expression-language-lcel) and the [full API reference](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html).
+이 문서는 가장 중요한 LCEL 원시 요소에 대한 빠른 참조입니다. 더 고급 사용법은 [LCEL 사용 안내서](/docs/how_to/#langchain-expression-language-lcel)와 [전체 API 참조](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html)를 참조하세요.
 
-### Invoke a runnable
+### 실행 가능 객체 호출
 #### [Runnable.invoke()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.invoke) / [Runnable.ainvoke()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.ainvoke)
 
 ```python
@@ -21,11 +22,13 @@ runnable.invoke(5)
 # await runnable.ainvoke(5)
 ```
 
+
 ```output
 '5'
 ```
 
-### Batch a runnable
+
+### 실행 가능 객체 배치
 #### [Runnable.batch()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.batch) / [Runnable.abatch()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.abatch)
 
 ```python
@@ -39,11 +42,13 @@ runnable.batch([7, 8, 9])
 # await runnable.abatch([7, 8, 9])
 ```
 
+
 ```output
 ['7', '8', '9']
 ```
 
-### Stream a runnable
+
+### 실행 가능 객체 스트리밍
 #### [Runnable.stream()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.stream) / [Runnable.astream()](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream)
 
 ```python
@@ -65,6 +70,7 @@ for chunk in runnable.stream(range(5)):
 # async for chunk in await runnable.astream(range(5)):
 #     print(chunk)
 ```
+
 ```output
 0
 1
@@ -72,8 +78,10 @@ for chunk in runnable.stream(range(5)):
 3
 4
 ```
-### Compose runnables
-#### Pipe operator `|`
+
+
+### 실행 가능 객체 조합
+#### 파이프 연산자 `|`
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -87,11 +95,13 @@ chain = runnable1 | runnable2
 chain.invoke(2)
 ```
 
+
 ```output
 [{'foo': 2}, {'foo': 2}]
 ```
 
-### Invoke runnables in parallel
+
+### 실행 가능 객체를 병렬로 호출
 #### [RunnableParallel](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html)
 
 ```python
@@ -106,11 +116,13 @@ chain = RunnableParallel(first=runnable1, second=runnable2)
 chain.invoke(2)
 ```
 
+
 ```output
 {'first': {'foo': 2}, 'second': [2, 2]}
 ```
 
-### Turn any function into a runnable
+
+### 모든 함수를 실행 가능 객체로 변환
 #### [RunnableLambda](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html)
 
 ```python
@@ -126,11 +138,13 @@ runnable = RunnableLambda(func)
 runnable.invoke(2)
 ```
 
+
 ```output
 7
 ```
 
-### Merge input and output dicts
+
+### 입력 및 출력 딕셔너리 병합
 #### [RunnablePassthrough.assign](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html)
 
 ```python
@@ -144,11 +158,13 @@ chain = RunnablePassthrough.assign(bar=runnable1)
 chain.invoke({"foo": 10})
 ```
 
+
 ```output
 {'foo': 10, 'bar': 17}
 ```
 
-### Include input dict in output dict
+
+### 출력 딕셔너리에 입력 딕셔너리 포함
 #### [RunnablePassthrough](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html)
 
 ```python
@@ -166,11 +182,13 @@ chain = RunnableParallel(bar=runnable1, baz=RunnablePassthrough())
 chain.invoke({"foo": 10})
 ```
 
+
 ```output
 {'bar': 17, 'baz': {'foo': 10}}
 ```
 
-### Add default invocation args
+
+### 기본 호출 인수 추가
 #### [Runnable.bind](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.bind)
 
 ```python
@@ -192,11 +210,13 @@ bound_runnable1 = runnable1.bind(other_arg="bye")
 bound_runnable1.invoke({"bar": "hello"})
 ```
 
+
 ```output
 {'bar': 'hello', 'foo': 'bye'}
 ```
 
-### Add fallbacks
+
+### 폴백 추가
 #### [Runnable.with_fallbacks](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_fallbacks)
 
 ```python
@@ -211,11 +231,13 @@ chain = runnable1.with_fallbacks([runnable2])
 chain.invoke(5)
 ```
 
+
 ```output
 '5foo'
 ```
 
-### Add retries
+
+### 재시도 추가
 #### [Runnable.with_retry](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_retry)
 
 ```python
@@ -236,16 +258,19 @@ chain = RunnableLambda(func).with_retry(stop_after_attempt=2)
 
 chain.invoke(2)
 ```
+
 ```output
 attempt with counter=0
 attempt with counter=1
 ```
 
+
 ```output
 2.0
 ```
 
-### Configure runnable execution
+
+### 실행 가능 객체 실행 구성
 #### [RunnableConfig](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html)
 
 ```python
@@ -261,11 +286,13 @@ chain = RunnableParallel(first=runnable1, second=runnable2, third=runnable3)
 chain.invoke(7, config={"max_concurrency": 2})
 ```
 
+
 ```output
 {'first': {'foo': 7}, 'second': [7, 7], 'third': '7'}
 ```
 
-### Add default config to runnable
+
+### 실행 가능 객체에 기본 구성 추가
 #### [Runnable.with_config](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_config)
 
 ```python
@@ -282,11 +309,13 @@ configured_chain = chain.with_config(max_concurrency=2)
 chain.invoke(7)
 ```
 
+
 ```output
 {'first': {'foo': 7}, 'second': [7, 7], 'third': '7'}
 ```
 
-### Make runnable attributes configurable
+
+### 실행 가능 객체 속성을 구성 가능하게 만들기
 #### [Runnable.with_configurable_fields](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableSerializable.html#langchain_core.runnables.base.RunnableSerializable.configurable_fields)
 
 ```python
@@ -322,19 +351,23 @@ configurable_runnable1.invoke(
 )
 ```
 
+
 ```output
 {'not bar': 3}
 ```
+
 
 ```python
 configurable_runnable1.invoke({"foo": 10})
 ```
 
+
 ```output
 {'bar': 3}
 ```
 
-### Make chain components configurable
+
+### 체인 구성 요소를 구성 가능하게 만들기
 #### [Runnable.with_configurable_alternatives](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableSerializable.html#langchain_core.runnables.base.RunnableSerializable.configurable_alternatives)
 
 ```python
@@ -374,19 +407,23 @@ chain = runnable1 | configurable_runnable
 chain.invoke(7, config={"configurable": {"second_step": "string"}})
 ```
 
+
 ```output
 "{'foo': 7}"
 ```
+
 
 ```python
 chain.invoke(7)
 ```
 
+
 ```output
 [{'foo': 7}]
 ```
 
-### Build a chain dynamically based on input
+
+### 입력에 따라 동적으로 체인 구축
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -400,19 +437,23 @@ chain = RunnableLambda(lambda x: runnable1 if x > 6 else runnable2)
 chain.invoke(7)
 ```
 
+
 ```output
 {'foo': 7}
 ```
+
 
 ```python
 chain.invoke(5)
 ```
 
+
 ```output
 [5, 5]
 ```
 
-### Generate a stream of events
+
+### 이벤트 스트림 생성
 #### [Runnable.astream_events](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream_events)
 
 ```python
@@ -422,6 +463,7 @@ import nest_asyncio
 
 nest_asyncio.apply()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "LangChain Expression Language Cheatsheet"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "LangChain Expression Language Cheatsheet"}]-->
@@ -442,6 +484,7 @@ chain = runnable1 | runnable2
 async for event in chain.astream_events("bar", version="v2"):
     print(f"event={event['event']} | name={event['name']} | data={event['data']}")
 ```
+
 ```output
 event=on_chain_start | name=RunnableSequence | data={'input': 'bar'}
 event=on_chain_start | name=first | data={}
@@ -461,7 +504,9 @@ event=on_chain_stream | name=RunnableSequence | data={'chunk': {'foo': 'bar'}}
 event=on_chain_end | name=second | data={'output': {'foo': 'bar'}, 'input': {'foo': 'bar'}}
 event=on_chain_end | name=RunnableSequence | data={'output': {'foo': 'bar'}}
 ```
-### Yield batched outputs as they complete
+
+
+### 완료되는 대로 배치된 출력 반환
 #### [Runnable.batch_as_completed](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.batch_as_completed) / [Runnable.abatch_as_completed](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.abatch_as_completed)
 
 ```python
@@ -479,13 +524,17 @@ for idx, result in runnable1.batch_as_completed([5, 1]):
 # async for idx, result in runnable1.abatch_as_completed([5, 1]):
 #     print(idx, result)
 ```
+
+
 ```output
 slept 1
 1 None
 slept 5
 0 None
 ```
-### Return subset of output dict
+
+
+### 출력 딕셔너리의 하위 집합 반환
 #### [Runnable.pick](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.pick)
 
 ```python
@@ -498,11 +547,13 @@ chain = RunnablePassthrough.assign(foo=runnable1).pick(["foo", "bar"])
 chain.invoke({"bar": "hi", "baz": 2})
 ```
 
+
 ```output
 {'foo': 7, 'bar': 'hi'}
 ```
 
-### Declaratively make a batched version of a runnable
+
+### 실행 가능 객체의 배치 버전을 선언적으로 만들기
 #### [Runnable.map](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.map)
 
 ```python
@@ -517,11 +568,13 @@ chain = runnable1 | runnable2.map()
 chain.invoke(3)
 ```
 
+
 ```output
 [5, 6, 7]
 ```
 
-### Get a graph representation of a runnable
+
+### 실행 가능 객체의 그래프 표현 가져오기
 #### [Runnable.get_graph](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.get_graph)
 
 ```python
@@ -536,6 +589,8 @@ chain = runnable1 | RunnableParallel(second=runnable2, third=runnable3)
 
 chain.get_graph().print_ascii()
 ```
+
+
 ```output
                              +-------------+                              
                              | LambdaInput |                              
@@ -565,7 +620,9 @@ chain.get_graph().print_ascii()
                     | Parallel<second,third>Output |                      
                     +------------------------------+
 ```
-### Get all prompts in a chain
+
+
+### 체인의 모든 프롬프트 가져오기
 #### [Runnable.get_prompts](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.get_prompts)
 
 ```python
@@ -592,6 +649,8 @@ for i, prompt in enumerate(chain.get_prompts()):
     print(prompt.pretty_repr())
     print("\n" * 3)
 ```
+
+
 ```output
 **prompt i=0**
 
@@ -624,7 +683,9 @@ really good ai
 
 {input2}
 ```
-### Add lifecycle listeners
+
+
+### 생명 주기 리스너 추가
 #### [Runnable.with_listeners](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_listeners)
 
 ```python
@@ -647,6 +708,8 @@ runnable1 = RunnableLambda(lambda x: time.sleep(x))
 chain = runnable1.with_listeners(on_start=on_start, on_end=on_end)
 chain.invoke(2)
 ```
+
+
 ```output
 start_time: 2024-05-17 23:04:00.951065+00:00
 end_time: 2024-05-17 23:04:02.958765+00:00

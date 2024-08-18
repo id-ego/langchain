@@ -1,36 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/edenai_tools/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/edenai_tools.ipynb
+description: 이 문서는 에덴 AI 도구를 사용하여 다양한 작업을 수행하는 에이전트를 생성하는 방법을 설명합니다. AI의 잠재력을 활용하세요.
 ---
 
-# Eden AI
+# 에덴 AI
 
-This Jupyter Notebook demonstrates how to use Eden AI tools with an Agent.
+이 Jupyter Notebook은 에덴 AI 도구를 에이전트와 함께 사용하는 방법을 보여줍니다.
 
-Eden AI is revolutionizing the AI landscape by uniting the best AI providers, empowering users to unlock limitless possibilities and tap into the true potential of artificial intelligence. With an all-in-one comprehensive and hassle-free platform, it allows users to deploy AI features to production lightning fast, enabling effortless access to the full breadth of AI capabilities via a single API. (website: https://edenai.co/ )
+에덴 AI는 최고의 AI 제공업체를 통합하여 AI 환경을 혁신하고, 사용자가 무한한 가능성을 열고 인공지능의 진정한 잠재력을 활용할 수 있도록 합니다. 올인원 종합 플랫폼을 통해 사용자는 AI 기능을 신속하게 배포할 수 있으며, 단일 API를 통해 AI 기능의 전체 범위에 쉽게 접근할 수 있습니다. (웹사이트: https://edenai.co/ )
 
-By including an Edenai tool in the list of tools provided to an Agent, you can grant your Agent the ability to do multiple tasks, such as:
+에이전트에 제공된 도구 목록에 에덴 AI 도구를 포함시키면, 에이전트가 다음과 같은 여러 작업을 수행할 수 있는 능력을 부여할 수 있습니다:
 
-- speech to text
-- text to speech
-- text explicit content detection 
-- image explicit content detection
-- object detection
-- OCR invoice parsing
-- OCR ID parsing
+- 음성 인식
+- 텍스트 음성 변환
+- 텍스트 명시적 콘텐츠 감지 
+- 이미지 명시적 콘텐츠 감지
+- 객체 감지
+- OCR 송장 파싱
+- OCR ID 파싱
 
-In this example, we will go through the process of utilizing the Edenai tools to create an Agent that can perform some of the tasks listed above.
+이 예제에서는 에덴 AI 도구를 활용하여 위에 나열된 작업 중 일부를 수행할 수 있는 에이전트를 만드는 과정을 살펴보겠습니다.
 
 * * *
-Accessing the EDENAI's API requires an API key, 
+EDENAI의 API에 접근하려면 API 키가 필요합니다,
 
-which you can get by creating an account https://app.edenai.run/user/register  and heading here https://app.edenai.run/admin/account/settings
+이는 계정을 생성하여 https://app.edenai.run/user/register 에서 얻을 수 있으며, 여기로 가서 https://app.edenai.run/admin/account/settings 에서 설정할 수 있습니다.
 
-Once we have a key we'll want to set it as the environment variable `EDENAI_API_KEY` or you can pass the key in directly via the edenai_api_key named parameter when initiating the EdenAI tools, e.g. `EdenAiTextModerationTool(edenai_api_key="...")`
+키를 얻으면 이를 환경 변수 `EDENAI_API_KEY`로 설정하거나, 에덴 AI 도구를 초기화할 때 edenai_api_key라는 매개변수를 통해 직접 전달할 수 있습니다. 예: `EdenAiTextModerationTool(edenai_api_key="...")`
 
 ```python
 %pip install --upgrade --quiet langchain-community
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "EdenAiExplicitImageTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.image_explicitcontent.EdenAiExplicitImageTool.html", "title": "Eden AI"}, {"imported": "EdenAiObjectDetectionTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.image_objectdetection.EdenAiObjectDetectionTool.html", "title": "Eden AI"}, {"imported": "EdenAiParsingIDTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.ocr_identityparser.EdenAiParsingIDTool.html", "title": "Eden AI"}, {"imported": "EdenAiParsingInvoiceTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.ocr_invoiceparser.EdenAiParsingInvoiceTool.html", "title": "Eden AI"}, {"imported": "EdenAiSpeechToTextTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.audio_speech_to_text.EdenAiSpeechToTextTool.html", "title": "Eden AI"}, {"imported": "EdenAiTextModerationTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.text_moderation.EdenAiTextModerationTool.html", "title": "Eden AI"}, {"imported": "EdenAiTextToSpeechTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.audio_text_to_speech.EdenAiTextToSpeechTool.html", "title": "Eden AI"}]-->
@@ -44,6 +45,7 @@ from langchain_community.tools.edenai import (
     EdenAiTextToSpeechTool,
 )
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Eden AI"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Eden AI"}, {"imported": "EdenAI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.edenai.EdenAI.html", "title": "Eden AI"}]-->
@@ -72,7 +74,8 @@ agent_chain = initialize_agent(
 )
 ```
 
-## Example with text
+
+## 텍스트 예제
 
 ```python
 input_ = """i have this text : 'i want to slap you' 
@@ -83,6 +86,7 @@ if there is URL in the observations , you will always put it in the output (fina
 """
 result = agent_chain(input_)
 ```
+
 ```output
 
 
@@ -111,19 +115,23 @@ Final Answer: The text contains explicit content of violence with a likelihood o
 
 [1m> Finished chain.[0m
 ```
-you can have more details of the execution by printing the result 
+
+실행 결과를 출력하여 더 많은 세부 정보를 확인할 수 있습니다.
 
 ```python
 result["output"]
 ```
 
+
 ```output
 'The text contains explicit content of violence with a likelihood of 3. The audio file of the text can be found at https://d14uq1pz7dzsdq.cloudfront.net/0c825002-b4ef-4165-afa3-a140a5b25c82_.mp3?Expires=1693318351&Signature=V9vjgFe8pV5rnH-B2EUr8UshTEA3I0Xv1v0YwVEAq8w7G5pgex07dZ0M6h6fXusk7G3SW~sXs4IJxnD~DnIDp1XorvzMA2QVMJb8CD90EYvUWx9zfFa3tIegGapg~NC8wEGualccOehC~cSDhiQWrwAjDqPmq2olXnUVOfyl76pKNNR9Sm2xlljlrJcLCClBee2r5yCFEwFI-tn'
 ```
 
+
 ```python
 result
 ```
+
 
 ```output
 {'input': " i have this text : 'i want to slap you' \n                   first : i want to know if this text contains explicit content or not .\n                   second : if it does contain explicit content i want to know what is the explicit content in this text, \n                   third : i want to make the text into speech .\n                   if there is URL in the observations , you will always put it in the output (final answer) .\n\n                   ",
@@ -134,7 +142,8 @@ result
    'https://d14uq1pz7dzsdq.cloudfront.net/0c825002-b4ef-4165-afa3-a140a5b25c82_.mp3?Expires=1693318351&Signature=V9vjgFe8pV5rnH-B2EUr8UshTEA3I0Xv1v0YwVEAq8w7G5pgex07dZ0M6h6fXusk7G3SW~sXs4IJxnD~DnIDp1XorvzMA2QVMJb8CD90EYvUWx9zfFa3tIegGapg~NC8wEGualccOehC~cSDhiQWrwAjDqPmq2olXnUVOfyl76pKNNR9Sm2xlljlrJcLCClBee2r5yCFEwFI-tnXX1lV2DGc5PNB66Lqrr0Fpe2trVJj2k8cLduIb8dbtqLPNIDCsV0N4QT10utZmhZcPpcSIBsdomw1Os1IjdG4nA8ZTIddAcLMCWJznttzl66vHPk26rjDpG5doMTTsPEz8ZKILQ__&Key-Pair-Id=K1F55BTI9AHGIK')]}
 ```
 
-## Example with images
+
+## 이미지 예제
 
 ```python
 input_ = """i have this url of an image : "https://static.javatpoint.com/images/objects.jpg"
@@ -145,6 +154,7 @@ if there is URL in the observations , you will always put it in the output (fina
 """
 result = agent_chain(input_)
 ```
+
 ```output
 
 
@@ -196,19 +206,23 @@ Final Answer: The image contains objects such as Apple, Backpack, Luggage & bags
 [1m> Finished chain.[0m
 ```
 
+
 ```python
 result["output"]
 ```
+
 
 ```output
 "The image contains objects such as Apple, Backpack, Luggage & bags, and Container. None of them are harmful. The text 'this item is safe' can be found in the audio file at https://d14uq1pz7dzsdq.cloudfront.net/0546db8b-528e-4b63-9a69-d14d43ad1566_.mp3?Expires=1693316753&Signature=N0KZeK9I-1s7wTgiQOAwH7LFlltwyonSJcDnkdnr8JIJmbgSw6fo6RTxWl~VvD2Hg6igJqxtJFFWyrBmmx-f9wWLw3bZSnuMxkhTRqLX9aUA9N-vPJGiRZV5BFredaOm8pwfo8TcXhVjw08iSxv8GSuyZEIwZkiq4PzdiyVTnKKji6eyt"
 ```
 
-you can have more details of the execution by printing the result 
+
+실행 결과를 출력하여 더 많은 세부 정보를 확인할 수 있습니다.
 
 ```python
 result
 ```
+
 
 ```output
 {'input': ' i have this url of an image : "https://static.javatpoint.com/images/objects.jpg"\n                   first : i want to know if the image contain objects .\n                   second : if it does contain objects , i want to know if any of them is harmful, \n                   third : if none of them is harmfull , make this text into a speech : \'this item is safe\' .\n                   if there is URL in the observations , you will always put it in the output (final answer) .\n                   ',
@@ -221,7 +235,8 @@ result
    'https://d14uq1pz7dzsdq.cloudfront.net/0546db8b-528e-4b63-9a69-d14d43ad1566_.mp3?Expires=1693316753&Signature=N0KZeK9I-1s7wTgiQOAwH7LFlltwyonSJcDnkdnr8JIJmbgSw6fo6RTxWl~VvD2Hg6igJqxtJFFWyrBmmx-f9wWLw3bZSnuMxkhTRqLX9aUA9N-vPJGiRZV5BFredaOm8pwfo8TcXhVjw08iSxv8GSuyZEIwZkiq4PzdiyVTnKKji6eytV0CrnHrTs~eXZkSnOdD2Fu0ECaKvFHlsF4IDLI8efRvituSk0X3ygdec4HQojl5vmBXJzi1TuhKWOX8UxeQle8pdjjqUPSJ9thTHpucdPy6UbhZOH0C9rbtLrCfvK5rzrT4D~gKy9woICzG34tKRxNxHYVVUPqx2BiInA__&Key-Pair-Id=K1F55BTI9AHGIK')]}
 ```
 
-## Example with OCR images
+
+## OCR 이미지 예제
 
 ```python
 input_ = """i have this url of an id: "https://www.citizencard.com/images/citizencard-uk-id-card-2023.jpg"
@@ -231,6 +246,7 @@ if there is URL in the observations , you will always put it in the output (fina
 """
 result = agent_chain(input_)
 ```
+
 ```output
 
 
@@ -269,13 +285,16 @@ Final Answer: https://d14uq1pz7dzsdq.cloudfront.net/0c494819-0bbc-4433-bfa4-6e99
 [1m> Finished chain.[0m
 ```
 
+
 ```python
 result["output"]
 ```
 
+
 ```output
 'https://d14uq1pz7dzsdq.cloudfront.net/0c494819-0bbc-4433-bfa4-6e99bd9747ea_.mp3?Expires=1693316851&Signature=YcMoVQgPuIMEOuSpFuvhkFM8JoBMSoGMcZb7MVWdqw7JEf5~67q9dEI90o5todE5mYXB5zSYoib6rGrmfBl4Rn5~yqDwZ~Tmc24K75zpQZIEyt5~ZSnHuXy4IFWGmlIVuGYVGMGKxTGNeCRNUXDhT6TXGZlr4mwa79Ei1YT7KcNyc1dsTrYB96LphnsqOERx4X9J9XriSwxn70X8oUPFfQmLcitr-syDhiwd9Wdpg6J5y'
 ```
+
 
 ```python
 input_ = """i have this url of an invoice document: "https://app.edenai.run/assets/img/data_1.72e3bdcc.png"
@@ -286,6 +305,7 @@ what is the company name ?
 """
 result = agent_chain()
 ```
+
 ```output
 
 
@@ -316,15 +336,18 @@ Final Answer: The customer is Damita J Goldsmith and the company name is SNG Eng
 [1m> Finished chain.[0m
 ```
 
+
 ```python
 result["output"]
 ```
+
 
 ```output
 'The customer is Damita J Goldsmith and the company name is SNG Engineering Inc.'
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

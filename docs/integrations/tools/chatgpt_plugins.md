@@ -1,31 +1,33 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/chatgpt_plugins/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/chatgpt_plugins.ipynb
+description: ChatGPT 플러그인을 LangChain 추상화 내에서 사용하는 방법을 설명합니다. 인증이 필요 없는 플러그인에만 해당됩니다.
 sidebar_class_name: hidden
 ---
 
-# ChatGPT Plugins
+# ChatGPT 플러그인
 
-:::warning Deprecated
+:::warning 사용 중단
 
-OpenAI has [deprecated plugins](https://openai.com/index/chatgpt-plugins/).
+OpenAI는 [플러그인](https://openai.com/index/chatgpt-plugins/)을 사용 중단했습니다.
 
 :::
 
-This example shows how to use ChatGPT Plugins within LangChain abstractions.
+이 예제는 LangChain 추상화 내에서 ChatGPT 플러그인을 사용하는 방법을 보여줍니다.
 
-Note 1: This currently only works for plugins with no auth.
+참고 1: 현재 인증이 없는 플러그인에 대해서만 작동합니다.
 
-Note 2: There are almost certainly other ways to do this, this is just a first pass. If you have better ideas, please open a PR!
+참고 2: 이를 수행하는 다른 방법이 거의 확실히 존재합니다. 이것은 단지 첫 번째 시도일 뿐입니다. 더 나은 아이디어가 있다면 PR을 열어주세요!
 
 ```python
 %pip install --upgrade --quiet langchain-community
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "AIPluginTool", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.plugin.AIPluginTool.html", "title": "ChatGPT Plugins"}]-->
 from langchain_community.tools import AIPluginTool
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "ChatGPT Plugins"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "ChatGPT Plugins"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "ChatGPT Plugins"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "ChatGPT Plugins"}]-->
@@ -33,9 +35,11 @@ from langchain.agents import AgentType, initialize_agent, load_tools
 from langchain_openai import ChatOpenAI
 ```
 
+
 ```python
 tool = AIPluginTool.from_plugin_url("https://www.klarna.com/.well-known/ai-plugin.json")
 ```
+
 
 ```python
 llm = ChatOpenAI(temperature=0)
@@ -47,6 +51,7 @@ agent_chain = initialize_agent(
 )
 agent_chain.run("what t shirts are available in klarna?")
 ```
+
 ```output
 
 
@@ -67,11 +72,13 @@ Final Answer: The available t shirts in Klarna are Lacoste Men's Pack of Plain T
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 "The available t shirts in Klarna are Lacoste Men's Pack of Plain T-Shirts, Hanes Men's Ultimate 6pk. Crewneck T-Shirts, Nike Boy's Jordan Stretch T-shirts, Polo Classic Fit Cotton V-Neck T-Shirts 3-Pack, and adidas Comfort T-shirts Men's 3-pack."
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

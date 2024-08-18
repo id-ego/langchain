@@ -1,45 +1,47 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/oracle/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/oracle.ipynb
+description: Oracle AI 벡터 검색은 의미 기반 쿼리를 통해 비즈니스 데이터와 비구조적 데이터를 효과적으로 결합하여 데이터 단편화를
+  해소합니다.
 ---
 
-# Oracle AI Vector Search: Vector Store
+# 오라클 AI 벡터 검색: 벡터 저장소
 
-Oracle AI Vector Search is designed for Artificial Intelligence (AI) workloads that allows you to query data based on semantics, rather than keywords.
-One of the biggest benefits of Oracle AI Vector Search is that semantic search on unstructured data can be combined with relational search on business data in one single system.
-This is not only powerful but also significantly more effective because you don't need to add a specialized vector database, eliminating the pain of data fragmentation between multiple systems.
+오라클 AI 벡터 검색은 키워드가 아닌 의미에 기반하여 데이터를 쿼리할 수 있도록 설계된 인공지능(AI) 작업 부하를 위한 시스템입니다.  
+오라클 AI 벡터 검색의 가장 큰 장점 중 하나는 비구조적 데이터에 대한 의미 검색을 비즈니스 데이터에 대한 관계형 검색과 하나의 시스템에서 결합할 수 있다는 것입니다.  
+이는 강력할 뿐만 아니라 여러 시스템 간의 데이터 단편화 문제를 없애주므로 훨씬 더 효과적입니다.  
 
-In addition, your vectors can benefit from all of Oracle Database’s most powerful features, like the following:
+또한, 귀하의 벡터는 다음과 같은 오라클 데이터베이스의 가장 강력한 기능을 활용할 수 있습니다:
 
-* [Partitioning Support](https://www.oracle.com/database/technologies/partitioning.html)
-* [Real Application Clusters scalability](https://www.oracle.com/database/real-application-clusters/)
-* [Exadata smart scans](https://www.oracle.com/database/technologies/exadata/software/smartscan/)
-* [Shard processing across geographically distributed databases](https://www.oracle.com/database/distributed-database/)
-* [Transactions](https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/transactions.html)
-* [Parallel SQL](https://docs.oracle.com/en/database/oracle/oracle-database/21/vldbg/parallel-exec-intro.html#GUID-D28717E4-0F77-44F5-BB4E-234C31D4E4BA)
-* [Disaster recovery](https://www.oracle.com/database/data-guard/)
-* [Security](https://www.oracle.com/security/database-security/)
-* [Oracle Machine Learning](https://www.oracle.com/artificial-intelligence/database-machine-learning/)
-* [Oracle Graph Database](https://www.oracle.com/database/integrated-graph-database/)
-* [Oracle Spatial and Graph](https://www.oracle.com/database/spatial/)
-* [Oracle Blockchain](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_blockchain_table.html#GUID-B469E277-978E-4378-A8C1-26D3FF96C9A6)
+* [파티셔닝 지원](https://www.oracle.com/database/technologies/partitioning.html)
+* [실제 애플리케이션 클러스터 확장성](https://www.oracle.com/database/real-application-clusters/)
+* [엑사데이터 스마트 스캔](https://www.oracle.com/database/technologies/exadata/software/smartscan/)
+* [지리적으로 분산된 데이터베이스에서의 샤드 처리](https://www.oracle.com/database/distributed-database/)
+* [트랜잭션](https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/transactions.html)
+* [병렬 SQL](https://docs.oracle.com/en/database/oracle/oracle-database/21/vldbg/parallel-exec-intro.html#GUID-D28717E4-0F77-44F5-BB4E-234C31D4E4BA)
+* [재해 복구](https://www.oracle.com/database/data-guard/)
+* [보안](https://www.oracle.com/security/database-security/)
+* [오라클 머신 러닝](https://www.oracle.com/artificial-intelligence/database-machine-learning/)
+* [오라클 그래프 데이터베이스](https://www.oracle.com/database/integrated-graph-database/)
+* [오라클 공간 및 그래프](https://www.oracle.com/database/spatial/)
+* [오라클 블록체인](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_blockchain_table.html#GUID-B469E277-978E-4378-A8C1-26D3FF96C9A6)
 * [JSON](https://docs.oracle.com/en/database/oracle/oracle-database/23/adjsn/json-in-oracle-database.html)
 
-If you are just starting with Oracle Database, consider exploring the [free Oracle 23 AI](https://www.oracle.com/database/free/#resources) which provides a great introduction to setting up your database environment. While working with the database, it is often advisable to avoid using the system user by default; instead, you can create your own user for enhanced security and customization. For detailed steps on user creation, refer to our [end-to-end guide](https://github.com/langchain-ai/langchain/blob/master/cookbook/oracleai_demo.ipynb) which also shows how to set up a user in Oracle. Additionally, understanding user privileges is crucial for managing database security effectively. You can learn more about this topic in the official [Oracle guide](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D) on administering user accounts and security.
+오라클 데이터베이스를 처음 시작하는 경우, 데이터베이스 환경 설정에 대한 훌륭한 소개를 제공하는 [무료 오라클 23 AI](https://www.oracle.com/database/free/#resources)를 탐색하는 것을 고려해 보십시오. 데이터베이스 작업 시 기본적으로 시스템 사용자를 사용하는 것을 피하는 것이 좋습니다. 대신 보안 및 사용자 정의를 강화하기 위해 자신의 사용자를 생성할 수 있습니다. 사용자 생성에 대한 자세한 단계는 [종합 가이드](https://github.com/langchain-ai/langchain/blob/master/cookbook/oracleai_demo.ipynb)를 참조하십시오. 이 가이드에서는 오라클에서 사용자를 설정하는 방법도 보여줍니다. 또한, 사용자 권한을 이해하는 것은 데이터베이스 보안을 효과적으로 관리하는 데 중요합니다. 이 주제에 대한 자세한 내용은 사용자 계정 및 보안 관리를 위한 공식 [오라클 가이드](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D)를 통해 알아볼 수 있습니다.
 
-### Prerequisites for using Langchain with Oracle AI Vector Search
+### 오라클 AI 벡터 검색을 위한 Langchain 사용 전제 조건
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-Please install Oracle Python Client driver to use Langchain with Oracle AI Vector Search. 
+오라클 AI 벡터 검색과 함께 Langchain을 사용하려면 오라클 파이썬 클라이언트 드라이버를 설치하십시오. 
 
 ```python
 # pip install oracledb
 ```
 
-### Connect to Oracle AI Vector Search
 
-The following sample code will show how to connect to Oracle Database. By default, python-oracledb runs in a ‘Thin’ mode which connects directly to Oracle Database. This mode does not need Oracle Client libraries. However, some additional functionality is available when python-oracledb uses them. Python-oracledb is said to be in ‘Thick’ mode when Oracle Client libraries are used. Both modes have comprehensive functionality supporting the Python Database API v2.0 Specification. See the following [guide](https://python-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html#featuresummary) that talks about features supported in each mode. You might want to switch to thick-mode if you are unable to use thin-mode.
+### 오라클 AI 벡터 검색에 연결하기
+
+다음 샘플 코드는 오라클 데이터베이스에 연결하는 방법을 보여줍니다. 기본적으로 python-oracledb는 오라클 데이터베이스에 직접 연결하는 'Thin' 모드로 실행됩니다. 이 모드는 오라클 클라이언트 라이브러리가 필요하지 않습니다. 그러나 python-oracledb가 이를 사용할 때 추가 기능이 제공됩니다. 오라클 클라이언트 라이브러리가 사용될 때 python-oracledb는 'Thick' 모드에 있다고 합니다. 두 모드 모두 Python 데이터베이스 API v2.0 사양을 지원하는 포괄적인 기능을 가지고 있습니다. 각 모드에서 지원되는 기능에 대한 [가이드](https://python-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html#featuresummary)를 참조하십시오. Thin 모드를 사용할 수 없는 경우 Thick 모드로 전환하는 것이 좋습니다.
 
 ```python
 import oracledb
@@ -55,7 +57,8 @@ except Exception as e:
     print("Connection failed!")
 ```
 
-### Import the required dependencies to use Oracle AI Vector Search
+
+### 오라클 AI 벡터 검색을 사용하기 위한 필수 종속성 가져오기
 
 ```python
 <!--IMPORTS:[{"imported": "OracleVS", "source": "langchain_community.vectorstores.oraclevs", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.oraclevs.OracleVS.html", "title": "Oracle AI Vector Search: Vector Store"}, {"imported": "DistanceStrategy", "source": "langchain_community.vectorstores.utils", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.utils.DistanceStrategy.html", "title": "Oracle AI Vector Search: Vector Store"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Oracle AI Vector Search: Vector Store"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Oracle AI Vector Search: Vector Store"}]-->
@@ -66,7 +69,8 @@ from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 ```
 
-### Load Documents
+
+### 문서 로드
 
 ```python
 # Define a list of documents (The examples below are 5 random documents from Oracle Concepts Manual )
@@ -95,6 +99,7 @@ documents_json_list = [
 ]
 ```
 
+
 ```python
 # Create Langchain Documents
 
@@ -106,15 +111,14 @@ for doc in documents_json_list:
     documents_langchain.append(doc_langchain)
 ```
 
-### Create Vector Stores with different distance metrics using AI Vector Search
 
-First we will create three vector stores each with different distance functions. Since we have not created indices in them yet, they will just create tables for now. Later we will use these vector stores to create HNSW indicies. To understand more about the different types of indices Oracle AI Vector Search supports, refer to the following [guide](https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/manage-different-categories-vector-indexes.html) .
+### AI 벡터 검색을 사용하여 다양한 거리 메트릭으로 벡터 저장소 생성
 
-You can manually connect to the Oracle Database and will see three tables :
-Documents_DOT, Documents_COSINE and Documents_EUCLIDEAN. 
+먼저 서로 다른 거리 함수로 세 개의 벡터 저장소를 생성합니다. 아직 인덱스를 생성하지 않았기 때문에 현재는 테이블만 생성됩니다. 나중에 이 벡터 저장소를 사용하여 HNSW 인덱스를 생성할 것입니다. 오라클 AI 벡터 검색이 지원하는 다양한 유형의 인덱스에 대해 더 알고 싶다면 다음 [가이드](https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/manage-different-categories-vector-indexes.html)를 참조하십시오.
 
-We will then create three additional tables Documents_DOT_IVF, Documents_COSINE_IVF and Documents_EUCLIDEAN_IVF which will be used
-to create IVF indicies on the tables instead of HNSW indices. 
+오라클 데이터베이스에 수동으로 연결하면 세 개의 테이블이 표시됩니다: Documents_DOT, Documents_COSINE 및 Documents_EUCLIDEAN.
+
+그런 다음 IVF 인덱스를 생성하는 데 사용될 Documents_DOT_IVF, Documents_COSINE_IVF 및 Documents_EUCLIDEAN_IVF라는 세 개의 추가 테이블을 생성합니다.
 
 ```python
 # Ingest documents into Oracle Vector Store using different distance strategies
@@ -171,7 +175,8 @@ vector_store_euclidean_ivf = OracleVS.from_documents(
 )
 ```
 
-### Demonstrating add and delete operations for texts, along with basic similarity search
+
+### 텍스트에 대한 추가 및 삭제 작업 시연, 기본 유사성 검색 포함
 
 ```python
 def manage_texts(vector_stores):
@@ -216,7 +221,8 @@ vector_store_list = [
 manage_texts(vector_store_list)
 ```
 
-### Demonstrating index creation with specific parameters for each distance strategy
+
+### 각 거리 전략에 대한 특정 매개변수로 인덱스 생성 시연
 
 ```python
 def create_search_indices(connection):
@@ -297,7 +303,8 @@ def create_search_indices(connection):
 create_search_indices(connection)
 ```
 
-### Demonstrate advanced searches on all six vector stores, with and without attribute filtering – with filtering, we only select the document id 101 and nothing else
+
+### 모든 여섯 개의 벡터 저장소에서 고급 검색 시연, 속성 필터링 유무에 따라 – 필터링을 통해 문서 ID 101만 선택하고 다른 것은 선택하지 않습니다.
 
 ```python
 # Conduct advanced searches after creating the indices
@@ -341,10 +348,11 @@ def conduct_advanced_searches(vector_stores):
 conduct_advanced_searches(vector_store_list)
 ```
 
-### End to End Demo
-Please refer to our complete demo guide [Oracle AI Vector Search End-to-End Demo Guide](https://github.com/langchain-ai/langchain/tree/master/cookbook/oracleai_demo.ipynb) to build an end to end RAG pipeline with the help of Oracle AI Vector Search.
 
-## Related
+### 종합 데모  
+오라클 AI 벡터 검색을 활용하여 종합 RAG 파이프라인을 구축하기 위한 전체 데모 가이드인 [오라클 AI 벡터 검색 종합 데모 가이드](https://github.com/langchain-ai/langchain/tree/master/cookbook/oracleai_demo.ipynb)를 참조하십시오.
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

@@ -1,27 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/zep_memory_cloud/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/zep_memory_cloud.ipynb
+description: Zep 클라우드는 AI 비서 앱을 위한 장기 메모리 서비스로, 대화 기록을 기억하고 개인화된 AI 경험을 제공합니다.
 ---
 
-# Zep Cloud Memory
-> Recall, understand, and extract data from chat histories. Power personalized AI experiences.
+# Zep 클라우드 메모리
+> 채팅 기록에서 데이터를 기억하고 이해하며 추출합니다. 개인화된 AI 경험을 강화합니다.
 
-> [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-while also reducing hallucinations, latency, and cost.
+> [Zep](https://www.getzep.com)은 AI 어시스턴트 앱을 위한 장기 메모리 서비스입니다.
+Zep을 사용하면 AI 어시스턴트가 과거 대화를 기억할 수 있는 능력을 제공할 수 있으며,
+환각, 지연 및 비용을 줄일 수 있습니다.
 
-> See [Zep Cloud Installation Guide](https://help.getzep.com/sdks) and more [Zep Cloud Langchain Examples](https://github.com/getzep/zep-python/tree/main/examples)
+> [Zep 클라우드 설치 가이드](https://help.getzep.com/sdks) 및 더 많은 [Zep 클라우드 Langchain 예제](https://github.com/getzep/zep-python/tree/main/examples)를 참조하세요.
 
-## Example
+## 예제
 
-This notebook demonstrates how to use [Zep](https://www.getzep.com/) as memory for your chatbot.
+이 노트북은 [Zep](https://www.getzep.com/)을 챗봇의 메모리로 사용하는 방법을 보여줍니다.
 
-We'll demonstrate:
+다음과 같은 내용을 시연할 것입니다:
 
-1. Adding conversation history to Zep.
-2. Running an agent and having message automatically added to the store.
-3. Viewing the enriched messages.
-4. Vector search over the conversation history.
+1. Zep에 대화 기록 추가하기.
+2. 에이전트를 실행하고 메시지를 자동으로 저장소에 추가하기.
+3. 풍부해진 메시지 보기.
+4. 대화 기록에 대한 벡터 검색.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Zep Cloud Memory"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Zep Cloud Memory"}, {"imported": "ZepCloudMemory", "source": "langchain_community.memory.zep_cloud_memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain_community.memory.zep_cloud_memory.ZepCloudMemory.html", "title": "Zep Cloud Memory"}, {"imported": "ZepCloudRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.zep_cloud.ZepCloudRetriever.html", "title": "Zep Cloud Memory"}, {"imported": "WikipediaAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wikipedia.WikipediaAPIWrapper.html", "title": "Zep Cloud Memory"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Zep Cloud Memory"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Zep Cloud Memory"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Zep Cloud Memory"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Zep Cloud Memory"}]-->
@@ -37,6 +37,7 @@ from langchain_openai import OpenAI
 
 session_id = str(uuid4())  # This is a unique identifier for the session
 ```
+
 
 ```output
 ---------------------------------------------------------------------------
@@ -237,6 +238,7 @@ File ~/job/zep-proprietary/venv/lib/python3.11/site-packages/pydantic/_internal/
 AttributeError: 'FieldInfo' object has no attribute 'deprecated'
 ```
 
+
 ```python
 # Provide your OpenAI key
 import getpass
@@ -244,13 +246,15 @@ import getpass
 openai_key = getpass.getpass()
 ```
 
+
 ```python
 # Provide your Zep API key. See https://help.getzep.com/projects#api-keys
 
 zep_api_key = getpass.getpass()
 ```
 
-### Initialize the Zep Chat Message History Class and initialize the Agent
+
+### Zep 채팅 메시지 기록 클래스 초기화 및 에이전트 초기화
 
 ```python
 search = WikipediaAPIWrapper()
@@ -284,7 +288,8 @@ agent_chain = initialize_agent(
 )
 ```
 
-### Add some history data
+
+### 일부 기록 데이터 추가
 
 ```python
 # Preload some messages into the memory. The default message window is 12 messages. We want to push beyond this to demonstrate auto-summarization.
@@ -359,15 +364,17 @@ for msg in test_history:
     )
 ```
 
-### Run the agent
 
-Doing so will automatically add the input and response to the Zep memory.
+### 에이전트 실행
+
+이렇게 하면 입력 및 응답이 Zep 메모리에 자동으로 추가됩니다.
 
 ```python
 agent_chain.invoke(
     input="What is the book's relevance to the challenges facing contemporary society?",
 )
 ```
+
 ```output
 
 
@@ -378,17 +385,19 @@ AI: Parable of the Sower is highly relevant to contemporary society as it explor
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': "What is the book's relevance to the challenges facing contemporary society?",
  'chat_history': [HumanMessage(content="Octavia Butler's contemporaries included Ursula K. Le Guin, Samuel R. Delany, and Joanna Russ.\nOctavia Butler won the Hugo Award, the Nebula Award, and the MacArthur Fellowship.\nUrsula K. Le Guin is known for novels like The Left Hand of Darkness and The Dispossessed.\nJoanna Russ is the author of the influential feminist science fiction novel The Female Man.\nMargaret Atwood is known for works like The Handmaid's Tale and the MaddAddam trilogy.\nConnie Willis is an award-winning author of science fiction and fantasy, known for novels like Doomsday Book.\nOctavia Butler is a pioneering black female science fiction author, known for Kindred and the Parable series.\nOctavia Estelle Butler was an acclaimed American science fiction author. While none of her books were directly adapted into movies, her novel Kindred was adapted into a TV series on FX. Butler was part of a generation of prominent science fiction writers in the 20th century, including contemporaries such as Ursula K. Le Guin, Samuel R. Delany, Chip Delany, and Nalo Hopkinson.\nhuman: What awards did she win?\nai: Octavia Butler won the Hugo Award, the Nebula Award, and the MacArthur Fellowship.\nhuman: Which other women sci-fi writers might I want to read?\nai: You might want to read Ursula K. Le Guin or Joanna Russ.\nhuman: Write a short synopsis of Butler's book, Parable of the Sower. What is it about?\nai: Parable of the Sower is a science fiction novel by Octavia Butler, published in 1993. It follows the story of Lauren Olamina, a young woman living in a dystopian future where society has collapsed due to environmental disasters, poverty, and violence.")],
  'output': 'Parable of the Sower is highly relevant to contemporary society as it explores themes of environmental degradation, social and economic inequality, and the struggle for survival in a chaotic world. It also delves into issues of race, gender, and religion, making it a thought-provoking and timely read.'}
 ```
 
-### Inspect the Zep memory
 
-Note the summary, and that the history has been enriched with token counts, UUIDs, and timestamps.
+### Zep 메모리 검사
 
-Summaries are biased towards the most recent messages.
+요약을 주의 깊게 살펴보세요. 기록이 토큰 수, UUID 및 타임스탬프와 함께 풍부해졌습니다.
+
+요약은 가장 최근 메시지에 편향되어 있습니다.
 
 ```python
 def print_messages(messages):
@@ -404,6 +413,7 @@ for fact in facts:
     print(fact + "\n")
 print_messages(memory.chat_memory.messages)
 ```
+
 ```output
 Octavia Estelle Butler was an acclaimed American science fiction author. While none of her books were directly adapted into movies, her novel Kindred was adapted into a TV series on FX. Butler was part of a generation of prominent science fiction writers in the 20th century, including contemporaries such as Ursula K. Le Guin, Samuel R. Delany, Chip Delany, and Nalo Hopkinson.
 
@@ -434,11 +444,12 @@ The novel also delves into issues of race, gender, and religion, making it a tho
 human :
  {'content': "Octavia Butler's contemporaries included Ursula K. Le Guin, Samuel R. Delany, and Joanna Russ.\nOctavia Butler won the Hugo Award, the Nebula Award, and the MacArthur Fellowship.\nUrsula K. Le Guin is known for novels like The Left Hand of Darkness and The Dispossessed.\nJoanna Russ is the author of the influential feminist science fiction novel The Female Man.\nMargaret Atwood is known for works like The Handmaid's Tale and the MaddAddam trilogy.\nConnie Willis is an award-winning author of science fiction and fantasy, known for novels like Doomsday Book.\nOctavia Butler is a pioneering black female science fiction author, known for Kindred and the Parable series.\nParable of the Sower is a science fiction novel by Octavia Butler, published in 1993.\nThe novel follows the story of Lauren Olamina, a young woman living in a dystopian future where society has collapsed due to environmental disasters, poverty, and violence.\nParable of the Sower explores themes of environmental degradation, social and economic inequality, and the struggle for survival in a chaotic world.\nThe novel also delves into issues of race, gender, and religion, making it a thought-provoking and timely read.\nOctavia Estelle Butler was an acclaimed American science fiction author. While none of her books were directly adapted into movies, her novel Kindred was adapted into a TV series on FX. Butler was part of a generation of prominent science fiction writers in the 20th century, including contemporaries such as Ursula K. Le Guin, Samuel R. Delany, Chip Delany, and Nalo Hopkinson.\nhuman: Which other women sci-fi writers might I want to read?\nai: You might want to read Ursula K. Le Guin or Joanna Russ.\nhuman: Write a short synopsis of Butler's book, Parable of the Sower. What is it about?\nai: Parable of the Sower is a science fiction novel by Octavia Butler, published in 1993. It follows the story of Lauren Olamina, a young woman living in a dystopian future where society has collapsed due to environmental disasters, poverty, and violence.\nhuman: What is the book's relevance to the challenges facing contemporary society?\nai: Parable of the Sower is highly relevant to contemporary society as it explores themes of environmental degradation, social and economic inequality, and the struggle for survival in a chaotic world. It also delves into issues of race, gender, and religion, making it a thought-provoking and timely read.", 'additional_kwargs': {}, 'response_metadata': {}, 'type': 'human', 'name': None, 'id': None, 'example': False}
 ```
-### Vector search over the Zep memory
 
-Zep provides native vector search over historical conversation memory via the `ZepRetriever`.
+### Zep 메모리에서 벡터 검색
 
-You can use the `ZepRetriever` with chains that support passing in a Langchain `Retriever` object.
+Zep은 `ZepRetriever`를 통해 역사적 대화 메모리에 대한 기본 벡터 검색을 제공합니다.
+
+Langchain `Retriever` 객체를 전달하는 것을 지원하는 체인과 함께 `ZepRetriever`를 사용할 수 있습니다.
 
 ```python
 retriever = ZepCloudRetriever(
@@ -451,6 +462,7 @@ for r in search_results:
     if r.score > 0.8:  # Only print results with similarity of 0.8 or higher
         print(r.message, r.score)
 ```
+
 ```output
 content='Which other women sci-fi writers might I want to read?' created_at='2024-05-10T14:34:16.714292Z' metadata=None role='human' role_type=None token_count=12 updated_at='0001-01-01T00:00:00Z' uuid_='64ca1fae-8db1-4b4f-8a45-9b0e57e88af5' 0.8960460126399994
 ```

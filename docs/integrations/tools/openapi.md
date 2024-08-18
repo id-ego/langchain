@@ -1,11 +1,11 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/openapi/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/openapi.ipynb
+description: OpenAPI 툴킷을 사용하여 API를 소비하는 에이전트를 구축하는 방법과 계층적 계획 에이전트의 예를 설명합니다.
 ---
 
-# OpenAPI Toolkit
+# OpenAPI 툴킷
 
-We can construct agents to consume arbitrary APIs, here APIs conformant to the `OpenAPI`/`Swagger` specification.
+우리는 임의의 API를 소비하는 에이전트를 구성할 수 있습니다. 여기서는 `OpenAPI`/`Swagger` 사양에 부합하는 API를 다룹니다.
 
 ```python
 # NOTE: In this example. We must set `allow_dangerous_request=True` to enable the OpenAPI Agent to automatically use the Request Tool.
@@ -13,17 +13,18 @@ We can construct agents to consume arbitrary APIs, here APIs conformant to the `
 ALLOW_DANGEROUS_REQUEST = True
 ```
 
-## 1st example: hierarchical planning agent
 
-In this example, we'll consider an approach called hierarchical planning, common in robotics and appearing in recent works for LLMs X robotics. We'll see it's a viable approach to start working with a massive API spec AND to assist with user queries that require multiple steps against the API.
+## 첫 번째 예: 계층적 계획 에이전트
 
-The idea is simple: to get coherent agent behavior over long sequences behavior & to save on tokens, we'll separate concerns: a "planner" will be responsible for what endpoints to call and a "controller" will be responsible for how to call them.
+이 예제에서는 로봇 공학에서 일반적으로 사용되는 계층적 계획이라는 접근 방식을 고려할 것입니다. 이는 최근 LLM과 로봇 공학의 작업에서 나타났습니다. 이는 방대한 API 사양으로 작업을 시작하고 API에 대해 여러 단계가 필요한 사용자 쿼리를 지원하는 실행 가능한 접근 방식임을 알 수 있습니다.
 
-In the initial implementation, the planner is an LLM chain that has the name and a short description for each endpoint in context. The controller is an LLM agent that is instantiated with documentation for only the endpoints for a particular plan. There's a lot left to get this working very robustly :)
+아이디어는 간단합니다: 긴 시퀀스의 일관된 에이전트 행동을 얻고 토큰을 절약하기 위해, 우리는 문제를 분리할 것입니다: "계획자"는 호출할 엔드포인트를 책임지고 "제어기"는 이를 호출하는 방법을 책임집니다.
+
+초기 구현에서, 계획자는 각 엔드포인트에 대한 이름과 간단한 설명이 포함된 LLM 체인입니다. 제어기는 특정 계획에 대한 엔드포인트에 대한 문서로 인스턴스화된 LLM 에이전트입니다. 이를 매우 견고하게 작동시키기 위해 많은 작업이 남아 있습니다 :)
 
 * * *
 
-### To start, let's collect some OpenAPI specs.
+### 시작하기 위해 OpenAPI 사양을 수집해 봅시다.
 
 ```python
 import os
@@ -31,13 +32,15 @@ import os
 import yaml
 ```
 
-You will be able to get OpenAPI specs from here: [APIs-guru/openapi-directory](https://github.com/APIs-guru/openapi-directory)
+
+여기에서 OpenAPI 사양을 얻을 수 있습니다: [APIs-guru/openapi-directory](https://github.com/APIs-guru/openapi-directory)
 
 ```python
 !wget https://raw.githubusercontent.com/openai/openai-openapi/master/openapi.yaml -O openai_openapi.yaml
 !wget https://www.klarna.com/us/shopping/public/openai/v0/api-docs -O klarna_openapi.yaml
 !wget https://raw.githubusercontent.com/APIs-guru/openapi-directory/main/APIs/spotify.com/1.0.0/openapi.yaml -O spotify_openapi.yaml
 ```
+
 ```output
 --2023-03-31 15:45:56--  https://raw.githubusercontent.com/openai/openai-openapi/master/openapi.yaml
 Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 185.199.110.133, 185.199.109.133, 185.199.111.133, ...
@@ -73,10 +76,12 @@ openapi.yaml        100%[===================>] 280.03K  --.-KB/s    in 0.02s
 2023-03-31 15:45:58 (13.3 MB/s) - ‘openapi.yaml’ saved [286747/286747]
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "reduce_openapi_spec", "source": "langchain_community.agent_toolkits.openapi.spec", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.spec.reduce_openapi_spec.html", "title": "OpenAPI Toolkit"}]-->
 from langchain_community.agent_toolkits.openapi.spec import reduce_openapi_spec
 ```
+
 
 ```python
 with open("openai_openapi.yaml") as f:
@@ -92,12 +97,13 @@ with open("spotify_openapi.yaml") as f:
 spotify_api_spec = reduce_openapi_spec(raw_spotify_api_spec)
 ```
 
+
 * * *
 
-We'll work with the Spotify API as one of the examples of a somewhat complex API. There's a bit of auth-related setup to do if you want to replicate this.
+우리는 다소 복잡한 API의 예로 Spotify API를 사용할 것입니다. 이를 복제하려면 약간의 인증 관련 설정이 필요합니다.
 
-- You'll have to set up an application in the Spotify developer console, documented [here](https://developer.spotify.com/documentation/general/guides/authorization/), to get credentials: `CLIENT_ID`, `CLIENT_SECRET`, and `REDIRECT_URI`.
-- To get an access tokens (and keep them fresh), you can implement the oauth flows, or you can use `spotipy`. If you've set your Spotify creedentials as environment variables `SPOTIPY_CLIENT_ID`, `SPOTIPY_CLIENT_SECRET`, and `SPOTIPY_REDIRECT_URI`, you can use the helper functions below:
+- Spotify 개발자 콘솔에서 애플리케이션을 설정해야 하며, 이는 [여기](https://developer.spotify.com/documentation/general/guides/authorization/)에 문서화되어 있습니다. 자격 증명: `CLIENT_ID`, `CLIENT_SECRET`, 및 `REDIRECT_URI`를 얻기 위해서입니다.
+- 액세스 토큰을 얻고(신선하게 유지하기 위해) oauth 흐름을 구현하거나 `spotipy`를 사용할 수 있습니다. Spotify 자격 증명을 환경 변수 `SPOTIPY_CLIENT_ID`, `SPOTIPY_CLIENT_SECRET`, 및 `SPOTIPY_REDIRECT_URI`로 설정했다면, 아래의 헬퍼 함수를 사용할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "RequestsWrapper", "source": "langchain_community.utilities.requests", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.requests.RequestsWrapper.html", "title": "OpenAPI Toolkit"}]-->
@@ -120,7 +126,8 @@ headers = construct_spotify_auth_headers(raw_spotify_api_spec)
 requests_wrapper = RequestsWrapper(headers=headers)
 ```
 
-### How big is this spec?
+
+### 이 사양은 얼마나 큰가요?
 
 ```python
 endpoints = [
@@ -132,9 +139,11 @@ endpoints = [
 len(endpoints)
 ```
 
+
 ```output
 63
 ```
+
 
 ```python
 import tiktoken
@@ -149,13 +158,15 @@ def count_tokens(s):
 count_tokens(yaml.dump(raw_spotify_api_spec))
 ```
 
+
 ```output
 80326
 ```
 
-### Let's see some examples!
 
-Starting with GPT-4. (Some robustness iterations under way for GPT-3 family.)
+### 몇 가지 예제를 살펴봅시다!
+
+GPT-4부터 시작합니다. (GPT-3 계열에 대한 몇 가지 견고성 반복 작업이 진행 중입니다.)
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "OpenAPI Toolkit"}]-->
@@ -164,12 +175,14 @@ from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI(model_name="gpt-4", temperature=0.0)
 ```
+
 ```output
 /Users/jeremywelborn/src/langchain/langchain/llms/openai.py:169: UserWarning: You are trying to use a chat model. This way of initializing it is no longer supported. Instead, please use: `from langchain_openai import ChatOpenAI`
   warnings.warn(
 /Users/jeremywelborn/src/langchain/langchain/llms/openai.py:608: UserWarning: You are trying to use a chat model. This way of initializing it is no longer supported. Instead, please use: `from langchain_openai import ChatOpenAI`
   warnings.warn(
 ```
+
 
 ```python
 # NOTE: set allow_dangerous_requests manually for security concern https://python.langchain.com/docs/security
@@ -184,6 +197,7 @@ user_query = (
 )
 spotify_agent.invoke(user_query)
 ```
+
 ```output
 
 
@@ -232,14 +246,17 @@ Final Answer: I have created a playlist called "Machine Blues" with the first so
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'I have created a playlist called "Machine Blues" with the first song from the "Kind of Blue" album.'
 ```
+
 
 ```python
 user_query = "give me a song I'd like, make it blues-ey"
 spotify_agent.invoke(user_query)
 ```
+
 ```output
 
 
@@ -286,16 +303,19 @@ Final Answer: The recommended blues song for you is "Get Away Jordan" with the t
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'The recommended blues song for you is "Get Away Jordan" with the track ID: 03lXHmokj9qsXspNsPoirR.'
 ```
 
-#### Try another API.
+
+#### 다른 API를 시도해 보세요.
 
 ```python
 headers = {"Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"}
 openai_requests_wrapper = RequestsWrapper(headers=headers)
 ```
+
 
 ```python
 # Meta!
@@ -306,6 +326,7 @@ openai_agent = planner.create_openapi_agent(
 user_query = "generate a short piece of advice"
 openai_agent.invoke(user_query)
 ```
+
 ```output
 
 
@@ -391,15 +412,17 @@ Final Answer: A short piece of advice for improving communication skills is to m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'A short piece of advice for improving communication skills is to make sure to listen.'
 ```
 
-Takes awhile to get there!
 
-## 2nd example: "json explorer" agent
+거기까지 가는 데 시간이 걸립니다!
 
-Here's an agent that's not particularly practical, but neat! The agent has access to 2 toolkits. One comprises tools to interact with json: one tool to list the keys of a json object and another tool to get the value for a given key. The other toolkit comprises `requests` wrappers to send GET and POST requests. This agent consumes a lot calls to the language model, but does a surprisingly decent job.
+## 두 번째 예: "json 탐색기" 에이전트
+
+여기에는 특히 실용적이지는 않지만 멋진 에이전트가 있습니다! 이 에이전트는 json과 상호 작용하는 도구를 포함한 2개의 툴킷에 접근할 수 있습니다: 하나는 json 객체의 키를 나열하는 도구이고 다른 하나는 주어진 키에 대한 값을 가져오는 도구입니다. 다른 툴킷은 GET 및 POST 요청을 보내기 위한 `requests` 래퍼로 구성됩니다. 이 에이전트는 언어 모델에 대한 많은 호출을 소비하지만 놀랍도록 괜찮은 작업을 수행합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAPIToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.toolkit.OpenAPIToolkit.html", "title": "OpenAPI Toolkit"}, {"imported": "create_openapi_agent", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.base.create_openapi_agent.html", "title": "OpenAPI Toolkit"}, {"imported": "JsonSpec", "source": "langchain_community.tools.json.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.json.tool.JsonSpec.html", "title": "OpenAPI Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "OpenAPI Toolkit"}]-->
@@ -407,6 +430,7 @@ from langchain_community.agent_toolkits import OpenAPIToolkit, create_openapi_ag
 from langchain_community.tools.json.tool import JsonSpec
 from langchain_openai import OpenAI
 ```
+
 
 ```python
 with open("openai_openapi.yaml") as f:
@@ -425,11 +449,13 @@ openapi_agent_executor = create_openapi_agent(
 )
 ```
 
+
 ```python
 openapi_agent_executor.run(
     "Make a post request to openai /completions. The prompt should be 'tell me a joke.'"
 )
 ```
+
 ```output
 
 
@@ -542,11 +568,13 @@ Final Answer: The response of the POST request is {"id":"cmpl-70Ivzip3dazrIXU8DS
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'The response of the POST request is {"id":"cmpl-70Ivzip3dazrIXU8DSVJGzFJj2rdv","object":"text_completion","created":1680307139,"model":"davinci","choices":[{"text":" with mummy not there”\\n\\nYou dig deep and come up with,","index":0,"logprobs":null,"finish_reason":"length"}],"usage":{"prompt_tokens":4,"completion_tokens":16,"total_tokens":20}}'
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

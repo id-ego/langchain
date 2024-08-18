@@ -1,29 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/flyte/
+description: Flyte는 Kubernetes를 기반으로 한 오픈소스 오케스트레이터로, 데이터 및 ML 파이프라인을 구축하고 LangChain
+  실험을 모니터링합니다.
 ---
 
 # Flyte
 
-> [Flyte](https://github.com/flyteorg/flyte) is an open-source orchestrator that facilitates building production-grade data and ML pipelines.
-It is built for scalability and reproducibility, leveraging Kubernetes as its underlying platform.
+> [Flyte](https://github.com/flyteorg/flyte)는 프로덕션급 데이터 및 ML 파이프라인 구축을 용이하게 하는 오픈 소스 오케스트레이터입니다. 
+Kubernetes를 기본 플랫폼으로 활용하여 확장성과 재현성을 위해 설계되었습니다.
 
-The purpose of this notebook is to demonstrate the integration of a `FlyteCallback` into your Flyte task, enabling you to effectively monitor and track your LangChain experiments.
+이 노트북의 목적은 `FlyteCallback`을 Flyte 작업에 통합하여 LangChain 실험을 효과적으로 모니터링하고 추적할 수 있도록 하는 것입니다.
 
-## Installation & Setup
+## 설치 및 설정
 
-- Install the Flytekit library by running the command `pip install flytekit`.
-- Install the Flytekit-Envd plugin by running the command `pip install flytekitplugins-envd`.
-- Install LangChain by running the command `pip install langchain`.
-- Install [Docker](https://docs.docker.com/engine/install/) on your system.
+- `pip install flytekit` 명령어를 실행하여 Flytekit 라이브러리를 설치합니다.
+- `pip install flytekitplugins-envd` 명령어를 실행하여 Flytekit-Envd 플러그인을 설치합니다.
+- `pip install langchain` 명령어를 실행하여 LangChain을 설치합니다.
+- 시스템에 [Docker](https://docs.docker.com/engine/install/)를 설치합니다.
 
-## Flyte Tasks
+## Flyte 작업
 
-A Flyte [task](https://docs.flyte.org/en/latest/user_guide/basics/tasks.html) serves as the foundational building block of Flyte.
-To execute LangChain experiments, you need to write Flyte tasks that define the specific steps and operations involved.
+Flyte [작업](https://docs.flyte.org/en/latest/user_guide/basics/tasks.html)은 Flyte의 기본 빌딩 블록 역할을 합니다. 
+LangChain 실험을 실행하려면 특정 단계와 작업을 정의하는 Flyte 작업을 작성해야 합니다.
 
-NOTE: The [getting started guide](https://docs.flyte.org/projects/cookbook/en/latest/index.html) offers detailed, step-by-step instructions on installing Flyte locally and running your initial Flyte pipeline.
+참고: [시작 가이드](https://docs.flyte.org/projects/cookbook/en/latest/index.html)는 Flyte를 로컬에 설치하고 초기 Flyte 파이프라인을 실행하는 방법에 대한 자세한 단계별 지침을 제공합니다.
 
-First, import the necessary dependencies to support your LangChain experiments.
+먼저, LangChain 실험을 지원하기 위해 필요한 종속성을 가져옵니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Flyte"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Flyte"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Flyte"}, {"imported": "FlyteCallbackHandler", "source": "langchain.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.flyte_callback.FlyteCallbackHandler.html", "title": "Flyte"}, {"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Flyte"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Flyte"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Flyte"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Flyte"}]-->
@@ -38,7 +39,8 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.messages import HumanMessage
 ```
 
-Set up the necessary environment variables to utilize the OpenAI API and Serp API:
+
+OpenAI API 및 Serp API를 활용하기 위해 필요한 환경 변수를 설정합니다:
 
 ```python
 # Set OpenAI API key
@@ -48,13 +50,14 @@ os.environ["OPENAI_API_KEY"] = "<your_openai_api_key>"
 os.environ["SERPAPI_API_KEY"] = "<your_serp_api_key>"
 ```
 
-Replace `<your_openai_api_key>` and `<your_serp_api_key>` with your respective API keys obtained from OpenAI and Serp API.
 
-To guarantee reproducibility of your pipelines, Flyte tasks are containerized.
-Each Flyte task must be associated with an image, which can either be shared across the entire Flyte [workflow](https://docs.flyte.org/en/latest/user_guide/basics/workflows.html) or provided separately for each task.
+`<your_openai_api_key>` 및 `<your_serp_api_key>`를 OpenAI 및 Serp API에서 얻은 각각의 API 키로 교체합니다.
 
-To streamline the process of supplying the required dependencies for each Flyte task, you can initialize an [`ImageSpec`](https://docs.flyte.org/en/latest/user_guide/customizing_dependencies/imagespec.html) object.
-This approach automatically triggers a Docker build, alleviating the need for users to manually create a Docker image.
+파이프라인의 재현성을 보장하기 위해 Flyte 작업은 컨테이너화됩니다. 
+각 Flyte 작업은 Flyte [워크플로우](https://docs.flyte.org/en/latest/user_guide/basics/workflows.html) 전체에서 공유되거나 각 작업에 대해 별도로 제공될 수 있는 이미지와 연결되어야 합니다.
+
+각 Flyte 작업에 필요한 종속성을 제공하는 프로세스를 간소화하기 위해 [`ImageSpec`](https://docs.flyte.org/en/latest/user_guide/customizing_dependencies/imagespec.html) 객체를 초기화할 수 있습니다. 
+이 접근 방식은 자동으로 Docker 빌드를 트리거하여 사용자가 수동으로 Docker 이미지를 생성할 필요를 줄입니다.
 
 ```python
 custom_image = ImageSpec(
@@ -71,12 +74,13 @@ custom_image = ImageSpec(
 )
 ```
 
-You have the flexibility to push the Docker image to a registry of your preference.
-[Docker Hub](https://hub.docker.com/) or [GitHub Container Registry (GHCR)](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry) is a convenient option to begin with.
 
-Once you have selected a registry, you can proceed to create Flyte tasks that log the LangChain metrics to Flyte Deck.
+Docker 이미지를 원하는 레지스트리에 푸시할 수 있는 유연성이 있습니다. 
+[Docker Hub](https://hub.docker.com/) 또는 [GitHub Container Registry (GHCR)](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)는 시작하기에 편리한 옵션입니다.
 
-The following examples demonstrate tasks related to OpenAI LLM, chains and agent with tools:
+레지스트리를 선택한 후, LangChain 메트릭을 Flyte Deck에 기록하는 Flyte 작업을 생성할 수 있습니다.
+
+다음 예제는 OpenAI LLM, 체인 및 도구가 있는 에이전트와 관련된 작업을 보여줍니다:
 
 ### LLM
 
@@ -90,6 +94,7 @@ def langchain_llm() -> str:
     )
     return llm.invoke([HumanMessage(content="Tell me a joke")]).content
 ```
+
 
 ### Chain
 
@@ -116,6 +121,7 @@ Playwright: This is a synopsis for the above play:"""
     return synopsis_chain.apply(test_prompts)
 ```
 
+
 ### Agent
 
 ```python
@@ -141,18 +147,20 @@ def langchain_agent() -> str:
     )
 ```
 
-These tasks serve as a starting point for running your LangChain experiments within Flyte.
 
-## Execute the Flyte Tasks on Kubernetes
+이 작업들은 Flyte 내에서 LangChain 실험을 실행하기 위한 출발점 역할을 합니다.
 
-To execute the Flyte tasks on the configured Flyte backend, use the following command:
+## Kubernetes에서 Flyte 작업 실행
+
+구성된 Flyte 백엔드에서 Flyte 작업을 실행하려면 다음 명령어를 사용합니다:
 
 ```bash
 pyflyte run --image <your-image> langchain_flyte.py langchain_llm
 ```
 
-This command will initiate the execution of the `langchain_llm` task on the Flyte backend. You can trigger the remaining two tasks in a similar manner.
 
-The metrics will be displayed on the Flyte UI as follows:
+이 명령어는 Flyte 백엔드에서 `langchain_llm` 작업의 실행을 시작합니다. 나머지 두 작업도 유사한 방식으로 트리거할 수 있습니다.
 
-![Screenshot of Flyte Deck showing LangChain metrics and a dependency tree visualization.](https://ik.imagekit.io/c8zl7irwkdda/Screenshot_2023-06-20_at_1.23.29_PM_MZYeG0dKa.png?updatedAt=1687247642993 "Flyte Deck Metrics Display")
+메트릭은 Flyte UI에 다음과 같이 표시됩니다:
+
+![Flyte Deck에서 LangChain 메트릭과 종속성 트리 시각화를 보여주는 스크린샷.](https://ik.imagekit.io/c8zl7irwkdda/Screenshot_2023-06-20_at_1.23.29_PM_MZYeG0dKa.png?updatedAt=1687247642993 "Flyte Deck 메트릭 표시")

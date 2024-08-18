@@ -1,21 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/callbacks/infino/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/callbacks/infino.ipynb
+description: Infino는 로그, 메트릭 및 추적을 위한 확장 가능한 텔레메트리 저장소로, 독립형 관측 솔루션 또는 관측 스택의 저장소
+  레이어로 기능합니다.
 ---
 
-# Infino
+# 인피노
 
-> [Infino](https://github.com/infinohq/infino) is a scalable telemetry store designed for logs, metrics, and traces. Infino can function as a standalone observability solution or as the storage layer in your observability stack.
+> [인피노](https://github.com/infinohq/infino)는 로그, 메트릭 및 추적을 위해 설계된 확장 가능한 텔레메트리 저장소입니다. 인피노는 독립형 관측 솔루션으로 작동하거나 관측 스택의 저장소 계층으로 사용할 수 있습니다.
 
-This example shows how one can track the following while calling OpenAI and ChatOpenAI models via `LangChain` and [Infino](https://github.com/infinohq/infino):
+이 예제는 `LangChain` 및 [인피노](https://github.com/infinohq/infino)를 통해 OpenAI 및 ChatOpenAI 모델을 호출할 때 다음을 추적하는 방법을 보여줍니다:
 
-* prompt input
-* response from `ChatGPT` or any other `LangChain` model
-* latency
-* errors
-* number of tokens consumed
+* 프롬프트 입력
+* `ChatGPT` 또는 기타 `LangChain` 모델의 응답
+* 대기 시간
+* 오류
+* 소비된 토큰 수
 
-## Initializing
+## 초기화
 
 ```python
 # Install necessary dependencies.
@@ -25,10 +26,12 @@ This example shows how one can track the following while calling OpenAI and Chat
 %pip install --upgrade --quiet  langchain langchain-openai langchain-community
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "InfinoCallbackHandler", "source": "langchain_community.callbacks.infino_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.infino_callback.InfinoCallbackHandler.html", "title": "Infino"}]-->
 from langchain_community.callbacks.infino_callback import InfinoCallbackHandler
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Infino"}]-->
@@ -42,7 +45,8 @@ from infinopy import InfinoClient
 from langchain_openai import OpenAI
 ```
 
-## Start Infino server, initialize the Infino client
+
+## 인피노 서버 시작, 인피노 클라이언트 초기화
 
 ```python
 # Start server using the Infino docker image.
@@ -51,10 +55,12 @@ from langchain_openai import OpenAI
 # Create Infino client.
 client = InfinoClient()
 ```
+
 ```output
 a1159e99c6bdb3101139157acee6aba7ae9319375e77ab6fbc79beff75abeca3
 ```
-## Read the questions dataset
+
+## 질문 데이터셋 읽기
 
 ```python
 # These are a subset of questions from Stanford's QA dataset -
@@ -83,7 +89,8 @@ What name comes from the English words Normans/Normanz?"""
 questions = data.split("\n")
 ```
 
-## Example 1: LangChain OpenAI Q&A; Publish metrics and logs to Infino
+
+## 예제 1: LangChain OpenAI Q&A; 메트릭 및 로그를 인피노에 게시
 
 ```python
 # Set your key here.
@@ -108,6 +115,7 @@ for question in questions:
     llm_result = llm.generate([question], callbacks=[handler])
     print(llm_result)
 ```
+
 ```output
 In what country is Normandy located?
 generations=[[Generation(text='\n\nNormandy is located in France.', generation_info={'finish_reason': 'stop', 'logprobs': None})]] llm_output={'token_usage': {'total_tokens': 16, 'prompt_tokens': 7, 'completion_tokens': 9}, 'model_name': 'text-davinci-003'} run=[RunInfo(run_id=UUID('67a516e3-d48a-4e83-92ba-a139079bd3b1'))]
@@ -130,9 +138,10 @@ generations=[[Generation(text='\n\nThe Frankish identity began to emerge in the 
 Who was the duke in the battle of Hastings?
 generations=[[Generation(text='\n\nThe Duke of Normandy, William the Conqueror, was the leader of the Norman forces at the Battle of Hastings in 1066.', generation_info={'finish_reason': 'stop', 'logprobs': None})]] llm_output={'token_usage': {'total_tokens': 39, 'prompt_tokens': 11, 'completion_tokens': 28}, 'model_name': 'text-davinci-003'} run=[RunInfo(run_id=UUID('b8f84619-ea5f-4c18-b411-b62194f36fe0'))]
 ```
-## Create Metric Charts
 
-We now use matplotlib to create graphs of latency, errors and tokens consumed.
+## 메트릭 차트 생성
+
+이제 matplotlib를 사용하여 대기 시간, 오류 및 소비된 토큰의 그래프를 생성합니다.
 
 ```python
 # Helper function to create a graph using matplotlib.
@@ -162,6 +171,7 @@ def plot(data, title):
     plt.show()
 ```
 
+
 ```python
 response = client.search_ts("__name__", "latency", 0, int(time.time()))
 plot(response.text, "Latency")
@@ -179,7 +189,8 @@ response = client.search_ts("__name__", "total_tokens", 0, int(time.time()))
 plot(response.text, "Total Tokens")
 ```
 
-## Full text query on prompt or prompt outputs.
+
+## 프롬프트 또는 프롬프트 출력에 대한 전체 텍스트 쿼리.
 
 ```python
 # Search for a particular prompt text.
@@ -193,12 +204,14 @@ query = "king charles III"
 response = client.search_log("king charles III", 0, int(time.time()))
 print("Results for", query, ":", response.text)
 ```
+
 ```output
 Results for normandy : [{"time":1696947743,"fields":{"prompt_response":"\n\nThe Normans, a people from northern France, gave their name to Normandy in the 1000s and 1100s. The Normans were descendants of Vikings who had settled in the region in the late 800s."},"text":"\n\nThe Normans, a people from northern France, gave their name to Normandy in the 1000s and 1100s. The Normans were descendants of Vikings who had settled in the region in the late 800s."},{"time":1696947740,"fields":{"prompt":"Who gave their name to Normandy in the 1000's and 1100's"},"text":"Who gave their name to Normandy in the 1000's and 1100's"},{"time":1696947733,"fields":{"prompt_response":"\n\nThe Normans first settled in Normandy in the late 9th century."},"text":"\n\nThe Normans first settled in Normandy in the late 9th century."},{"time":1696947732,"fields":{"prompt_response":"\n\nNormandy is located in France."},"text":"\n\nNormandy is located in France."},{"time":1696947731,"fields":{"prompt":"In what country is Normandy located?"},"text":"In what country is Normandy located?"}]
 ===
 Results for king charles III : [{"time":1696947745,"fields":{"prompt_response":"\n\nKing Charles III swore fealty to King Philip II of Spain."},"text":"\n\nKing Charles III swore fealty to King Philip II of Spain."},{"time":1696947744,"fields":{"prompt":"Who did King Charles III swear fealty to?"},"text":"Who did King Charles III swear fealty to?"}]
 ```
-# Example 2: Summarize a piece of text using ChatOpenAI
+
+# 예제 2: ChatOpenAI를 사용하여 텍스트 요약하기
 
 ```python
 <!--IMPORTS:[{"imported": "load_summarize_chain", "source": "langchain.chains.summarize", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.summarize.chain.load_summarize_chain.html", "title": "Infino"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Infino"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Infino"}]-->
@@ -230,7 +243,8 @@ for url in urls:
     chain.run(docs)
 ```
 
-## Create Metric Charts
+
+## 메트릭 차트 생성
 
 ```python
 response = client.search_ts("__name__", "latency", 0, int(time.time()))
@@ -246,9 +260,11 @@ response = client.search_ts("__name__", "completion_tokens", 0, int(time.time())
 plot(response.text, "Completion Tokens")
 ```
 
+
 ```python
 ## Full text query on prompt or prompt outputs
 ```
+
 
 ```python
 # Search for a particular prompt text.
@@ -260,17 +276,21 @@ response = client.search_log(query, 0, int(time.time()))
 
 print("===")
 ```
+
 ```output
 ===
 ```
+
 
 ```python
 ## Stop Infino server
 ```
 
+
 ```python
 !docker rm -f infino-example
 ```
+
 ```output
 infino-example
 ```

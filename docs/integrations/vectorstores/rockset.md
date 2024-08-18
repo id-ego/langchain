@@ -1,23 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/rockset/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/rockset.ipynb
+description: Rockset는 클라우드용 실시간 검색 및 분석 데이터베이스로, LangChain에서 벡터 저장소로 사용하는 방법을 설명합니다.
 ---
 
 # Rockset
 
-> [Rockset](https://rockset.com/) is a real-time search and analytics database built for the cloud. Rockset uses a [Converged Index™](https://rockset.com/blog/converged-indexing-the-secret-sauce-behind-rocksets-fast-queries/) with an efficient store for vector embeddings to serve low latency, high concurrency search queries at scale. Rockset has full support for metadata filtering and  handles real-time ingestion for constantly updating, streaming data.
+> [Rockset](https://rockset.com/)는 클라우드를 위해 구축된 실시간 검색 및 분석 데이터베이스입니다. Rockset는 [Converged Index™](https://rockset.com/blog/converged-indexing-the-secret-sauce-behind-rocksets-fast-queries/)를 사용하여 벡터 임베딩을 위한 효율적인 저장소를 제공하여 저지연, 고동시성 검색 쿼리를 대규모로 처리합니다. Rockset는 메타데이터 필터링을 완벽하게 지원하며, 지속적으로 업데이트되는 스트리밍 데이터를 위한 실시간 수집을 처리합니다.
 
-This notebook demonstrates how to use `Rockset` as a vector store in LangChain. Before getting started, make sure you have access to a `Rockset` account and an API key available. [Start your free trial today.](https://rockset.com/create/)
+이 노트북은 LangChain에서 `Rockset`을 벡터 저장소로 사용하는 방법을 보여줍니다. 시작하기 전에 `Rockset` 계정과 사용 가능한 API 키에 액세스할 수 있는지 확인하세요. [오늘 무료 체험을 시작하세요.](https://rockset.com/create/)
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-## Setting Up Your Environment
+## 환경 설정
 
-1. Leverage the `Rockset` console to create a [collection](https://rockset.com/docs/collections/) with the Write API as your source. In this walkthrough, we create a collection named `langchain_demo`. 
+1. `Rockset` 콘솔을 활용하여 Write API를 소스로 하는 [컬렉션](https://rockset.com/docs/collections/)을 생성합니다. 이 안내에서는 `langchain_demo`라는 이름의 컬렉션을 생성합니다.
    
-   Configure the following [ingest transformation](https://rockset.com/docs/ingest-transformation/) to mark your embeddings field and take advantage of performance and storage optimizations:
+   성능 및 저장 최적화를 활용하기 위해 임베딩 필드를 표시하는 다음 [수집 변환](https://rockset.com/docs/ingest-transformation/)을 구성합니다:
    
-   (We used OpenAI `text-embedding-ada-002` for this examples, where #length_of_vector_embedding = 1536)
+   (이 예제에서는 OpenAI `text-embedding-ada-002`를 사용했으며, #length_of_vector_embedding = 1536입니다.)
 
 ```
 SELECT _input.* EXCEPT(_meta), 
@@ -25,19 +25,21 @@ VECTOR_ENFORCE(_input.description_embedding, #length_of_vector_embedding, 'float
 FROM _input
 ```
 
-2. After creating your collection, use the console to retrieve an [API key](https://rockset.com/docs/iam/#users-api-keys-and-roles). For the purpose of this notebook, we assume you are using the `Oregon(us-west-2)` region.
-3. Install the [rockset-python-client](https://github.com/rockset/rockset-python-client) to enable LangChain to communicate directly with `Rockset`.
+
+2. 컬렉션을 생성한 후 콘솔을 사용하여 [API 키](https://rockset.com/docs/iam/#users-api-keys-and-roles)를 검색합니다. 이 노트북의 목적을 위해 `Oregon(us-west-2)` 지역을 사용한다고 가정합니다.
+3. LangChain이 `Rockset`과 직접 통신할 수 있도록 [rockset-python-client](https://github.com/rockset/rockset-python-client)를 설치합니다.
 
 ```python
 %pip install --upgrade --quiet  rockset
 ```
 
-## LangChain Tutorial
 
-Follow along in your own Python notebook to generate and store vector embeddings in Rockset.
-Start using Rockset to search for documents similar to your search queries.
+## LangChain 튜토리얼
 
-### 1. Define Key Variables
+자신의 Python 노트북에서 따라 하여 Rockset에 벡터 임베딩을 생성하고 저장하세요.
+Rockset을 사용하여 검색 쿼리와 유사한 문서를 검색하기 시작하세요.
+
+### 1. 주요 변수 정의
 
 ```python
 import os
@@ -55,7 +57,8 @@ TEXT_KEY = "description"
 EMBEDDING_KEY = "description_embedding"
 ```
 
-### 2. Prepare Documents
+
+### 2. 문서 준비
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Rockset"}, {"imported": "Rockset", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.rocksetdb.Rockset.html", "title": "Rockset"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Rockset"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Rockset"}]-->
@@ -70,7 +73,8 @@ text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 ```
 
-### 3. Insert Documents
+
+### 3. 문서 삽입
 
 ```python
 embeddings = OpenAIEmbeddings()  # Verify OPENAI_API_KEY environment variable
@@ -89,7 +93,8 @@ ids = docsearch.add_texts(
 )
 ```
 
-### 4. Search for Similar Documents
+
+### 4. 유사한 문서 검색
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -108,7 +113,8 @@ for d, dist in output:
 # 0.7436231261419488 {'source': '../../../state_of_the_union.txt'} Groups of citizens b...
 ```
 
-### 5. Search for Similar Documents with Filtering
+
+### 5. 필터링을 통한 유사한 문서 검색
 
 ```python
 output = docsearch.similarity_search_with_relevance_scores(
@@ -129,24 +135,26 @@ for d, dist in output:
 # 0.7344177777547739 {'source': '../../../state_of_the_union.txt'} We see the unity amo...
 ```
 
-### 6. [Optional] Delete Inserted Documents
 
-You must have the unique ID associated with each document to delete them from your collection.
-Define IDs when inserting documents with `Rockset.add_texts()`. Rockset will otherwise generate a unique ID for each document. Regardless, `Rockset.add_texts()` returns the IDs of inserted documents.
+### 6. [선택 사항] 삽입된 문서 삭제
 
-To delete these docs, simply use the `Rockset.delete_texts()` function.
+컬렉션에서 문서를 삭제하려면 각 문서와 연결된 고유 ID가 필요합니다.
+`Rockset.add_texts()`로 문서를 삽입할 때 ID를 정의하세요. 그렇지 않으면 Rockset이 각 문서에 대해 고유 ID를 생성합니다. 어쨌든 `Rockset.add_texts()`는 삽입된 문서의 ID를 반환합니다.
+
+이 문서를 삭제하려면 `Rockset.delete_texts()` 함수를 사용하세요.
 
 ```python
 docsearch.delete_texts(ids)
 ```
 
-## Summary
 
-In this tutorial, we successfully created a `Rockset` collection, `inserted` documents with  OpenAI embeddings, and searched for similar documents with and without metadata filters.
+## 요약
 
-Keep an eye on https://rockset.com/ for future updates in this space.
+이 튜토리얼에서는 `Rockset` 컬렉션을 성공적으로 생성하고, OpenAI 임베딩으로 문서를 `삽입`하며, 메타데이터 필터가 있는 경우와 없는 경우 모두 유사한 문서를 검색했습니다.
 
-## Related
+향후 업데이트를 위해 https://rockset.com/를 주목하세요.
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

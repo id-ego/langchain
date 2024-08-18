@@ -1,20 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/symblai_nebula/
+description: 이 문서는 LangChain 내에서 Nebula 사용 방법을 다루며, 설치 및 설정과 Nebula 래퍼에 대한 참고 자료를
+  제공합니다.
 ---
 
-# Nebula
+# 네뷸라
 
-This page covers how to use [Nebula](https://symbl.ai/nebula), [Symbl.ai](https://symbl.ai/)'s LLM, ecosystem within LangChain.
-It is broken into two parts: installation and setup, and then references to specific Nebula wrappers.
+이 페이지는 [네뷸라](https://symbl.ai/nebula), [Symbl.ai](https://symbl.ai/)의 LLM 생태계를 LangChain 내에서 사용하는 방법을 다룹니다. 설치 및 설정과 특정 네뷸라 래퍼에 대한 참조로 두 부분으로 나뉩니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Get an [Nebula API Key](https://info.symbl.ai/Nebula_Private_Beta.html) and set as environment variable `NEBULA_API_KEY`
-- Please see the [Nebula documentation](https://docs.symbl.ai/docs/nebula-llm) for more details.
+- [네뷸라 API 키](https://info.symbl.ai/Nebula_Private_Beta.html)를 얻고 환경 변수 `NEBULA_API_KEY`로 설정하세요.
+- 더 자세한 내용은 [네뷸라 문서](https://docs.symbl.ai/docs/nebula-llm)를 참조하세요.
 
 ### LLM
 
-There exists an Nebula LLM wrapper, which you can access with
+네뷸라 LLM 래퍼가 존재하며, 이를 통해 접근할 수 있습니다.
 ```python
 <!--IMPORTS:[{"imported": "Nebula", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.symblai_nebula.Nebula.html", "title": "Nebula"}]-->
 from langchain_community.llms import Nebula

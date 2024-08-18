@@ -1,13 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/self_query/hanavector_self_query/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/self_query/hanavector_self_query.ipynb
+description: SAP HANA Cloud Vector Engine에 대한 설정 및 SelfQueryRetriever를 사용하는 방법을 설명하는
+  문서입니다.
 ---
 
 # SAP HANA Cloud Vector Engine
 
-For more information on how to setup the SAP HANA vetor store, take a look at the [documentation](/docs/integrations/vectorstores/sap_hanavector.md).
+SAP HANA 벡터 저장소를 설정하는 방법에 대한 자세한 내용은 [문서](/docs/integrations/vectorstores/sap_hanavector.md)를 참조하십시오.
 
-We use the same setup here:
+여기서도 동일한 설정을 사용합니다:
 
 ```python
 import os
@@ -27,8 +28,8 @@ connection = dbapi.connect(
 )
 ```
 
-To be able to self query with good performance we create additional metadata fields
-for our vectorstore table in HANA:
+
+좋은 성능으로 자기 쿼리를 수행할 수 있도록 HANA의 벡터 저장소 테이블에 추가 메타데이터 필드를 생성합니다:
 
 ```python
 # Create custom table with attribute
@@ -46,7 +47,8 @@ cur.execute(
 )
 ```
 
-Let's add some documents.
+
+문서를 추가해 보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "HanaDB", "source": "langchain_community.vectorstores.hanavector", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.hanavector.HanaDB.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "SAP HANA Cloud Vector Engine"}]-->
@@ -84,9 +86,10 @@ db.delete(filter={})
 db.add_documents(docs)
 ```
 
-## Self querying
 
-Now for the main act: here is how to construct a SelfQueryRetriever for HANA vectorstore:
+## 자기 쿼리
+
+이제 주요 작업: HANA 벡터 저장소를 위한 SelfQueryRetriever를 구성하는 방법은 다음과 같습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "HanaTranslator", "source": "langchain_community.query_constructors.hanavector", "docs": "https://api.python.langchain.com/en/latest/query_constructors/langchain_community.query_constructors.hanavector.HanaTranslator.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "SAP HANA Cloud Vector Engine"}]-->
@@ -133,7 +136,8 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
-Let's use this retriever to prepare a (self) query for a person:
+
+이 리트리버를 사용하여 사람에 대한 (자기) 쿼리를 준비해 보겠습니다:
 
 ```python
 query_prompt = "Which person is not active?"
@@ -144,7 +148,8 @@ for doc in docs:
     print(doc.page_content, " ", doc.metadata)
 ```
 
-We can also take a look at how the query is being constructed:
+
+쿼리가 어떻게 구성되는지도 살펴볼 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "StructuredQueryOutputParser", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.base.StructuredQueryOutputParser.html", "title": "SAP HANA Cloud Vector Engine"}, {"imported": "get_query_constructor_prompt", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.base.get_query_constructor_prompt.html", "title": "SAP HANA Cloud Vector Engine"}]-->

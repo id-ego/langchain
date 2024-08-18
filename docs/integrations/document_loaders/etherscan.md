@@ -1,31 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/etherscan/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/etherscan.ipynb
+description: Etherscan은 이더리움 메인넷의 특정 계좌에 대한 거래 내역을 로드하는 API 및 분석 플랫폼입니다.
 ---
 
 # Etherscan
 
-> [Etherscan](https://docs.etherscan.io/)  is the leading blockchain explorer, search, API and analytics platform for Ethereum,
-a decentralized smart contracts platform.
+> [Etherscan](https://docs.etherscan.io/)은 분산형 스마트 계약 플랫폼인 Ethereum을 위한 선도적인 블록체인 탐색기, 검색, API 및 분석 플랫폼입니다.
 
-## Overview
+## 개요
 
-The `Etherscan` loader use `Etherscan API` to load transactions histories under specific account on `Ethereum Mainnet`.
+`Etherscan` 로더는 `Etherscan API`를 사용하여 `Ethereum Mainnet`의 특정 계정 아래에서 거래 내역을 로드합니다.
 
-You will need a `Etherscan api key` to proceed. The free api key has 5 calls per seconds quota.
+진행하려면 `Etherscan api key`가 필요합니다. 무료 API 키는 초당 5회 호출 할당량이 있습니다.
 
-The loader supports the following six functionalities:
+로더는 다음 여섯 가지 기능을 지원합니다:
 
-* Retrieve normal transactions under specific account on Ethereum Mainet
-* Retrieve internal transactions under specific account on Ethereum Mainet
-* Retrieve erc20 transactions under specific account on Ethereum Mainet
-* Retrieve erc721 transactions under specific account on Ethereum Mainet
-* Retrieve erc1155 transactions under specific account on Ethereum Mainet
-* Retrieve ethereum balance in wei under specific account on Ethereum Mainet
+* Ethereum Mainet의 특정 계정 아래에서 일반 거래 검색
+* Ethereum Mainet의 특정 계정 아래에서 내부 거래 검색
+* Ethereum Mainet의 특정 계정 아래에서 erc20 거래 검색
+* Ethereum Mainet의 특정 계정 아래에서 erc721 거래 검색
+* Ethereum Mainet의 특정 계정 아래에서 erc1155 거래 검색
+* Ethereum Mainet의 특정 계정 아래에서 wei 단위의 이더리움 잔액 검색
 
-If the account does not have corresponding transactions, the loader will a list with one document. The content of document is ''.
+계정에 해당 거래가 없으면 로더는 하나의 문서가 포함된 목록을 반환합니다. 문서의 내용은 ''입니다.
 
-You can pass different filters to loader to access different functionalities we mentioned above:
+로더에 다양한 필터를 전달하여 위에서 언급한 다양한 기능에 접근할 수 있습니다:
 
 * "normal_transaction"
 * "internal_transaction"
@@ -33,27 +32,29 @@ You can pass different filters to loader to access different functionalities we 
 * "eth_balance"
 * "erc721_transaction"
 * "erc1155_transaction"
-The filter is default to normal_transaction
+필터는 기본적으로 normal_transaction으로 설정됩니다.
 
-If you have any questions, you can access [Etherscan API Doc](https://etherscan.io/tx/0x0ffa32c787b1398f44303f731cb06678e086e4f82ce07cebf75e99bb7c079c77) or contact me via i@inevitable.tech.
+질문이 있는 경우 [Etherscan API Doc](https://etherscan.io/tx/0x0ffa32c787b1398f44303f731cb06678e086e4f82ce07cebf75e99bb7c079c77)에 접근하거나 i@inevitable.tech를 통해 저에게 연락하실 수 있습니다.
 
-All functions related to transactions histories are restricted 1000 histories maximum because of Etherscan limit. You can use the following parameters to find the transaction histories you need:
+거래 내역과 관련된 모든 기능은 Etherscan 제한으로 인해 최대 1000개의 내역으로 제한됩니다. 필요한 거래 내역을 찾기 위해 다음 매개변수를 사용할 수 있습니다:
 
-* offset: default to 20. Shows 20 transactions for one time
-* page: default to 1. This controls pagination.
-* start_block: Default to 0. The transaction histories starts from 0 block.
-* end_block: Default to 99999999. The transaction histories starts from 99999999 block
-* sort: "desc" or "asc". Set default to "desc" to get latest transactions.
+* offset: 기본값 20. 한 번에 20개의 거래를 표시합니다.
+* page: 기본값 1. 페이지 매김을 제어합니다.
+* start_block: 기본값 0. 거래 내역은 0 블록에서 시작됩니다.
+* end_block: 기본값 99999999. 거래 내역은 99999999 블록에서 시작됩니다.
+* sort: "desc" 또는 "asc". 최신 거래를 얻기 위해 기본값을 "desc"로 설정합니다.
 
-## Setup
+## 설정
 
 ```python
 %pip install --upgrade --quiet  langchain -q
 ```
 
+
 ```python
 etherscanAPIKey = "..."
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "EtherscanLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.etherscan.EtherscanLoader.html", "title": "Etherscan"}]-->
@@ -62,11 +63,13 @@ import os
 from langchain_community.document_loaders import EtherscanLoader
 ```
 
+
 ```python
 os.environ["ETHERSCAN_API_KEY"] = etherscanAPIKey
 ```
 
-## Create a ERC20 transaction loader
+
+## ERC20 거래 로더 생성
 
 ```python
 account_address = "0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b"
@@ -74,6 +77,7 @@ loader = EtherscanLoader(account_address, filter="erc20_transaction")
 result = loader.load()
 eval(result[0].page_content)
 ```
+
 
 ```output
 {'blockNumber': '13242975',
@@ -97,7 +101,8 @@ eval(result[0].page_content)
  'confirmations': '4492277'}
 ```
 
-## Create a normal transaction loader with customized parameters
+
+## 사용자 정의 매개변수를 가진 일반 거래 로더 생성
 
 ```python
 loader = EtherscanLoader(
@@ -111,9 +116,11 @@ loader = EtherscanLoader(
 result = loader.load()
 result
 ```
+
 ```output
 20
 ```
+
 
 ```output
 [Document(page_content="{'blockNumber': '1723771', 'timeStamp': '1466213371', 'hash': '0xe00abf5fa83a4b23ee1cc7f07f9dda04ab5fa5efe358b315df8b76699a83efc4', 'nonce': '3155', 'blockHash': '0xc2c2207bcaf341eed07f984c9a90b3f8e8bdbdbd2ac6562f8c2f5bfa4b51299d', 'transactionIndex': '5', 'from': '0x3763e6e1228bfeab94191c856412d1bb0a8e6996', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b', 'value': '13149213761000000000', 'gas': '90000', 'gasPrice': '22655598156', 'isError': '0', 'txreceipt_status': '', 'input': '0x', 'contractAddress': '', 'cumulativeGasUsed': '126000', 'gasUsed': '21000', 'confirmations': '16011481', 'methodId': '0x', 'functionName': ''}", metadata={'from': '0x3763e6e1228bfeab94191c856412d1bb0a8e6996', 'tx_hash': '0xe00abf5fa83a4b23ee1cc7f07f9dda04ab5fa5efe358b315df8b76699a83efc4', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b'}),
@@ -138,7 +145,8 @@ result
  Document(page_content="{'blockNumber': '1780120', 'timeStamp': '1467020353', 'hash': '0xc5ec8cecdc9f5ed55a5b8b0ad79c964fb5c49dc1136b6a49e981616c3e70bbe6', 'nonce': '1266', 'blockHash': '0xfc0e066e5b613239e1a01e6d582e7ab162ceb3ca4f719dfbd1a0c965adcfe1c5', 'transactionIndex': '1', 'from': '0x16545fb79dbee1ad3a7f868b7661c023f372d5de', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b', 'value': '11890330240000000000', 'gas': '90000', 'gasPrice': '20000000000', 'isError': '0', 'txreceipt_status': '', 'input': '0x', 'contractAddress': '', 'cumulativeGasUsed': '42000', 'gasUsed': '21000', 'confirmations': '15955132', 'methodId': '0x', 'functionName': ''}", metadata={'from': '0x16545fb79dbee1ad3a7f868b7661c023f372d5de', 'tx_hash': '0xc5ec8cecdc9f5ed55a5b8b0ad79c964fb5c49dc1136b6a49e981616c3e70bbe6', 'to': '0x9dd134d14d1e65f84b706d6f205cd5b1cd03a46b'})]
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

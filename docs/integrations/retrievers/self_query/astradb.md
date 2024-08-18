@@ -1,24 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/self_query/astradb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/self_query/astradb.ipynb
+description: Astra DB는 Cassandra 기반의 서버리스 벡터 데이터베이스로, JSON API를 통해 쉽게 사용할 수 있습니다.
 ---
 
 # Astra DB (Cassandra)
 
-> [DataStax Astra DB](https://docs.datastax.com/en/astra/home/astra.html) is a serverless vector-capable database built on `Cassandra` and made conveniently available through an easy-to-use JSON API.
+> [DataStax Astra DB](https://docs.datastax.com/en/astra/home/astra.html)는 `Cassandra`를 기반으로 한 서버리스 벡터 지원 데이터베이스로, 사용하기 쉬운 JSON API를 통해 편리하게 제공됩니다.
 
-In the walkthrough, we'll demo the `SelfQueryRetriever` with an `Astra DB` vector store.
+이 안내서에서는 `Astra DB` 벡터 저장소와 함께 `SelfQueryRetriever`를 시연할 것입니다.
 
-## Creating an Astra DB vector store
-First we'll want to create an Astra DB VectorStore and seed it with some data. We've created a small demo set of documents that contain summaries of movies.
+## Astra DB 벡터 저장소 만들기
+먼저 Astra DB VectorStore를 만들고 일부 데이터로 초기화해야 합니다. 우리는 영화 요약을 포함하는 작은 데모 문서 세트를 만들었습니다.
 
-NOTE: The self-query retriever requires you to have `lark` installed (`pip install lark`). We also need the `astrapy` package.
+참고: self-query retriever를 사용하려면 `lark`가 설치되어 있어야 합니다 (`pip install lark`). 또한 `astrapy` 패키지가 필요합니다.
 
 ```python
 %pip install --upgrade --quiet lark astrapy langchain-openai
 ```
 
-We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
+
+우리는 `OpenAIEmbeddings`를 사용하고 싶으므로 OpenAI API 키를 가져와야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAIEmbeddings", "source": "langchain_openai.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Astra DB (Cassandra)"}]-->
@@ -32,15 +33,17 @@ os.environ["OPENAI_API_KEY"] = getpass("OpenAI API Key:")
 embeddings = OpenAIEmbeddings()
 ```
 
-Create the Astra DB VectorStore:
 
-- the API Endpoint looks like `https://01234567-89ab-cdef-0123-456789abcdef-us-east1.apps.astra.datastax.com`
-- the Token looks like `AstraCS:6gBhNmsk135....`
+Astra DB VectorStore를 생성합니다:
+
+- API 엔드포인트는 `https://01234567-89ab-cdef-0123-456789abcdef-us-east1.apps.astra.datastax.com`과 같습니다.
+- 토큰은 `AstraCS:6gBhNmsk135....`와 같습니다.
 
 ```python
 ASTRA_DB_API_ENDPOINT = input("ASTRA_DB_API_ENDPOINT = ")
 ASTRA_DB_APPLICATION_TOKEN = getpass("ASTRA_DB_APPLICATION_TOKEN = ")
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.astradb.AstraDB.html", "title": "Astra DB (Cassandra)"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Astra DB (Cassandra)"}]-->
@@ -88,8 +91,9 @@ vectorstore = AstraDB.from_documents(
 )
 ```
 
-## Creating our self-querying retriever
-Now we can instantiate our retriever. To do this we'll need to provide some information upfront about the metadata fields that our documents support and a short description of the document contents.
+
+## 자체 쿼리 검색기 만들기
+이제 검색기를 인스턴스화할 수 있습니다. 이를 위해 문서가 지원하는 메타데이터 필드에 대한 정보를 미리 제공하고 문서 내용에 대한 간단한 설명을 제공해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "Astra DB (Cassandra)"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "Astra DB (Cassandra)"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Astra DB (Cassandra)"}]-->
@@ -125,28 +129,33 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
-## Testing it out
-And now we can try actually using our retriever!
+
+## 테스트해보기
+이제 실제로 검색기를 사용해 볼 수 있습니다!
 
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are some movies about dinosaurs?")
 ```
 
+
 ```python
 # This example specifies a filter
 retriever.invoke("I want to watch a movie rated higher than 8.5")
 ```
+
 
 ```python
 # This example only specifies a query and a filter
 retriever.invoke("Has Greta Gerwig directed any movies about women")
 ```
 
+
 ```python
 # This example specifies a composite filter
 retriever.invoke("What's a highly rated (above 8.5), science fiction movie ?")
 ```
+
 
 ```python
 # This example specifies a query and composite filter
@@ -155,11 +164,12 @@ retriever.invoke(
 )
 ```
 
-## Filter k
 
-We can also use the self query retriever to specify `k`: the number of documents to fetch.
+## k 필터링
 
-We can do this by passing `enable_limit=True` to the constructor.
+자체 쿼리 검색기를 사용하여 `k`: 가져올 문서 수를 지정할 수도 있습니다.
+
+생성자에 `enable_limit=True`를 전달하여 이를 수행할 수 있습니다.
 
 ```python
 retriever = SelfQueryRetriever.from_llm(
@@ -172,16 +182,18 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
+
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are two movies about dinosaurs?")
 ```
 
-## Cleanup
 
-If you want to completely delete the collection from your Astra DB instance, run this.
+## 정리
 
-*(You will lose the data you stored in it.)*
+Astra DB 인스턴스에서 컬렉션을 완전히 삭제하려면 이 명령을 실행하세요.
+
+*(저장한 데이터가 손실됩니다.)*
 
 ```python
 vectorstore.delete_collection()

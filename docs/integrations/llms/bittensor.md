@@ -1,21 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/bittensor/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/bittensor.ipynb
+description: Bittensor는 채굴자들이 컴퓨팅 및 지식을 기여하도록 유도하는 분산 AI 네트워크로, 다양한 AI 모델을 활용합니다.
 ---
 
 # Bittensor
 
-> [Bittensor](https://bittensor.com/) is a mining network, similar to Bitcoin, that includes built-in incentives designed to encourage miners to contribute compute + knowledge.
+> [Bittensor](https://bittensor.com/)는 비트코인과 유사한 채굴 네트워크로, 채굴자들이 컴퓨팅 및 지식을 기여하도록 유도하기 위해 설계된 내장 인센티브를 포함하고 있습니다.
 > 
-> `NIBittensorLLM` is developed by [Neural Internet](https://neuralinternet.ai/), powered by `Bittensor`.
+> `NIBittensorLLM`은 [Neural Internet](https://neuralinternet.ai/)에 의해 개발되었으며, `Bittensor`의 지원을 받습니다.
 
-> This LLM showcases true potential of decentralized AI by giving you the best response(s) from the `Bittensor protocol`, which consist of various AI models such as `OpenAI`, `LLaMA2` etc.
+> 이 LLM은 `OpenAI`, `LLaMA2` 등 다양한 AI 모델로 구성된 `Bittensor 프로토콜`에서 최상의 응답을 제공함으로써 분산형 AI의 진정한 잠재력을 보여줍니다.
 
-Users can view their logs, requests, and API keys on the [Validator Endpoint Frontend](https://api.neuralinternet.ai/). However, changes to the configuration are currently prohibited; otherwise, the user's queries will be blocked.
+사용자는 [Validator Endpoint Frontend](https://api.neuralinternet.ai/)에서 로그, 요청 및 API 키를 확인할 수 있습니다. 그러나 구성 변경은 현재 금지되어 있으며, 그렇지 않으면 사용자의 쿼리가 차단됩니다.
 
-If you encounter any difficulties or have any questions, please feel free to reach out to our developer on [GitHub](https://github.com/Kunj-2206), [Discord](https://discordapp.com/users/683542109248159777) or join our discord server for latest update and queries [Neural Internet](https://discord.gg/neuralinternet).
+어려움이 있거나 질문이 있는 경우, [GitHub](https://github.com/Kunj-2206), [Discord](https://discordapp.com/users/683542109248159777)에서 개발자에게 연락하거나 최신 업데이트 및 질문을 위해 [Neural Internet](https://discord.gg/neuralinternet) 디스코드 서버에 참여해 주시기 바랍니다.
 
-## Different Parameter and response handling for NIBittensorLLM
+## NIBittensorLLM에 대한 다양한 매개변수 및 응답 처리
 
 ```python
 <!--IMPORTS:[{"imported": "set_debug", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_debug.html", "title": "Bittensor"}, {"imported": "NIBittensorLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.bittensor.NIBittensorLLM.html", "title": "Bittensor"}]-->
@@ -56,7 +56,8 @@ json_multi_resp = json.loads(multi_resp)
 pprint(json_multi_resp)
 ```
 
-## Using NIBittensorLLM with LLMChain and PromptTemplate
+
+## LLMChain 및 PromptTemplate와 함께 NIBittensorLLM 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Bittensor"}, {"imported": "set_debug", "source": "langchain.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain.globals.set_debug.html", "title": "Bittensor"}, {"imported": "NIBittensorLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.bittensor.NIBittensorLLM.html", "title": "Bittensor"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Bittensor"}]-->
@@ -85,7 +86,8 @@ question = "What is bittensor?"
 llm_chain.run(question)
 ```
 
-## Using NIBittensorLLM with Conversational Agent and Google Search Tool
+
+## 대화형 에이전트 및 Google 검색 도구와 함께 NIBittensorLLM 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleSearchAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_search.GoogleSearchAPIWrapper.html", "title": "Bittensor"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Bittensor"}]-->
@@ -100,6 +102,7 @@ tool = Tool(
     func=search.run,
 )
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Bittensor"}, {"imported": "create_react_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.react.agent.create_react_agent.html", "title": "Bittensor"}, {"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "Bittensor"}, {"imported": "NIBittensorLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.bittensor.NIBittensorLLM.html", "title": "Bittensor"}]-->
@@ -128,7 +131,8 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, memory=memory)
 response = agent_executor.invoke({"input": prompt})
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

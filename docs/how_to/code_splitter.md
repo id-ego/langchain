@@ -1,13 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/code_splitter/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/code_splitter.ipynb
+description: 이 문서는 RecursiveCharacterTextSplitter를 사용하여 프로그래밍 언어별로 코드를 분할하는 방법에 대해
+  설명합니다.
 ---
 
-# How to split code
+# 코드 분할 방법
 
-[RecursiveCharacterTextSplitter](https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html) includes pre-built lists of separators that are useful for splitting text in a specific programming language.
+[RecursiveCharacterTextSplitter](https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html)에는 특정 프로그래밍 언어로 텍스트를 분할하는 데 유용한 구분자의 미리 구축된 목록이 포함되어 있습니다.
 
-Supported languages are stored in the `langchain_text_splitters.Language` enum. They include:
+지원되는 언어는 `langchain_text_splitters.Language` 열거형에 저장됩니다. 포함된 언어는:
 
 ```
 "cpp",
@@ -36,21 +37,25 @@ Supported languages are stored in the `langchain_text_splitters.Language` enum. 
 "haskell"
 ```
 
-To view the list of separators for a given language, pass a value from this enum into
+
+주어진 언어에 대한 구분자 목록을 보려면 이 열거형에서 값을 전달하십시오.
 ```python
 RecursiveCharacterTextSplitter.get_separators_for_language`
 ```
 
-To instantiate a splitter that is tailored for a specific language, pass a value from the enum into
+
+특정 언어에 맞춘 분할기를 인스턴스화하려면 열거형에서 값을 전달하십시오.
 ```python
 RecursiveCharacterTextSplitter.from_language
 ```
 
-Below we demonstrate examples for the various languages.
+
+아래에서는 다양한 언어에 대한 예제를 보여줍니다.
 
 ```python
 %pip install -qU langchain-text-splitters
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Language", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.Language.html", "title": "How to split code"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to split code"}]-->
@@ -60,11 +65,13 @@ from langchain_text_splitters import (
 )
 ```
 
-To view the full list of supported languages:
+
+지원되는 언어의 전체 목록을 보려면:
 
 ```python
 [e.value for e in Language]
 ```
+
 
 ```output
 ['cpp',
@@ -93,19 +100,22 @@ To view the full list of supported languages:
  'haskell']
 ```
 
-You can also see the separators used for a given language:
+
+주어진 언어에 사용된 구분자도 확인할 수 있습니다:
 
 ```python
 RecursiveCharacterTextSplitter.get_separators_for_language(Language.PYTHON)
 ```
 
+
 ```output
 ['\nclass ', '\ndef ', '\n\tdef ', '\n\n', '\n', ' ', '']
 ```
 
+
 ## Python
 
-Here's an example using the PythonTextSplitter:
+다음은 PythonTextSplitter를 사용하는 예입니다:
 
 ```python
 PYTHON_CODE = """
@@ -122,13 +132,15 @@ python_docs = python_splitter.create_documents([PYTHON_CODE])
 python_docs
 ```
 
+
 ```output
 [Document(page_content='def hello_world():\n    print("Hello, World!")'),
  Document(page_content='# Call the function\nhello_world()')]
 ```
 
+
 ## JS
-Here's an example using the JS text splitter:
+다음은 JS 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 JS_CODE = """
@@ -147,13 +159,15 @@ js_docs = js_splitter.create_documents([JS_CODE])
 js_docs
 ```
 
+
 ```output
 [Document(page_content='function helloWorld() {\n  console.log("Hello, World!");\n}'),
  Document(page_content='// Call the function\nhelloWorld();')]
 ```
 
+
 ## TS
-Here's an example using the TS text splitter:
+다음은 TS 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 TS_CODE = """
@@ -172,15 +186,17 @@ ts_docs = ts_splitter.create_documents([TS_CODE])
 ts_docs
 ```
 
+
 ```output
 [Document(page_content='function helloWorld(): void {'),
  Document(page_content='console.log("Hello, World!");\n}'),
  Document(page_content='// Call the function\nhelloWorld();')]
 ```
 
+
 ## Markdown
 
-Here's an example using the Markdown text splitter:
+다음은 Markdown 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 markdown_text = """
@@ -197,6 +213,7 @@ As an open-source project in a rapidly developing field, we are extremely open t
 """
 ```
 
+
 ```python
 md_splitter = RecursiveCharacterTextSplitter.from_language(
     language=Language.MARKDOWN, chunk_size=60, chunk_overlap=0
@@ -204,6 +221,7 @@ md_splitter = RecursiveCharacterTextSplitter.from_language(
 md_docs = md_splitter.create_documents([markdown_text])
 md_docs
 ```
+
 
 ```output
 [Document(page_content='# 🦜️🔗 LangChain'),
@@ -215,9 +233,10 @@ md_docs
  Document(page_content='are extremely open to contributions.')]
 ```
 
+
 ## Latex
 
-Here's an example on Latex text:
+다음은 Latex 텍스트에 대한 예입니다:
 
 ```python
 latex_text = """
@@ -240,6 +259,7 @@ LLMs have many applications in industry, including chatbots, content creation, a
 """
 ```
 
+
 ```python
 latex_splitter = RecursiveCharacterTextSplitter.from_language(
     language=Language.MARKDOWN, chunk_size=60, chunk_overlap=0
@@ -247,6 +267,7 @@ latex_splitter = RecursiveCharacterTextSplitter.from_language(
 latex_docs = latex_splitter.create_documents([latex_text])
 latex_docs
 ```
+
 
 ```output
 [Document(page_content='\\documentclass{article}\n\n\x08egin{document}\n\n\\maketitle'),
@@ -273,9 +294,10 @@ latex_docs
  Document(page_content='\\end{document}')]
 ```
 
+
 ## HTML
 
-Here's an example using an HTML text splitter:
+다음은 HTML 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 html_text = """
@@ -305,6 +327,7 @@ html_text = """
 """
 ```
 
+
 ```python
 html_splitter = RecursiveCharacterTextSplitter.from_language(
     language=Language.HTML, chunk_size=60, chunk_overlap=0
@@ -312,6 +335,7 @@ html_splitter = RecursiveCharacterTextSplitter.from_language(
 html_docs = html_splitter.create_documents([html_text])
 html_docs
 ```
+
 
 ```output
 [Document(page_content='<!DOCTYPE html>\n<html>'),
@@ -329,8 +353,9 @@ html_docs
  Document(page_content='</div>\n    </body>\n</html>')]
 ```
 
+
 ## Solidity
-Here's an example using the Solidity text splitter:
+다음은 Solidity 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 SOL_CODE = """
@@ -349,13 +374,15 @@ sol_docs = sol_splitter.create_documents([SOL_CODE])
 sol_docs
 ```
 
+
 ```output
 [Document(page_content='pragma solidity ^0.8.20;'),
  Document(page_content='contract HelloWorld {\n   function add(uint a, uint b) pure public returns(uint) {\n       return a + b;\n   }\n}')]
 ```
 
+
 ## C#
-Here's an example using the C# text splitter:
+다음은 C# 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 C_CODE = """
@@ -389,6 +416,7 @@ c_docs = c_splitter.create_documents([C_CODE])
 c_docs
 ```
 
+
 ```output
 [Document(page_content='using System;'),
  Document(page_content='class Program\n{\n    static void Main()\n    {\n        int age = 30; // Change the age value as needed'),
@@ -397,8 +425,9 @@ c_docs
  Document(page_content='// Age is a senior citizen\n        }\n    }\n}')]
 ```
 
+
 ## Haskell
-Here's an example using the Haskell text splitter:
+다음은 Haskell 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 HASKELL_CODE = """
@@ -416,6 +445,7 @@ haskell_docs = haskell_splitter.create_documents([HASKELL_CODE])
 haskell_docs
 ```
 
+
 ```output
 [Document(page_content='main :: IO ()'),
  Document(page_content='main = do\n    putStrLn "Hello, World!"\n-- Some'),
@@ -423,8 +453,9 @@ haskell_docs
  Document(page_content='= x + y')]
 ```
 
+
 ## PHP
-Here's an example using the PHP text splitter:
+다음은 PHP 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 PHP_CODE = """<?php
@@ -451,6 +482,7 @@ php_docs = php_splitter.create_documents([PHP_CODE])
 php_docs
 ```
 
+
 ```output
 [Document(page_content='<?php\nnamespace foo;'),
  Document(page_content='class Hello {'),
@@ -461,8 +493,9 @@ php_docs
  Document(page_content='case Blue;\n}')]
 ```
 
+
 ## PowerShell
-Here's an example using the PowerShell text splitter:
+다음은 PowerShell 텍스트 분할기를 사용하는 예입니다:
 
 ```python
 POWERSHELL_CODE = """

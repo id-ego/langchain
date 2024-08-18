@@ -1,21 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/graphs/hugegraph/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/graphs/hugegraph.ipynb
+description: HugeGraph는 Apache TinkerPop3 프레임워크와 Gremlin 쿼리 언어와 호환되는 효율적이고 적응 가능한
+  그래프 데이터베이스입니다.
 ---
 
 # HugeGraph
 
-> [HugeGraph](https://hugegraph.apache.org/) is a convenient, efficient, and adaptable graph database compatible with
-the `Apache TinkerPop3` framework and the `Gremlin` query language.
+> [HugeGraph](https://hugegraph.apache.org/)는 `Apache TinkerPop3` 프레임워크 및 `Gremlin` 쿼리 언어와 호환되는 편리하고 효율적이며 적응 가능한 그래프 데이터베이스입니다.
 > 
-> [Gremlin](https://en.wikipedia.org/wiki/Gremlin_(query_language)) is a graph traversal language and virtual machine developed by `Apache TinkerPop` of the `Apache Software Foundation`.
+> [Gremlin](https://en.wikipedia.org/wiki/Gremlin_(query_language))은 `Apache Software Foundation`의 `Apache TinkerPop`에 의해 개발된 그래프 탐색 언어 및 가상 머신입니다.
 
-This notebook shows how to use LLMs to provide a natural language interface to [HugeGraph](https://hugegraph.apache.org/cn/) database.
+이 노트북은 LLM을 사용하여 [HugeGraph](https://hugegraph.apache.org/cn/) 데이터베이스에 자연어 인터페이스를 제공하는 방법을 보여줍니다.
 
-## Setting up
+## 설정
 
-You will need to have a running HugeGraph instance.
-You can run a local docker container by running the executing the following script:
+실행 중인 HugeGraph 인스턴스가 필요합니다.
+다음 스크립트를 실행하여 로컬 도커 컨테이너를 실행할 수 있습니다:
 
 ```
 docker run \
@@ -25,13 +25,15 @@ docker run \
     hugegraph/hugegraph
 ```
 
-If we want to connect HugeGraph in the application, we need to install python sdk:
+
+애플리케이션에서 HugeGraph에 연결하려면 python sdk를 설치해야 합니다:
 
 ```
 pip3 install hugegraph-python
 ```
 
-If you are using the docker container, you need to wait a couple of second for the database to start, and then we need create schema and write graph data for the database.
+
+도커 컨테이너를 사용하는 경우 데이터베이스가 시작될 때까지 몇 초 기다려야 하며, 그 후에 스키마를 생성하고 데이터베이스에 그래프 데이터를 작성해야 합니다.
 
 ```python
 from hugegraph.connection import PyHugeGraph
@@ -39,7 +41,8 @@ from hugegraph.connection import PyHugeGraph
 client = PyHugeGraph("localhost", "8080", user="admin", pwd="admin", graph="hugegraph")
 ```
 
-First, we create the schema for a simple movie database:
+
+먼저, 간단한 영화 데이터베이스를 위한 스키마를 생성합니다:
 
 ```python
 """schema"""
@@ -57,11 +60,13 @@ schema.edgeLabel("ActedIn").sourceLabel("Person").targetLabel(
 ).ifNotExist().create()
 ```
 
+
 ```output
 'create EdgeLabel success, Detail: "b\'{"id":1,"name":"ActedIn","source_label":"Person","target_label":"Movie","frequency":"SINGLE","sort_keys":[],"nullable_keys":[],"index_labels":[],"properties":[],"status":"CREATED","ttl":0,"enable_label_index":true,"user_data":{"~create_time":"2023-07-04 10:48:47.908"}}\'"'
 ```
 
-Then we can insert some data.
+
+그런 다음 일부 데이터를 삽입할 수 있습니다.
 
 ```python
 """graph"""
@@ -80,13 +85,15 @@ g.addEdge(
 g.addEdge("ActedIn", "1:Robert De Niro", "2:The Godfather Part II", {})
 ```
 
+
 ```output
 1:Robert De Niro--ActedIn-->2:The Godfather Part II
 ```
 
-## Creating `HugeGraphQAChain`
 
-We can now create the `HugeGraph` and `HugeGraphQAChain`. To create the `HugeGraph` we simply need to pass the database object to the `HugeGraph` constructor.
+## `HugeGraphQAChain` 생성
+
+이제 `HugeGraph` 및 `HugeGraphQAChain`을 생성할 수 있습니다. `HugeGraph`를 생성하려면 데이터베이스 객체를 `HugeGraph` 생성자에 전달하면 됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "HugeGraphQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.hugegraph.HugeGraphQAChain.html", "title": "HugeGraph"}, {"imported": "HugeGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.hugegraph.HugeGraph.html", "title": "HugeGraph"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "HugeGraph"}]-->
@@ -94,6 +101,7 @@ from langchain.chains import HugeGraphQAChain
 from langchain_community.graphs import HugeGraph
 from langchain_openai import ChatOpenAI
 ```
+
 
 ```python
 graph = HugeGraph(
@@ -105,33 +113,39 @@ graph = HugeGraph(
 )
 ```
 
-## Refresh graph schema information
 
-If the schema of database changes, you can refresh the schema information needed to generate Gremlin statements.
+## 그래프 스키마 정보 새로 고침
+
+데이터베이스의 스키마가 변경되면 Gremlin 문을 생성하는 데 필요한 스키마 정보를 새로 고칠 수 있습니다.
 
 ```python
 # graph.refresh_schema()
 ```
 
+
 ```python
 print(graph.get_schema)
 ```
+
 ```output
 Node properties: [name: Person, primary_keys: ['name'], properties: ['name', 'birthDate'], name: Movie, primary_keys: ['name'], properties: ['name']]
 Edge properties: [name: ActedIn, properties: []]
 Relationships: ['Person--ActedIn-->Movie']
 ```
-## Querying the graph
 
-We can now use the graph Gremlin QA chain to ask question of the graph
+## 그래프 쿼리
+
+이제 그래프 Gremlin QA 체인을 사용하여 그래프에 질문을 할 수 있습니다.
 
 ```python
 chain = HugeGraphQAChain.from_llm(ChatOpenAI(temperature=0), graph=graph, verbose=True)
 ```
 
+
 ```python
 chain.run("Who played in The Godfather?")
 ```
+
 ```output
 
 
@@ -143,6 +157,7 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
+
 
 ```output
 'Al Pacino played in The Godfather.'

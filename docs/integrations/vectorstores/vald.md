@@ -1,24 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/vald/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/vald.ipynb
+description: Vald는 고도로 확장 가능한 분산형 빠른 근사 최근접 이웃(ANN) 밀집 벡터 검색 엔진입니다. 이 문서는 Vald 데이터베이스
+  사용 방법을 보여줍니다.
 ---
 
 # Vald
 
-> [Vald](https://github.com/vdaas/vald) is a highly scalable distributed fast approximate nearest neighbor (ANN) dense vector search engine.
+> [Vald](https://github.com/vdaas/vald)는 고도로 확장 가능한 분산 빠른 근사 최근접 이웃(ANN) 밀집 벡터 검색 엔진입니다.
 
-This notebook shows how to use functionality related to the `Vald` database.
+이 노트북은 `Vald` 데이터베이스와 관련된 기능을 사용하는 방법을 보여줍니다.
 
-To run this notebook you need a running Vald cluster.
-Check [Get Started](https://github.com/vdaas/vald#get-started) for more information.
+이 노트북을 실행하려면 실행 중인 Vald 클러스터가 필요합니다.
+자세한 정보는 [시작하기](https://github.com/vdaas/vald#get-started)를 확인하세요.
 
-See the [installation instructions](https://github.com/vdaas/vald-client-python#install).
+[설치 지침](https://github.com/vdaas/vald-client-python#install)을 참조하세요.
 
 ```python
 %pip install --upgrade --quiet  vald-client-python langchain-community
 ```
 
-## Basic Example
+
+## 기본 예제
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Vald"}, {"imported": "Vald", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vald.Vald.html", "title": "Vald"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Vald"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Vald"}]-->
@@ -34,13 +36,15 @@ embeddings = HuggingFaceEmbeddings()
 db = Vald.from_documents(documents, embeddings, host="localhost", port=8080)
 ```
 
+
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = db.similarity_search(query)
 docs[0].page_content
 ```
 
-### Similarity search by vector
+
+### 벡터에 의한 유사성 검색
 
 ```python
 embedding_vector = embeddings.embed_query(query)
@@ -48,34 +52,38 @@ docs = db.similarity_search_by_vector(embedding_vector)
 docs[0].page_content
 ```
 
-### Similarity search with score
+
+### 점수가 있는 유사성 검색
 
 ```python
 docs_and_scores = db.similarity_search_with_score(query)
 docs_and_scores[0]
 ```
 
-## Maximal Marginal Relevance Search (MMR)
 
-In addition to using similarity search in the retriever object, you can also use `mmr` as retriever.
+## 최대 한계 관련성 검색 (MMR)
+
+검색기 객체에서 유사성 검색을 사용하는 것 외에도 `mmr`을 검색기로 사용할 수 있습니다.
 
 ```python
 retriever = db.as_retriever(search_type="mmr")
 retriever.invoke(query)
 ```
 
-Or use `max_marginal_relevance_search` directly:
+
+또는 `max_marginal_relevance_search`를 직접 사용할 수 있습니다:
 
 ```python
 db.max_marginal_relevance_search(query, k=2, fetch_k=10)
 ```
 
-## Example of using secure connection
-In order to run this notebook, it is necessary to run a Vald cluster with secure connection.
 
-Here is an example of a Vald cluster with the following configuration using [Athenz](https://github.com/AthenZ/athenz) authentication.
+## 보안 연결 사용 예
+이 노트북을 실행하려면 보안 연결이 있는 Vald 클러스터를 실행해야 합니다.
 
-ingress(TLS) -> [authorization-proxy](https://github.com/AthenZ/authorization-proxy)(Check athenz-role-auth in grpc metadata) -> vald-lb-gateway
+다음은 [Athenz](https://github.com/AthenZ/athenz) 인증을 사용하여 구성된 Vald 클러스터의 예입니다.
+
+ingress(TLS) -> [authorization-proxy](https://github.com/AthenZ/authorization-proxy)(grpc 메타데이터에서 athenz-role-auth 확인) -> vald-lb-gateway
 
 ```python
 import grpc
@@ -89,6 +97,7 @@ with open(".ztoken", "rb") as ztoken:
 
 metadata = [(b"athenz-role-auth", token)]
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Vald"}, {"imported": "Vald", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vald.Vald.html", "title": "Vald"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Vald"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Vald"}]-->
@@ -113,13 +122,15 @@ db = Vald.from_documents(
 )
 ```
 
+
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = db.similarity_search(query, grpc_metadata=metadata)
 docs[0].page_content
 ```
 
-### Similarity search by vector
+
+### 벡터에 의한 유사성 검색
 
 ```python
 embedding_vector = embeddings.embed_query(query)
@@ -127,14 +138,16 @@ docs = db.similarity_search_by_vector(embedding_vector, grpc_metadata=metadata)
 docs[0].page_content
 ```
 
-### Similarity search with score
+
+### 점수가 있는 유사성 검색
 
 ```python
 docs_and_scores = db.similarity_search_with_score(query, grpc_metadata=metadata)
 docs_and_scores[0]
 ```
 
-### Maximal Marginal Relevance Search (MMR)
+
+### 최대 한계 관련성 검색 (MMR)
 
 ```python
 retriever = db.as_retriever(
@@ -143,13 +156,15 @@ retriever = db.as_retriever(
 retriever.invoke(query, grpc_metadata=metadata)
 ```
 
-Or:
+
+또는:
 
 ```python
 db.max_marginal_relevance_search(query, k=2, fetch_k=10, grpc_metadata=metadata)
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

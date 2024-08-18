@@ -1,39 +1,40 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/arxiv/
+description: arXiv는 물리학, 수학, 컴퓨터 과학 등 다양한 분야의 200만 개 학술 기사를 제공하는 오픈 액세스 아카이브입니다.
 ---
 
 # Arxiv
 
-> [arXiv](https://arxiv.org/) is an open-access archive for 2 million scholarly articles in the fields of physics,
-mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and
-systems science, and economics.
+> [arXiv](https://arxiv.org/)는 물리학, 수학, 컴퓨터 과학, 정량 생물학, 정량 금융, 통계학, 전기 공학 및 시스템 과학, 경제학 분야의 200만 개 학술 기사를 위한 오픈 액세스 아카이브입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-First, you need to install `arxiv` python package.
+먼저, `arxiv` 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install arxiv
 ```
 
-Second, you need to install `PyMuPDF` python package which transforms PDF files downloaded from the `arxiv.org` site into the text format.
+
+둘째, `arxiv.org` 사이트에서 다운로드한 PDF 파일을 텍스트 형식으로 변환하는 `PyMuPDF` 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install pymupdf
 ```
 
-## Document Loader
 
-See a [usage example](/docs/integrations/document_loaders/arxiv).
+## 문서 로더
+
+[사용 예제](/docs/integrations/document_loaders/arxiv)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ArxivLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.arxiv.ArxivLoader.html", "title": "Arxiv"}]-->
 from langchain_community.document_loaders import ArxivLoader
 ```
 
-## Retriever
 
-See a [usage example](/docs/integrations/retrievers/arxiv).
+## 검색기
+
+[사용 예제](/docs/integrations/retrievers/arxiv)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ArxivRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.arxiv.ArxivRetriever.html", "title": "Arxiv"}]-->

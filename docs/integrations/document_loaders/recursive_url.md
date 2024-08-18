@@ -1,40 +1,42 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/recursive_url/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/recursive_url.ipynb
+description: '`RecursiveUrlLoader`는 루트 URL에서 모든 자식 링크를 재귀적으로 스크랩하고 이를 문서로 파싱하는 기능을
+  제공합니다.'
 ---
 
-# Recursive URL
+# 재귀 URL
 
-The `RecursiveUrlLoader` lets you recursively scrape all child links from a root URL and parse them into Documents.
+`RecursiveUrlLoader`는 루트 URL에서 모든 자식 링크를 재귀적으로 스크랩하고 이를 문서로 파싱할 수 있게 해줍니다.
 
-## Overview
-### Integration details
+## 개요
+### 통합 세부정보
 
-| Class | Package | Local | Serializable | [JS support](https://js.langchain.com/v0.2/docs/integrations/document_loaders/web_loaders/recursive_url_loader/)|
+| 클래스 | 패키지 | 로컬 | 직렬화 가능 | [JS 지원](https://js.langchain.com/v0.2/docs/integrations/document_loaders/web_loaders/recursive_url_loader/)|
 | :--- | :--- | :---: | :---: |  :---: |
 | [RecursiveUrlLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.recursive_url_loader.RecursiveUrlLoader.html) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) | ✅ | ❌ | ✅ | 
-### Loader features
-| Source | Document Lazy Loading | Native Async Support
+### 로더 기능
+| 소스 | 문서 지연 로딩 | 네이티브 비동기 지원
 | :---: | :---: | :---: |
 | RecursiveUrlLoader | ✅ | ❌ | 
 
-## Setup
+## 설정
 
-### Credentials
+### 자격 증명
 
-No credentials are required to use the `RecursiveUrlLoader`.
+`RecursiveUrlLoader`를 사용하기 위해서는 자격 증명이 필요하지 않습니다.
 
-### Installation
+### 설치
 
-The `RecursiveUrlLoader` lives in the `langchain-community` package. There's no other required packages, though you will get richer default Document metadata if you have ``beautifulsoup4` installed as well.
+`RecursiveUrlLoader`는 `langchain-community` 패키지에 포함되어 있습니다. 다른 필수 패키지는 없지만, `beautifulsoup4`를 설치하면 더 풍부한 기본 문서 메타데이터를 얻을 수 있습니다.
 
 ```python
 %pip install -qU langchain-community beautifulsoup4
 ```
 
-## Instantiation
 
-Now we can instantiate our document loader object and load Documents:
+## 인스턴스화
+
+이제 문서 로더 객체를 인스턴스화하고 문서를 로드할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "RecursiveUrlLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.recursive_url_loader.RecursiveUrlLoader.html", "title": "Recursive URL"}]-->
@@ -56,22 +58,23 @@ loader = RecursiveUrlLoader(
 )
 ```
 
-## Load
 
-Use `.load()` to synchronously load into memory all Documents, with one
-Document per visited URL. Starting from the initial URL, we recurse through
-all linked URLs up to the specified max_depth.
+## 로드
 
-Let's run through a basic example of how to use the `RecursiveUrlLoader` on the [Python 3.9 Documentation](https://docs.python.org/3.9/).
+`.load()`를 사용하여 메모리에 모든 문서를 동기적으로 로드합니다. 방문한 URL당 하나의 문서가 생성됩니다. 초기 URL에서 시작하여 지정된 max_depth까지 모든 링크된 URL을 재귀적으로 탐색합니다.
+
+[Python 3.9 Documentation](https://docs.python.org/3.9/)에서 `RecursiveUrlLoader`를 사용하는 기본 예제를 살펴보겠습니다.
 
 ```python
 docs = loader.load()
 docs[0].metadata
 ```
+
 ```output
 /Users/bagatur/.pyenv/versions/3.9.1/lib/python3.9/html/parser.py:170: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
   k = self.parse_starttag(i)
 ```
+
 
 ```output
 {'source': 'https://docs.python.org/3.9/',
@@ -80,11 +83,13 @@ docs[0].metadata
  'language': None}
 ```
 
-Great! The first document looks like the root page we started from. Let's look at the metadata of the next document
+
+좋습니다! 첫 번째 문서는 우리가 시작한 루트 페이지처럼 보입니다. 다음 문서의 메타데이터를 살펴보겠습니다.
 
 ```python
 docs[1].metadata
 ```
+
 
 ```output
 {'source': 'https://docs.python.org/3.9/using/index.html',
@@ -93,11 +98,13 @@ docs[1].metadata
  'language': None}
 ```
 
-That url looks like a child of our root page, which is great! Let's move on from metadata to examine the content of one of our documents
+
+해당 URL은 우리의 루트 페이지의 자식처럼 보입니다. 좋습니다! 메타데이터에서 콘텐츠를 살펴보겠습니다.
 
 ```python
 print(docs[0].page_content[:300])
 ```
+
 ```output
 
 <!DOCTYPE html>
@@ -109,11 +116,12 @@ print(docs[0].page_content[:300])
     <link rel="stylesheet" href="_static/pydoctheme.css" type="text/css" />
     <link rel=
 ```
-That certainly looks like HTML that comes from the url https://docs.python.org/3.9/, which is what we expected. Let's now look at some variations we can make to our basic example that can be helpful in different situations. 
 
-## Lazy loading
+확실히 https://docs.python.org/3.9/에서 온 HTML처럼 보입니다. 우리가 예상했던 대로입니다. 이제 다양한 상황에서 유용할 수 있는 기본 예제에 대한 몇 가지 변형을 살펴보겠습니다.
 
-If we're loading a  large number of Documents and our downstream operations can be done over subsets of all loaded Documents, we can lazily load our Documents one at a time to minimize our memory footprint:
+## 지연 로딩
+
+많은 수의 문서를 로드하고 하위 작업이 로드된 모든 문서의 하위 집합에서 수행될 수 있는 경우, 메모리 사용량을 최소화하기 위해 문서를 하나씩 지연 로드할 수 있습니다:
 
 ```python
 pages = []
@@ -125,15 +133,17 @@ for doc in loader.lazy_load():
 
         pages = []
 ```
+
 ```output
 /var/folders/4j/2rz3865x6qg07tx43146py8h0000gn/T/ipykernel_73962/2110507528.py:6: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
   soup = BeautifulSoup(html, "lxml")
 ```
-In this example we never have more than 10 Documents loaded into memory at a time.
 
-## Adding an Extractor
+이 예제에서는 한 번에 10개 이상의 문서가 메모리에 로드되지 않습니다.
 
-By default the loader sets the raw HTML from each link as the Document page content. To parse this HTML into a more human/LLM-friendly format you can pass in a custom `extractor` method:
+## 추출기 추가
+
+기본적으로 로더는 각 링크의 원시 HTML을 문서 페이지 콘텐츠로 설정합니다. 이 HTML을 더 인간/LLM 친화적인 형식으로 파싱하려면 사용자 정의 `extractor` 메서드를 전달할 수 있습니다:
 
 ```python
 import re
@@ -150,6 +160,7 @@ loader = RecursiveUrlLoader("https://docs.python.org/3.9/", extractor=bs4_extrac
 docs = loader.load()
 print(docs[0].page_content[:200])
 ```
+
 ```output
 /var/folders/td/vzm913rx77x21csd90g63_7c0000gn/T/ipykernel_10935/1083427287.py:6: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
   soup = BeautifulSoup(html, "lxml")
@@ -168,17 +179,18 @@ Python 3.11 (security-fixes)
 Python 3.10 (security-fixes)
 Python 3.9 (securit
 ```
-This looks much nicer!
 
-You can similarly pass in a `metadata_extractor` to customize how Document metadata is extracted from the HTTP response. See the [API reference](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.recursive_url_loader.RecursiveUrlLoader.html) for more on this.
+훨씬 더 보기 좋습니다!
 
-## API reference
+유사하게 `metadata_extractor`를 전달하여 HTTP 응답에서 문서 메타데이터가 추출되는 방식을 사용자 정의할 수 있습니다. 이에 대한 자세한 내용은 [API 참조](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.recursive_url_loader.RecursiveUrlLoader.html)를 참조하십시오.
 
-These examples show just a few of the ways in which you can modify the default `RecursiveUrlLoader`, but there are many more modifications that can be made to best fit your use case. Using the parameters `link_regex` and `exclude_dirs` can help you filter out unwanted URLs, `aload()` and `alazy_load()` can be used for aynchronous loading, and more.
+## API 참조
 
-For detailed information on configuring and calling the `RecursiveUrlLoader`, please see the API reference: https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.recursive_url_loader.RecursiveUrlLoader.html.
+이 예제들은 기본 `RecursiveUrlLoader`를 수정할 수 있는 몇 가지 방법만 보여주지만, 사용 사례에 가장 적합하게 만들기 위해 더 많은 수정이 가능합니다. `link_regex` 및 `exclude_dirs` 매개변수를 사용하면 원하지 않는 URL을 필터링할 수 있으며, `aload()` 및 `alazy_load()`는 비동기 로딩에 사용할 수 있습니다.
 
-## Related
+`RecursiveUrlLoader`를 구성하고 호출하는 방법에 대한 자세한 정보는 API 참조를 참조하십시오: https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.recursive_url_loader.RecursiveUrlLoader.html.
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

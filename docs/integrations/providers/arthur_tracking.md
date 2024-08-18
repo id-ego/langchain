@@ -1,19 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/arthur_tracking/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/providers/arthur_tracking.ipynb
+description: 이 문서는 Arthur 콜백 핸들러를 사용하여 등록된 채팅 LLM을 실행하고 모델 추론을 자동으로 기록하는 방법을 안내합니다.
 ---
 
-# Arthur
+# 아서
 
-> [Arthur](https://arthur.ai) is a model monitoring and observability platform.
+> [아서](https://arthur.ai)는 모델 모니터링 및 관찰 가능성 플랫폼입니다.
 
-The following guide shows how to run a registered chat LLM with the Arthur callback handler to automatically log model inferences to Arthur.
+다음 가이드는 등록된 채팅 LLM을 아서 콜백 핸들러와 함께 실행하여 모델 추론을 아서에 자동으로 기록하는 방법을 보여줍니다.
 
-If you do not have a model currently onboarded to Arthur, visit our [onboarding guide for generative text models](https://docs.arthur.ai/user-guide/walkthroughs/model-onboarding/generative_text_onboarding.html). For more information about how to use the `Arthur SDK`, visit our [docs](https://docs.arthur.ai/).
+현재 아서에 온보딩된 모델이 없다면, [생성 텍스트 모델을 위한 온보딩 가이드](https://docs.arthur.ai/user-guide/walkthroughs/model-onboarding/generative_text_onboarding.html)를 방문하세요. `Arthur SDK` 사용 방법에 대한 자세한 정보는 [문서](https://docs.arthur.ai/)를 참조하세요.
 
-## Installation and Setup
+## 설치 및 설정
 
-Place Arthur credentials here
+여기에 아서 자격 증명을 입력하세요
 
 ```python
 arthur_url = "https://app.arthur.ai"
@@ -21,7 +21,8 @@ arthur_login = "your-arthur-login-username-here"
 arthur_model_id = "your-arthur-model-id-here"
 ```
 
-## Callback handler
+
+## 콜백 핸들러
 
 ```python
 <!--IMPORTS:[{"imported": "ArthurCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.arthur_callback.ArthurCallbackHandler.html", "title": "Arthur"}, {"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "Arthur"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Arthur"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Arthur"}]-->
@@ -31,7 +32,8 @@ from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 ```
 
-Create Langchain LLM with Arthur callback handler
+
+아서 콜백 핸들러로 Langchain LLM 생성
 
 ```python
 def make_langchain_chat_llm():
@@ -47,15 +49,18 @@ def make_langchain_chat_llm():
     )
 ```
 
+
 ```python
 chatgpt = make_langchain_chat_llm()
 ```
+
 ```output
 Please enter password for admin: ········
 ```
-Running the chat LLM with this `run` function will save the chat history in an ongoing list so that the conversation can reference earlier messages and log each response to the Arthur platform. You can view the history of this model's inferences on your [model dashboard page](https://app.arthur.ai/).
 
-Enter `q` to quit the run loop
+이 `run` 함수를 사용하여 채팅 LLM을 실행하면 채팅 기록이 지속적인 목록에 저장되어 대화가 이전 메시지를 참조할 수 있으며 각 응답이 아서 플랫폼에 기록됩니다. 이 모델의 추론 기록은 [모델 대시보드 페이지](https://app.arthur.ai/)에서 확인할 수 있습니다.
+
+`q`를 입력하여 실행 루프를 종료하세요
 
 ```python
 def run(llm):
@@ -68,9 +73,11 @@ def run(llm):
         history.append(llm(history))
 ```
 
+
 ```python
 run(chatgpt)
 ```
+
 ```output
 
 >>> input >>>

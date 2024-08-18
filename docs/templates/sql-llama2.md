@@ -1,52 +1,57 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/sql-llama2/
+description: 이 템플릿은 자연어를 사용하여 SQL 데이터베이스와 상호작용할 수 있도록 하며, 2023 NBA 로스터의 예제 데이터베이스를
+  포함합니다.
 ---
 
 # sql-llama2
 
-This template enables a user to interact with a SQL database using natural language. 
+이 템플릿은 사용자가 자연어를 사용하여 SQL 데이터베이스와 상호작용할 수 있게 해줍니다.
 
-It uses LLamA2-13b hosted by [Replicate](https://python.langchain.com/docs/integrations/llms/replicate), but can be adapted to any API that supports LLaMA2 including [Fireworks](https://python.langchain.com/docs/integrations/chat/fireworks). 
+이 템플릿은 [Replicate](https://python.langchain.com/docs/integrations/llms/replicate)에서 호스팅되는 LLamA2-13b를 사용하지만, [Fireworks](https://python.langchain.com/docs/integrations/chat/fireworks)를 포함하여 LLaMA2를 지원하는 모든 API에 맞게 조정할 수 있습니다.
 
-The template includes an example database of 2023 NBA rosters. 
+이 템플릿에는 2023 NBA 로스터의 예제 데이터베이스가 포함되어 있습니다.
 
-For more information on how to build this database, see [here](https://github.com/facebookresearch/llama-recipes/blob/main/demo_apps/StructuredLlama.ipynb).
+이 데이터베이스를 구축하는 방법에 대한 자세한 내용은 [여기](https://github.com/facebookresearch/llama-recipes/blob/main/demo_apps/StructuredLlama.ipynb)를 참조하십시오.
 
-## Environment Setup
+## 환경 설정
 
-Ensure the `REPLICATE_API_TOKEN` is set in your environment.
+`REPLICATE_API_TOKEN`이 환경에 설정되어 있는지 확인하십시오.
 
-## Usage
+## 사용법
 
-To use this package, you should first have the LangChain CLI installed:
+이 패키지를 사용하려면 먼저 LangChain CLI가 설치되어 있어야 합니다:
 
 ```shell
 pip install -U langchain-cli
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새로운 LangChain 프로젝트를 생성하고 이것을 유일한 패키지로 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package sql-llama2
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음을 실행하면 됩니다:
 
 ```shell
 langchain app add sql-llama2
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가하십시오:
 ```python
 from sql_llama2 import chain as sql_llama2_chain
 
 add_routes(app, sql_llama2_chain, path="/sql-llama2")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줍니다.
+LangSmith에 가입하려면 [여기](https://smith.langchain.com/)를 방문하십시오.
+접근 권한이 없으면 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -54,19 +59,21 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+
+이 디렉토리 내에 있다면, 다음과 같이 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버가 로컬에서 실행됩니다.
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/sql-llama2/playground](http://127.0.0.1:8000/sql-llama2/playground)  
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 볼 수 있습니다.
+플레이그라운드는 [http://127.0.0.1:8000/sql-llama2/playground](http://127.0.0.1:8000/sql-llama2/playground)에서 접근할 수 있습니다.
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable

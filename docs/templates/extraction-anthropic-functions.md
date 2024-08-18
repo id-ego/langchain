@@ -1,50 +1,54 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/extraction-anthropic-functions/
+description: 이 템플릿은 Anthropic 함수 호출을 통해 추출 및 태깅 작업을 지원합니다. 환경 설정 및 사용 방법을 안내합니다.
 ---
 
 # extraction-anthropic-functions
 
-This template enables [Anthropic function calling](https://python.langchain.com/docs/integrations/chat/anthropic_functions). 
+이 템플릿은 [Anthropic 함수 호출](https://python.langchain.com/docs/integrations/chat/anthropic_functions)을 가능하게 합니다.
 
-This can be used for various tasks, such as extraction or tagging.
+이는 추출 또는 태깅과 같은 다양한 작업에 사용할 수 있습니다.
 
-The function output schema can be set in `chain.py`. 
+함수 출력 스키마는 `chain.py`에서 설정할 수 있습니다.
 
-## Environment Setup
+## 환경 설정
 
-Set the `ANTHROPIC_API_KEY` environment variable to access the Anthropic models.
+`ANTHROPIC_API_KEY` 환경 변수를 설정하여 Anthropic 모델에 접근합니다.
 
-## Usage
+## 사용법
 
-To use this package, you should first have the LangChain CLI installed:
+이 패키지를 사용하려면 먼저 LangChain CLI를 설치해야 합니다:
 
 ```shell
 pip install -U langchain-cli
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새로운 LangChain 프로젝트를 생성하고 이 패키지만 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package extraction-anthropic-functions
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음을 실행하면 됩니다:
 
 ```shell
 langchain app add extraction-anthropic-functions
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가하세요:
 ```python
 from extraction_anthropic_functions import chain as extraction_anthropic_functions_chain
 
 add_routes(app, extraction_anthropic_functions_chain, path="/extraction-anthropic-functions")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줄 것입니다.
+LangSmith에 [여기](https://smith.langchain.com/)에서 가입할 수 있습니다.
+접근 권한이 없는 경우 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -52,19 +56,21 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+
+이 디렉토리 안에 있다면, 다음과 같이 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버가 로컬에서 실행됩니다.
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/extraction-anthropic-functions/playground](http://127.0.0.1:8000/extraction-anthropic-functions/playground)  
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 확인할 수 있습니다.
+플레이그라운드는 [http://127.0.0.1:8000/extraction-anthropic-functions/playground](http://127.0.0.1:8000/extraction-anthropic-functions/playground)에서 접근할 수 있습니다.
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable
@@ -72,6 +78,7 @@ from langserve.client import RemoteRunnable
 runnable = RemoteRunnable("http://localhost:8000/extraction-anthropic-functions")
 ```
 
-By default, the package will extract the title and author of papers from the information you specify in `chain.py`. This template will use `Claude2` by default. 
+
+기본적으로 이 패키지는 `chain.py`에서 지정한 정보로부터 논문의 제목과 저자를 추출합니다. 이 템플릿은 기본적으로 `Claude2`를 사용합니다. 
 
 * * *

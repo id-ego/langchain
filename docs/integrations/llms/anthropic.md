@@ -1,6 +1,7 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/anthropic/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/anthropic.ipynb
+description: 이 문서는 LangChain을 사용하여 Anthropic 모델과 상호작용하는 방법을 설명합니다. 설치 및 환경 설정에 대한
+  정보를 포함합니다.
 sidebar_class_name: hidden
 sidebar_label: Anthropic
 ---
@@ -8,22 +9,23 @@ sidebar_label: Anthropic
 # AnthropicLLM
 
 :::caution
-You are currently on a page documenting the use of Anthropic legacy Claude 2 models as [text completion models](/docs/concepts/#llms). The latest and most popular Anthropic models are [chat completion models](/docs/concepts/#chat-models), and the text completion models have been deprecated.
+현재 Anthropic 레거시 Claude 2 모델을 [텍스트 완성 모델](/docs/concepts/#llms)로 사용하는 방법에 대한 문서 페이지에 있습니다. 최신의 가장 인기 있는 Anthropic 모델은 [채팅 완성 모델](/docs/concepts/#chat-models)이며, 텍스트 완성 모델은 더 이상 사용되지 않습니다.
 
-You are probably looking for [this page instead](/docs/integrations/chat/anthropic/).
+대신 [이 페이지](/docs/integrations/chat/anthropic/)를 찾고 계실 것입니다.
 :::
 
-This example goes over how to use LangChain to interact with `Anthropic` models.
+이 예제는 LangChain을 사용하여 `Anthropic` 모델과 상호작용하는 방법을 설명합니다.
 
-## Installation
+## 설치
 
 ```python
 %pip install -qU langchain-anthropic
 ```
 
-## Environment Setup
 
-We'll need to get an [Anthropic](https://console.anthropic.com/settings/keys) API key and set the `ANTHROPIC_API_KEY` environment variable:
+## 환경 설정
+
+[Anthropic](https://console.anthropic.com/settings/keys) API 키를 가져오고 `ANTHROPIC_API_KEY` 환경 변수를 설정해야 합니다:
 
 ```python
 import os
@@ -32,7 +34,8 @@ from getpass import getpass
 os.environ["ANTHROPIC_API_KEY"] = getpass()
 ```
 
-## Usage
+
+## 사용법
 
 ```python
 <!--IMPORTS:[{"imported": "AnthropicLLM", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_anthropic.llms.AnthropicLLM.html", "title": "AnthropicLLM"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "AnthropicLLM"}]-->
@@ -52,11 +55,13 @@ chain = prompt | model
 chain.invoke({"question": "What is LangChain?"})
 ```
 
+
 ```output
 '\nLangChain is a decentralized blockchain network that leverages AI and machine learning to provide language translation services.'
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

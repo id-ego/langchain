@@ -1,13 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/example_selectors_ngram/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/example_selectors_ngram.ipynb
+description: '`NGramOverlapExampleSelector`는 n-그램 중복 점수를 기반으로 입력과 가장 유사한 예제를 선택하고
+  정렬하는 방법을 설명합니다.'
 ---
 
-# How to select examples by n-gram overlap
+# n-그램 오버랩으로 예제 선택하는 방법
 
-The `NGramOverlapExampleSelector` selects and orders examples based on which examples are most similar to the input, according to an ngram overlap score. The ngram overlap score is a float between 0.0 and 1.0, inclusive. 
+`NGramOverlapExampleSelector`는 n그램 오버랩 점수에 따라 입력과 가장 유사한 예제를 선택하고 정렬합니다. n그램 오버랩 점수는 0.0과 1.0 사이의 부동 소수점 값입니다. 
 
-The selector allows for a threshold score to be set. Examples with an ngram overlap score less than or equal to the threshold are excluded. The threshold is set to -1.0, by default, so will not exclude any examples, only reorder them. Setting the threshold to 0.0 will exclude examples that have no ngram overlaps with the input.
+선택기는 임계값 점수를 설정할 수 있습니다. n그램 오버랩 점수가 임계값보다 작거나 같은 예제는 제외됩니다. 기본적으로 임계값은 -1.0으로 설정되어 있어, 예제를 제외하지 않고 단지 재정렬만 합니다. 임계값을 0.0으로 설정하면 입력과 n그램 오버랩이 없는 예제가 제외됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "NGramOverlapExampleSelector", "source": "langchain_community.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_community.example_selectors.ngram_overlap.NGramOverlapExampleSelector.html", "title": "How to select examples by n-gram overlap"}, {"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to select examples by n-gram overlap"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to select examples by n-gram overlap"}]-->
@@ -26,6 +27,7 @@ examples = [
     {"input": "Spot can run.", "output": "Spot puede correr."},
 ]
 ```
+
 
 ```python
 example_selector = NGramOverlapExampleSelector(
@@ -54,11 +56,13 @@ dynamic_prompt = FewShotPromptTemplate(
 )
 ```
 
+
 ```python
 # An example input with large ngram overlap with "Spot can run."
 # and no overlap with "My dog barks."
 print(dynamic_prompt.format(sentence="Spot can run fast."))
 ```
+
 ```output
 Give the Spanish translation of every input
 
@@ -75,6 +79,7 @@ Input: Spot can run fast.
 Output:
 ```
 
+
 ```python
 # You can add examples to NGramOverlapExampleSelector as well.
 new_example = {"input": "Spot plays fetch.", "output": "Spot juega a buscar."}
@@ -82,6 +87,7 @@ new_example = {"input": "Spot plays fetch.", "output": "Spot juega a buscar."}
 example_selector.add_example(new_example)
 print(dynamic_prompt.format(sentence="Spot can run fast."))
 ```
+
 ```output
 Give the Spanish translation of every input
 
@@ -100,6 +106,7 @@ Output: Mi perro ladra.
 Input: Spot can run fast.
 Output:
 ```
+
 
 ```python
 # You can set a threshold at which examples are excluded.
@@ -110,6 +117,7 @@ Output:
 example_selector.threshold = 0.0
 print(dynamic_prompt.format(sentence="Spot can run fast."))
 ```
+
 ```output
 Give the Spanish translation of every input
 
@@ -126,11 +134,13 @@ Input: Spot can run fast.
 Output:
 ```
 
+
 ```python
 # Setting small nonzero threshold
 example_selector.threshold = 0.09
 print(dynamic_prompt.format(sentence="Spot can play fetch."))
 ```
+
 ```output
 Give the Spanish translation of every input
 
@@ -144,11 +154,13 @@ Input: Spot can play fetch.
 Output:
 ```
 
+
 ```python
 # Setting threshold greater than 1.0
 example_selector.threshold = 1.0 + 1e-9
 print(dynamic_prompt.format(sentence="Spot can play fetch."))
 ```
+
 ```output
 Give the Spanish translation of every input
 

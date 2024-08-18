@@ -1,28 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/tair/
+description: Alibaba Cloud Tair는 Redis와 호환되는 클라우드 기반 인메모리 데이터베이스 서비스로, 실시간 온라인 시나리오를
+  지원합니다.
 ---
 
 # Tair
 
-> [Alibaba Cloud Tair](https://www.alibabacloud.com/help/en/tair/latest/what-is-tair) is a cloud native in-memory database service
-developed by `Alibaba Cloud`. It provides rich data models and enterprise-grade capabilities to
-support your real-time online scenarios while maintaining full compatibility with open-source `Redis`.
-`Tair` also introduces persistent memory-optimized instances that are based on
-new non-volatile memory (NVM) storage medium.
+> [Alibaba Cloud Tair](https://www.alibabacloud.com/help/en/tair/latest/what-is-tair)는 `Alibaba Cloud`에서 개발한 클라우드 네이티브 인메모리 데이터베이스 서비스입니다. 이는 풍부한 데이터 모델과 엔터프라이즈급 기능을 제공하여 실시간 온라인 시나리오를 지원하며 오픈 소스 `Redis`와의 완전한 호환성을 유지합니다. `Tair`는 또한 새로운 비휘발성 메모리(NVM) 저장 매체를 기반으로 하는 지속적인 메모리 최적화 인스턴스를 도입합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install Tair Python SDK:
+Tair Python SDK 설치:
 
 ```bash
 pip install tair
 ```
 
-## Vector Store
+
+## 벡터 저장소
 
 ```python
 <!--IMPORTS:[{"imported": "Tair", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.tair.Tair.html", "title": "Tair"}]-->
 from langchain_community.vectorstores import Tair
 ```
 
-See a [usage example](/docs/integrations/vectorstores/tair).
+
+사용 예제는 [여기](/docs/integrations/vectorstores/tair)를 참조하세요.

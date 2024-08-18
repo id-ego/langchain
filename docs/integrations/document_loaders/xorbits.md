@@ -1,31 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/xorbits/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/xorbits.ipynb
+description: 이 문서는 xorbits.pandas DataFrame에서 데이터를 로드하는 방법에 대해 설명합니다. 다양한 코드 예제를 통해
+  이해를 돕습니다.
 ---
 
 # Xorbits Pandas DataFrame
 
-This notebook goes over how to load data from a [xorbits.pandas](https://doc.xorbits.io/en/latest/reference/pandas/frame.html) DataFrame.
+이 노트북은 [xorbits.pandas](https://doc.xorbits.io/en/latest/reference/pandas/frame.html) DataFrame에서 데이터를 로드하는 방법에 대해 설명합니다.
 
 ```python
 %pip install --upgrade --quiet  xorbits
 ```
 
+
 ```python
 import xorbits.pandas as pd
 ```
+
 
 ```python
 df = pd.read_csv("example_data/mlb_teams_2012.csv")
 ```
 
+
 ```python
 df.head()
 ```
 
+
 ```output
   0%|          |   0.00/100 [00:00<?, ?it/s]
 ```
+
 
 ```html
 <div>
@@ -87,22 +93,27 @@ df.head()
 </div> 
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "XorbitsLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.xorbits.XorbitsLoader.html", "title": "Xorbits Pandas DataFrame"}]-->
 from langchain_community.document_loaders import XorbitsLoader
 ```
 
+
 ```python
 loader = XorbitsLoader(df, page_content_column="Team")
 ```
+
 
 ```python
 loader.load()
 ```
 
+
 ```output
   0%|          |   0.00/100 [00:00<?, ?it/s]
 ```
+
 
 ```output
 [Document(page_content='Nationals', metadata={' "Payroll (millions)"': 81.34, ' "Wins"': 98}),
@@ -137,15 +148,18 @@ loader.load()
  Document(page_content='Astros', metadata={' "Payroll (millions)"': 60.65, ' "Wins"': 55})]
 ```
 
+
 ```python
 # Use lazy load for larger table, which won't read the full table into memory
 for i in loader.lazy_load():
     print(i)
 ```
 
+
 ```output
   0%|          |   0.00/100 [00:00<?, ?it/s]
 ```
+
 ```output
 page_content='Nationals' metadata={' "Payroll (millions)"': 81.34, ' "Wins"': 98}
 page_content='Reds' metadata={' "Payroll (millions)"': 82.2, ' "Wins"': 97}
@@ -179,7 +193,8 @@ page_content='Cubs' metadata={' "Payroll (millions)"': 88.19, ' "Wins"': 61}
 page_content='Astros' metadata={' "Payroll (millions)"': 60.65, ' "Wins"': 55}
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

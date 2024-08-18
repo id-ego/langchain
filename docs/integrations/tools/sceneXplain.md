@@ -1,19 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/sceneXplain/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/sceneXplain.ipynb
+description: SceneXplain은 이미지 캡셔닝 서비스로, API 토큰을 통해 LangChain 에이전트에서 사용할 수 있습니다.
 ---
 
 # SceneXplain
 
-[SceneXplain](https://scenex.jina.ai/) is an ImageCaptioning service accessible through the SceneXplain Tool.
+[SceneXplain](https://scenex.jina.ai/)는 SceneXplain 도구를 통해 접근할 수 있는 이미지 캡셔닝 서비스입니다.
 
-To use this tool, you'll need to make an account and fetch your API Token [from the website](https://scenex.jina.ai/api). Then you can instantiate the tool.
+이 도구를 사용하려면 계정을 만들고 [웹사이트](https://scenex.jina.ai/api)에서 API 토큰을 가져와야 합니다. 그런 다음 도구를 인스턴스화할 수 있습니다.
 
 ```python
 import os
 
 os.environ["SCENEX_API_KEY"] = "<YOUR_API_KEY>"
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "SceneXplain"}]-->
@@ -22,7 +23,8 @@ from langchain.agents import load_tools
 tools = load_tools(["sceneXplain"])
 ```
 
-Or directly instantiate the tool.
+
+또는 도구를 직접 인스턴스화할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "SceneXplainTool", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.scenexplain.tool.SceneXplainTool.html", "title": "SceneXplain"}]-->
@@ -31,9 +33,10 @@ from langchain_community.tools import SceneXplainTool
 tool = SceneXplainTool()
 ```
 
-## Usage in an Agent
 
-The tool can be used in any LangChain agent as follows:
+## 에이전트에서의 사용
+
+이 도구는 다음과 같이 모든 LangChain 에이전트에서 사용할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "SceneXplain"}, {"imported": "ConversationBufferMemory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain.memory.buffer.ConversationBufferMemory.html", "title": "SceneXplain"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "SceneXplain"}]-->
@@ -55,6 +58,7 @@ output = agent.run(
 
 print(output)
 ```
+
 ```output
 
 
@@ -75,7 +79,8 @@ AI: This image appears to be a still from the 1988 Japanese animated fantasy fil
 This image appears to be a still from the 1988 Japanese animated fantasy film My Neighbor Totoro. The film follows two young girls, Satsuki and Mei, as they explore the countryside and befriend the magical forest spirits, including the titular character Totoro.
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

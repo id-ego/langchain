@@ -1,36 +1,39 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/google_spanner/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/google_spanner.ipynb
+description: 이 문서는 `SpannerVectorStore` 클래스를 사용하여 Google Spanner에서 벡터 검색을 수행하는 방법을
+  설명합니다.
 ---
 
-# Google Spanner
-> [Spanner](https://cloud.google.com/spanner) is a highly scalable database that combines unlimited scalability with relational semantics, such as secondary indexes, strong consistency, schemas, and SQL providing 99.999% availability in one easy solution.
+# 구글 스패너
+> [스패너](https://cloud.google.com/spanner)는 무제한 확장성과 관계형 의미론(예: 보조 인덱스, 강력한 일관성, 스키마 및 SQL)을 결합하여 99.999% 가용성을 제공하는 매우 확장 가능한 데이터베이스입니다.
 
-This notebook goes over how to use `Spanner` for Vector Search with `SpannerVectorStore` class.
+이 노트북에서는 `SpannerVectorStore` 클래스를 사용하여 벡터 검색을 위한 `Spanner` 사용 방법을 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-spanner-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-spanner-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-spanner-python/blob/main/docs/vector_store.ipynb)
 
-## Before You Begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the Cloud Spanner API](https://console.cloud.google.com/flows/enableapi?apiid=spanner.googleapis.com)
-* [Create a Spanner instance](https://cloud.google.com/spanner/docs/create-manage-instances)
-* [Create a Spanner database](https://cloud.google.com/spanner/docs/create-manage-databases)
+* [구글 클라우드 프로젝트 생성](https://developers.google.com/workspace/guides/create-project)
+* [클라우드 스패너 API 활성화](https://console.cloud.google.com/flows/enableapi?apiid=spanner.googleapis.com)
+* [스패너 인스턴스 생성](https://cloud.google.com/spanner/docs/create-manage-instances)
+* [스패너 데이터베이스 생성](https://cloud.google.com/spanner/docs/create-manage-databases)
 
-### 🦜🔗 Library Installation
-The integration lives in its own `langchain-google-spanner` package, so we need to install it.
+### 🦜🔗 라이브러리 설치
+통합은 자체 `langchain-google-spanner` 패키지에 있으므로 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet langchain-google-spanner
 ```
+
 ```output
 Note: you may need to restart the kernel to use updated packages.
 ```
-**Colab only:** Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**Colab 전용:** 커널을 재시작하려면 다음 셀의 주석을 제거하거나 버튼을 사용하여 커널을 재시작하세요. Vertex AI Workbench에서는 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -40,11 +43,12 @@ Note: you may need to restart the kernel to use updated packages.
 # app.kernel.do_shutdown(True)
 ```
 
-### 🔐 Authentication
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
 
-* If you are using Colab to run this notebook, use the cell below and continue.
-* If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+### 🔐 인증
+구글 클라우드에 인증하여 이 노트북에 로그인한 IAM 사용자로서 구글 클라우드 프로젝트에 접근합니다.
+
+* Colab을 사용하여 이 노트북을 실행하는 경우 아래 셀을 사용하고 계속 진행하세요.
+* Vertex AI Workbench를 사용하는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -52,14 +56,15 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ 구글 클라우드 프로젝트 설정
+구글 클라우드 프로젝트를 설정하여 이 노트북 내에서 구글 클라우드 리소스를 활용할 수 있도록 합니다.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list`를 실행합니다.
+* `gcloud projects list`를 실행합니다.
+* 지원 페이지를 참조하세요: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
@@ -70,18 +75,20 @@ PROJECT_ID = "my-project-id"  # @param {type:"string"}
 !gcloud config set project {PROJECT_ID}
 ```
 
-### 💡 API Enablement
-The `langchain-google-spanner` package requires that you [enable the Spanner API](https://console.cloud.google.com/flows/enableapi?apiid=spanner.googleapis.com) in your Google Cloud Project.
+
+### 💡 API 활성화
+`langchain-google-spanner` 패키지는 구글 클라우드 프로젝트에서 [스패너 API를 활성화](https://console.cloud.google.com/flows/enableapi?apiid=spanner.googleapis.com)해야 합니다.
 
 ```python
 # enable Spanner API
 !gcloud services enable spanner.googleapis.com
 ```
 
-## Basic Usage
 
-### Set Spanner database values
-Find your database values, in the [Spanner Instances page](https://console.cloud.google.com/spanner?_ga=2.223735448.2062268965.1707700487-2088871159.1707257687).
+## 기본 사용법
+
+### 스패너 데이터베이스 값 설정
+[스패너 인스턴스 페이지](https://console.cloud.google.com/spanner?_ga=2.223735448.2062268965.1707700487-2088871159.1707257687)에서 데이터베이스 값을 찾습니다.
 
 ```python
 # @title Set Your Values Here { display-mode: "form" }
@@ -90,10 +97,11 @@ DATABASE = "my-database"  # @param {type: "string"}
 TABLE_NAME = "vectors_search_data"  # @param {type: "string"}
 ```
 
-### Initialize a table
-The `SpannerVectorStore` class instance requires a database table with id, content and embeddings columns. 
 
-The helper method `init_vector_store_table()` that can be used to create a table with the proper schema for you.
+### 테이블 초기화
+`SpannerVectorStore` 클래스 인스턴스는 id, content 및 embeddings 열이 있는 데이터베이스 테이블이 필요합니다.
+
+적절한 스키마로 테이블을 생성하는 데 사용할 수 있는 도우미 메서드 `init_vector_store_table()`가 있습니다.
 
 ```python
 from langchain_google_spanner import SecondaryIndex, SpannerVectorStore, TableColumn
@@ -113,15 +121,17 @@ SpannerVectorStore.init_vector_store_table(
 )
 ```
 
-### Create an embedding class instance
 
-You can use any [LangChain embeddings model](/docs/integrations/text_embedding/).
-You may need to enable Vertex AI API to use `VertexAIEmbeddings`. We recommend setting the embedding model's version for production, learn more about the [Text embeddings models](https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/text-embeddings).
+### 임베딩 클래스 인스턴스 생성
+
+[LangChain 임베딩 모델](/docs/integrations/text_embedding/)을 사용할 수 있습니다.
+`VertexAIEmbeddings`를 사용하려면 Vertex AI API를 활성화해야 할 수 있습니다. 프로덕션을 위해 임베딩 모델의 버전을 설정하는 것이 좋으며, [텍스트 임베딩 모델](https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/text-embeddings)에 대해 자세히 알아보세요.
 
 ```python
 # enable Vertex AI API
 !gcloud services enable aiplatform.googleapis.com
 ```
+
 
 ```python
 from langchain_google_vertexai import VertexAIEmbeddings
@@ -131,14 +141,15 @@ embeddings = VertexAIEmbeddings(
 )
 ```
 
+
 ### SpannerVectorStore
 
-To initialize the `SpannerVectorStore` class you need to provide 4 required arguments and other arguments are optional and only need to pass if it's different from default ones
+`SpannerVectorStore` 클래스를 초기화하려면 4개의 필수 인수를 제공해야 하며, 나머지 인수는 선택 사항이며 기본값과 다를 경우에만 전달해야 합니다.
 
-1. `instance_id` - The name of the Spanner instance
-2. `database_id` - The name of the Spanner database
-3. `table_name` - The name of the table within the database to store the documents & their embeddings.
-4. `embedding_service` - The Embeddings implementation which is used to generate the embeddings.
+1. `instance_id` - 스패너 인스턴스의 이름
+2. `database_id` - 스패너 데이터베이스의 이름
+3. `table_name` - 문서 및 임베딩을 저장할 데이터베이스 내의 테이블 이름
+4. `embedding_service` - 임베딩을 생성하는 데 사용되는 임베딩 구현
 
 ```python
 db = SpannerVectorStore(
@@ -151,8 +162,9 @@ db = SpannerVectorStore(
 )
 ```
 
-#### 🔐 Add Documents
-To add documents in the vector store.
+
+#### 🔐 문서 추가
+벡터 저장소에 문서를 추가합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "HNLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.hn.HNLoader.html", "title": "Google Spanner"}]-->
@@ -166,35 +178,40 @@ documents = loader.load()
 ids = [str(uuid.uuid4()) for _ in range(len(documents))]
 ```
 
-#### 🔐 Search Documents
-To search documents in the vector store with similarity search.
+
+#### 🔐 문서 검색
+유사성 검색을 통해 벡터 저장소에서 문서를 검색합니다.
 
 ```python
 db.similarity_search(query="Explain me vector store?", k=3)
 ```
 
-#### 🔐 Search Documents
-To search documents in the vector store with max marginal relevance search.
+
+#### 🔐 문서 검색
+최대 마진 관련성 검색을 통해 벡터 저장소에서 문서를 검색합니다.
 
 ```python
 db.max_marginal_relevance_search("Testing the langchain integration with spanner", k=3)
 ```
 
-#### 🔐 Delete Documents
-To remove documents from the vector store, use the IDs that correspond to the values in the `row_id`` column when initializing the VectorStore.
+
+#### 🔐 문서 삭제
+벡터 저장소에서 문서를 제거하려면 벡터 저장소 초기화 시 `row_id` 열에 해당하는 ID를 사용하세요.
 
 ```python
 db.delete(ids=["id1", "id2"])
 ```
 
-#### 🔐 Delete Documents
-To remove documents from the vector store, you can utilize the documents themselves. The content column and metadata columns provided during VectorStore initialization will be used to find out the rows corresponding to the documents. Any matching rows will then be deleted.
+
+#### 🔐 문서 삭제
+벡터 저장소에서 문서를 제거하려면 문서 자체를 활용할 수 있습니다. 벡터 저장소 초기화 시 제공된 내용 열과 메타데이터 열을 사용하여 문서에 해당하는 행을 찾습니다. 일치하는 행은 삭제됩니다.
 
 ```python
 db.delete(documents=[documents[0], documents[1]])
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

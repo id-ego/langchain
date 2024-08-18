@@ -1,23 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/elastic_search_bm25/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/elastic_search_bm25.ipynb
+description: Elasticsearch는 RESTful 검색 엔진으로, BM25는 검색 쿼리에 대한 문서의 관련성을 평가하는 랭킹 함수입니다.
 ---
 
 # ElasticSearch BM25
 
-> [Elasticsearch](https://www.elastic.co/elasticsearch/) is a distributed, RESTful search and analytics engine. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.
+> [Elasticsearch](https://www.elastic.co/elasticsearch/)는 분산형 RESTful 검색 및 분석 엔진입니다. HTTP 웹 인터페이스와 스키마 없는 JSON 문서를 갖춘 분산형 다중 테넌트 지원 전체 텍스트 검색 엔진을 제공합니다.
 
-> In information retrieval, [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) (BM is an abbreviation of best matching) is a ranking function used by search engines to estimate the relevance of documents to a given search query. It is based on the probabilistic retrieval framework developed in the 1970s and 1980s by Stephen E. Robertson, Karen Spärck Jones, and others.
+> 정보 검색에서 [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) (BM은 best matching의 약자)는 검색 엔진이 주어진 검색 쿼리에 대한 문서의 관련성을 추정하는 데 사용하는 순위 함수입니다. 이는 1970년대와 1980년대에 Stephen E. Robertson, Karen Spärck Jones 및 기타 사람들이 개발한 확률적 검색 프레임워크에 기반하고 있습니다.
 
-> The name of the actual ranking function is BM25. The fuller name, Okapi BM25, includes the name of the first system to use it, which was the Okapi information retrieval system, implemented at London's City University in the 1980s and 1990s. BM25 and its newer variants, e.g. BM25F (a version of BM25 that can take document structure and anchor text into account), represent TF-IDF-like retrieval functions used in document retrieval.
+> 실제 순위 함수의 이름은 BM25입니다. 전체 이름인 Okapi BM25는 1980년대와 1990년대에 런던 시티 대학교에서 구현된 Okapi 정보 검색 시스템의 이름을 포함합니다. BM25와 그 새로운 변형들, 예를 들어 문서 구조와 앵커 텍스트를 고려할 수 있는 BM25F(버전의 BM25)는 문서 검색에 사용되는 TF-IDF 유사 검색 함수를 나타냅니다.
 
-This notebook shows how to use a retriever that uses `ElasticSearch` and `BM25`.
+이 노트북은 `ElasticSearch`와 `BM25`를 사용하는 검색기를 사용하는 방법을 보여줍니다.
 
-For more information on the details of BM25 see [this blog post](https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables).
+BM25의 세부 사항에 대한 더 많은 정보는 [이 블로그 게시물](https://www.elastic.co/blog/practical-bm25-part-2-the-bm25-algorithm-and-its-variables)을 참조하십시오.
 
 ```python
 %pip install --upgrade --quiet  elasticsearch
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticSearchBM25Retriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.elastic_search_bm25.ElasticSearchBM25Retriever.html", "title": "ElasticSearch BM25"}]-->
@@ -26,12 +27,14 @@ from langchain_community.retrievers import (
 )
 ```
 
-## Create New Retriever
+
+## 새 검색기 만들기
 
 ```python
 elasticsearch_url = "http://localhost:9200"
 retriever = ElasticSearchBM25Retriever.create(elasticsearch_url, "langchain-index-4")
 ```
+
 
 ```python
 # Alternatively, you can load an existing index
@@ -40,13 +43,15 @@ retriever = ElasticSearchBM25Retriever.create(elasticsearch_url, "langchain-inde
 # retriever = ElasticSearchBM25Retriever(elasticsearch.Elasticsearch(elasticsearch_url), "langchain-index")
 ```
 
-## Add texts (if necessary)
 
-We can optionally add texts to the retriever (if they aren't already in there)
+## 텍스트 추가 (필요한 경우)
+
+검색기에 텍스트를 추가할 수 있습니다 (이미 포함되어 있지 않은 경우).
 
 ```python
 retriever.add_texts(["foo", "bar", "world", "hello", "foo bar"])
 ```
+
 
 ```output
 ['cbd4cb47-8d9f-4f34-b80e-ea871bc49856',
@@ -56,24 +61,28 @@ retriever.add_texts(["foo", "bar", "world", "hello", "foo bar"])
  'd79f457b-2842-4eab-ae10-77aa420b53d7']
 ```
 
-## Use Retriever
 
-We can now use the retriever!
+## 검색기 사용하기
+
+이제 검색기를 사용할 수 있습니다!
 
 ```python
 result = retriever.invoke("foo")
 ```
 
+
 ```python
 result
 ```
+
 
 ```output
 [Document(page_content='foo', metadata={}),
  Document(page_content='foo bar', metadata={})]
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

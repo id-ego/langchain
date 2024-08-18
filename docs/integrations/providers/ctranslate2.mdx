@@ -1,31 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/ctranslate2/
+description: CTranslate2는 Transformer 모델의 효율적인 추론을 위한 C++ 및 Python 라이브러리로, 성능 최적화를
+  통해 메모리 사용량을 줄입니다.
 ---
 
 # CTranslate2
 
-> [CTranslate2](https://opennmt.net/CTranslate2/quickstart.html) is a C++ and Python library
-for efficient inference with Transformer models.
+> [CTranslate2](https://opennmt.net/CTranslate2/quickstart.html)는 Transformer 모델을 위한 효율적인 추론을 위한 C++ 및 Python 라이브러리입니다.
 > 
-> The project implements a custom runtime that applies many performance optimization
-techniques such as weights quantization, layers fusion, batch reordering, etc.,
-to accelerate and reduce the memory usage of Transformer models on CPU and GPU.
+> 이 프로젝트는 CPU 및 GPU에서 Transformer 모델의 성능을 가속화하고 메모리 사용량을 줄이기 위해 가중치 양자화, 레이어 융합, 배치 재정렬 등과 같은 많은 성능 최적화 기술을 적용하는 맞춤형 런타임을 구현합니다.
 > 
-> A full list of features and supported models is included in the
-[project’s repository](https://opennmt.net/CTranslate2/guides/transformers.html).
-To start, please check out the official [quickstart guide](https://opennmt.net/CTranslate2/quickstart.html).
+> 전체 기능 목록 및 지원되는 모델은 [프로젝트의 저장소](https://opennmt.net/CTranslate2/guides/transformers.html)에 포함되어 있습니다.
+시작하려면 공식 [빠른 시작 가이드](https://opennmt.net/CTranslate2/quickstart.html)를 확인하세요.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the Python package:
+Python 패키지를 설치하세요:
 
 ```bash
 pip install ctranslate2
 ```
 
+
 ## LLMs
 
-See a [usage example](/docs/integrations/llms/ctranslate2).
+[사용 예제](/docs/integrations/llms/ctranslate2)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "CTranslate2", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.ctranslate2.CTranslate2.html", "title": "CTranslate2"}]-->

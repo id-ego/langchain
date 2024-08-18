@@ -1,34 +1,34 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/cohere/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/cohere.ipynb
+description: Cohere는 기업의 인간-기계 상호작용을 개선하는 자연어 처리 모델을 제공하는 캐나다 스타트업입니다.
 ---
 
 # Cohere
 
 :::caution
-You are currently on a page documenting the use of Cohere models as [text completion models](/docs/concepts/#llms). Many popular Cohere models are [chat completion models](/docs/concepts/#chat-models).
+현재 [텍스트 완성 모델](/docs/concepts/#llms)로서 Cohere 모델 사용에 대한 문서 페이지에 있습니다. 많은 인기 있는 Cohere 모델은 [채팅 완성 모델](/docs/concepts/#chat-models)입니다.
 
-You may be looking for [this page instead](/docs/integrations/chat/cohere/).
+대신 [이 페이지](/docs/integrations/chat/cohere/)를 찾고 있을 수 있습니다.
 :::
 
-> [Cohere](https://cohere.ai/about) is a Canadian startup that provides natural language processing models that help companies improve human-machine interactions.
+> [Cohere](https://cohere.ai/about)는 기업이 인간-기계 상호작용을 개선하는 데 도움을 주는 자연어 처리 모델을 제공하는 캐나다 스타트업입니다.
 
-Head to the [API reference](https://api.python.langchain.com/en/latest/llms/langchain_community.llms.cohere.Cohere.html) for detailed documentation of all attributes and methods.
+모든 속성과 메서드에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/llms/langchain_community.llms.cohere.Cohere.html)에서 확인하세요.
 
-## Overview
-### Integration details
+## 개요
+### 통합 세부정보
 
-| Class | Package | Local | Serializable | [JS support](https://js.langchain.com/v0.2/docs/integrations/llms/cohere/) | Package downloads | Package latest |
+| 클래스 | 패키지 | 로컬 | 직렬화 가능 | [JS 지원](https://js.langchain.com/v0.2/docs/integrations/llms/cohere/) | 패키지 다운로드 | 패키지 최신 |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [Cohere](https://api.python.langchain.com/en/latest/llms/langchain_community.llms.cohere.Cohere.html) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) | ❌ | beta | ✅ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain_community?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain_community?style=flat-square&label=%20) |
 
-## Setup
+## 설정
 
-The integration lives in the `langchain-community` package. We also need to install the `cohere` package itself. We can install these with:
+통합은 `langchain-community` 패키지에 있습니다. `cohere` 패키지 자체도 설치해야 합니다. 다음과 같이 설치할 수 있습니다:
 
-### Credentials
+### 자격 증명
 
-We'll need to get a [Cohere API key](https://cohere.com/) and set the `COHERE_API_KEY` environment variable:
+[Cohere API 키](https://cohere.com/)를 받아야 하며 `COHERE_API_KEY` 환경 변수를 설정해야 합니다:
 
 ```python
 import getpass
@@ -38,22 +38,25 @@ if "COHERE_API_KEY" not in os.environ:
     os.environ["COHERE_API_KEY"] = getpass.getpass()
 ```
 
-### Installation
+
+### 설치
 
 ```python
 pip install -U langchain-community langchain-cohere
 ```
 
-It's also helpful (but not needed) to set up [LangSmith](https://smith.langchain.com/) for best-in-class observability
+
+최고 수준의 가시성을 위해 [LangSmith](https://smith.langchain.com/)를 설정하는 것도 도움이 됩니다(필수는 아님).
 
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-## Invocation
 
-Cohere supports all [LLM](/docs/how_to#llms) functionality:
+## 호출
+
+Cohere는 모든 [LLM](/docs/how_to#llms) 기능을 지원합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Cohere"}]-->
@@ -61,46 +64,56 @@ from langchain_cohere import Cohere
 from langchain_core.messages import HumanMessage
 ```
 
+
 ```python
 model = Cohere(max_tokens=256, temperature=0.75)
 ```
+
 
 ```python
 message = "Knock knock"
 model.invoke(message)
 ```
 
+
 ```output
 " Who's there?"
 ```
+
 
 ```python
 await model.ainvoke(message)
 ```
 
+
 ```output
 " Who's there?"
 ```
+
 
 ```python
 for chunk in model.stream(message):
     print(chunk, end="", flush=True)
 ```
+
 ```output
  Who's there?
 ```
+
 
 ```python
 model.batch([message])
 ```
 
+
 ```output
 [" Who's there?"]
 ```
 
-## Chaining
 
-You can also easily combine with a prompt template for easy structuring of user input. We can do this using [LCEL](/docs/concepts#langchain-expression-language-lcel)
+## 체이닝
+
+프롬프트 템플릿과 쉽게 결합하여 사용자 입력을 쉽게 구조화할 수 있습니다. [LCEL](/docs/concepts#langchain-expression-language-lcel)을 사용하여 이를 수행할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Cohere"}]-->
@@ -110,19 +123,22 @@ prompt = PromptTemplate.from_template("Tell me a joke about {topic}")
 chain = prompt | model
 ```
 
+
 ```python
 chain.invoke({"topic": "bears"})
 ```
+
 
 ```output
 ' Why did the teddy bear cross the road?\nBecause he had bear crossings.\n\nWould you like to hear another joke? '
 ```
 
-## API reference
 
-For detailed documentation of all `Cohere` llm features and configurations head to the API reference: https://api.python.langchain.com/en/latest/llms/langchain_community.llms.cohere.Cohere.html
+## API 참조
 
-## Related
+모든 `Cohere` llm 기능 및 구성에 대한 자세한 문서는 API 참조에서 확인하세요: https://api.python.langchain.com/en/latest/llms/langchain_community.llms.cohere.Cohere.html
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

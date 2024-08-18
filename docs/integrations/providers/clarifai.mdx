@@ -1,27 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/clarifai/
+description: Clarifai는 이미지, 비디오, 텍스트 및 오디오 데이터를 위한 AI 플랫폼으로, LLM, 임베딩 및 벡터 저장소를 지원합니다.
 ---
 
 # Clarifai
 
-> [Clarifai](https://clarifai.com) is one of first deep learning platforms having been founded in 2013. Clarifai provides an AI platform with the full AI lifecycle for data exploration, data labeling, model training, evaluation and inference around images, video, text and audio data. In the LangChain ecosystem, as far as we're aware, Clarifai is the only provider that supports LLMs, embeddings and a vector store in one production scale platform, making it an excellent choice to operationalize your LangChain implementations.
+> [Clarifai](https://clarifai.com)는 2013년에 설립된 최초의 딥 러닝 플랫폼 중 하나입니다. Clarifai는 이미지, 비디오, 텍스트 및 오디오 데이터에 대한 데이터 탐색, 데이터 레이블링, 모델 훈련, 평가 및 추론을 위한 전체 AI 라이프사이클을 제공하는 AI 플랫폼을 제공합니다. LangChain 생태계에서 우리가 아는 한, Clarifai는 LLM, 임베딩 및 벡터 저장소를 하나의 프로덕션 규모 플랫폼에서 지원하는 유일한 제공업체로, LangChain 구현을 운영화하는 데 탁월한 선택입니다.
 
-## Installation and Setup
-- Install the Python SDK:
+## 설치 및 설정
+- Python SDK 설치:
 ```bash
 pip install clarifai
 ```
-[Sign-up](https://clarifai.com/signup) for a Clarifai account, then get a personal access token to access the Clarifai API from your [security settings](https://clarifai.com/settings/security) and set it as an environment variable (`CLARIFAI_PAT`).
 
-## Models
+[가입](https://clarifai.com/signup)하여 Clarifai 계정을 만든 후, [보안 설정](https://clarifai.com/settings/security)에서 Clarifai API에 접근할 개인 액세스 토큰을 얻고 이를 환경 변수(`CLARIFAI_PAT`)로 설정합니다.
 
-Clarifai provides 1,000s of AI models for many different use cases. You can [explore them here](https://clarifai.com/explore) to find the one most suited for your use case. These models include those created by other providers such as OpenAI, Anthropic, Cohere, AI21, etc. as well as state of the art from open source such as Falcon, InstructorXL, etc. so that you build the best in AI into your products. You'll find these organized by the creator's user_id and into projects we call applications denoted by their app_id. Those IDs will be needed in additional to the model_id and optionally the version_id, so make note of all these IDs once you found the best model for your use case!
+## 모델
 
-Also note that given there are many models for images, video, text and audio understanding, you can build some interested AI agents that utilize the variety of AI models as experts to understand those data types.
+Clarifai는 다양한 사용 사례에 대해 수천 개의 AI 모델을 제공합니다. [여기에서 탐색](https://clarifai.com/explore)하여 귀하의 사용 사례에 가장 적합한 모델을 찾을 수 있습니다. 이러한 모델에는 OpenAI, Anthropic, Cohere, AI21 등과 같은 다른 제공업체가 만든 모델과 Falcon, InstructorXL 등과 같은 오픈 소스의 최첨단 모델이 포함되어 있어 귀하의 제품에 최고의 AI를 구축할 수 있습니다. 이러한 모델은 생성자의 user_id에 따라 정리되어 있으며, app_id로 표시되는 애플리케이션이라는 프로젝트로 나뉘어 있습니다. 이러한 ID는 model_id와 선택적으로 version_id와 함께 필요하므로, 귀하의 사용 사례에 가장 적합한 모델을 찾은 후 모든 ID를 기록해 두십시오!
+
+또한 이미지, 비디오, 텍스트 및 오디오 이해를 위한 많은 모델이 있으므로, 이러한 데이터 유형을 이해하기 위해 다양한 AI 모델을 전문가로 활용하는 흥미로운 AI 에이전트를 구축할 수 있습니다.
 
 ### LLMs
 
-To find the selection of LLMs in the Clarifai platform you can select the text to text model type [here](https://clarifai.com/explore/models?filterData=%5B%7B%22field%22%3A%22model_type_id%22%2C%22value%22%3A%5B%22text-to-text%22%5D%7D%5D&page=1&perPage=24).
+Clarifai 플랫폼에서 LLM 선택을 찾으려면 [여기](https://clarifai.com/explore/models?filterData=%5B%7B%22field%22%3A%22model_type_id%22%2C%22value%22%3A%5B%22text-to-text%22%5D%7D%5D&page=1&perPage=24)에서 텍스트-투-텍스트 모델 유형을 선택할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Clarifai", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.clarifai.Clarifai.html", "title": "Clarifai"}]-->
@@ -29,29 +30,32 @@ from langchain_community.llms import Clarifai
 llm = Clarifai(pat=CLARIFAI_PAT, user_id=USER_ID, app_id=APP_ID, model_id=MODEL_ID)
 ```
 
-For more details, the docs on the Clarifai LLM wrapper provide a [detailed walkthrough](/docs/integrations/llms/clarifai).
 
-### Text Embedding Models
+자세한 내용은 Clarifai LLM 래퍼에 대한 문서에서 [상세한 안내](/docs/integrations/llms/clarifai)를 제공합니다.
 
-To find the selection of text embeddings models in the Clarifai platform you can select the text to embedding model type [here](https://clarifai.com/explore/models?page=1&perPage=24&filterData=%5B%7B%22field%22%3A%22model_type_id%22%2C%22value%22%3A%5B%22text-embedder%22%5D%7D%5D).
+### 텍스트 임베딩 모델
 
-There is a Clarifai Embedding model in LangChain, which you can access with:
+Clarifai 플랫폼에서 텍스트 임베딩 모델 선택을 찾으려면 [여기](https://clarifai.com/explore/models?page=1&perPage=24&filterData=%5B%7B%22field%22%3A%22model_type_id%22%2C%22value%22%3A%5B%22text-embedder%22%5D%7D%5D)에서 텍스트-임베딩 모델 유형을 선택할 수 있습니다.
+
+LangChain에는 Clarifai 임베딩 모델이 있으며, 다음과 같이 접근할 수 있습니다:
 ```python
 <!--IMPORTS:[{"imported": "ClarifaiEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.clarifai.ClarifaiEmbeddings.html", "title": "Clarifai"}]-->
 from langchain_community.embeddings import ClarifaiEmbeddings
 embeddings = ClarifaiEmbeddings(pat=CLARIFAI_PAT, user_id=USER_ID, app_id=APP_ID, model_id=MODEL_ID)
 ```
-For more details, the docs on the Clarifai Embeddings wrapper provide a [detailed walkthrough](/docs/integrations/text_embedding/clarifai).
 
-## Vectorstore
+자세한 내용은 Clarifai 임베딩 래퍼에 대한 문서에서 [상세한 안내](/docs/integrations/text_embedding/clarifai)를 제공합니다.
 
-Clarifai's vector DB was launched in 2016 and has been optimized to support live search queries. With workflows in the Clarifai platform, you data is automatically indexed by am embedding model and optionally other models as well to index that information in the DB for search. You can query the DB not only via the vectors but also filter by metadata matches, other AI predicted concepts, and even do geo-coordinate search. Simply create an application, select the appropriate base workflow for your type of data, and upload it (through the API as [documented here](https://docs.clarifai.com/api-guide/data/create-get-update-delete) or the UIs at clarifai.com).
+## 벡터 저장소
 
-You can also add data directly from LangChain as well, and the auto-indexing will take place for you. You'll notice this is a little different than other vectorstores where you need to provide an embedding model in their constructor and have LangChain coordinate getting the embeddings from text and writing those to the index. Not only is it more convenient, but it's much more scalable to use Clarifai's distributed cloud to do all the index in the background.
+Clarifai의 벡터 DB는 2016년에 출시되었으며, 실시간 검색 쿼리를 지원하도록 최적화되었습니다. Clarifai 플랫폼의 워크플로우를 사용하면, 데이터가 자동으로 임베딩 모델 및 선택적으로 다른 모델에 의해 인덱싱되어 DB에서 검색할 수 있도록 정보가 인덱싱됩니다. DB는 벡터를 통해 쿼리할 수 있을 뿐만 아니라 메타데이터 일치, 다른 AI 예측 개념으로 필터링하고 심지어 지리 좌표 검색도 수행할 수 있습니다. 애플리케이션을 생성하고, 데이터 유형에 적합한 기본 워크플로우를 선택한 후, 이를 업로드하면 됩니다 (API를 통해 [여기에서 문서화된 대로](https://docs.clarifai.com/api-guide/data/create-get-update-delete) 또는 clarifai.com의 UI를 통해).
+
+또한 LangChain에서 직접 데이터를 추가할 수 있으며, 자동 인덱싱이 이루어집니다. 이는 다른 벡터 저장소와는 조금 다르며, 해당 저장소의 생성자에서 임베딩 모델을 제공해야 하고 LangChain이 텍스트에서 임베딩을 가져와 인덱스에 쓰도록 조정해야 합니다. Clarifai의 분산 클라우드를 사용하여 모든 인덱스를 백그라운드에서 처리하는 것이 더 편리할 뿐만 아니라 훨씬 더 확장 가능합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Clarifai", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.clarifai.Clarifai.html", "title": "Clarifai"}]-->
 from langchain_community.vectorstores import Clarifai
 clarifai_vector_db = Clarifai.from_texts(user_id=USER_ID, app_id=APP_ID, texts=texts, pat=CLARIFAI_PAT, number_of_docs=NUMBER_OF_DOCS, metadatas = metadatas)
 ```
-For more details, the docs on the Clarifai vector store provide a [detailed walkthrough](/docs/integrations/vectorstores/clarifai).
+
+자세한 내용은 Clarifai 벡터 저장소에 대한 문서에서 [상세한 안내](/docs/integrations/vectorstores/clarifai)를 제공합니다.

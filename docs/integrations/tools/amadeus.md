@@ -1,29 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/amadeus/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/amadeus.ipynb
+description: 이 문서는 LangChain을 Amadeus 여행 API에 연결하는 방법을 안내하며, 여행 검색 및 예약을 위한 도구를 제공합니다.
 ---
 
-# Amadeus Toolkit
+# 아마데우스 툴킷
 
-This notebook walks you through connecting LangChain to the `Amadeus` travel APIs.
+이 노트북은 LangChain을 `Amadeus` 여행 API에 연결하는 방법을 안내합니다.
 
-This `Amadeus` toolkit allows agents to make decision when it comes to travel, especially searching and booking trips with flights.
+이 `Amadeus` 툴킷은 여행에 대한 결정을 내릴 수 있도록 도와주며, 특히 항공편을 이용한 여행 검색 및 예약에 유용합니다.
 
-To use this toolkit, you will need to have your Amadeus API keys ready, explained in the [Get started Amadeus Self-Service APIs](https://developers.amadeus.com/get-started/get-started-with-self-service-apis-335). Once you've received a AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET, you can input them as environmental variables below.
+이 툴킷을 사용하려면 Amadeus API 키를 준비해야 하며, 이는 [Amadeus 셀프 서비스 API 시작하기](https://developers.amadeus.com/get-started/get-started-with-self-service-apis-335)에서 설명되어 있습니다. AMADEUS_CLIENT_ID와 AMADEUS_CLIENT_SECRET을 받으면 아래 환경 변수로 입력할 수 있습니다.
 
-Note: Amadeus Self-Service APIs offers a test environment with [free limited data](https://amadeus4dev.github.io/developer-guides/test-data/). This allows developers to build and test their applications before deploying them to production. To access real-time data, you will need to [move to the production environment](https://amadeus4dev.github.io/developer-guides/API-Keys/moving-to-production/).
+참고: Amadeus 셀프 서비스 API는 [무료 제한 데이터](https://amadeus4dev.github.io/developer-guides/test-data/)가 포함된 테스트 환경을 제공합니다. 이를 통해 개발자는 애플리케이션을 프로덕션에 배포하기 전에 구축하고 테스트할 수 있습니다. 실시간 데이터에 접근하려면 [프로덕션 환경으로 이동](https://amadeus4dev.github.io/developer-guides/API-Keys/moving-to-production/)해야 합니다.
 
 ```python
 %pip install --upgrade --quiet  amadeus > /dev/null
 ```
 
+
 ```python
 %pip install -qU langchain-community
 ```
 
-## Assign Environmental Variables
 
-The toolkit will read the AMADEUS_CLIENT_ID and AMADEUS_CLIENT_SECRET environmental variables to authenticate the user, so you need to set them here. 
+## 환경 변수 설정
+
+툴킷은 AMADEUS_CLIENT_ID 및 AMADEUS_CLIENT_SECRET 환경 변수를 읽어 사용자를 인증하므로, 여기에서 설정해야 합니다.
 
 ```python
 # Set environmental variables here
@@ -35,15 +37,17 @@ os.environ["AMADEUS_CLIENT_SECRET"] = "CLIENT_SECRET"
 # os.environ["AMADEUS_HOSTNAME"] = "production" or "test"
 ```
 
-## Create the Amadeus Toolkit and Get Tools
 
-To start, you need to create the toolkit, so you can access its tools later.
+## 아마데우스 툴킷 생성 및 도구 가져오기
 
-By default, `AmadeusToolkit` uses `ChatOpenAI` to identify airports closest to a given location. To use it, just set `OPENAI_API_KEY`.
+시작하려면 툴킷을 생성해야 나중에 도구에 접근할 수 있습니다.
+
+기본적으로 `AmadeusToolkit`은 주어진 위치에 가장 가까운 공항을 식별하기 위해 `ChatOpenAI`를 사용합니다. 사용하려면 `OPENAI_API_KEY`를 설정하면 됩니다.
 
 ```python
 os.environ["OPENAI_API_KEY"] = "YOUR_OPENAI_API_KEY"
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AmadeusToolkit", "source": "langchain_community.agent_toolkits.amadeus.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.amadeus.toolkit.AmadeusToolkit.html", "title": "Amadeus Toolkit"}]-->
@@ -53,7 +57,8 @@ toolkit = AmadeusToolkit()
 tools = toolkit.get_tools()
 ```
 
-Alternatively, you can use any LLM supported by langchain, e.g. `HuggingFaceHub`. 
+
+대안으로, langchain에서 지원하는 모든 LLM을 사용할 수 있습니다. 예: `HuggingFaceHub`.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceHub", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.huggingface_hub.HuggingFaceHub.html", "title": "Amadeus Toolkit"}]-->
@@ -69,7 +74,8 @@ llm = HuggingFaceHub(
 toolkit_hf = AmadeusToolkit(llm=llm)
 ```
 
-## Use Amadeus Toolkit within an Agent
+
+## 에이전트 내에서 아마데우스 툴킷 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Amadeus Toolkit"}, {"imported": "create_react_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.react.agent.create_react_agent.html", "title": "Amadeus Toolkit"}, {"imported": "ReActJsonSingleInputOutputParser", "source": "langchain.agents.output_parsers", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.output_parsers.react_json_single_input.ReActJsonSingleInputOutputParser.html", "title": "Amadeus Toolkit"}, {"imported": "render_text_description_and_args", "source": "langchain.tools.render", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.render.render_text_description_and_args.html", "title": "Amadeus Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Amadeus Toolkit"}]-->
@@ -79,6 +85,7 @@ from langchain.agents.output_parsers import ReActJsonSingleInputOutputParser
 from langchain.tools.render import render_text_description_and_args
 from langchain_openai import ChatOpenAI
 ```
+
 
 ```python
 llm = ChatOpenAI(temperature=0)
@@ -99,9 +106,11 @@ agent_executor = AgentExecutor(
 )
 ```
 
+
 ```python
 agent_executor.invoke({"input": "What is the name of the airport in Cali, Colombia?"})
 ```
+
 ```output
 
 
@@ -114,10 +123,12 @@ Final Answer: CLO[0m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': 'What is the name of the airport in Cali, Colombia?',
  'output': 'CLO'}
 ```
+
 
 ```python
 agent_executor.invoke(
@@ -126,6 +137,7 @@ agent_executor.invoke(
     }
 )
 ```
+
 ```output
 
 
@@ -134,6 +146,7 @@ agent_executor.invoke(
 Thought: We need to find the closest airport to Dallas, Texas, and then search for the cheapest flight departing before noon on March 10, 2024, to Lincoln, Nebraska.
 Action:
 ```
+
 {
 "action": "closest_airport",
 "action_input": {
@@ -144,6 +157,7 @@ Action:
 
 Action:
 ```
+
 {
 "action": "single_flight_search",
 "action_input": {
@@ -159,10 +173,12 @@ Final Answer: The departure time of the cheapest flight on March 10, 2024, leavi
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': 'What is the departure time of the cheapest flight on March 10, 2024 leaving Dallas, Texas before noon to Lincoln, Nebraska?',
  'output': 'The departure time of the cheapest flight on March 10, 2024, leaving Dallas, Texas before noon to Lincoln, Nebraska is 10:54 AM.'}
 ```
+
 
 ```python
 agent_executor.invoke(
@@ -171,6 +187,7 @@ agent_executor.invoke(
     }
 )
 ```
+
 ```output
 
 
@@ -181,6 +198,7 @@ Thought: We need to find the closest airport to Dallas, Texas, and then search f
 
 Action:
 ```
+
 {
 "action": "closest_airport",
 "action_input": {
@@ -192,6 +210,7 @@ Action:
 
 Action:
 ```
+
 {
 "action": "single_flight_search",
 "action_input": {
@@ -209,10 +228,12 @@ Final Answer: The earliest flight on March 10, 2024, leaving Dallas, Texas to Li
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': 'At what time does earliest flight on March 10, 2024 leaving Dallas, Texas to Lincoln, Nebraska land in Nebraska?',
  'output': 'The earliest flight on March 10, 2024, leaving Dallas, Texas to Lincoln, Nebraska lands in Nebraska at 14:19 on March 11, 2024.'}
 ```
+
 
 ```python
 # to execute api correctly, change the querying date to feature
@@ -222,6 +243,7 @@ agent_executor.invoke(
     }
 )
 ```
+
 ```output
 
 
@@ -230,6 +252,7 @@ agent_executor.invoke(
 Thought: We need to find the cheapest flight between Portland, Oregon and Dallas, TX on March 10, 2024, and then calculate the total travel time.
 Action:
 ```
+
 {
 "action": "single_flight_search",
 "action_input": {
@@ -242,6 +265,7 @@ Action:
 ```[0m[33;1m[1;3m[{'price': {'total': '246.13', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T12:09:00'}, 'arrival': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T14:22:00'}, 'flightNumber': '427', 'carrier': 'SPIRIT AIRLINES'}, {'departure': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-11T05:00:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-11T09:39:00'}, 'flightNumber': '269', 'carrier': 'SPIRIT AIRLINES'}]}, {'price': {'total': '246.13', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T12:09:00'}, 'arrival': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T14:22:00'}, 'flightNumber': '427', 'carrier': 'SPIRIT AIRLINES'}, {'departure': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-11T09:30:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-11T14:11:00'}, 'flightNumber': '2920', 'carrier': 'SPIRIT AIRLINES'}]}, {'price': {'total': '246.13', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T05:45:00'}, 'arrival': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T07:59:00'}, 'flightNumber': '1722', 'carrier': 'SPIRIT AIRLINES'}, {'departure': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-11T05:00:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-11T09:39:00'}, 'flightNumber': '269', 'carrier': 'SPIRIT AIRLINES'}]}, {'price': {'total': '304.18', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T12:09:00'}, 'arrival': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T14:22:00'}, 'flightNumber': '427', 'carrier': 'SPIRIT AIRLINES'}, {'departure': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T20:21:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-11T00:59:00'}, 'flightNumber': '1200', 'carrier': 'SPIRIT AIRLINES'}]}, {'price': {'total': '304.18', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T05:45:00'}, 'arrival': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T07:59:00'}, 'flightNumber': '1722', 'carrier': 'SPIRIT AIRLINES'}, {'departure': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T20:21:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-11T00:59:00'}, 'flightNumber': '1200', 'carrier': 'SPIRIT AIRLINES'}]}, {'price': {'total': '377.48', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T16:05:00'}, 'arrival': {'iataCode': 'DEN', 'at': '2024-03-10T19:28:00'}, 'flightNumber': '2254', 'carrier': 'UNITED AIRLINES'}, {'departure': {'iataCode': 'DEN', 'at': '2024-03-10T20:20:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-10T23:18:00'}, 'flightNumber': '772', 'carrier': 'UNITED AIRLINES'}]}, {'price': {'total': '377.48', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T07:11:00'}, 'arrival': {'iataCode': 'ORD', 'terminal': '1', 'at': '2024-03-10T13:00:00'}, 'flightNumber': '1693', 'carrier': 'UNITED AIRLINES'}, {'departure': {'iataCode': 'ORD', 'terminal': '1', 'at': '2024-03-10T15:50:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-10T18:25:00'}, 'flightNumber': '793', 'carrier': 'UNITED AIRLINES'}]}, {'price': {'total': '382.10', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T10:38:00'}, 'arrival': {'iataCode': 'IAH', 'terminal': 'C', 'at': '2024-03-10T20:38:00'}, 'flightNumber': '1823', 'carrier': 'UNITED AIRLINES'}, {'departure': {'iataCode': 'IAH', 'terminal': 'C', 'at': '2024-03-10T21:30:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-10T22:45:00'}, 'flightNumber': '320', 'carrier': 'UNITED AIRLINES'}]}, {'price': {'total': '389.10', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T19:04:00'}, 'arrival': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T21:09:00'}, 'flightNumber': '431', 'carrier': 'SPIRIT AIRLINES'}, {'departure': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-11T05:00:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-11T09:39:00'}, 'flightNumber': '269', 'carrier': 'SPIRIT AIRLINES'}]}, {'price': {'total': '389.10', 'currency': 'EURO'}, 'segments': [{'departure': {'iataCode': 'PDX', 'at': '2024-03-10T19:04:00'}, 'arrival': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-10T21:09:00'}, 'flightNumber': '431', 'carrier': 'SPIRIT AIRLINES'}, {'departure': {'iataCode': 'LAS', 'terminal': '1', 'at': '2024-03-11T09:30:00'}, 'arrival': {'iataCode': 'DFW', 'terminal': 'E', 'at': '2024-03-11T14:11:00'}, 'flightNumber': '2920', 'carrier': 'SPIRIT AIRLINES'}]}][0m[32;1m[1;3mWe have multiple flight options with different total prices. We need to calculate the total travel time for each option to find the cheapest flight's full travel time.
 Action:
 ```
+
 {
 "action": "single_flight_search",
 "action_input": {
@@ -258,6 +282,7 @@ Action:
 [32;1m[1;3mWe have retrieved the flight options, but we need to calculate the total travel time for each option to find the cheapest flight's full travel time.
 Action:
 ```
+
 {
 "action": "single_flight_search",
 "action_input": {
@@ -274,10 +299,12 @@ Final Answer: The full travel time for the cheapest flight between Portland, Ore
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': 'What is the full travel time for the cheapest flight between Portland, Oregon to Dallas, TX on March 10, 2024?',
  'output': 'The full travel time for the cheapest flight between Portland, Oregon and Dallas, TX on March 10, 2024, is approximately 21 hours and 2 minutes.'}
 ```
+
 
 ```python
 agent_executor.invoke(
@@ -286,6 +313,7 @@ agent_executor.invoke(
     }
 )
 ```
+
 ```output
 
 
@@ -296,6 +324,7 @@ Thought: We need to find the earliest flight from Dallas Fort Worth (DFW) to Was
 
 Action:
 ```
+
 {
 "action": "single_flight_search",
 "action_input": {
@@ -310,6 +339,7 @@ Action:
 
 Action:
 ```
+
 {
 "action": "single_flight_search",
 "action_input": {
@@ -324,6 +354,7 @@ Action:
 
 Action:
 ```
+
 {
 "action": "single_flight_search",
 "action_input": {
@@ -339,12 +370,14 @@ Action:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': "Please draft a concise email from Santiago to Paul, Santiago's travel agent, asking him to book the earliest flight from DFW to DCA on March 10, 2024. Include all flight details in the email.",
  'output': 'We have found several flight options from Dallas Fort Worth (DFW) to Washington D.C. (DCA) on March 10, 2024. The earliest flight is with United Airlines, departing from DFW at 06:00 and arriving at DCA at 13:19 with flight numbers 1517 and 4431. The total price is 303.31 EURO.'}
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

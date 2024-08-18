@@ -1,32 +1,33 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/tools_error/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/tools_error.ipynb
+description: 도구 오류 처리 방법에 대한 가이드로, LLM을 사용한 도구 호출 시 발생할 수 있는 오류를 관리하는 전략을 설명합니다.
 ---
 
-# How to handle tool errors
+# 도구 오류 처리 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [Chat models](/docs/concepts/#chat-models)
-- [LangChain Tools](/docs/concepts/#tools)
-- [How to use a model to call tools](/docs/how_to/tool_calling)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [채팅 모델](/docs/concepts/#chat-models)
+- [랑체인 도구](/docs/concepts/#tools)
+- [모델을 사용하여 도구 호출하기](/docs/how_to/tool_calling)
 
 :::
 
-Calling tools with an LLM is generally more reliable than pure prompting, but it isn't perfect. The model may try to call a tool that doesn't exist or fail to return arguments that match the requested schema. Strategies like keeping schemas simple, reducing the number of tools you pass at once, and having good names and descriptions can help mitigate this risk, but aren't foolproof.
+LLM으로 도구를 호출하는 것은 순수한 프롬프트보다 일반적으로 더 신뢰할 수 있지만 완벽하지는 않습니다. 모델이 존재하지 않는 도구를 호출하려 하거나 요청된 스키마와 일치하는 인수를 반환하지 못할 수 있습니다. 스키마를 간단하게 유지하고, 한 번에 전달하는 도구의 수를 줄이며, 좋은 이름과 설명을 갖는 것과 같은 전략은 이러한 위험을 완화하는 데 도움이 될 수 있지만 완벽하지는 않습니다.
 
-This guide covers some ways to build error handling into your chains to mitigate these failure modes.
+이 가이드는 이러한 실패 모드를 완화하기 위해 체인에 오류 처리를 구축하는 몇 가지 방법을 다룹니다.
 
-## Setup
+## 설정
 
-We'll need to install the following packages:
+다음 패키지를 설치해야 합니다:
 
 ```python
 %pip install --upgrade --quiet langchain-core langchain-openai
 ```
 
-If you'd like to trace your runs in [LangSmith](https://docs.smith.langchain.com/) uncomment and set the following environment variables:
+
+[LangSmith](https://docs.smith.langchain.com/)에서 실행을 추적하려면 다음 환경 변수를 주석 해제하고 설정하세요:
 
 ```python
 import getpass
@@ -36,14 +37,14 @@ import os
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-## Chain
 
-Suppose we have the following (dummy) tool and tool-calling chain. We'll make our tool intentionally convoluted to try and trip up the model.
+## 체인
+
+다음과 같은 (더미) 도구 및 도구 호출 체인이 있다고 가정해 보겠습니다. 모델을 혼란스럽게 만들기 위해 의도적으로 도구를 복잡하게 만들겠습니다.
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm"/>
-
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to handle tool errors"}]-->
@@ -65,13 +66,15 @@ llm_with_tools = llm.bind_tools(
 chain = llm_with_tools | (lambda msg: msg.tool_calls[0]["args"]) | complex_tool
 ```
 
-We can see that when we try to invoke this chain with even a fairly explicit input, the model fails to correctly call the tool (it forgets the `dict_arg` argument).
+
+상당히 명확한 입력으로 이 체인을 호출하려고 할 때, 모델이 도구를 올바르게 호출하지 못하는 것을 볼 수 있습니다 (모델이 `dict_arg` 인수를 잊어버립니다).
 
 ```python
 chain.invoke(
     "use complex tool. the args are 5, 2.1, empty dictionary. don't forget dict_arg"
 )
 ```
+
 
 ```output
 ---------------------------------------------------------------------------
@@ -148,9 +151,10 @@ dict_arg
   field required (type=value_error.missing)
 ```
 
-## Try/except tool call
 
-The simplest way to more gracefully handle errors is to try/except the tool-calling step and return a helpful message on errors:
+## 시도/예외 도구 호출
+
+오류를 보다 우아하게 처리하는 가장 간단한 방법은 도구 호출 단계를 try/except로 감싸고 오류에 대한 유용한 메시지를 반환하는 것입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "Runnable", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html", "title": "How to handle tool errors"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to handle tool errors"}]-->
@@ -174,6 +178,7 @@ print(
     )
 )
 ```
+
 ```output
 Calling tool with arguments:
 
@@ -185,9 +190,11 @@ raised the following error:
 dict_arg
   field required (type=value_error.missing)
 ```
-## Fallbacks
 
-We can also try to fallback to a better model in the event of a tool invocation error. In this case we'll fall back to an identical chain that uses `gpt-4-1106-preview` instead of `gpt-3.5-turbo`.
+
+## 대체
+
+도구 호출 오류가 발생할 경우 더 나은 모델로 대체할 수도 있습니다. 이 경우 `gpt-3.5-turbo` 대신 `gpt-4-1106-preview`를 사용하는 동일한 체인으로 대체하겠습니다.
 
 ```python
 chain = llm_with_tools | (lambda msg: msg.tool_calls[0]["args"]) | complex_tool
@@ -205,15 +212,17 @@ chain_with_fallback.invoke(
 )
 ```
 
+
 ```output
 10.5
 ```
 
-Looking at the [LangSmith trace](https://smith.langchain.com/public/00e91fc2-e1a4-4b0f-a82e-e6b3119d196c/r) for this chain run, we can see that the first chain call fails as expected and it's the fallback that succeeds.
 
-## Retry with exception
+이 체인 실행에 대한 [LangSmith 추적](https://smith.langchain.com/public/00e91fc2-e1a4-4b0f-a82e-e6b3119d196c/r)을 살펴보면, 첫 번째 체인 호출이 예상대로 실패하고 대체가 성공하는 것을 볼 수 있습니다.
 
-To take things one step further, we can try to automatically re-run the chain with the exception passed in, so that the model may be able to correct its behavior:
+## 예외와 함께 재시도
+
+한 걸음 더 나아가, 예외가 전달된 상태에서 체인을 자동으로 재실행하여 모델이 자신의 동작을 수정할 수 있도록 시도할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to handle tool errors"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to handle tool errors"}, {"imported": "ToolCall", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolCall.html", "title": "How to handle tool errors"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to handle tool errors"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to handle tool errors"}]-->
@@ -268,6 +277,7 @@ self_correcting_chain = chain.with_fallbacks(
 )
 ```
 
+
 ```python
 self_correcting_chain.invoke(
     {
@@ -276,20 +286,22 @@ self_correcting_chain.invoke(
 )
 ```
 
+
 ```output
 10.5
 ```
 
-And our chain succeeds! Looking at the [LangSmith trace](https://smith.langchain.com/public/c11e804c-e14f-4059-bd09-64766f999c14/r), we can see that indeed our initial chain still fails, and it's only on retrying that the chain succeeds.
 
-## Next steps
+그리고 우리의 체인이 성공했습니다! [LangSmith 추적](https://smith.langchain.com/public/c11e804c-e14f-4059-bd09-64766f999c14/r)을 살펴보면, 초기 체인은 여전히 실패하고, 재시도할 때만 체인이 성공하는 것을 알 수 있습니다.
 
-Now you've seen some strategies how to handle tool calling errors. Next, you can learn more about how to use tools:
+## 다음 단계
 
-- Few shot prompting [with tools](/docs/how_to/tools_few_shot/)
-- Stream [tool calls](/docs/how_to/tool_streaming/)
-- Pass [runtime values to tools](/docs/how_to/tool_runtime)
+이제 도구 호출 오류를 처리하는 몇 가지 전략을 보았습니다. 다음으로 도구 사용에 대해 더 알아볼 수 있습니다:
 
-You can also check out some more specific uses of tool calling:
+- 도구를 사용한 [소수 샷 프롬프트](/docs/how_to/tools_few_shot/)
+- [도구 호출 스트리밍](/docs/how_to/tool_streaming/)
+- 도구에 [런타임 값 전달하기](/docs/how_to/tool_runtime)
 
-- Getting [structured outputs](/docs/how_to/structured_output/) from models
+또한 도구 호출의 좀 더 구체적인 사용 사례를 확인할 수 있습니다:
+
+- 모델에서 [구조화된 출력](/docs/how_to/structured_output/) 얻기

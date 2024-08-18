@@ -1,26 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/vectorstores/
+description: 벡터 저장소를 생성하고 쿼리하는 방법에 대한 가이드로, 비정형 데이터를 임베딩하고 검색하는 기본 기능을 소개합니다.
 ---
 
-# How to create and query vector stores
+# 벡터 저장소 생성 및 쿼리 방법
 
 :::info
-Head to [Integrations](/docs/integrations/vectorstores/) for documentation on built-in integrations with 3rd-party vector stores.
+3rd-party 벡터 저장소와의 내장 통합에 대한 문서는 [Integrations](/docs/integrations/vectorstores/)를 참조하세요.
 :::
 
-One of the most common ways to store and search over unstructured data is to embed it and store the resulting embedding
-vectors, and then at query time to embed the unstructured query and retrieve the embedding vectors that are
-'most similar' to the embedded query. A vector store takes care of storing embedded data and performing vector search
-for you.
+비구조화된 데이터를 저장하고 검색하는 가장 일반적인 방법 중 하나는 이를 임베드하고 결과 임베딩 벡터를 저장한 다음, 쿼리 시 비구조화된 쿼리를 임베드하여 임베딩 쿼리와 '가장 유사한' 임베딩 벡터를 검색하는 것입니다. 벡터 저장소는 임베드된 데이터를 저장하고 벡터 검색을 수행하는 역할을 합니다.
 
-## Get started
+## 시작하기
 
-This guide showcases basic functionality related to vector stores. A key part of working with vector stores is creating the vector to put in them,
-which is usually created via embeddings. Therefore, it is recommended that you familiarize yourself with the [text embedding model interfaces](/docs/how_to/embed_text) before diving into this.
+이 가이드는 벡터 저장소와 관련된 기본 기능을 보여줍니다. 벡터 저장소 작업의 핵심 부분은 그 안에 넣을 벡터를 생성하는 것으로, 이는 일반적으로 임베딩을 통해 생성됩니다. 따라서 이 주제에 뛰어들기 전에 [텍스트 임베딩 모델 인터페이스](/docs/how_to/embed_text)에 익숙해지는 것이 좋습니다.
 
-Before using the vectorstore at all, we need to load some data and initialize an embedding model.
+벡터 저장소를 사용하기 전에 데이터를 로드하고 임베딩 모델을 초기화해야 합니다.
 
-We want to use OpenAIEmbeddings so we have to get the OpenAI API Key.
+OpenAIEmbeddings를 사용하고 싶으므로 OpenAI API 키를 받아야 합니다.
 
 ```python
 import os
@@ -28,6 +24,7 @@ import getpass
 
 os.environ['OPENAI_API_KEY'] = getpass.getpass('OpenAI API Key:')
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "How to create and query vector stores"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to create and query vector stores"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to create and query vector stores"}]-->
@@ -41,20 +38,22 @@ text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 documents = text_splitter.split_documents(raw_documents)
 ```
 
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-There are many great vector store options, here are a few that are free, open-source, and run entirely on your local machine. Review all integrations for many great hosted offerings.
+많은 훌륭한 벡터 저장소 옵션이 있으며, 여기에는 무료, 오픈 소스이며 완전히 로컬 머신에서 실행되는 몇 가지가 있습니다. 많은 훌륭한 호스팅 제공을 위해 모든 통합을 검토하세요.
 
 <Tabs>
   <TabItem value="chroma" label="Chroma" default>
 
 
-This walkthrough uses the `chroma` vector database, which runs on your local machine as a library.
+이 워크스루는 로컬 머신에서 라이브러리로 실행되는 `chroma` 벡터 데이터베이스를 사용합니다.
 
 ```bash
 pip install langchain-chroma
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to create and query vector stores"}]-->
@@ -63,15 +62,17 @@ from langchain_chroma import Chroma
 db = Chroma.from_documents(documents, OpenAIEmbeddings())
 ```
 
+
   </TabItem>
   <TabItem value="faiss" label="FAISS">
 
 
-This walkthrough uses the `FAISS` vector database, which makes use of the Facebook AI Similarity Search (FAISS) library.
+이 워크스루는 Facebook AI 유사성 검색(FAISS) 라이브러리를 사용하는 `FAISS` 벡터 데이터베이스를 사용합니다.
 
 ```bash
 pip install faiss-cpu
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to create and query vector stores"}]-->
@@ -80,15 +81,17 @@ from langchain_community.vectorstores import FAISS
 db = FAISS.from_documents(documents, OpenAIEmbeddings())
 ```
 
+
   </TabItem>
   <TabItem value="lance" label="Lance">
 
 
-This notebook shows how to use functionality related to the LanceDB vector database based on the Lance data format.
+이 노트북은 Lance 데이터 형식에 기반한 LanceDB 벡터 데이터베이스와 관련된 기능을 사용하는 방법을 보여줍니다.
 
 ```bash
 pip install lancedb
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "LanceDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.lancedb.LanceDB.html", "title": "How to create and query vector stores"}]-->
@@ -111,14 +114,15 @@ table = db.create_table(
 db = LanceDB.from_documents(documents, OpenAIEmbeddings())
 ```
 
+
   </TabItem>
 </Tabs>
 
 
-## Similarity search
+## 유사성 검색
 
-All vectorstores expose a `similarity_search` method.
-This will take incoming documents, create an embedding of them, and then find all documents with the most similar embedding.
+모든 벡터 저장소는 `similarity_search` 메서드를 제공합니다.
+이 메서드는 들어오는 문서를 받아 임베딩을 생성한 다음, 가장 유사한 임베딩을 가진 모든 문서를 찾습니다.
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -138,9 +142,9 @@ print(docs[0].page_content)
 ```
 
 
-### Similarity search by vector
+### 벡터에 의한 유사성 검색
 
-It is also possible to do a search for documents similar to a given embedding vector using `similarity_search_by_vector` which accepts an embedding vector as a parameter instead of a string.
+주어진 임베딩 벡터와 유사한 문서를 검색하는 것도 가능하며, 이는 문자열 대신 임베딩 벡터를 매개변수로 받아들이는 `similarity_search_by_vector`를 사용합니다.
 
 ```python
 embedding_vector = OpenAIEmbeddings().embed_query(query)
@@ -160,11 +164,11 @@ print(docs[0].page_content)
 ```
 
 
-## Async Operations
+## 비동기 작업
 
-Vector stores are usually run as a separate service that requires some IO operations, and therefore they might be called asynchronously. That gives performance benefits as you don't waste time waiting for responses from external services. That might also be important if you work with an asynchronous framework, such as [FastAPI](https://fastapi.tiangolo.com/).
+벡터 저장소는 일반적으로 일부 IO 작업이 필요한 별도의 서비스로 실행되며, 따라서 비동기적으로 호출될 수 있습니다. 이는 외부 서비스로부터 응답을 기다리는 시간을 낭비하지 않기 때문에 성능 이점을 제공합니다. 이는 [FastAPI](https://fastapi.tiangolo.com/)와 같은 비동기 프레임워크로 작업할 때도 중요할 수 있습니다.
 
-LangChain supports async operation on vector stores. All the methods might be called using their async counterparts, with the prefix `a`, meaning `async`.
+LangChain은 벡터 저장소에서 비동기 작업을 지원합니다. 모든 메서드는 `a` 접두사가 붙은 비동기 대응 메서드를 사용하여 호출할 수 있습니다.
 
 ```python
 docs = await db.asimilarity_search(query)

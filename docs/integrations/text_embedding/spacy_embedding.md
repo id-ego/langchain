@@ -1,34 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/spacy_embedding/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/spacy_embedding.ipynb
+description: spaCy는 고급 자연어 처리를 위한 오픈 소스 소프트웨어 라이브러리로, Python과 Cython으로 작성되었습니다.
 ---
 
 # SpaCy
 
-> [spaCy](https://spacy.io/) is an open-source software library for advanced natural language processing, written in the programming languages Python and Cython.
+> [spaCy](https://spacy.io/)는 Python과 Cython 프로그래밍 언어로 작성된 고급 자연어 처리를 위한 오픈 소스 소프트웨어 라이브러리입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```python
 %pip install --upgrade --quiet  spacy
 ```
 
-Import the necessary classes
+
+필요한 클래스 가져오기
 
 ```python
 <!--IMPORTS:[{"imported": "SpacyEmbeddings", "source": "langchain_community.embeddings.spacy_embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.spacy_embeddings.SpacyEmbeddings.html", "title": "SpaCy"}]-->
 from langchain_community.embeddings.spacy_embeddings import SpacyEmbeddings
 ```
 
-## Example
 
-Initialize SpacyEmbeddings.This will load the Spacy model into memory.
+## 예제
+
+SpacyEmbeddings를 초기화합니다. 이것은 Spacy 모델을 메모리에 로드합니다.
 
 ```python
 embedder = SpacyEmbeddings(model_name="en_core_web_sm")
 ```
 
-Define some example texts . These could be any documents that you want to analyze - for example, news articles, social media posts, or product reviews.
+
+분석할 예제 텍스트를 정의합니다. 이들은 뉴스 기사, 소셜 미디어 게시물 또는 제품 리뷰와 같은 분석하고자 하는 문서일 수 있습니다.
 
 ```python
 texts = [
@@ -39,7 +42,8 @@ texts = [
 ]
 ```
 
-Generate and print embeddings for the texts . The SpacyEmbeddings class generates an embedding for each document, which is a numerical representation of the document's content. These embeddings can be used for various natural language processing tasks, such as document similarity comparison or text classification.
+
+텍스트에 대한 임베딩을 생성하고 출력합니다. SpacyEmbeddings 클래스는 각 문서에 대한 임베딩을 생성하며, 이는 문서 내용의 수치적 표현입니다. 이러한 임베딩은 문서 유사성 비교 또는 텍스트 분류와 같은 다양한 자연어 처리 작업에 사용될 수 있습니다.
 
 ```python
 embeddings = embedder.embed_documents(texts)
@@ -47,7 +51,8 @@ for i, embedding in enumerate(embeddings):
     print(f"Embedding for document {i+1}: {embedding}")
 ```
 
-Generate and print an embedding for a single piece of text. You can also generate an embedding for a single piece of text, such as a search query. This can be useful for tasks like information retrieval, where you want to find documents that are similar to a given query.
+
+단일 텍스트 조각에 대한 임베딩을 생성하고 출력합니다. 검색 쿼리와 같은 단일 텍스트 조각에 대한 임베딩을 생성할 수도 있습니다. 이는 주어진 쿼리와 유사한 문서를 찾고자 할 때 정보 검색과 같은 작업에 유용할 수 있습니다.
 
 ```python
 query = "Quick foxes and lazy dogs."
@@ -55,7 +60,8 @@ query_embedding = embedder.embed_query(query)
 print(f"Embedding for query: {query_embedding}")
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

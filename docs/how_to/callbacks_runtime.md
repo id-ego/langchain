@@ -1,22 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/callbacks_runtime/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/callbacks_runtime.ipynb
+description: 콜백을 실행 시점에 전달하는 방법에 대한 가이드로, 핸들러를 효율적으로 사용하여 중첩 객체에서 콜백을 관리하는 방법을 설명합니다.
 ---
 
-# How to pass callbacks in at runtime
+# 런타임에서 콜백 전달하는 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
+이 가이드는 다음 개념에 대한 친숙함을 가정합니다:
 
-- [Callbacks](/docs/concepts/#callbacks)
-- [Custom callback handlers](/docs/how_to/custom_callbacks)
+- [콜백](/docs/concepts/#callbacks)
+- [커스텀 콜백 핸들러](/docs/how_to/custom_callbacks)
 
 :::
 
-In many cases, it is advantageous to pass in handlers instead when running the object. When we pass through [`CallbackHandlers`](https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.BaseCallbackHandler.html#langchain-core-callbacks-base-basecallbackhandler) using the `callbacks` keyword arg when executing an run, those callbacks will be issued by all nested objects involved in the execution. For example, when a handler is passed through to an Agent, it will be used for all callbacks related to the agent and all the objects involved in the agent's execution, in this case, the Tools and LLM.
+많은 경우, 객체를 실행할 때 대신 핸들러를 전달하는 것이 유리합니다. 실행할 때 `callbacks` 키워드 인수를 사용하여 [`CallbackHandlers`](https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.BaseCallbackHandler.html#langchain-core-callbacks-base-basecallbackhandler)를 통과시키면, 해당 콜백은 실행에 관련된 모든 중첩 객체에 의해 발행됩니다. 예를 들어, 핸들러가 에이전트에 전달되면, 이는 에이전트와 에이전트 실행에 관련된 모든 객체, 즉 도구와 LLM과 관련된 모든 콜백에 사용됩니다.
 
-This prevents us from having to manually attach the handlers to each individual nested object. Here's an example:
+이렇게 하면 각 개별 중첩 객체에 핸들러를 수동으로 연결할 필요가 없습니다. 다음은 예시입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to pass callbacks in at runtime"}, {"imported": "BaseCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.BaseCallbackHandler.html", "title": "How to pass callbacks in at runtime"}, {"imported": "BaseMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.base.BaseMessage.html", "title": "How to pass callbacks in at runtime"}, {"imported": "LLMResult", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.llm_result.LLMResult.html", "title": "How to pass callbacks in at runtime"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to pass callbacks in at runtime"}]-->
@@ -55,6 +55,7 @@ chain = prompt | llm
 
 chain.invoke({"number": "2"}, config={"callbacks": callbacks})
 ```
+
 ```output
 Chain RunnableSequence started
 Chain ChatPromptTemplate started
@@ -64,14 +65,16 @@ Chat model ended, response: generations=[[ChatGeneration(text='1 + 2 = 3', messa
 Chain ended, outputs: content='1 + 2 = 3' response_metadata={'id': 'msg_01D8Tt5FdtBk5gLTfBPm2tac', 'model': 'claude-3-sonnet-20240229', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 16, 'output_tokens': 13}} id='run-bb0dddd8-85f3-4e6b-8553-eaa79f859ef8-0'
 ```
 
+
 ```output
 AIMessage(content='1 + 2 = 3', response_metadata={'id': 'msg_01D8Tt5FdtBk5gLTfBPm2tac', 'model': 'claude-3-sonnet-20240229', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 16, 'output_tokens': 13}}, id='run-bb0dddd8-85f3-4e6b-8553-eaa79f859ef8-0')
 ```
 
-If there are already existing callbacks associated with a module, these will run in addition to any passed in at runtime.
 
-## Next steps
+모듈과 관련된 기존 콜백이 이미 있는 경우, 이는 런타임에 전달된 콜백과 함께 실행됩니다.
 
-You've now learned how to pass callbacks at runtime.
+## 다음 단계
 
-Next, check out the other how-to guides in this section, such as how to [pass callbacks into a module constructor](/docs/how_to/custom_callbacks).
+이제 런타임에서 콜백을 전달하는 방법을 배웠습니다.
+
+다음으로, 이 섹션의 다른 방법 가이드를 확인해 보세요. 예를 들어, [모듈 생성자에 콜백 전달하기](/docs/how_to/custom_callbacks)와 같은 내용을 참고하세요.

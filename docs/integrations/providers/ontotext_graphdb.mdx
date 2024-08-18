@@ -1,23 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/ontotext_graphdb/
+description: Ontotext GraphDB는 RDF 및 SPARQL을 준수하는 그래프 데이터베이스이자 지식 발견 도구입니다. 데이터에 대한
+  통찰력을 제공합니다.
 ---
 
 # Ontotext GraphDB
 
-> [Ontotext GraphDB](https://graphdb.ontotext.com/) is a graph database and knowledge discovery tool compliant with RDF and SPARQL.
+> [Ontotext GraphDB](https://graphdb.ontotext.com/)는 RDF 및 SPARQL을 준수하는 그래프 데이터베이스 및 지식 발견 도구입니다.
 
 ## Dependencies
 
-Install the [rdflib](https://github.com/RDFLib/rdflib) package with
+[rdflib](https://github.com/RDFLib/rdflib) 패키지를 설치하려면
 ```bash
 pip install rdflib==7.0.0
 ```
 
+
 ## Graph QA Chain
 
-Connect your GraphDB Database with a chat model to get insights on your data.
+GraphDB 데이터베이스를 채팅 모델과 연결하여 데이터에 대한 통찰력을 얻으세요.
 
-See the notebook example [here](/docs/integrations/graphs/ontotext).
+노트북 예제는 [여기](/docs/integrations/graphs/ontotext)에서 확인하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "OntotextGraphDBGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.ontotext_graphdb_graph.OntotextGraphDBGraph.html", "title": "Ontotext GraphDB"}, {"imported": "OntotextGraphDBQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.ontotext_graphdb.OntotextGraphDBQAChain.html", "title": "Ontotext GraphDB"}]-->

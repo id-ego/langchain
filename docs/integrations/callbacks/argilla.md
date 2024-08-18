@@ -1,41 +1,41 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/callbacks/argilla/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/callbacks/argilla.ipynb
+description: Argilla는 LLM을 위한 오픈소스 데이터 큐레이션 플랫폼으로, 데이터 라벨링부터 모델 모니터링까지 MLOps 사이클을
+  지원합니다.
 ---
 
 # Argilla
 
-> [Argilla](https://argilla.io/) is an open-source data curation platform for LLMs.
-Using Argilla, everyone can build robust language models through faster data curation
-using both human and machine feedback. We provide support for each step in the MLOps cycle,
-from data labeling to model monitoring.
+> [Argilla](https://argilla.io/)는 LLM을 위한 오픈 소스 데이터 큐레이션 플랫폼입니다.  
+Argilla를 사용하면 누구나 인간과 기계 피드백을 통해 더 빠른 데이터 큐레이션으로 강력한 언어 모델을 구축할 수 있습니다. 우리는 데이터 레이블링부터 모델 모니터링까지 MLOps 사이클의 각 단계를 지원합니다.
 
 <a target="_blank" href="https://colab.research.google.com/github/langchain-ai/langchain/blob/master/docs/docs/integrations/callbacks/argilla.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
-In this guide we will demonstrate how to track the inputs and responses of your LLM to generate a dataset in Argilla, using the `ArgillaCallbackHandler`.
+이 가이드에서는 `ArgillaCallbackHandler`를 사용하여 Argilla에서 데이터셋을 생성하기 위해 LLM의 입력 및 응답을 추적하는 방법을 보여줍니다.
 
-It's useful to keep track of the inputs and outputs of your LLMs to generate datasets for future fine-tuning. This is especially useful when you're using a LLM to generate data for a specific task, such as question answering, summarization, or translation.
+LLM의 입력 및 출력을 추적하여 향후 파인 튜닝을 위한 데이터셋을 생성하는 것이 유용합니다. 이는 질문 응답, 요약 또는 번역과 같은 특정 작업을 위해 LLM을 사용할 때 특히 유용합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-openai argilla
 ```
 
-### Getting API Credentials
 
-To get the Argilla API credentials, follow the next steps:
+### API 자격 증명 얻기
 
-1. Go to your Argilla UI.
-2. Click on your profile picture and go to "My settings".
-3. Then copy the API Key.
+Argilla API 자격 증명을 얻으려면 다음 단계를 따르세요:
 
-In Argilla the API URL will be the same as the URL of your Argilla UI.
+1. Argilla UI로 이동합니다.
+2. 프로필 사진을 클릭하고 "내 설정"으로 이동합니다.
+3. 그런 다음 API 키를 복사합니다.
 
-To get the OpenAI API credentials, please visit https://platform.openai.com/account/api-keys
+Argilla에서 API URL은 Argilla UI의 URL과 동일합니다.
+
+OpenAI API 자격 증명을 얻으려면 https://platform.openai.com/account/api-keys를 방문하세요.
 
 ```python
 import os
@@ -46,13 +46,15 @@ os.environ["ARGILLA_API_KEY"] = "..."
 os.environ["OPENAI_API_KEY"] = "..."
 ```
 
-### Setup Argilla
 
-To use the `ArgillaCallbackHandler` we will need to create a new `FeedbackDataset` in Argilla to keep track of your LLM experiments. To do so, please use the following code:
+### Argilla 설정
+
+`ArgillaCallbackHandler`를 사용하려면 Argilla에서 LLM 실험을 추적하기 위해 새로운 `FeedbackDataset`을 생성해야 합니다. 이를 위해 다음 코드를 사용하세요:
 
 ```python
 import argilla as rg
 ```
+
 
 ```python
 from packaging.version import parse as parse_version
@@ -63,6 +65,7 @@ if parse_version(rg.__version__) < parse_version("1.8.0"):
         "upgrade `argilla` as `pip install argilla --upgrade`."
     )
 ```
+
 
 ```python
 dataset = rg.FeedbackDataset(
@@ -94,11 +97,12 @@ rg.init(
 dataset.push_to_argilla("langchain-dataset")
 ```
 
-> 📌 NOTE: at the moment, just the prompt-response pairs are supported as `FeedbackDataset.fields`, so the `ArgillaCallbackHandler` will just track the prompt i.e. the LLM input, and the response i.e. the LLM output.
 
-## Tracking
+> 📌 참고: 현재 `FeedbackDataset.fields`로는 프롬프트-응답 쌍만 지원되므로 `ArgillaCallbackHandler`는 프롬프트 즉, LLM 입력과 응답 즉, LLM 출력을 추적합니다.
 
-To use the `ArgillaCallbackHandler` you can either use the following code, or just reproduce one of the examples presented in the following sections.
+## 추적
+
+`ArgillaCallbackHandler`를 사용하려면 다음 코드를 사용하거나 다음 섹션에 제시된 예 중 하나를 재현하면 됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ArgillaCallbackHandler", "source": "langchain_community.callbacks.argilla_callback", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.argilla_callback.ArgillaCallbackHandler.html", "title": "Argilla"}]-->
@@ -111,9 +115,10 @@ argilla_callback = ArgillaCallbackHandler(
 )
 ```
 
-### Scenario 1: Tracking an LLM
 
-First, let's just run a single LLM a few times and capture the resulting prompt-response pairs in Argilla.
+### 시나리오 1: LLM 추적
+
+먼저, 단일 LLM을 몇 번 실행하고 결과적인 프롬프트-응답 쌍을 Argilla에 캡처해 보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks.stdout", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Argilla"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Argilla"}]-->
@@ -131,15 +136,17 @@ llm = OpenAI(temperature=0.9, callbacks=callbacks)
 llm.generate(["Tell me a joke", "Tell me a poem"] * 3)
 ```
 
+
 ```output
 LLMResult(generations=[[Generation(text='\n\nQ: What did the fish say when he hit the wall? \nA: Dam.', generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text='\n\nThe Moon \n\nThe moon is high in the midnight sky,\nSparkling like a star above.\nThe night so peaceful, so serene,\nFilling up the air with love.\n\nEver changing and renewing,\nA never-ending light of grace.\nThe moon remains a constant view,\nA reminder of life’s gentle pace.\n\nThrough time and space it guides us on,\nA never-fading beacon of hope.\nThe moon shines down on us all,\nAs it continues to rise and elope.', generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text='\n\nQ. What did one magnet say to the other magnet?\nA. "I find you very attractive!"', generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text="\n\nThe world is charged with the grandeur of God.\nIt will flame out, like shining from shook foil;\nIt gathers to a greatness, like the ooze of oil\nCrushed. Why do men then now not reck his rod?\n\nGenerations have trod, have trod, have trod;\nAnd all is seared with trade; bleared, smeared with toil;\nAnd wears man's smudge and shares man's smell: the soil\nIs bare now, nor can foot feel, being shod.\n\nAnd for all this, nature is never spent;\nThere lives the dearest freshness deep down things;\nAnd though the last lights off the black West went\nOh, morning, at the brown brink eastward, springs —\n\nBecause the Holy Ghost over the bent\nWorld broods with warm breast and with ah! bright wings.\n\n~Gerard Manley Hopkins", generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text='\n\nQ: What did one ocean say to the other ocean?\nA: Nothing, they just waved.', generation_info={'finish_reason': 'stop', 'logprobs': None})], [Generation(text="\n\nA poem for you\n\nOn a field of green\n\nThe sky so blue\n\nA gentle breeze, the sun above\n\nA beautiful world, for us to love\n\nLife is a journey, full of surprise\n\nFull of joy and full of surprise\n\nBe brave and take small steps\n\nThe future will be revealed with depth\n\nIn the morning, when dawn arrives\n\nA fresh start, no reason to hide\n\nSomewhere down the road, there's a heart that beats\n\nBelieve in yourself, you'll always succeed.", generation_info={'finish_reason': 'stop', 'logprobs': None})]], llm_output={'token_usage': {'completion_tokens': 504, 'total_tokens': 528, 'prompt_tokens': 24}, 'model_name': 'text-davinci-003'})
 ```
 
+
 ![Argilla UI with LangChain LLM input-response](https://docs.argilla.io/en/latest/_images/llm.png)
 
-### Scenario 2: Tracking an LLM in a chain
+### 시나리오 2: 체인에서 LLM 추적
 
-Then we can create a chain using a prompt template, and then track the initial prompt and the final response in Argilla.
+그런 다음 프롬프트 템플릿을 사용하여 체인을 만들고 초기 프롬프트와 최종 응답을 Argilla에서 추적할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Argilla"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks.stdout", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Argilla"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Argilla"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Argilla"}]-->
@@ -165,6 +172,7 @@ synopsis_chain = LLMChain(llm=llm, prompt=prompt_template, callbacks=callbacks)
 test_prompts = [{"title": "Documentary about Bigfoot in Paris"}]
 synopsis_chain.apply(test_prompts)
 ```
+  
 ```output
 
 
@@ -177,17 +185,19 @@ Playwright: This is a synopsis for the above play:[0m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 [{'text': "\n\nDocumentary about Bigfoot in Paris focuses on the story of a documentary filmmaker and their search for evidence of the legendary Bigfoot creature in the city of Paris. The play follows the filmmaker as they explore the city, meeting people from all walks of life who have had encounters with the mysterious creature. Through their conversations, the filmmaker unravels the story of Bigfoot and finds out the truth about the creature's presence in Paris. As the story progresses, the filmmaker learns more and more about the mysterious creature, as well as the different perspectives of the people living in the city, and what they think of the creature. In the end, the filmmaker's findings lead them to some surprising and heartwarming conclusions about the creature's existence and the importance it holds in the lives of the people in Paris."}]
 ```
 
+
 ![Argilla UI with LangChain Chain input-response](https://docs.argilla.io/en/latest/_images/chain.png)
 
-### Scenario 3: Using an Agent with Tools
+### 시나리오 3: 도구와 함께 에이전트 사용
 
-Finally, as a more advanced workflow, you can create an agent that uses some tools. So that `ArgillaCallbackHandler` will keep track of the input and the output, but not about the intermediate steps/thoughts, so that given a prompt we log the original prompt and the final response to that given prompt.
+마지막으로, 더 고급 워크플로우로 도구를 사용하는 에이전트를 생성할 수 있습니다. 따라서 `ArgillaCallbackHandler`는 입력과 출력을 추적하지만 중간 단계/생각에 대해서는 추적하지 않으므로 주어진 프롬프트에 대해 원래 프롬프트와 해당 프롬프트에 대한 최종 응답을 기록합니다.
 
-> Note that for this scenario we'll be using Google Search API (Serp API) so you will need to both install `google-search-results` as `pip install google-search-results`, and to set the Serp API Key as `os.environ["SERPAPI_API_KEY"] = "..."` (you can find it at https://serpapi.com/dashboard), otherwise the example below won't work.
+> 이 시나리오에서는 Google Search API (Serp API)를 사용할 것이므로 `google-search-results`를 `pip install google-search-results`로 설치하고 Serp API 키를 `os.environ["SERPAPI_API_KEY"] = "..."`로 설정해야 합니다 (이는 https://serpapi.com/dashboard에서 찾을 수 있습니다). 그렇지 않으면 아래 예제가 작동하지 않습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Argilla"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Argilla"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Argilla"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks.stdout", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Argilla"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Argilla"}]-->
@@ -212,6 +222,7 @@ agent = initialize_agent(
 )
 agent.run("Who was the first president of the United States of America?")
 ```
+  
 ```output
 
 
@@ -225,9 +236,11 @@ Final Answer: George Washington was the first president of the United States of 
 
 [1m> Finished chain.[0m
 ```
+  
 
 ```output
 'George Washington was the first president of the United States of America.'
 ```
+
 
 ![Argilla UI with LangChain Agent input-response](https://docs.argilla.io/en/latest/_images/agent.png)

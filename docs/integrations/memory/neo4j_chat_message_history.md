@@ -1,13 +1,13 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/neo4j_chat_message_history/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/neo4j_chat_message_history.ipynb
+description: 이 문서는 Neo4j를 사용하여 채팅 메시지 기록을 저장하는 방법에 대해 설명합니다. 그래프 데이터베이스의 효율성을 강조합니다.
 ---
 
 # Neo4j
 
-[Neo4j](https://en.wikipedia.org/wiki/Neo4j) is an open-source graph database management system, renowned for its efficient management of highly connected data. Unlike traditional databases that store data in tables, Neo4j uses a graph structure with nodes, edges, and properties to represent and store data. This design allows for high-performance queries on complex data relationships.
+[Neo4j](https://en.wikipedia.org/wiki/Neo4j)는 고도로 연결된 데이터를 효율적으로 관리하는 것으로 유명한 오픈 소스 그래프 데이터베이스 관리 시스템입니다. 데이터를 테이블에 저장하는 전통적인 데이터베이스와 달리, Neo4j는 노드, 엣지 및 속성을 사용하여 데이터를 표현하고 저장하는 그래프 구조를 사용합니다. 이 설계는 복잡한 데이터 관계에 대한 고성능 쿼리를 가능하게 합니다.
 
-This notebook goes over how to use `Neo4j` to store chat message history.
+이 노트북은 `Neo4j`를 사용하여 채팅 메시지 기록을 저장하는 방법에 대해 설명합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Neo4jChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.neo4j.Neo4jChatMessageHistory.html", "title": "Neo4j"}]-->
@@ -24,6 +24,7 @@ history.add_user_message("hi!")
 
 history.add_ai_message("whats up?")
 ```
+
 
 ```python
 history.messages

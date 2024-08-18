@@ -1,24 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/sql_large_db/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/sql_large_db.ipynb
+description: 대규모 데이터베이스에서 SQL 질문-응답을 위한 유용한 정보 식별 및 쿼리 생성 방법을 안내하는 가이드입니다.
 ---
 
-# How to deal with large databases when doing SQL question-answering
+# 대규모 데이터베이스를 SQL 질문-응답 시 처리하는 방법
 
-In order to write valid queries against a database, we need to feed the model the table names, table schemas, and feature values for it to query over. When there are many tables, columns, and/or high-cardinality columns, it becomes impossible for us to dump the full information about our database in every prompt. Instead, we must find ways to dynamically insert into the prompt only the most relevant information.
+데이터베이스에 유효한 쿼리를 작성하기 위해서는 모델에 테이블 이름, 테이블 스키마 및 쿼리할 기능 값을 제공해야 합니다. 테이블, 열 및/또는 높은 카디널리티 열이 많을 경우, 모든 프롬프트에 데이터베이스에 대한 전체 정보를 덤프하는 것은 불가능해집니다. 대신, 우리는 프롬프트에 가장 관련성이 높은 정보만 동적으로 삽입하는 방법을 찾아야 합니다.
 
-In this guide we demonstrate methods for identifying such relevant information, and feeding this into a query-generation step. We will cover:
+이 가이드에서는 그러한 관련 정보를 식별하고 이를 쿼리 생성 단계에 제공하는 방법을 보여줍니다. 우리는 다음을 다룰 것입니다:
 
-1. Identifying a relevant subset of tables;
-2. Identifying a relevant subset of column values.
+1. 관련 테이블의 하위 집합 식별하기;
+2. 관련 열 값의 하위 집합 식별하기.
 
-## Setup
+## 설정
 
-First, get required packages and set environment variables:
+먼저 필요한 패키지를 가져오고 환경 변수를 설정합니다:
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai
 ```
+
 
 ```python
 # Uncomment the below to use LangSmith. Not required.
@@ -27,14 +28,15 @@ First, get required packages and set environment variables:
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 ```
 
-The below example will use a SQLite connection with Chinook database. Follow [these installation steps](https://database.guide/2-sample-databases-sqlite/) to create `Chinook.db` in the same directory as this notebook:
 
-* Save [this file](https://raw.githubusercontent.com/lerocha/chinook-database/master/ChinookDatabase/DataSources/Chinook_Sqlite.sql) as `Chinook_Sqlite.sql`
-* Run `sqlite3 Chinook.db`
-* Run `.read Chinook_Sqlite.sql`
-* Test `SELECT * FROM Artist LIMIT 10;`
+아래 예제는 Chinook 데이터베이스와 함께 SQLite 연결을 사용할 것입니다. [이 설치 단계](https://database.guide/2-sample-databases-sqlite/)를 따라 `Chinook.db`를 이 노트북과 같은 디렉토리에 생성하세요:
 
-Now, `Chinhook.db` is in our directory and we can interface with it using the SQLAlchemy-driven [SQLDatabase](https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html) class:
+* [이 파일](https://raw.githubusercontent.com/lerocha/chinook-database/master/ChinookDatabase/DataSources/Chinook_Sqlite.sql)을 `Chinook_Sqlite.sql`로 저장합니다.
+* `sqlite3 Chinook.db`를 실행합니다.
+* `.read Chinook_Sqlite.sql`을 실행합니다.
+* `SELECT * FROM Artist LIMIT 10;`을 테스트합니다.
+
+이제 `Chinook.db`가 우리의 디렉토리에 있으며, SQLAlchemy 기반의 [SQLDatabase](https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html) 클래스를 사용하여 인터페이스할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "SQLDatabase", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.sql_database.SQLDatabase.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -45,21 +47,23 @@ print(db.dialect)
 print(db.get_usable_table_names())
 print(db.run("SELECT * FROM Artist LIMIT 10;"))
 ```
+
 ```output
 sqlite
 ['Album', 'Artist', 'Customer', 'Employee', 'Genre', 'Invoice', 'InvoiceLine', 'MediaType', 'Playlist', 'PlaylistTrack', 'Track']
 [(1, 'AC/DC'), (2, 'Accept'), (3, 'Aerosmith'), (4, 'Alanis Morissette'), (5, 'Alice In Chains'), (6, 'Antônio Carlos Jobim'), (7, 'Apocalyptica'), (8, 'Audioslave'), (9, 'BackBeat'), (10, 'Billy Cobham')]
 ```
-## Many tables
 
-One of the main pieces of information we need to include in our prompt is the schemas of the relevant tables. When we have very many tables, we can't fit all of the schemas in a single prompt. What we can do in such cases is first extract the names of the tables related to the user input, and then include only their schemas.
 
-One easy and reliable way to do this is using [tool-calling](/docs/how_to/tool_calling). Below, we show how we can use this feature to obtain output conforming to a desired format (in this case, a list of table names). We use the chat model's `.bind_tools` method to bind a tool in Pydantic format, and feed this into an output parser to reconstruct the object from the model's response.
+## 많은 테이블
+
+프롬프트에 포함해야 할 주요 정보 중 하나는 관련 테이블의 스키마입니다. 테이블이 너무 많을 경우, 모든 스키마를 단일 프롬프트에 담을 수 없습니다. 이러한 경우, 사용자 입력과 관련된 테이블의 이름을 먼저 추출한 다음, 그들의 스키마만 포함할 수 있습니다.
+
+이를 수행하는 쉽고 신뢰할 수 있는 방법 중 하나는 [tool-calling](/docs/how_to/tool_calling)을 사용하는 것입니다. 아래에서는 이 기능을 사용하여 원하는 형식(이 경우, 테이블 이름 목록)에 맞는 출력을 얻는 방법을 보여줍니다. 우리는 채팅 모델의 `.bind_tools` 메서드를 사용하여 Pydantic 형식으로 도구를 바인딩하고, 이를 출력 파서에 제공하여 모델의 응답에서 객체를 재구성합니다.
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
-
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticToolsParser", "source": "langchain_core.output_parsers.openai_tools", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html", "title": "How to deal with large databases when doing SQL question-answering"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -96,11 +100,13 @@ table_chain = prompt | llm_with_tools | output_parser
 table_chain.invoke({"input": "What are all the genres of Alanis Morisette songs"})
 ```
 
+
 ```output
 [Table(name='Genre')]
 ```
 
-This works pretty well! Except, as we'll see below, we actually need a few other tables as well. This would be pretty difficult for the model to know based just on the user question. In this case, we might think to simplify our model's job by grouping the tables together. We'll just ask the model to choose between categories "Music" and "Business", and then take care of selecting all the relevant tables from there:
+
+이것은 꽤 잘 작동합니다! 하지만 아래에서 볼 수 있듯이, 실제로는 몇 가지 다른 테이블도 필요합니다. 이는 모델이 사용자 질문만으로 알기에는 꽤 어려울 것입니다. 이 경우, 우리는 모델의 작업을 단순화하기 위해 테이블을 그룹화할 수 있습니다. 우리는 모델에게 "음악"과 "비즈니스" 카테고리 중에서 선택하도록 요청하고, 그 이후에 모든 관련 테이블을 선택하는 작업을 처리할 것입니다:
 
 ```python
 system = """Return the names of any SQL tables that are relevant to the user question.
@@ -121,9 +127,11 @@ category_chain = prompt | llm_with_tools | output_parser
 category_chain.invoke({"input": "What are all the genres of Alanis Morisette songs"})
 ```
 
+
 ```output
 [Table(name='Music'), Table(name='Business')]
 ```
+
 
 ```python
 from typing import List
@@ -153,6 +161,7 @@ table_chain = category_chain | get_tables
 table_chain.invoke({"input": "What are all the genres of Alanis Morisette songs"})
 ```
 
+
 ```output
 ['Album',
  'Artist',
@@ -167,7 +176,8 @@ table_chain.invoke({"input": "What are all the genres of Alanis Morisette songs"
  'InvoiceLine']
 ```
 
-Now that we've got a chain that can output the relevant tables for any query we can combine this with our [create_sql_query_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.sql_database.query.create_sql_query_chain.html), which can accept a list of `table_names_to_use` to determine which table schemas are included in the prompt:
+
+이제 우리는 어떤 쿼리에 대해서도 관련 테이블을 출력할 수 있는 체인을 갖추었으며, 이를 [create_sql_query_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.sql_database.query.create_sql_query_chain.html)과 결합할 수 있습니다. 이 체인은 프롬프트에 포함될 테이블 스키마를 결정하기 위해 `table_names_to_use` 목록을 수용할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "create_sql_query_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.sql_database.query.create_sql_query_chain.html", "title": "How to deal with large databases when doing SQL question-answering"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -183,12 +193,14 @@ table_chain = {"input": itemgetter("question")} | table_chain
 full_chain = RunnablePassthrough.assign(table_names_to_use=table_chain) | query_chain
 ```
 
+
 ```python
 query = full_chain.invoke(
     {"question": "What are all the genres of Alanis Morisette songs"}
 )
 print(query)
 ```
+
 ```output
 SELECT DISTINCT "g"."Name"
 FROM "Genre" g
@@ -199,25 +211,28 @@ WHERE "ar"."Name" = 'Alanis Morissette'
 LIMIT 5;
 ```
 
+
 ```python
 db.run(query)
 ```
+
 
 ```output
 "[('Rock',)]"
 ```
 
-We can see the LangSmith trace for this run [here](https://smith.langchain.com/public/4fbad408-3554-4f33-ab47-1e510a1b52a3/r).
 
-We've seen how to dynamically include a subset of table schemas in a prompt within a chain. Another possible approach to this problem is to let an Agent decide for itself when to look up tables by giving it a Tool to do so. You can see an example of this in the [SQL: Agents](/docs/tutorials/agents) guide.
+이번 실행에 대한 LangSmith 추적을 [여기](https://smith.langchain.com/public/4fbad408-3554-4f33-ab47-1e510a1b52a3/r)에서 볼 수 있습니다.
 
-## High-cardinality columns
+우리는 체인 내에서 프롬프트에 테이블 스키마의 하위 집합을 동적으로 포함하는 방법을 보았습니다. 이 문제에 대한 또 다른 가능한 접근 방식은 에이전트가 스스로 테이블을 조회할 시점을 결정하도록 하는 것입니다. 이 예시는 [SQL: Agents](/docs/tutorials/agents) 가이드에서 확인할 수 있습니다.
 
-In order to filter columns that contain proper nouns such as addresses, song names or artists, we first need to double-check the spelling in order to filter the data correctly. 
+## 높은 카디널리티 열
 
-One naive strategy it to create a vector store with all the distinct proper nouns that exist in the database. We can then query that vector store each user input and inject the most relevant proper nouns into the prompt.
+주소, 노래 제목 또는 아티스트와 같은 고유 명사를 포함하는 열을 필터링하기 위해서는 먼저 올바른 철자를 확인하여 데이터를 올바르게 필터링해야 합니다.
 
-First we need the unique values for each entity we want, for which we define a function that parses the result into a list of elements:
+한 가지 단순한 전략은 데이터베이스에 존재하는 모든 고유 명사의 벡터 저장소를 만드는 것입니다. 그런 다음 각 사용자 입력에 대해 해당 벡터 저장소를 쿼리하고 가장 관련성이 높은 고유 명사를 프롬프트에 주입할 수 있습니다.
+
+먼저 원하는 각 엔티티의 고유 값을 얻기 위해 결과를 요소 목록으로 구문 분석하는 함수를 정의합니다:
 
 ```python
 import ast
@@ -238,11 +253,13 @@ len(proper_nouns)
 proper_nouns[:5]
 ```
 
+
 ```output
 ['AC/DC', 'Accept', 'Aerosmith', 'Alanis Morissette', 'Alice In Chains']
 ```
 
-Now we can embed and store all of our values in a vector database:
+
+이제 모든 값을 벡터 데이터베이스에 임베드하고 저장할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to deal with large databases when doing SQL question-answering"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -253,7 +270,8 @@ vector_db = FAISS.from_texts(proper_nouns, OpenAIEmbeddings())
 retriever = vector_db.as_retriever(search_kwargs={"k": 15})
 ```
 
-And put together a query construction chain that first retrieves values from the database and inserts them into the prompt:
+
+그리고 먼저 데이터베이스에서 값을 검색하고 이를 프롬프트에 삽입하는 쿼리 구성 체인을 함께 구성합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to deal with large databases when doing SQL question-answering"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to deal with large databases when doing SQL question-answering"}]-->
@@ -287,7 +305,8 @@ retriever_chain = (
 chain = RunnablePassthrough.assign(proper_nouns=retriever_chain) | query_chain
 ```
 
-To try out our chain, let's see what happens when we try filtering on "elenis moriset", a misspelling of Alanis Morissette, without and with retrieval:
+
+체인을 시도해 보려면 "elenis moriset"라는 잘못된 철자를 필터링할 때 어떤 일이 발생하는지 확인해 보겠습니다. 이는 Alanis Morissette의 잘못된 철자입니다. 검색 없이와 검색과 함께 시도해 보겠습니다:
 
 ```python
 # Without retrieval
@@ -297,6 +316,7 @@ query = query_chain.invoke(
 print(query)
 db.run(query)
 ```
+
 ```output
 SELECT DISTINCT g.Name 
 FROM Track t
@@ -306,9 +326,11 @@ JOIN Genre g ON t.GenreId = g.GenreId
 WHERE ar.Name = 'Elenis Moriset';
 ```
 
+
 ```output
 ''
 ```
+
 
 ```python
 # Without retrieval
@@ -318,6 +340,7 @@ query = query_chain.invoke(
 print(query)
 db.run(query)
 ```
+
 ```output
 SELECT DISTINCT Genre.Name
 FROM Genre
@@ -327,9 +350,11 @@ JOIN Artist ON Album.ArtistId = Artist.ArtistId
 WHERE Artist.Name = 'Elenis Moriset'
 ```
 
+
 ```output
 ''
 ```
+
 
 ```python
 # With retrieval
@@ -337,6 +362,8 @@ query = chain.invoke({"question": "What are all the genres of elenis moriset son
 print(query)
 db.run(query)
 ```
+
+
 ```output
 SELECT DISTINCT g.Name
 FROM Genre g
@@ -346,10 +373,12 @@ JOIN Artist ar ON a.ArtistId = ar.ArtistId
 WHERE ar.Name = 'Alanis Morissette';
 ```
 
+
 ```output
 "[('Rock',)]"
 ```
 
-We can see that with retrieval we're able to correct the spelling from "Elenis Moriset" to "Alanis Morissette" and get back a valid result.
 
-Another possible approach to this problem is to let an Agent decide for itself when to look up proper nouns. You can see an example of this in the [SQL: Agents](/docs/tutorials/agents) guide.
+검색을 통해 "Elenis Moriset"의 철자를 "Alanis Morissette"로 수정하고 유효한 결과를 얻을 수 있음을 확인할 수 있습니다.
+
+이 문제에 대한 또 다른 가능한 접근 방식은 에이전트가 스스로 고유 명사를 조회할 시점을 결정하도록 하는 것입니다. 이 예시는 [SQL: Agents](/docs/tutorials/agents) 가이드에서 확인할 수 있습니다.

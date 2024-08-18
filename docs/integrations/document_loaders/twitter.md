@@ -1,23 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/twitter/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/twitter.ipynb
+description: 트위터 사용자 목록에서 트윗 텍스트를 가져오는 로더에 대한 설명입니다. `tweepy` 패키지를 사용하여 Twitter API
+  토큰으로 초기화합니다.
 ---
 
-# Twitter
+# 트위터
 
-> [Twitter](https://twitter.com/) is an online social media and social networking service.
+> [트위터](https://twitter.com/)는 온라인 소셜 미디어 및 소셜 네트워킹 서비스입니다.
 
-This loader fetches the text from the Tweets of a list of `Twitter` users, using the `tweepy` Python package.
-You must initialize the loader with your `Twitter API` token, and you need to pass in the Twitter username you want to extract.
+이 로더는 `tweepy` 파이썬 패키지를 사용하여 특정 `트위터` 사용자 목록의 트윗에서 텍스트를 가져옵니다. 로더를 초기화하려면 `트위터 API` 토큰이 필요하며, 추출하려는 트위터 사용자 이름을 전달해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TwitterTweetLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.twitter.TwitterTweetLoader.html", "title": "Twitter"}]-->
 from langchain_community.document_loaders import TwitterTweetLoader
 ```
 
+
 ```python
 %pip install --upgrade --quiet  tweepy
 ```
+
 
 ```python
 loader = TwitterTweetLoader.from_bearer_token(
@@ -37,10 +39,12 @@ loader = TwitterTweetLoader.from_bearer_token(
 # )
 ```
 
+
 ```python
 documents = loader.load()
 documents[:5]
 ```
+
 
 ```output
 [Document(page_content='@MrAndyNgo @REI One store after another shutting down', metadata={'created_at': 'Tue Apr 18 03:45:50 +0000 2023', 'user_info': {'id': 44196397, 'id_str': '44196397', 'name': 'Elon Musk', 'screen_name': 'elonmusk', 'location': 'A Shortfall of Gravitas', 'profile_location': None, 'description': 'nothing', 'url': None, 'entities': {'description': {'urls': []}}, 'protected': False, 'followers_count': 135528327, 'friends_count': 220, 'listed_count': 120478, 'created_at': 'Tue Jun 02 20:12:29 +0000 2009', 'favourites_count': 21285, 'utc_offset': None, 'time_zone': None, 'geo_enabled': False, 'verified': False, 'statuses_count': 24795, 'lang': None, 'status': {'created_at': 'Tue Apr 18 03:45:50 +0000 2023', 'id': 1648170947541704705, 'id_str': '1648170947541704705', 'text': '@MrAndyNgo @REI One store after another shutting down', 'truncated': False, 'entities': {'hashtags': [], 'symbols': [], 'user_mentions': [{'screen_name': 'MrAndyNgo', 'name': 'Andy Ngô 🏳️\u200d🌈', 'id': 2835451658, 'id_str': '2835451658', 'indices': [0, 10]}, {'screen_name': 'REI', 'name': 'REI', 'id': 16583846, 'id_str': '16583846', 'indices': [11, 15]}], 'urls': []}, 'source': '<a href="http://twitter.com/download/iphone" rel="nofollow">Twitter for iPhone</a>', 'in_reply_to_status_id': 1648134341678051328, 'in_reply_to_status_id_str': '1648134341678051328', 'in_reply_to_user_id': 2835451658, 'in_reply_to_user_id_str': '2835451658', 'in_reply_to_screen_name': 'MrAndyNgo', 'geo': None, 'coordinates': None, 'place': None, 'contributors': None, 'is_quote_status': False, 'retweet_count': 118, 'favorite_count': 1286, 'favorited': False, 'retweeted': False, 'lang': 'en'}, 'contributors_enabled': False, 'is_translator': False, 'is_translation_enabled': False, 'profile_background_color': 'C0DEED', 'profile_background_image_url': 'http://abs.twimg.com/images/themes/theme1/bg.png', 'profile_background_image_url_https': 'https://abs.twimg.com/images/themes/theme1/bg.png', 'profile_background_tile': False, 'profile_image_url': 'http://pbs.twimg.com/profile_images/1590968738358079488/IY9Gx6Ok_normal.jpg', 'profile_image_url_https': 'https://pbs.twimg.com/profile_images/1590968738358079488/IY9Gx6Ok_normal.jpg', 'profile_banner_url': 'https://pbs.twimg.com/profile_banners/44196397/1576183471', 'profile_link_color': '0084B4', 'profile_sidebar_border_color': 'C0DEED', 'profile_sidebar_fill_color': 'DDEEF6', 'profile_text_color': '333333', 'profile_use_background_image': True, 'has_extended_profile': True, 'default_profile': False, 'default_profile_image': False, 'following': None, 'follow_request_sent': None, 'notifications': None, 'translator_type': 'none', 'withheld_in_countries': []}}),
@@ -50,7 +54,8 @@ documents[:5]
  Document(page_content='@TRHLofficial What’s he talking about and why is it sponsored by Erik’s son?', metadata={'created_at': 'Tue Apr 18 03:32:17 +0000 2023', 'user_info': {'id': 44196397, 'id_str': '44196397', 'name': 'Elon Musk', 'screen_name': 'elonmusk', 'location': 'A Shortfall of Gravitas', 'profile_location': None, 'description': 'nothing', 'url': None, 'entities': {'description': {'urls': []}}, 'protected': False, 'followers_count': 135528327, 'friends_count': 220, 'listed_count': 120478, 'created_at': 'Tue Jun 02 20:12:29 +0000 2009', 'favourites_count': 21285, 'utc_offset': None, 'time_zone': None, 'geo_enabled': False, 'verified': False, 'statuses_count': 24795, 'lang': None, 'status': {'created_at': 'Tue Apr 18 03:45:50 +0000 2023', 'id': 1648170947541704705, 'id_str': '1648170947541704705', 'text': '@MrAndyNgo @REI One store after another shutting down', 'truncated': False, 'entities': {'hashtags': [], 'symbols': [], 'user_mentions': [{'screen_name': 'MrAndyNgo', 'name': 'Andy Ngô 🏳️\u200d🌈', 'id': 2835451658, 'id_str': '2835451658', 'indices': [0, 10]}, {'screen_name': 'REI', 'name': 'REI', 'id': 16583846, 'id_str': '16583846', 'indices': [11, 15]}], 'urls': []}, 'source': '<a href="http://twitter.com/download/iphone" rel="nofollow">Twitter for iPhone</a>', 'in_reply_to_status_id': 1648134341678051328, 'in_reply_to_status_id_str': '1648134341678051328', 'in_reply_to_user_id': 2835451658, 'in_reply_to_user_id_str': '2835451658', 'in_reply_to_screen_name': 'MrAndyNgo', 'geo': None, 'coordinates': None, 'place': None, 'contributors': None, 'is_quote_status': False, 'retweet_count': 118, 'favorite_count': 1286, 'favorited': False, 'retweeted': False, 'lang': 'en'}, 'contributors_enabled': False, 'is_translator': False, 'is_translation_enabled': False, 'profile_background_color': 'C0DEED', 'profile_background_image_url': 'http://abs.twimg.com/images/themes/theme1/bg.png', 'profile_background_image_url_https': 'https://abs.twimg.com/images/themes/theme1/bg.png', 'profile_background_tile': False, 'profile_image_url': 'http://pbs.twimg.com/profile_images/1590968738358079488/IY9Gx6Ok_normal.jpg', 'profile_image_url_https': 'https://pbs.twimg.com/profile_images/1590968738358079488/IY9Gx6Ok_normal.jpg', 'profile_banner_url': 'https://pbs.twimg.com/profile_banners/44196397/1576183471', 'profile_link_color': '0084B4', 'profile_sidebar_border_color': 'C0DEED', 'profile_sidebar_fill_color': 'DDEEF6', 'profile_text_color': '333333', 'profile_use_background_image': True, 'has_extended_profile': True, 'default_profile': False, 'default_profile_image': False, 'following': None, 'follow_request_sent': None, 'notifications': None, 'translator_type': 'none', 'withheld_in_countries': []}})]
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

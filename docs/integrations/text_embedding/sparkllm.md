@@ -1,15 +1,16 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/sparkllm/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/sparkllm.ipynb
+description: SparkLLM 텍스트 임베딩 API에 대한 설명으로, 2K 토큰 윈도우와 2560 차원의 벡터를 지원합니다. API 키가
+  필요합니다.
 ---
 
-# SparkLLM Text Embeddings
+# SparkLLM 텍스트 임베딩
 
-Official Website: https://www.xfyun.cn/doc/spark/Embedding_new_api.html
+공식 웹사이트: https://www.xfyun.cn/doc/spark/Embedding_new_api.html
 
-An API key is required to use this embedding model. You can get one by registering at https://platform.SparkLLM-ai.com/docs/text-Embedding.
+이 임베딩 모델을 사용하려면 API 키가 필요합니다. https://platform.SparkLLM-ai.com/docs/text-Embedding에서 등록하여 얻을 수 있습니다.
 
-SparkLLMTextEmbeddings support 2K token window and preduces vectors with 2560 dimensions.
+SparkLLMTextEmbeddings는 2K 토큰 윈도우를 지원하며 2560 차원의 벡터를 생성합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "SparkLLMTextEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sparkllm.SparkLLMTextEmbeddings.html", "title": "SparkLLM Text Embeddings"}]-->
@@ -22,7 +23,8 @@ embeddings = SparkLLMTextEmbeddings(
 )
 ```
 
-Alternatively, you can set API key this way:
+
+또는 다음과 같이 API 키를 설정할 수 있습니다:
 
 ```python
 text_q = "Introducing iFlytek"
@@ -35,6 +37,7 @@ query_result = embeddings.embed_query(text_q)
 query_result[:8]
 ```
 
+
 ```output
 [-0.043609619140625,
  0.2017822265625,
@@ -46,10 +49,12 @@ query_result[:8]
  -0.0146331787109375]
 ```
 
+
 ```python
 doc_result = embeddings.embed_documents([text_1, text_2])
 doc_result[0][:8]
 ```
+
 
 ```output
 [-0.161865234375,
@@ -62,7 +67,8 @@ doc_result[0][:8]
  -0.2666015625]
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

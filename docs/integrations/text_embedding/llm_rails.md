@@ -1,34 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/llm_rails/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/llm_rails.ipynb
+description: LLMRails Embeddings 클래스를 사용하는 방법과 API 키 설정 방법에 대한 안내를 제공합니다. 텍스트 쿼리 및
+  임베딩 생성 방법도 포함되어 있습니다.
 ---
 
 # LLMRails
 
-Let's load the LLMRails Embeddings class.
+LLMRails Embeddings 클래스를 로드해 보겠습니다.
 
-To use LLMRails embedding you need to pass api key by argument or set it in environment with `LLM_RAILS_API_KEY` key.
-To gey API Key you need to sign up in https://console.llmrails.com/signup and then go to https://console.llmrails.com/api-keys and copy key from there after creating one key in platform.
+LLMRails 임베딩을 사용하려면 인수로 API 키를 전달하거나 `LLM_RAILS_API_KEY` 키로 환경에 설정해야 합니다. API 키를 얻으려면 https://console.llmrails.com/signup 에 가입한 후 https://console.llmrails.com/api-keys 로 가서 플랫폼에서 키를 생성한 후 거기에서 키를 복사해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMRailsEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.llm_rails.LLMRailsEmbeddings.html", "title": "LLMRails"}]-->
 from langchain_community.embeddings import LLMRailsEmbeddings
 ```
 
+
 ```python
 embeddings = LLMRailsEmbeddings(model="embedding-english-v1")  # or embedding-multi-v1
 ```
+
 
 ```python
 text = "This is a test document."
 ```
 
-To generate embeddings, you can either query an invidivual text, or you can query a list of texts.
+
+임베딩을 생성하려면 개별 텍스트를 쿼리하거나 텍스트 목록을 쿼리할 수 있습니다.
 
 ```python
 query_result = embeddings.embed_query(text)
 query_result[:5]
 ```
+
 
 ```output
 [-0.09996652603149414,
@@ -38,10 +42,12 @@ query_result[:5]
  0.21193109452724457]
 ```
 
+
 ```python
 doc_result = embeddings.embed_documents([text])
 doc_result[0][:5]
 ```
+
 
 ```output
 [-0.04242777079343796,
@@ -51,7 +57,8 @@ doc_result[0][:5]
  0.2079043835401535]
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

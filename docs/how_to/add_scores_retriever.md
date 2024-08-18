@@ -1,19 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/add_scores_retriever/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/add_scores_retriever.ipynb
+description: 문서 검색 결과에 점수를 추가하는 방법을 설명합니다. 벡터 저장소 및 고차원 LangChain 검색기를 활용한 구현 방법을
+  다룹니다.
 ---
 
-# How to add scores to retriever results
+# 검색 결과에 점수 추가하는 방법
 
-Retrievers will return sequences of [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) objects, which by default include no information about the process that retrieved them (e.g., a similarity score against a query). Here we demonstrate how to add retrieval scores to the `.metadata` of documents:
-1. From [vectorstore retrievers](/docs/how_to/vectorstore_retriever);
-2. From higher-order LangChain retrievers, such as [SelfQueryRetriever](/docs/how_to/self_query) or [MultiVectorRetriever](/docs/how_to/multi_vector).
+검색자는 기본적으로 검색 프로세스에 대한 정보(예: 쿼리에 대한 유사성 점수)를 포함하지 않는 [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) 객체의 시퀀스를 반환합니다. 여기에서는 문서의 `.metadata`에 검색 점수를 추가하는 방법을 보여줍니다:
+1. [벡터 스토어 검색기](/docs/how_to/vectorstore_retriever)에서;
+2. [SelfQueryRetriever](/docs/how_to/self_query) 또는 [MultiVectorRetriever](/docs/how_to/multi_vector)와 같은 고차원 LangChain 검색기에서.
 
-For (1), we will implement a short wrapper function around the corresponding vector store. For (2), we will update a method of the corresponding class.
+(1)의 경우, 해당 벡터 스토어 주위에 짧은 래퍼 함수를 구현합니다. (2)의 경우, 해당 클래스의 메서드를 업데이트합니다.
 
-## Create vector store
+## 벡터 스토어 생성
 
-First we populate a vector store with some data. We will use a [PineconeVectorStore](https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html), but this guide is compatible with any LangChain vector store that implements a `.similarity_search_with_score` method.
+먼저 일부 데이터를 사용하여 벡터 스토어를 채웁니다. 우리는 [PineconeVectorStore](https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html)를 사용할 것이지만, 이 가이드는 `.similarity_search_with_score` 메서드를 구현하는 모든 LangChain 벡터 스토어와 호환됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to add scores to retriever results"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add scores to retriever results"}, {"imported": "PineconeVectorStore", "source": "langchain_pinecone", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html", "title": "How to add scores to retriever results"}]-->
@@ -58,11 +59,12 @@ vectorstore = PineconeVectorStore.from_documents(
 )
 ```
 
-## Retriever
 
-To obtain scores from a vector store retriever, we wrap the underlying vector store's `.similarity_search_with_score` method in a short function that packages scores into the associated document's metadata.
+## 검색기
 
-We add a `@chain` decorator to the function to create a [Runnable](/docs/concepts/#langchain-expression-language) that can be used similarly to a typical retriever.
+벡터 스토어 검색기에서 점수를 얻기 위해, 기본 벡터 스토어의 `.similarity_search_with_score` 메서드를 점수를 관련 문서의 메타데이터에 패키징하는 짧은 함수로 래핑합니다.
+
+우리는 이 함수에 `@chain` 데코레이터를 추가하여 일반적인 검색기와 유사하게 사용할 수 있는 [Runnable](/docs/concepts/#langchain-expression-language)를 생성합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to add scores to retriever results"}, {"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to add scores to retriever results"}]-->
@@ -81,10 +83,12 @@ def retriever(query: str) -> List[Document]:
     return docs
 ```
 
+
 ```python
 result = retriever.invoke("dinosaur")
 result
 ```
+
 
 ```output
 (Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'genre': 'science fiction', 'rating': 7.7, 'year': 1993.0, 'score': 0.84429127}),
@@ -93,15 +97,16 @@ result
  Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'director': 'Satoshi Kon', 'rating': 8.6, 'year': 2006.0, 'score': 0.747471571}))
 ```
 
-Note that similarity scores from the retrieval step are included in the metadata of the above documents.
+
+검색 단계에서의 유사성 점수가 위 문서의 메타데이터에 포함되어 있음을 주의하세요.
 
 ## SelfQueryRetriever
 
-`SelfQueryRetriever` will use a LLM to generate a query that is potentially structured-- for example, it can construct filters for the retrieval on top of the usual semantic-similarity driven selection. See [this guide](/docs/how_to/self_query) for more detail.
+`SelfQueryRetriever`는 잠재적으로 구조화된 쿼리를 생성하기 위해 LLM을 사용합니다. 예를 들어, 일반적인 의미적 유사성 기반 선택 위에 검색을 위한 필터를 구성할 수 있습니다. 자세한 내용은 [이 가이드](/docs/how_to/self_query)를 참조하세요.
 
-`SelfQueryRetriever` includes a short (1 - 2 line) method `_get_docs_with_query` that executes the `vectorstore` search. We can subclass `SelfQueryRetriever` and override this method to propagate similarity scores.
+`SelfQueryRetriever`는 `vectorstore` 검색을 실행하는 짧은 (1 - 2줄) 메서드 `_get_docs_with_query`를 포함합니다. 우리는 `SelfQueryRetriever`를 서브클래싱하고 이 메서드를 재정의하여 유사성 점수를 전파할 수 있습니다.
 
-First, following the [how-to guide](/docs/how_to/self_query), we will need to establish some metadata on which to filter:
+먼저, [사용 방법 가이드](/docs/how_to/self_query)를 따라 필터링할 메타데이터를 설정해야 합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "How to add scores to retriever results"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "How to add scores to retriever results"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add scores to retriever results"}]-->
@@ -133,7 +138,8 @@ document_content_description = "Brief summary of a movie"
 llm = ChatOpenAI(temperature=0)
 ```
 
-We then override the `_get_docs_with_query` to use the `similarity_search_with_score` method of the underlying vector store: 
+
+그런 다음 기본 벡터 스토어의 `similarity_search_with_score` 메서드를 사용하도록 `_get_docs_with_query`를 재정의합니다:
 
 ```python
 from typing import Any, Dict
@@ -153,7 +159,8 @@ class CustomSelfQueryRetriever(SelfQueryRetriever):
         return docs
 ```
 
-Invoking this retriever will now include similarity scores in the document metadata. Note that the underlying structured-query capabilities of `SelfQueryRetriever` are retained.
+
+이 검색기를 호출하면 이제 문서 메타데이터에 유사성 점수가 포함됩니다. `SelfQueryRetriever`의 기본 구조화 쿼리 기능이 유지됨을 주의하세요.
 
 ```python
 retriever = CustomSelfQueryRetriever.from_llm(
@@ -168,17 +175,19 @@ result = retriever.invoke("dinosaur movie with rating less than 8")
 result
 ```
 
+
 ```output
 (Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'genre': 'science fiction', 'rating': 7.7, 'year': 1993.0, 'score': 0.84429127}),)
 ```
 
+
 ## MultiVectorRetriever
 
-`MultiVectorRetriever` allows you to associate multiple vectors with a single document. This can be useful in a number of applications. For example, we can index small chunks of a larger document and run the retrieval on the chunks, but return the larger "parent" document when invoking the retriever. [ParentDocumentRetriever](/docs/how_to/parent_document_retriever/), a subclass of `MultiVectorRetriever`, includes convenience methods for populating a vector store to support this. Further applications are detailed in this [how-to guide](/docs/how_to/multi_vector/).
+`MultiVectorRetriever`는 단일 문서와 여러 벡터를 연결할 수 있게 해줍니다. 이는 여러 응용 프로그램에서 유용할 수 있습니다. 예를 들어, 더 큰 문서의 작은 조각을 인덱싱하고 조각에서 검색을 수행하되, 검색기를 호출할 때 더 큰 "부모" 문서를 반환할 수 있습니다. `MultiVectorRetriever`의 서브클래스인 [ParentDocumentRetriever](/docs/how_to/parent_document_retriever/)는 이를 지원하기 위해 벡터 스토어를 채우기 위한 편리한 메서드를 포함합니다. 추가 응용 프로그램은 이 [사용 방법 가이드](/docs/how_to/multi_vector/)에 자세히 설명되어 있습니다.
 
-To propagate similarity scores through this retriever, we can again subclass `MultiVectorRetriever` and override a method. This time we will override `_get_relevant_documents`.
+이 검색기를 통해 유사성 점수를 전파하기 위해, 우리는 다시 `MultiVectorRetriever`를 서브클래싱하고 메서드를 재정의할 수 있습니다. 이번에는 `_get_relevant_documents`를 재정의합니다.
 
-First, we prepare some fake data. We generate fake "whole documents" and store them in a document store; here we will use a simple [InMemoryStore](https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryBaseStore.html).
+먼저, 일부 가짜 데이터를 준비합니다. 우리는 가짜 "전체 문서"를 생성하고 이를 문서 스토어에 저장합니다; 여기서는 간단한 [InMemoryStore](https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryBaseStore.html)를 사용할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/stores/langchain_core.stores.InMemoryStore.html", "title": "How to add scores to retriever results"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to add scores to retriever results"}]-->
@@ -194,7 +203,8 @@ fake_whole_documents = [
 docstore.mset(fake_whole_documents)
 ```
 
-Next we will add some fake "sub-documents" to our vector store. We can link these sub-documents to the parent documents by populating the `"doc_id"` key in its metadata.
+
+다음으로, 벡터 스토어에 일부 가짜 "하위 문서"를 추가합니다. 우리는 이 하위 문서를 부모 문서에 연결하기 위해 메타데이터의 `"doc_id"` 키를 채울 수 있습니다.
 
 ```python
 docs = [
@@ -215,16 +225,18 @@ docs = [
 vectorstore.add_documents(docs)
 ```
 
+
 ```output
 ['62a85353-41ff-4346-bff7-be6c8ec2ed89',
  '5d4a0e83-4cc5-40f1-bc73-ed9cbad0ee15',
  '8c1d9a56-120f-45e4-ba70-a19cd19a38f4']
 ```
 
-To propagate the scores, we subclass `MultiVectorRetriever` and override its `_get_relevant_documents` method. Here we will make two changes:
 
-1. We will add similarity scores to the metadata of the corresponding "sub-documents" using the `similarity_search_with_score` method of the underlying vector store as above;
-2. We will include a list of these sub-documents in the metadata of the retrieved parent document. This surfaces what snippets of text were identified by the retrieval, together with their corresponding similarity scores.
+점수를 전파하기 위해, 우리는 `MultiVectorRetriever`를 서브클래싱하고 `_get_relevant_documents` 메서드를 재정의합니다. 여기에서 두 가지 변경을 합니다:
+
+1. 위와 같이 기본 벡터 스토어의 `similarity_search_with_score` 메서드를 사용하여 해당 "하위 문서"의 메타데이터에 유사성 점수를 추가합니다;
+2. 검색된 부모 문서의 메타데이터에 이러한 하위 문서의 목록을 포함합니다. 이는 검색에 의해 식별된 텍스트 조각과 해당 유사성 점수를 함께 표시합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "MultiVectorRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.multi_vector.MultiVectorRetriever.html", "title": "How to add scores to retriever results"}, {"imported": "CallbackManagerForRetrieverRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForRetrieverRun.html", "title": "How to add scores to retriever results"}]-->
@@ -269,13 +281,15 @@ class CustomMultiVectorRetriever(MultiVectorRetriever):
         return docs
 ```
 
-Invoking this retriever, we can see that it identifies the correct parent document, including the relevant snippet from the sub-document with similarity score.
+
+이 검색기를 호출하면, 올바른 부모 문서를 식별하고 유사성 점수를 가진 하위 문서의 관련 조각을 포함하는 것을 볼 수 있습니다.
 
 ```python
 retriever = CustomMultiVectorRetriever(vectorstore=vectorstore, docstore=docstore)
 
 retriever.invoke("cat")
 ```
+
 
 ```output
 [Document(page_content='fake whole document 1', metadata={'sub_docs': [Document(page_content='A snippet from a larger document discussing cats.', metadata={'doc_id': 'fake_id_1', 'score': 0.831276655})]})]

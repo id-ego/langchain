@@ -1,62 +1,63 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/github/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/github.ipynb
+description: 이 문서는 LLM 에이전트가 GitHub 리포지토리와 상호작용할 수 있도록 돕는 GitHub 툴킷의 설정 및 사용법을 설명합니다.
 ---
 
-# Github Toolkit
+# Github 툴킷
 
-The `Github` toolkit contains tools that enable an LLM agent to interact with a github repository.
-The tool is a wrapper for the [PyGitHub](https://github.com/PyGithub/PyGithub) library. 
+`Github` 툴킷은 LLM 에이전트가 github 리포지토리와 상호작용할 수 있도록 하는 도구를 포함합니다. 이 도구는 [PyGitHub](https://github.com/PyGithub/PyGithub) 라이브러리에 대한 래퍼입니다.
 
-For detailed documentation of all GithubToolkit features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.github.toolkit.GitHubToolkit.html).
+모든 GithubToolkit 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.github.toolkit.GitHubToolkit.html)에서 확인할 수 있습니다.
 
-## Setup
+## 설정
 
-At a high-level, we will:
+전반적으로 우리는 다음을 수행할 것입니다:
 
-1. Install the pygithub library
-2. Create a Github app
-3. Set your environmental variables
-4. Pass the tools to your agent with `toolkit.get_tools()`
+1. pygithub 라이브러리 설치
+2. Github 앱 생성
+3. 환경 변수 설정
+4. `toolkit.get_tools()`로 도구를 에이전트에 전달
 
-If you want to get automated tracing from runs of individual tools, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+개별 도구 실행에서 자동 추적을 받고 싶다면 아래 주석을 해제하여 [LangSmith](https://docs.smith.langchain.com/) API 키를 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-### Installation
 
-#### 1. Install dependencies
+### 설치
 
-This integration is implemented in `langchain-community`. We will also need the `pygithub` dependency:
+#### 1. 종속성 설치
+
+이 통합은 `langchain-community`에서 구현됩니다. `pygithub` 종속성도 필요합니다:
 
 ```python
 %pip install --upgrade --quiet  pygithub langchain-community
 ```
 
-#### 2. Create a Github App
 
-[Follow the instructions here](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app) to create and register a Github app. Make sure your app has the following [repository permissions:](https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28)
+#### 2. Github 앱 생성
 
-* Commit statuses (read only)
-* Contents (read and write)
-* Issues (read and write)
-* Metadata (read only)
-* Pull requests (read and write)
+[여기에서 지침을 따르세요](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app) Github 앱을 생성하고 등록합니다. 앱에 다음 [리포지토리 권한이 있는지 확인하세요:](https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28)
 
-Once the app has been registered, you must give your app permission to access each of the repositories you whish it to act upon. Use the App settings on [github.com here](https://github.com/settings/installations).
+* 커밋 상태 (읽기 전용)
+* 콘텐츠 (읽기 및 쓰기)
+* 이슈 (읽기 및 쓰기)
+* 메타데이터 (읽기 전용)
+* 풀 요청 (읽기 및 쓰기)
 
-#### 3. Set Environment Variables
+앱이 등록되면, 앱이 작동할 각 리포지토리에 대한 접근 권한을 부여해야 합니다. [github.com의 앱 설정](https://github.com/settings/installations)에서 사용하세요.
 
-Before initializing your agent, the following environment variables need to be set:
+#### 3. 환경 변수 설정
 
-* **GITHUB_APP_ID**- A six digit number found in your app's general settings
-* **GITHUB_APP_PRIVATE_KEY**- The location of your app's private key .pem file, or the full text of that file as a string.
-* **GITHUB_REPOSITORY**- The name of the Github repository you want your bot to act upon. Must follow the format {username}/{repo-name}. *Make sure the app has been added to this repository first!*
-* Optional: **GITHUB_BRANCH**- The branch where the bot will make its commits. Defaults to `repo.default_branch`.
-* Optional: **GITHUB_BASE_BRANCH**- The base branch of your repo upon which PRs will based from. Defaults to `repo.default_branch`.
+에이전트를 초기화하기 전에 다음 환경 변수를 설정해야 합니다:
+
+* **GITHUB_APP_ID** - 앱의 일반 설정에서 찾을 수 있는 6자리 숫자
+* **GITHUB_APP_PRIVATE_KEY** - 앱의 개인 키 .pem 파일의 위치 또는 해당 파일의 전체 텍스트를 문자열로
+* **GITHUB_REPOSITORY** - 봇이 작동할 Github 리포지토리의 이름. {username}/{repo-name} 형식을 따라야 합니다. *먼저 이 리포지토리에 앱이 추가되었는지 확인하세요!*
+* 선택 사항: **GITHUB_BRANCH** - 봇이 커밋을 할 브랜치. 기본값은 `repo.default_branch`입니다.
+* 선택 사항: **GITHUB_BASE_BRANCH** - PR이 기반할 리포지토리의 기본 브랜치. 기본값은 `repo.default_branch`입니다.
 
 ```python
 import getpass
@@ -71,9 +72,10 @@ for env_var in [
         os.environ[env_var] = getpass.getpass()
 ```
 
-## Instantiation
 
-Now we can instantiate our toolkit:
+## 인스턴스화
+
+이제 툴킷을 인스턴스화할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "GitHubToolkit", "source": "langchain_community.agent_toolkits.github.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.github.toolkit.GitHubToolkit.html", "title": "Github Toolkit"}, {"imported": "GitHubAPIWrapper", "source": "langchain_community.utilities.github", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.github.GitHubAPIWrapper.html", "title": "Github Toolkit"}]-->
@@ -84,9 +86,10 @@ github = GitHubAPIWrapper()
 toolkit = GitHubToolkit.from_github_api_wrapper(github)
 ```
 
-## Tools
 
-View available tools:
+## 도구
+
+사용 가능한 도구 보기:
 
 ```python
 tools = toolkit.get_tools()
@@ -94,6 +97,7 @@ tools = toolkit.get_tools()
 for tool in tools:
     print(tool.name)
 ```
+
 ```output
 Get Issues
 Get Issue
@@ -117,29 +121,29 @@ Search issues and pull requests
 Search code
 Create review request
 ```
-The purpose of these tools is as follows:
 
-Each of these steps will be explained in great detail below.
+이 도구들의 목적은 다음과 같습니다:
 
-1. **Get Issues**- fetches issues from the repository.
-2. **Get Issue**- fetches details about a specific issue.
-3. **Comment on Issue**- posts a comment on a specific issue.
-4. **Create Pull Request**- creates a pull request from the bot's working branch to the base branch.
-5. **Create File**- creates a new file in the repository.
-6. **Read File**- reads a file from the repository.
-7. **Update File**- updates a file in the repository.
-8. **Delete File**- deletes a file from the repository.
+각 단계는 아래에서 자세히 설명됩니다.
 
-## Use within an agent
+1. **이슈 가져오기** - 리포지토리에서 이슈를 가져옵니다.
+2. **이슈 가져오기** - 특정 이슈에 대한 세부 정보를 가져옵니다.
+3. **이슈에 댓글 달기** - 특정 이슈에 댓글을 게시합니다.
+4. **풀 요청 생성** - 봇의 작업 브랜치에서 기본 브랜치로 풀 요청을 생성합니다.
+5. **파일 생성** - 리포지토리에 새 파일을 생성합니다.
+6. **파일 읽기** - 리포지토리에서 파일을 읽습니다.
+7. **파일 업데이트** - 리포지토리에서 파일을 업데이트합니다.
+8. **파일 삭제** - 리포지토리에서 파일을 삭제합니다.
 
-We will need a LLM or chat model:
+## 에이전트 내에서 사용
+
+LLM 또는 채팅 모델이 필요합니다:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
-
-Initialize the agent with a subset of tools:
+도구의 하위 집합으로 에이전트를 초기화합니다:
 
 ```python
 from langgraph.prebuilt import create_react_agent
@@ -151,7 +155,8 @@ tools[0].name = "get_issue"
 agent_executor = create_react_agent(llm, tools)
 ```
 
-And issue it a query:
+
+그리고 쿼리를 발행합니다:
 
 ```python
 example_query = "What is the title of issue 24888?"
@@ -163,6 +168,7 @@ events = agent_executor.stream(
 for event in events:
     event["messages"][-1].pretty_print()
 ```
+
 ```output
 ================================[1m Human Message [0m=================================
 
@@ -181,11 +187,12 @@ Name: get_issue
 
 The title of issue 24888 is "Standardize KV-Store Docs".
 ```
-## API reference
 
-For detailed documentation of all `GithubToolkit` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.github.toolkit.GitHubToolkit.html).
+## API 참조
 
-## Related
+모든 `GithubToolkit` 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.github.toolkit.GitHubToolkit.html)에서 확인할 수 있습니다.
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

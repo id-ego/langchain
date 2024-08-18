@@ -1,85 +1,84 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/contributing/code/setup/
+description: 이 가이드는 로컬에서 저장소를 실행하고 첫 번째 코드를 체크인하는 방법을 안내합니다. Poetry를 사용한 의존성 관리도 포함되어
+  있습니다.
 ---
 
-# Setup
+# 설정
 
-This guide walks through how to run the repository locally and check in your first code.
-For a [development container](https://containers.dev/), see the [.devcontainer folder](https://github.com/langchain-ai/langchain/tree/master/.devcontainer).
+이 가이드는 로컬에서 리포지토리를 실행하고 첫 번째 코드를 체크인하는 방법을 안내합니다. [개발 컨테이너](https://containers.dev/)에 대한 내용은 [.devcontainer 폴더](https://github.com/langchain-ai/langchain/tree/master/.devcontainer)를 참조하세요.
 
-## Dependency Management: Poetry and other env/dependency managers
+## 의존성 관리: Poetry 및 기타 env/의존성 관리자
 
-This project utilizes [Poetry](https://python-poetry.org/) v1.7.1+ as a dependency manager.
+이 프로젝트는 의존성 관리자로 [Poetry](https://python-poetry.org/) v1.7.1+를 사용합니다.
 
-❗Note: *Before installing Poetry*, if you use `Conda`, create and activate a new Conda env (e.g. `conda create -n langchain python=3.9`)
+❗참고: *Poetry를 설치하기 전에*, `Conda`를 사용하는 경우 새로운 Conda 환경을 생성하고 활성화하세요 (예: `conda create -n langchain python=3.9`).
 
-Install Poetry: **[documentation on how to install it](https://python-poetry.org/docs/#installation)**.
+Poetry 설치: **[설치 방법에 대한 문서](https://python-poetry.org/docs/#installation)**.
 
-❗Note: If you use `Conda` or `Pyenv` as your environment/package manager, after installing Poetry,
-tell Poetry to use the virtualenv python environment (`poetry config virtualenvs.prefer-active-python true`)
+❗참고: `Conda` 또는 `Pyenv`를 환경/패키지 관리자로 사용하는 경우, Poetry 설치 후,
+Poetry에 가상 환경 파이썬 환경을 사용하도록 지시하세요 (`poetry config virtualenvs.prefer-active-python true`).
 
-## Different packages
+## 다양한 패키지
 
-This repository contains multiple packages:
-- `langchain-core`: Base interfaces for key abstractions as well as logic for combining them in chains (LangChain Expression Language).
-- `langchain-community`: Third-party integrations of various components.
-- `langchain`: Chains, agents, and retrieval logic that makes up the cognitive architecture of your applications.
-- `langchain-experimental`: Components and chains that are experimental, either in the sense that the techniques are novel and still being tested, or they require giving the LLM more access than would be possible in most production systems.
-- Partner integrations: Partner packages in `libs/partners` that are independently version controlled.
+이 리포지토리에는 여러 패키지가 포함되어 있습니다:
+- `langchain-core`: 주요 추상화에 대한 기본 인터페이스와 이를 체인으로 결합하는 로직 (LangChain 표현 언어).
+- `langchain-community`: 다양한 구성 요소의 서드파티 통합.
+- `langchain`: 애플리케이션의 인지 아키텍처를 구성하는 체인, 에이전트 및 검색 로직.
+- `langchain-experimental`: 기술이 새롭고 여전히 테스트 중이거나 LLM에 대부분의 프로덕션 시스템에서 가능할 수 있는 것보다 더 많은 접근을 요구하는 실험적인 구성 요소 및 체인.
+- 파트너 통합: 독립적으로 버전 관리되는 `libs/partners`의 파트너 패키지.
 
-Each of these has its own development environment. Docs are run from the top-level makefile, but development
-is split across separate test & release flows.
+각각은 자체 개발 환경을 가지고 있습니다. 문서는 최상위 메이크파일에서 실행되지만, 개발은 별도의 테스트 및 릴리스 흐름으로 나뉩니다.
 
-For this quickstart, start with langchain-community:
+이 빠른 시작을 위해 langchain-community로 시작하세요:
 
 ```bash
 cd libs/community
 ```
 
-## Local Development Dependencies
 
-Install langchain-community development requirements (for running langchain, running examples, linting, formatting, tests, and coverage):
+## 로컬 개발 의존성
+
+langchain-community 개발 요구 사항을 설치하세요 (langchain 실행, 예제 실행, 린트, 포맷, 테스트 및 커버리지):
 
 ```bash
 poetry install --with lint,typing,test,test_integration
 ```
 
-Then verify dependency installation:
+
+그런 다음 의존성 설치를 확인하세요:
 
 ```bash
 make test
 ```
 
-If during installation you receive a `WheelFileValidationError` for `debugpy`, please make sure you are running
-Poetry v1.6.1+. This bug was present in older versions of Poetry (e.g. 1.4.1) and has been resolved in newer releases.
-If you are still seeing this bug on v1.6.1+, you may also try disabling "modern installation"
-(`poetry config installer.modern-installation false`) and re-installing requirements.
-See [this `debugpy` issue](https://github.com/microsoft/debugpy/issues/1246) for more details.
 
-## Testing
+설치 중 `debugpy`에 대한 `WheelFileValidationError`가 발생하면, Poetry v1.6.1+를 실행하고 있는지 확인하세요. 이 버그는 이전 Poetry 버전(예: 1.4.1)에서 존재했으며, 최신 릴리스에서 해결되었습니다. v1.6.1+에서 여전히 이 버그가 발생하면 "현대 설치"를 비활성화해 보세요 (`poetry config installer.modern-installation false`) 및 요구 사항을 다시 설치하세요. 자세한 내용은 [이 `debugpy` 문제](https://github.com/microsoft/debugpy/issues/1246)를 참조하세요.
 
-**Note:** In `langchain`, `langchain-community`, and `langchain-experimental`, some test dependencies are optional. See the following section about optional dependencies.
+## 테스트
 
-Unit tests cover modular logic that does not require calls to outside APIs.
-If you add new logic, please add a unit test.
+**참고:** `langchain`, `langchain-community`, 및 `langchain-experimental`에서 일부 테스트 의존성은 선택 사항입니다. 선택적 의존성에 대한 다음 섹션을 참조하세요.
 
-To run unit tests:
+단위 테스트는 외부 API 호출이 필요 없는 모듈 로직을 다룹니다. 새로운 로직을 추가하는 경우, 단위 테스트를 추가하세요.
+
+단위 테스트를 실행하려면:
 
 ```bash
 make test
 ```
 
-To run unit tests in Docker:
+
+Docker에서 단위 테스트를 실행하려면:
 
 ```bash
 make docker_tests
 ```
 
-There are also [integration tests and code-coverage](/docs/contributing/testing/) available.
 
-### Only develop langchain_core or langchain_experimental
+[통합 테스트 및 코드 커버리지](/docs/contributing/testing/)도 가능합니다.
 
-If you are only developing `langchain_core` or `langchain_experimental`, you can simply install the dependencies for the respective projects and run tests:
+### langchain_core 또는 langchain_experimental만 개발하는 경우
+
+`langchain_core` 또는 `langchain_experimental`만 개발하는 경우, 해당 프로젝트의 의존성만 설치하고 테스트를 실행할 수 있습니다:
 
 ```bash
 cd libs/core
@@ -87,7 +86,8 @@ poetry install --with test
 make test
 ```
 
-Or:
+
+또는:
 
 ```bash
 cd libs/experimental
@@ -95,80 +95,88 @@ poetry install --with test
 make test
 ```
 
-## Formatting and Linting
 
-Run these locally before submitting a PR; the CI system will check also.
+## 포맷팅 및 린팅
 
-### Code Formatting
+PR 제출 전에 로컬에서 이들을 실행하세요; CI 시스템에서도 확인합니다.
 
-Formatting for this project is done via [ruff](https://docs.astral.sh/ruff/rules/).
+### 코드 포맷팅
 
-To run formatting for docs, cookbook and templates:
+이 프로젝트의 포맷팅은 [ruff](https://docs.astral.sh/ruff/rules/)를 통해 수행됩니다.
+
+문서, 요리책 및 템플릿에 대한 포맷팅을 실행하려면:
 
 ```bash
 make format
 ```
 
-To run formatting for a library, run the same command from the relevant library directory:
+
+라이브러리에 대한 포맷팅을 실행하려면, 관련 라이브러리 디렉토리에서 동일한 명령을 실행하세요:
 
 ```bash
 cd libs/{LIBRARY}
 make format
 ```
 
-Additionally, you can run the formatter only on the files that have been modified in your current branch as compared to the master branch using the format_diff command:
+
+또한, 마스터 브랜치와 비교하여 현재 브랜치에서 수정된 파일에 대해서만 포맷터를 실행할 수 있습니다:
 
 ```bash
 make format_diff
 ```
 
-This is especially useful when you have made changes to a subset of the project and want to ensure your changes are properly formatted without affecting the rest of the codebase.
 
-#### Linting
+이는 프로젝트의 일부에만 변경을 가했을 때, 나머지 코드베이스에 영향을 주지 않고 변경 사항이 올바르게 포맷팅되었는지 확인하는 데 특히 유용합니다.
 
-Linting for this project is done via a combination of [ruff](https://docs.astral.sh/ruff/rules/) and [mypy](http://mypy-lang.org/).
+#### 린팅
 
-To run linting for docs, cookbook and templates:
+이 프로젝트의 린팅은 [ruff](https://docs.astral.sh/ruff/rules/)와 [mypy](http://mypy-lang.org/)의 조합을 통해 수행됩니다.
+
+문서, 요리책 및 템플릿에 대한 린팅을 실행하려면:
 
 ```bash
 make lint
 ```
 
-To run linting for a library, run the same command from the relevant library directory:
+
+라이브러리에 대한 린팅을 실행하려면, 관련 라이브러리 디렉토리에서 동일한 명령을 실행하세요:
 
 ```bash
 cd libs/{LIBRARY}
 make lint
 ```
 
-In addition, you can run the linter only on the files that have been modified in your current branch as compared to the master branch using the lint_diff command:
+
+또한, 마스터 브랜치와 비교하여 현재 브랜치에서 수정된 파일에 대해서만 린터를 실행할 수 있습니다:
 
 ```bash
 make lint_diff
 ```
 
-This can be very helpful when you've made changes to only certain parts of the project and want to ensure your changes meet the linting standards without having to check the entire codebase.
 
-We recognize linting can be annoying - if you do not want to do it, please contact a project maintainer, and they can help you with it. We do not want this to be a blocker for good code getting contributed.
+이는 프로젝트의 특정 부분에만 변경을 가했을 때, 전체 코드베이스를 확인하지 않고도 변경 사항이 린팅 기준을 충족하는지 확인하는 데 매우 유용할 수 있습니다.
 
-### Spellcheck
+린팅이 번거로울 수 있다는 점을 인식합니다 - 원하지 않는 경우, 프로젝트 유지 관리자에게 연락해 주세요, 그들이 도와줄 수 있습니다. 우리는 좋은 코드 기여에 대한 장애물이 되기를 원하지 않습니다.
 
-Spellchecking for this project is done via [codespell](https://github.com/codespell-project/codespell).
-Note that `codespell` finds common typos, so it could have false-positive (correctly spelled but rarely used) and false-negatives (not finding misspelled) words.
+### 맞춤법 검사
 
-To check spelling for this project:
+이 프로젝트의 맞춤법 검사는 [codespell](https://github.com/codespell-project/codespell)을 통해 수행됩니다. `codespell`은 일반적인 오타를 찾으므로, 잘못된 긍정(올바르게 철자되었지만 드물게 사용됨) 및 잘못된 부정(잘못된 철자를 찾지 못함) 단어가 있을 수 있습니다.
+
+이 프로젝트의 맞춤법을 확인하려면:
 
 ```bash
 make spell_check
 ```
 
-To fix spelling in place:
+
+제자리에서 맞춤법을 수정하려면:
 
 ```bash
 make spell_fix
 ```
 
-If codespell is incorrectly flagging a word, you can skip spellcheck for that word by adding it to the codespell config in the `pyproject.toml` file.
+
+codespell이 잘못된 단어를 잘못 표시하는 경우, `pyproject.toml` 파일의 codespell 구성에 해당 단어를 추가하여 맞춤법 검사를 건너뛸 수 있습니다.
 
 ```python
 [tool.codespell]
@@ -177,41 +185,43 @@ If codespell is incorrectly flagging a word, you can skip spellcheck for that wo
 ignore-words-list = 'momento,collison,ned,foor,reworkd,parth,whats,aapply,mysogyny,unsecure'
 ```
 
-## Working with Optional Dependencies
 
-`langchain`, `langchain-community`, and `langchain-experimental` rely on optional dependencies to keep these packages lightweight.
+## 선택적 의존성 작업
 
-`langchain-core` and partner packages **do not use** optional dependencies in this way.
+`langchain`, `langchain-community`, 및 `langchain-experimental`은 이러한 패키지를 경량으로 유지하기 위해 선택적 의존성에 의존합니다.
 
-You'll notice that `pyproject.toml` and `poetry.lock` are **not** touched when you add optional dependencies below.
+`langchain-core` 및 파트너 패키지는 **이러한 방식으로** 선택적 의존성을 사용하지 않습니다.
 
-If you're adding a new dependency to Langchain, assume that it will be an optional dependency, and
-that most users won't have it installed.
+아래에서 선택적 의존성을 추가할 때 `pyproject.toml` 및 `poetry.lock`이 **변경되지** 않는 것을 알 수 있습니다.
 
-Users who do not have the dependency installed should be able to **import** your code without
-any side effects (no warnings, no errors, no exceptions).
+Langchain에 새로운 의존성을 추가하는 경우, 그것이 선택적 의존성이 될 것이라고 가정하고,
+대부분의 사용자가 설치하지 않을 것이라고 가정하세요.
 
-To introduce the dependency to a library, please do the following:
+의존성이 설치되지 않은 사용자는 **코드를 가져올 수 있어야** 하며,
+부작용(경고, 오류, 예외 없음)이 없어야 합니다.
 
-1. Open extended_testing_deps.txt and add the dependency
-2. Add a unit test that the very least attempts to import the new code. Ideally, the unit
-test makes use of lightweight fixtures to test the logic of the code.
-3. Please use the `@pytest.mark.requires(package_name)` decorator for any unit tests that require the dependency.
+라이브러리에 의존성을 도입하려면 다음을 수행하세요:
 
-## Adding a Jupyter Notebook
+1. extended_testing_deps.txt를 열고 의존성을 추가하세요.
+2. 새로운 코드를 가져오려고 최소한 시도하는 단위 테스트를 추가하세요. 이상적으로는, 단위 테스트가 경량의 픽스를 사용하여 코드의 로직을 테스트합니다.
+3. 의존성이 필요한 단위 테스트에는 `@pytest.mark.requires(package_name)` 데코레이터를 사용하세요.
 
-If you are adding a Jupyter Notebook example, you'll want to install the optional `dev` dependencies.
+## Jupyter Notebook 추가하기
 
-To install dev dependencies:
+Jupyter Notebook 예제를 추가하는 경우, 선택적 `dev` 의존성을 설치해야 합니다.
+
+개발 의존성을 설치하려면:
 
 ```bash
 poetry install --with dev
 ```
 
-Launch a notebook:
+
+노트북을 시작하려면:
 
 ```bash
 poetry run jupyter notebook
 ```
 
-When you run `poetry install`, the `langchain` package is installed as editable in the virtualenv, so your new logic can be imported into the notebook.
+
+`poetry install`을 실행하면, `langchain` 패키지가 가상 환경에서 편집 가능으로 설치되므로, 새로운 로직을 노트북에 가져올 수 있습니다.

@@ -1,28 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/clearml_tracking/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/providers/clearml_tracking.ipynb
+description: ClearML은 ML/DL 개발 및 운영을 위한 종합 솔루션으로, 실험 관리, MLOps, 데이터 관리, 모델 서빙 및 리포트
+  생성을 지원합니다.
 ---
 
 # ClearML
 
-> [ClearML](https://github.com/allegroai/clearml) is a ML/DL development and production suite, it contains 5 main modules:
-> - `Experiment Manager` - Automagical experiment tracking, environments and results
-> - `MLOps` - Orchestration, Automation & Pipelines solution for ML/DL jobs (K8s / Cloud / bare-metal)
-> - `Data-Management` - Fully differentiable data management & version control solution on top of object-storage (S3 / GS / Azure / NAS)
-> - `Model-Serving` - cloud-ready Scalable model serving solution!
-Deploy new model endpoints in under 5 minutes
-Includes optimized GPU serving support backed by Nvidia-Triton
-with out-of-the-box Model Monitoring
-> - `Fire Reports` - Create and share rich MarkDown documents supporting embeddable online content
+> [ClearML](https://github.com/allegroai/clearml)는 ML/DL 개발 및 프로덕션 스위트로, 5개의 주요 모듈이 포함되어 있습니다:
+> - `Experiment Manager` - 자동 실험 추적, 환경 및 결과
+> - `MLOps` - ML/DL 작업을 위한 오케스트레이션, 자동화 및 파이프라인 솔루션 (K8s / 클라우드 / 베어메탈)
+> - `Data-Management` - 객체 저장소(S3 / GS / Azure / NAS) 위에 완전히 차별화된 데이터 관리 및 버전 관리 솔루션
+> - `Model-Serving` - 클라우드 준비 완료, 확장 가능한 모델 서빙 솔루션!
+5분 이내에 새로운 모델 엔드포인트 배포
+Nvidia-Triton에 의해 지원되는 최적화된 GPU 서빙 지원 포함
+즉시 사용 가능한 모델 모니터링 포함
+> - `Fire Reports` - 임베디드 온라인 콘텐츠를 지원하는 풍부한 MarkDown 문서 생성 및 공유
 
-In order to properly keep track of your langchain experiments and their results, you can enable the `ClearML` integration. We use the `ClearML Experiment Manager` that neatly tracks and organizes all your experiment runs.
+당신의 langchain 실험과 그 결과를 제대로 추적하기 위해 `ClearML` 통합을 활성화할 수 있습니다. 우리는 모든 실험 실행을 깔끔하게 추적하고 정리하는 `ClearML Experiment Manager`를 사용합니다.
 
 <a target="_blank" href="https://colab.research.google.com/github/langchain-ai/langchain/blob/master/docs/docs/integrations/providers/clearml_tracking.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
-## Installation and Setup
+## 설치 및 설정
 
 ```python
 %pip install --upgrade --quiet  clearml
@@ -32,13 +33,14 @@ In order to properly keep track of your langchain experiments and their results,
 !python -m spacy download en_core_web_sm
 ```
 
-### Getting API Credentials
 
-We'll be using quite some APIs in this notebook, here is a list and where to get them:
+### API 자격 증명 얻기
+
+이 노트북에서 여러 API를 사용할 예정이며, 여기에서 목록과 얻는 방법을 안내합니다:
 
 - ClearML: https://app.clear.ml/settings/workspace-configuration
 - OpenAI: https://platform.openai.com/account/api-keys
-- SerpAPI (google search): https://serpapi.com/dashboard
+- SerpAPI (구글 검색): https://serpapi.com/dashboard
 
 ```python
 import os
@@ -50,12 +52,14 @@ os.environ["OPENAI_API_KEY"] = ""
 os.environ["SERPAPI_API_KEY"] = ""
 ```
 
-## Callbacks
+
+## 콜백
 
 ```python
 <!--IMPORTS:[{"imported": "ClearMLCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.clearml_callback.ClearMLCallbackHandler.html", "title": "ClearML"}]-->
 from langchain_community.callbacks import ClearMLCallbackHandler
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "ClearML"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "ClearML"}]-->
@@ -77,12 +81,14 @@ callbacks = [StdOutCallbackHandler(), clearml_callback]
 # Get the OpenAI model ready to go
 llm = OpenAI(temperature=0, callbacks=callbacks)
 ```
+
 ```output
 The clearml callback is currently in beta and is subject to change based on updates to `langchain`. Please report any issues to https://github.com/allegroai/clearml/issues with the tag `langchain`.
 ```
-### Scenario 1: Just an LLM
 
-First, let's just run a single LLM a few times and capture the resulting prompt-answer conversation in ClearML
+### 시나리오 1: 단순 LLM
+
+먼저, 단일 LLM을 몇 번 실행하고 결과로 생성된 프롬프트-응답 대화를 ClearML에 캡처해 보겠습니다.
 
 ```python
 # SCENARIO 1 - LLM
@@ -91,6 +97,7 @@ llm_result = llm.generate(["Tell me a joke", "Tell me a poem"] * 3)
 # prompts and other output are properly saved separately
 clearml_callback.flush_tracker(langchain_asset=llm, name="simple_sequential")
 ```
+
 ```output
 {'action': 'on_llm_start', 'name': 'OpenAI', 'step': 3, 'starts': 2, 'ends': 1, 'errors': 0, 'text_ctr': 0, 'chain_starts': 0, 'chain_ends': 0, 'llm_starts': 2, 'llm_ends': 1, 'llm_streams': 0, 'tool_starts': 0, 'tool_ends': 0, 'agent_ends': 0, 'prompts': 'Tell me a joke'}
 {'action': 'on_llm_start', 'name': 'OpenAI', 'step': 3, 'starts': 2, 'ends': 1, 'errors': 0, 'text_ctr': 0, 'chain_starts': 0, 'chain_ends': 0, 'llm_starts': 2, 'llm_ends': 1, 'llm_streams': 0, 'tool_starts': 0, 'tool_ends': 0, 'agent_ends': 0, 'prompts': 'Tell me a poem'}
@@ -309,17 +316,18 @@ clearml_callback.flush_tracker(langchain_asset=llm, name="simple_sequential")
 [12 rows x 24 columns]}
 2023-03-29 14:00:25,948 - clearml.Task - INFO - Completed model upload to https://files.clear.ml/langchain_callback_demo/llm.988bd727b0e94a29a3ac0ee526813545/models/simple_sequential
 ```
-At this point you can already go to https://app.clear.ml and take a look at the resulting ClearML Task that was created.
 
-Among others, you should see that this notebook is saved along with any git information. The model JSON that contains the used parameters is saved as an artifact, there are also console logs and under the plots section, you'll find tables that represent the flow of the chain.
+이 시점에서 https://app.clear.ml로 가서 생성된 ClearML 작업을 확인할 수 있습니다.
 
-Finally, if you enabled visualizations, these are stored as HTML files under debug samples.
+다른 것들 중에서, 이 노트북이 모든 git 정보와 함께 저장된 것을 볼 수 있습니다. 사용된 매개변수를 포함하는 모델 JSON은 아티팩트로 저장되며, 콘솔 로그도 있으며, 플롯 섹션 아래에서 체인의 흐름을 나타내는 테이블을 찾을 수 있습니다.
 
-### Scenario 2: Creating an agent with tools
+마지막으로, 시각화를 활성화했다면, 이는 디버그 샘플 아래 HTML 파일로 저장됩니다.
 
-To show a more advanced workflow, let's create an agent with access to tools. The way ClearML tracks the results is not different though, only the table will look slightly different as there are other types of actions taken when compared to the earlier, simpler example.
+### 시나리오 2: 도구를 가진 에이전트 생성
 
-You can now also see the use of the `finish=True` keyword, which will fully close the ClearML Task, instead of just resetting the parameters and prompts for a new conversation.
+더 발전된 워크플로를 보여주기 위해, 도구에 접근할 수 있는 에이전트를 생성해 보겠습니다. ClearML이 결과를 추적하는 방식은 다르지 않지만, 이전의 간단한 예와 비교할 때 다른 유형의 작업이 수행되므로 테이블이 약간 다르게 보일 것입니다.
+
+이제 `finish=True` 키워드의 사용도 볼 수 있으며, 이는 새로운 대화를 위한 매개변수와 프롬프트를 재설정하는 대신 ClearML 작업을 완전히 종료합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "ClearML"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "ClearML"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "ClearML"}]-->
@@ -338,6 +346,7 @@ clearml_callback.flush_tracker(
     langchain_asset=agent, name="Agent with Tools", finish=True
 )
 ```
+
 ```output
 
 
@@ -473,8 +482,9 @@ Final Answer: Bryan Adams has never been married.[0m
 ``````output
 Could not update last created model in Task 988bd727b0e94a29a3ac0ee526813545, Task status 'completed' cannot be updated
 ```
-### Tips and Next Steps
 
-- Make sure you always use a unique `name` argument for the `clearml_callback.flush_tracker` function. If not, the model parameters used for a run will override the previous run!
-- If you close the ClearML Callback using `clearml_callback.flush_tracker(..., finish=True)` the Callback cannot be used anymore. Make a new one if you want to keep logging.
-- Check out the rest of the open-source ClearML ecosystem, there is a data version manager, a remote execution agent, automated pipelines and much more!
+### 팁 및 다음 단계
+
+- 항상 `clearml_callback.flush_tracker` 함수에 대해 고유한 `name` 인수를 사용해야 합니다. 그렇지 않으면 실행에 사용된 모델 매개변수가 이전 실행을 덮어씁니다!
+- `clearml_callback.flush_tracker(..., finish=True)`를 사용하여 ClearML 콜백을 닫으면 콜백을 더 이상 사용할 수 없습니다. 로그를 계속하려면 새로 만들어야 합니다.
+- 나머지 오픈 소스 ClearML 생태계를 확인해 보세요. 데이터 버전 관리자, 원격 실행 에이전트, 자동화된 파이프라인 등이 있습니다!

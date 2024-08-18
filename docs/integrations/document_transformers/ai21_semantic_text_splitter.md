@@ -1,21 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/ai21_semantic_text_splitter/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/ai21_semantic_text_splitter.ipynb
+description: AI21SemanticTextSplitter를 사용하여 텍스트를 의미 기반으로 분할하는 방법과 예제를 설명하는 문서입니다.
 ---
 
 # AI21SemanticTextSplitter
 
-This example goes over how to use AI21SemanticTextSplitter in LangChain.
+이 예제는 LangChain에서 AI21SemanticTextSplitter를 사용하는 방법을 설명합니다.
 
-## Installation
+## 설치
 
 ```python
 pip install langchain-ai21
 ```
 
-## Environment Setup
 
-We'll need to get a AI21 API key and set the AI21_API_KEY environment variable:
+## 환경 설정
+
+AI21 API 키를 얻고 AI21_API_KEY 환경 변수를 설정해야 합니다:
 
 ```python
 import os
@@ -24,11 +25,12 @@ from getpass import getpass
 os.environ["AI21_API_KEY"] = getpass()
 ```
 
-## Example Usages
 
-### Splitting text by semantic meaning
+## 예제 사용법
 
-This example shows how to use AI21SemanticTextSplitter to split a text into chunks based on semantic meaning.
+### 의미론적 의미로 텍스트 분할
+
+이 예제는 AI21SemanticTextSplitter를 사용하여 의미론적 의미에 따라 텍스트를 청크로 분할하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21SemanticTextSplitter", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/semantic_text_splitter/langchain_ai21.semantic_text_splitter.AI21SemanticTextSplitter.html", "title": "AI21SemanticTextSplitter"}]-->
@@ -62,9 +64,10 @@ for chunk in chunks:
     print("====")
 ```
 
-### Splitting text by semantic meaning with merge
 
-This example shows how to use AI21SemanticTextSplitter to split a text into chunks based on semantic meaning, then merging the chunks based on `chunk_size`.
+### 병합을 통한 의미론적 의미로 텍스트 분할
+
+이 예제는 AI21SemanticTextSplitter를 사용하여 의미론적 의미에 따라 텍스트를 청크로 분할한 다음, `chunk_size`에 따라 청크를 병합하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21SemanticTextSplitter", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/semantic_text_splitter/langchain_ai21.semantic_text_splitter.AI21SemanticTextSplitter.html", "title": "AI21SemanticTextSplitter"}]-->
@@ -98,9 +101,10 @@ for chunk in chunks:
     print("====")
 ```
 
-### Splitting text to documents
 
-This example shows how to use AI21SemanticTextSplitter to split a text into Documents based on semantic meaning. The metadata will contain a type for each document.
+### 문서로 텍스트 분할
+
+이 예제는 AI21SemanticTextSplitter를 사용하여 의미론적 의미에 따라 텍스트를 문서로 분할하는 방법을 보여줍니다. 메타데이터에는 각 문서에 대한 유형이 포함됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21SemanticTextSplitter", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/semantic_text_splitter/langchain_ai21.semantic_text_splitter.AI21SemanticTextSplitter.html", "title": "AI21SemanticTextSplitter"}]-->
@@ -135,9 +139,10 @@ for doc in documents:
     print("====")
 ```
 
-### Creating Documents with Metadata
 
-This example shows how to use AI21SemanticTextSplitter to create Documents from texts, and adding custom Metadata to each Document.
+### 메타데이터가 있는 문서 생성
+
+이 예제는 AI21SemanticTextSplitter를 사용하여 텍스트에서 문서를 생성하고 각 문서에 사용자 정의 메타데이터를 추가하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21SemanticTextSplitter", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/semantic_text_splitter/langchain_ai21.semantic_text_splitter.AI21SemanticTextSplitter.html", "title": "AI21SemanticTextSplitter"}]-->
@@ -175,10 +180,11 @@ for doc in documents:
     print("====")
 ```
 
-### Splitting text to documents with start index
 
-This example shows how to use AI21SemanticTextSplitter to split a text into Documents based on semantic meaning. The metadata will contain a start index for each document.
-**Note** that the start index provides an indication of the order of the chunks rather than the actual start index for each chunk.
+### 시작 인덱스가 있는 문서로 텍스트 분할
+
+이 예제는 AI21SemanticTextSplitter를 사용하여 의미론적 의미에 따라 텍스트를 문서로 분할하는 방법을 보여줍니다. 메타데이터에는 각 문서에 대한 시작 인덱스가 포함됩니다.
+**참고**: 시작 인덱스는 각 청크의 실제 시작 인덱스가 아니라 청크의 순서를 나타냅니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21SemanticTextSplitter", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/semantic_text_splitter/langchain_ai21.semantic_text_splitter.AI21SemanticTextSplitter.html", "title": "AI21SemanticTextSplitter"}]-->
@@ -212,9 +218,10 @@ for doc in documents:
     print("====")
 ```
 
-### Splitting documents
 
-This example shows how to use AI21SemanticTextSplitter to split a list of Documents into chunks based on semantic meaning.
+### 문서 분할
+
+이 예제는 AI21SemanticTextSplitter를 사용하여 의미론적 의미에 따라 문서 목록을 청크로 분할하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21SemanticTextSplitter", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/semantic_text_splitter/langchain_ai21.semantic_text_splitter.AI21SemanticTextSplitter.html", "title": "AI21SemanticTextSplitter"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "AI21SemanticTextSplitter"}]-->

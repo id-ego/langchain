@@ -1,24 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/golden_query/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/golden_query.ipynb
+description: 이 문서는 Golden Query API를 활용하여 자연어 쿼리 및 데이터 검색을 수행하는 방법을 설명합니다. API 키 설정
+  방법도 포함되어 있습니다.
 ---
 
-# Golden Query
+# 골든 쿼리
 
-> [Golden](https://golden.com) provides a set of natural language APIs for querying and enrichment using the Golden Knowledge Graph e.g. queries such as: `Products from OpenAI`, `Generative ai companies with series a funding`, and `rappers who invest` can be used to retrieve structured data about relevant entities.
+> [골든](https://golden.com)은 골든 지식 그래프를 사용하여 쿼리 및 보강을 위한 자연어 API 세트를 제공합니다. 예를 들어, `OpenAI의 제품`, `시리즈 A 자금을 받은 생성적 AI 회사`, `투자하는 래퍼들`과 같은 쿼리를 사용하여 관련 엔티티에 대한 구조화된 데이터를 검색할 수 있습니다.
 > 
-> The `golden-query` langchain tool is a wrapper on top of the [Golden Query API](https://docs.golden.com/reference/query-api) which enables programmatic access to these results.
-See the [Golden Query API docs](https://docs.golden.com/reference/query-api) for more information.
+> `golden-query` langchain 도구는 이러한 결과에 대한 프로그래밍적 접근을 가능하게 하는 [골든 쿼리 API](https://docs.golden.com/reference/query-api) 위에 래핑된 도구입니다.
+자세한 내용은 [골든 쿼리 API 문서](https://docs.golden.com/reference/query-api)를 참조하십시오.
 
-This notebook goes over how to use the `golden-query` tool.
+이 노트북에서는 `golden-query` 도구를 사용하는 방법에 대해 설명합니다.
 
-- Go to the [Golden API docs](https://docs.golden.com/) to get an overview about the Golden API.
-- Get your API key from the [Golden API Settings](https://golden.com/settings/api) page.
-- Save your API key into GOLDEN_API_KEY env variable
+- [골든 API 문서](https://docs.golden.com/)로 가서 골든 API에 대한 개요를 확인하십시오.
+- [골든 API 설정](https://golden.com/settings/api) 페이지에서 API 키를 가져옵니다.
+- API 키를 GOLDEN_API_KEY 환경 변수에 저장합니다.
 
 ```python
 %pip install -qU langchain-community
 ```
+
 
 ```python
 import os
@@ -26,20 +28,24 @@ import os
 os.environ["GOLDEN_API_KEY"] = ""
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "GoldenQueryAPIWrapper", "source": "langchain_community.utilities.golden_query", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.golden_query.GoldenQueryAPIWrapper.html", "title": "Golden Query"}]-->
 from langchain_community.utilities.golden_query import GoldenQueryAPIWrapper
 ```
 
+
 ```python
 golden_query = GoldenQueryAPIWrapper()
 ```
+
 
 ```python
 import json
 
 json.loads(golden_query.run("companies in nanotech"))
 ```
+
 
 ```output
 {'results': [{'id': 4673886,
@@ -86,7 +92,8 @@ json.loads(golden_query.run("companies in nanotech"))
  'previous': None}
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

@@ -1,29 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/grobid/
+description: GROBID는 학술 논문을 추출하고 구조화하는 머신 러닝 라이브러리로, LangChain과 함께 사용할 수 있습니다.
 ---
 
 # Grobid
 
-GROBID is a machine learning library for extracting, parsing, and re-structuring raw documents.
+GROBID는 원시 문서를 추출하고, 구문 분석하며, 재구성하기 위한 기계 학습 라이브러리입니다.
 
-It is designed and expected to be used to parse academic papers, where it works particularly well.
+이 라이브러리는 학술 논문을 구문 분석하는 데 사용되도록 설계되었으며, 특히 잘 작동합니다.
 
-*Note*: if the articles supplied to Grobid are large documents (e.g. dissertations) exceeding a certain number
-of elements, they might not be processed.
+*참고*: Grobid에 제공된 문서가 특정 요소 수를 초과하는 대형 문서(예: 논문)인 경우, 처리되지 않을 수 있습니다.
 
-This page covers how to use the Grobid to parse articles for LangChain.
+이 페이지에서는 LangChain을 위한 기사 구문 분석에 Grobid를 사용하는 방법을 다룹니다.
 
-## Installation
-The grobid installation is described in details in https://grobid.readthedocs.io/en/latest/Install-Grobid/.
-However, it is probably easier and less troublesome to run grobid through a docker container,
-as documented [here](https://grobid.readthedocs.io/en/latest/Grobid-docker/).
+## 설치
+grobid 설치에 대한 자세한 내용은 https://grobid.readthedocs.io/en/latest/Install-Grobid/에서 설명되어 있습니다.
+그러나 docker 컨테이너를 통해 grobid를 실행하는 것이 아마도 더 쉽고 번거롭지 않을 것입니다,
+자세한 내용은 [여기](https://grobid.readthedocs.io/en/latest/Grobid-docker/)에서 확인할 수 있습니다.
 
-## Use Grobid with LangChain
+## LangChain과 함께 Grobid 사용하기
 
-Once grobid is installed and up and running (you can check by accessing it http://localhost:8070),
-you're ready to go.
+grobid가 설치되고 실행 중인 경우( http://localhost:8070에 접속하여 확인할 수 있습니다),
+준비가 완료된 것입니다.
 
-You can now use the GrobidParser to produce documents
+이제 GrobidParser를 사용하여 문서를 생성할 수 있습니다.
 ```python
 <!--IMPORTS:[{"imported": "GrobidParser", "source": "langchain_community.document_loaders.parsers", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.parsers.grobid.GrobidParser.html", "title": "Grobid"}, {"imported": "GenericLoader", "source": "langchain_community.document_loaders.generic", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.generic.GenericLoader.html", "title": "Grobid"}]-->
 from langchain_community.document_loaders.parsers import GrobidParser
@@ -47,5 +46,6 @@ loader = GenericLoader.from_filesystem(
 )
 docs = loader.load()
 ```
-Chunk metadata will include Bounding Boxes. Although these are a bit funky to parse,
-they are explained in https://grobid.readthedocs.io/en/latest/Coordinates-in-PDF/
+
+청크 메타데이터에는 경계 상자가 포함됩니다. 이러한 경계 상자는 구문 분석하기에 다소 복잡하지만,
+https://grobid.readthedocs.io/en/latest/Coordinates-in-PDF/에서 설명되어 있습니다.

@@ -1,24 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/log10/
+description: Log10은 LangChain 호출을 기록, 디버깅 및 태그할 수 있는 오픈 소스 LLM 데이터 관리 플랫폼입니다.
 ---
 
 # Log10
 
-This page covers how to use the [Log10](https://log10.io) within LangChain.
+이 페이지에서는 LangChain 내에서 [Log10](https://log10.io)을 사용하는 방법을 다룹니다.
 
-## What is Log10?
+## Log10이란?
 
-Log10 is an [open-source](https://github.com/log10-io/log10) proxiless LLM data management and application development platform that lets you log, debug and tag your Langchain calls.
+Log10은 Langchain 호출을 기록하고 디버그하며 태그를 추가할 수 있는 [오픈 소스](https://github.com/log10-io/log10) 프록시 없는 LLM 데이터 관리 및 애플리케이션 개발 플랫폼입니다.
 
-## Quick start
+## 빠른 시작
 
-1. Create your free account at [log10.io](https://log10.io)
-2. Add your `LOG10_TOKEN` and `LOG10_ORG_ID` from the Settings and Organization tabs respectively as environment variables.
-3. Also add `LOG10_URL=https://log10.io` and your usual LLM API key: for e.g. `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` to your environment
+1. [log10.io](https://log10.io)에서 무료 계정을 생성하세요.
+2. 설정 및 조직 탭에서 각각 `LOG10_TOKEN`과 `LOG10_ORG_ID`를 환경 변수로 추가하세요.
+3. 또한 `LOG10_URL=https://log10.io`와 일반 LLM API 키(예: `OPENAI_API_KEY` 또는 `ANTHROPIC_API_KEY`)를 환경에 추가하세요.
 
-## How to enable Log10 data management for Langchain
+## Langchain을 위한 Log10 데이터 관리 활성화 방법
 
-Integration with log10 is a simple one-line `log10_callback` integration as shown below:
+log10과의 통합은 아래와 같이 간단한 한 줄의 `log10_callback` 통합입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Log10"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Log10"}]-->
@@ -38,11 +38,12 @@ messages = [
 llm = ChatOpenAI(model="gpt-3.5-turbo", callbacks=[log10_callback])
 ```
 
-[Log10 + Langchain + Logs docs](https://github.com/log10-io/log10/blob/main/logging.md#langchain-logger)
 
-[More details + screenshots](https://log10.io/docs/observability/logs) including instructions for self-hosting logs
+[Log10 + Langchain + 로그 문서](https://github.com/log10-io/log10/blob/main/logging.md#langchain-logger)
 
-## How to use tags with Log10
+[자체 호스팅 로그에 대한 지침을 포함한 더 많은 세부정보 + 스크린샷](https://log10.io/docs/observability/logs)
+
+## Log10과 함께 태그를 사용하는 방법
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Log10"}, {"imported": "ChatAnthropic", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.anthropic.ChatAnthropic.html", "title": "Log10"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Log10"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Log10"}]-->
@@ -74,7 +75,8 @@ completion = llm.predict("You are a ping pong machine.\nPing?\n")
 print(completion)
 ```
 
-You can also intermix direct OpenAI calls and Langchain LLM calls:
+
+직접 OpenAI 호출과 Langchain LLM 호출을 혼합하여 사용할 수도 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Log10"}]-->
@@ -104,8 +106,9 @@ with log10_session(tags=["foo", "bar"]):
     print(response)
 ```
 
-## How to debug Langchain calls
 
-[Example of debugging](https://log10.io/docs/observability/prompt_chain_debugging)
+## Langchain 호출 디버깅 방법
 
-[More Langchain examples](https://github.com/log10-io/log10/tree/main/examples#langchain)
+[디버깅 예시](https://log10.io/docs/observability/prompt_chain_debugging)
+
+[더 많은 Langchain 예시](https://github.com/log10-io/log10/tree/main/examples#langchain)

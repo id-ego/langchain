@@ -1,37 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/google_firestore_datastore/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/google_firestore_datastore.ipynb
+description: Google Cloud Firestore의 Datastore 모드를 사용하여 채팅 메시지 기록을 저장하는 방법을 설명하는 노트북입니다.
 ---
 
-# Google Firestore (Datastore Mode)
+# Google Firestore (Datastore 모드)
 
-> [Google Cloud Firestore in Datastore](https://cloud.google.com/datastore) is a serverless document-oriented database that scales to meet any demand. Extend your database application to build AI-powered experiences leveraging `Datastore's` Langchain integrations.
+> [Google Cloud Firestore in Datastore](https://cloud.google.com/datastore)는 수요에 맞게 확장되는 서버리스 문서 지향 데이터베이스입니다. `Datastore`의 Langchain 통합을 활용하여 AI 기반 경험을 구축하기 위해 데이터베이스 애플리케이션을 확장하세요.
 
-This notebook goes over how to use [Google Cloud Firestore in Datastore](https://cloud.google.com/datastore) to store chat message history with the `DatastoreChatMessageHistory` class.
+이 노트북은 `DatastoreChatMessageHistory` 클래스를 사용하여 채팅 메시지 기록을 저장하는 방법에 대해 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-datastore-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-datastore-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-datastore-python/blob/main/docs/chat_message_history.ipynb)
 
-## Before You Begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the Datastore API](https://console.cloud.google.com/flows/enableapi?apiid=datastore.googleapis.com)
-* [Create a Datastore database](https://cloud.google.com/datastore/docs/manage-databases)
+* [Google Cloud 프로젝트 만들기](https://developers.google.com/workspace/guides/create-project)
+* [Datastore API 활성화](https://console.cloud.google.com/flows/enableapi?apiid=datastore.googleapis.com)
+* [Datastore 데이터베이스 만들기](https://cloud.google.com/datastore/docs/manage-databases)
 
-After confirming access to the database in the runtime environment of this notebook, filling the following values and run the cell before running example scripts.
+이 노트북의 런타임 환경에서 데이터베이스에 대한 접근을 확인한 후, 다음 값을 입력하고 예제 스크립트를 실행하기 전에 셀을 실행하세요.
 
-### 🦜🔗 Library Installation
+### 🦜🔗 라이브러리 설치
 
-The integration lives in its own `langchain-google-datastore` package, so we need to install it.
+통합은 자체 `langchain-google-datastore` 패키지에 있으므로 이를 설치해야 합니다.
 
 ```python
 %pip install -upgrade --quiet langchain-google-datastore
 ```
 
-**Colab only**: Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**Colab 전용**: 다음 셀의 주석을 제거하여 커널을 재시작하거나 버튼을 사용하여 커널을 재시작하세요. Vertex AI Workbench에서는 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -41,14 +42,15 @@ The integration lives in its own `langchain-google-datastore` package, so we nee
 # app.kernel.do_shutdown(True)
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ Google Cloud 프로젝트 설정
+이 노트북 내에서 Google Cloud 리소스를 활용할 수 있도록 Google Cloud 프로젝트를 설정하세요.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list` 실행.
+* `gcloud projects list` 실행.
+* 지원 페이지 참조: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
@@ -59,12 +61,13 @@ PROJECT_ID = "my-project-id"  # @param {type:"string"}
 !gcloud config set project {PROJECT_ID}
 ```
 
-### 🔐 Authentication
 
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
+### 🔐 인증
 
-- If you are using Colab to run this notebook, use the cell below and continue.
-- If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+Google Cloud에 이 노트북에 로그인한 IAM 사용자로 인증하여 Google Cloud 프로젝트에 접근하세요.
+
+- 이 노트북을 실행하기 위해 Colab을 사용하는 경우 아래 셀을 사용하고 계속 진행하세요.
+- Vertex AI Workbench를 사용하는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -72,23 +75,25 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-### API Enablement
-The `langchain-google-datastore` package requires that you [enable the Datastore API](https://console.cloud.google.com/flows/enableapi?apiid=datastore.googleapis.com) in your Google Cloud Project.
+
+### API 활성화
+`langchain-google-datastore` 패키지는 Google Cloud 프로젝트에서 [Datastore API를 활성화](https://console.cloud.google.com/flows/enableapi?apiid=datastore.googleapis.com)해야 합니다.
 
 ```python
 # enable Datastore API
 !gcloud services enable datastore.googleapis.com
 ```
 
-## Basic Usage
+
+## 기본 사용법
 
 ### DatastoreChatMessageHistory
 
-To initialize the `DatastoreChatMessageHistory` class you need to provide only 3 things:
+`DatastoreChatMessageHistory` 클래스를 초기화하려면 다음 3가지만 제공하면 됩니다:
 
-1. `session_id` - A unique identifier string that specifies an id for the session.
-2. `kind` - The name of the Datastore kind to write into. This is an optional value and by default, it will use `ChatHistory` as the kind.
-3. `collection` - The single `/`-delimited path to a Datastore collection.
+1. `session_id` - 세션의 ID를 지정하는 고유 식별자 문자열.
+2. `kind` - 기록할 Datastore 종류의 이름. 이는 선택적 값이며 기본적으로 `ChatHistory`를 종류로 사용합니다.
+3. `collection` - Datastore 컬렉션에 대한 단일 `/`로 구분된 경로.
 
 ```python
 from langchain_google_datastore import DatastoreChatMessageHistory
@@ -101,22 +106,25 @@ chat_history.add_user_message("Hi!")
 chat_history.add_ai_message("How can I help you?")
 ```
 
+
 ```python
 chat_history.messages
 ```
 
-#### Cleaning up
-When the history of a specific session is obsolete and can be deleted from the database and memory, it can be done the following way.
 
-**Note:** Once deleted, the data is no longer stored in Datastore and is gone forever.
+#### 정리하기
+특정 세션의 기록이 더 이상 필요하지 않거나 데이터베이스와 메모리에서 삭제할 수 있을 때는 다음과 같은 방법으로 수행할 수 있습니다.
+
+**참고:** 삭제되면 데이터는 더 이상 Datastore에 저장되지 않으며 영원히 사라집니다.
 
 ```python
 chat_history.clear()
 ```
 
-### Custom Client
 
-The client is created by default using the available environment variables. A [custom client](https://cloud.google.com/python/docs/reference/datastore/latest/client) can be passed to the constructor.
+### 사용자 정의 클라이언트
+
+클라이언트는 기본적으로 사용 가능한 환경 변수를 사용하여 생성됩니다. [사용자 정의 클라이언트](https://cloud.google.com/python/docs/reference/datastore/latest/client)를 생성자에 전달할 수 있습니다.
 
 ```python
 from google.auth import compute_engine

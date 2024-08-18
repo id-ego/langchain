@@ -1,103 +1,102 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/release_policy/
+description: LangChain 생태계의 버전 관리 정책 및 구성 요소 패키지에 대한 정보를 제공합니다. 세부 사항을 확인하세요.
 sidebar_label: Release policy
 sidebar_position: 2
 ---
 
-# LangChain release policy
+# LangChain 릴리스 정책
 
-The LangChain ecosystem is composed of different component packages (e.g., `langchain-core`, `langchain`, `langchain-community`, `langgraph`, `langserve`, partner packages etc.)
+LangChain 생태계는 다양한 구성 요소 패키지(`langchain-core`, `langchain`, `langchain-community`, `langgraph`, `langserve`, 파트너 패키지 등)로 구성되어 있습니다.
 
-## Versioning
+## 버전 관리
 
-### `langchain`, `langchain-core`, and integration packages
+### `langchain`, `langchain-core`, 및 통합 패키지
 
-`langchain`, `langchain-core`, `langchain-text-splitters`, and integration packages (`langchain-openai`, `langchain-anthropic`, etc.) follow [semantic versioning](https://semver.org/) in the format of 0.**Y**.**Z**. The packages are under rapid development, and so are currently versioning the packages with a major version of 0.
+`langchain`, `langchain-core`, `langchain-text-splitters`, 및 통합 패키지(`langchain-openai`, `langchain-anthropic` 등)는 [의미론적 버전 관리](https://semver.org/)를 따르며 형식은 0.**Y**.**Z**입니다. 패키지는 빠르게 개발되고 있으며, 현재 0의 주요 버전으로 패키지를 버전 관리하고 있습니다.
 
-Minor version increases will occur for:
+부 버전 증가가 발생하는 경우:
 
-- Breaking changes for any public interfaces *not* marked as `beta`.
+- `beta`로 표시되지 않은 모든 공개 인터페이스의 파괴적 변경.
 
-Patch version increases will occur for:
+패치 버전 증가가 발생하는 경우:
 
-- Bug fixes,
-- New features,
-- Any changes to private interfaces,
-- Any changes to `beta` features.
+- 버그 수정,
+- 새로운 기능,
+- 비공식 인터페이스에 대한 모든 변경,
+- `beta` 기능에 대한 모든 변경.
 
-When upgrading between minor versions, users should review the list of breaking changes and deprecations.
+부 버전 간 업그레이드 시, 사용자는 파괴적 변경 및 사용 중단 목록을 검토해야 합니다.
 
-From time to time, we will version packages as **release candidates**. These are versions that are intended to be released as stable versions, but we want to get feedback from the community before doing so. Release candidates will be versioned as 0.**Y**.**Z**rc**N**. For example, 0.2.0rc1. If no issues are found, the release candidate will be released as a stable version with the same version number. If issues are found, we will release a new release candidate with an incremented `N` value (e.g., 0.2.0rc2).
+때때로, 우리는 패키지를 **릴리스 후보**로 버전 관리할 것입니다. 이는 안정적인 버전으로 릴리스할 의도가 있는 버전이지만, 그렇게 하기 전에 커뮤니티의 피드백을 받고자 합니다. 릴리스 후보는 0.**Y**.**Z**rc**N**으로 버전 관리됩니다. 예를 들어, 0.2.0rc1. 문제가 발견되지 않으면, 릴리스 후보는 동일한 버전 번호로 안정적인 버전으로 릴리스됩니다. 문제가 발견되면, 우리는 증가된 `N` 값(예: 0.2.0rc2)으로 새로운 릴리스 후보를 릴리스할 것입니다.
 
 ### `langchain-community`
 
-`langchain-community` is currently on version `0.2.x`.
+`langchain-community`는 현재 버전 `0.2.x`입니다.
 
-Minor version increases will occur for:
+부 버전 증가가 발생하는 경우:
 
-- Updates to the major/minor versions of required `langchain-x` dependencies. E.g., when updating the required version of `langchain-core` from `^0.2.x` to `0.3.0`.
+- 필수 `langchain-x` 종속성의 주요/부 버전 업데이트. 예: `langchain-core`의 필수 버전을 `^0.2.x`에서 `0.3.0`으로 업데이트할 때.
 
-Patch version increases will occur for:
+패치 버전 증가가 발생하는 경우:
 
-- Bug fixes,
-- New features,
-- Any changes to private interfaces,
-- Any changes to `beta` features,
-- Breaking changes to integrations to reflect breaking changes in the third-party service.
+- 버그 수정,
+- 새로운 기능,
+- 비공식 인터페이스에 대한 모든 변경,
+- `beta` 기능에 대한 모든 변경,
+- 타사 서비스의 파괴적 변경을 반영하기 위한 통합의 파괴적 변경.
 
-Whenever possible we will avoid making breaking changes in patch versions.
-However, if an external API makes a breaking change then breaking changes to the corresponding `langchain-community` integration can occur in a patch version.
+가능한 경우 패치 버전에서 파괴적 변경을 피할 것입니다. 그러나 외부 API에서 파괴적 변경이 발생하면 해당 `langchain-community` 통합에서 패치 버전으로 파괴적 변경이 발생할 수 있습니다.
 
 ### `langchain-experimental`
 
-`langchain-experimental` is currently on version `0.0.x`. All changes will be accompanied with patch version increases.
+`langchain-experimental`은 현재 버전 `0.0.x`입니다. 모든 변경은 패치 버전 증가와 함께 제공됩니다.
 
-## Release cadence
+## 릴리스 주기
 
-We expect to space out **minor** releases (e.g., from 0.2.x to 0.3.0) of `langchain` and `langchain-core` by at least 2-3 months, as such releases may contain breaking changes.
+우리는 `langchain` 및 `langchain-core`의 **부** 릴리스를 최소 2-3개월 간격으로 진행할 것으로 예상합니다. 이러한 릴리스는 파괴적 변경을 포함할 수 있습니다.
 
-Patch versions are released frequently, up to a few times per week, as they contain bug fixes and new features.
+패치 버전은 버그 수정 및 새로운 기능을 포함하므로 주 1-2회 자주 릴리스됩니다.
 
-## API stability
+## API 안정성
 
-The development of LLM applications is a rapidly evolving field, and we are constantly learning from our users and the community. As such, we expect that the APIs in `langchain` and `langchain-core` will continue to evolve to better serve the needs of our users.
+LLM 애플리케이션 개발은 빠르게 발전하는 분야이며, 우리는 사용자와 커뮤니티로부터 지속적으로 배우고 있습니다. 따라서 `langchain` 및 `langchain-core`의 API는 사용자 요구를 더 잘 충족시키기 위해 계속 발전할 것으로 예상합니다.
 
-Even though both `langchain` and `langchain-core` are currently in a pre-1.0 state, we are committed to maintaining API stability in these packages.
+`langchain`과 `langchain-core`가 현재 1.0 이전 상태에 있지만, 우리는 이러한 패키지의 API 안정성을 유지하기 위해 최선을 다하고 있습니다.
 
-- Breaking changes to the public API will result in a minor version bump (the second digit)
-- Any bug fixes or new features will result in a patch version bump (the third digit)
+- 공개 API에 대한 파괴적 변경은 부 버전 증가를 초래합니다(두 번째 숫자).
+- 모든 버그 수정 또는 새로운 기능은 패치 버전 증가를 초래합니다(세 번째 숫자).
 
-We will generally try to avoid making unnecessary changes, and will provide a deprecation policy for features that are being removed.
+우리는 일반적으로 불필요한 변경을 피하려고 하며, 제거되는 기능에 대한 사용 중단 정책을 제공할 것입니다.
 
-### Stability of other packages
+### 다른 패키지의 안정성
 
-The stability of other packages in the LangChain ecosystem may vary:
+LangChain 생태계의 다른 패키지의 안정성은 다를 수 있습니다:
 
-- `langchain-community` is a community maintained package that contains 3rd party integrations. While we do our best to review and test changes in `langchain-community`, `langchain-community` is expected to experience more breaking changes than `langchain` and `langchain-core` as it contains many community contributions.
-- Partner packages may follow different stability and versioning policies, and users should refer to the documentation of those packages for more information; however, in general these packages are expected to be stable.
+- `langchain-community`는 3자 통합을 포함하는 커뮤니티 유지 관리 패키지입니다. 우리는 `langchain-community`의 변경 사항을 검토하고 테스트하기 위해 최선을 다하고 있지만, `langchain-community`는 많은 커뮤니티 기여를 포함하고 있기 때문에 `langchain` 및 `langchain-core`보다 더 많은 파괴적 변경이 발생할 것으로 예상됩니다.
+- 파트너 패키지는 다른 안정성 및 버전 관리 정책을 따를 수 있으며, 사용자는 해당 패키지의 문서를 참조해야 합니다. 그러나 일반적으로 이러한 패키지는 안정적일 것으로 예상됩니다.
 
-### What is a "API stability"?
+### "API 안정성"이란 무엇인가?
 
-API stability means:
+API 안정성은 다음을 의미합니다:
 
-- All the public APIs (everything in this documentation) will not be moved or renamed without providing backwards-compatible aliases.
-- If new features are added to these APIs – which is quite possible – they will not break or change the meaning of existing methods. In other words, "stable" does not (necessarily) mean "complete."
-- If, for some reason, an API declared stable must be removed or replaced, it will be declared deprecated but will remain in the API for at least two minor releases. Warnings will be issued when the deprecated method is called.
+- 모든 공개 API(이 문서의 모든 내용)는 이전 버전과 호환되는 별칭을 제공하지 않고 이동하거나 이름이 변경되지 않습니다.
+- 이러한 API에 새로운 기능이 추가되면 – 이는 매우 가능성이 높습니다 – 기존 메서드의 의미를 변경하거나 파괴하지 않습니다. 다시 말해, "안정적"이라는 것은 "완전함"을 의미하지는 않습니다.
+- 어떤 이유로 안정적이라고 선언된 API를 제거하거나 교체해야 하는 경우, 이는 사용 중단으로 선언되지만 최소 두 개의 부 릴리스 동안 API에 남아 있을 것입니다. 사용 중단된 메서드가 호출될 때 경고가 발행됩니다.
 
-### **APIs marked as internal**
+### **내부로 표시된 API**
 
-Certain APIs are explicitly marked as “internal” in a couple of ways:
+특정 API는 몇 가지 방법으로 "내부"로 명시적으로 표시됩니다:
 
-- Some documentation refers to internals and mentions them as such. If the documentation says that something is internal, it may change.
-- Functions, methods, and other objects prefixed by a leading underscore (**`_`**). This is the standard Python convention of indicating that something is private; if any method starts with a single **`_`**, it’s an internal API.
-  - **Exception:** Certain methods are prefixed with `_` , but do not contain an implementation. These methods are *meant* to be overridden by sub-classes that provide the implementation. Such methods are generally part of the **Public API** of LangChain.
+- 일부 문서에서는 내부를 언급하며 그렇게 언급합니다. 문서에서 어떤 것이 내부라고 말하면 변경될 수 있습니다.
+- 선행 언더스코어(**`_`**)로 접두사가 붙은 함수, 메서드 및 기타 객체. 이는 무언가가 비공식적임을 나타내는 표준 Python 관례입니다. 어떤 메서드가 단일 **`_`**로 시작하면, 이는 내부 API입니다.
+  - **예외:** 특정 메서드는 `_`로 접두사가 붙지만 구현이 포함되어 있지 않습니다. 이러한 메서드는 구현을 제공하는 하위 클래스에 의해 *재정의*되어야 합니다. 이러한 메서드는 일반적으로 LangChain의 **공식 API**의 일부입니다.
 
-## Deprecation policy
+## 사용 중단 정책
 
-We will generally avoid deprecating features until a better alternative is available.
+우리는 일반적으로 더 나은 대안이 제공될 때까지 기능의 사용 중단을 피할 것입니다.
 
-When a feature is deprecated, it will continue to work in the current and next minor version of `langchain` and `langchain-core`. After that, the feature will be removed.
+기능이 사용 중단되면, 현재 및 다음 부 버전의 `langchain` 및 `langchain-core`에서 계속 작동합니다. 그 이후에는 해당 기능이 제거됩니다.
 
-Since we're expecting to space out minor releases by at least 2-3 months, this means that a feature can be removed within 2-6 months of being deprecated.
+우리는 부 릴리스를 최소 2-3개월 간격으로 진행할 것으로 예상하고 있으므로, 이는 기능이 사용 중단된 후 2-6개월 이내에 제거될 수 있음을 의미합니다.
 
-In some situations, we may allow the feature to remain in the code base for longer periods of time, if it's not causing issues in the packages, to reduce the burden on users.
+일부 상황에서는 패키지에서 문제가 발생하지 않는 한 기능이 코드베이스에 더 오랜 기간 남아 있도록 허용할 수 있습니다.

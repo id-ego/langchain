@@ -1,58 +1,53 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/dedoc/
+description: Dedoc은 다양한 형식의 파일에서 텍스트, 표, 첨부 파일 및 문서 구조를 추출하는 오픈 소스 라이브러리입니다.
 ---
 
 # Dedoc
 
-> [Dedoc](https://dedoc.readthedocs.io) is an [open-source](https://github.com/ispras/dedoc)
-library/service that extracts texts, tables, attached files and document structure
-(e.g., titles, list items, etc.) from files of various formats.
+> [Dedoc](https://dedoc.readthedocs.io)는 다양한 형식의 파일에서 텍스트, 표, 첨부 파일 및 문서 구조(예: 제목, 목록 항목 등)를 추출하는 [오픈 소스](https://github.com/ispras/dedoc) 라이브러리/서비스입니다.
 
-`Dedoc` supports `DOCX`, `XLSX`, `PPTX`, `EML`, `HTML`, `PDF`, images and more.
-Full list of supported formats can be found [here](https://dedoc.readthedocs.io/en/latest/#id1).
+`Dedoc`는 `DOCX`, `XLSX`, `PPTX`, `EML`, `HTML`, `PDF`, 이미지 등 다양한 형식을 지원합니다. 지원되는 형식의 전체 목록은 [여기](https://dedoc.readthedocs.io/en/latest/#id1)에서 확인할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-### Dedoc library
+### Dedoc 라이브러리
 
-You can install `Dedoc` using `pip`.
-In this case, you will need to install dependencies,
-please go [here](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html)
-to get more information.
+`pip`를 사용하여 `Dedoc`를 설치할 수 있습니다. 이 경우, 종속성을 설치해야 하며, 자세한 정보는 [여기](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html)를 참조하세요.
 
 ```bash
 pip install dedoc
 ```
 
+
 ### Dedoc API
 
-If you are going to use `Dedoc` API, you don't need to install `dedoc` library.
-In this case, you should run the `Dedoc` service, e.g. `Docker` container (please see
-[the documentation](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html#install-and-run-dedoc-using-docker)
-for more details):
+`Dedoc` API를 사용할 경우, `dedoc` 라이브러리를 설치할 필요가 없습니다. 이 경우, `Dedoc` 서비스를 실행해야 하며, 예를 들어 `Docker` 컨테이너를 사용할 수 있습니다(자세한 내용은 [문서](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html#install-and-run-dedoc-using-docker)를 참조하세요):
 
 ```bash
 docker pull dedocproject/dedoc
 docker run -p 1231:1231
 ```
 
-## Document Loader
 
-* For handling files of any formats (supported by `Dedoc`), you can use `DedocFileLoader`:
+## 문서 로더
+
+* `Dedoc`에서 지원하는 모든 형식의 파일을 처리하려면 `DedocFileLoader`를 사용할 수 있습니다:
   
   ```python
   from langchain_community.document_loaders import DedocFileLoader
   ```
-* For handling PDF files (with or without a textual layer), you can use `DedocPDFLoader`:
+
+* 텍스트 레이어가 있는 PDF 파일 또는 없는 PDF 파일을 처리하려면 `DedocPDFLoader`를 사용할 수 있습니다:
   
   ```python
   from langchain_community.document_loaders import DedocPDFLoader
   ```
-* For handling files of any formats without library installation,
-you can use `Dedoc API` with `DedocAPIFileLoader`:
+
+* 라이브러리 설치 없이 모든 형식의 파일을 처리하려면 `Dedoc API`와 함께 `DedocAPIFileLoader`를 사용할 수 있습니다:
   
   ```python
   from langchain_community.document_loaders import DedocAPIFileLoader
   ```
 
-Please see a [usage example](/docs/integrations/document_loaders/dedoc) for more details.
+
+자세한 내용은 [사용 예제](/docs/integrations/document_loaders/dedoc)를 참조하세요.

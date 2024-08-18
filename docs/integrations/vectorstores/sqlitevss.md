@@ -1,22 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/sqlitevss/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/sqlitevss.ipynb
+description: SQLite-VSS는 로컬 우선 작업과 외부 서버 없이 애플리케이션에 쉽게 통합할 수 있는 벡터 검색을 위한 SQLite 확장입니다.
 ---
 
 # SQLite-VSS
 
-> [SQLite-VSS](https://alexgarcia.xyz/sqlite-vss/) is an `SQLite` extension designed for vector search, emphasizing local-first operations and easy integration into applications without external servers. Leveraging the `Faiss` library, it offers efficient similarity search and clustering capabilities.
+> [SQLite-VSS](https://alexgarcia.xyz/sqlite-vss/)는 벡터 검색을 위해 설계된 `SQLite` 확장으로, 로컬 우선 작업 및 외부 서버 없이 애플리케이션에 쉽게 통합할 수 있도록 강조합니다. `Faiss` 라이브러리를 활용하여 효율적인 유사성 검색 및 클러스터링 기능을 제공합니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-This notebook shows how to use the `SQLiteVSS` vector database.
+이 노트북은 `SQLiteVSS` 벡터 데이터베이스를 사용하는 방법을 보여줍니다.
 
 ```python
 # You need to install sqlite-vss as a dependency.
 %pip install --upgrade --quiet  sqlite-vss
 ```
 
-## Quickstart
+
+## 빠른 시작
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "SQLite-VSS"}, {"imported": "SentenceTransformerEmbeddings", "source": "langchain_community.embeddings.sentence_transformer", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.huggingface.SentenceTransformerEmbeddings.html", "title": "SQLite-VSS"}, {"imported": "SQLiteVSS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.sqlitevss.SQLiteVSS.html", "title": "SQLite-VSS"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "SQLite-VSS"}]-->
@@ -59,11 +60,13 @@ data = db.similarity_search(query)
 data[0].page_content
 ```
 
+
 ```output
 'Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. \n\nTonight, I’d like to honor someone who has dedicated his life to serve this country: Justice Stephen Breyer—an Army veteran, Constitutional scholar, and retiring Justice of the United States Supreme Court. Justice Breyer, thank you for your service. \n\nOne of the most serious constitutional responsibilities a President has is nominating someone to serve on the United States Supreme Court. \n\nAnd I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.'
 ```
 
-## Using existing SQLite connection
+
+## 기존 SQLite 연결 사용
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "SQLite-VSS"}, {"imported": "SentenceTransformerEmbeddings", "source": "langchain_community.embeddings.sentence_transformer", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.huggingface.SentenceTransformerEmbeddings.html", "title": "SQLite-VSS"}, {"imported": "SQLiteVSS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.sqlitevss.SQLiteVSS.html", "title": "SQLite-VSS"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "SQLite-VSS"}]-->
@@ -101,9 +104,11 @@ data = db1.similarity_search(query)
 data[0].page_content
 ```
 
+
 ```output
 'Ketanji Brown Jackson is awesome'
 ```
+
 
 ```python
 # Cleaning up
@@ -112,7 +117,8 @@ import os
 os.remove("/tmp/vss.db")
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

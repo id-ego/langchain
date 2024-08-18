@@ -1,44 +1,50 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/gitbook/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/gitbook.ipynb
+description: GitBook은 팀이 제품, 내부 지식 기반 및 API를 문서화할 수 있는 현대적인 문서 플랫폼입니다.
 ---
 
 # GitBook
 
-> [GitBook](https://docs.gitbook.com/) is a modern documentation platform where teams can document everything from products to internal knowledge bases and APIs.
+> [GitBook](https://docs.gitbook.com/)은 팀이 제품에서 내부 지식 기반 및 API에 이르기까지 모든 것을 문서화할 수 있는 현대적인 문서화 플랫폼입니다.
 
-This notebook shows how to pull page data from any `GitBook`.
+이 노트북은 모든 `GitBook`에서 페이지 데이터를 가져오는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "GitbookLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.gitbook.GitbookLoader.html", "title": "GitBook"}]-->
 from langchain_community.document_loaders import GitbookLoader
 ```
 
-### Load from single GitBook page
+
+### 단일 GitBook 페이지에서 로드
 
 ```python
 loader = GitbookLoader("https://docs.gitbook.com")
 ```
 
+
 ```python
 page_data = loader.load()
 ```
+
 
 ```python
 page_data
 ```
 
+
 ```output
 [Document(page_content='Introduction to GitBook\nGitBook is a modern documentation platform where teams can document everything from products to internal knowledge bases and APIs.\nWe want to help \nteams to work more efficiently\n by creating a simple yet powerful platform for them to \nshare their knowledge\n.\nOur mission is to make a \nuser-friendly\n and \ncollaborative\n product for everyone to create, edit and share knowledge through documentation.\nPublish your documentation in 5 easy steps\nImport\n\nMove your existing content to GitBook with ease.\nGit Sync\n\nBenefit from our bi-directional synchronisation with GitHub and GitLab.\nOrganise your content\n\nCreate pages and spaces and organize them into collections\nCollaborate\n\nInvite other users and collaborate asynchronously with ease.\nPublish your docs\n\nShare your documentation with selected users or with everyone.\nNext\n - Getting started\nOverview\nLast modified \n3mo ago', lookup_str='', metadata={'source': 'https://docs.gitbook.com', 'title': 'Introduction to GitBook'}, lookup_index=0)]
 ```
 
-### Load from all paths in a given GitBook
-For this to work, the GitbookLoader needs to be initialized with the root path (`https://docs.gitbook.com` in this example) and have `load_all_paths` set to `True`.
+
+### 주어진 GitBook의 모든 경로에서 로드
+이 작업을 수행하려면 GitbookLoader를 루트 경로(`https://docs.gitbook.com` 이 예제에서)로 초기화하고 `load_all_paths`를 `True`로 설정해야 합니다.
 
 ```python
 loader = GitbookLoader("https://docs.gitbook.com", load_all_paths=True)
 all_pages_data = loader.load()
 ```
+
 ```output
 Fetching text from https://docs.gitbook.com/
 Fetching text from https://docs.gitbook.com/getting-started/overview
@@ -70,20 +76,24 @@ Fetching text from https://docs.gitbook.com/troubleshooting/connectivity-issues
 Fetching text from https://docs.gitbook.com/troubleshooting/support
 ```
 
+
 ```python
 print(f"fetched {len(all_pages_data)} documents.")
 # show second document
 all_pages_data[2]
 ```
+
 ```output
 fetched 28 documents.
 ```
+
 
 ```output
 Document(page_content="Import\nFind out how to easily migrate your existing documentation and which formats are supported.\nThe import function allows you to migrate and unify existing documentation in GitBook. You can choose to import single or multiple pages although limits apply. \nPermissions\nAll members with editor permission or above can use the import feature.\nSupported formats\nGitBook supports imports from websites or files that are:\nMarkdown (.md or .markdown)\nHTML (.html)\nMicrosoft Word (.docx).\nWe also support import from:\nConfluence\nNotion\nGitHub Wiki\nQuip\nDropbox Paper\nGoogle Docs\nYou can also upload a ZIP\n \ncontaining HTML or Markdown files when \nimporting multiple pages.\nNote: this feature is in beta.\nFeel free to suggest import sources we don't support yet and \nlet us know\n if you have any issues.\nImport panel\nWhen you create a new space, you'll have the option to import content straight away:\nThe new page menu\nImport a page or subpage by selecting \nImport Page\n from the New Page menu, or \nImport Subpage\n in the page action menu, found in the table of contents:\nImport from the page action menu\nWhen you choose your input source, instructions will explain how to proceed.\nAlthough GitBook supports importing content from different kinds of sources, the end result might be different from your source due to differences in product features and document format.\nLimits\nGitBook currently has the following limits for imported content:\nThe maximum number of pages that can be uploaded in a single import is \n20.\nThe maximum number of files (images etc.) that can be uploaded in a single import is \n20.\nGetting started - \nPrevious\nOverview\nNext\n - Getting started\nGit Sync\nLast modified \n4mo ago", lookup_str='', metadata={'source': 'https://docs.gitbook.com/getting-started/import', 'title': 'Import'}, lookup_index=0)
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

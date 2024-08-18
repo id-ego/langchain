@@ -1,11 +1,11 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/output_parser_retry/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/output_parser_retry.ipynb
+description: 파싱 오류 발생 시 재시도 방법에 대한 가이드를 제공하며, 효과적인 출력 수정을 위한 다양한 파서 사용법을 설명합니다.
 ---
 
-# How to retry when a parsing error occurs
+# 파싱 오류가 발생했을 때 재시도하는 방법
 
-While in some cases it is possible to fix any parsing mistakes by only looking at the output, in other cases it isn't. An example of this is when the output is not just in the incorrect format, but is partially complete. Consider the below example.
+일부 경우에는 출력만 보고 파싱 오류를 수정할 수 있지만, 다른 경우에는 그렇지 않습니다. 그 예로 출력이 잘못된 형식일 뿐만 아니라 부분적으로 완전하지 않은 경우가 있습니다. 아래 예를 고려해 보십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "OutputFixingParser", "source": "langchain.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.fix.OutputFixingParser.html", "title": "How to retry when a parsing error occurs"}, {"imported": "PydanticOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html", "title": "How to retry when a parsing error occurs"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to retry when a parsing error occurs"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to retry when a parsing error occurs"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "How to retry when a parsing error occurs"}]-->
@@ -15,6 +15,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI, OpenAI
 ```
+
 
 ```python
 template = """Based on the user question, provide an Action and Action Input for what step should be taken.
@@ -31,6 +32,7 @@ class Action(BaseModel):
 parser = PydanticOutputParser(pydantic_object=Action)
 ```
 
+
 ```python
 prompt = PromptTemplate(
     template="Answer the user query.\n{format_instructions}\n{query}\n",
@@ -39,19 +41,23 @@ prompt = PromptTemplate(
 )
 ```
 
+
 ```python
 prompt_value = prompt.format_prompt(query="who is leo di caprios gf?")
 ```
+
 
 ```python
 bad_response = '{"action": "search"}'
 ```
 
-If we try to parse this response as is, we will get an error:
+
+이 응답을 그대로 파싱하려고 하면 오류가 발생합니다:
 
 ```python
 parser.parse(bad_response)
 ```
+
 
 ```output
 ---------------------------------------------------------------------------
@@ -89,40 +95,48 @@ action_input
   field required (type=value_error.missing)
 ```
 
-If we try to use the `OutputFixingParser` to fix this error, it will be confused - namely, it doesn't know what to actually put for action input.
+
+이 오류를 수정하기 위해 `OutputFixingParser`를 사용하려고 하면 혼란스러워질 것입니다. 즉, 실제로 action input에 무엇을 넣어야 할지 알지 못합니다.
 
 ```python
 fix_parser = OutputFixingParser.from_llm(parser=parser, llm=ChatOpenAI())
 ```
 
+
 ```python
 fix_parser.parse(bad_response)
 ```
+
 
 ```output
 Action(action='search', action_input='input')
 ```
 
-Instead, we can use the RetryOutputParser, which passes in the prompt (as well as the original output) to try again to get a better response.
+
+대신, 우리는 RetryOutputParser를 사용할 수 있습니다. 이 파서는 프롬프트(원래 출력 포함)를 전달하여 더 나은 응답을 얻기 위해 다시 시도합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RetryOutputParser", "source": "langchain.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.retry.RetryOutputParser.html", "title": "How to retry when a parsing error occurs"}]-->
 from langchain.output_parsers import RetryOutputParser
 ```
 
+
 ```python
 retry_parser = RetryOutputParser.from_llm(parser=parser, llm=OpenAI(temperature=0))
 ```
+
 
 ```python
 retry_parser.parse_with_prompt(bad_response, prompt_value)
 ```
 
+
 ```output
 Action(action='search', action_input='leo di caprio girlfriend')
 ```
 
-We can also add the RetryOutputParser easily with a custom chain which transform the raw LLM/ChatModel output into a more workable format.
+
+우리는 또한 원시 LLM/ChatModel 출력을 더 작업하기 쉬운 형식으로 변환하는 사용자 정의 체인과 함께 RetryOutputParser를 쉽게 추가할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to retry when a parsing error occurs"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "How to retry when a parsing error occurs"}]-->
@@ -137,7 +151,9 @@ main_chain = RunnableParallel(
 
 main_chain.invoke({"query": "who is leo di caprios gf?"})
 ```
+
 ```output
 Action(action='search', action_input='leo di caprio girlfriend')
 ```
-Find out api documentation for [RetryOutputParser](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.retry.RetryOutputParser.html#langchain.output_parsers.retry.RetryOutputParser).
+
+[RetryOutputParser](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.retry.RetryOutputParser.html#langchain.output_parsers.retry.RetryOutputParser) API 문서를 찾아보십시오.

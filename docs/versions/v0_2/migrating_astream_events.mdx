@@ -1,29 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/v0_2/migrating_astream_events/
+description: Astream Events v2로의 마이그레이션에 대한 정보와 v1과 v2 API 간의 변경 사항을 설명합니다.
 sidebar_label: astream_events v2
 sidebar_position: 2
 ---
 
-# Migrating to Astream Events v2
+# Astream Events v2로의 마이그레이션
 
-We've added a `v2` of the astream_events API with the release of `0.2.x`. You can see this [PR](https://github.com/langchain-ai/langchain/pull/21638) for more details.
+`0.2.x`의 출시와 함께 astream_events API의 `v2`가 추가되었습니다. 자세한 내용은 이 [PR](https://github.com/langchain-ai/langchain/pull/21638)를 참조하세요.
 
-The `v2` version is a re-write of the `v1` version, and should be more efficient, with more consistent output for the events. The `v1` version of the API will be deprecated in favor of the `v2` version and will be removed in  `0.4.0`.
+`v2` 버전은 `v1` 버전을 재작성한 것으로, 더 효율적이며 이벤트에 대한 출력이 더 일관되게 제공됩니다. API의 `v1` 버전은 `v2` 버전으로 대체될 예정이며, `0.4.0`에서 제거됩니다.
 
-Below is a list of changes between the `v1` and `v2` versions of the API.
+아래는 API의 `v1`과 `v2` 버전 간의 변경 사항 목록입니다.
 
-### output for `on_chat_model_end`
+### `on_chat_model_end`의 출력
 
-In `v1`, the outputs associated with `on_chat_model_end` changed depending on whether the
-chat model was run as a root level runnable or as part of a chain.
+`v1`에서는 `on_chat_model_end`와 관련된 출력이 채팅 모델이 루트 레벨 실행 가능 항목으로 실행되었는지 또는 체인의 일부로 실행되었는지에 따라 달라졌습니다.
 
-As a root level runnable the output was:
+루트 레벨 실행 가능 항목으로서의 출력은:
 
 ```python
 "data": {"output": AIMessageChunk(content="hello world!", id='some id')}
 ```
 
-As part of a chain the output was:
+
+체인의 일부로서의 출력은:
 
 ```
             "data": {
@@ -45,21 +45,23 @@ As part of a chain the output was:
             },
 ```
 
-As of `v2`, the output will always be the simpler representation:
+
+`v2`부터는 출력이 항상 더 간단한 표현으로 제공됩니다:
 
 ```python
 "data": {"output": AIMessageChunk(content="hello world!", id='some id')}
 ```
 
+
 :::note
-Non chat models (i.e., regular LLMs) are will be consistently associated with the more verbose format for now.
+비채팅 모델(즉, 일반 LLM)은 현재 더 장황한 형식과 일관되게 연관될 것입니다.
 :::
 
-### output for `on_retriever_end`
+### `on_retriever_end`의 출력
 
-`on_retriever_end` output will always return a list of `Documents`.
+`on_retriever_end` 출력은 항상 `Documents` 목록을 반환합니다.
 
-Before:
+이전:
 ```python
 {
     "data": {
@@ -72,25 +74,26 @@ Before:
 }
 ```
 
-### Removed `on_retriever_stream`
 
-The `on_retriever_stream` event was an artifact of the implementation and has been removed.
+### `on_retriever_stream` 제거
 
-Full information associated with the event is already available in the `on_retriever_end` event.
+`on_retriever_stream` 이벤트는 구현의 유물로 제거되었습니다.
 
-Please use `on_retriever_end` instead.
+이벤트와 관련된 전체 정보는 이미 `on_retriever_end` 이벤트에서 사용할 수 있습니다.
 
-### Removed `on_tool_stream`
+대신 `on_retriever_end`를 사용하세요.
 
-The `on_tool_stream` event was an artifact of the implementation and has been removed.
+### `on_tool_stream` 제거
 
-Full information associated with the event is already available in the `on_tool_end` event.
+`on_tool_stream` 이벤트는 구현의 유물로 제거되었습니다.
 
-Please use `on_tool_end` instead.
+이벤트와 관련된 전체 정보는 이미 `on_tool_end` 이벤트에서 사용할 수 있습니다.
 
-### Propagating Names
+대신 `on_tool_end`를 사용하세요.
 
-Names of runnables have been updated to be more consistent.
+### 이름 전파
+
+실행 가능 항목의 이름이 더 일관되게 업데이트되었습니다.
 
 ```python
 model = GenericFakeChatModel(messages=infinite_cycle).configurable_fields(
@@ -102,16 +105,15 @@ model = GenericFakeChatModel(messages=infinite_cycle).configurable_fields(
 )
 ```
 
-In `v1`, the event name was `RunnableConfigurableFields`.
 
-In `v2`, the event name is `GenericFakeChatModel`.
+`v1`에서는 이벤트 이름이 `RunnableConfigurableFields`였습니다.
 
-If you're filtering by event names, check if you need to update your filters.
+`v2`에서는 이벤트 이름이 `GenericFakeChatModel`입니다.
+
+이벤트 이름으로 필터링하는 경우 필터를 업데이트해야 하는지 확인하세요.
 
 ### RunnableRetry
 
-Usage of [RunnableRetry](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.retry.RunnableRetry.html)
-within an LCEL chain being streamed generated an incorrect `on_chain_end` event in `v1` corresponding
-to the failed runnable invocation that was being retried. This event has been removed in `v2`.
+LCEL 체인 내에서 스트리밍되는 [RunnableRetry](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.retry.RunnableRetry.html)의 사용은 `v1`에서 실패한 실행 가능 항목 호출에 해당하는 잘못된 `on_chain_end` 이벤트를 생성했습니다. 이 이벤트는 `v2`에서 제거되었습니다.
 
-No action is required for this change.
+이 변경에 대한 추가 조치는 필요하지 않습니다.

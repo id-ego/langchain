@@ -1,21 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/you/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/you.ipynb
+description: 이 문서는 You.com API를 설정하고 사용하는 방법, 도구 활용, 체인 구성 및 관련 리소스에 대한 정보를 제공합니다.
 ---
 
-# You.com Search
+# You.com 검색
 
-The [you.com API](https://api.you.com) is a suite of tools designed to help developers ground the output of LLMs in the most recent, most accurate, most relevant information that may not have been included in their training dataset.
+[you.com API](https://api.you.com)는 개발자가 LLM의 출력을 최신의, 가장 정확하고, 가장 관련성 높은 정보에 기반하여 제공할 수 있도록 돕기 위해 설계된 도구 모음입니다. 이 정보는 훈련 데이터셋에 포함되지 않았을 수 있습니다.
 
-## Setup
+## 설정
 
-The tool lives in the `langchain-community` package.
+이 도구는 `langchain-community` 패키지에 포함되어 있습니다.
 
-You also need to set your you.com API key.
+또한 you.com API 키를 설정해야 합니다.
 
 ```python
 %pip install --upgrade --quiet langchain-community
 ```
+
 
 ```python
 import os
@@ -32,14 +33,16 @@ os.environ["OPENAI_API_KEY"] = ""
 # dotenv.load_dotenv()
 ```
 
-It's also helpful (but not needed) to set up [LangSmith](https://smith.langchain.com/) for best-in-class observability
+
+최고 수준의 가시성을 위해 [LangSmith](https://smith.langchain.com/)를 설정하는 것도 유용하지만 필수는 아닙니다.
 
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-## Tool Usage
+
+## 도구 사용
 
 ```python
 <!--IMPORTS:[{"imported": "YouSearchTool", "source": "langchain_community.tools.you", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.you.tool.YouSearchTool.html", "title": "You.com Search"}, {"imported": "YouSearchAPIWrapper", "source": "langchain_community.utilities.you", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.you.YouSearchAPIWrapper.html", "title": "You.com Search"}]-->
@@ -52,9 +55,11 @@ tool = YouSearchTool(api_wrapper=api_wrapper)
 tool
 ```
 
+
 ```output
 YouSearchTool(api_wrapper=YouSearchAPIWrapper(ydc_api_key='054da371-e73b-47c1-a6d9-3b0cddf0fa3e<__>1Obt7EETU8N2v5f4MxaH0Zhx', num_web_results=1, safesearch=None, country=None, k=None, n_snippets_per_hit=None, endpoint_type='search', n_hits=None))
 ```
+
 
 ```python
 # .invoke wraps utility.results
@@ -66,6 +71,7 @@ print(len(response))
 for item in response:
     print(item)
 ```
+
 ```output
 7
 page_content='10 Day Weather-Manhattan, NY\nToday43°/39°1%\nToday\nSun 31 | Day\nGenerally cloudy. High 43F. Winds W at 10 to 15 mph.\n- Humidity54%\n- UV Index0 of 11\n- Sunrise7:19 am\n- Sunset4:38 pm\nSun 31 | Night\nCloudy. Low 39F. Winds light and variable.\n- Humidity70%\n- UV Index0 of 11\n- Moonrise9:13 pmWaning Gibbous\n- Moonset10:28 am\nMon 0145°/33°7%\nMon 01\nMon 01 | Day\nConsiderable cloudiness. High around 45F. Winds light and variable.\n- Humidity71%\n- UV Index1 of 11\n- Sunrise7:19 am\n- Sunset4:39 pm\nMon 01 | Night\nA few clouds. Low 33F. Winds NNW at 5 to 10 mph.\n- Humidity64%\n- UV Index0 of 11\n- Moonrise10:14 pmWaning Gibbous\n- Moonset10:49 am\nTue 0246°/35°4%\nTue 02\nTue 02 | Day\nMainly sunny. High 46F. Winds NW at 5 to 10 mph.\n- Humidity52%\n- UV Index2 of 11\n- Sunrise7:19 am\n- Sunset4:40 pm\nTue 02 | Night\nA few clouds overnight. Low around 35F. Winds W at 5 to 10 mph.\n- Humidity64%\n- UV Index0 of 11\n- Moonrise11:13 pmWaning Gibbous\n- Moonset11:08 am\nWed 0346°/38°4%\nWed 03\nWed 03 | Day' metadata={'url': 'https://weather.com/weather/tenday/l/New+York+NY+USNY0996:1:US', 'thumbnail_url': None, 'title': '10-Day Weather Forecast for Manhattan, NY - The Weather Channel ...', 'description': 'Some sun in the morning with increasing clouds during the afternoon. High around 45F. Winds SSE at 5 to 10 mph. ... Cloudy with showers. Low near 40F. Winds SSE at 5 to 10 mph. Chance of rain 60%. ... A steady rain in the morning. Showers continuing in the afternoon.'}
@@ -76,14 +82,17 @@ page_content='- Humidity91%\n- UV Index0 of 11\n- Moonrise5:50 amWaning Crescent
 page_content='Sat 1346°/36°53%\nSat 13\nSat 13 | Day\nCloudy with showers. High 46F. Winds WSW at 10 to 15 mph. Chance of rain 50%.\n- Humidity73%\n- UV Index1 of 11\n- Sunrise7:18 am\n- Sunset4:50 pm\nSat 13 | Night\nRain showers early transitioning to snow showers late. Low 36F. Winds W at 10 to 15 mph. Chance of precip 50%.\n- Humidity70%\n- UV Index0 of 11\n- Moonrise9:14 amWaxing Crescent\n- Moonset7:33 pm\nSun 1442°/34°37%\nSun 14\nSun 14 | Day\nSnow showers early will transition to a few showers later. High 42F. Winds WSW at 10 to 15 mph. Chance of rain 40%.\n- Humidity63%\n- UV Index1 of 11\n- Sunrise7:18 am\n- Sunset4:51 pm\nSun 14 | Night\nVariable clouds with snow showers. Low 34F. Winds W at 10 to 15 mph. Chance of snow 60%. Snow accumulations less than one inch.\n- UV Index0 of 11\n- Moonrise9:44 amWaxing Crescent\n- Moonset8:52 pm\nMon 1540°/31°51%\nMon 15\nMon 15 | Day' metadata={'url': 'https://weather.com/weather/tenday/l/New+York+NY+USNY0996:1:US', 'thumbnail_url': None, 'title': '10-Day Weather Forecast for Manhattan, NY - The Weather Channel ...', 'description': 'Some sun in the morning with increasing clouds during the afternoon. High around 45F. Winds SSE at 5 to 10 mph. ... Cloudy with showers. Low near 40F. Winds SSE at 5 to 10 mph. Chance of rain 60%. ... A steady rain in the morning. Showers continuing in the afternoon.'}
 page_content='- Humidity70%\n- UV Index1 of 11\n- Sunrise7:18 am\n- Sunset4:34 pm\nMon 25 | Night\nOvercast with showers at times. Low 43F. Winds light and variable. Chance of rain 40%.\n- Humidity80%\n- UV Index0 of 11\n- Moonrise3:08 pmWaxing Gibbous\n- Moonset6:14 am\nTue 2653°/45°58%\nTue 26\nTue 26 | Day\nOvercast with rain showers at times. High 53F. Winds E at 5 to 10 mph. Chance of rain 60%.\n- Humidity79%\n- UV Index1 of 11\n- Sunrise7:18 am\n- Sunset4:34 pm\nTue 26 | Night\nShowers early then scattered thunderstorms developing late. Low near 45F. Winds ESE at 5 to 10 mph. Chance of rain 60%.\n- Humidity93%\n- UV Index0 of 11\n- Moonrise4:00 pmFull Moon\n- Moonset7:17 am\nWed 2751°/41°58%\nWed 27\nWed 27 | Day\nCloudy with showers. High 51F. Winds WSW at 5 to 10 mph. Chance of rain 60%.\n- Humidity79%\n- UV Index1 of 11\n- Sunrise7:18 am\n- Sunset4:35 pm\nWed 27 | Night\nCloudy with showers. Low 41F. Winds NW at 5 to 10 mph. Chance of rain 60%.\n- Humidity72%\n- UV Index0 of 11\n- Moonrise4:59 pmFull Moon\n- Moonset8:13 am' metadata={'url': 'https://weather.com/weather/tenday/l/New+York+NY+USNY0996:1:US', 'thumbnail_url': None, 'title': '10-Day Weather Forecast for Manhattan, NY - The Weather Channel ...', 'description': 'Some sun in the morning with increasing clouds during the afternoon. High around 45F. Winds SSE at 5 to 10 mph. ... Cloudy with showers. Low near 40F. Winds SSE at 5 to 10 mph. Chance of rain 60%. ... A steady rain in the morning. Showers continuing in the afternoon.'}
 ```
-## Chaining
 
-We show here how to use it as part of an [agent](/docs/tutorials/agents). We use the OpenAI Functions Agent, so we will need to setup and install the required dependencies for that. We will also use [LangSmith Hub](https://smith.langchain.com/hub) to pull the prompt from, so we will need to install that.
+
+## 체이닝
+
+여기서는 [에이전트](/docs/tutorials/agents)의 일부로 사용하는 방법을 보여줍니다. 우리는 OpenAI Functions Agent를 사용하므로, 이를 위한 필수 종속성을 설정하고 설치해야 합니다. 또한 프롬프트를 가져오기 위해 [LangSmith Hub](https://smith.langchain.com/hub)를 사용할 것이므로, 이를 설치해야 합니다.
 
 ```python
 # you need a model to use in the chain
 !pip install --upgrade --quiet langchain langchain-openai langchainhub langchain-community
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "You.com Search"}, {"imported": "create_openai_functions_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.create_openai_functions_agent.html", "title": "You.com Search"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "You.com Search"}]-->
@@ -105,9 +114,11 @@ agent_executor = AgentExecutor(
 )
 ```
 
+
 ```python
 agent_executor.invoke({"input": "What is the weather in NY today?"})
 ```
+
 ```output
 
 
@@ -132,12 +143,14 @@ For more details, you can visit [The Weather Channel](https://weather.com/weathe
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': 'What is the weather in NY today?',
  'output': 'The weather in New York City today is as follows:\n- Feels Like: 43°F\n- High/Low: --/39°F\n- Wind: 3 mph\n- Humidity: 63%\n- Dew Point: 31°F\n- Pressure: 30.44 in\n- UV Index: 0 of 11\n- Visibility: 10 mi\n- Moon Phase: Waxing Gibbous\n\nFor more details, you can visit [The Weather Channel](https://weather.com/weather/today/l/96f2f84af9a5f5d452eb0574d4e4d8a840c71b05e22264ebdc0056433a642c84).'}
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

@@ -1,13 +1,13 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/solar/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/solar.ipynb
+description: Solar는 LangChain을 사용하여 텍스트 임베딩을 위한 Solar Inference와 상호작용하는 방법을 설명하는 문서입니다.
 ---
 
-# Solar
+# 태양광
 
-[Solar](https://console.upstage.ai/services/embedding) offers an embeddings service.
+[태양광](https://console.upstage.ai/services/embedding) 은 임베딩 서비스를 제공합니다.
 
-This example goes over how to use LangChain to interact with Solar Inference for text embedding.
+이 예제는 LangChain을 사용하여 텍스트 임베딩을 위해 Solar Inference와 상호작용하는 방법을 설명합니다.
 
 ```python
 import os
@@ -15,23 +15,28 @@ import os
 os.environ["SOLAR_API_KEY"] = ""
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "SolarEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.solar.SolarEmbeddings.html", "title": "Solar"}]-->
 from langchain_community.embeddings import SolarEmbeddings
 ```
 
+
 ```python
 embeddings = SolarEmbeddings()
 ```
+
 
 ```python
 query_text = "This is a test query."
 query_result = embeddings.embed_query(query_text)
 ```
 
+
 ```python
 query_result
 ```
+
 
 ```output
 [-0.009612835943698883,
@@ -1037,14 +1042,17 @@ query_result
  ...]
 ```
 
+
 ```python
 document_text = "This is a test document."
 document_result = embeddings.embed_documents([document_text])
 ```
 
+
 ```python
 document_result
 ```
+
 
 ```output
 [[-0.019484492018818855,
@@ -2050,6 +2058,7 @@ document_result
   ...]]
 ```
 
+
 ```python
 import numpy as np
 
@@ -2060,11 +2069,13 @@ similarity = np.dot(query_numpy, document_numpy) / (
 )
 print(f"Cosine similarity between document and query: {similarity}")
 ```
+
 ```output
 Cosine similarity between document and query: 0.8685132879722154
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

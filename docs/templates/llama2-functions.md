@@ -1,50 +1,55 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/llama2-functions/
+description: 이 문서는 LLaMA2 모델을 사용하여 비구조적 데이터에서 구조화된 데이터를 추출하는 방법을 설명합니다. JSON 출력 스키마를
+  지원합니다.
 ---
 
 # llama2-functions
 
-This template performs extraction of structured data from unstructured data using a [LLaMA2 model that supports a specified JSON output schema](https://github.com/ggerganov/llama.cpp/blob/master/grammars/README.md). 
+이 템플릿은 [지정된 JSON 출력 스키마를 지원하는 LLaMA2 모델](https://github.com/ggerganov/llama.cpp/blob/master/grammars/README.md)을 사용하여 비구조적 데이터에서 구조화된 데이터를 추출합니다.
 
-The extraction schema can be set in `chain.py`.
+추출 스키마는 `chain.py`에서 설정할 수 있습니다.
 
-## Environment Setup
+## 환경 설정
 
-This will use a [LLaMA2-13b model hosted by Replicate](https://replicate.com/andreasjansson/llama-2-13b-chat-gguf/versions).
+이것은 [Replicate에서 호스팅되는 LLaMA2-13b 모델](https://replicate.com/andreasjansson/llama-2-13b-chat-gguf/versions)을 사용할 것입니다.
 
-Ensure that `REPLICATE_API_TOKEN` is set in your environment.
+`REPLICATE_API_TOKEN`이 환경에 설정되어 있는지 확인하세요.
 
-## Usage
+## 사용법
 
-To use this package, you should first have the LangChain CLI installed:
+이 패키지를 사용하려면 먼저 LangChain CLI를 설치해야 합니다:
 
 ```shell
 pip install -U langchain-cli
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새로운 LangChain 프로젝트를 생성하고 이것을 유일한 패키지로 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package llama2-functions
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음을 실행하면 됩니다:
 
 ```shell
 langchain app add llama2-functions
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가하세요:
 ```python
 from llama2_functions import chain as llama2_functions_chain
 
 add_routes(app, llama2_functions_chain, path="/llama2-functions")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줄 것입니다.
+LangSmith에 [여기서](https://smith.langchain.com/) 가입할 수 있습니다.
+접근 권한이 없으면 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -52,19 +57,21 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+
+이 디렉토리 안에 있다면, 다음을 통해 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버가 로컬에서 실행됩니다.
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/llama2-functions/playground](http://127.0.0.1:8000/llama2-functions/playground)  
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 확인할 수 있습니다.
+플레이그라운드는 [http://127.0.0.1:8000/llama2-functions/playground](http://127.0.0.1:8000/llama2-functions/playground)에서 접근할 수 있습니다.
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable

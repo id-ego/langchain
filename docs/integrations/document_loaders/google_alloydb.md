@@ -1,36 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/google_alloydb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/google_alloydb.ipynb
+description: Google AlloyDB는 PostgreSQL과 100% 호환되는 완전 관리형 관계형 데이터베이스 서비스입니다. AI 기반
+  경험을 구축할 수 있습니다.
 ---
 
 # Google AlloyDB for PostgreSQL
 
-> [AlloyDB](https://cloud.google.com/alloydb) is a fully managed relational database service that offers high performance, seamless integration, and impressive scalability. AlloyDB is 100% compatible with PostgreSQL. Extend your database application to build AI-powered experiences leveraging AlloyDB's Langchain integrations.
+> [AlloyDB](https://cloud.google.com/alloydb)는 고성능, 원활한 통합 및 인상적인 확장성을 제공하는 완전 관리형 관계형 데이터베이스 서비스입니다. AlloyDB는 PostgreSQL과 100% 호환됩니다. AlloyDB의 Langchain 통합을 활용하여 AI 기반 경험을 구축하기 위해 데이터베이스 애플리케이션을 확장하세요.
 
-This notebook goes over how to use `AlloyDB for PostgreSQL` to load Documents with the `AlloyDBLoader` class.
+이 노트북에서는 `AlloyDB for PostgreSQL`을 사용하여 `AlloyDBLoader` 클래스로 문서를 로드하는 방법을 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-alloydb-pg-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-alloydb-pg-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-alloydb-pg-python/blob/main/docs/document_loader.ipynb)
 
-## Before you begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the AlloyDB API](https://console.cloud.google.com/flows/enableapi?apiid=alloydb.googleapis.com)
-* [Create a AlloyDB cluster and instance.](https://cloud.google.com/alloydb/docs/cluster-create)
-* [Create a AlloyDB database.](https://cloud.google.com/alloydb/docs/quickstart/create-and-connect)
-* [Add a User to the database.](https://cloud.google.com/alloydb/docs/database-users/about)
+* [Google Cloud 프로젝트 만들기](https://developers.google.com/workspace/guides/create-project)
+* [AlloyDB API 활성화](https://console.cloud.google.com/flows/enableapi?apiid=alloydb.googleapis.com)
+* [AlloyDB 클러스터 및 인스턴스 만들기.](https://cloud.google.com/alloydb/docs/cluster-create)
+* [AlloyDB 데이터베이스 만들기.](https://cloud.google.com/alloydb/docs/quickstart/create-and-connect)
+* [데이터베이스에 사용자 추가.](https://cloud.google.com/alloydb/docs/database-users/about)
 
-### 🦜🔗 Library Installation
-Install the integration library, `langchain-google-alloydb-pg`.
+### 🦜🔗 라이브러리 설치
+통합 라이브러리인 `langchain-google-alloydb-pg`를 설치하세요.
 
 ```python
 %pip install --upgrade --quiet  langchain-google-alloydb-pg
 ```
 
-**Colab only:** Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**Colab 전용:** 다음 셀의 주석을 제거하여 커널을 재시작하거나 버튼을 사용하여 커널을 재시작하세요. Vertex AI Workbench에서는 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -40,11 +42,12 @@ Install the integration library, `langchain-google-alloydb-pg`.
 # app.kernel.do_shutdown(True)
 ```
 
-### 🔐 Authentication
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
 
-* If you are using Colab to run this notebook, use the cell below and continue.
-* If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+### 🔐 인증
+Google Cloud에 인증하여 이 노트북에 로그인한 IAM 사용자로서 Google Cloud 프로젝트에 접근하세요.
+
+* Colab을 사용하여 이 노트북을 실행하는 경우 아래 셀을 사용하고 계속 진행하세요.
+* Vertex AI Workbench를 사용하고 있는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -52,14 +55,15 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ Google Cloud 프로젝트 설정
+Google Cloud 프로젝트를 설정하여 이 노트북 내에서 Google Cloud 리소스를 활용할 수 있도록 하세요.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list` 실행.
+* `gcloud projects list` 실행.
+* 지원 페이지 참조: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @title Project { display-mode: "form" }
@@ -69,10 +73,11 @@ PROJECT_ID = "gcp_project_id"  # @param {type:"string"}
 ! gcloud config set project {PROJECT_ID}
 ```
 
-## Basic Usage
 
-### Set AlloyDB database variables
-Find your database values, in the [AlloyDB Instances page](https://console.cloud.google.com/alloydb/clusters).
+## 기본 사용법
+
+### AlloyDB 데이터베이스 변수 설정
+[AlloyDB 인스턴스 페이지](https://console.cloud.google.com/alloydb/clusters)에서 데이터베이스 값을 찾으세요.
 
 ```python
 # @title Set Your Values Here { display-mode: "form" }
@@ -83,26 +88,27 @@ DATABASE = "my-database"  # @param {type: "string"}
 TABLE_NAME = "vector_store"  # @param {type: "string"}
 ```
 
-### AlloyDBEngine Connection Pool
 
-One of the requirements and arguments to establish AlloyDB as a vector store is a `AlloyDBEngine` object. The `AlloyDBEngine`  configures a connection pool to your AlloyDB database, enabling successful connections from your application and following industry best practices.
+### AlloyDBEngine 연결 풀
 
-To create a `AlloyDBEngine` using `AlloyDBEngine.from_instance()` you need to provide only 5 things:
+AlloyDB를 벡터 저장소로 설정하기 위한 요구 사항 및 인수 중 하나는 `AlloyDBEngine` 객체입니다. `AlloyDBEngine`은 AlloyDB 데이터베이스에 대한 연결 풀을 구성하여 애플리케이션에서 성공적인 연결을 가능하게 하고 업계 모범 사례를 따릅니다.
 
-1. `project_id` : Project ID of the Google Cloud Project where the AlloyDB instance is located.
-2. `region` : Region where the AlloyDB instance is located.
-3. `cluster`: The name of the AlloyDB cluster.
-4. `instance` : The name of the AlloyDB instance.
-5. `database` : The name of the database to connect to on the AlloyDB instance.
+`AlloyDBEngine.from_instance()`를 사용하여 `AlloyDBEngine`을 생성하려면 다음 5가지만 제공하면 됩니다:
 
-By default, [IAM database authentication](https://cloud.google.com/alloydb/docs/connect-iam) will be used as the method of database authentication. This library uses the IAM principal belonging to the [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/application-default-credentials) sourced from the environment.
+1. `project_id` : AlloyDB 인스턴스가 위치한 Google Cloud 프로젝트의 프로젝트 ID.
+2. `region` : AlloyDB 인스턴스가 위치한 지역.
+3. `cluster`: AlloyDB 클러스터의 이름.
+4. `instance` : AlloyDB 인스턴스의 이름.
+5. `database` : AlloyDB 인스턴스에서 연결할 데이터베이스의 이름.
 
-Optionally, [built-in database authentication](https://cloud.google.com/alloydb/docs/database-users/about) using a username and password to access the AlloyDB database can also be used. Just provide the optional `user` and `password` arguments to `AlloyDBEngine.from_instance()`:
+기본적으로 [IAM 데이터베이스 인증](https://cloud.google.com/alloydb/docs/connect-iam)이 데이터베이스 인증 방법으로 사용됩니다. 이 라이브러리는 환경에서 가져온 [애플리케이션 기본 자격 증명(ADC)](https://cloud.google.com/docs/authentication/application-default-credentials)에 속하는 IAM 주체를 사용합니다.
 
-* `user` : Database user to use for built-in database authentication and login
-* `password` : Database password to use for built-in database authentication and login.
+선택적으로, 사용자 이름과 비밀번호를 사용하여 AlloyDB 데이터베이스에 접근하는 [내장 데이터베이스 인증](https://cloud.google.com/alloydb/docs/database-users/about)도 사용할 수 있습니다. `AlloyDBEngine.from_instance()`에 선택적 `user` 및 `password` 인수를 제공하면 됩니다:
 
-**Note**: This tutorial demonstrates the async interface. All async methods have corresponding sync methods.
+* `user` : 내장 데이터베이스 인증 및 로그인에 사용할 데이터베이스 사용자
+* `password` : 내장 데이터베이스 인증 및 로그인에 사용할 데이터베이스 비밀번호.
+
+**참고**: 이 튜토리얼은 비동기 인터페이스를 보여줍니다. 모든 비동기 메서드에는 해당하는 동기 메서드가 있습니다.
 
 ```python
 from langchain_google_alloydb_pg import AlloyDBEngine
@@ -116,7 +122,8 @@ engine = await AlloyDBEngine.afrom_instance(
 )
 ```
 
-### Create AlloyDBLoader
+
+### AlloyDBLoader 생성
 
 ```python
 from langchain_google_alloydb_pg import AlloyDBLoader
@@ -125,16 +132,17 @@ from langchain_google_alloydb_pg import AlloyDBLoader
 loader = await AlloyDBLoader.create(engine, table_name=TABLE_NAME)
 ```
 
-### Load Documents via default table
-The loader returns a list of Documents from the table using the first column as page_content and all other columns as metadata. The default table will have the first column as
-page_content and the second column as metadata (JSON). Each row becomes a document.
+
+### 기본 테이블을 통한 문서 로드
+로더는 첫 번째 열을 page_content로 사용하고 나머지 모든 열을 메타데이터로 사용하여 테이블에서 문서 목록을 반환합니다. 기본 테이블은 첫 번째 열을 page_content로 하고 두 번째 열을 메타데이터(JSON)로 가집니다. 각 행은 문서가 됩니다.
 
 ```python
 docs = await loader.aload()
 print(docs)
 ```
 
-### Load documents via custom table/metadata or custom page content columns
+
+### 사용자 정의 테이블/메타데이터 또는 사용자 정의 페이지 콘텐츠 열을 통한 문서 로드
 
 ```python
 loader = await AlloyDBLoader.create(
@@ -147,8 +155,9 @@ docs = await loader.aload()
 print(docs)
 ```
 
-### Set page content format
-The loader returns a list of Documents, with one document per row, with page content in specified string format, i.e. text (space separated concatenation), JSON, YAML, CSV, etc. JSON and YAML formats include headers, while text and CSV do not include field headers.
+
+### 페이지 콘텐츠 형식 설정
+로더는 지정된 문자열 형식으로 페이지 콘텐츠가 있는 각 행당 하나의 문서로 문서 목록을 반환합니다. 즉, 텍스트(공백으로 구분된 연결), JSON, YAML, CSV 등. JSON 및 YAML 형식에는 헤더가 포함되며, 텍스트 및 CSV에는 필드 헤더가 포함되지 않습니다.
 
 ```python
 loader = AlloyDBLoader.create(
@@ -161,7 +170,8 @@ docs = await loader.aload()
 print(docs)
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

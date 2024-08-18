@@ -1,27 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/ascend/
+description: 이 문서는 Huawei의 Ascend NPU를 LangChain과 함께 사용하는 방법과 설치 지침을 제공합니다.
 ---
 
 # Ascend
 
-> [Ascend](https://https://www.hiascend.com/) is Natural Process Unit provide by Huawei
+> [Ascend](https://https://www.hiascend.com/)는 Huawei에서 제공하는 자연 프로세스 유닛입니다.
 
-This page covers how to use ascend NPU with LangChain.
+이 페이지는 LangChain과 함께 ascend NPU를 사용하는 방법을 다룹니다.
 
-### Installation
+### 설치
 
-Install using torch-npu using:
+torch-npu를 사용하여 설치하려면:
 
 ```bash
 pip install torch-npu
 ```
 
-Please follow the installation instructions as specified below:
-* Install CANN as shown [here](https://www.hiascend.com/document/detail/zh/canncommercial/700/quickstart/quickstart/quickstart_18_0002.html).
 
-### Embedding Models
+아래에 명시된 설치 지침을 따르십시오:
+* CANN을 [여기](https://www.hiascend.com/document/detail/zh/canncommercial/700/quickstart/quickstart/quickstart_18_0002.html)와 같이 설치하십시오.
 
-See a [usage example](/docs/integrations/text_embedding/ascend).
+### 임베딩 모델
+
+[사용 예시](/docs/integrations/text_embedding/ascend)를 참조하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "AscendEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.ascend.AscendEmbeddings.html", "title": "Ascend"}]-->

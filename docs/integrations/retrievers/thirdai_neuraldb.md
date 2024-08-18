@@ -1,19 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/thirdai_neuraldb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/thirdai_neuraldb.ipynb
+description: NeuralDB는 ThirdAI에서 개발한 CPU 친화적이고 세밀하게 조정 가능한 검색 엔진입니다. 다양한 초기화 방법과 문서
+  검색 기능을 제공합니다.
 ---
 
 # **NeuralDB**
-NeuralDB is a CPU-friendly and fine-tunable retrieval engine developed by ThirdAI.
+NeuralDB는 ThirdAI에서 개발한 CPU 친화적이고 세밀하게 조정 가능한 검색 엔진입니다.
 
-### **Initialization**
-There are two initialization methods:
-- From Scratch: Basic model
-- From Checkpoint: Load a model that was previously saved
+### **초기화**
+초기화 방법은 두 가지가 있습니다:
+- 처음부터: 기본 모델
+- 체크포인트에서: 이전에 저장된 모델 로드
 
-For all of the following initialization methods, the `thirdai_key` parameter can be ommitted if the `THIRDAI_KEY` environment variable is set.
+다음의 모든 초기화 방법에 대해 `thirdai_key` 매개변수는 `THIRDAI_KEY` 환경 변수가 설정되어 있으면 생략할 수 있습니다.
 
-ThirdAI API keys can be obtained at https://www.thirdai.com/try-bolt/
+ThirdAI API 키는 https://www.thirdai.com/try-bolt/ 에서 얻을 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "NeuralDBRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.thirdai_neuraldb.NeuralDBRetriever.html", "title": "**NeuralDB**"}]-->
@@ -33,7 +34,8 @@ retriever = NeuralDBRetriever.from_checkpoint(
 )
 ```
 
-### **Inserting document sources**
+
+### **문서 소스 삽입**
 
 ```python
 retriever.insert(
@@ -64,18 +66,20 @@ retriever.insert(
 )
 ```
 
-### **Retrieving documents**
-To query the retriever, you can use the standard LangChain retriever method `get_relevant_documents`, which returns a list of LangChain Document objects. Each document object represents a chunk of text from the indexed files. For example, it may contain a paragraph from one of the indexed PDF files. In addition to the text, the document's metadata field contains information such as the document's ID, the source of this document (which file it came from), and the score of the document.
+
+### **문서 검색**
+검색기를 쿼리하려면 표준 LangChain 검색기 메서드 `get_relevant_documents`를 사용할 수 있으며, 이 메서드는 LangChain 문서 객체의 목록을 반환합니다. 각 문서 객체는 인덱싱된 파일에서 텍스트 조각을 나타냅니다. 예를 들어, 인덱싱된 PDF 파일 중 하나의 단락을 포함할 수 있습니다. 텍스트 외에도 문서의 메타데이터 필드는 문서의 ID, 이 문서의 출처(어떤 파일에서 왔는지), 문서의 점수와 같은 정보를 포함합니다.
 
 ```python
 # This returns a list of LangChain Document objects
 documents = retriever.invoke("query", top_k=10)
 ```
 
-### **Fine tuning**
-NeuralDBRetriever can be fine-tuned to user behavior and domain-specific knowledge. It can be fine-tuned in two ways:
-1. Association: the retriever associates a source phrase with a target phrase. When the retriever sees the source phrase, it will also consider results that are relevant to the target phrase.
-2. Upvoting: the retriever upweights the score of a document for a specific query. This is useful when you want to fine-tune the retriever to user behavior. For example, if a user searches "how is a car manufactured" and likes the returned document with id 52, then we can upvote the document with id 52 for the query "how is a car manufactured".
+
+### **세밀 조정**
+NeuralDBRetriever는 사용자 행동 및 도메인 특정 지식에 맞게 세밀하게 조정할 수 있습니다. 두 가지 방법으로 세밀 조정할 수 있습니다:
+1. 연관: 검색기는 소스 구문을 대상 구문과 연관시킵니다. 검색기가 소스 구문을 볼 때, 대상 구문과 관련된 결과도 고려합니다.
+2. 업보팅: 검색기는 특정 쿼리에 대해 문서의 점수를 높입니다. 이는 검색기를 사용자 행동에 맞게 세밀하게 조정할 때 유용합니다. 예를 들어, 사용자가 "자동차는 어떻게 제조되나요"를 검색하고 ID가 52인 반환된 문서를 좋아하는 경우, "자동차는 어떻게 제조되나요" 쿼리에 대해 ID가 52인 문서를 업보팅할 수 있습니다.
 
 ```python
 retriever.associate(source="source phrase", target="target phrase")
@@ -95,7 +99,8 @@ retriever.upvote_batch(
 )
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

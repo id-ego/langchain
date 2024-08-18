@@ -1,350 +1,349 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/
+description: 이 문서는 LangChain의 설치, 주요 기능 및 사용 방법에 대한 구체적인 가이드를 제공합니다. 목표 지향적인 작업 완료를
+  지원합니다.
 sidebar_class_name: hidden
 sidebar_position: 0
 ---
 
-# How-to guides
+# 사용 방법 안내서
 
-Here you’ll find answers to “How do I….?” types of questions.
-These guides are *goal-oriented* and *concrete*; they're meant to help you complete a specific task.
-For conceptual explanations see the [Conceptual guide](/docs/concepts/).
-For end-to-end walkthroughs see [Tutorials](/docs/tutorials).
-For comprehensive descriptions of every class and function see the [API Reference](https://api.python.langchain.com/en/latest/).
+여기에서 “어떻게….?” 유형의 질문에 대한 답변을 찾을 수 있습니다.  
+이 가이드는 *목표 지향적*이고 *구체적*이며, 특정 작업을 완료하는 데 도움을 주기 위해 작성되었습니다.  
+개념적 설명은 [개념 안내서](/docs/concepts/)를 참조하세요.  
+전체적인 단계별 안내는 [튜토리얼](/docs/tutorials/)을 참조하세요.  
+모든 클래스와 함수에 대한 포괄적인 설명은 [API 참조](https://api.python.langchain.com/en/latest/)를 참조하세요.
 
-## Installation
+## 설치
 
-- [How to: install LangChain packages](/docs/how_to/installation/)
-- [How to: use LangChain with different Pydantic versions](/docs/how_to/pydantic_compatibility)
+- [방법: LangChain 패키지 설치하기](/docs/how_to/installation/)
+- [방법: 다양한 Pydantic 버전과 함께 LangChain 사용하기](/docs/how_to/pydantic_compatibility)
 
-## Key features
+## 주요 기능
 
-This highlights functionality that is core to using LangChain.
+이 섹션은 LangChain 사용의 핵심 기능을 강조합니다.
 
-- [How to: return structured data from a model](/docs/how_to/structured_output/)
-- [How to: use a model to call tools](/docs/how_to/tool_calling)
-- [How to: stream runnables](/docs/how_to/streaming)
-- [How to: debug your LLM apps](/docs/how_to/debugging/)
+- [방법: 모델에서 구조화된 데이터 반환하기](/docs/how_to/structured_output/)
+- [방법: 도구 호출을 위해 모델 사용하기](/docs/how_to/tool_calling)
+- [방법: 실행 가능한 항목 스트리밍하기](/docs/how_to/streaming)
+- [방법: LLM 앱 디버깅하기](/docs/how_to/debugging/)
 
-## LangChain Expression Language (LCEL)
+## LangChain 표현 언어 (LCEL)
 
-[LangChain Expression Language](/docs/concepts/#langchain-expression-language-lcel) is a way to create arbitrary custom chains. It is built on the [Runnable](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html) protocol.
+[LangChain 표현 언어](/docs/concepts/#langchain-expression-language-lcel)는 임의의 사용자 정의 체인을 생성하는 방법입니다. 이는 [Runnable](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html) 프로토콜에 기반하여 구축되었습니다.
 
-[**LCEL cheatsheet**](/docs/how_to/lcel_cheatsheet/): For a quick overview of how to use the main LCEL primitives.
+[**LCEL 요약표**](/docs/how_to/lcel_cheatsheet/): 주요 LCEL 원시 요소 사용 방법에 대한 간단한 개요입니다.
 
-[**Migration guide**](/docs/versions/migrating_chains): For migrating legacy chain abstractions to LCEL.
+[**마이그레이션 가이드**](/docs/versions/migrating_chains): 레거시 체인 추상화를 LCEL로 마이그레이션하는 방법입니다.
 
-- [How to: chain runnables](/docs/how_to/sequence)
-- [How to: stream runnables](/docs/how_to/streaming)
-- [How to: invoke runnables in parallel](/docs/how_to/parallel/)
-- [How to: add default invocation args to runnables](/docs/how_to/binding/)
-- [How to: turn any function into a runnable](/docs/how_to/functions)
-- [How to: pass through inputs from one chain step to the next](/docs/how_to/passthrough)
-- [How to: configure runnable behavior at runtime](/docs/how_to/configure)
-- [How to: add message history (memory) to a chain](/docs/how_to/message_history)
-- [How to: route between sub-chains](/docs/how_to/routing)
-- [How to: create a dynamic (self-constructing) chain](/docs/how_to/dynamic_chain/)
-- [How to: inspect runnables](/docs/how_to/inspect)
-- [How to: add fallbacks to a runnable](/docs/how_to/fallbacks)
-- [How to: pass runtime secrets to a runnable](/docs/how_to/runnable_runtime_secrets)
+- [방법: 실행 가능한 항목 체인하기](/docs/how_to/sequence)
+- [방법: 실행 가능한 항목 스트리밍하기](/docs/how_to/streaming)
+- [방법: 실행 가능한 항목을 병렬로 호출하기](/docs/how_to/parallel/)
+- [방법: 실행 가능한 항목에 기본 호출 인수 추가하기](/docs/how_to/binding/)
+- [방법: 모든 함수를 실행 가능 항목으로 변환하기](/docs/how_to/functions)
+- [방법: 한 체인 단계에서 다음 단계로 입력 전달하기](/docs/how_to/passthrough)
+- [방법: 런타임에서 실행 가능한 항목 동작 구성하기](/docs/how_to/configure)
+- [방법: 체인에 메시지 이력(메모리) 추가하기](/docs/how_to/message_history)
+- [방법: 하위 체인 간 라우팅하기](/docs/how_to/routing)
+- [방법: 동적(자기 생성) 체인 만들기](/docs/how_to/dynamic_chain/)
+- [방법: 실행 가능한 항목 검사하기](/docs/how_to/inspect)
+- [방법: 실행 가능한 항목에 폴백 추가하기](/docs/how_to/fallbacks)
+- [방법: 런타임 비밀을 실행 가능한 항목에 전달하기](/docs/how_to/runnable_runtime_secrets)
 
-## Components
+## 구성 요소
 
-These are the core building blocks you can use when building applications.
+응용 프로그램을 구축할 때 사용할 수 있는 핵심 빌딩 블록입니다.
 
-### Prompt templates
+### 프롬프트 템플릿
 
-[Prompt Templates](/docs/concepts/#prompt-templates) are responsible for formatting user input into a format that can be passed to a language model.
+[프롬프트 템플릿](/docs/concepts/#prompt-templates)은 사용자 입력을 언어 모델에 전달할 수 있는 형식으로 포맷하는 역할을 합니다.
 
-- [How to: use few shot examples](/docs/how_to/few_shot_examples)
-- [How to: use few shot examples in chat models](/docs/how_to/few_shot_examples_chat/)
-- [How to: partially format prompt templates](/docs/how_to/prompts_partial)
-- [How to: compose prompts together](/docs/how_to/prompts_composition)
+- [방법: 몇 가지 샷 예제 사용하기](/docs/how_to/few_shot_examples)
+- [방법: 채팅 모델에서 몇 가지 샷 예제 사용하기](/docs/how_to/few_shot_examples_chat/)
+- [방법: 프롬프트 템플릿 부분적으로 포맷하기](/docs/how_to/prompts_partial)
+- [방법: 프롬프트 함께 구성하기](/docs/how_to/prompts_composition)
 
-### Example selectors
+### 예제 선택기
 
-[Example Selectors](/docs/concepts/#example-selectors) are responsible for selecting the correct few shot examples to pass to the prompt.
+[예제 선택기](/docs/concepts/#example-selectors)는 프롬프트에 전달할 올바른 몇 가지 샷 예제를 선택하는 역할을 합니다.
 
-- [How to: use example selectors](/docs/how_to/example_selectors)
-- [How to: select examples by length](/docs/how_to/example_selectors_length_based)
-- [How to: select examples by semantic similarity](/docs/how_to/example_selectors_similarity)
-- [How to: select examples by semantic ngram overlap](/docs/how_to/example_selectors_ngram)
-- [How to: select examples by maximal marginal relevance](/docs/how_to/example_selectors_mmr)
+- [방법: 예제 선택기 사용하기](/docs/how_to/example_selectors)
+- [방법: 길이에 따라 예제 선택하기](/docs/how_to/example_selectors_length_based)
+- [방법: 의미적 유사성에 따라 예제 선택하기](/docs/how_to/example_selectors_similarity)
+- [방법: 의미적 n-그램 중복에 따라 예제 선택하기](/docs/how_to/example_selectors_ngram)
+- [방법: 최대 한계 관련성에 따라 예제 선택하기](/docs/how_to/example_selectors_mmr)
 
-### Chat models
+### 채팅 모델
 
-[Chat Models](/docs/concepts/#chat-models) are newer forms of language models that take messages in and output a message.
+[채팅 모델](/docs/concepts/#chat-models)은 메시지를 입력받아 메시지를 출력하는 새로운 형태의 언어 모델입니다.
 
-- [How to: do function/tool calling](/docs/how_to/tool_calling)
-- [How to: get models to return structured output](/docs/how_to/structured_output)
-- [How to: cache model responses](/docs/how_to/chat_model_caching)
-- [How to: get log probabilities](/docs/how_to/logprobs)
-- [How to: create a custom chat model class](/docs/how_to/custom_chat_model)
-- [How to: stream a response back](/docs/how_to/chat_streaming)
-- [How to: track token usage](/docs/how_to/chat_token_usage_tracking)
-- [How to: track response metadata across providers](/docs/how_to/response_metadata)
-- [How to: use chat model to call tools](/docs/how_to/tool_calling)
-- [How to: stream tool calls](/docs/how_to/tool_streaming)
-- [How to: handle rate limits](/docs/how_to/chat_model_rate_limiting)
-- [How to: few shot prompt tool behavior](/docs/how_to/tools_few_shot)
-- [How to: bind model-specific formatted tools](/docs/how_to/tools_model_specific)
-- [How to: force a specific tool call](/docs/how_to/tool_choice)
-- [How to: work with local models](/docs/how_to/local_llms)
-- [How to: init any model in one line](/docs/how_to/chat_models_universal_init/)
+- [방법: 함수/도구 호출하기](/docs/how_to/tool_calling)
+- [방법: 모델에서 구조화된 출력 반환받기](/docs/how_to/structured_output)
+- [방법: 모델 응답 캐시하기](/docs/how_to/chat_model_caching)
+- [방법: 로그 확률 얻기](/docs/how_to/logprobs)
+- [방법: 사용자 정의 채팅 모델 클래스 만들기](/docs/how_to/custom_chat_model)
+- [방법: 응답을 스트리밍하여 반환하기](/docs/how_to/chat_streaming)
+- [방법: 토큰 사용량 추적하기](/docs/how_to/chat_token_usage_tracking)
+- [방법: 공급자 간 응답 메타데이터 추적하기](/docs/how_to/response_metadata)
+- [방법: 도구 호출을 위해 채팅 모델 사용하기](/docs/how_to/tool_calling)
+- [방법: 도구 호출 스트리밍하기](/docs/how_to/tool_streaming)
+- [방법: 비율 제한 처리하기](/docs/how_to/chat_model_rate_limiting)
+- [방법: 몇 가지 샷 프롬프트 도구 동작하기](/docs/how_to/tools_few_shot)
+- [방법: 모델 특정 포맷 도구 바인딩하기](/docs/how_to/tools_model_specific)
+- [방법: 특정 도구 호출 강제하기](/docs/how_to/tool_choice)
+- [방법: 로컬 모델과 작업하기](/docs/how_to/local_llms)
+- [방법: 한 줄로 모든 모델 초기화하기](/docs/how_to/chat_models_universal_init/)
 
-### Messages
+### 메시지
 
-[Messages](/docs/concepts/#messages) are the input and output of chat models. They have some `content` and a `role`, which describes the source of the message.
+[메시지](/docs/concepts/#messages)는 채팅 모델의 입력 및 출력입니다. 메시지는 `content`와 메시지의 출처를 설명하는 `role`을 가집니다.
 
-- [How to: trim messages](/docs/how_to/trim_messages/)
-- [How to: filter messages](/docs/how_to/filter_messages/)
-- [How to: merge consecutive messages of the same type](/docs/how_to/merge_message_runs/)
+- [방법: 메시지 다듬기](/docs/how_to/trim_messages/)
+- [방법: 메시지 필터링하기](/docs/how_to/filter_messages/)
+- [방법: 같은 유형의 연속 메시지 병합하기](/docs/how_to/merge_message_runs/)
 
 ### LLMs
 
-What LangChain calls [LLMs](/docs/concepts/#llms) are older forms of language models that take a string in and output a string.
+LangChain에서 [LLMs](/docs/concepts/#llms)라고 부르는 것은 문자열을 입력받아 문자열을 출력하는 구형 언어 모델입니다.
 
-- [How to: cache model responses](/docs/how_to/llm_caching)
-- [How to: create a custom LLM class](/docs/how_to/custom_llm)
-- [How to: stream a response back](/docs/how_to/streaming_llm)
-- [How to: track token usage](/docs/how_to/llm_token_usage_tracking)
-- [How to: work with local models](/docs/how_to/local_llms)
+- [방법: 모델 응답 캐시하기](/docs/how_to/llm_caching)
+- [방법: 사용자 정의 LLM 클래스 만들기](/docs/how_to/custom_llm)
+- [방법: 응답을 스트리밍하여 반환하기](/docs/how_to/streaming_llm)
+- [방법: 토큰 사용량 추적하기](/docs/how_to/llm_token_usage_tracking)
+- [방법: 로컬 모델과 작업하기](/docs/how_to/local_llms)
 
-### Output parsers
+### 출력 파서
 
-[Output Parsers](/docs/concepts/#output-parsers) are responsible for taking the output of an LLM and parsing into more structured format.
+[출력 파서](/docs/concepts/#output-parsers)는 LLM의 출력을 더 구조화된 형식으로 파싱하는 역할을 합니다.
 
-- [How to: use output parsers to parse an LLM response into structured format](/docs/how_to/output_parser_structured)
-- [How to: parse JSON output](/docs/how_to/output_parser_json)
-- [How to: parse XML output](/docs/how_to/output_parser_xml)
-- [How to: parse YAML output](/docs/how_to/output_parser_yaml)
-- [How to: retry when output parsing errors occur](/docs/how_to/output_parser_retry)
-- [How to: try to fix errors in output parsing](/docs/how_to/output_parser_fixing)
-- [How to: write a custom output parser class](/docs/how_to/output_parser_custom)
+- [방법: 출력 파서를 사용하여 LLM 응답을 구조화된 형식으로 파싱하기](/docs/how_to/output_parser_structured)
+- [방법: JSON 출력 파싱하기](/docs/how_to/output_parser_json)
+- [방법: XML 출력 파싱하기](/docs/how_to/output_parser_xml)
+- [방법: YAML 출력 파싱하기](/docs/how_to/output_parser_yaml)
+- [방법: 출력 파싱 오류가 발생할 때 재시도하기](/docs/how_to/output_parser_retry)
+- [방법: 출력 파싱 오류 수정하기](/docs/how_to/output_parser_fixing)
+- [방법: 사용자 정의 출력 파서 클래스 작성하기](/docs/how_to/output_parser_custom)
 
-### Document loaders
+### 문서 로더
 
-[Document Loaders](/docs/concepts/#document-loaders) are responsible for loading documents from a variety of sources.
+[문서 로더](/docs/concepts/#document-loaders)는 다양한 소스에서 문서를 로드하는 역할을 합니다.
 
-- [How to: load CSV data](/docs/how_to/document_loader_csv)
-- [How to: load data from a directory](/docs/how_to/document_loader_directory)
-- [How to: load HTML data](/docs/how_to/document_loader_html)
-- [How to: load JSON data](/docs/how_to/document_loader_json)
-- [How to: load Markdown data](/docs/how_to/document_loader_markdown)
-- [How to: load Microsoft Office data](/docs/how_to/document_loader_office_file)
-- [How to: load PDF files](/docs/how_to/document_loader_pdf)
-- [How to: write a custom document loader](/docs/how_to/document_loader_custom)
+- [방법: CSV 데이터 로드하기](/docs/how_to/document_loader_csv)
+- [방법: 디렉토리에서 데이터 로드하기](/docs/how_to/document_loader_directory)
+- [방법: HTML 데이터 로드하기](/docs/how_to/document_loader_html)
+- [방법: JSON 데이터 로드하기](/docs/how_to/document_loader_json)
+- [방법: Markdown 데이터 로드하기](/docs/how_to/document_loader_markdown)
+- [방법: Microsoft Office 데이터 로드하기](/docs/how_to/document_loader_office_file)
+- [방법: PDF 파일 로드하기](/docs/how_to/document_loader_pdf)
+- [방법: 사용자 정의 문서 로더 작성하기](/docs/how_to/document_loader_custom)
 
-### Text splitters
+### 텍스트 분할기
 
-[Text Splitters](/docs/concepts/#text-splitters) take a document and split into chunks that can be used for retrieval.
+[텍스트 분할기](/docs/concepts/#text-splitters)는 문서를 가져와서 검색에 사용할 수 있는 청크로 분할합니다.
 
-- [How to: recursively split text](/docs/how_to/recursive_text_splitter)
-- [How to: split by HTML headers](/docs/how_to/HTML_header_metadata_splitter)
-- [How to: split by HTML sections](/docs/how_to/HTML_section_aware_splitter)
-- [How to: split by character](/docs/how_to/character_text_splitter)
-- [How to: split code](/docs/how_to/code_splitter)
-- [How to: split Markdown by headers](/docs/how_to/markdown_header_metadata_splitter)
-- [How to: recursively split JSON](/docs/how_to/recursive_json_splitter)
-- [How to: split text into semantic chunks](/docs/how_to/semantic-chunker)
-- [How to: split by tokens](/docs/how_to/split_by_token)
+- [방법: 텍스트를 재귀적으로 분할하기](/docs/how_to/recursive_text_splitter)
+- [방법: HTML 헤더로 분할하기](/docs/how_to/HTML_header_metadata_splitter)
+- [방법: HTML 섹션으로 분할하기](/docs/how_to/HTML_section_aware_splitter)
+- [방법: 문자로 분할하기](/docs/how_to/character_text_splitter)
+- [방법: 코드 분할하기](/docs/how_to/code_splitter)
+- [방법: 헤더로 Markdown 분할하기](/docs/how_to/markdown_header_metadata_splitter)
+- [방법: JSON을 재귀적으로 분할하기](/docs/how_to/recursive_json_splitter)
+- [방법: 의미적 청크로 텍스트 분할하기](/docs/how_to/semantic-chunker)
+- [방법: 토큰으로 분할하기](/docs/how_to/split_by_token)
 
-### Embedding models
+### 임베딩 모델
 
-[Embedding Models](/docs/concepts/#embedding-models) take a piece of text and create a numerical representation of it.
+[임베딩 모델](/docs/concepts/#embedding-models)은 텍스트 조각을 가져와서 숫자 표현을 생성합니다.
 
-- [How to: embed text data](/docs/how_to/embed_text)
-- [How to: cache embedding results](/docs/how_to/caching_embeddings)
+- [방법: 텍스트 데이터 임베딩하기](/docs/how_to/embed_text)
+- [방법: 임베딩 결과 캐시하기](/docs/how_to/caching_embeddings)
 
-### Vector stores
+### 벡터 저장소
 
-[Vector stores](/docs/concepts/#vector-stores) are databases that can efficiently store and retrieve embeddings.
+[벡터 저장소](/docs/concepts/#vector-stores)는 임베딩을 효율적으로 저장하고 검색할 수 있는 데이터베이스입니다.
 
-- [How to: use a vector store to retrieve data](/docs/how_to/vectorstores)
+- [방법: 벡터 저장소를 사용하여 데이터 검색하기](/docs/how_to/vectorstores)
 
-### Retrievers
+### 검색기
 
-[Retrievers](/docs/concepts/#retrievers) are responsible for taking a query and returning relevant documents.
+[검색기](/docs/concepts/#retrievers)는 쿼리를 가져와서 관련 문서를 반환하는 역할을 합니다.
 
-- [How to: use a vector store to retrieve data](/docs/how_to/vectorstore_retriever)
-- [How to: generate multiple queries to retrieve data for](/docs/how_to/MultiQueryRetriever)
-- [How to: use contextual compression to compress the data retrieved](/docs/how_to/contextual_compression)
-- [How to: write a custom retriever class](/docs/how_to/custom_retriever)
-- [How to: add similarity scores to retriever results](/docs/how_to/add_scores_retriever)
-- [How to: combine the results from multiple retrievers](/docs/how_to/ensemble_retriever)
-- [How to: reorder retrieved results to mitigate the "lost in the middle" effect](/docs/how_to/long_context_reorder)
-- [How to: generate multiple embeddings per document](/docs/how_to/multi_vector)
-- [How to: retrieve the whole document for a chunk](/docs/how_to/parent_document_retriever)
-- [How to: generate metadata filters](/docs/how_to/self_query)
-- [How to: create a time-weighted retriever](/docs/how_to/time_weighted_vectorstore)
-- [How to: use hybrid vector and keyword retrieval](/docs/how_to/hybrid)
+- [방법: 벡터 저장소를 사용하여 데이터 검색하기](/docs/how_to/vectorstore_retriever)
+- [방법: 여러 쿼리를 생성하여 데이터를 검색하기](/docs/how_to/MultiQueryRetriever)
+- [방법: 맥락 압축을 사용하여 검색된 데이터 압축하기](/docs/how_to/contextual_compression)
+- [방법: 사용자 정의 검색기 클래스 작성하기](/docs/how_to/custom_retriever)
+- [방법: 검색기 결과에 유사도 점수 추가하기](/docs/how_to/add_scores_retriever)
+- [방법: 여러 검색기에서 결과 결합하기](/docs/how_to/ensemble_retriever)
+- [방법: "중간에 잃어버림" 효과를 완화하기 위해 검색된 결과 재정렬하기](/docs/how_to/long_context_reorder)
+- [방법: 문서당 여러 임베딩 생성하기](/docs/how_to/multi_vector)
+- [방법: 청크에 대한 전체 문서 검색하기](/docs/how_to/parent_document_retriever)
+- [방법: 메타데이터 필터 생성하기](/docs/how_to/self_query)
+- [방법: 시간 가중 검색기 생성하기](/docs/how_to/time_weighted_vectorstore)
+- [방법: 하이브리드 벡터 및 키워드 검색 사용하기](/docs/how_to/hybrid)
 
-### Indexing
+### 인덱싱
 
-Indexing is the process of keeping your vectorstore in-sync with the underlying data source.
+인덱싱은 벡터 저장소를 기본 데이터 소스와 동기화 상태로 유지하는 과정입니다.
 
-- [How to: reindex data to keep your vectorstore in-sync with the underlying data source](/docs/how_to/indexing)
+- [방법: 데이터를 재인덱싱하여 벡터 저장소를 기본 데이터 소스와 동기화 상태로 유지하기](/docs/how_to/indexing)
 
-### Tools
+### 도구
 
-LangChain [Tools](/docs/concepts/#tools) contain a description of the tool (to pass to the language model) as well as the implementation of the function to call. Refer [here](/docs/integrations/tools/) for a list of pre-buit tools. 
+LangChain [도구](/docs/concepts/#tools)는 도구에 대한 설명(언어 모델에 전달할)과 호출할 함수의 구현을 포함합니다. 미리 구축된 도구 목록은 [여기](https://docs/langchain.com/integrations/tools/)를 참조하세요.
 
-- [How to: create tools](/docs/how_to/custom_tools)
-- [How to: use built-in tools and toolkits](/docs/how_to/tools_builtin)
-- [How to: use chat models to call tools](/docs/how_to/tool_calling)
-- [How to: pass tool outputs to chat models](/docs/how_to/tool_results_pass_to_model)
-- [How to: pass run time values to tools](/docs/how_to/tool_runtime)
-- [How to: add a human-in-the-loop for tools](/docs/how_to/tools_human)
-- [How to: handle tool errors](/docs/how_to/tools_error)
-- [How to: force models to call a tool](/docs/how_to/tool_choice)
-- [How to: disable parallel tool calling](/docs/how_to/tool_calling_parallel)
-- [How to: access the `RunnableConfig` from a tool](/docs/how_to/tool_configure)
-- [How to: stream events from a tool](/docs/how_to/tool_stream_events)
-- [How to: return artifacts from a tool](/docs/how_to/tool_artifacts/)
-- [How to: convert Runnables to tools](/docs/how_to/convert_runnable_to_tool)
-- [How to: add ad-hoc tool calling capability to models](/docs/how_to/tools_prompting)
-- [How to: pass in runtime secrets](/docs/how_to/runnable_runtime_secrets)
+- [방법: 도구 만들기](/docs/how_to/custom_tools)
+- [방법: 내장 도구 및 툴킷 사용하기](/docs/how_to/tools_builtin)
+- [방법: 도구 호출을 위해 채팅 모델 사용하기](/docs/how_to/tool_calling)
+- [방법: 도구 출력을 채팅 모델에 전달하기](/docs/how_to/tool_results_pass_to_model)
+- [방법: 런타임 값을 도구에 전달하기](/docs/how_to/tool_runtime)
+- [방법: 도구에 인간 개입 추가하기](/docs/how_to/tools_human)
+- [방법: 도구 오류 처리하기](/docs/how_to/tools_error)
+- [방법: 모델이 도구를 호출하도록 강제하기](/docs/how_to/tool_choice)
+- [방법: 병렬 도구 호출 비활성화하기](/docs/how_to/tool_calling_parallel)
+- [방법: 도구에서 `RunnableConfig`에 접근하기](/docs/how_to/tool_configure)
+- [방법: 도구에서 이벤트 스트리밍하기](/docs/how_to/tool_stream_events)
+- [방법: 도구에서 아티팩트 반환하기](/docs/how_to/tool_artifacts/)
+- [방법: 실행 가능 항목을 도구로 변환하기](/docs/how_to/convert_runnable_to_tool)
+- [방법: 모델에 즉석 도구 호출 기능 추가하기](/docs/how_to/tools_prompting)
+- [방법: 런타임 비밀 전달하기](/docs/how_to/runnable_runtime_secrets)
 
-### Multimodal
+### 다중 모드
 
-- [How to: pass multimodal data directly to models](/docs/how_to/multimodal_inputs/)
-- [How to: use multimodal prompts](/docs/how_to/multimodal_prompts/)
+- [방법: 다중 모드 데이터를 모델에 직접 전달하기](/docs/how_to/multimodal_inputs/)
+- [방법: 다중 모드 프롬프트 사용하기](/docs/how_to/multimodal_prompts/)
 
-### Agents
+### 에이전트
 
 :::note
 
-For in depth how-to guides for agents, please check out [LangGraph](https://langchain-ai.github.io/langgraph/) documentation.
+에이전트에 대한 심층 사용 방법 안내서는 [LangGraph](https://langchain-ai.github.io/langgraph/) 문서를 확인하세요.
 
 :::
 
-- [How to: use legacy LangChain Agents (AgentExecutor)](/docs/how_to/agent_executor)
-- [How to: migrate from legacy LangChain agents to LangGraph](/docs/how_to/migrate_agent)
+- [방법: 레거시 LangChain 에이전트(AgentExecutor) 사용하기](/docs/how_to/agent_executor)
+- [방법: 레거시 LangChain 에이전트에서 LangGraph로 마이그레이션하기](/docs/how_to/migrate_agent)
+### 콜백
 
-### Callbacks
+[콜백](/docs/concepts/#callbacks)은 LLM 애플리케이션 실행의 다양한 단계에 연결할 수 있게 해줍니다.
 
-[Callbacks](/docs/concepts/#callbacks) allow you to hook into the various stages of your LLM application's execution.
+- [방법: 런타임에 콜백 전달하기](/docs/how_to/callbacks_runtime)
+- [방법: 모듈에 콜백 첨부하기](/docs/how_to/callbacks_attach)
+- [방법: 모듈 생성자에 콜백 전달하기](/docs/how_to/callbacks_constructor)
+- [방법: 사용자 정의 콜백 핸들러 만들기](/docs/how_to/custom_callbacks)
+- [방법: 비동기 환경에서 콜백 사용하기](/docs/how_to/callbacks_async)
+- [방법: 사용자 정의 콜백 이벤트 전송하기](/docs/how_to/callbacks_custom_events)
 
-- [How to: pass in callbacks at runtime](/docs/how_to/callbacks_runtime)
-- [How to: attach callbacks to a module](/docs/how_to/callbacks_attach)
-- [How to: pass callbacks into a module constructor](/docs/how_to/callbacks_constructor)
-- [How to: create custom callback handlers](/docs/how_to/custom_callbacks)
-- [How to: use callbacks in async environments](/docs/how_to/callbacks_async)
-- [How to: dispatch custom callback events](/docs/how_to/callbacks_custom_events)
+### 사용자 정의
 
-### Custom
+모든 LangChain 구성 요소는 쉽게 확장하여 자신의 버전을 지원할 수 있습니다.
 
-All of LangChain components can easily be extended to support your own versions.
+- [방법: 사용자 정의 채팅 모델 클래스 만들기](/docs/how_to/custom_chat_model)
+- [방법: 사용자 정의 LLM 클래스 만들기](/docs/how_to/custom_llm)
+- [방법: 사용자 정의 검색기 클래스 작성하기](/docs/how_to/custom_retriever)
+- [방법: 사용자 정의 문서 로더 작성하기](/docs/how_to/document_loader_custom)
+- [방법: 사용자 정의 출력 파서 클래스 작성하기](/docs/how_to/output_parser_custom)
+- [방법: 사용자 정의 콜백 핸들러 만들기](/docs/how_to/custom_callbacks)
+- [방법: 사용자 정의 도구 정의하기](/docs/how_to/custom_tools)
+- [방법: 사용자 정의 콜백 이벤트 전송하기](/docs/how_to/callbacks_custom_events)
 
-- [How to: create a custom chat model class](/docs/how_to/custom_chat_model)
-- [How to: create a custom LLM class](/docs/how_to/custom_llm)
-- [How to: write a custom retriever class](/docs/how_to/custom_retriever)
-- [How to: write a custom document loader](/docs/how_to/document_loader_custom)
-- [How to: write a custom output parser class](/docs/how_to/output_parser_custom)
-- [How to: create custom callback handlers](/docs/how_to/custom_callbacks)
-- [How to: define a custom tool](/docs/how_to/custom_tools)
-- [How to: dispatch custom callback events](/docs/how_to/callbacks_custom_events)
+### 직렬화
+- [방법: LangChain 객체 저장 및 로드하기](/docs/how_to/serialization)
 
-### Serialization
-- [How to: save and load LangChain objects](/docs/how_to/serialization)
+## 사용 사례
 
-## Use cases
+이 가이드는 사용 사례별 세부 정보를 다룹니다.
 
-These guides cover use-case specific details.
+### RAG를 통한 Q&A
 
-### Q&A with RAG
+검색 증강 생성(RAG)은 LLM을 외부 데이터 소스에 연결하는 방법입니다.
+RAG에 대한 고급 튜토리얼은 [이 가이드](/docs/tutorials/rag/)를 확인하세요.
 
-Retrieval Augmented Generation (RAG) is a way to connect LLMs to external sources of data.
-For a high-level tutorial on RAG, check out [this guide](/docs/tutorials/rag/).
+- [방법: 채팅 기록 추가하기](/docs/how_to/qa_chat_history_how_to/)
+- [방법: 스트리밍하기](/docs/how_to/qa_streaming/)
+- [방법: 출처 반환하기](/docs/how_to/qa_sources/)
+- [방법: 인용 반환하기](/docs/how_to/qa_citations/)
+- [방법: 사용자별 검색 수행하기](/docs/how_to/qa_per_user/)
 
-- [How to: add chat history](/docs/how_to/qa_chat_history_how_to/)
-- [How to: stream](/docs/how_to/qa_streaming/)
-- [How to: return sources](/docs/how_to/qa_sources/)
-- [How to: return citations](/docs/how_to/qa_citations/)
-- [How to: do per-user retrieval](/docs/how_to/qa_per_user/)
+### 추출
 
-### Extraction
+추출은 LLM을 사용하여 비구조적 텍스트에서 구조화된 정보를 추출하는 것입니다.
+추출에 대한 고급 튜토리얼은 [이 가이드](/docs/tutorials/extraction/)를 확인하세요.
 
-Extraction is when you use LLMs to extract structured information from unstructured text.
-For a high level tutorial on extraction, check out [this guide](/docs/tutorials/extraction/).
+- [방법: 참조 예제 사용하기](/docs/how_to/extraction_examples/)
+- [방법: 긴 텍스트 처리하기](/docs/how_to/extraction_long_text/)
+- [방법: 함수 호출 없이 추출 수행하기](/docs/how_to/extraction_parse)
 
-- [How to: use reference examples](/docs/how_to/extraction_examples/)
-- [How to: handle long text](/docs/how_to/extraction_long_text/)
-- [How to: do extraction without using function calling](/docs/how_to/extraction_parse)
+### 챗봇
 
-### Chatbots
+챗봇은 LLM을 사용하여 대화를 나누는 것입니다.
+챗봇 구축에 대한 고급 튜토리얼은 [이 가이드](/docs/tutorials/chatbot/)를 확인하세요.
 
-Chatbots involve using an LLM to have a conversation.
-For a high-level tutorial on building chatbots, check out [this guide](/docs/tutorials/chatbot/).
+- [방법: 메모리 관리하기](/docs/how_to/chatbots_memory)
+- [방법: 검색 수행하기](/docs/how_to/chatbots_retrieval)
+- [방법: 도구 사용하기](/docs/how_to/chatbots_tools)
+- [방법: 대규모 채팅 기록 관리하기](/docs/how_to/trim_messages/)
 
-- [How to: manage memory](/docs/how_to/chatbots_memory)
-- [How to: do retrieval](/docs/how_to/chatbots_retrieval)
-- [How to: use tools](/docs/how_to/chatbots_tools)
-- [How to: manage large chat history](/docs/how_to/trim_messages/)
+### 쿼리 분석
 
-### Query analysis
+쿼리 분석은 LLM을 사용하여 검색기에 보낼 쿼리를 생성하는 작업입니다.
+쿼리 분석에 대한 고급 튜토리얼은 [이 가이드](/docs/tutorials/query_analysis/)를 확인하세요.
 
-Query Analysis is the task of using an LLM to generate a query to send to a retriever.
-For a high-level tutorial on query analysis, check out [this guide](/docs/tutorials/query_analysis/).
+- [방법: 프롬프트에 예제 추가하기](/docs/how_to/query_few_shot)
+- [방법: 쿼리가 생성되지 않는 경우 처리하기](/docs/how_to/query_no_queries)
+- [방법: 여러 쿼리 처리하기](/docs/how_to/query_multiple_queries)
+- [방법: 여러 검색기 처리하기](/docs/how_to/query_multiple_retrievers)
+- [방법: 필터 구성하기](/docs/how_to/query_constructing_filters)
+- [방법: 고차원 범주형 변수 처리하기](/docs/how_to/query_high_cardinality)
 
-- [How to: add examples to the prompt](/docs/how_to/query_few_shot)
-- [How to: handle cases where no queries are generated](/docs/how_to/query_no_queries)
-- [How to: handle multiple queries](/docs/how_to/query_multiple_queries)
-- [How to: handle multiple retrievers](/docs/how_to/query_multiple_retrievers)
-- [How to: construct filters](/docs/how_to/query_constructing_filters)
-- [How to: deal with high cardinality categorical variables](/docs/how_to/query_high_cardinality)
+### SQL + CSV를 통한 Q&A
 
-### Q&A over SQL + CSV
+LLM을 사용하여 표 형식 데이터에 대한 질문 응답을 수행할 수 있습니다.
+고급 튜토리얼은 [이 가이드](/docs/tutorials/sql_qa/)를 확인하세요.
 
-You can use LLMs to do question answering over tabular data.
-For a high-level tutorial, check out [this guide](/docs/tutorials/sql_qa/).
+- [방법: 결과 개선을 위한 프롬프트 사용하기](/docs/how_to/sql_prompting)
+- [방법: 쿼리 검증하기](/docs/how_to/sql_query_checking)
+- [방법: 대규모 데이터베이스 처리하기](/docs/how_to/sql_large_db)
+- [방법: CSV 파일 처리하기](/docs/how_to/sql_csv)
 
-- [How to: use prompting to improve results](/docs/how_to/sql_prompting)
-- [How to: do query validation](/docs/how_to/sql_query_checking)
-- [How to: deal with large databases](/docs/how_to/sql_large_db)
-- [How to: deal with CSV files](/docs/how_to/sql_csv)
+### 그래프 데이터베이스를 통한 Q&A
 
-### Q&A over graph databases
+LLM을 사용하여 그래프 데이터베이스에 대한 질문 응답을 수행할 수 있습니다.
+고급 튜토리얼은 [이 가이드](/docs/tutorials/graph/)를 확인하세요.
 
-You can use an LLM to do question answering over graph databases.
-For a high-level tutorial, check out [this guide](/docs/tutorials/graph/).
-
-- [How to: map values to a database](/docs/how_to/graph_mapping)
-- [How to: add a semantic layer over the database](/docs/how_to/graph_semantic)
-- [How to: improve results with prompting](/docs/how_to/graph_prompting)
-- [How to: construct knowledge graphs](/docs/how_to/graph_constructing)
+- [방법: 값을 데이터베이스에 매핑하기](/docs/how_to/graph_mapping)
+- [방법: 데이터베이스에 의미적 레이어 추가하기](/docs/how_to/graph_semantic)
+- [방법: 프롬프트로 결과 개선하기](/docs/how_to/graph_prompting)
+- [방법: 지식 그래프 구성하기](/docs/how_to/graph_constructing)
 
 ## [LangGraph](https://langchain-ai.github.io/langgraph)
 
-LangGraph is an extension of LangChain aimed at
-building robust and stateful multi-actor applications with LLMs by modeling steps as edges and nodes in a graph.
+LangGraph는 LangChain의 확장으로, 
+단계를 그래프의 엣지와 노드로 모델링하여 LLM을 사용한 강력하고 상태 유지 가능한 다중 액터 애플리케이션을 구축하는 것을 목표로 합니다.
 
-LangGraph documentation is currently hosted on a separate site.
-You can peruse [LangGraph how-to guides here](https://langchain-ai.github.io/langgraph/how-tos/).
+LangGraph 문서는 현재 별도의 사이트에 호스팅되고 있습니다.
+[여기에서 LangGraph 사용 방법 가이드를 확인하세요](https://langchain-ai.github.io/langgraph/how-tos/).
 
 ## [LangSmith](https://docs.smith.langchain.com/)
 
-LangSmith allows you to closely trace, monitor and evaluate your LLM application.
-It seamlessly integrates with LangChain and LangGraph, and you can use it to inspect and debug individual steps of your chains and agents as you build.
+LangSmith는 LLM 애플리케이션을 면밀히 추적, 모니터링 및 평가할 수 있게 해줍니다.
+LangChain 및 LangGraph와 원활하게 통합되며, 체인 및 에이전트를 구축할 때 개별 단계의 검사 및 디버깅에 사용할 수 있습니다.
 
-LangSmith documentation is hosted on a separate site.
-You can peruse [LangSmith how-to guides here](https://docs.smith.langchain.com/how_to_guides/), but we'll highlight a few sections that are particularly
-relevant to LangChain below:
+LangSmith 문서는 별도의 사이트에 호스팅되고 있습니다.
+[여기에서 LangSmith 사용 방법 가이드를 확인하세요](https://docs.smith.langchain.com/how_to_guides/), 하지만 LangChain과 특히 관련된 몇 가지 섹션을 아래에 강조하겠습니다:
 
-### Evaluation
+### 평가
 <span data-heading-keywords="evaluation,evaluate"></span>
 
-Evaluating performance is a vital part of building LLM-powered applications.
-LangSmith helps with every step of the process from creating a dataset to defining metrics to running evaluators.
+성능 평가 는 LLM 기반 애플리케이션 구축의 중요한 부분입니다.
+LangSmith는 데이터 세트 생성에서 메트릭 정의, 평가자 실행에 이르기까지 모든 단계에서 도움을 줍니다.
 
-To learn more, check out the [LangSmith evaluation how-to guides](https://docs.smith.langchain.com/how_to_guides#evaluation).
+자세한 내용을 보려면 [LangSmith 평가 사용 방법 가이드를 확인하세요](https://docs.smith.langchain.com/how_to_guides#evaluation).
 
-### Tracing
+### 추적
 <span data-heading-keywords="trace,tracing"></span>
 
-Tracing gives you observability inside your chains and agents, and is vital in diagnosing issues.
+추적은 체인 및 에이전트 내부에서 가시성을 제공하며, 문제 진단에 필수적입니다.
 
-- [How to: trace with LangChain](https://docs.smith.langchain.com/how_to_guides/tracing/trace_with_langchain)
-- [How to: add metadata and tags to traces](https://docs.smith.langchain.com/how_to_guides/tracing/trace_with_langchain#add-metadata-and-tags-to-traces)
+- [방법: LangChain으로 추적하기](https://docs.smith.langchain.com/how_to_guides/tracing/trace_with_langchain)
+- [방법: 추적에 메타데이터 및 태그 추가하기](https://docs.smith.langchain.com/how_to_guides/tracing/trace_with_langchain#add-metadata-and-tags-to-traces)
 
-You can see general tracing-related how-tos [in this section of the LangSmith docs](https://docs.smith.langchain.com/how_to_guides/tracing).
+추적 관련 일반 사용 방법은 [LangSmith 문서의 이 섹션](https://docs.smith.langchain.com/how_to_guides/tracing)에서 확인할 수 있습니다.

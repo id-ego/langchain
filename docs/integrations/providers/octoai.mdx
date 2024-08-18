@@ -1,40 +1,41 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/octoai/
+description: OctoAI는 효율적인 컴퓨팅에 쉽게 접근할 수 있도록 하며, 사용자가 AI 모델을 애플리케이션에 통합할 수 있게 돕습니다.
 ---
 
 # OctoAI
 
-> [OctoAI](https://docs.octoai.cloud/docs) offers easy access to efficient compute
-and enables users to integrate their choice of AI models into applications.
-The `OctoAI` compute service helps you run, tune, and scale AI applications easily.
+> [OctoAI](https://docs.octoai.cloud/docs)는 효율적인 컴퓨팅에 쉽게 접근할 수 있도록 하며 사용자가 선택한 AI 모델을 애플리케이션에 통합할 수 있게 합니다. `OctoAI` 컴퓨팅 서비스는 AI 애플리케이션을 쉽게 실행, 조정 및 확장할 수 있도록 도와줍니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the `openai` Python package:
+- `openai` Python 패키지를 설치하세요:
   ```bash
   pip install openai
   ```
-- Register on `OctoAI` and get an API Token from [your OctoAI account page](https://octoai.cloud/settings).
 
-## Chat models
+- `OctoAI`에 등록하고 [OctoAI 계정 페이지](https://octoai.cloud/settings)에서 API 토큰을 받으세요.
 
-See a [usage example](/docs/integrations/chat/octoai).
+## 채팅 모델
+
+[사용 예시](/docs/integrations/chat/octoai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOctoAI", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.octoai.ChatOctoAI.html", "title": "OctoAI"}]-->
 from langchain_community.chat_models import ChatOctoAI
 ```
 
+
 ## LLMs
 
-See a [usage example](/docs/integrations/llms/octoai).
+[사용 예시](/docs/integrations/llms/octoai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "OctoAIEndpoint", "source": "langchain_community.llms.octoai_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.octoai_endpoint.OctoAIEndpoint.html", "title": "OctoAI"}]-->
 from langchain_community.llms.octoai_endpoint import OctoAIEndpoint
 ```
 
-## Embedding models
+
+## 임베딩 모델
 
 ```python
 <!--IMPORTS:[{"imported": "OctoAIEmbeddings", "source": "langchain_community.embeddings.octoai_embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.octoai_embeddings.OctoAIEmbeddings.html", "title": "OctoAI"}]-->

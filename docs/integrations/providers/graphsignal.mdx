@@ -1,22 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/graphsignal/
+description: Graphsignal을 사용하여 LangChain을 추적하고 모니터링하는 방법을 설명합니다. 애플리케이션의 가시성을 높이고
+  성능을 분석합니다.
 ---
 
 # Graphsignal
 
-This page covers how to use [Graphsignal](https://app.graphsignal.com) to trace and monitor LangChain. Graphsignal enables full visibility into your application. It provides latency breakdowns by chains and tools, exceptions with full context, data monitoring, compute/GPU utilization, OpenAI cost analytics, and more.
+이 페이지에서는 [Graphsignal](https://app.graphsignal.com)을 사용하여 LangChain을 추적하고 모니터링하는 방법을 다룹니다. Graphsignal은 애플리케이션에 대한 전체 가시성을 제공합니다. 체인 및 도구별 지연 시간 분석, 전체 컨텍스트가 포함된 예외, 데이터 모니터링, 컴퓨트/GPU 활용도, OpenAI 비용 분석 등을 제공합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the Python library with `pip install graphsignal`
-- Create free Graphsignal account [here](https://graphsignal.com)
-- Get an API key and set it as an environment variable (`GRAPHSIGNAL_API_KEY`)
+- `pip install graphsignal`로 Python 라이브러리 설치
+- [여기](https://graphsignal.com)에서 무료 Graphsignal 계정 생성
+- API 키를 얻고 환경 변수(`GRAPHSIGNAL_API_KEY`)로 설정
 
-## Tracing and Monitoring
+## 추적 및 모니터링
 
-Graphsignal automatically instruments and starts tracing and monitoring chains. Traces and metrics are then available in your [Graphsignal dashboards](https://app.graphsignal.com).
+Graphsignal은 자동으로 체인을 계측하고 추적 및 모니터링을 시작합니다. 추적 및 메트릭은 귀하의 [Graphsignal 대시보드](https://app.graphsignal.com)에서 사용할 수 있습니다.
 
-Initialize the tracer by providing a deployment name:
+배포 이름을 제공하여 트레이서를 초기화합니다:
 
 ```python
 import graphsignal
@@ -24,7 +25,8 @@ import graphsignal
 graphsignal.configure(deployment='my-langchain-app-prod')
 ```
 
-To additionally trace any function or code, you can use a decorator or a context manager:
+
+추가로 함수나 코드를 추적하려면 데코레이터나 컨텍스트 관리자를 사용할 수 있습니다:
 
 ```python
 @graphsignal.trace_function
@@ -32,12 +34,14 @@ def handle_request():
     chain.run("some initial text")
 ```
 
+
 ```python
 with graphsignal.start_trace('my-chain'):
     chain.run("some initial text")
 ```
 
-Optionally, enable profiling to record function-level statistics for each trace.
+
+선택적으로 각 추적에 대한 함수 수준 통계를 기록하기 위해 프로파일링을 활성화합니다.
 
 ```python
 with graphsignal.start_trace(
@@ -45,4 +49,5 @@ with graphsignal.start_trace(
     chain.run("some initial text")
 ```
 
-See the [Quick Start](https://graphsignal.com/docs/guides/quick-start/) guide for complete setup instructions.
+
+완전한 설정 지침은 [빠른 시작](https://graphsignal.com/docs/guides/quick-start/) 가이드를 참조하십시오.

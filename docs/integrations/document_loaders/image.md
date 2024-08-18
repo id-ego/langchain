@@ -1,19 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/image/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/image.ipynb
+description: 이 문서는 LangChain 모듈과 함께 사용할 수 있도록 이미지를 문서 형식으로 로드하는 방법을 설명합니다. Unstructured를
+  사용하여 다양한 이미지 형식을 처리합니다.
 ---
 
-# Images
+# 이미지
 
-This covers how to load images into a document format that we can use downstream with other LangChain modules.
+이 문서는 다른 LangChain 모듈과 함께 사용할 수 있는 문서 형식으로 이미지를 로드하는 방법을 다룹니다.
 
-It uses [Unstructured](https://unstructured.io/) to handle a wide variety of image formats, such as `.jpg` and `.png`. Please see [this guide](/docs/integrations/providers/unstructured/) for more instructions on setting up Unstructured locally, including setting up required system dependencies.
+`.jpg` 및 `.png`와 같은 다양한 이미지 형식을 처리하기 위해 [Unstructured](https://unstructured.io/)를 사용합니다. Unstructured를 로컬에 설정하는 방법에 대한 자세한 지침은 [이 가이드](/docs/integrations/providers/unstructured/)를 참조하십시오. 여기에는 필요한 시스템 종속성 설정이 포함됩니다.
 
-## Using Unstructured
+## Unstructured 사용하기
 
 ```python
 %pip install --upgrade --quiet "unstructured[all-docs]"
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredImageLoader", "source": "langchain_community.document_loaders.image", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.image.UnstructuredImageLoader.html", "title": "Images"}]-->
@@ -26,13 +28,15 @@ data = loader.load()
 data[0]
 ```
 
+
 ```output
 Document(page_content='2021\n\n2103.15348v2 [cs.CV] 21 Jun\n\narXiv\n\nLayoutParser: A Unified Toolkit for Deep Learning Based Document Image Analysis\n\nZejiang Shen! (&4), Ruochen Zhang?, Melissa Dell?, Benjamin Charles Germain Lee*, Jacob Carlson?, and Weining Li?\n\n1\n\nAllen Institute for AI shannons@allenai.org ? Brown University ruochen_zhang@brown. edu 3 Harvard University {melissadell, jacob_carlson}@fas.harvard.edu 4 University of Washington begl@cs.washington.edu 5 University of Waterloo w4221i@uwaterloo.ca\n\nAbstract. Recent advances in document image analysis (DIA) have been primarily driven by the application of neural networks. Ideally, research outcomes could be easily deployed in production and extended for further investigation. However, various factors like loosely organized codebases and sophisticated model configurations complicate the easy reuse of im- portant innovations by a wide audience. Though there have been on-going efforts to improve reusability and simplify deep learning (DL) model development in disciplines like natural language processing and computer vision, none of them are optimized for challenges in the domain of DIA. This represents a major gap in the existing toolkit, as DIA is central to academic research across a wide range of disciplines in the social sciences and humanities. This paper introduces LayoutParser, an open-source library for streamlining the usage of DL in DIA research and applica- tions. The core LayoutParser library comes with a set of simple and intuitive interfaces for applying and customizing DL models for layout de- tection, character recognition, and many other document processing tasks. To promote extensibility, LayoutParser also incorporates a community platform for sharing both pre-trained models and full document digiti- zation pipelines. We demonstrate that LayoutParser is helpful for both lightweight and large-scale digitization pipelines in real-word use cases. The library is publicly available at https: //layout-parser.github. io.\n\nKeywords: Document Image Analysis - Deep Learning - Layout Analysis - Character Recognition - Open Source library - Toolkit.\n\n1 Introduction\n\nDeep Learning(DL)-based approaches are the state-of-the-art for a wide range of document image analysis (DIA) tasks including document image classification [11,', metadata={'source': './example_data/layout-parser-paper-screenshot.png'})
 ```
 
-### Retain Elements
 
-Under the hood, Unstructured creates different "elements" for different chunks of text. By default we combine those together, but you can keep that separation by specifying `mode="elements"`.
+### 요소 유지
+
+Unstructured는 내부적으로 서로 다른 텍스트 청크에 대해 다양한 "요소"를 생성합니다. 기본적으로 우리는 그것들을 함께 결합하지만, `mode="elements"`를 지정하여 그 분리를 유지할 수 있습니다.
 
 ```python
 loader = UnstructuredImageLoader(
@@ -44,11 +48,13 @@ data = loader.load()
 data[0]
 ```
 
+
 ```output
 Document(page_content='2021', metadata={'source': './example_data/layout-parser-paper-screenshot.png', 'coordinates': {'points': ((47.0, 492.0), (47.0, 591.0), (83.0, 591.0), (83.0, 492.0)), 'system': 'PixelSpace', 'layout_width': 1624, 'layout_height': 1920}, 'last_modified': '2024-07-01T10:38:29', 'filetype': 'PNG', 'languages': ['eng'], 'page_number': 1, 'file_directory': './example_data', 'filename': 'layout-parser-paper-screenshot.png', 'category': 'UncategorizedText'})
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

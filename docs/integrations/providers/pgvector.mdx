@@ -1,33 +1,34 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/pgvector/
+description: 이 문서는 LangChain 내에서 Postgres PGVector 생태계를 사용하는 방법을 설치, 설정 및 래퍼에 대한 참조로
+  안내합니다.
 ---
 
 # PGVector
 
-This page covers how to use the Postgres [PGVector](https://github.com/pgvector/pgvector) ecosystem within LangChain
-It is broken into two parts: installation and setup, and then references to specific PGVector wrappers.
+이 페이지는 LangChain 내에서 Postgres [PGVector](https://github.com/pgvector/pgvector) 생태계를 사용하는 방법을 다룹니다. 
+설치는 두 부분으로 나뉘며, 첫 번째는 설치 및 설정, 두 번째는 특정 PGVector 래퍼에 대한 참조입니다.
 
-## Installation
-- Install the Python package with `pip install pgvector`
+## 설치
+- `pip install pgvector`로 Python 패키지를 설치합니다.
 
-## Setup
-1. The first step is to create a database with the `pgvector` extension installed.
+## 설정
+1. 첫 번째 단계는 `pgvector` 확장이 설치된 데이터베이스를 만드는 것입니다.
    
-   Follow the steps at [PGVector Installation Steps](https://github.com/pgvector/pgvector#installation) to install the database and the extension. The docker image is the easiest way to get started.
+   데이터베이스와 확장을 설치하려면 [PGVector 설치 단계](https://github.com/pgvector/pgvector#installation)의 단계를 따르세요. 도커 이미지는 시작하기 가장 쉬운 방법입니다.
 
-## Wrappers
+## 래퍼
 
 ### VectorStore
 
-There exists a wrapper around Postgres vector databases, allowing you to use it as a vectorstore,
-whether for semantic search or example selection.
+Postgres 벡터 데이터베이스를 감싸는 래퍼가 존재하여, 의미 검색이나 예제 선택을 위해 벡터 저장소로 사용할 수 있습니다.
 
-To import this vectorstore:
+이 벡터 저장소를 가져오려면:
 ```python
 <!--IMPORTS:[{"imported": "PGVector", "source": "langchain_community.vectorstores.pgvector", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.pgvector.PGVector.html", "title": "PGVector"}]-->
 from langchain_community.vectorstores.pgvector import PGVector
 ```
 
-### Usage
 
-For a more detailed walkthrough of the PGVector Wrapper, see [this notebook](/docs/integrations/vectorstores/pgvector)
+### 사용법
+
+PGVector 래퍼에 대한 보다 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/pgvector)을 참조하세요.

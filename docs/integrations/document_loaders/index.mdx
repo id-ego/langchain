@@ -1,17 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/
+description: 문서 로더는 표준 LangChain 문서 형식으로 데이터를 로드하는 도구입니다. 다양한 웹페이지, PDF 및 일반 파일 형식을
+  지원합니다.
 sidebar_class_name: hidden
 sidebar_position: 0
 ---
 
-# Document loaders
+# 문서 로더
 
 import { CategoryTable, IndexTable } from "@theme/FeatureTables";
 
-DocumentLoaders load data into the standard LangChain Document format.
+DocumentLoaders는 데이터를 표준 LangChain 문서 형식으로 로드합니다.
 
-Each DocumentLoader has its own specific parameters, but they can all be invoked in the same way with the .load method.
-An example use case is as follows:
+각 DocumentLoader는 고유한 특정 매개변수를 가지고 있지만, 모두 .load 메서드를 사용하여 동일한 방식으로 호출할 수 있습니다.
+예제 사용 사례는 다음과 같습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "CSVLoader", "source": "langchain_community.document_loaders.csv_loader", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.csv_loader.CSVLoader.html", "title": "Document loaders"}]-->
@@ -23,27 +24,28 @@ loader = CSVLoader(
 data = loader.load()
 ```
 
-## Webpages
 
-The below document loaders allow you to load webpages.
+## 웹페이지
+
+아래 문서 로더를 사용하면 웹페이지를 로드할 수 있습니다.
 
 <CategoryTable category="webpage_loaders" />
 
 
-## PDFs
+## PDF
 
-The below document loaders allow you to load PDF documents.
+아래 문서 로더를 사용하면 PDF 문서를 로드할 수 있습니다.
 
 <CategoryTable category="pdf_loaders" />
 
 
-## Common File Types
+## 일반 파일 형식
 
-The below document loaders allow you to load data from common data formats.
+아래 문서 로더를 사용하면 일반 데이터 형식에서 데이터를 로드할 수 있습니다.
 
 <CategoryTable category="common_loaders" />
 
 
-## All document loaders
+## 모든 문서 로더
 
 <IndexTable />

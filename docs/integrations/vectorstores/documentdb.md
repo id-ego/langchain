@@ -1,23 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/documentdb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/documentdb.ipynb
+description: Amazon DocumentDB는 MongoDB와 호환되는 데이터베이스를 클라우드에서 쉽게 설정하고 운영할 수 있게 해줍니다.
+  벡터 검색 기능도 지원합니다.
 ---
 
-# Amazon Document DB
+# 아마존 문서 DB
 
-> [Amazon DocumentDB (with MongoDB Compatibility)](https://docs.aws.amazon.com/documentdb/) makes it easy to set up, operate, and scale MongoDB-compatible databases in the cloud.
-With Amazon DocumentDB, you can run the same application code and use the same drivers and tools that you use with MongoDB.
-Vector search for Amazon DocumentDB combines the flexibility and rich querying capability of a JSON-based document database with the power of vector search.
+> [아마존 DocumentDB (MongoDB 호환)](https://docs.aws.amazon.com/documentdb/)는 클라우드에서 MongoDB 호환 데이터베이스를 쉽게 설정하고 운영하며 확장할 수 있게 해줍니다.  
+아마존 DocumentDB를 사용하면 MongoDB와 함께 사용하는 동일한 애플리케이션 코드와 드라이버 및 도구를 실행할 수 있습니다.  
+아마존 DocumentDB의 벡터 검색은 JSON 기반 문서 데이터베이스의 유연성과 풍부한 쿼리 기능을 벡터 검색의 힘과 결합합니다.
 
-This notebook shows you how to use [Amazon Document DB Vector Search](https://docs.aws.amazon.com/documentdb/latest/developerguide/vector-search.html) to store documents in collections, create indicies and perform vector search queries using approximate nearest neighbor algorithms such "cosine", "euclidean", and "dotProduct". By default, DocumentDB creates Hierarchical Navigable Small World (HNSW) indexes. To learn about other supported vector index types, please refer to the document linked above.
+이 노트북은 [아마존 Document DB 벡터 검색](https://docs.aws.amazon.com/documentdb/latest/developerguide/vector-search.html)을 사용하여 문서를 컬렉션에 저장하고, 인덱스를 생성하며, "코사인", "유클리드", "내적"과 같은 근사 최근접 이웃 알고리즘을 사용하여 벡터 검색 쿼리를 수행하는 방법을 보여줍니다. 기본적으로 DocumentDB는 계층적 탐색 가능한 작은 세계(HNSW) 인덱스를 생성합니다. 지원되는 다른 벡터 인덱스 유형에 대한 자세한 내용은 위의 문서를 참조하십시오.
 
-To use DocumentDB, you must first deploy a cluster. Please refer to the [Developer Guide](https://docs.aws.amazon.com/documentdb/latest/developerguide/what-is.html) for more details.
+DocumentDB를 사용하려면 먼저 클러스터를 배포해야 합니다. 자세한 내용은 [개발자 가이드](https://docs.aws.amazon.com/documentdb/latest/developerguide/what-is.html)를 참조하십시오.
 
-[Sign Up](https://aws.amazon.com/free/) for free to get started today.
+[가입하기](https://aws.amazon.com/free/)하여 오늘 시작하세요.
 
 ```python
 !pip install pymongo
 ```
+
 
 ```python
 import getpass
@@ -31,7 +33,8 @@ NAMESPACE = "izzy_test_db.izzy_test_collection"
 DB_NAME, COLLECTION_NAME = NAMESPACE.split(".")
 ```
 
-We want to use `OpenAIEmbeddings` so we need to set up our OpenAI environment variables. 
+
+`OpenAIEmbeddings`를 사용하려고 하므로 OpenAI 환경 변수를 설정해야 합니다.
 
 ```python
 import getpass
@@ -45,9 +48,10 @@ os.environ["OPENAI_EMBEDDINGS_DEPLOYMENT"] = (
 os.environ["OPENAI_EMBEDDINGS_MODEL_NAME"] = "text-embedding-ada-002"  # the model name
 ```
 
-Now, we will load the documents into the collection, create the index, and then perform queries against the index.
 
-Please refer to the [documentation](https://docs.aws.amazon.com/documentdb/latest/developerguide/vector-search.html) if you have questions about certain parameters
+이제 문서를 컬렉션에 로드하고, 인덱스를 생성한 다음, 인덱스에 대해 쿼리를 수행합니다.
+
+특정 매개변수에 대한 질문이 있는 경우 [문서](https://docs.aws.amazon.com/documentdb/latest/developerguide/vector-search.html)를 참조하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Amazon Document DB"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Amazon Document DB"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Amazon Document DB"}]-->
@@ -77,6 +81,7 @@ openai_embeddings: OpenAIEmbeddings = OpenAIEmbeddings(
     deployment=model_deployment, model=model_name
 )
 ```
+
 
 ```python
 from pymongo import MongoClient
@@ -110,6 +115,7 @@ similarity_algorithm = DocumentDBSimilarityType.COS
 vectorstore.create_index(dimensions, similarity_algorithm)
 ```
 
+
 ```output
 { 'createdCollectionAutomatically' : false,
    'numIndexesBefore' : 1,
@@ -118,15 +124,18 @@ vectorstore.create_index(dimensions, similarity_algorithm)
    'operationTime' : Timestamp(1703656982, 1)}
 ```
 
+
 ```python
 # perform a similarity search between the embedding of the query and the embeddings of the documents
 query = "What did the President say about Ketanji Brown Jackson"
 docs = vectorstore.similarity_search(query)
 ```
 
+
 ```python
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -136,7 +145,8 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
-Once the documents have been loaded and the index has been created, you can now instantiate the vector store directly and run queries against the index
+
+문서가 로드되고 인덱스가 생성되면 이제 벡터 저장소를 직접 인스턴스화하고 인덱스에 대해 쿼리를 실행할 수 있습니다.
 
 ```python
 vectorstore = DocumentDBVectorSearch.from_connection_string(
@@ -151,9 +161,11 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = vectorstore.similarity_search(query)
 ```
 
+
 ```python
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -164,15 +176,18 @@ One of the most serious constitutional responsibilities a President has is nomin
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
 
+
 ```python
 # perform a similarity search between a query and the ingested documents
 query = "Which stats did the President share about the U.S. economy"
 docs = vectorstore.similarity_search(query)
 ```
 
+
 ```python
 print(docs[0].page_content)
 ```
+
 ```output
 And unlike the $2 Trillion tax cut passed in the previous administration that benefitted the top 1% of Americans, the American Rescue Plan helped working people—and left no one behind. 
 
@@ -187,7 +202,8 @@ For the past 40 years we were told that if we gave tax breaks to those at the ve
 
 But that trickle-down theory led to weaker economic growth, lower wages, bigger deficits, and the widest gap between those at the top and everyone else in nearly a century.
 ```
-## Question Answering
+
+## 질문 응답
 
 ```python
 qa_retriever = vectorstore.as_retriever(
@@ -195,6 +211,7 @@ qa_retriever = vectorstore.as_retriever(
     search_kwargs={"k": 25},
 )
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Amazon Document DB"}]-->
@@ -210,6 +227,7 @@ PROMPT = PromptTemplate(
     template=prompt_template, input_variables=["context", "question"]
 )
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Amazon Document DB"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Amazon Document DB"}]-->
@@ -230,7 +248,8 @@ print(docs["result"])
 print(docs["source_documents"])
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

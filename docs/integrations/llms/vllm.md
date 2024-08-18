@@ -1,24 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/vllm/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/vllm.ipynb
+description: vLLM은 LLM 추론 및 서비스를 위한 빠르고 사용하기 쉬운 라이브러리로, 효율적인 메모리 관리와 분산 추론을 지원합니다.
 ---
 
 # vLLM
 
-[vLLM](https://vllm.readthedocs.io/en/latest/index.html) is a fast and easy-to-use library for LLM inference and serving, offering:
+[vLLM](https://vllm.readthedocs.io/en/latest/index.html)은 LLM 추론 및 서빙을 위한 빠르고 사용하기 쉬운 라이브러리로, 다음과 같은 기능을 제공합니다:
 
-* State-of-the-art serving throughput 
-* Efficient management of attention key and value memory with PagedAttention
-* Continuous batching of incoming requests
-* Optimized CUDA kernels
+* 최첨단 서빙 처리량
+* PagedAttention을 통한 효율적인 주의 키 및 값 메모리 관리
+* 들어오는 요청의 지속적인 배치
+* 최적화된 CUDA 커널
 
-This notebooks goes over how to use a LLM with langchain and vLLM.
+이 노트북에서는 langchain과 vLLM을 사용하여 LLM을 사용하는 방법을 설명합니다.
 
-To use, you should have the `vllm` python package installed.
+사용하려면 `vllm` 파이썬 패키지가 설치되어 있어야 합니다.
 
 ```python
 %pip install --upgrade --quiet  vllm -q
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "VLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.vllm.VLLM.html", "title": "vLLM"}]-->
@@ -35,6 +36,7 @@ llm = VLLM(
 
 print(llm.invoke("What is the capital of France ?"))
 ```
+
 ```output
 INFO 08-06 11:37:33 llm_engine.py:70] Initializing an LLM engine with config: model='mosaicml/mpt-7b', tokenizer='mosaicml/mpt-7b', tokenizer_mode=auto, trust_remote_code=True, dtype=torch.bfloat16, use_dummy_weights=False, download_dir=None, use_np_weights=False, tensor_parallel_size=1, seed=0)
 INFO 08-06 11:37:41 llm_engine.py:196] # GPU blocks: 861, # CPU blocks: 512
@@ -46,7 +48,8 @@ What is the capital of France ? The capital of France is Paris.
 ``````output
 
 ```
-## Integrate the model in an LLMChain
+
+## LLMChain에 모델 통합
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "vLLM"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "vLLM"}]-->
@@ -64,6 +67,7 @@ question = "Who was the US president in the year the first Pokemon game was rele
 
 print(llm_chain.invoke(question))
 ```
+
 ```output
 Processed prompts: 100%|██████████| 1/1 [00:01<00:00,  1.34s/it]
 ``````output
@@ -76,11 +80,12 @@ Processed prompts: 100%|██████████| 1/1 [00:01<00:00,  1.34s
 ``````output
 
 ```
-## Distributed Inference
 
-vLLM supports distributed tensor-parallel inference and serving. 
+## 분산 추론
 
-To run multi-GPU inference with the LLM class, set the `tensor_parallel_size` argument to the number of GPUs you want to use. For example, to run inference on 4 GPUs
+vLLM은 분산 텐서 병렬 추론 및 서빙을 지원합니다.
+
+LLM 클래스를 사용하여 다중 GPU 추론을 실행하려면 `tensor_parallel_size` 인수를 사용하려는 GPU의 수로 설정하십시오. 예를 들어, 4개의 GPU에서 추론을 실행하려면
 
 ```python
 <!--IMPORTS:[{"imported": "VLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.vllm.VLLM.html", "title": "vLLM"}]-->
@@ -95,9 +100,10 @@ llm = VLLM(
 llm.invoke("What is the future of AI?")
 ```
 
-## Quantization
 
-vLLM supports `awq` quantization. To enable it, pass `quantization` to `vllm_kwargs`.
+## 양자화
+
+vLLM은 `awq` 양자화를 지원합니다. 이를 활성화하려면 `quantization`을 `vllm_kwargs`에 전달하십시오.
 
 ```python
 llm_q = VLLM(
@@ -108,13 +114,14 @@ llm_q = VLLM(
 )
 ```
 
-## OpenAI-Compatible Server
 
-vLLM can be deployed as a server that mimics the OpenAI API protocol. This allows vLLM to be used as a drop-in replacement for applications using OpenAI API.
+## OpenAI 호환 서버
 
-This server can be queried in the same format as OpenAI API.
+vLLM은 OpenAI API 프로토콜을 모방하는 서버로 배포될 수 있습니다. 이를 통해 vLLM은 OpenAI API를 사용하는 애플리케이션의 대체품으로 사용될 수 있습니다.
 
-### OpenAI-Compatible Completion
+이 서버는 OpenAI API와 동일한 형식으로 쿼리할 수 있습니다.
+
+### OpenAI 호환 완료
 
 ```python
 <!--IMPORTS:[{"imported": "VLLMOpenAI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.vllm.VLLMOpenAI.html", "title": "vLLM"}]-->
@@ -128,11 +135,13 @@ llm = VLLMOpenAI(
 )
 print(llm.invoke("Rome is"))
 ```
+
 ```output
  a city that is filled with history, ancient buildings, and art around every corner
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

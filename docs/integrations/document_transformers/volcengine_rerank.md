@@ -1,17 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/volcengine_rerank/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/volcengine_rerank.ipynb
+description: 이 문서는 Volcengine Reranker를 사용하여 문서 압축 및 검색을 수행하는 방법을 보여줍니다. Volcengine은
+  ByteDance에서 개발한 클라우드 서비스 플랫폼입니다.
 ---
 
 # Volcengine Reranker
 
-This notebook shows how to use Volcengine Reranker for document compression and retrieval. [Volcengine](https://www.volcengine.com/) is a cloud service platform developed by ByteDance, the parent company of TikTok.
+이 노트북은 문서 압축 및 검색을 위한 Volcengine Reranker 사용 방법을 보여줍니다. [Volcengine](https://www.volcengine.com/)은 TikTok의 모회사인 ByteDance가 개발한 클라우드 서비스 플랫폼입니다.
 
-Volcengine's Rerank Service supports reranking up to 50 documents with a maximum of 4000 tokens. For more, please visit [here](https://www.volcengine.com/docs/84313/1254474) and [here](https://www.volcengine.com/docs/84313/1254605).
+Volcengine의 Rerank 서비스는 최대 4000 토큰으로 50개의 문서를 재정렬하는 것을 지원합니다. 더 많은 정보는 [여기](https://www.volcengine.com/docs/84313/1254474)와 [여기](https://www.volcengine.com/docs/84313/1254605)를 방문해 주세요.
 
 ```python
 %pip install --upgrade --quiet  volcengine
 ```
+
 
 ```python
 %pip install --upgrade --quiet  faiss
@@ -20,6 +22,7 @@ Volcengine's Rerank Service supports reranking up to 50 documents with a maximum
 
 %pip install --upgrade --quiet  faiss-cpu
 ```
+
 
 ```python
 # To obtain ak/sk: https://www.volcengine.com/docs/84313/1254488
@@ -31,6 +34,7 @@ os.environ["VOLC_API_AK"] = getpass.getpass("Volcengine API AK:")
 os.environ["VOLC_API_SK"] = getpass.getpass("Volcengine API SK:")
 ```
 
+
 ```python
 # Helper function for printing docs
 def pretty_print_docs(docs):
@@ -41,8 +45,9 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+
+## 기본 벡터 저장소 검색기 설정
+간단한 벡터 저장소 검색기를 초기화하고 2023년 국정 연설을 (청크로) 저장하는 것으로 시작하겠습니다. 검색기를 설정하여 많은 수(20)의 문서를 검색할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Volcengine Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores.faiss", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Volcengine Reranker"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Volcengine Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Volcengine Reranker"}]-->
@@ -62,6 +67,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 /Users/terminator/Developer/langchain/.venv/lib/python3.11/site-packages/sentence_transformers/cross_encoder/CrossEncoder.py:11: TqdmExperimentalWarning: Using `tqdm.autonotebook.tqdm` in notebook mode. Use `tqdm.tqdm` instead to force console mode (e.g. in jupyter console)
   from tqdm.autonotebook import tqdm, trange
@@ -287,8 +293,9 @@ To disable this warning, you can either:
 	- Avoid using `tokenizers` before the fork if possible
 	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
 ```
-## Reranking with VolcengineRerank
-Now let's wrap our base retriever with a `ContextualCompressionRetriever`. We'll use the `VolcengineRerank` to rerank the returned results.
+
+## VolcengineRerank로 재정렬
+이제 기본 검색기를 `ContextualCompressionRetriever`로 래핑하겠습니다. 반환된 결과를 재정렬하기 위해 `VolcengineRerank`를 사용할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Volcengine Reranker"}, {"imported": "VolcengineRerank", "source": "langchain_community.document_compressors.volcengine_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.volcengine_rerank.VolcengineRerank.html", "title": "Volcengine Reranker"}]-->
@@ -305,6 +312,7 @@ compressed_docs = compression_retriever.invoke(
 )
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 

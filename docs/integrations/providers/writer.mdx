@@ -1,20 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/writer/
+description: LangChain의 Writer 생태계 사용법을 다루며, 설치 및 설정과 Writer 래퍼에 대한 참고자료를 제공합니다.
 ---
 
 # Writer
 
-This page covers how to use the Writer ecosystem within LangChain.
-It is broken into two parts: installation and setup, and then references to specific Writer wrappers.
+이 페이지는 LangChain 내에서 Writer 생태계를 사용하는 방법을 다룹니다. 설치 및 설정과 특정 Writer 래퍼에 대한 참조로 두 부분으로 나뉩니다.
 
-## Installation and Setup
-- Get an Writer api key and set it as an environment variable (`WRITER_API_KEY`)
+## 설치 및 설정
+- Writer API 키를 얻고 이를 환경 변수(`WRITER_API_KEY`)로 설정합니다.
 
-## Wrappers
+## 래퍼
 
 ### LLM
 
-There exists an Writer LLM wrapper, which you can access with 
+Writer LLM 래퍼가 존재하며, 이를 통해 접근할 수 있습니다. 
 ```python
 <!--IMPORTS:[{"imported": "Writer", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.writer.Writer.html", "title": "Writer"}]-->
 from langchain_community.llms import Writer

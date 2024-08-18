@@ -1,24 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/dingo/
+description: DingoDB 생태계를 LangChain에서 사용하는 방법을 다루며, 설치, 설정 및 DingoDB 래퍼에 대한 참조를 제공합니다.
 ---
 
 # DingoDB
 
-This page covers how to use the DingoDB ecosystem within LangChain.
-It is broken into two parts: installation and setup, and then references to specific DingoDB wrappers.
+이 페이지는 LangChain 내에서 DingoDB 생태계를 사용하는 방법을 다룹니다. 설치 및 설정과 특정 DingoDB 래퍼에 대한 참조의 두 부분으로 나뉩니다.
 
-## Installation and Setup
-- Install the Python SDK with `pip install dingodb`
+## 설치 및 설정
+- `pip install dingodb`를 사용하여 Python SDK를 설치합니다.
 
 ## VectorStore
 
-There exists a wrapper around DingoDB indexes, allowing you to use it as a vectorstore,
-whether for semantic search or example selection.
+DingoDB 인덱스를 감싸는 래퍼가 존재하여, 의미 검색 또는 예제 선택을 위해 벡터 저장소로 사용할 수 있습니다.
 
-To import this vectorstore:
+이 벡터 저장소를 가져오려면:
 ```python
 <!--IMPORTS:[{"imported": "Dingo", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.dingo.Dingo.html", "title": "DingoDB"}]-->
 from langchain_community.vectorstores import Dingo
 ```
 
-For a more detailed walkthrough of the DingoDB wrapper, see [this notebook](/docs/integrations/vectorstores/dingo)
+
+DingoDB 래퍼에 대한 보다 자세한 설명은 [이 노트북](/docs/integrations/vectorstores/dingo)을 참조하십시오.

@@ -1,29 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/google_spanner/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/google_spanner.ipynb
+description: Google Spanner는 무제한 확장성과 관계형 의미론을 결합한 데이터베이스로, Langchain 문서를 저장, 로드 및
+  삭제하는 방법을 다룹니다.
 ---
 
-# Google Spanner
+# 구글 스패너
 
-> [Spanner](https://cloud.google.com/spanner) is a highly scalable database that combines unlimited scalability with relational semantics, such as secondary indexes, strong consistency, schemas, and SQL providing 99.999% availability in one easy solution.
+> [스패너](https://cloud.google.com/spanner)는 무제한 확장성과 관계형 의미론(예: 보조 인덱스, 강력한 일관성, 스키마 및 SQL)을 결합하여 99.999% 가용성을 제공하는 매우 확장 가능한 데이터베이스입니다.
 
-This notebook goes over how to use [Spanner](https://cloud.google.com/spanner) to [save, load and delete langchain documents](/docs/how_to#document-loaders) with `SpannerLoader` and `SpannerDocumentSaver`.
+이 노트북은 `SpannerLoader`와 `SpannerDocumentSaver`를 사용하여 [langchain 문서 저장, 로드 및 삭제하기](/docs/how_to#document-loaders)에 대해 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-spanner-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-spanner-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-spanner-python/blob/main/docs/document_loader.ipynb)
 
-## Before You Begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the Cloud Spanner API](https://console.cloud.google.com/flows/enableapi?apiid=spanner.googleapis.com)
-* [Create a Spanner instance](https://cloud.google.com/spanner/docs/create-manage-instances)
-* [Create a Spanner database](https://cloud.google.com/spanner/docs/create-manage-databases)
-* [Create a Spanner table](https://cloud.google.com/spanner/docs/create-query-database-console#create-schema)
+* [구글 클라우드 프로젝트 만들기](https://developers.google.com/workspace/guides/create-project)
+* [클라우드 스패너 API 활성화](https://console.cloud.google.com/flows/enableapi?apiid=spanner.googleapis.com)
+* [스패너 인스턴스 만들기](https://cloud.google.com/spanner/docs/create-manage-instances)
+* [스패너 데이터베이스 만들기](https://cloud.google.com/spanner/docs/create-manage-databases)
+* [스패너 테이블 만들기](https://cloud.google.com/spanner/docs/create-query-database-console#create-schema)
 
-After confirmed access to database in the runtime environment of this notebook, filling the following values and run the cell before running example scripts.
+이 노트북의 런타임 환경에서 데이터베이스에 대한 액세스를 확인한 후, 다음 값을 입력하고 예제 스크립트를 실행하기 전에 셀을 실행하세요.
 
 ```python
 # @markdown Please specify an instance id, a database, and a table for demo purpose.
@@ -32,15 +33,17 @@ DATABASE_ID = "test_database"  # @param {type:"string"}
 TABLE_NAME = "test_table"  # @param {type:"string"}
 ```
 
-### 🦜🔗 Library Installation
 
-The integration lives in its own `langchain-google-spanner` package, so we need to install it.
+### 🦜🔗 라이브러리 설치
+
+통합은 자체 `langchain-google-spanner` 패키지에 있으므로 설치해야 합니다.
 
 ```python
 %pip install -upgrade --quiet langchain-google-spanner langchain
 ```
 
-**Colab only**: Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**콜랩 전용**: 다음 셀의 주석을 제거하여 커널을 재시작하거나 버튼을 사용하여 커널을 재시작하세요. Vertex AI Workbench에서는 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -50,14 +53,15 @@ The integration lives in its own `langchain-google-spanner` package, so we need 
 # app.kernel.do_shutdown(True)
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ 구글 클라우드 프로젝트 설정
+이 노트북 내에서 구글 클라우드 리소스를 활용할 수 있도록 구글 클라우드 프로젝트를 설정하세요.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list` 실행.
+* `gcloud projects list` 실행.
+* 지원 페이지 참조: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
@@ -68,12 +72,13 @@ PROJECT_ID = "my-project-id"  # @param {type:"string"}
 !gcloud config set project {PROJECT_ID}
 ```
 
-### 🔐 Authentication
 
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
+### 🔐 인증
 
-- If you are using Colab to run this notebook, use the cell below and continue.
-- If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+구글 클라우드 프로젝트에 액세스하기 위해 이 노트북에 로그인한 IAM 사용자로 구글 클라우드에 인증하세요.
+
+- 이 노트북을 실행하기 위해 콜랩을 사용하는 경우 아래 셀을 사용하고 계속 진행하세요.
+- Vertex AI Workbench를 사용하는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -81,15 +86,16 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-## Basic Usage
 
-### Save documents
+## 기본 사용법
 
-Save langchain documents with `SpannerDocumentSaver.add_documents(<documents>)`. To initialize `SpannerDocumentSaver` class you need to provide 3 things:
+### 문서 저장
 
-1. `instance_id` - An instance of Spanner to load data from.
-2. `database_id` - An instance of Spanner database to load data from.
-3. `table_name` - The name of the table within the Spanner database to store langchain documents.
+`SpannerDocumentSaver.add_documents(<documents>)`를 사용하여 langchain 문서를 저장하세요. `SpannerDocumentSaver` 클래스를 초기화하려면 3가지가 필요합니다:
+
+1. `instance_id` - 데이터를 로드할 스패너 인스턴스.
+2. `database_id` - 데이터를 로드할 스패너 데이터베이스 인스턴스.
+3. `table_name` - langchain 문서를 저장할 스패너 데이터베이스 내의 테이블 이름.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google Spanner"}]-->
@@ -119,17 +125,18 @@ saver = SpannerDocumentSaver(
 saver.add_documents(test_docs)
 ```
 
-### Querying for Documents from Spanner
 
-For more details on connecting to a Spanner table, please check the [Python SDK documentation](https://cloud.google.com/python/docs/reference/spanner/latest).
+### 스패너에서 문서 쿼리하기
 
-#### Load documents from table
+스패너 테이블에 연결하는 방법에 대한 자세한 내용은 [Python SDK 문서](https://cloud.google.com/python/docs/reference/spanner/latest)를 확인하세요.
 
-Load langchain documents with `SpannerLoader.load()` or `SpannerLoader.lazy_load()`. `lazy_load` returns a generator that only queries database during the iteration. To initialize `SpannerLoader` class you need to provide:
+#### 테이블에서 문서 로드
 
-1. `instance_id` - An instance of Spanner to load data from.
-2. `database_id` - An instance of Spanner database to load data from.
-3. `query` - A query of the database dialect.
+`SpannerLoader.load()` 또는 `SpannerLoader.lazy_load()`를 사용하여 langchain 문서를 로드하세요. `lazy_load`는 반복 중에만 데이터베이스를 쿼리하는 생성기를 반환합니다. `SpannerLoader` 클래스를 초기화하려면 다음을 제공해야 합니다:
+
+1. `instance_id` - 데이터를 로드할 스패너 인스턴스.
+2. `database_id` - 데이터를 로드할 스패너 데이터베이스 인스턴스.
+3. `query` - 데이터베이스 방언의 쿼리.
 
 ```python
 from langchain_google_spanner import SpannerLoader
@@ -146,9 +153,10 @@ for doc in loader.lazy_load():
     break
 ```
 
-### Delete documents
 
-Delete a list of langchain documents from the table with `SpannerDocumentSaver.delete(<documents>)`.
+### 문서 삭제
+
+`SpannerDocumentSaver.delete(<documents>)`를 사용하여 테이블에서 langchain 문서 목록을 삭제하세요.
 
 ```python
 docs = loader.load()
@@ -159,11 +167,12 @@ saver.delete([doc])
 print("Documents after delete:", loader.load())
 ```
 
-## Advanced Usage
 
-### Custom client
+## 고급 사용법
 
-The client created by default is the default client. To pass in `credentials` and `project` explicitly, a custom client can be passed to the constructor.
+### 사용자 정의 클라이언트
+
+기본적으로 생성된 클라이언트는 기본 클라이언트입니다. `credentials`와 `project`를 명시적으로 전달하려면 사용자 정의 클라이언트를 생성자에 전달할 수 있습니다.
 
 ```python
 from google.cloud import spanner
@@ -179,13 +188,14 @@ loader = SpannerLoader(
 )
 ```
 
-### Customize Document Page Content & Metadata
 
-The loader will returns a list of Documents with page content from a specific data columns. All other data columns will be added to metadata. Each row becomes a document.
+### 문서 페이지 콘텐츠 및 메타데이터 사용자 정의
 
-#### Customize page content format
+로더는 특정 데이터 열에서 페이지 콘텐츠가 포함된 문서 목록을 반환합니다. 모든 다른 데이터 열은 메타데이터에 추가됩니다. 각 행은 문서가 됩니다.
 
-The SpannerLoader assumes there is a column called `page_content`. These defaults can be changed like so:
+#### 페이지 콘텐츠 형식 사용자 정의
+
+SpannerLoader는 `page_content`라는 열이 있다고 가정합니다. 이러한 기본값은 다음과 같이 변경할 수 있습니다:
 
 ```python
 custom_content_loader = SpannerLoader(
@@ -193,11 +203,12 @@ custom_content_loader = SpannerLoader(
 )
 ```
 
-If multiple columns are specified, the page content's string format will default to `text` (space-separated string concatenation). There are other format that user can specify, including `text`, `JSON`, `YAML`, `CSV`.
 
-#### Customize metadata format
+여러 열이 지정된 경우 페이지 콘텐츠의 문자열 형식은 기본적으로 `text`(공백으로 구분된 문자열 연결)로 설정됩니다. 사용자가 지정할 수 있는 다른 형식으로는 `text`, `JSON`, `YAML`, `CSV`가 있습니다.
 
-The SpannerLoader assumes there is a metadata column called `langchain_metadata` that store JSON data. The metadata column will be used as the base dictionary. By default, all other column data will be added and may overwrite the original value. These defaults can be changed like so:
+#### 메타데이터 형식 사용자 정의
+
+SpannerLoader는 JSON 데이터를 저장하는 `langchain_metadata`라는 메타데이터 열이 있다고 가정합니다. 메타데이터 열은 기본 사전으로 사용됩니다. 기본적으로 모든 다른 열 데이터가 추가되며 원래 값을 덮어쓸 수 있습니다. 이러한 기본값은 다음과 같이 변경할 수 있습니다:
 
 ```python
 custom_metadata_loader = SpannerLoader(
@@ -205,9 +216,10 @@ custom_metadata_loader = SpannerLoader(
 )
 ```
 
-#### Customize JSON metadata column name
 
-By default, the loader uses `langchain_metadata` as the base dictionary. This can be customized to select a JSON column to use as base dictionary for the Document's metadata.
+#### JSON 메타데이터 열 이름 사용자 정의
+
+기본적으로 로더는 `langchain_metadata`를 기본 사전으로 사용합니다. 이는 문서의 메타데이터를 위한 기본 사전으로 사용할 JSON 열을 선택하도록 사용자 정의할 수 있습니다.
 
 ```python
 custom_metadata_json_loader = SpannerLoader(
@@ -215,9 +227,10 @@ custom_metadata_json_loader = SpannerLoader(
 )
 ```
 
-### Custom staleness
 
-The default [staleness](https://cloud.google.com/python/docs/reference/spanner/latest/snapshot-usage#beginning-a-snapshot) is 15s. This can be customized by specifying a weaker bound (which can either be to perform all reads as of a given timestamp), or as of a given duration in the past.
+### 사용자 정의 신선도
+
+기본 [신선도](https://cloud.google.com/python/docs/reference/spanner/latest/snapshot-usage#beginning-a-snapshot)는 15초입니다. 이는 약한 경계를 지정하여 사용자 정의할 수 있습니다(특정 타임스탬프 기준으로 모든 읽기를 수행하거나 과거의 특정 기간 기준으로).
 
 ```python
 import datetime
@@ -231,6 +244,7 @@ custom_timestamp_loader = SpannerLoader(
 )
 ```
 
+
 ```python
 duration = 20.0
 custom_duration_loader = SpannerLoader(
@@ -241,9 +255,10 @@ custom_duration_loader = SpannerLoader(
 )
 ```
 
-### Turn on data boost
 
-By default, the loader will not use [data boost](https://cloud.google.com/spanner/docs/databoost/databoost-overview) since it has additional costs associated, and require additional IAM permissions. However, user can choose to turn it on.
+### 데이터 부스트 활성화
+
+기본적으로 로더는 [데이터 부스트](https://cloud.google.com/spanner/docs/databoost/databoost-overview)를 사용하지 않으며, 이는 추가 비용이 발생하고 추가 IAM 권한이 필요합니다. 그러나 사용자는 이를 활성화할 수 있습니다.
 
 ```python
 custom_databoost_loader = SpannerLoader(
@@ -254,9 +269,10 @@ custom_databoost_loader = SpannerLoader(
 )
 ```
 
-### Custom client
 
-The client created by default is the default client. To pass in `credentials` and `project` explicitly, a custom client can be passed to the constructor.
+### 사용자 정의 클라이언트
+
+기본적으로 생성된 클라이언트는 기본 클라이언트입니다. `credentials`와 `project`를 명시적으로 전달하려면 사용자 정의 클라이언트를 생성자에 전달할 수 있습니다.
 
 ```python
 from google.cloud import spanner
@@ -270,15 +286,16 @@ saver = SpannerDocumentSaver(
 )
 ```
 
-### Custom initialization for SpannerDocumentSaver
 
-The SpannerDocumentSaver allows custom initialization. This allows user to specify how the Document is saved into the table.
+### SpannerDocumentSaver의 사용자 정의 초기화
 
-content_column: This will be used as the column name for the Document's page content. Defaulted to `page_content`.
+SpannerDocumentSaver는 사용자 정의 초기화를 허용합니다. 이를 통해 사용자는 문서가 테이블에 저장되는 방식을 지정할 수 있습니다.
 
-metadata_columns: These metadata will be saved into specific columns if the key exists in the Document's metadata.
+content_column: 문서의 페이지 콘텐츠에 대한 열 이름으로 사용됩니다. 기본값은 `page_content`입니다.
 
-metadata_json_column: This will be the column name for the spcial JSON column. Defaulted to `langchain_metadata`.
+metadata_columns: 이러한 메타데이터는 문서의 메타데이터에 키가 존재하는 경우 특정 열에 저장됩니다.
+
+metadata_json_column: 특별한 JSON 열에 대한 열 이름입니다. 기본값은 `langchain_metadata`입니다.
 
 ```python
 custom_saver = SpannerDocumentSaver(
@@ -291,9 +308,10 @@ custom_saver = SpannerDocumentSaver(
 )
 ```
 
-### Initialize custom schema for Spanner
 
-The SpannerDocumentSaver will have a `init_document_table` method to create a new table to store docs with custom schema.
+### Spanner에 대한 사용자 정의 스키마 초기화
+
+SpannerDocumentSaver는 사용자 정의 스키마로 문서를 저장할 새 테이블을 생성하기 위한 `init_document_table` 메서드를 가집니다.
 
 ```python
 from langchain_google_spanner import Column
@@ -312,7 +330,8 @@ SpannerDocumentSaver.init_document_table(
 )
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

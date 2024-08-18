@@ -1,23 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/rwkv/
+description: 이 문서는 LangChain 내에서 RWKV-4 래퍼를 설치하고 설정하는 방법과 사용 예제를 제공합니다.
 ---
 
 # RWKV-4
 
-This page covers how to use the `RWKV-4` wrapper within LangChain.
-It is broken into two parts: installation and setup, and then usage with an example.
+이 페이지에서는 LangChain 내에서 `RWKV-4` 래퍼를 사용하는 방법을 다룹니다. 설치 및 설정과 예제를 통한 사용으로 두 부분으로 나뉘어 있습니다.
 
-## Installation and Setup
-- Install the Python package with `pip install rwkv`
-- Install the tokenizer Python package with `pip install tokenizer`
-- Download a [RWKV model](https://huggingface.co/BlinkDL/rwkv-4-raven/tree/main) and place it in your desired directory
-- Download the [tokens file](https://raw.githubusercontent.com/BlinkDL/ChatRWKV/main/20B_tokenizer.json)
+## 설치 및 설정
+- `pip install rwkv`로 Python 패키지를 설치합니다.
+- `pip install tokenizer`로 토크나이저 Python 패키지를 설치합니다.
+- 원하는 디렉토리에 [RWKV 모델](https://huggingface.co/BlinkDL/rwkv-4-raven/tree/main)을 다운로드하여 배치합니다.
+- [tokens 파일](https://raw.githubusercontent.com/BlinkDL/ChatRWKV/main/20B_tokenizer.json)을 다운로드합니다.
 
-## Usage
+## 사용법
 
 ### RWKV
 
-To use the RWKV wrapper, you need to provide the path to the pre-trained model file and the tokenizer's configuration.
+RWKV 래퍼를 사용하려면 사전 훈련된 모델 파일의 경로와 토크나이저의 구성을 제공해야 합니다.
 ```python
 <!--IMPORTS:[{"imported": "RWKV", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.rwkv.RWKV.html", "title": "RWKV-4"}]-->
 from langchain_community.llms import RWKV
@@ -51,11 +50,12 @@ def generate_prompt(instruction, input=None):
 model = RWKV(model="./models/RWKV-4-Raven-3B-v7-Eng-20230404-ctx4096.pth", strategy="cpu fp32", tokens_path="./rwkv/20B_tokenizer.json")
 response = model.invoke(generate_prompt("Once upon a time, "))
 ```
-## Model File
 
-You can find links to model file downloads at the [RWKV-4-Raven](https://huggingface.co/BlinkDL/rwkv-4-raven/tree/main) repository.
+## 모델 파일
 
-### Rwkv-4 models -> recommended VRAM
+모델 파일 다운로드 링크는 [RWKV-4-Raven](https://huggingface.co/BlinkDL/rwkv-4-raven/tree/main) 리포지토리에서 찾을 수 있습니다.
+
+### Rwkv-4 모델 -> 권장 VRAM
 
 ```
 RWKV VRAM
@@ -66,4 +66,5 @@ Model | 8bit | bf16/fp16 | fp32
 1b5   | 1.3GB| 3GB       | 6GB
 ```
 
-See the [rwkv pip](https://pypi.org/project/rwkv/) page for more information about strategies, including streaming and cuda support.
+
+스트리밍 및 CUDA 지원을 포함한 전략에 대한 자세한 정보는 [rwkv pip](https://pypi.org/project/rwkv/) 페이지를 참조하세요.

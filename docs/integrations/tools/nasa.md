@@ -1,21 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/nasa/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/nasa.ipynb
+description: NASA 툴킷을 사용하여 NASA 이미지 및 비디오 라이브러리 API에 접근하는 방법을 보여주는 노트북입니다.
 ---
 
-# NASA Toolkit
+# NASA 툴킷
 
-This notebook shows how to use agents to interact with the NASA toolkit. The toolkit provides access to the NASA Image and Video Library API, with potential to expand and include other accessible NASA APIs in future iterations.
+이 노트북은 에이전트를 사용하여 NASA 툴킷과 상호작용하는 방법을 보여줍니다. 이 툴킷은 NASA 이미지 및 비디오 라이브러리 API에 접근할 수 있으며, 향후 반복에서 다른 접근 가능한 NASA API를 포함할 가능성이 있습니다.
 
-**Note: NASA Image and Video Library search queries can result in large responses when the number of desired media results is not specified. Consider this prior to using the agent with LLM token credits.**
+**참고: NASA 이미지 및 비디오 라이브러리 검색 쿼리는 원하는 미디어 결과 수가 지정되지 않을 경우 큰 응답을 초래할 수 있습니다. LLM 토큰 크레딧으로 에이전트를 사용하기 전에 이를 고려하십시오.**
 
-## Example Use:
+## 사용 예:
 * * *
-### Initializing the agent
+### 에이전트 초기화
 
 ```python
 %pip install -qU langchain-community
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "NASA Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "NASA Toolkit"}, {"imported": "NasaToolkit", "source": "langchain_community.agent_toolkits.nasa.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.nasa.toolkit.NasaToolkit.html", "title": "NASA Toolkit"}, {"imported": "NasaAPIWrapper", "source": "langchain_community.utilities.nasa", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.nasa.NasaAPIWrapper.html", "title": "NASA Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "NASA Toolkit"}]-->
@@ -32,7 +33,8 @@ agent = initialize_agent(
 )
 ```
 
-### Querying media assets
+
+### 미디어 자산 쿼리
 
 ```python
 agent.run(
@@ -40,7 +42,8 @@ agent.run(
 )
 ```
 
-### Querying details about media assets
+
+### 미디어 자산에 대한 세부정보 쿼리
 
 ```python
 output = agent.run(
@@ -49,7 +52,8 @@ output = agent.run(
 )
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

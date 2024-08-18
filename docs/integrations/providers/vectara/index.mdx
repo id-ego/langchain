@@ -1,50 +1,50 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/vectara/
+description: Vectara는 데이터에 기반한 AI 어시스턴트를 신속하게 생성할 수 있는 RAG-as-a-service 플랫폼입니다.
 ---
 
 # Vectara
 
-> [Vectara](https://vectara.com/) provides a Trusted Generative AI platform, allowing organizations to rapidly create a ChatGPT-like experience (an AI assistant)
-which is grounded in the data, documents, and knowledge that they have (technically, it is Retrieval-Augmented-Generation-as-a-service).
+> [Vectara](https://vectara.com/)는 조직이 보유한 데이터, 문서 및 지식에 기반하여 ChatGPT와 유사한 경험(인공지능 어시스턴트)을 신속하게 생성할 수 있도록 하는 신뢰할 수 있는 생성 AI 플랫폼을 제공합니다(기술적으로는 Retrieval-Augmented-Generation-as-a-service입니다).
 
-**Vectara Overview:**
-`Vectara` is RAG-as-a-service, providing all the components of RAG behind an easy-to-use API, including:
-1. A way to extract text from files (PDF, PPT, DOCX, etc)
-2. ML-based chunking that provides state of the art performance.
-3. The [Boomerang](https://vectara.com/how-boomerang-takes-retrieval-augmented-generation-to-the-next-level-via-grounded-generation/) embeddings model.
-4. Its own internal vector database where text chunks and embedding vectors are stored.
-5. A query service that automatically encodes the query into embedding, and retrieves the most relevant text segments
-(including support for [Hybrid Search](https://docs.vectara.com/docs/api-reference/search-apis/lexical-matching) and
-[MMR](https://vectara.com/get-diverse-results-and-comprehensive-summaries-with-vectaras-mmr-reranker/))
-6. An LLM to for creating a [generative summary](https://docs.vectara.com/docs/learn/grounded-generation/grounded-generation-overview), based on the retrieved documents (context), including citations.
+**Vectara 개요:**
+`Vectara`는 RAG-as-a-service로, 사용하기 쉬운 API 뒤에 RAG의 모든 구성 요소를 제공합니다. 여기에는 다음이 포함됩니다:
+1. 파일(PDF, PPT, DOCX 등)에서 텍스트를 추출하는 방법
+2. 최첨단 성능을 제공하는 ML 기반 청크화.
+3. [Boomerang](https://vectara.com/how-boomerang-takes-retrieval-augmented-generation-to-the-next-level-via-grounded-generation/) 임베딩 모델.
+4. 텍스트 청크와 임베딩 벡터가 저장되는 자체 내부 벡터 데이터베이스.
+5. 쿼리를 자동으로 임베딩으로 인코딩하고 가장 관련성이 높은 텍스트 세그먼트를 검색하는 쿼리 서비스
+(여기에는 [Hybrid Search](https://docs.vectara.com/docs/api-reference/search-apis/lexical-matching) 및
+[MMR](https://vectara.com/get-diverse-results-and-comprehensive-summaries-with-vectaras-mmr-reranker/) 지원 포함)
+6. 검색된 문서(맥락)를 기반으로 [생성 요약](https://docs.vectara.com/docs/learn/grounded-generation/grounded-generation-overview)을 생성하는 LLM, 인용 포함.
 
-For more information:
-- [Documentation](https://docs.vectara.com/docs/)
-- [API Playground](https://docs.vectara.com/docs/rest-api/)
-- [Quickstart](https://docs.vectara.com/docs/quickstart)
+자세한 정보는 다음을 참조하십시오:
+- [문서](https://docs.vectara.com/docs/)
+- [API 플레이그라운드](https://docs.vectara.com/docs/rest-api/)
+- [빠른 시작](https://docs.vectara.com/docs/quickstart)
 
-## Installation and Setup
+## 설치 및 설정
 
-To use `Vectara` with LangChain no special installation steps are required.
-To get started, [sign up](https://vectara.com/integrations/langchain) for a free Vectara account (if you don't already have one),
-and follow the [quickstart](https://docs.vectara.com/docs/quickstart) guide to create a corpus and an API key.
-Once you have these, you can provide them as arguments to the Vectara `vectorstore`, or you can set them as environment variables.
+LangChain과 함께 `Vectara`를 사용하기 위해 특별한 설치 단계는 필요하지 않습니다.
+시작하려면 [가입](https://vectara.com/integrations/langchain)하여 무료 Vectara 계정을 만들고(아직 없는 경우),
+[빠른 시작](https://docs.vectara.com/docs/quickstart) 가이드를 따라 코퍼스와 API 키를 생성하십시오.
+이러한 정보를 얻으면 Vectara `vectorstore`에 인수로 제공하거나 환경 변수로 설정할 수 있습니다.
 
 - export `VECTARA_CUSTOMER_ID`="your_customer_id"
 - export `VECTARA_CORPUS_ID`="your_corpus_id"
 - export `VECTARA_API_KEY`="your-vectara-api-key"
 
-## Vectara as a Vector Store
+## Vectara를 벡터 저장소로 사용하기
 
-There exists a wrapper around the Vectara platform, allowing you to use it as a `vectorstore` in LangChain:
+Vectara 플랫폼 주위에 래퍼가 존재하여 LangChain에서 `vectorstore`로 사용할 수 있습니다:
 
-To import this vectorstore:
+이 벡터 저장소를 가져오려면:
 ```python
 <!--IMPORTS:[{"imported": "Vectara", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vectara.Vectara.html", "title": "Vectara"}]-->
 from langchain_community.vectorstores import Vectara
 ```
 
-To create an instance of the Vectara vectorstore:
+
+Vectara 벡터 저장소의 인스턴스를 생성하려면:
 ```python
 vectara = Vectara(
     vectara_customer_id=customer_id, 
@@ -52,75 +52,80 @@ vectara = Vectara(
     vectara_api_key=api_key
 )
 ```
-The `customer_id`, `corpus_id` and `api_key` are optional, and if they are not supplied will be read from
-the environment variables `VECTARA_CUSTOMER_ID`, `VECTARA_CORPUS_ID` and `VECTARA_API_KEY`, respectively.
 
-### Adding Texts or Files
+`customer_id`, `corpus_id` 및 `api_key`는 선택 사항이며, 제공되지 않을 경우 각각 환경 변수 `VECTARA_CUSTOMER_ID`, `VECTARA_CORPUS_ID` 및 `VECTARA_API_KEY`에서 읽습니다.
 
-After you have the vectorstore, you can `add_texts` or `add_documents` as per the standard `VectorStore` interface, for example:
+### 텍스트 또는 파일 추가하기
+
+벡터 저장소를 얻은 후, 표준 `VectorStore` 인터페이스에 따라 `add_texts` 또는 `add_documents`를 사용할 수 있습니다. 예를 들어:
 
 ```python
 vectara.add_texts(["to be or not to be", "that is the question"])
 ```
 
-Since Vectara supports file-upload in the platform, we also added the ability to upload files (PDF, TXT, HTML, PPT, DOC, etc) directly.
-When using this method, each file is uploaded directly to the Vectara backend, processed and chunked optimally there, so you don't have to use the LangChain document loader or chunking mechanism.
 
-As an example:
+Vectara는 플랫폼에서 파일 업로드를 지원하므로, 파일(PDF, TXT, HTML, PPT, DOC 등)을 직접 업로드할 수 있는 기능도 추가했습니다.
+이 방법을 사용할 때 각 파일은 Vectara 백엔드에 직접 업로드되어 최적의 방식으로 처리되고 청크화되므로, LangChain 문서 로더나 청크화 메커니즘을 사용할 필요가 없습니다.
+
+예를 들어:
 
 ```python
 vectara.add_files(["path/to/file1.pdf", "path/to/file2.pdf",...])
 ```
 
-Of course you do not have to add any data, and instead just connect to an existing Vectara corpus where data may already be indexed.
 
-### Querying the VectorStore
+물론 데이터를 추가할 필요는 없으며, 대신 데이터가 이미 인덱싱된 기존 Vectara 코퍼스에 연결할 수 있습니다.
 
-To query the Vectara vectorstore, you can use the `similarity_search` method (or `similarity_search_with_score`), which takes a query string and returns a list of results:
+### 벡터 저장소 쿼리하기
+
+Vectara 벡터 저장소를 쿼리하려면 쿼리 문자열을 받아 결과 목록을 반환하는 `similarity_search` 메서드(또는 `similarity_search_with_score`)를 사용할 수 있습니다:
 ```python
 results = vectara.similarity_search_with_score("what is LangChain?")
 ```
-The results are returned as a list of relevant documents, and a relevance score of each document.
 
-In this case, we used the default retrieval parameters, but you can also specify the following additional arguments in `similarity_search` or `similarity_search_with_score`:
-- `k`: number of results to return (defaults to 5)
-- `lambda_val`: the [lexical matching](https://docs.vectara.com/docs/api-reference/search-apis/lexical-matching) factor for hybrid search (defaults to 0.025)
-- `filter`: a [filter](https://docs.vectara.com/docs/common-use-cases/filtering-by-metadata/filter-overview) to apply to the results (default None)
-- `n_sentence_context`: number of sentences to include before/after the actual matching segment when returning results. This defaults to 2.
-- `rerank_config`: can be used to specify reranker for thr results
-  - `reranker`: mmr, rerank_multilingual_v1 or none. Note that "rerank_multilingual_v1" is a Scale only feature
-  - `rerank_k`: number of results to use for reranking
-  - `mmr_diversity_bias`: 0 = no diversity, 1 = full diversity. This is the lambda parameter in the MMR formula and is in the range 0...1
+결과는 관련 문서 목록과 각 문서의 관련성 점수로 반환됩니다.
 
-To get results without the relevance score, you can simply use the 'similarity_search' method:
+이 경우 기본 검색 매개변수를 사용했지만, `similarity_search` 또는 `similarity_search_with_score`에서 다음 추가 인수를 지정할 수도 있습니다:
+- `k`: 반환할 결과 수(기본값 5)
+- `lambda_val`: 하이브리드 검색을 위한 [어휘 일치](https://docs.vectara.com/docs/api-reference/search-apis/lexical-matching) 계수(기본값 0.025)
+- `filter`: 결과에 적용할 [필터](https://docs.vectara.com/docs/common-use-cases/filtering-by-metadata/filter-overview)(기본값 없음)
+- `n_sentence_context`: 결과를 반환할 때 실제 일치 세그먼트 전후에 포함할 문장 수. 기본값은 2입니다.
+- `rerank_config`: 결과에 대한 재정렬기를 지정하는 데 사용할 수 있습니다.
+  - `reranker`: mmr, rerank_multilingual_v1 또는 none. "rerank_multilingual_v1"는 Scale 전용 기능입니다.
+  - `rerank_k`: 재정렬에 사용할 결과 수
+  - `mmr_diversity_bias`: 0 = 다양성 없음, 1 = 완전한 다양성. 이는 MMR 공식의 람다 매개변수이며 0...1 범위에 있습니다.
+
+관련성 점수 없이 결과를 얻으려면 'similarity_search' 메서드를 사용하면 됩니다:
 ```python
 results = vectara.similarity_search("what is LangChain?")
 ```
 
-## Vectara for Retrieval Augmented Generation (RAG)
 
-Vectara provides a full RAG pipeline, including generative summarization. To use it as a complete RAG solution, you can use the `as_rag` method.
-There are a few additional parameters that can be specified in the `VectaraQueryConfig` object to control retrieval and summarization:
-* k: number of results to return
-* lambda_val: the lexical matching factor for hybrid search
-* summary_config (optional): can be used to request an LLM summary in RAG
-  - is_enabled: True or False
-  - max_results: number of results to use for summary generation
-  - response_lang: language of the response summary, in ISO 639-2 format (e.g. 'en', 'fr', 'de', etc)
-* rerank_config (optional): can be used to specify Vectara Reranker of the results
-  - reranker: mmr, rerank_multilingual_v1 or none
-  - rerank_k: number of results to use for reranking
-  - mmr_diversity_bias: 0 = no diversity, 1 = full diversity.
-This is the lambda parameter in the MMR formula and is in the range 0...1
+## Vectara를 위한 검색 증강 생성(RAG)
 
-For example:
+Vectara는 생성 요약을 포함한 전체 RAG 파이프라인을 제공합니다. 이를 완전한 RAG 솔루션으로 사용하려면 `as_rag` 메서드를 사용할 수 있습니다.
+검색 및 요약을 제어하기 위해 `VectaraQueryConfig` 객체에서 지정할 수 있는 몇 가지 추가 매개변수가 있습니다:
+* k: 반환할 결과 수
+* lambda_val: 하이브리드 검색을 위한 어휘 일치 계수
+* summary_config (선택 사항): RAG에서 LLM 요약을 요청하는 데 사용할 수 있습니다.
+  - is_enabled: True 또는 False
+  - max_results: 요약 생성을 위해 사용할 결과 수
+  - response_lang: ISO 639-2 형식의 응답 요약 언어(예: 'en', 'fr', 'de' 등)
+* rerank_config (선택 사항): 결과의 Vectara 재정렬기를 지정하는 데 사용할 수 있습니다.
+  - reranker: mmr, rerank_multilingual_v1 또는 none
+  - rerank_k: 재정렬에 사용할 결과 수
+  - mmr_diversity_bias: 0 = 다양성 없음, 1 = 완전한 다양성.
+이는 MMR 공식의 람다 매개변수이며 0...1 범위에 있습니다.
+
+예를 들어:
 
 ```python
 summary_config = SummaryConfig(is_enabled=True, max_results=7, response_lang='eng')
 rerank_config = RerankConfig(reranker="mmr", rerank_k=50, mmr_diversity_bias=0.2)
 config = VectaraQueryConfig(k=10, lambda_val=0.005, rerank_config=rerank_config, summary_config=summary_config)
 ```
-Then you can use the `as_rag` method to create a RAG pipeline:
+
+그런 다음 `as_rag` 메서드를 사용하여 RAG 파이프라인을 생성할 수 있습니다:
 
 ```python
 query_str = "what did Biden say?"
@@ -129,11 +134,12 @@ rag = vectara.as_rag(config)
 rag.invoke(query_str)['answer']
 ```
 
-The `as_rag` method returns a `VectaraRAG` object, which behaves just like any LangChain Runnable, including the `invoke` or `stream` methods.
 
-## Vectara Chat
+`as_rag` 메서드는 `invoke` 또는 `stream` 메서드를 포함하여 LangChain Runnable처럼 작동하는 `VectaraRAG` 객체를 반환합니다.
 
-The RAG functionality can be used to create a chatbot. For example, you can create a simple chatbot that responds to user input:
+## Vectara 채팅
+
+RAG 기능은 챗봇을 만드는 데 사용할 수 있습니다. 예를 들어, 사용자 입력에 응답하는 간단한 챗봇을 만들 수 있습니다:
 
 ```python
 summary_config = SummaryConfig(is_enabled=True, max_results=7, response_lang='eng')
@@ -145,27 +151,29 @@ bot = vectara.as_chat(config)
 bot.invoke(query_str)['answer']
 ```
 
-The main difference is the following: with `as_chat` Vectara internally tracks the chat history and conditions each response on the full chat history.
-There is no need to keep that history locally to LangChain, as Vectara will manage it internally.
 
-## Vectara as a LangChain retriever only
+주요 차이점은 다음과 같습니다: `as_chat`를 사용하면 Vectara가 내부적으로 채팅 기록을 추적하고 각 응답을 전체 채팅 기록에 조건화합니다.
+이력을 LangChain에 로컬로 유지할 필요가 없으며, Vectara가 이를 내부적으로 관리합니다.
 
-If you want to use Vectara as a retriever only, you can use the `as_retriever` method, which returns a `VectaraRetriever` object.
+## Vectara를 LangChain 검색기로만 사용하기
+
+Vectara를 검색기로만 사용하려면 `as_retriever` 메서드를 사용할 수 있으며, 이는 `VectaraRetriever` 객체를 반환합니다.
 ```python
 retriever = vectara.as_retriever(config=config)
 retriever.invoke(query_str)
 ```
 
-Like with as_rag, you provide a `VectaraQueryConfig` object to control the retrieval parameters.
-In most cases you would not enable the summary_config, but it is left as an option for backwards compatibility.
-If no summary is requested, the response will be a list of relevant documents, each with a relevance score.
-If a summary is requested, the response will be a list of relevant documents as before, plus an additional document that includes the generative summary.
 
-## Hallucination Detection score
+as_rag와 마찬가지로 검색 매개변수를 제어하기 위해 `VectaraQueryConfig` 객체를 제공합니다.
+대부분의 경우 summary_config를 활성화하지 않지만, 이전 호환성을 위해 옵션으로 남겨둡니다.
+요약이 요청되지 않으면 응답은 관련 문서 목록이며, 각 문서에는 관련성 점수가 포함됩니다.
+요약이 요청되면 응답은 이전과 같은 관련 문서 목록과 함께 생성 요약을 포함하는 추가 문서가 포함됩니다.
 
-Vectara created [HHEM](https://huggingface.co/vectara/hallucination_evaluation_model) - an open source model that can be used to evaluate RAG responses for factual consistency.
-As part of the Vectara RAG, the "Factual Consistency Score" (or FCS), which is an improved version of the open source HHEM is made available via the API.
-This is automatically included in the output of the RAG pipeline
+## 환각 탐지 점수
+
+Vectara는 RAG 응답의 사실 일관성을 평가하는 데 사용할 수 있는 [HHEM](https://huggingface.co/vectara/hallucination_evaluation_model)이라는 오픈 소스 모델을 만들었습니다.
+Vectara RAG의 일환으로 "사실 일관성 점수"(Factual Consistency Score 또는 FCS)는 오픈 소스 HHEM의 개선된 버전으로 API를 통해 제공됩니다.
+이는 RAG 파이프라인의 출력에 자동으로 포함됩니다.
 
 ```python
 summary_config = SummaryConfig(is_enabled=True, max_results=7, response_lang='eng')
@@ -178,9 +186,10 @@ print(resp['answer'])
 print(f"Vectara FCS = {resp['fcs']}")
 ```
 
-## Example Notebooks
 
-For a more detailed examples of using Vectara with LangChain, see the following example notebooks:
-* [this notebook](/docs/integrations/vectorstores/vectara) shows how to use Vectara: with full RAG or just as a retriever.
-* [this notebook](/docs/integrations/retrievers/self_query/vectara_self_query) shows the self-query capability with Vectara.
-* [this notebook](/docs/integrations/providers/vectara/vectara_chat) shows how to build a chatbot with Langchain and Vectara
+## 예제 노트북
+
+LangChain과 함께 Vectara를 사용하는 보다 자세한 예제는 다음 예제 노트북을 참조하십시오:
+* [이 노트북](/docs/integrations/vectorstores/vectara)은 Vectara를 사용하는 방법을 보여줍니다: 전체 RAG 또는 검색기로만 사용.
+* [이 노트북](/docs/integrations/retrievers/self_query/vectara_self_query)은 Vectara의 자기 쿼리 기능을 보여줍니다.
+* [이 노트북](/docs/integrations/providers/vectara/vectara_chat)은 Langchain과 Vectara로 챗봇을 만드는 방법을 보여줍니다.

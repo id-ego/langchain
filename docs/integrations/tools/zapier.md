@@ -1,26 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/zapier/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/zapier.ipynb
+description: Zapier 자연어 액션 API는 5,000개 이상의 앱과 20,000개 이상의 작업에 접근할 수 있는 자연어 인터페이스를
+  제공합니다.
 ---
 
-# Zapier Natural Language Actions
+# Zapier 자연어 작업
 
-**Deprecated** This API will be sunset on 2023-11-17: https://nla.zapier.com/start/
+**사용 중단 예정** 이 API는 2023-11-17에 종료됩니다: https://nla.zapier.com/start/
 
-> [Zapier Natural Language Actions](https://nla.zapier.com/start/) gives you access to the 5k+ apps, 20k+ actions on Zapier's platform through a natural language API interface.
+> [Zapier 자연어 작업](https://nla.zapier.com/start/)은 자연어 API 인터페이스를 통해 Zapier 플랫폼의 5천 개 이상의 앱과 2만 개 이상의 작업에 접근할 수 있게 해줍니다.
 > 
-> NLA supports apps like `Gmail`, `Salesforce`, `Trello`, `Slack`, `Asana`, `HubSpot`, `Google Sheets`, `Microsoft Teams`, and thousands more apps: https://zapier.com/apps
-`Zapier NLA` handles ALL the underlying API auth and translation from natural language --> underlying API call --> return simplified output for LLMs. The key idea is you, or your users, expose a set of actions via an oauth-like setup window, which you can then query and execute via a REST API.
+> NLA는 `Gmail`, `Salesforce`, `Trello`, `Slack`, `Asana`, `HubSpot`, `Google Sheets`, `Microsoft Teams`와 같은 앱을 지원하며, 그 외에도 수천 개의 앱을 지원합니다: https://zapier.com/apps  
+`Zapier NLA`는 모든 기본 API 인증 및 자연어 --> 기본 API 호출 --> LLM을 위한 단순화된 출력 반환을 처리합니다. 핵심 아이디어는 여러분 또는 여러분의 사용자가 oauth와 유사한 설정 창을 통해 일련의 작업을 노출하고, 이를 REST API를 통해 쿼리하고 실행할 수 있다는 것입니다.
 
-NLA offers both API Key and OAuth for signing NLA API requests.
+NLA는 NLA API 요청 서명을 위한 API 키와 OAuth를 모두 제공합니다.
 
-1. Server-side (API Key): for quickly getting started, testing, and production scenarios where LangChain will only use actions exposed in the developer's Zapier account (and will use the developer's connected accounts on Zapier.com)
-2. User-facing (Oauth): for production scenarios where you are deploying an end-user facing application and LangChain needs access to end-user's exposed actions and connected accounts on Zapier.com
+1. 서버 측 (API 키): 빠르게 시작하고, 테스트하며, LangChain이 개발자의 Zapier 계정에 노출된 작업만 사용할 경우의 프로덕션 시나리오에 적합합니다 (그리고 개발자의 Zapier.com 연결 계정을 사용합니다).
+2. 사용자 대상 (Oauth): 최종 사용자 대상 애플리케이션을 배포하는 프로덕션 시나리오에서 LangChain이 최종 사용자의 노출된 작업 및 Zapier.com의 연결 계정에 접근해야 할 경우에 적합합니다.
 
-This quick start focus mostly on the server-side use case for brevity. Jump to [Example Using OAuth Access Token](#oauth) to see a short example how to set up Zapier for user-facing situations. Review [full docs](https://nla.zapier.com/start/) for full user-facing oauth developer support.
+이 빠른 시작 가이드는 간결함을 위해 주로 서버 측 사용 사례에 중점을 두고 있습니다. 사용자 대상 상황에 대한 Zapier 설정 방법의 짧은 예제를 보려면 [OAuth 액세스 토큰 사용 예제](#oauth)로 건너뛰십시오. 전체 사용자 대상 oauth 개발자 지원을 보려면 [전체 문서](https://nla.zapier.com/start/)를 검토하십시오.
 
-This example goes over how to use the Zapier integration with a `SimpleSequentialChain`, then an `Agent`.
-In code, below:
+이 예제는 `SimpleSequentialChain`과 `Agent`와 함께 Zapier 통합을 사용하는 방법을 다룹니다. 코드 아래:
 
 ```python
 import os
@@ -32,8 +32,9 @@ os.environ["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY", "")
 os.environ["ZAPIER_NLA_API_KEY"] = os.environ.get("ZAPIER_NLA_API_KEY", "")
 ```
 
-## Example with Agent
-Zapier tools can be used with an agent. See the example below.
+
+## 에이전트와 함께하는 예제
+Zapier 도구는 에이전트와 함께 사용할 수 있습니다. 아래 예제를 참조하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Zapier Natural Language Actions"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Zapier Natural Language Actions"}, {"imported": "ZapierToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.zapier.toolkit.ZapierToolkit.html", "title": "Zapier Natural Language Actions"}, {"imported": "ZapierNLAWrapper", "source": "langchain_community.utilities.zapier", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.zapier.ZapierNLAWrapper.html", "title": "Zapier Natural Language Actions"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Zapier Natural Language Actions"}]-->
@@ -43,12 +44,14 @@ from langchain_community.utilities.zapier import ZapierNLAWrapper
 from langchain_openai import OpenAI
 ```
 
+
 ```python
 ## step 0. expose gmail 'find email' and slack 'send channel message' actions
 
 # first go here, log in, expose (enable) the two actions: https://nla.zapier.com/demo/start -- for this example, can leave all fields "Have AI guess"
 # in an oauth scenario, you'd get your own <provider> id (instead of 'demo') which you route your users through first
 ```
+
 
 ```python
 llm = OpenAI(temperature=0)
@@ -59,11 +62,13 @@ agent = initialize_agent(
 )
 ```
 
+
 ```python
 agent.run(
     "Summarize the last email I received regarding Silicon Valley Bank. Send the summary to the #test-zapier channel in slack."
 )
 ```
+
 ```output
 
 
@@ -82,12 +87,14 @@ Final Answer: I have sent a summary of the last email from Silicon Valley Bank t
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'I have sent a summary of the last email from Silicon Valley Bank to the #test-zapier channel in Slack.'
 ```
 
-## Example with SimpleSequentialChain
-If you need more explicit control, use a chain, like below.
+
+## SimpleSequentialChain과 함께하는 예제
+더 명시적인 제어가 필요하다면, 아래와 같은 체인을 사용하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Zapier Natural Language Actions"}, {"imported": "SimpleSequentialChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.sequential.SimpleSequentialChain.html", "title": "Zapier Natural Language Actions"}, {"imported": "TransformChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.transform.TransformChain.html", "title": "Zapier Natural Language Actions"}, {"imported": "ZapierNLARunAction", "source": "langchain_community.tools.zapier.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.zapier.tool.ZapierNLARunAction.html", "title": "Zapier Natural Language Actions"}, {"imported": "ZapierNLAWrapper", "source": "langchain_community.utilities.zapier", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.zapier.ZapierNLAWrapper.html", "title": "Zapier Natural Language Actions"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Zapier Natural Language Actions"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Zapier Natural Language Actions"}]-->
@@ -98,6 +105,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_openai import OpenAI
 ```
 
+
 ```python
 ## step 0. expose gmail 'find email' and slack 'send direct message' actions
 
@@ -106,6 +114,7 @@ from langchain_openai import OpenAI
 
 actions = ZapierNLAWrapper().list()
 ```
+
 
 ```python
 ## step 1. gmail find email
@@ -133,6 +142,7 @@ gmail_chain = TransformChain(
 )
 ```
 
+
 ```python
 ## step 2. generate draft reply
 
@@ -146,6 +156,7 @@ Draft email reply:"""
 prompt_template = PromptTemplate(input_variables=["email_data"], template=template)
 reply_chain = LLMChain(llm=OpenAI(temperature=0.7), prompt=prompt_template)
 ```
+
 
 ```python
 ## step 3. send draft reply via a slack direct message
@@ -179,6 +190,7 @@ slack_chain = TransformChain(
 )
 ```
 
+
 ```python
 ## finally, execute
 
@@ -187,6 +199,7 @@ overall_chain = SimpleSequentialChain(
 )
 overall_chain.run(GMAIL_SEARCH_INSTRUCTIONS)
 ```
+
 ```output
 
 
@@ -204,14 +217,16 @@ Best regards,
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 '{"message__text": "Dear Silicon Valley Bridge Bank, \\n\\nThank you for your email and the update regarding your new CEO Tim Mayopoulos. We appreciate your dedication to keeping your clients and partners informed and we look forward to continuing our relationship with you. \\n\\nBest regards, \\n[Your Name]", "message__permalink": "https://langchain.slack.com/archives/D04TKF5BBHU/p1678859968241629", "channel": "D04TKF5BBHU", "message__bot_profile__name": "Zapier", "message__team": "T04F8K3FZB5", "message__bot_id": "B04TRV4R74K", "message__bot_profile__deleted": "false", "message__bot_profile__app_id": "A024R9PQM", "ts_time": "2023-03-15T05:59:28Z", "message__blocks[]block_id": "p7i", "message__blocks[]elements[]elements[]type": "[[\'text\']]", "message__blocks[]elements[]type": "[\'rich_text_section\']"}'
 ```
 
-## <a id="oauth">Example Using OAuth Access Token</a>
-The below snippet shows how to initialize the wrapper with a procured OAuth access token. Note the argument being passed in as opposed to setting an environment variable. Review the [authentication docs](https://nla.zapier.com/docs/authentication/#oauth-credentials) for full user-facing oauth developer support.
 
-The developer is tasked with handling the OAuth handshaking to procure and refresh the access token.
+## <a id="oauth">OAuth 액세스 토큰 사용 예제</a>
+아래 스니펫은 조달된 OAuth 액세스 토큰으로 래퍼를 초기화하는 방법을 보여줍니다. 환경 변수를 설정하는 대신 전달되는 인수를 주목하십시오. 전체 사용자 대상 oauth 개발자 지원을 보려면 [인증 문서](https://nla.zapier.com/docs/authentication/#oauth-credentials)를 검토하십시오.
+
+개발자는 액세스 토큰을 조달하고 갱신하기 위해 OAuth 핸드셰이킹을 처리하는 임무를 맡고 있습니다.
 
 ```python
 llm = OpenAI(temperature=0)
@@ -226,7 +241,8 @@ agent.run(
 )
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

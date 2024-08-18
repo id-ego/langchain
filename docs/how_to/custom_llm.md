@@ -1,35 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/custom_llm/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/custom_llm.ipynb
+description: 이 문서는 사용자 정의 LLM 래퍼를 생성하는 방법을 설명하며, LangChain 프로그램에서 최소한의 코드 수정으로 LLM을
+  사용할 수 있게 합니다.
 ---
 
-# How to create a custom LLM class
+# 사용자 정의 LLM 클래스 생성 방법
 
-This notebook goes over how to create a custom LLM wrapper, in case you want to use your own LLM or a different wrapper than one that is supported in LangChain.
+이 노트북은 LangChain에서 지원하는 것과 다른 래퍼나 자신의 LLM을 사용하고자 할 때 사용자 정의 LLM 래퍼를 만드는 방법을 다룹니다.
 
-Wrapping your LLM with the standard `LLM` interface allow you to use your LLM in existing LangChain programs with minimal code modifications!
+표준 `LLM` 인터페이스로 LLM을 래핑하면 최소한의 코드 수정으로 기존 LangChain 프로그램에서 LLM을 사용할 수 있습니다!
 
-As an bonus, your LLM will automatically become a LangChain `Runnable` and will benefit from some optimizations out of the box, async support, the `astream_events` API, etc.
+보너스로, 귀하의 LLM은 자동으로 LangChain `Runnable`이 되어 기본적으로 일부 최적화, 비동기 지원, `astream_events` API 등의 혜택을 누릴 수 있습니다.
 
-## Implementation
+## 구현
 
-There are only two required things that a custom LLM needs to implement:
+사용자 정의 LLM이 구현해야 하는 필수 사항은 두 가지입니다:
 
-| Method        | Description                                                               |
-|---------------|---------------------------------------------------------------------------|
-| `_call`       | Takes in a string and some optional stop words, and returns a string. Used by `invoke`. |
-| `_llm_type`   | A property that returns a string, used for logging purposes only.        
+| 메서드        | 설명                                                               |
+|---------------|-------------------------------------------------------------------|
+| `_call`       | 문자열과 몇 가지 선택적 중지 단어를 받아 문자열을 반환합니다. `invoke`에서 사용됩니다. |
+| `_llm_type`   | 문자열을 반환하는 속성으로, 로깅 목적으로만 사용됩니다.        
 
-Optional implementations: 
+선택적 구현: 
 
-| Method    | Description                                                                                               |
+| 메서드    | 설명                                                                                               |
 |----------------------|-----------------------------------------------------------------------------------------------------------|
-| `_identifying_params` | Used to help with identifying the model and printing the LLM; should return a dictionary. This is a **@property**.                 |
-| `_acall`              | Provides an async native implementation of `_call`, used by `ainvoke`.                                    |
-| `_stream`             | Method to stream the output token by token.                                                               |
-| `_astream`            | Provides an async native implementation of `_stream`; in newer LangChain versions, defaults to `_stream`. |
+| `_identifying_params` | 모델 식별 및 LLM 인쇄에 도움을 주기 위해 사용됩니다; 사전(dictionary)을 반환해야 합니다. 이는 **@property**입니다.                 |
+| `_acall`              | `_call`의 비동기 네이티브 구현을 제공하며, `ainvoke`에서 사용됩니다.                                    |
+| `_stream`             | 출력 토큰을 하나씩 스트리밍하는 메서드입니다.                                                               |
+| `_astream`            | `_stream`의 비동기 네이티브 구현을 제공하며, 최신 LangChain 버전에서는 기본적으로 `_stream`으로 설정됩니다. |
 
-Let's implement a simple custom LLM that just returns the first n characters of the input.
+입력의 첫 n 문자를 반환하는 간단한 사용자 정의 LLM을 구현해 보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "CallbackManagerForLLMRun", "source": "langchain_core.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForLLMRun.html", "title": "How to create a custom LLM class"}, {"imported": "LLM", "source": "langchain_core.language_models.llms", "docs": "https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.llms.LLM.html", "title": "How to create a custom LLM class"}, {"imported": "GenerationChunk", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.generation.GenerationChunk.html", "title": "How to create a custom LLM class"}]-->
@@ -138,64 +139,78 @@ class CustomLLM(LLM):
         return "custom"
 ```
 
-### Let's test it 🧪
 
-This LLM will implement the standard `Runnable` interface of LangChain which many of the LangChain abstractions support!
+### 테스트해 보겠습니다 🧪
+
+이 LLM은 LangChain의 표준 `Runnable` 인터페이스를 구현하며, 많은 LangChain 추상화에서 지원됩니다!
 
 ```python
 llm = CustomLLM(n=5)
 print(llm)
 ```
+
 ```output
 [1mCustomLLM[0m
 Params: {'model_name': 'CustomChatModel'}
 ```
 
+
 ```python
 llm.invoke("This is a foobar thing")
 ```
+
 
 ```output
 'This '
 ```
 
+
 ```python
 await llm.ainvoke("world")
 ```
+
 
 ```output
 'world'
 ```
 
+
 ```python
 llm.batch(["woof woof woof", "meow meow meow"])
 ```
 
+
 ```output
 ['woof ', 'meow ']
 ```
+
 
 ```python
 await llm.abatch(["woof woof woof", "meow meow meow"])
 ```
 
+
 ```output
 ['woof ', 'meow ']
 ```
+
 
 ```python
 async for token in llm.astream("hello"):
     print(token, end="|", flush=True)
 ```
+
 ```output
 h|e|l|l|o|
 ```
-Let's confirm that in integrates nicely with other `LangChain` APIs.
+
+다른 `LangChain` API와 잘 통합되는지 확인해 보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to create a custom LLM class"}]-->
 from langchain_core.prompts import ChatPromptTemplate
 ```
+
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -203,10 +218,12 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
+
 ```python
 llm = CustomLLM(n=7)
 chain = prompt | llm
 ```
+
 
 ```python
 idx = 0
@@ -217,6 +234,7 @@ async for event in chain.astream_events({"input": "hello there!"}, version="v1")
         # Truncate
         break
 ```
+
 ```output
 {'event': 'on_chain_start', 'run_id': '05f24b4f-7ea3-4fb6-8417-3aa21633462f', 'name': 'RunnableSequence', 'tags': [], 'metadata': {}, 'data': {'input': {'input': 'hello there!'}}}
 {'event': 'on_prompt_start', 'name': 'ChatPromptTemplate', 'run_id': '7e996251-a926-4344-809e-c425a9846d21', 'tags': ['seq:step:1'], 'metadata': {}, 'data': {'input': {'input': 'hello there!'}}}
@@ -227,31 +245,32 @@ async for event in chain.astream_events({"input": "hello there!"}, version="v1")
 {'event': 'on_llm_stream', 'name': 'CustomLLM', 'run_id': 'a8766beb-10f4-41de-8750-3ea7cf0ca7e2', 'tags': ['seq:step:2'], 'metadata': {}, 'data': {'chunk': 'y'}}
 {'event': 'on_chain_stream', 'run_id': '05f24b4f-7ea3-4fb6-8417-3aa21633462f', 'tags': [], 'metadata': {}, 'name': 'RunnableSequence', 'data': {'chunk': 'y'}}
 ```
-## Contributing
 
-We appreciate all chat model integration contributions. 
+## 기여하기
 
-Here's a checklist to help make sure your contribution gets added to LangChain:
+모든 채팅 모델 통합 기여를 감사히 생각합니다. 
 
-Documentation:
+귀하의 기여가 LangChain에 추가될 수 있도록 돕기 위한 체크리스트입니다:
 
-* The model contains doc-strings for all initialization arguments, as these will be surfaced in the [APIReference](https://api.python.langchain.com/en/stable/langchain_api_reference.html).
-* The class doc-string for the model contains a link to the model API if the model is powered by a service.
+문서화:
 
-Tests:
+* 모델은 모든 초기화 인수에 대한 문서 문자열을 포함해야 하며, 이는 [APIReference](https://api.python.langchain.com/en/stable/langchain_api_reference.html)에서 표시됩니다.
+* 모델의 클래스 문서 문자열에는 모델이 서비스에 의해 구동되는 경우 모델 API에 대한 링크가 포함되어야 합니다.
 
-* [ ] Add unit or integration tests to the overridden methods. Verify that `invoke`, `ainvoke`, `batch`, `stream` work if you've over-ridden the corresponding code.
+테스트:
 
-Streaming (if you're implementing it):
+* [ ] 재정의된 메서드에 단위 또는 통합 테스트를 추가합니다. 해당 코드를 재정의한 경우 `invoke`, `ainvoke`, `batch`, `stream`이 작동하는지 확인합니다.
 
-* [ ] Make sure to invoke the `on_llm_new_token` callback
-* [ ] `on_llm_new_token` is invoked BEFORE yielding the chunk
+스트리밍(구현하는 경우):
 
-Stop Token Behavior:
+* [ ] `on_llm_new_token` 콜백을 호출해야 합니다.
+* [ ] 청크를 제공하기 전에 `on_llm_new_token`이 호출됩니다.
 
-* [ ] Stop token should be respected
-* [ ] Stop token should be INCLUDED as part of the response
+중지 토큰 동작:
 
-Secret API Keys:
+* [ ] 중지 토큰이 존중되어야 합니다.
+* [ ] 중지 토큰은 응답의 일부로 포함되어야 합니다.
 
-* [ ] If your model connects to an API it will likely accept API keys as part of its initialization. Use Pydantic's `SecretStr` type for secrets, so they don't get accidentally printed out when folks print the model.
+비밀 API 키:
+
+* [ ] 모델이 API에 연결되는 경우 초기화의 일부로 API 키를 수락할 가능성이 높습니다. 비밀이 우연히 출력되지 않도록 Pydantic의 `SecretStr` 유형을 사용합니다.

@@ -1,35 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/maritalk/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/maritalk.ipynb
+description: MariTalk는 브라질의 Maritaca AI가 개발한 포르투갈어 이해에 특화된 언어 모델 기반의 어시스턴트입니다. LangChain과
+  함께 사용법을 보여줍니다.
 ---
 
 <a href="https://colab.research.google.com/github/langchain-ai/langchain/blob/master/docs/docs/integrations/chat/maritalk.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 # Maritalk
 
-## Introduction
+## 소개
 
-MariTalk is an assistant developed by the Brazilian company [Maritaca AI](https://www.maritaca.ai).
-MariTalk is based on language models that have been specially trained to understand Portuguese well.
+MariTalk는 브라질 회사 [Maritaca AI](https://www.maritaca.ai)에서 개발한 어시스턴트입니다.  
+MariTalk는 포르투갈어를 잘 이해하도록 특별히 훈련된 언어 모델을 기반으로 합니다.
 
-This notebook demonstrates how to use MariTalk with LangChain through two examples:
+이 노트북은 두 가지 예제를 통해 LangChain과 함께 MariTalk를 사용하는 방법을 보여줍니다:
 
-1. A simple example of how to use MariTalk to perform a task.
-2. LLM + RAG: The second example shows how to answer a question whose answer is found in a long document that does not fit within the token limit of MariTalk. For this, we will use a simple searcher (BM25) to first search the document for the most relevant sections and then feed them to MariTalk for answering.
+1. MariTalk를 사용하여 작업을 수행하는 간단한 예제.
+2. LLM + RAG: 두 번째 예제는 MariTalk의 토큰 제한에 맞지 않는 긴 문서에서 답변을 찾는 질문에 답하는 방법을 보여줍니다. 이를 위해 간단한 검색기(BM25)를 사용하여 문서에서 가장 관련성이 높은 섹션을 먼저 검색한 후, 이를 MariTalk에 제공하여 답변을 받습니다.
 
-## Installation
-First, install the LangChain library (and all its dependencies) using the following command:
+## 설치
+먼저, 다음 명령어를 사용하여 LangChain 라이브러리(및 모든 종속성)를 설치합니다:
 
 ```python
 !pip install langchain langchain-core langchain-community httpx
 ```
 
-## API Key
-You will need an API key that can be obtained from chat.maritaca.ai ("Chaves da API" section).
 
-### Example 1 - Pet Name Suggestions
+## API 키
+chat.maritaca.ai에서 API 키를 얻어야 합니다("Chaves da API" 섹션).
 
-Let's define our language model, ChatMaritalk, and configure it with your API key.
+### 예제 1 - 애완동물 이름 제안
+
+우리의 언어 모델인 ChatMaritalk를 정의하고 API 키로 구성해봅시다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMaritalk", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.maritalk.ChatMaritalk.html", "title": "Maritalk"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Maritalk"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts.chat", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Maritalk"}]-->
@@ -62,11 +64,12 @@ response = chain.invoke({"animal": "dog"})
 print(response)  # should answer something like "1. Max\n2. Bella\n3. Charlie\n4. Rocky"
 ```
 
-### Stream Generation
 
-For tasks involving the generation of long text, such as creating an extensive article or translating a large document, it can be advantageous to receive the response in parts, as the text is generated, instead of waiting for the complete text. This makes the application more responsive and efficient, especially when the generated text is extensive. We offer two approaches to meet this need: one synchronous and another asynchronous.
+### 스트림 생성
 
-#### Synchronous:
+긴 텍스트 생성과 관련된 작업, 예를 들어 광범위한 기사를 작성하거나 대규모 문서를 번역하는 경우, 전체 텍스트를 기다리는 대신 텍스트가 생성되는 동안 응답을 부분적으로 받는 것이 유리할 수 있습니다. 이는 생성된 텍스트가 방대할 때 애플리케이션을 더 반응적이고 효율적으로 만듭니다. 이 요구를 충족하기 위해 두 가지 접근 방식을 제공합니다: 하나는 동기식이고 다른 하나는 비동기식입니다.
+
+#### 동기식:
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Maritalk"}]-->
@@ -78,7 +81,8 @@ for chunk in llm.stream(messages):
     print(chunk.content, end="", flush=True)
 ```
 
-#### Asynchronous:
+
+#### 비동기식:
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Maritalk"}]-->
@@ -94,16 +98,18 @@ async def async_invoke_chain(animal: str):
 await async_invoke_chain("dog")
 ```
 
-### Example 2 - RAG + LLM: UNICAMP 2024 Entrance Exam Question Answering System
-For this example, we need to install some extra libraries:
+
+### 예제 2 - RAG + LLM: UNICAMP 2024 입학 시험 질문 응답 시스템
+이 예제를 위해 몇 가지 추가 라이브러리를 설치해야 합니다:
 
 ```python
 !pip install unstructured rank_bm25 pdf2image pdfminer-six pikepdf pypdf unstructured_inference fastapi kaleido uvicorn "pillow<10.1.0" pillow_heif -q
 ```
 
-#### Loading the database
 
-The first step is to create a database with the information from the notice. For this, we will download the notice from the COMVEST website and segment the extracted text into 500-character windows.
+#### 데이터베이스 로딩
+
+첫 번째 단계는 공지에서 정보를 포함하는 데이터베이스를 만드는 것입니다. 이를 위해 COMVEST 웹사이트에서 공지를 다운로드하고 추출된 텍스트를 500자 창으로 분할합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OnlinePDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.OnlinePDFLoader.html", "title": "Maritalk"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Maritalk"}]-->
@@ -122,8 +128,9 @@ text_splitter = RecursiveCharacterTextSplitter(
 texts = text_splitter.split_documents(data)
 ```
 
-#### Creating a Searcher
-Now that we have our database, we need a searcher. For this example, we will use a simple BM25 as a search system, but this could be replaced by any other searcher (such as search via embeddings).
+
+#### 검색기 생성
+이제 데이터베이스가 준비되었으므로 검색기가 필요합니다. 이 예제에서는 간단한 BM25를 검색 시스템으로 사용할 것이지만, 이는 다른 검색기(예: 임베딩을 통한 검색)로 대체될 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "BM25Retriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.bm25.BM25Retriever.html", "title": "Maritalk"}]-->
@@ -132,8 +139,9 @@ from langchain_community.retrievers import BM25Retriever
 retriever = BM25Retriever.from_documents(texts)
 ```
 
-#### Combining Search System + LLM
-Now that we have our searcher, we just need to implement a prompt specifying the task and invoke the chain.
+
+#### 검색 시스템 + LLM 결합
+이제 검색기가 준비되었으므로, 작업을 지정하는 프롬프트를 구현하고 체인을 호출하기만 하면 됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "load_qa_chain", "source": "langchain.chains.question_answering", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.question_answering.chain.load_qa_chain.html", "title": "Maritalk"}]-->
@@ -159,7 +167,8 @@ chain.invoke(
 )  # Should output something like: "O tempo máximo para realização da prova é de 5 horas."
 ```
 
-## Related
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

@@ -1,28 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/epsilla/
+description: Epsilla를 LangChain에서 사용하는 방법을 다루며, 설치 및 설정과 Epsilla 래퍼에 대한 정보를 제공합니다.
 ---
 
 # Epsilla
 
-This page covers how to use [Epsilla](https://github.com/epsilla-cloud/vectordb) within LangChain.
-It is broken into two parts: installation and setup, and then references to specific Epsilla wrappers.
+이 페이지는 LangChain 내에서 [Epsilla](https://github.com/epsilla-cloud/vectordb)를 사용하는 방법을 다룹니다. 설치 및 설정과 특정 Epsilla 래퍼에 대한 참조로 두 부분으로 나뉘어 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the Python SDK with `pip/pip3 install pyepsilla`
+- Python SDK를 `pip/pip3 install pyepsilla`로 설치합니다.
 
-## Wrappers
+## 래퍼
 
 ### VectorStore
 
-There exists a wrapper around Epsilla vector databases, allowing you to use it as a vectorstore,
-whether for semantic search or example selection.
+Epsilla 벡터 데이터베이스를 감싸는 래퍼가 존재하여, 의미 검색이나 예제 선택을 위해 벡터 저장소로 사용할 수 있습니다.
 
-To import this vectorstore:
+이 벡터 저장소를 가져오려면:
 
 ```python
 <!--IMPORTS:[{"imported": "Epsilla", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.epsilla.Epsilla.html", "title": "Epsilla"}]-->
 from langchain_community.vectorstores import Epsilla
 ```
 
-For a more detailed walkthrough of the Epsilla wrapper, see [this notebook](/docs/integrations/vectorstores/epsilla)
+
+Epsilla 래퍼에 대한 보다 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/epsilla)을 참조하세요.

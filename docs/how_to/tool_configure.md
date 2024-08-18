@@ -1,42 +1,43 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/tool_configure/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/tool_configure.ipynb
+description: 툴에서 RunnableConfig에 접근하는 방법을 안내합니다. 내부 이벤트를 활용하고 추가 속성을 설정하는 방법을 배워보세요.
 ---
 
-# How to access the RunnableConfig from a tool
+# 도구에서 RunnableConfig에 접근하는 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
 
-- [LangChain Tools](/docs/concepts/#tools)
-- [Custom tools](/docs/how_to/custom_tools)
-- [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language-lcel)
-- [Configuring runnable behavior](/docs/how_to/configure/)
-
-:::
-
-If you have a tool  that call chat models, retrievers, or other runnables, you may want to access internal events from those runnables or configure them with additional properties. This guide shows you how to manually pass parameters properly so that you can do this using the `astream_events()` method.
-
-Tools are runnables, and you can treat them the same way as any other runnable at the interface level - you can call `invoke()`, `batch()`, and `stream()` on them as normal. However, when writing custom tools, you may want to invoke other runnables like chat models or retrievers. In order to properly trace and configure those sub-invocations, you'll need to manually access and pass in the tool's current [`RunnableConfig`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html) object. This guide show you some examples of how to do that.
-
-:::caution Compatibility
-
-This guide requires `langchain-core>=0.2.16`.
+- [LangChain 도구](/docs/concepts/#tools)
+- [사용자 정의 도구](/docs/how_to/custom_tools)
+- [LangChain 표현 언어 (LCEL)](/docs/concepts/#langchain-expression-language-lcel)
+- [실행 가능한 동작 구성하기](/docs/how_to/configure/)
 
 :::
 
-## Inferring by parameter type
+채팅 모델, 검색기 또는 기타 실행 가능한 도구를 호출하는 도구가 있는 경우, 해당 실행 가능한 도구의 내부 이벤트에 접근하거나 추가 속성으로 구성하고 싶을 수 있습니다. 이 가이드는 `astream_events()` 메서드를 사용하여 이를 올바르게 수행하는 방법을 보여줍니다.
 
-To access reference the active config object from your custom tool, you'll need to add a parameter to your tool's signature typed as `RunnableConfig`. When you invoke your tool, LangChain will inspect your tool's signature, look for a parameter typed as `RunnableConfig`, and if it exists, populate that parameter with the correct value.
+도구는 실행 가능하며, 인터페이스 수준에서 다른 실행 가능 도구와 동일하게 취급할 수 있습니다 - `invoke()`, `batch()`, `stream()`을 정상적으로 호출할 수 있습니다. 그러나 사용자 정의 도구를 작성할 때는 채팅 모델이나 검색기와 같은 다른 실행 가능 도구를 호출하고 싶을 수 있습니다. 이러한 하위 호출을 올바르게 추적하고 구성하려면 도구의 현재 [`RunnableConfig`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html) 객체에 수동으로 접근하고 전달해야 합니다. 이 가이드는 이를 수행하는 몇 가지 예를 보여줍니다.
 
-**Note:** The actual name of the parameter doesn't matter, only the typing.
+:::caution 호환성
 
-To illustrate this, define a custom tool that takes a two parameters - one typed as a string, the other typed as `RunnableConfig`:
+이 가이드는 `langchain-core>=0.2.16`이 필요합니다.
+
+:::
+
+## 매개변수 유형에 따른 추론
+
+사용자 정의 도구에서 활성 구성 객체에 접근하려면 도구의 서명에 `RunnableConfig`로 유형이 지정된 매개변수를 추가해야 합니다. 도구를 호출할 때 LangChain은 도구의 서명을 검사하고 `RunnableConfig`로 유형이 지정된 매개변수를 찾으며, 존재할 경우 해당 매개변수를 올바른 값으로 채웁니다.
+
+**참고:** 매개변수의 실제 이름은 중요하지 않으며, 오직 유형만 중요합니다.
+
+이를 설명하기 위해, 문자열로 유형이 지정된 매개변수 하나와 `RunnableConfig`로 유형이 지정된 매개변수 하나를 받는 사용자 정의 도구를 정의합니다:
 
 ```python
 %pip install -qU langchain_core
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to access the RunnableConfig from a tool"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to access the RunnableConfig from a tool"}]-->
@@ -50,7 +51,8 @@ async def reverse_tool(text: str, special_config_param: RunnableConfig) -> str:
     return (text + special_config_param["configurable"]["additional_field"])[::-1]
 ```
 
-Then, if we invoke the tool with a `config` containing a `configurable` field, we can see that `additional_field` is passed through correctly:
+
+그런 다음, `configurable` 필드를 포함하는 `config`로 도구를 호출하면 `additional_field`가 올바르게 전달되는 것을 확인할 수 있습니다:
 
 ```python
 await reverse_tool.ainvoke(
@@ -58,18 +60,20 @@ await reverse_tool.ainvoke(
 )
 ```
 
+
 ```output
 '321cba'
 ```
 
-## Next steps
 
-You've now seen how to configure and stream events from within a tool. Next, check out the following guides for more on using tools:
+## 다음 단계
 
-- [Stream events from child runs within a custom tool](/docs/how_to/tool_stream_events/)
-- Pass [tool results back to a model](/docs/how_to/tool_results_pass_to_model)
+이제 도구 내에서 이벤트를 구성하고 스트리밍하는 방법을 보았습니다. 다음으로 도구 사용에 대한 추가 정보를 보려면 다음 가이드를 확인하세요:
 
-You can also check out some more specific uses of tool calling:
+- [사용자 정의 도구 내에서 자식 실행의 이벤트 스트리밍](/docs/how_to/tool_stream_events/)
+- [모델에 도구 결과 전달하기](/docs/how_to/tool_results_pass_to_model)
 
-- Building [tool-using chains and agents](/docs/how_to#tools)
-- Getting [structured outputs](/docs/how_to/structured_output/) from models
+또한 도구 호출의 보다 구체적인 사용 사례를 확인할 수 있습니다:
+
+- [도구를 사용하는 체인 및 에이전트 구축하기](/docs/how_to#tools)
+- 모델에서 [구조화된 출력](/docs/how_to/structured_output/) 얻기

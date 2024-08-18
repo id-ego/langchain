@@ -1,23 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/prompts_composition/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/prompts_composition.ipynb
+description: 프롬프트를 구성하는 방법에 대한 가이드를 제공하며, 문자열 및 채팅 프롬프트의 구성 요소 재사용을 설명합니다.
 sidebar_position: 5
 ---
 
-# How to compose prompts together
+# 프롬프트를 함께 구성하는 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [Prompt templates](/docs/concepts/#prompt-templates)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [프롬프트 템플릿](/docs/concepts/#prompt-templates)
 
 :::
 
-LangChain provides a user friendly interface for composing different parts of prompts together. You can do this with either string prompts or chat prompts. Constructing prompts this way allows for easy reuse of components.
+LangChain은 프롬프트의 다양한 부분을 함께 구성할 수 있는 사용자 친화적인 인터페이스를 제공합니다. 문자열 프롬프트 또는 채팅 프롬프트를 사용하여 이를 수행할 수 있습니다. 이러한 방식으로 프롬프트를 구성하면 구성 요소를 쉽게 재사용할 수 있습니다.
 
-## String prompt composition
+## 문자열 프롬프트 구성
 
-When working with string prompts, each template is joined together. You can work with either prompts directly or strings (the first element in the list needs to be a prompt).
+문자열 프롬프트 작업 시 각 템플릿이 함께 연결됩니다. 프롬프트를 직접 사용하거나 문자열로 작업할 수 있습니다(목록의 첫 번째 요소는 프롬프트여야 합니다).
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to compose prompts together"}]-->
@@ -32,23 +32,27 @@ prompt = (
 prompt
 ```
 
+
 ```output
 PromptTemplate(input_variables=['language', 'topic'], template='Tell me a joke about {topic}, make it funny\n\nand in {language}')
 ```
+
 
 ```python
 prompt.format(topic="sports", language="spanish")
 ```
 
+
 ```output
 'Tell me a joke about sports, make it funny\n\nand in spanish'
 ```
 
-## Chat prompt composition
 
-A chat prompt is made up a of a list of messages. Similarly to the above example, we can concatenate chat prompt templates. Each new element is a new message in the final prompt.
+## 채팅 프롬프트 구성
 
-First, let's initialize the a [`ChatPromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html) with a [`SystemMessage`](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html).
+채팅 프롬프트는 메시지 목록으로 구성됩니다. 위의 예와 유사하게 채팅 프롬프트 템플릿을 연결할 수 있습니다. 각 새로운 요소는 최종 프롬프트의 새로운 메시지입니다.
+
+먼저, [`ChatPromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html)를 [`SystemMessage`](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html)로 초기화합시다.
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to compose prompts together"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to compose prompts together"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to compose prompts together"}]-->
@@ -57,8 +61,8 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 prompt = SystemMessage(content="You are a nice pirate")
 ```
 
-You can then easily create a pipeline combining it with other messages *or* message templates.
-Use a `Message` when there is no variables to be formatted, use a `MessageTemplate` when there are variables to be formatted. You can also use just a string (note: this will automatically get inferred as a [`HumanMessagePromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.HumanMessagePromptTemplate.html).)
+
+그런 다음 다른 메시지 *또는* 메시지 템플릿과 결합하여 파이프라인을 쉽게 생성할 수 있습니다. 변수가 형식화되지 않을 때는 `Message`를 사용하고, 변수가 형식화될 때는 `MessageTemplate`을 사용합니다. 문자열만 사용할 수도 있습니다(참고: 이는 자동으로 [`HumanMessagePromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.HumanMessagePromptTemplate.html)로 추론됩니다).
 
 ```python
 new_prompt = (
@@ -66,11 +70,13 @@ new_prompt = (
 )
 ```
 
-Under the hood, this creates an instance of the ChatPromptTemplate class, so you can use it just as you did before!
+
+내부적으로, 이는 ChatPromptTemplate 클래스의 인스턴스를 생성하므로 이전과 동일하게 사용할 수 있습니다!
 
 ```python
 new_prompt.format_messages(input="i said hi")
 ```
+
 
 ```output
 [SystemMessage(content='You are a nice pirate'),
@@ -79,12 +85,13 @@ new_prompt.format_messages(input="i said hi")
  HumanMessage(content='i said hi')]
 ```
 
-## Using PipelinePrompt
 
-LangChain includes a class called [`PipelinePromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.pipeline.PipelinePromptTemplate.html), which can be useful when you want to reuse parts of prompts. A PipelinePrompt consists of two main parts:
+## PipelinePrompt 사용하기
 
-- Final prompt: The final prompt that is returned
-- Pipeline prompts: A list of tuples, consisting of a string name and a prompt template. Each prompt template will be formatted and then passed to future prompt templates as a variable with the same name.
+LangChain에는 프롬프트의 일부를 재사용하고 싶을 때 유용한 [`PipelinePromptTemplate`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.pipeline.PipelinePromptTemplate.html)라는 클래스가 포함되어 있습니다. PipelinePrompt는 두 가지 주요 부분으로 구성됩니다:
+
+- 최종 프롬프트: 반환되는 최종 프롬프트
+- 파이프라인 프롬프트: 문자열 이름과 프롬프트 템플릿으로 구성된 튜플 목록입니다. 각 프롬프트 템플릿은 형식화된 후 동일한 이름의 변수로 향후 프롬프트 템플릿에 전달됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PipelinePromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.pipeline.PipelinePromptTemplate.html", "title": "How to compose prompts together"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to compose prompts together"}]-->
@@ -124,9 +131,11 @@ pipeline_prompt = PipelinePromptTemplate(
 pipeline_prompt.input_variables
 ```
 
+
 ```output
 ['person', 'example_a', 'example_q', 'input']
 ```
+
 
 ```python
 print(
@@ -138,6 +147,7 @@ print(
     )
 )
 ```
+
 ```output
 You are impersonating Elon Musk.
 
@@ -151,8 +161,10 @@ Now, do this for real!
 Q: What's your favorite social media site?
 A:
 ```
-## Next steps
 
-You've now learned how to compose prompts together.
 
-Next, check out the other how-to guides on prompt templates in this section, like [adding few-shot examples to your prompt templates](/docs/how_to/few_shot_examples_chat).
+## 다음 단계
+
+이제 프롬프트를 함께 구성하는 방법을 배웠습니다.
+
+다음으로, 이 섹션의 프롬프트 템플릿에 대한 다른 사용 방법 가이드를 확인하세요, 예를 들어 [프롬프트 템플릿에 몇 가지 샷 예제를 추가하기](/docs/how_to/few_shot_examples_chat).

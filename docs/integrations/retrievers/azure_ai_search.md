@@ -1,35 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/azure_ai_search/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/azure_ai_search.ipynb
+description: Azure AI Search는 비구조적 쿼리에서 문서를 반환하는 통합 모듈인 `AzureAISearchRetriever`를
+  제공합니다.
 sidebar_label: Azure AI Search
 ---
 
 # AzureAISearchRetriever
 
-[Azure AI Search](https://learn.microsoft.com/azure/search/search-what-is-azure-search) (formerly known as `Azure Cognitive Search`) is a Microsoft cloud search service that gives developers infrastructure, APIs, and tools for information retrieval of vector, keyword, and hybrid queries at scale.
+[Azure AI Search](https://learn.microsoft.com/azure/search/search-what-is-azure-search) (이전 이름: `Azure Cognitive Search`)는 개발자에게 대규모 벡터, 키워드 및 하이브리드 쿼리 정보 검색을 위한 인프라, API 및 도구를 제공하는 Microsoft 클라우드 검색 서비스입니다.
 
-`AzureAISearchRetriever` is an integration module that returns documents from an unstructured query. It's based on the BaseRetriever class and it targets the 2023-11-01 stable REST API version of Azure AI Search, which means it supports vector indexing and queries.
+`AzureAISearchRetriever`는 비구조적 쿼리에서 문서를 반환하는 통합 모듈입니다. 이는 BaseRetriever 클래스를 기반으로 하며 Azure AI Search의 2023-11-01 안정적인 REST API 버전을 대상으로 하므로 벡터 인덱싱 및 쿼리를 지원합니다.
 
-This guide will help you getting started with the Azure AI Search [retriever](/docs/concepts/#retrievers). For detailed documentation of all `AzureAISearchRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.azure_ai_search.AzureAISearchRetriever.html).
+이 가이드는 Azure AI Search [retriever](/docs/concepts/#retrievers)를 시작하는 데 도움이 됩니다. `AzureAISearchRetriever`의 모든 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.azure_ai_search.AzureAISearchRetriever.html)에서 확인할 수 있습니다.
 
-`AzureAISearchRetriever` replaces `AzureCognitiveSearchRetriever`, which will soon be deprecated. We recommend switching to the newer version that's based on the most recent stable version of the search APIs.
+`AzureAISearchRetriever`는 곧 사용 중단될 `AzureCognitiveSearchRetriever`를 대체합니다. 최신 안정 버전의 검색 API를 기반으로 한 새 버전으로 전환하는 것을 권장합니다.
 
-### Integration details
+### 통합 세부정보
 
 import {ItemTable} from "@theme/FeatureTables";
 
 <ItemTable category="document_retrievers" item="AzureAISearchRetriever" />
 
 
-## Setup
+## 설정
 
-To use this module, you need:
+이 모듈을 사용하려면 다음이 필요합니다:
 
-+ An Azure AI Search service. You can [create one](https://learn.microsoft.com/azure/search/search-create-service-portal) for free if you sign up for the Azure trial. A free service has lower quotas, but it's sufficient for running the code in this notebook.
-+ An existing index with vector fields. There are several ways to create one, including using the [vector store module](../vectorstores/azuresearch.md). Or, [try the Azure AI Search REST APIs](https://learn.microsoft.com/azure/search/search-get-started-vector).
-+ An API key. API keys are generated when you create the search service. If you're just querying an index, you can use the query API key, otherwise use an admin API key. See [Find your API keys](https://learn.microsoft.com/azure/search/search-security-api-keys?tabs=rest-use%2Cportal-find%2Cportal-query#find-existing-keys) for details.
++ Azure AI Search 서비스. Azure 체험판에 가입하면 [무료로 생성](https://learn.microsoft.com/azure/search/search-create-service-portal)할 수 있습니다. 무료 서비스는 할당량이 낮지만 이 노트북에서 코드를 실행하는 데 충분합니다.
++ 벡터 필드가 있는 기존 인덱스. [벡터 저장소 모듈](../vectorstores/azuresearch.md)을 사용하여 생성하는 등 여러 가지 방법이 있습니다. 또는 [Azure AI Search REST API를 사용해 보세요](https://learn.microsoft.com/azure/search/search-get-started-vector).
++ API 키. API 키는 검색 서비스를 생성할 때 생성됩니다. 인덱스를 쿼리하는 경우 쿼리 API 키를 사용할 수 있으며, 그렇지 않으면 관리자 API 키를 사용하세요. 자세한 내용은 [API 키 찾기](https://learn.microsoft.com/azure/search/search-security-api-keys?tabs=rest-use%2Cportal-find%2Cportal-query#find-existing-keys)를 참조하세요.
 
-We can then set the search service name, index name, and API key as environment variables (alternatively, you can pass them as arguments to `AzureAISearchRetriever`). The search index provides the searchable content.
+그런 다음 검색 서비스 이름, 인덱스 이름 및 API 키를 환경 변수로 설정할 수 있습니다(또는 `AzureAISearchRetriever`에 인수로 전달할 수 있습니다). 검색 인덱스는 검색 가능한 콘텐츠를 제공합니다.
 
 ```python
 import os
@@ -39,16 +40,18 @@ os.environ["AZURE_AI_SEARCH_INDEX_NAME"] = "<YOUR_SEARCH_INDEX_NAME>"
 os.environ["AZURE_AI_SEARCH_API_KEY"] = "<YOUR_API_KEY>"
 ```
 
-If you want to get automated tracing from individual queries, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+
+개별 쿼리에서 자동 추적을 받으려면 아래의 주석을 제거하여 [LangSmith](https://docs.smith.langchain.com/) API 키를 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-### Installation
 
-This retriever lives in the `langchain-community` package. We will need some additional dependencies as well:
+### 설치
+
+이 리트리버는 `langchain-community` 패키지에 포함되어 있습니다. 추가 종속성이 필요합니다:
 
 ```python
 %pip install --upgrade --quiet langchain-community
@@ -57,9 +60,10 @@ This retriever lives in the `langchain-community` package. We will need some add
 %pip install --upgrade --quiet  azure-identity
 ```
 
-## Instantiation
 
-For `AzureAISearchRetriever`, provide an `index_name`, `content_key`, and `top_k` set to the number of number of results you'd like to retrieve. Setting `top_k` to zero (the default) returns all results.
+## 인스턴스화
+
+`AzureAISearchRetriever`의 경우 `index_name`, `content_key` 및 검색할 결과 수를 설정하는 `top_k`를 제공해야 합니다. `top_k`를 0(기본값)으로 설정하면 모든 결과가 반환됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AzureAISearchRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.azure_ai_search.AzureAISearchRetriever.html", "title": "AzureAISearchRetriever"}]-->
@@ -70,20 +74,22 @@ retriever = AzureAISearchRetriever(
 )
 ```
 
-## Usage
 
-Now you can use it to retrieve documents from Azure AI Search.
-This is the method you would call to do so. It will return all documents relevant to the query. 
+## 사용법
+
+이제 Azure AI Search에서 문서를 검색하는 데 사용할 수 있습니다.
+이를 수행하기 위해 호출할 메서드입니다. 쿼리와 관련된 모든 문서를 반환합니다.
 
 ```python
 retriever.invoke("here is my unstructured query string")
 ```
 
-## Example
 
-This section demonstrates using the retriever over built-in sample data. You can skip this step if you already have a vector index on your search service.
+## 예제
 
-Start by providing the endpoints and keys. Since we're creating a vector index in this step, specify a text embedding model to get a vector representation of the text. This example assumes Azure OpenAI with a deployment of text-embedding-ada-002. Because this step creates an index, be sure to use an admin API key for your search service.
+이 섹션에서는 내장 샘플 데이터를 사용하여 리트리버를 사용하는 방법을 보여줍니다. 검색 서비스에 벡터 인덱스가 이미 있는 경우 이 단계를 건너뛸 수 있습니다.
+
+엔드포인트와 키를 제공하는 것으로 시작합니다. 이 단계에서 벡터 인덱스를 생성하므로 텍스트의 벡터 표현을 얻기 위해 텍스트 임베딩 모델을 지정합니다. 이 예제는 text-embedding-ada-002 배포가 있는 Azure OpenAI를 가정합니다. 이 단계는 인덱스를 생성하므로 검색 서비스에 대해 관리자 API 키를 사용해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "DirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.directory.DirectoryLoader.html", "title": "AzureAISearchRetriever"}, {"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "AzureAISearchRetriever"}, {"imported": "AzureAISearchRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.azure_ai_search.AzureAISearchRetriever.html", "title": "AzureAISearchRetriever"}, {"imported": "AzureSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azuresearch.AzureSearch.html", "title": "AzureAISearchRetriever"}, {"imported": "AzureOpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.azure.AzureOpenAIEmbeddings.html", "title": "AzureAISearchRetriever"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "AzureAISearchRetriever"}, {"imported": "TokenTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.TokenTextSplitter.html", "title": "AzureAISearchRetriever"}]-->
@@ -104,7 +110,8 @@ azure_openai_api_version: str = "2023-05-15"
 azure_deployment: str = "text-embedding-ada-002"
 ```
 
-We'll use an embedding model from Azure OpenAI to turn our documents into embeddings stored in the Azure AI Search vector store. We'll also set the index name to `langchain-vector-demo`. This will create a new vector store associated with that index name. 
+
+Azure OpenAI의 임베딩 모델을 사용하여 문서를 Azure AI Search 벡터 저장소에 저장된 임베딩으로 변환합니다. 인덱스 이름은 `langchain-vector-demo`로 설정합니다. 이렇게 하면 해당 인덱스 이름과 연결된 새 벡터 저장소가 생성됩니다.
 
 ```python
 embeddings = AzureOpenAIEmbeddings(
@@ -121,7 +128,8 @@ vector_store: AzureSearch = AzureSearch(
 )
 ```
 
-Next, we'll load data into our newly created vector store. For this example, we load the `state_of_the_union.txt` file. We'll split the text in 400 token chunks with no overlap. Finally, the documents are added to our vector store as emeddings.
+
+다음으로 새로 생성된 벡터 저장소에 데이터를 로드합니다. 이 예제에서는 `state_of_the_union.txt` 파일을 로드합니다. 텍스트를 400 토큰 청크로 나누되 겹치지 않도록 합니다. 마지막으로 문서는 임베딩으로서 벡터 저장소에 추가됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "AzureAISearchRetriever"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "AzureAISearchRetriever"}]-->
@@ -137,7 +145,8 @@ docs = text_splitter.split_documents(documents)
 vector_store.add_documents(documents=docs)
 ```
 
-Next, we'll create a retriever. The current `index_name` variable is `langchain-vector-demo` from the last step. If you skipped vector store creation, provide your index name in the parameter. In this query, the top result is returned.
+
+다음으로 리트리버를 생성합니다. 현재 `index_name` 변수는 마지막 단계에서의 `langchain-vector-demo`입니다. 벡터 저장소 생성을 건너뛰었다면 매개변수에 인덱스 이름을 제공하세요. 이 쿼리에서는 최상위 결과가 반환됩니다.
 
 ```python
 retriever = AzureAISearchRetriever(
@@ -145,13 +154,15 @@ retriever = AzureAISearchRetriever(
 )
 ```
 
-Now we can retrieve the data that is relevant to our query from the documents we uploaded. 
+
+이제 업로드한 문서에서 쿼리와 관련된 데이터를 검색할 수 있습니다.
 
 ```python
 retriever.invoke("does the president have a plan for covid-19?")
 ```
 
-## Use within a chain
+
+## 체인 내에서 사용
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "AzureAISearchRetriever"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "AzureAISearchRetriever"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "AzureAISearchRetriever"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "AzureAISearchRetriever"}]-->
@@ -183,15 +194,17 @@ chain = (
 )
 ```
 
+
 ```python
 chain.invoke("does the president have a plan for covid-19?")
 ```
 
-## API reference
 
-For detailed documentation of all `AzureAISearchRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.azure_ai_search.AzureAISearchRetriever.html).
+## API 참조
 
-## Related
+`AzureAISearchRetriever`의 모든 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.azure_ai_search.AzureAISearchRetriever.html)에서 확인할 수 있습니다.
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 리트리버 [개념 가이드](/docs/concepts/#retrievers)
+- 리트리버 [사용 방법 가이드](/docs/how_to/#retrievers)

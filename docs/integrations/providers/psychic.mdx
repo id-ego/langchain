@@ -1,34 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/psychic/
+description: Psychic은 OAuth를 통해 SaaS 도구와 통합하고 문서를 SQL 또는 벡터 데이터베이스에 동기화하는 플랫폼입니다.
 sidebar_class_name: hidden
 ---
 
-# Psychic
+# 사이킥
 
 :::warning
-This provider is no longer maintained, and may not work. Use with caution.
+이 제공자는 더 이상 유지 관리되지 않으며, 작동하지 않을 수 있습니다. 주의해서 사용하십시오.
 :::
 
-> [Psychic](https://www.psychic.dev/) is a platform for integrating with SaaS tools like `Notion`, `Zendesk`,
-`Confluence`, and `Google Drive` via OAuth and syncing documents from these applications to your SQL or vector
-database. You can think of it like Plaid for unstructured data. 
+> [사이킥](https://www.psychic.dev/)은 `Notion`, `Zendesk`, `Confluence`, `Google Drive`와 같은 SaaS 도구와 통합하고, 이러한 애플리케이션의 문서를 SQL 또는 벡터 데이터베이스로 동기화하는 플랫폼입니다. 비구조화된 데이터에 대한 Plaid와 같다고 생각할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```bash
 pip install psychicapi
 ```
 
-Psychic is easy to set up - you import the `react` library and configure it with your `Sidekick API` key, which you get
-from the [Psychic dashboard](https://dashboard.psychic.dev/). When you connect the applications, you\
-view these connections from the dashboard and retrieve data using the server-side libraries.
 
-1. Create an account in the [dashboard](https://dashboard.psychic.dev/).
-2. Use the [react library](https://docs.psychic.dev/sidekick-link) to add the Psychic link modal to your frontend react app. You will use this to connect the SaaS apps.
-3. Once you have created a connection, you can use the `PsychicLoader` by following the [example notebook](/docs/integrations/document_loaders/psychic)
+사이킥은 설정이 간편합니다. `react` 라이브러리를 가져오고 [사이킥 대시보드](https://dashboard.psychic.dev/)에서 받은 `Sidekick API` 키로 구성합니다. 애플리케이션을 연결하면 대시보드에서 이러한 연결을 보고 서버 측 라이브러리를 사용하여 데이터를 검색할 수 있습니다.
 
-## Advantages vs Other Document Loaders
+1. [대시보드](https://dashboard.psychic.dev/)에서 계정을 생성합니다.
+2. [react 라이브러리](https://docs.psychic.dev/sidekick-link)를 사용하여 프론트엔드 react 앱에 사이킥 링크 모달을 추가합니다. 이 모달을 사용하여 SaaS 앱을 연결합니다.
+3. 연결을 생성한 후, [예제 노트북](/docs/integrations/document_loaders/psychic)을 따라 `PsychicLoader`를 사용할 수 있습니다.
 
-1. **Universal API:** Instead of building OAuth flows and learning the APIs for every SaaS app, you integrate Psychic once and leverage our universal API to retrieve data.
-2. **Data Syncs:** Data in your customers' SaaS apps can get stale fast. With Psychic you can configure webhooks to keep your documents up to date on a daily or realtime basis.
-3. **Simplified OAuth:** Psychic handles OAuth end-to-end so that you don't have to spend time creating OAuth clients for each integration, keeping access tokens fresh, and handling OAuth redirect logic.
+## 다른 문서 로더와의 장점
+
+1. **범용 API:** 모든 SaaS 앱에 대해 OAuth 흐름을 구축하고 API를 배우는 대신, 사이킥을 한 번 통합하고 우리의 범용 API를 활용하여 데이터를 검색합니다.
+2. **데이터 동기화:** 고객의 SaaS 앱의 데이터는 빠르게 오래될 수 있습니다. 사이킥을 사용하면 웹후크를 구성하여 문서를 매일 또는 실시간으로 최신 상태로 유지할 수 있습니다.
+3. **간소화된 OAuth:** 사이킥은 OAuth를 처음부터 끝까지 처리하므로 각 통합에 대해 OAuth 클라이언트를 생성하고, 액세스 토큰을 신선하게 유지하며, OAuth 리디렉션 로직을 처리하는 데 시간을 낭비할 필요가 없습니다.

@@ -1,31 +1,33 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/upstash/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/upstash.ipynb
+description: Upstash Vector는 벡터 임베딩 작업을 위한 서버리스 벡터 데이터베이스로, Langchain 통합을 통해 간편하게
+  사용할 수 있습니다.
 ---
 
 # Upstash Vector
 
-> [Upstash Vector](https://upstash.com/docs/vector/overall/whatisvector) is a serverless vector database designed for working with vector embeddings.
+> [Upstash Vector](https://upstash.com/docs/vector/overall/whatisvector)는 벡터 임베딩 작업을 위해 설계된 서버리스 벡터 데이터베이스입니다.
 > 
-> The vector langchain integration is a wrapper around the [upstash-vector](https://github.com/upstash/vector-py) package.
+> 벡터 langchain 통합은 [upstash-vector](https://github.com/upstash/vector-py) 패키지를 감싸는 래퍼입니다.
 > 
-> The python package uses the [vector rest api](https://upstash.com/docs/vector/api/get-started) behind the scenes.
+> 파이썬 패키지는 백그라운드에서 [vector rest api](https://upstash.com/docs/vector/api/get-started)를 사용합니다.
 
-## Installation
+## 설치
 
-Create a free vector database from [upstash console](https://console.upstash.com/vector) with the desired dimensions and distance metric.
+원하는 차원과 거리 메트릭으로 [upstash 콘솔](https://console.upstash.com/vector)에서 무료 벡터 데이터베이스를 생성합니다.
 
-You can then create an `UpstashVectorStore` instance by:
+그런 다음 다음 방법으로 `UpstashVectorStore` 인스턴스를 생성할 수 있습니다:
 
-- Providing the environment variables `UPSTASH_VECTOR_URL` and `UPSTASH_VECTOR_TOKEN`
-- Giving them as parameters to the constructor
-- Passing an Upstash Vector `Index` instance to the constructor
+- 환경 변수 `UPSTASH_VECTOR_URL` 및 `UPSTASH_VECTOR_TOKEN` 제공
+- 생성자에 매개변수로 제공
+- 생성자에 Upstash Vector `Index` 인스턴스 전달
 
-Also, an `Embeddings` instance is required to turn given texts into embeddings. Here we use `OpenAIEmbeddings` as an example
+또한 주어진 텍스트를 임베딩으로 변환하기 위해 `Embeddings` 인스턴스가 필요합니다. 여기서는 `OpenAIEmbeddings`를 예로 사용합니다.
 
 ```python
 %pip install langchain-openai langchain langchain-community upstash-vector
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "UpstashVectorStore", "source": "langchain_community.vectorstores.upstash", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.upstash.UpstashVectorStore.html", "title": "Upstash Vector"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Upstash Vector"}]-->
@@ -45,17 +47,19 @@ embeddings = OpenAIEmbeddings()
 store = UpstashVectorStore(embedding=embeddings)
 ```
 
-An alternative way of creating `UpstashVectorStore` is to [create an Upstash Vector index by selecting a model](https://upstash.com/docs/vector/features/embeddingmodels#using-a-model) and passing `embedding=True`. In this configuration, documents or queries will be sent to Upstash as text and embedded there.
+
+`UpstashVectorStore`를 생성하는 대안 방법은 [모델을 선택하여 Upstash Vector 인덱스를 생성](https://upstash.com/docs/vector/features/embeddingmodels#using-a-model)하고 `embedding=True`를 전달하는 것입니다. 이 구성에서는 문서나 쿼리가 텍스트로 Upstash에 전송되고 그곳에서 임베딩됩니다.
 
 ```python
 store = UpstashVectorStore(embedding=True)
 ```
 
-If you are interested in trying out this approach, you can update the initialization of `store` like above and run the rest of the tutorial.
 
-## Load documents
+이 접근 방식을 시도해 보고 싶다면 위와 같이 `store`의 초기화를 업데이트하고 나머지 튜토리얼을 실행할 수 있습니다.
 
-Load an example text file and split it into chunks which can be turned into vector embeddings.
+## 문서 로드
+
+예제 텍스트 파일을 로드하고 이를 벡터 임베딩으로 변환할 수 있는 청크로 분할합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Upstash Vector"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Upstash Vector"}]-->
@@ -70,21 +74,24 @@ docs = text_splitter.split_documents(documents)
 docs[:3]
 ```
 
+
 ```output
 [Document(metadata={'source': '../../how_to/state_of_the_union.txt'}, page_content='Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  \n\nLast year COVID-19 kept us apart. This year we are finally together again. \n\nTonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. \n\nWith a duty to one another to the American people to the Constitution. \n\nAnd with an unwavering resolve that freedom will always triumph over tyranny. \n\nSix days ago, Russia’s Vladimir Putin sought to shake the foundations of the free world thinking he could make it bend to his menacing ways. But he badly miscalculated. \n\nHe thought he could roll into Ukraine and the world would roll over. Instead he met a wall of strength he never imagined. \n\nHe met the Ukrainian people. \n\nFrom President Zelenskyy to every Ukrainian, their fearlessness, their courage, their determination, inspires the world.'),
  Document(metadata={'source': '../../how_to/state_of_the_union.txt'}, page_content='Groups of citizens blocking tanks with their bodies. Everyone from students to retirees teachers turned soldiers defending their homeland. \n\nIn this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” The Ukrainian Ambassador to the United States is here tonight. \n\nLet each of us here tonight in this Chamber send an unmistakable signal to Ukraine and to the world. \n\nPlease rise if you are able and show that, Yes, we the United States of America stand with the Ukrainian people. \n\nThroughout our history we’ve learned this lesson when dictators do not pay a price for their aggression they cause more chaos.   \n\nThey keep moving.   \n\nAnd the costs and the threats to America and the world keep rising.   \n\nThat’s why the NATO Alliance was created to secure peace and stability in Europe after World War 2. \n\nThe United States is a member along with 29 other nations. \n\nIt matters. American diplomacy matters. American resolve matters.'),
  Document(metadata={'source': '../../how_to/state_of_the_union.txt'}, page_content='Putin’s latest attack on Ukraine was premeditated and unprovoked. \n\nHe rejected repeated efforts at diplomacy. \n\nHe thought the West and NATO wouldn’t respond. And he thought he could divide us at home. Putin was wrong. We were ready.  Here is what we did.   \n\nWe prepared extensively and carefully. \n\nWe spent months building a coalition of other freedom-loving nations from Europe and the Americas to Asia and Africa to confront Putin. \n\nI spent countless hours unifying our European allies. We shared with the world in advance what we knew Putin was planning and precisely how he would try to falsely justify his aggression.  \n\nWe countered Russia’s lies with truth.   \n\nAnd now that he has acted the free world is holding him accountable. \n\nAlong with twenty-seven members of the European Union including France, Germany, Italy, as well as countries like the United Kingdom, Canada, Japan, Korea, Australia, New Zealand, and many others, even Switzerland.')]
 ```
 
-## Inserting documents
 
-The vectorstore embeds text chunks using the embedding object and batch inserts them into the database. This returns an id array of the inserted vectors.
+## 문서 삽입
+
+벡터 스토어는 임베딩 객체를 사용하여 텍스트 청크를 임베딩하고 이를 데이터베이스에 배치 삽입합니다. 이는 삽입된 벡터의 ID 배열을 반환합니다.
 
 ```python
 inserted_vectors = store.add_documents(docs)
 
 inserted_vectors[:5]
 ```
+
 
 ```output
 ['247aa3ae-9be9-43e2-98e4-48f94f920749',
@@ -94,17 +101,19 @@ inserted_vectors[:5]
  '28875612-c672-4de4-b40a-3b658c72036a']
 ```
 
-## Querying
 
-The database can be queried using a vector or a text prompt.
-If a text prompt is used, it's first converted into embedding and then queried.
+## 쿼리
 
-The `k` parameter specifies how many results to return from the query.
+데이터베이스는 벡터 또는 텍스트 프롬프트를 사용하여 쿼리할 수 있습니다.
+텍스트 프롬프트가 사용되면 먼저 임베딩으로 변환된 다음 쿼리됩니다.
+
+`k` 매개변수는 쿼리에서 반환할 결과의 수를 지정합니다.
 
 ```python
 result = store.similarity_search("technology", k=5)
 result
 ```
+
 
 ```output
 [Document(metadata={'source': '../../how_to/state_of_the_union.txt'}, page_content='If you travel 20 miles east of Columbus, Ohio, you’ll find 1,000 empty acres of land. \n\nIt won’t look like much, but if you stop and look closely, you’ll see a “Field of dreams,” the ground on which America’s future will be built. \n\nThis is where Intel, the American company that helped build Silicon Valley, is going to build its $20 billion semiconductor “mega site”. \n\nUp to eight state-of-the-art factories in one place. 10,000 new good-paying jobs. \n\nSome of the most sophisticated manufacturing in the world to make computer chips the size of a fingertip that power the world and our everyday lives. \n\nSmartphones. The Internet. Technology we have yet to invent. \n\nBut that’s just the beginning. \n\nIntel’s CEO, Pat Gelsinger, who is here tonight, told me they are ready to increase their investment from  \n$20 billion to $100 billion. \n\nThat would be one of the biggest investments in manufacturing in American history. \n\nAnd all they’re waiting for is for you to pass this bill.'),
@@ -114,11 +123,12 @@ result
  Document(metadata={'source': '../../how_to/state_of_the_union.txt'}, page_content='And based on the projections, more of the country will reach that point across the next couple of weeks. \n\nThanks to the progress we have made this past year, COVID-19 need no longer control our lives.  \n\nI know some are talking about “living with COVID-19”. Tonight – I say that we will never just accept living with COVID-19. \n\nWe will continue to combat the virus as we do other diseases. And because this is a virus that mutates and spreads, we will stay on guard. \n\nHere are four common sense steps as we move forward safely.  \n\nFirst, stay protected with vaccines and treatments. We know how incredibly effective vaccines are. If you’re vaccinated and boosted you have the highest degree of protection. \n\nWe will never give up on vaccinating more Americans. Now, I know parents with kids under 5 are eager to see a vaccine authorized for their children. \n\nThe scientists are working hard to get that done and we’ll be ready with plenty of vaccines when they do.')]
 ```
 
-## Querying with score
 
-The score of the query can be included for every result. 
+## 점수와 함께 쿼리
 
-> The score returned in the query requests is a normalized value between 0 and 1, where 1 indicates the highest similarity and 0 the lowest regardless of the similarity function used. For more information look at the [docs](https://upstash.com/docs/vector/overall/features#vector-similarity-functions).
+쿼리의 점수는 모든 결과에 포함될 수 있습니다.
+
+> 쿼리 요청에서 반환된 점수는 0과 1 사이의 정규화된 값으로, 1은 가장 높은 유사성을 나타내고 0은 가장 낮은 유사성을 나타냅니다. 사용된 유사성 함수에 관계없이. 자세한 내용은 [문서](https://upstash.com/docs/vector/overall/features#vector-similarity-functions)를 참조하십시오.
 
 ```python
 result = store.similarity_search_with_score("technology", k=5)
@@ -126,6 +136,7 @@ result = store.similarity_search_with_score("technology", k=5)
 for doc, score in result:
     print(f"{doc.metadata} - {score}")
 ```
+
 ```output
 {'source': '../../how_to/state_of_the_union.txt'} - 0.8968438
 {'source': '../../how_to/state_of_the_union.txt'} - 0.8895128
@@ -133,13 +144,16 @@ for doc, score in result:
 {'source': '../../how_to/state_of_the_union.txt'} - 0.88538057
 {'source': '../../how_to/state_of_the_union.txt'} - 0.88432854
 ```
-## Namespaces
 
-Namespaces can be used to separate different types of documents. This can increase the efficiency of the queries since the search space is reduced. When no namespace is provided, the default namespace is used.
+
+## 네임스페이스
+
+네임스페이스는 서로 다른 유형의 문서를 구분하는 데 사용할 수 있습니다. 이는 검색 공간이 줄어들기 때문에 쿼리의 효율성을 높일 수 있습니다. 네임스페이스가 제공되지 않으면 기본 네임스페이스가 사용됩니다.
 
 ```python
 store_books = UpstashVectorStore(embedding=embeddings, namespace="books")
 ```
+
 
 ```python
 store_books.add_texts(
@@ -164,6 +178,7 @@ store_books.add_texts(
 )
 ```
 
+
 ```output
 ['928a5f12-900f-40b7-9406-3861741cc9d6',
  '4908670e-0b9c-455b-96b8-e0f83bc59204',
@@ -174,10 +189,12 @@ store_books.add_texts(
  '695e2bcf-23d9-44d4-af26-a7b554c0c375']
 ```
 
+
 ```python
 result = store_books.similarity_search("dystopia", k=3)
 result
 ```
+
 
 ```output
 [Document(metadata={'title': '1984', 'author': 'George Orwell', 'year': 1949}, page_content='A chilling portrayal of a totalitarian regime, this dystopian novel offers a bleak vision of a future world dominated by surveillance, propaganda, and thought control. Through the eyes of a disillusioned protagonist, it explores the dangers of totalitarianism and the erosion of individual freedom in a society ruled by fear and oppression.'),
@@ -185,14 +202,16 @@ result
  Document(metadata={'title': 'Brave New World', 'author': 'Aldous Huxley', 'year': 1932}, page_content='In a society where emotion is suppressed and individuality is forbidden, one man dares to defy the oppressive regime. Through acts of rebellion and forbidden love, he discovers the power of human connection and the importance of free will.')]
 ```
 
-## Metadata Filtering
 
-Metadata can be used to filter the results of a query. You can refer to the [docs](https://upstash.com/docs/vector/features/filtering) to see more complex ways of filtering.
+## 메타데이터 필터링
+
+메타데이터는 쿼리 결과를 필터링하는 데 사용할 수 있습니다. 더 복잡한 필터링 방법은 [문서](https://upstash.com/docs/vector/features/filtering)를 참조하십시오.
 
 ```python
 result = store_books.similarity_search("dystopia", k=3, filter="year < 2000")
 result
 ```
+
 
 ```output
 [Document(metadata={'title': '1984', 'author': 'George Orwell', 'year': 1949}, page_content='A chilling portrayal of a totalitarian regime, this dystopian novel offers a bleak vision of a future world dominated by surveillance, propaganda, and thought control. Through the eyes of a disillusioned protagonist, it explores the dangers of totalitarianism and the erosion of individual freedom in a society ruled by fear and oppression.'),
@@ -200,38 +219,43 @@ result
  Document(metadata={'title': 'The Catcher in the Rye', 'author': 'J.D. Salinger', 'year': 1951}, page_content='Narrated by a disillusioned teenager, this novel follows his journey of self-discovery and rebellion against the phoniness of the adult world. Through a series of encounters and reflections, it explores themes of alienation, identity, and the search for authenticity in a society marked by conformity and hypocrisy.')]
 ```
 
-## Getting info about vector database
 
-You can get information about your database like the distance metric dimension using the info function.
+## 벡터 데이터베이스 정보 가져오기
 
-> When an insert happens, the database an indexing takes place. While this is happening new vectors can not be queried. `pendingVectorCount` represents the number of vector that are currently being indexed. 
+정보 함수 사용하여 거리 메트릭 차원과 같은 데이터베이스에 대한 정보를 얻을 수 있습니다.
+
+> 삽입이 발생하면 데이터베이스에서 인덱싱이 진행됩니다. 이 과정에서 새로운 벡터는 쿼리할 수 없습니다. `pendingVectorCount`는 현재 인덱싱 중인 벡터의 수를 나타냅니다.
 
 ```python
 store.info()
 ```
 
+
 ```output
 InfoResult(vector_count=49, pending_vector_count=0, index_size=2978163, dimension=1536, similarity_function='COSINE', namespaces={'': NamespaceInfo(vector_count=42, pending_vector_count=0), 'books': NamespaceInfo(vector_count=7, pending_vector_count=0)})
 ```
 
-## Deleting vectors
 
-Vectors can be deleted by their ids
+## 벡터 삭제
+
+벡터는 ID로 삭제할 수 있습니다.
 
 ```python
 store.delete(inserted_vectors)
 ```
 
-## Clearing the vector database
 
-This will clear the vector database
+## 벡터 데이터베이스 지우기
+
+이 작업은 벡터 데이터베이스를 지웁니다.
 
 ```python
 store.delete(delete_all=True)
 store_books.delete(delete_all=True)
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 스토어 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 스토어 [사용 방법 가이드](/docs/how_to/#vector-stores)

@@ -1,19 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/anyscale/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/anyscale.ipynb
+description: 이 문서는 Anyscale Endpoints에서 `langchain.chat_models.ChatAnyscale`의 사용법을
+  시연합니다. API 키 설정 및 모델 요청 방법을 포함합니다.
 sidebar_label: Anyscale
 ---
 
 # ChatAnyscale
 
-This notebook demonstrates the use of `langchain.chat_models.ChatAnyscale` for [Anyscale Endpoints](https://endpoints.anyscale.com/).
+이 노트북은 `langchain.chat_models.ChatAnyscale`을 [Anyscale Endpoints](https://endpoints.anyscale.com/)에서 사용하는 방법을 보여줍니다.
 
-* Set `ANYSCALE_API_KEY` environment variable
-* or use the `anyscale_api_key` keyword argument
+* `ANYSCALE_API_KEY` 환경 변수를 설정하세요.
+* 또는 `anyscale_api_key` 키워드 인수를 사용하세요.
 
 ```python
 %pip install --upgrade --quiet  langchain-openai
 ```
+
 
 ```python
 import os
@@ -21,10 +23,12 @@ from getpass import getpass
 
 os.environ["ANYSCALE_API_KEY"] = getpass()
 ```
+
 ```output
  ········
 ```
-# Let's try out each model offered on Anyscale Endpoints
+
+# Anyscale Endpoints에서 제공하는 각 모델을 사용해 보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnyscale", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.anyscale.ChatAnyscale.html", "title": "ChatAnyscale"}]-->
@@ -37,12 +41,14 @@ chats = {
 
 print(chats.keys())
 ```
+
 ```output
 dict_keys(['meta-llama/Llama-2-70b-chat-hf', 'meta-llama/Llama-2-7b-chat-hf', 'meta-llama/Llama-2-13b-chat-hf'])
 ```
-# We can use async methods and other stuff supported by ChatOpenAI
 
-This way, the three requests will only take as long as the longest individual request.
+# 우리는 async 메서드와 ChatOpenAI에서 지원하는 기타 기능을 사용할 수 있습니다.
+
+이렇게 하면 세 가지 요청은 가장 긴 개별 요청만큼만 시간이 걸립니다.
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatAnyscale"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "ChatAnyscale"}]-->
@@ -64,11 +70,13 @@ async def get_msgs():
     return dict(zip(chats.keys(), responses))
 ```
 
+
 ```python
 import nest_asyncio
 
 nest_asyncio.apply()
 ```
+
 
 ```python
 %%time
@@ -81,6 +89,7 @@ for model_name, response in response_dict.items():
     print(response.content)
     print("\n---\n")
 ```
+
 ```output
 	meta-llama/Llama-2-70b-chat-hf
 
@@ -128,7 +137,8 @@ CPU times: user 371 ms, sys: 15.5 ms, total: 387 ms
 Wall time: 12 s
 ```
 
-## Related
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

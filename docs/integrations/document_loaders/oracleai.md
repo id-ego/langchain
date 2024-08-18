@@ -1,43 +1,44 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/oracleai/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/oracleai.ipynb
+description: Oracle AI 벡터 검색은 비즈니스 데이터와 비구조적 데이터를 통합하여 의미 기반 쿼리를 지원하는 강력한 AI 솔루션입니다.
 ---
 
-# Oracle AI Vector Search: Document Processing
-Oracle AI Vector Search is designed for Artificial Intelligence (AI) workloads that allows you to query data based on semantics, rather than keywords.
-One of the biggest benefits of Oracle AI Vector Search is that semantic search on unstructured data can be combined with relational search on business data in one single system.
-This is not only powerful but also significantly more effective because you don't need to add a specialized vector database, eliminating the pain of data fragmentation between multiple systems.
+# 오라클 AI 벡터 검색: 문서 처리
+오라클 AI 벡터 검색은 키워드가 아닌 의미에 기반하여 데이터를 쿼리할 수 있는 인공지능(AI) 작업을 위해 설계되었습니다.  
+오라클 AI 벡터 검색의 가장 큰 장점 중 하나는 비구조화된 데이터에 대한 의미 검색을 비즈니스 데이터에 대한 관계형 검색과 하나의 시스템에서 결합할 수 있다는 것입니다.  
+이는 강력할 뿐만 아니라 여러 시스템 간의 데이터 단편화 문제를 없애줌으로써 훨씬 더 효과적입니다.
 
-In addition, your vectors can benefit from all of Oracle Database’s most powerful features, like the following:
+또한, 귀하의 벡터는 다음과 같은 오라클 데이터베이스의 가장 강력한 기능의 혜택을 누릴 수 있습니다:
 
-* [Partitioning Support](https://www.oracle.com/database/technologies/partitioning.html)
-* [Real Application Clusters scalability](https://www.oracle.com/database/real-application-clusters/)
-* [Exadata smart scans](https://www.oracle.com/database/technologies/exadata/software/smartscan/)
-* [Shard processing across geographically distributed databases](https://www.oracle.com/database/distributed-database/)
-* [Transactions](https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/transactions.html)
-* [Parallel SQL](https://docs.oracle.com/en/database/oracle/oracle-database/21/vldbg/parallel-exec-intro.html#GUID-D28717E4-0F77-44F5-BB4E-234C31D4E4BA)
-* [Disaster recovery](https://www.oracle.com/database/data-guard/)
-* [Security](https://www.oracle.com/security/database-security/)
-* [Oracle Machine Learning](https://www.oracle.com/artificial-intelligence/database-machine-learning/)
-* [Oracle Graph Database](https://www.oracle.com/database/integrated-graph-database/)
-* [Oracle Spatial and Graph](https://www.oracle.com/database/spatial/)
-* [Oracle Blockchain](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_blockchain_table.html#GUID-B469E277-978E-4378-A8C1-26D3FF96C9A6)
+* [파티셔닝 지원](https://www.oracle.com/database/technologies/partitioning.html)
+* [실제 애플리케이션 클러스터 확장성](https://www.oracle.com/database/real-application-clusters/)
+* [엑사데이터 스마트 스캔](https://www.oracle.com/database/technologies/exadata/software/smartscan/)
+* [지리적으로 분산된 데이터베이스 간의 샤드 처리](https://www.oracle.com/database/distributed-database/)
+* [트랜잭션](https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/transactions.html)
+* [병렬 SQL](https://docs.oracle.com/en/database/oracle/oracle-database/21/vldbg/parallel-exec-intro.html#GUID-D28717E4-0F77-44F5-BB4E-234C31D4E4BA)
+* [재해 복구](https://www.oracle.com/database/data-guard/)
+* [보안](https://www.oracle.com/security/database-security/)
+* [오라클 머신 러닝](https://www.oracle.com/artificial-intelligence/database-machine-learning/)
+* [오라클 그래프 데이터베이스](https://www.oracle.com/database/integrated-graph-database/)
+* [오라클 공간 및 그래프](https://www.oracle.com/database/spatial/)
+* [오라클 블록체인](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_blockchain_table.html#GUID-B469E277-978E-4378-A8C1-26D3FF96C9A6)
 * [JSON](https://docs.oracle.com/en/database/oracle/oracle-database/23/adjsn/json-in-oracle-database.html)
 
-The guide demonstrates how to use Document Processing Capabilities within Oracle AI Vector Search to load and chunk documents using OracleDocLoader and OracleTextSplitter respectively.
+이 가이드는 오라클 AI 벡터 검색 내에서 오라클DocLoader 및 오라클TextSplitter를 사용하여 문서를 로드하고 청크화하는 방법을 보여줍니다.
 
-If you are just starting with Oracle Database, consider exploring the [free Oracle 23 AI](https://www.oracle.com/database/free/#resources) which provides a great introduction to setting up your database environment. While working with the database, it is often advisable to avoid using the system user by default; instead, you can create your own user for enhanced security and customization. For detailed steps on user creation, refer to our [end-to-end guide](https://github.com/langchain-ai/langchain/blob/master/cookbook/oracleai_demo.ipynb) which also shows how to set up a user in Oracle. Additionally, understanding user privileges is crucial for managing database security effectively. You can learn more about this topic in the official [Oracle guide](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D) on administering user accounts and security.
+오라클 데이터베이스를 처음 시작하는 경우, 데이터베이스 환경 설정에 대한 훌륭한 소개를 제공하는 [무료 오라클 23 AI](https://www.oracle.com/database/free/#resources)를 탐색하는 것을 고려해 보십시오. 데이터베이스 작업 시 기본적으로 시스템 사용자를 피하는 것이 좋습니다. 대신 보안 및 사용자 정의를 강화하기 위해 자신의 사용자를 생성할 수 있습니다. 사용자 생성에 대한 자세한 단계는 오라클에서 사용자를 설정하는 방법도 보여주는 [종합 가이드](https://github.com/langchain-ai/langchain/blob/master/cookbook/oracleai_demo.ipynb)를 참조하십시오. 또한, 사용자 권한을 이해하는 것은 데이터베이스 보안을 효과적으로 관리하는 데 중요합니다. 이 주제에 대한 자세한 내용은 사용자 계정 및 보안 관리에 대한 공식 [오라클 가이드](https://docs.oracle.com/en/database/oracle/oracle-database/19/admqs/administering-user-accounts-and-security.html#GUID-36B21D72-1BBB-46C9-A0C9-F0D2A8591B8D)를 통해 알아볼 수 있습니다.
 
-### Prerequisites
+### 전제 조건
 
-Please install Oracle Python Client driver to use Langchain with Oracle AI Vector Search. 
+Langchain을 오라클 AI 벡터 검색과 함께 사용하려면 오라클 파이썬 클라이언트 드라이버를 설치하십시오.
 
 ```python
 # pip install oracledb
 ```
 
-### Connect to Oracle Database
-The following sample code will show how to connect to Oracle Database. By default, python-oracledb runs in a ‘Thin’ mode which connects directly to Oracle Database. This mode does not need Oracle Client libraries. However, some additional functionality is available when python-oracledb uses them. Python-oracledb is said to be in ‘Thick’ mode when Oracle Client libraries are used. Both modes have comprehensive functionality supporting the Python Database API v2.0 Specification. See the following [guide](https://python-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html#featuresummary) that talks about features supported in each mode. You might want to switch to thick-mode if you are unable to use thin-mode.
+
+### 오라클 데이터베이스에 연결
+다음 샘플 코드는 오라클 데이터베이스에 연결하는 방법을 보여줍니다. 기본적으로 python-oracledb는 오라클 데이터베이스에 직접 연결하는 'Thin' 모드에서 실행됩니다. 이 모드는 오라클 클라이언트 라이브러리가 필요하지 않습니다. 그러나 python-oracledb가 이를 사용할 때 추가 기능이 제공됩니다. 오라클 클라이언트 라이브러리가 사용될 때 python-oracledb는 'Thick' 모드에 있다고 합니다. 두 모드 모두 Python 데이터베이스 API v2.0 사양을 지원하는 포괄적인 기능을 가지고 있습니다. 각 모드에서 지원되는 기능에 대해 설명하는 [가이드](https://python-oracledb.readthedocs.io/en/latest/user_guide/appendix_a.html#featuresummary)를 참조하십시오. Thin 모드를 사용할 수 없는 경우 Thick 모드로 전환하는 것이 좋습니다.
 
 ```python
 import sys
@@ -57,7 +58,8 @@ except Exception as e:
     sys.exit(1)
 ```
 
-Now let's create a table and insert some sample docs to test.
+
+이제 테이블을 생성하고 테스트할 샘플 문서를 삽입해 보겠습니다.
 
 ```python
 try:
@@ -97,13 +99,14 @@ except Exception as e:
     sys.exit(1)
 ```
 
-### Load Documents
 
-Users have the flexibility to load documents from either the Oracle Database, a file system, or both, by appropriately configuring the loader parameters. For comprehensive details on these parameters, please consult the [Oracle AI Vector Search Guide](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_vector_chain1.html#GUID-73397E89-92FB-48ED-94BB-1AD960C4EA1F).
+### 문서 로드
 
-A significant advantage of utilizing OracleDocLoader is its capability to process over 150 distinct file formats, eliminating the need for multiple loaders for different document types. For a complete list of the supported formats, please refer to the [Oracle Text Supported Document Formats](https://docs.oracle.com/en/database/oracle/oracle-database/23/ccref/oracle-text-supported-document-formats.html).
+사용자는 로더 매개변수를 적절히 구성하여 오라클 데이터베이스, 파일 시스템 또는 둘 다에서 문서를 로드할 수 있는 유연성을 가지고 있습니다. 이러한 매개변수에 대한 포괄적인 세부정보는 [오라클 AI 벡터 검색 가이드](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_vector_chain1.html#GUID-73397E89-92FB-48ED-94BB-1AD960C4EA1F)를 참조하십시오.
 
-Below is a sample code snippet that demonstrates how to use OracleDocLoader
+오라클DocLoader를 활용하는 주요 장점은 150개 이상의 다양한 파일 형식을 처리할 수 있는 능력으로, 다양한 문서 유형에 대해 여러 로더가 필요하지 않습니다. 지원되는 형식의 전체 목록은 [오라클 텍스트 지원 문서 형식](https://docs.oracle.com/en/database/oracle/oracle-database/23/ccref/oracle-text-supported-document-formats.html)을 참조하십시오.
+
+아래는 오라클DocLoader를 사용하는 방법을 보여주는 샘플 코드 스니펫입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OracleDocLoader", "source": "langchain_community.document_loaders.oracleai", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.oracleai.OracleDocLoader.html", "title": "Oracle AI Vector Search: Document Processing"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Oracle AI Vector Search: Document Processing"}]-->
@@ -136,10 +139,11 @@ print(f"Number of docs loaded: {len(docs)}")
 # print(f"Document-0: {docs[0].page_content}") # content
 ```
 
-### Split Documents
-The documents may vary in size, ranging from small to very large. Users often prefer to chunk their documents into smaller sections to facilitate the generation of embeddings. A wide array of customization options is available for this splitting process. For comprehensive details regarding these parameters, please consult the [Oracle AI Vector Search Guide](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_vector_chain1.html#GUID-4E145629-7098-4C7C-804F-FC85D1F24240).
 
-Below is a sample code illustrating how to implement this:
+### 문서 분할
+문서는 크기가 작거나 매우 클 수 있습니다. 사용자는 종종 임베딩 생성을 용이하게 하기 위해 문서를 더 작은 섹션으로 청크화하는 것을 선호합니다. 이 분할 프로세스에는 다양한 사용자 정의 옵션이 제공됩니다. 이러한 매개변수에 대한 포괄적인 세부정보는 [오라클 AI 벡터 검색 가이드](https://docs.oracle.com/en/database/oracle/oracle-database/23/arpls/dbms_vector_chain1.html#GUID-4E145629-7098-4C7C-804F-FC85D1F24240)를 참조하십시오.
+
+아래는 이를 구현하는 방법을 보여주는 샘플 코드입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "OracleTextSplitter", "source": "langchain_community.document_loaders.oracleai", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.oracleai.OracleTextSplitter.html", "title": "Oracle AI Vector Search: Document Processing"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Oracle AI Vector Search: Document Processing"}]-->
@@ -174,10 +178,11 @@ print(f"Number of Chunks: {len(list_chunks)}")
 # print(f"Chunk-0: {list_chunks[0]}") # content
 ```
 
-### End to End Demo
-Please refer to our complete demo guide [Oracle AI Vector Search End-to-End Demo Guide](https://github.com/langchain-ai/langchain/tree/master/cookbook/oracleai_demo.ipynb) to build an end to end RAG pipeline with the help of Oracle AI Vector Search.
 
-## Related
+### 엔드 투 엔드 데모
+오라클 AI 벡터 검색의 도움으로 엔드 투 엔드 RAG 파이프라인을 구축하기 위해 [오라클 AI 벡터 검색 엔드 투 엔드 데모 가이드](https://github.com/langchain-ai/langchain/tree/master/cookbook/oracleai_demo.ipynb)를 참조하십시오.
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

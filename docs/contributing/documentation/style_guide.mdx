@@ -1,161 +1,138 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/contributing/documentation/style_guide/
+description: LangChain 문서 스타일 가이드는 문서 작성 지침과 조직 및 구조에 대한 철학을 제공합니다. 다양한 문서 유형을 다룹니다.
 sidebar_class_name: hidden
 ---
 
-# Documentation Style Guide
+# 문서 스타일 가이드
 
-As LangChain continues to grow, the surface area of documentation required to cover it continues to grow too.
-This page provides guidelines for anyone writing documentation for LangChain, as well as some of our philosophies around
-organization and structure.
+LangChain이 계속 성장함에 따라 이를 다루기 위한 문서의 범위도 계속 확장되고 있습니다. 이 페이지는 LangChain에 대한 문서를 작성하는 모든 사람을 위한 가이드라인과 조직 및 구조에 대한 우리의 철학을 제공합니다.
 
-## Philosophy
+## 철학
 
-LangChain's documentation follows the [Diataxis framework](https://diataxis.fr).
-Under this framework, all documentation falls under one of four categories: [Tutorials](/docs/contributing/documentation/style_guide/#tutorials),
-[How-to guides](/docs/contributing/documentation/style_guide/#how-to-guides),
-[References](/docs/contributing/documentation/style_guide/#references), and [Explanations](/docs/contributing/documentation/style_guide/#conceptual-guide).
+LangChain의 문서는 [Diataxis 프레임워크](https://diataxis.fr)를 따릅니다. 이 프레임워크에 따라 모든 문서는 네 가지 범주 중 하나에 해당합니다: [튜토리얼](/docs/contributing/documentation/style_guide/#tutorials), [사용 방법 가이드](/docs/contributing/documentation/style_guide/#how-to-guides), [참조](/docs/contributing/documentation/style_guide/#references), [설명](/docs/contributing/documentation/style_guide/#conceptual-guide).
 
-### Tutorials
+### 튜토리얼
 
-Tutorials are lessons that take the reader through a practical activity. Their purpose is to help the user
-gain understanding of concepts and how they interact by showing one way to achieve some goal in a hands-on way. They should **avoid** giving
-multiple permutations of ways to achieve that goal in-depth. Instead, it should guide a new user through a recommended path to accomplishing the tutorial's goal. While the end result of a tutorial does not necessarily need to
-be completely production-ready, it should be useful and practically satisfy the the goal that you clearly stated in the tutorial's introduction. Information on how to address additional scenarios
-belongs in how-to guides.
+튜토리얼은 독자가 실용적인 활동을 통해 학습하도록 돕는 수업입니다. 그 목적은 사용자가 개념을 이해하고 상호작용하는 방법을 보여주어 특정 목표를 달성하는 한 가지 방법을 제시하는 것입니다. 여러 가지 방법을 깊이 있게 제시하는 것은 **피해야** 합니다. 대신, 새로운 사용자가 튜토리얼의 목표를 달성하기 위한 추천 경로를 안내해야 합니다. 튜토리얼의 최종 결과가 반드시 완전히 생산 준비가 되어 있을 필요는 없지만, 유용하고 튜토리얼의 소개에서 명확히 언급한 목표를 실질적으로 만족해야 합니다. 추가 시나리오를 다루는 정보는 사용 방법 가이드에 포함되어야 합니다.
 
-To quote the Diataxis website:
+Diataxis 웹사이트에서 인용하자면:
 
-> A tutorial serves the user’s *acquisition* of skills and knowledge - their study. Its purpose is not to help the user get something done, but to help them learn.
+> 튜토리얼은 사용자의 *기술 및 지식 습득* - 즉, 학습을 돕습니다. 그 목적은 사용자가 무언가를 완료하도록 돕는 것이 아니라, 그들이 배우도록 돕는 것입니다.
 
-In LangChain, these are often higher level guides that show off end-to-end use cases.
+LangChain에서 이러한 튜토리얼은 종종 엔드 투 엔드 사용 사례를 보여주는 고급 가이드입니다.
 
-Some examples include:
+몇 가지 예시로는:
 
-- [Build a Simple LLM Application with LCEL](/docs/tutorials/llm_chain/)
-- [Build a Retrieval Augmented Generation (RAG) App](/docs/tutorials/rag/)
+- [LCEL로 간단한 LLM 애플리케이션 구축하기](/docs/tutorials/llm_chain/)
+- [검색 증강 생성(RAG) 앱 구축하기](/docs/tutorials/rag/)
 
-A good structural rule of thumb is to follow the structure of this [example from Numpy](https://numpy.org/numpy-tutorials/content/tutorial-svd.html).
+좋은 구조적 규칙은 이 [Numpy의 예시](https://numpy.org/numpy-tutorials/content/tutorial-svd.html)의 구조를 따르는 것입니다.
 
-Here are some high-level tips on writing a good tutorial:
+좋은 튜토리얼 작성을 위한 몇 가지 고급 팁은 다음과 같습니다:
 
-- Focus on guiding the user to get something done, but keep in mind the end-goal is more to impart principles than to create a perfect production system.
-- Be specific, not abstract and follow one path.
-  - No need to go deeply into alternative approaches, but it’s ok to reference them, ideally with a link to an appropriate how-to guide.
-- Get "a point on the board" as soon as possible - something the user can run that outputs something.
-  - You can iterate and expand afterwards.
-  - Try to frequently checkpoint at given steps where the user can run code and see progress.
-- Focus on results, not technical explanation.
-  - Crosslink heavily to appropriate conceptual/reference pages.
-- The first time you mention a LangChain concept, use its full name (e.g. "LangChain Expression Language (LCEL)"), and link to its conceptual/other documentation page.
-  - It's also helpful to add a prerequisite callout that links to any pages with necessary background information.
-- End with a recap/next steps section summarizing what the tutorial covered and future reading, such as related how-to guides.
+- 사용자가 무언가를 완료하도록 안내하는 데 집중하되, 최종 목표는 완벽한 생산 시스템을 만드는 것보다 원칙을 전달하는 것입니다.
+- 구체적이어야 하며, 추상적이지 않고 한 경로를 따라야 합니다.
+  - 대체 접근 방식에 대해 깊이 들어갈 필요는 없지만, 적절한 사용 방법 가이드에 대한 링크와 함께 언급하는 것은 괜찮습니다.
+- 가능한 한 빨리 "점수를 얻는 것" - 사용자가 실행할 수 있는 무언가를 출력하는 것입니다.
+  - 이후에 반복하고 확장할 수 있습니다.
+  - 사용자가 코드를 실행하고 진행 상황을 확인할 수 있는 특정 단계에서 자주 체크포인트를 시도하십시오.
+- 결과에 집중하고 기술적 설명은 피하십시오.
+  - 적절한 개념/참조 페이지에 많이 링크하십시오.
+- LangChain 개념을 처음 언급할 때는 전체 이름을 사용하고 (예: "LangChain 표현 언어(LCEL)"), 개념적/기타 문서 페이지에 링크하십시오.
+  - 필요한 배경 정보가 포함된 페이지에 링크하는 전제 조건 호출을 추가하는 것도 유용합니다.
+- 튜토리얼에서 다룬 내용을 요약하고 관련 사용 방법 가이드와 같은 향후 읽을거리를 정리하는 요약/다음 단계 섹션으로 마무리하십시오.
 
-### How-to guides
+### 사용 방법 가이드
 
-A how-to guide, as the name implies, demonstrates how to do something discrete and specific.
-It should assume that the user is already familiar with underlying concepts, and is trying to solve an immediate problem, but
-should still give some background or list the scenarios where the information contained within can be relevant.
-They can and should discuss alternatives if one approach may be better than another in certain cases.
+사용 방법 가이드는 이름에서 알 수 있듯이, 특정하고 분리된 작업을 수행하는 방법을 보여줍니다. 사용자가 기본 개념에 이미 익숙하고 즉각적인 문제를 해결하려고 한다고 가정해야 하지만, 여전히 배경 정보를 제공하거나 정보가 관련될 수 있는 시나리오를 나열해야 합니다. 한 접근 방식이 특정 경우에 더 나을 수 있다면 대안에 대해 논의할 수 있어야 합니다.
 
-To quote the Diataxis website:
+Diataxis 웹사이트에서 인용하자면:
 
-> A how-to guide serves the work of the already-competent user, whom you can assume to know what they want to do, and to be able to follow your instructions correctly.
+> 사용 방법 가이드는 이미 능숙한 사용자의 작업을 돕습니다. 이들은 자신이 무엇을 하고 싶은지 알고 있으며, 귀하의 지침을 올바르게 따를 수 있다고 가정할 수 있습니다.
 
-Some examples include:
+몇 가지 예시로는:
 
-- [How to: return structured data from a model](/docs/how_to/structured_output/)
-- [How to: write a custom chat model](/docs/how_to/custom_chat_model/)
+- [모델에서 구조화된 데이터 반환하기](/docs/how_to/structured_output/)
+- [사용자 정의 채팅 모델 작성하기](/docs/how_to/custom_chat_model/)
 
-Here are some high-level tips on writing a good how-to guide:
+좋은 사용 방법 가이드를 작성하기 위한 몇 가지 고급 팁은 다음과 같습니다:
 
-- Clearly explain what you are guiding the user through at the start.
-- Assume higher intent than a tutorial and show what the user needs to do to get that task done.
-- Assume familiarity of concepts, but explain why suggested actions are helpful.
-  - Crosslink heavily to conceptual/reference pages.
-- Discuss alternatives and responses to real-world tradeoffs that may arise when solving a problem.
-- Use lots of example code.
-  - Prefer full code blocks that the reader can copy and run.
-- End with a recap/next steps section summarizing what the tutorial covered and future reading, such as other related how-to guides.
+- 시작할 때 사용자가 무엇을 안내받고 있는지 명확히 설명하십시오.
+- 튜토리얼보다 높은 의도를 가정하고 사용자가 작업을 완료하기 위해 무엇을 해야 하는지 보여주십시오.
+- 개념에 대한 친숙함을 가정하되, 제안된 행동이 왜 유용한지 설명하십시오.
+  - 개념/참조 페이지에 많이 링크하십시오.
+- 문제를 해결할 때 발생할 수 있는 실제 세계의 트레이드오프에 대한 대안과 응답을 논의하십시오.
+- 많은 예제 코드를 사용하십시오.
+  - 독자가 복사하고 실행할 수 있는 전체 코드 블록을 선호하십시오.
+- 튜토리얼에서 다룬 내용을 요약하고 향후 읽을거리를 정리하는 요약/다음 단계 섹션으로 마무리하십시오.
 
-### Conceptual guide
+### 개념 가이드
 
-LangChain's conceptual guide falls under the **Explanation** quadrant of Diataxis. They should cover LangChain terms and concepts
-in a more abstract way than how-to guides or tutorials, and should be geared towards curious users interested in
-gaining a deeper understanding of the framework. Try to avoid excessively large code examples - the goal here is to
-impart perspective to the user rather than to finish a practical project. These guides should cover **why** things work they way they do.
+LangChain의 개념 가이드는 Diataxis의 **설명** 사분면에 해당합니다. 이들은 LangChain 용어와 개념을 사용 방법 가이드나 튜토리얼보다 더 추상적인 방식으로 다루며, 프레임워크에 대한 깊은 이해를 원하는 호기심 많은 사용자를 대상으로 해야 합니다. 지나치게 큰 코드 예제를 피하고, 목표는 사용자가 관점을 얻도록 하는 것입니다. 이 가이드는 **왜** 사물이 그렇게 작동하는지를 다루어야 합니다.
 
-This guide on documentation style is meant to fall under this category.
+이 문서 스타일 가이드는 이 범주에 해당합니다.
 
-To quote the Diataxis website:
+Diataxis 웹사이트에서 인용하자면:
 
-> The perspective of explanation is higher and wider than that of the other types. It does not take the user’s eye-level view, as in a how-to guide, or a close-up view of the machinery, like reference material. Its scope in each case is a topic - “an area of knowledge”, that somehow has to be bounded in a reasonable, meaningful way.
+> 설명의 관점은 다른 유형보다 더 높고 넓습니다. 이는 사용자의 눈높이에서 보지 않으며, 사용 방법 가이드처럼 가까이에서 기계를 들여다보지 않습니다. 각 경우의 범위는 "지식의 영역"이라는 주제로, 합리적이고 의미 있는 방식으로 한정되어야 합니다.
 
-Some examples include:
+몇 가지 예시로는:
 
-- [Retrieval conceptual docs](/docs/concepts/#retrieval)
-- [Chat model conceptual docs](/docs/concepts/#chat-models)
+- [검색 개념 문서](/docs/concepts/#retrieval)
+- [채팅 모델 개념 문서](/docs/concepts/#chat-models)
 
-Here are some high-level tips on writing a good conceptual guide:
+좋은 개념 가이드를 작성하기 위한 몇 가지 고급 팁은 다음과 같습니다:
 
-- Explain design decisions. Why does concept X exist and why was it designed this way?
-- Use analogies and reference other concepts and alternatives
-- Avoid blending in too much reference content
-- You can and should reference content covered in other guides, but make sure to link to them
+- 설계 결정을 설명하십시오. 개념 X는 왜 존재하며 왜 이렇게 설계되었는가?
+- 비유를 사용하고 다른 개념 및 대안을 참조하십시오.
+- 너무 많은 참조 내용을 혼합하지 마십시오.
+- 다른 가이드에서 다룬 내용을 참조할 수 있으며, 반드시 링크를 포함하십시오.
 
-### References
+### 참조
 
-References contain detailed, low-level information that describes exactly what functionality exists and how to use it.
-In LangChain, this is mainly our API reference pages, which are populated from docstrings within code.
-References pages are generally not read end-to-end, but are consulted as necessary when a user needs to know
-how to use something specific.
+참조는 존재하는 기능과 이를 사용하는 방법을 정확하게 설명하는 상세하고 저수준의 정보를 포함합니다. LangChain에서 이는 주로 코드 내의 docstring에서 생성된 API 참조 페이지입니다. 참조 페이지는 일반적으로 처음부터 끝까지 읽히지 않지만, 사용자가 특정한 것을 사용하는 방법을 알아야 할 때 필요에 따라 참조됩니다.
 
-To quote the Diataxis website:
+Diataxis 웹사이트에서 인용하자면:
 
-> The only purpose of a reference guide is to describe, as succinctly as possible, and in an orderly way. Whereas the content of tutorials and how-to guides are led by needs of the user, reference material is led by the product it describes.
+> 참조 가이드의 유일한 목적은 가능한 한 간결하고 정돈된 방식으로 설명하는 것입니다. 튜토리얼과 사용 방법 가이드의 내용은 사용자의 필요에 의해 주도되지만, 참조 자료는 설명하는 제품에 의해 주도됩니다.
 
-Many of the reference pages in LangChain are automatically generated from code,
-but here are some high-level tips on writing a good docstring:
+LangChain의 많은 참조 페이지는 코드에서 자동으로 생성되지만, 좋은 docstring 작성을 위한 몇 가지 고급 팁은 다음과 같습니다:
 
-- Be concise
-- Discuss special cases and deviations from a user's expectations
-- Go into detail on required inputs and outputs
-- Light details on when one might use the feature are fine, but in-depth details belong in other sections.
+- 간결해야 합니다.
+- 사용자의 기대에서 벗어난 특별한 경우 및 편차를 논의하십시오.
+- 필수 입력 및 출력에 대해 자세히 설명하십시오.
+- 기능을 사용할 때의 간단한 세부사항은 괜찮지만, 심층적인 세부사항은 다른 섹션에 포함되어야 합니다.
 
-Each category serves a distinct purpose and requires a specific approach to writing and structuring the content.
+각 범주는 뚜렷한 목적을 가지고 있으며 콘텐츠를 작성하고 구조화하는 특정 접근 방식이 필요합니다.
 
-## General guidelines
+## 일반 가이드라인
 
-Here are some other guidelines you should think about when writing and organizing documentation.
+문서를 작성하고 조직할 때 고려해야 할 몇 가지 다른 가이드라인은 다음과 같습니다.
 
-We generally do not merge new tutorials from outside contributors without an actue need.
-We welcome updates as well as new integration docs, how-tos, and references.
+우리는 일반적으로 급박한 필요가 없는 한 외부 기여자로부터 새로운 튜토리얼을 병합하지 않습니다. 우리는 업데이트와 새로운 통합 문서, 사용 방법, 참조를 환영합니다.
 
-### Avoid duplication
+### 중복 피하기
 
-Multiple pages that cover the same material in depth are difficult to maintain and cause confusion. There should
-be only one (very rarely two), canonical pages for a given concept or feature. Instead, you should link to other guides.
+같은 내용을 깊이 다루는 여러 페이지는 유지 관리가 어렵고 혼란을 초래합니다. 특정 개념이나 기능에 대해 하나(매우 드물게 두 개)의 정본 페이지만 있어야 합니다. 대신 다른 가이드에 링크해야 합니다.
 
-### Link to other sections
+### 다른 섹션에 링크하기
 
-Because sections of the docs do not exist in a vacuum, it is important to link to other sections as often as possible
-to allow a developer to learn more about an unfamiliar topic inline.
+문서의 섹션은 고립되어 존재하지 않기 때문에, 개발자가 익숙하지 않은 주제에 대해 인라인으로 더 많이 배울 수 있도록 다른 섹션에 가능한 한 자주 링크하는 것이 중요합니다.
 
-This includes linking to the API references as well as conceptual sections!
+여기에는 API 참조와 개념 섹션에 링크하는 것도 포함됩니다!
 
-### Be concise
+### 간결해야 합니다
 
-In general, take a less-is-more approach. If a section with a good explanation of a concept already exists, you should link to it rather than
-re-explain it, unless the concept you are documenting presents some new wrinkle.
+일반적으로 적은 것이 더 많은 접근 방식을 취하십시오. 이미 개념에 대한 좋은 설명이 있는 섹션이 있다면, 이를 재설명하기보다는 링크해야 합니다. 문서화하는 개념이 새로운 변형을 제시하지 않는 한 그렇습니다.
 
-Be concise, including in code samples.
+간결하게 작성하십시오. 코드 샘플에서도 마찬가지입니다.
 
-### General style
+### 일반 스타일
 
-- Use active voice and present tense whenever possible
-- Use examples and code snippets to illustrate concepts and usage
-- Use appropriate header levels (`#`, `##`, `###`, etc.) to organize the content hierarchically
-- Use fewer cells with more code to make copy/paste easier
-- Use bullet points and numbered lists to break down information into easily digestible chunks
-- Use tables (especially for **Reference** sections) and diagrams often to present information visually
-- Include the table of contents for longer documentation pages to help readers navigate the content, but hide it for shorter pages
+- 가능한 한 능동태와 현재 시제를 사용하십시오.
+- 개념과 사용법을 설명하기 위해 예제와 코드 스니펫을 사용하십시오.
+- 콘텐츠를 계층적으로 구성하기 위해 적절한 헤더 수준(`#`, `##`, `###` 등)을 사용하십시오.
+- 복사/붙여넣기를 쉽게 하기 위해 더 적은 셀에 더 많은 코드를 사용하십시오.
+- 정보를 쉽게 소화할 수 있는 조각으로 나누기 위해 글머리 기호 및 번호 매기기 목록을 사용하십시오.
+- 정보를 시각적으로 제시하기 위해 표(특히 **참조** 섹션)와 다이어그램을 자주 사용하십시오.
+- 긴 문서 페이지의 경우 독자가 콘텐츠를 탐색하는 데 도움이 되도록 목차를 포함하되, 짧은 페이지의 경우에는 숨기십시오.

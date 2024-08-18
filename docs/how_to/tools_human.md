@@ -1,30 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/tools_human/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/tools_human.ipynb
+description: 모델이 도구를 독립적으로 실행하는 것을 신뢰하지 않을 때, 도구 호출 전에 인간의 승인을 요구하는 방법을 안내합니다.
 ---
 
-# How to add a human-in-the-loop for tools
+# 도구에 대한 인간 개입 추가 방법
 
-There are certain tools that we don't trust a model to execute on its own. One thing we can do in such situations is require human approval before the tool is invoked.
+모델이 독립적으로 실행하는 것을 신뢰하지 않는 특정 도구가 있습니다. 이러한 상황에서 우리가 할 수 있는 한 가지는 도구가 호출되기 전에 인간의 승인을 요구하는 것입니다.
 
 :::info
 
-This how-to guide shows a simple way to add human-in-the-loop for code running in a jupyter notebook or in a terminal.
+이 사용 설명서는 주피터 노트북이나 터미널에서 코드 실행을 위한 인간 개입을 추가하는 간단한 방법을 보여줍니다.
 
-To build a production application, you will need to do more work to keep track of application state appropriately.
+프로덕션 애플리케이션을 구축하려면 애플리케이션 상태를 적절하게 추적하기 위해 더 많은 작업이 필요합니다.
 
-We recommend using `langgraph` for powering such a capability. For more details, please see this [guide](https://langchain-ai.github.io/langgraph/how-tos/human-in-the-loop/).
+이러한 기능을 지원하기 위해 `langgraph` 사용을 권장합니다. 자세한 내용은 이 [가이드](https://langchain-ai.github.io/langgraph/how-tos/human-in-the-loop/)를 참조하십시오.
 :::
 
-## Setup
+## 설정
 
-We'll need to install the following packages:
+다음 패키지를 설치해야 합니다:
 
 ```python
 %pip install --upgrade --quiet langchain
 ```
 
-And set these environment variables:
+
+그리고 이 환경 변수를 설정합니다:
 
 ```python
 import getpass
@@ -35,9 +36,10 @@ import os
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-## Chain
 
-Let's create a few simple (dummy) tools and a tool-calling chain:
+## 체인
+
+간단한 (더미) 도구와 도구 호출 체인을 만들어 보겠습니다:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -82,6 +84,7 @@ chain = llm_with_tools | call_tools
 chain.invoke("how many emails did i get in the last 5 days?")
 ```
 
+
 ```output
 [{'name': 'count_emails',
   'args': {'last_n_days': 5},
@@ -89,11 +92,12 @@ chain.invoke("how many emails did i get in the last 5 days?")
   'output': 10}]
 ```
 
-## Adding human approval
 
-Let's add a step in the chain that will ask a person to approve or reject the tall call request.
+## 인간 승인 추가
 
-On rejection, the step will raise an exception which will stop execution of the rest of the chain.
+체인에 사람에게 호출 요청을 승인하거나 거부하도록 요청하는 단계를 추가하겠습니다.
+
+거부 시, 이 단계는 예외를 발생시켜 나머지 체인의 실행을 중단합니다.
 
 ```python
 import json
@@ -125,10 +129,12 @@ def human_approval(msg: AIMessage) -> AIMessage:
     return msg
 ```
 
+
 ```python
 chain = llm_with_tools | human_approval | call_tools
 chain.invoke("how many emails did i get in the last 5 days?")
 ```
+
 ```output
 Do you approve of the following tool invocations
 
@@ -144,12 +150,14 @@ Anything except 'Y'/'Yes' (case-insensitive) will be treated as a no.
  >>> yes
 ```
 
+
 ```output
 [{'name': 'count_emails',
   'args': {'last_n_days': 5},
   'id': 'toolu_01WbD8XeMoQaRFtsZezfsHor',
   'output': 10}]
 ```
+
 
 ```python
 try:
@@ -158,6 +166,7 @@ except NotApproved as e:
     print()
     print(e)
 ```
+
 ```output
 Do you approve of the following tool invocations
 

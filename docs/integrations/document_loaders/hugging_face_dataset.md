@@ -1,19 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/hugging_face_dataset/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/hugging_face_dataset.ipynb
+description: Hugging Face Hub는 NLP, 컴퓨터 비전, 오디오를 위한 5,000개 이상의 데이터셋을 제공하며, LangChain에서
+  데이터셋을 로드하는 방법을 보여줍니다.
 ---
 
-# HuggingFace dataset
+# HuggingFace 데이터셋
 
-> The [Hugging Face Hub](https://huggingface.co/docs/hub/index) is home to over 5,000 [datasets](https://huggingface.co/docs/hub/index#datasets) in more than 100 languages that can be used for a broad range of tasks across NLP, Computer Vision, and Audio. They used for a diverse range of tasks such as translation,
-automatic speech recognition, and image classification.
+> [Hugging Face Hub](https://huggingface.co/docs/hub/index)는 NLP, 컴퓨터 비전 및 오디오 전반에 걸쳐 다양한 작업에 사용할 수 있는 100개 이상의 언어로 된 5,000개 이상의 [데이터셋](https://huggingface.co/docs/hub/index#datasets)의 본거지입니다. 이들은 번역, 자동 음성 인식 및 이미지 분류와 같은 다양한 작업에 사용됩니다.
 
-This notebook shows how to load `Hugging Face Hub` datasets to LangChain.
+이 노트북은 `Hugging Face Hub` 데이터셋을 LangChain에 로드하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceDatasetLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.hugging_face_dataset.HuggingFaceDatasetLoader.html", "title": "HuggingFace dataset"}]-->
 from langchain_community.document_loaders import HuggingFaceDatasetLoader
 ```
+
 
 ```python
 dataset_name = "imdb"
@@ -23,13 +24,16 @@ page_content_column = "text"
 loader = HuggingFaceDatasetLoader(dataset_name, page_content_column)
 ```
 
+
 ```python
 data = loader.load()
 ```
 
+
 ```python
 data[:15]
 ```
+
 
 ```output
 [Document(page_content='I rented I AM CURIOUS-YELLOW from my video store because of all the controversy that surrounded it when it was first released in 1967. I also heard that at first it was seized by U.S. customs if it ever tried to enter this country, therefore being a fan of films considered "controversial" I really had to see this for myself.<br /><br />The plot is centered around a young Swedish drama student named Lena who wants to learn everything she can about life. In particular she wants to focus her attentions to making some sort of documentary on what the average Swede thought about certain political issues such as the Vietnam War and race issues in the United States. In between asking politicians and ordinary denizens of Stockholm about their opinions on politics, she has sex with her drama teacher, classmates, and married men.<br /><br />What kills me about I AM CURIOUS-YELLOW is that 40 years ago, this was considered pornographic. Really, the sex and nudity scenes are few and far between, even then it\'s not shot like some cheaply made porno. While my countrymen mind find it shocking, in reality sex and nudity are a major staple in Swedish cinema. Even Ingmar Bergman, arguably their answer to good old boy John Ford, had sex scenes in his films.<br /><br />I do commend the filmmakers for the fact that any sex shown in the film is shown for artistic purposes rather than just to shock people and make money to be shown in pornographic theaters in America. I AM CURIOUS-YELLOW is a good film for anyone wanting to study the meat and potatoes (no pun intended) of Swedish cinema. But really, this film doesn\'t have much of a plot.', metadata={'label': 0}),
@@ -49,8 +53,9 @@ data[:15]
  Document(page_content='Today I found "They All Laughed" on VHS on sale in a rental. It was a really old and very used VHS, I had no information about this movie, but I liked the references listed on its cover: the names of Peter Bogdanovich, Audrey Hepburn, John Ritter and specially Dorothy Stratten attracted me, the price was very low and I decided to risk and buy it. I searched IMDb, and the User Rating of 6.0 was an excellent reference. I looked in "Mick Martin & Marsha Porter Video & DVD Guide 2003" and \x96 wow \x96 four stars! So, I decided that I could not waste more time and immediately see it. Indeed, I have just finished watching "They All Laughed" and I found it a very boring overrated movie. The characters are badly developed, and I spent lots of minutes to understand their roles in the story. The plot is supposed to be funny (private eyes who fall in love for the women they are chasing), but I have not laughed along the whole story. The coincidences, in a huge city like New York, are ridiculous. Ben Gazarra as an attractive and very seductive man, with the women falling for him as if her were a Brad Pitt, Antonio Banderas or George Clooney, is quite ridiculous. In the end, the greater attractions certainly are the presence of the Playboy centerfold and playmate of the year Dorothy Stratten, murdered by her husband pretty after the release of this movie, and whose life was showed in "Star 80" and "Death of a Centerfold: The Dorothy Stratten Story"; the amazing beauty of the sexy Patti Hansen, the future Mrs. Keith Richards; the always wonderful, even being fifty-two years old, Audrey Hepburn; and the song "Amigo", from Roberto Carlos. Although I do not like him, Roberto Carlos has been the most popular Brazilian singer since the end of the 60\'s and is called by his fans as "The King". I will keep this movie in my collection only because of these attractions (manly Dorothy Stratten). My vote is four.<br /><br />Title (Brazil): "Muito Riso e Muita Alegria" ("Many Laughs and Lots of Happiness")', metadata={'label': 0})]
 ```
 
-### Example
-In this example, we use data from a dataset to answer a question
+
+### 예제
+이 예제에서는 데이터셋의 데이터를 사용하여 질문에 답변합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "VectorstoreIndexCreator", "source": "langchain.indexes", "docs": "https://api.python.langchain.com/en/latest/indexes/langchain.indexes.vectorstore.VectorstoreIndexCreator.html", "title": "HuggingFace dataset"}, {"imported": "HuggingFaceDatasetLoader", "source": "langchain_community.document_loaders.hugging_face_dataset", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.hugging_face_dataset.HuggingFaceDatasetLoader.html", "title": "HuggingFace dataset"}]-->
@@ -59,6 +64,7 @@ from langchain_community.document_loaders.hugging_face_dataset import (
     HuggingFaceDatasetLoader,
 )
 ```
+
 
 ```python
 dataset_name = "tweet_eval"
@@ -69,33 +75,41 @@ name = "stance_climate"
 loader = HuggingFaceDatasetLoader(dataset_name, page_content_column, name)
 ```
 
+
 ```python
 index = VectorstoreIndexCreator().from_loaders([loader])
 ```
+
 ```output
 Found cached dataset tweet_eval
 ```
+
 ```output
   0%|          | 0/3 [00:00<?, ?it/s]
 ```
+
 ```output
 Using embedded DuckDB without persistence: data will be transient
 ```
+
 
 ```python
 query = "What are the most used hashtag?"
 result = index.query(query)
 ```
 
+
 ```python
 result
 ```
+
 
 ```output
 ' The most used hashtags in this context are #UKClimate2015, #Sustainability, #TakeDownTheFlag, #LoveWins, #CSOTA, #ClimateSummitoftheAmericas, #SM, and #SocialMedia.'
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

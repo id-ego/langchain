@@ -1,29 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/openllm/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/openllm.ipynb
+description: OpenLLM은 오픈소스 대형 언어 모델을 운영하고, 클라우드 또는 온프레미스에 배포하여 강력한 AI 앱을 구축할 수 있는
+  플랫폼입니다.
 ---
 
 # OpenLLM
 
-[🦾 OpenLLM](https://github.com/bentoml/OpenLLM) is an open platform for operating large language models (LLMs) in production. It enables developers to easily run inference with any open-source LLMs, deploy to the cloud or on-premises, and build powerful AI apps.
+[🦾 OpenLLM](https://github.com/bentoml/OpenLLM)은 대규모 언어 모델(LLM)을 운영하기 위한 개방형 플랫폼입니다. 개발자가 오픈 소스 LLM으로 쉽게 추론을 실행하고, 클라우드 또는 온프레미스에 배포하며, 강력한 AI 앱을 구축할 수 있도록 합니다.
 
-## Installation
+## 설치
 
-Install `openllm` through [PyPI](https://pypi.org/project/openllm/)
+[PyPI](https://pypi.org/project/openllm/)를 통해 `openllm`을 설치합니다.
 
 ```python
 %pip install --upgrade --quiet  openllm
 ```
 
-## Launch OpenLLM server locally
 
-To start an LLM server, use `openllm start` command. For example, to start a dolly-v2 server, run the following command from a terminal:
+## OpenLLM 서버 로컬에서 시작하기
+
+LLM 서버를 시작하려면 `openllm start` 명령어를 사용합니다. 예를 들어, dolly-v2 서버를 시작하려면 터미널에서 다음 명령어를 실행합니다:
 
 ```bash
 openllm start dolly-v2
 ```
 
-## Wrapper
+
+## 래퍼
 
 ```python
 <!--IMPORTS:[{"imported": "OpenLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.openllm.OpenLLM.html", "title": "OpenLLM"}]-->
@@ -33,13 +36,14 @@ server_url = "http://localhost:3000"  # Replace with remote host if you are runn
 llm = OpenLLM(server_url=server_url)
 ```
 
-### Optional: Local LLM Inference
 
-You may also choose to initialize an LLM managed by OpenLLM locally from current process. This is useful for development purpose and allows developers to quickly try out different types of LLMs.
+### 선택 사항: 로컬 LLM 추론
 
-When moving LLM applications to production, we recommend deploying the OpenLLM server separately and access via the `server_url` option demonstrated above.
+현재 프로세스에서 OpenLLM이 관리하는 LLM을 로컬에서 초기화할 수도 있습니다. 이는 개발 목적으로 유용하며 개발자가 다양한 유형의 LLM을 빠르게 시도할 수 있도록 합니다.
 
-To load an LLM locally via the LangChain wrapper:
+LLM 애플리케이션을 프로덕션으로 이동할 때는 OpenLLM 서버를 별도로 배포하고 위에서 설명한 `server_url` 옵션을 통해 접근하는 것을 권장합니다.
+
+LangChain 래퍼를 통해 로컬에서 LLM을 로드하려면:
 
 ```python
 <!--IMPORTS:[{"imported": "OpenLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.openllm.OpenLLM.html", "title": "OpenLLM"}]-->
@@ -53,7 +57,8 @@ llm = OpenLLM(
 )
 ```
 
-### Integrate with a LLMChain
+
+### LLMChain과 통합하기
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "OpenLLM"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "OpenLLM"}]-->
@@ -69,11 +74,13 @@ llm_chain = LLMChain(prompt=prompt, llm=llm)
 generated = llm_chain.run(product="mechanical keyboard")
 print(generated)
 ```
+
 ```output
 iLkb
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

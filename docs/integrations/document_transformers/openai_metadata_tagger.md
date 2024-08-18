@@ -1,17 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/openai_metadata_tagger/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/openai_metadata_tagger.ipynb
+description: OpenAIMetadataTagger는 문서에서 메타데이터를 자동으로 추출하여 구조화된 정보를 제공하는 도구입니다. 효율적인
+  유사성 검색을 지원합니다.
 ---
 
-# OpenAI metadata tagger
+# OpenAI 메타데이터 태거
 
-It can often be useful to tag ingested documents with structured metadata, such as the title, tone, or length of a document, to allow for a more targeted similarity search later. However, for large numbers of documents, performing this labelling process manually can be tedious.
+문서의 제목, 톤 또는 길이와 같은 구조화된 메타데이터로 수집된 문서를 태그하는 것은 나중에 보다 목표 지향적인 유사성 검색을 가능하게 하므로 유용할 수 있습니다. 그러나 많은 수의 문서에 대해 이 라벨링 프로세스를 수동으로 수행하는 것은 지루할 수 있습니다.
 
-The `OpenAIMetadataTagger` document transformer automates this process by extracting metadata from each provided document according to a provided schema. It uses a configurable `OpenAI Functions`-powered chain under the hood, so if you pass a custom LLM instance, it must be an `OpenAI` model with functions support. 
+`OpenAIMetadataTagger` 문서 변환기는 제공된 스키마에 따라 각 제공된 문서에서 메타데이터를 추출하여 이 프로세스를 자동화합니다. 내부적으로 구성 가능한 `OpenAI Functions` 기반 체인을 사용하므로, 사용자 정의 LLM 인스턴스를 전달하는 경우, 반드시 함수 지원이 있는 `OpenAI` 모델이어야 합니다.
 
-**Note:** This document transformer works best with complete documents, so it's best to run it first with whole documents before doing any other splitting or processing!
+**참고:** 이 문서 변환기는 완전한 문서에서 가장 잘 작동하므로, 다른 분할이나 처리를 수행하기 전에 전체 문서로 먼저 실행하는 것이 좋습니다!
 
-For example, let's say you wanted to index a set of movie reviews. You could initialize the document transformer with a valid `JSON Schema` object as follows:
+예를 들어, 영화 리뷰 세트를 인덱싱하고 싶다고 가정해 보겠습니다. 다음과 같이 유효한 `JSON Schema` 객체로 문서 변환기를 초기화할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "create_metadata_tagger", "source": "langchain_community.document_transformers.openai_functions", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.openai_functions.create_metadata_tagger.html", "title": "OpenAI metadata tagger"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "OpenAI metadata tagger"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "OpenAI metadata tagger"}]-->
@@ -21,6 +22,7 @@ from langchain_community.document_transformers.openai_functions import (
 from langchain_core.documents import Document
 from langchain_openai import ChatOpenAI
 ```
+
 
 ```python
 schema = {
@@ -42,7 +44,8 @@ llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
 document_transformer = create_metadata_tagger(metadata_schema=schema, llm=llm)
 ```
 
-You can then simply pass the document transformer a list of documents, and it will extract metadata from the contents:
+
+그런 다음 문서 변환기에 문서 목록을 간단히 전달하면, 내용에서 메타데이터를 추출합니다:
 
 ```python
 original_documents = [
@@ -58,6 +61,7 @@ original_documents = [
 enhanced_documents = document_transformer.transform_documents(original_documents)
 ```
 
+
 ```python
 import json
 
@@ -66,6 +70,7 @@ print(
     sep="\n\n---------------\n\n",
 )
 ```
+
 ```output
 Review of The Bee Movie
 By Roger Ebert
@@ -83,9 +88,10 @@ This movie was super boring. 1 out of 5 stars.
 
 {"movie_title": "The Godfather", "critic": "Anonymous", "tone": "negative", "rating": 1, "reliable": false}
 ```
-The new documents can then be further processed by a text splitter before being loaded into a vector store. Extracted fields will not overwrite existing metadata.
 
-You can also initialize the document transformer with a Pydantic schema:
+새 문서는 벡터 저장소에 로드되기 전에 텍스트 분할기에 의해 추가로 처리될 수 있습니다. 추출된 필드는 기존 메타데이터를 덮어쓰지 않습니다.
+
+또한 Pydantic 스키마로 문서 변환기를 초기화할 수 있습니다:
 
 ```python
 from typing import Literal
@@ -108,6 +114,7 @@ print(
     sep="\n\n---------------\n\n",
 )
 ```
+
 ```output
 Review of The Bee Movie
 By Roger Ebert
@@ -126,9 +133,10 @@ This movie was super boring. 1 out of 5 stars.
 {"movie_title": "The Godfather", "critic": "Anonymous", "tone": "negative", "rating": 1, "reliable": false}
 ```
 
-## Customization
 
-You can pass the underlying tagging chain the standard LLMChain arguments in the document transformer constructor. For example, if you wanted to ask the LLM to focus specific details in the input documents, or extract metadata in a certain style, you could pass in a custom prompt:
+## 사용자 정의
+
+문서 변환기 생성자에서 기본 태깅 체인에 표준 LLMChain 인수를 전달할 수 있습니다. 예를 들어, LLM에게 입력 문서의 특정 세부 사항에 집중하도록 요청하거나 특정 스타일로 메타데이터를 추출하도록 하려면 사용자 정의 프롬프트를 전달할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "OpenAI metadata tagger"}]-->
@@ -150,6 +158,7 @@ print(
     sep="\n\n---------------\n\n",
 )
 ```
+
 ```output
 Review of The Bee Movie
 By Roger Ebert

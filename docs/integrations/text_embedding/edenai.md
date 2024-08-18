@@ -1,58 +1,62 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/edenai/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/edenai.ipynb
+description: 에덴 AI는 최고의 AI 제공업체를 통합하여 사용자가 인공지능의 무한한 가능성을 활용할 수 있도록 지원하는 플랫폼입니다.
 ---
 
 # EDEN AI
 
-Eden AI is revolutionizing the AI landscape by uniting the best AI providers, empowering users to unlock limitless possibilities and tap into the true potential of artificial intelligence. With an all-in-one comprehensive and hassle-free platform, it allows users to deploy AI features to production lightning fast, enabling effortless access to the full breadth of AI capabilities via a single API. (website: https://edenai.co/)
+Eden AI는 최고의 AI 제공업체를 통합하여 AI 환경을 혁신하고, 사용자가 무한한 가능성을 열고 인공지능의 진정한 잠재력을 활용할 수 있도록 합니다. 올인원 종합 플랫폼을 통해 사용자는 AI 기능을 신속하게 배포할 수 있으며, 단일 API를 통해 AI 기능의 전체 범위에 쉽게 접근할 수 있습니다. (웹사이트: https://edenai.co/)
 
-This example goes over how to use LangChain to interact with Eden AI embedding models
+이 예제는 LangChain을 사용하여 Eden AI 임베딩 모델과 상호작용하는 방법을 설명합니다.
 
 * * *
 
-Accessing the EDENAI's API requires an API key, 
+EDENAI의 API에 접근하려면 API 키가 필요합니다.
 
-which you can get by creating an account https://app.edenai.run/user/register  and heading here https://app.edenai.run/admin/account/settings
+API 키는 계정을 생성하여 https://app.edenai.run/user/register 에서 얻을 수 있으며, 여기로 가서 https://app.edenai.run/admin/account/settings 설정을 확인하세요.
 
-Once we have a key we'll want to set it as an environment variable by running:
+키를 얻은 후에는 다음과 같이 환경 변수로 설정해야 합니다:
 
 ```shell
 export EDENAI_API_KEY="..."
 ```
 
-If you'd prefer not to set an environment variable you can pass the key in directly via the edenai_api_key named parameter
 
-when initiating the EdenAI embedding class:
+환경 변수를 설정하고 싶지 않다면 EdenAI 임베딩 클래스를 초기화할 때 edenai_api_key라는 매개변수를 통해 키를 직접 전달할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "EdenAiEmbeddings", "source": "langchain_community.embeddings.edenai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.edenai.EdenAiEmbeddings.html", "title": "EDEN AI"}]-->
 from langchain_community.embeddings.edenai import EdenAiEmbeddings
 ```
 
+
 ```python
 embeddings = EdenAiEmbeddings(edenai_api_key="...", provider="...")
 ```
 
-## Calling a model
 
-The EdenAI API brings together various providers.
+## 모델 호출하기
 
-To access a specific model, you can simply use the "provider" when calling.
+EdenAI API는 다양한 제공업체를 통합합니다.
+
+특정 모델에 접근하려면 호출할 때 "provider"를 간단히 사용하면 됩니다.
 
 ```python
 embeddings = EdenAiEmbeddings(provider="openai")
 ```
+
 
 ```python
 docs = ["It's raining right now", "cats are cute"]
 document_result = embeddings.embed_documents(docs)
 ```
 
+
 ```python
 query = "my umbrella is broken"
 query_result = embeddings.embed_query(query)
 ```
+
 
 ```python
 import numpy as np
@@ -65,12 +69,14 @@ for doc_res, doc in zip(document_result, docs):
     )
     print(f'Cosine similarity between "{doc}" and query: {similarity}')
 ```
+
 ```output
 Cosine similarity between "It's raining right now" and query: 0.849261496107252
 Cosine similarity between "cats are cute" and query: 0.7525900655705218
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

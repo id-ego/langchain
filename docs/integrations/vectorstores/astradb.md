@@ -1,31 +1,33 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/astradb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/astradb.ipynb
+description: 이 문서는 Astra DB를 벡터 스토어로 사용하는 방법에 대한 빠른 시작 가이드를 제공합니다. 간편한 JSON API를 통해
+  서버리스 데이터베이스를 활용하세요.
 ---
 
-# Astra DB Vector Store
+# Astra DB 벡터 스토어
 
-This page provides a quickstart for using [Astra DB](https://docs.datastax.com/en/astra/home/astra.html) as a Vector Store.
+이 페이지는 [Astra DB](https://docs.datastax.com/en/astra/home/astra.html)를 벡터 스토어로 사용하는 빠른 시작 가이드를 제공합니다.
 
-> DataStax [Astra DB](https://docs.datastax.com/en/astra/home/astra.html) is a serverless vector-capable database built on Apache Cassandra® and made conveniently available through an easy-to-use JSON API.
+> DataStax [Astra DB](https://docs.datastax.com/en/astra/home/astra.html)는 Apache Cassandra®를 기반으로 구축된 서버리스 벡터 기능 데이터베이스로, 사용하기 쉬운 JSON API를 통해 편리하게 제공됩니다.
 
-## Setup
+## 설정
 
-Use of the integration requires the `langchain-astradb` partner package:
+통합을 사용하려면 `langchain-astradb` 파트너 패키지가 필요합니다:
 
 ```python
 pip install -qU "langchain-astradb>=0.3.3"
 ```
 
-### Credentials
 
-In order to use the AstraDB vector store, you must first head to the [AstraDB website](https://astra.datastax.com), create an account, and then create a new database - the initialization might take a few minutes. 
+### 자격 증명
 
-Once the database has been initialized, you should [create an application token](https://docs.datastax.com/en/astra-db-serverless/administration/manage-application-tokens.html#generate-application-token) and save it for later use. 
+AstraDB 벡터 스토어를 사용하려면 먼저 [AstraDB 웹사이트](https://astra.datastax.com)로 이동하여 계정을 만들고 새 데이터베이스를 생성해야 합니다. 초기화에는 몇 분이 걸릴 수 있습니다.
 
-You will also want to copy the `API Endpoint` from the `Database Details` and store that in the `ASTRA_DB_API_ENDPOINT` variable.
+데이터베이스가 초기화되면 [애플리케이션 토큰을 생성](https://docs.datastax.com/en/astra-db-serverless/administration/manage-application-tokens.html#generate-application-token)하고 나중에 사용할 수 있도록 저장해야 합니다.
 
-You may optionally provide a namespace, which you can manage from the `Data Explorer` tab of your database dashboard. If you don't wish to set a namespace, you can leave the `getpass` prompt for `ASTRA_DB_NAMESPACE` empty.
+또한 `Database Details`에서 `API Endpoint`를 복사하여 `ASTRA_DB_API_ENDPOINT` 변수에 저장해야 합니다.
+
+선택적으로 네임스페이스를 제공할 수 있으며, 이는 데이터베이스 대시보드의 `Data Explorer` 탭에서 관리할 수 있습니다. 네임스페이스를 설정하지 않으려면 `ASTRA_DB_NAMESPACE`에 대한 `getpass` 프롬프트를 비워둘 수 있습니다.
 
 ```python
 import getpass
@@ -40,33 +42,34 @@ else:
     ASTRA_DB_NAMESPACE = None
 ```
 
-If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+
+모델 호출의 최상급 자동 추적을 원하신다면 아래의 [LangSmith](https://docs.smith.langchain.com/) API 키를 주석 해제하여 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-## Initialization
 
-There are two ways to create an Astra DB vector store, which differ in how the embeddings are computed.
+## 초기화
 
-#### Method 1: Explicit embeddings
+Astra DB 벡터 스토어를 생성하는 방법은 두 가지가 있으며, 임베딩이 계산되는 방식이 다릅니다.
 
-You can separately instantiate a `langchain_core.embeddings.Embeddings` class and pass it to the `AstraDBVectorStore` constructor, just like with most other LangChain vector stores.
+#### 방법 1: 명시적 임베딩
 
-#### Method 2: Integrated embedding computation
+대부분의 다른 LangChain 벡터 스토어와 마찬가지로 `langchain_core.embeddings.Embeddings` 클래스를 별도로 인스턴스화하고 이를 `AstraDBVectorStore` 생성자에 전달할 수 있습니다.
 
-Alternatively, you can use the [Vectorize](https://www.datastax.com/blog/simplifying-vector-embedding-generation-with-astra-vectorize) feature of Astra DB and simply specify the name of a supported embedding model when creating the store. The embedding computations are entirely handled within the database. (To proceed with this method, you must have enabled the desired embedding integration for your database, as described [in the docs](https://docs.datastax.com/en/astra-db-serverless/databases/embedding-generation.html).)
+#### 방법 2: 통합 임베딩 계산
 
-### Explicit Embedding Initialization
+또는 Astra DB의 [Vectorize](https://www.datastax.com/blog/simplifying-vector-embedding-generation-with-astra-vectorize) 기능을 사용하여 스토어를 생성할 때 지원되는 임베딩 모델의 이름을 지정할 수 있습니다. 임베딩 계산은 데이터베이스 내에서 완전히 처리됩니다. (이 방법을 진행하려면, 원하는 임베딩 통합을 데이터베이스에 대해 활성화해야 하며, 이에 대한 설명은 [문서](https://docs.datastax.com/en/astra-db-serverless/databases/embedding-generation.html)를 참조하십시오.)
 
-Below, we instantiate our vector store using the explicit embedding class:
+### 명시적 임베딩 초기화
+
+아래에서는 명시적 임베딩 클래스를 사용하여 벡터 스토어를 인스턴스화합니다:
 
 import EmbeddingTabs from "@theme/EmbeddingTabs";
 
 <EmbeddingTabs/>
-
 
 ```python
 <!--IMPORTS:[{"imported": "AstraDBVectorStore", "source": "langchain_astradb", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html", "title": "Astra DB Vector Store"}]-->
@@ -81,14 +84,15 @@ vector_store = AstraDBVectorStore(
 )
 ```
 
-### Integrated Embedding Initialization
 
-Here it is assumed that you have
+### 통합 임베딩 초기화
 
-- Enabled the OpenAI integration in your Astra DB organization,
-- Added an API Key named `"OPENAI_API_KEY"` to the integration, and scoped it to the database you are using.
+여기서는 다음과 같은 조건이 충족된다고 가정합니다:
 
-For more details on how to do this, please consult the [documentation](https://docs.datastax.com/en/astra-db-serverless/integrations/embedding-providers/openai.html).
+- Astra DB 조직에서 OpenAI 통합을 활성화했습니다.
+- `"OPENAI_API_KEY"`라는 이름의 API 키를 통합에 추가하고, 사용 중인 데이터베이스에 범위를 지정했습니다.
+
+이 작업을 수행하는 방법에 대한 자세한 내용은 [문서](https://docs.datastax.com/en/astra-db-serverless/integrations/embedding-providers/openai.html)를 참조하십시오.
 
 ```python
 from astrapy.info import CollectionVectorServiceOptions
@@ -110,13 +114,14 @@ vector_store_integrated = AstraDBVectorStore(
 )
 ```
 
-## Manage vector store
 
-Once you have created your vector store, we can interact with it by adding and deleting different items.
+## 벡터 스토어 관리
 
-### Add items to vector store
+벡터 스토어를 생성한 후, 다양한 항목을 추가 및 삭제하여 상호작용할 수 있습니다.
 
-We can add items to our vector store by using the `add_documents` function.
+### 벡터 스토어에 항목 추가
+
+`add_documents` 함수를 사용하여 벡터 스토어에 항목을 추가할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Astra DB Vector Store"}]-->
@@ -191,6 +196,7 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
+
 ```output
 [UUID('89a5cea1-5f3d-47c1-89dc-7e36e12cf4de'),
  UUID('d4e78c48-f954-4612-8a38-af22923ba23b'),
@@ -204,27 +210,30 @@ vector_store.add_documents(documents=documents, ids=uuids)
  UUID('a9b84820-3445-4810-a46c-e77b76ab85bc')]
 ```
 
-### Delete items from vector store
 
-We can delete items from our vector store by ID by using the `delete` function.
+### 벡터 스토어에서 항목 삭제
+
+`delete` 함수를 사용하여 ID로 벡터 스토어에서 항목을 삭제할 수 있습니다.
 
 ```python
 vector_store.delete(ids=uuids[-1])
 ```
 
+
 ```output
 True
 ```
 
-## Query vector store
 
-Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent. 
+## 벡터 스토어 쿼리
 
-### Query directly
+벡터 스토어가 생성되고 관련 문서가 추가된 후, 체인이나 에이전트를 실행하는 동안 쿼리하고 싶을 것입니다.
 
-#### Similarity search
+### 직접 쿼리
 
-Performing a simple similarity search with filtering on metadata can be done as follows:
+#### 유사성 검색
+
+메타데이터 필터링을 통해 간단한 유사성 검색을 수행할 수 있습니다:
 
 ```python
 results = vector_store.similarity_search(
@@ -235,13 +244,16 @@ results = vector_store.similarity_search(
 for res in results:
     print(f"* {res.page_content} [{res.metadata}]")
 ```
+
 ```output
 * Building an exciting new project with LangChain - come check it out! [{'source': 'tweet'}]
 * LangGraph is the best framework for building stateful, agentic applications! [{'source': 'tweet'}]
 ```
-#### Similarity search with score
 
-You can also search with score:
+
+#### 점수가 있는 유사성 검색
+
+점수와 함께 검색할 수도 있습니다:
 
 ```python
 results = vector_store.similarity_search_with_score(
@@ -250,18 +262,21 @@ results = vector_store.similarity_search_with_score(
 for res, score in results:
     print(f"* [SIM={score:3f}] {res.page_content} [{res.metadata}]")
 ```
+
 ```output
 * [SIM=0.776585] The weather forecast for tomorrow is cloudy and overcast, with a high of 62 degrees. [{'source': 'news'}]
 ```
-#### Other search methods
 
-There are a variety of other search methods that are not covered in this notebook, such as MMR search or searching by vector. For a full list of the search abilities available for `AstraDBVectorStore` check out the [API reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html).
 
-### Query by turning into retriever
+#### 기타 검색 방법
 
-You can also transform the vector store into a retriever for easier usage in your chains. 
+MMR 검색이나 벡터로 검색하는 것과 같이 이 노트북에서 다루지 않는 다양한 다른 검색 방법이 있습니다. `AstraDBVectorStore`에서 사용할 수 있는 검색 기능의 전체 목록은 [API 참조](https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html)를 확인하십시오.
 
-Here is how to transform your vector store into a retriever and then invoke the retreiever with a simple query and filter.
+### 검색기로 변환하여 쿼리
+
+벡터 스토어를 검색기로 변환하여 체인에서 더 쉽게 사용할 수 있습니다.
+
+벡터 스토어를 검색기로 변환하고 간단한 쿼리와 필터로 검색기를 호출하는 방법은 다음과 같습니다.
 
 ```python
 retriever = vector_store.as_retriever(
@@ -271,35 +286,38 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime", filter={"source": "news"})
 ```
 
+
 ```output
 [Document(metadata={'source': 'news'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
 
-## Usage for retrieval-augmented generation
 
-For guides on how to use this vector store for retrieval-augmented generation (RAG), see the following sections:
+## 검색 증강 생성 사용
 
-- [Tutorials: working with external knowledge](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
-- [How-to: Question and answer with RAG](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
-- [Retrieval conceptual docs](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
+검색 증강 생성(RAG)을 위해 이 벡터 스토어를 사용하는 방법에 대한 가이드는 다음 섹션을 참조하십시오:
 
-For more, check out a complete RAG template using Astra DB [here](https://github.com/langchain-ai/langchain/tree/master/templates/rag-astradb).
+- [튜토리얼: 외부 지식과 작업하기](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
+- [방법: RAG로 질문 및 답변](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
+- [검색 개념 문서](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
 
-## Cleanup vector store
+자세한 내용은 Astra DB를 사용한 완전한 RAG 템플릿을 [여기](https://github.com/langchain-ai/langchain/tree/master/templates/rag-astradb)에서 확인하십시오.
 
-If you want to completely delete the collection from your Astra DB instance, run this.
+## 벡터 스토어 정리
 
-*(You will lose the data you stored in it.)*
+Astra DB 인스턴스에서 컬렉션을 완전히 삭제하려면 다음을 실행하십시오.
+
+*(저장된 데이터가 손실됩니다.)*
 
 ```python
 vector_store.delete_collection()
 ```
 
-## API reference
 
-For detailed documentation of all `AstraDBVectorStore` features and configurations head to the API reference:https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html
+## API 참조
 
-## Related
+모든 `AstraDBVectorStore` 기능 및 구성에 대한 자세한 문서는 API 참조에서 확인하십시오: https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 스토어 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 스토어 [방법 가이드](/docs/how_to/#vector-stores)

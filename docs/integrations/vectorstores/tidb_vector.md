@@ -1,17 +1,17 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/tidb_vector/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/tidb_vector.ipynb
+description: TiDB Vector는 TiDB Serverless에 통합된 벡터 검색 기능으로 AI 애플리케이션 개발을 간편하게 지원합니다.
 ---
 
-# TiDB Vector
+# TiDB 벡터
 
-> [TiDB Cloud](https://www.pingcap.com/tidb-serverless), is a comprehensive Database-as-a-Service (DBaaS) solution, that provides dedicated and serverless options. TiDB Serverless is now integrating a built-in vector search into the MySQL landscape. With this enhancement, you can seamlessly develop AI applications using TiDB Serverless without the need for a new database or additional technical stacks. Create a free TiDB Serverless cluster and start using the vector search feature at https://pingcap.com/ai.
+> [TiDB Cloud](https://www.pingcap.com/tidb-serverless)는 전용 및 서버리스 옵션을 제공하는 종합 데이터베이스 서비스(DBaaS) 솔루션입니다. TiDB Serverless는 이제 MySQL 환경에 내장된 벡터 검색 기능을 통합하고 있습니다. 이 기능을 통해 새로운 데이터베이스나 추가 기술 스택 없이 TiDB Serverless를 사용하여 AI 애플리케이션을 원활하게 개발할 수 있습니다. 무료 TiDB Serverless 클러스터를 생성하고 https://pingcap.com/ai에서 벡터 검색 기능을 사용해 보세요.
 
-This notebook provides a detailed guide on utilizing the TiDB Vector functionality, showcasing its features and practical applications.
+이 노트북은 TiDB 벡터 기능을 활용하는 방법에 대한 자세한 가이드를 제공하며, 그 기능과 실제 응용 프로그램을 보여줍니다.
 
-## Setting up environments
+## 환경 설정
 
-Begin by installing the necessary packages.
+필요한 패키지를 설치하는 것으로 시작합니다.
 
 ```python
 %pip install langchain langchain-community
@@ -20,7 +20,8 @@ Begin by installing the necessary packages.
 %pip install tidb-vector
 ```
 
-Configure both the OpenAI and TiDB host settings that you will need. In this notebook, we will follow the standard connection method provided by TiDB Cloud to establish a secure and efficient database connection.
+
+OpenAI 및 TiDB 호스트 설정을 구성해야 합니다. 이 노트북에서는 TiDB Cloud에서 제공하는 표준 연결 방법을 따라 안전하고 효율적인 데이터베이스 연결을 설정합니다.
 
 ```python
 # Here we useimport getpass
@@ -37,7 +38,8 @@ tidb_connection_string = tidb_connection_string_template.replace(
 )
 ```
 
-Prepare the following data
+
+다음 데이터를 준비합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "TiDB Vector"}, {"imported": "TiDBVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.tidb_vector.TiDBVectorStore.html", "title": "TiDB Vector"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "TiDB Vector"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "TiDB Vector"}]-->
@@ -46,6 +48,7 @@ from langchain_community.vectorstores import TiDBVectorStore
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
+
 
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
@@ -56,11 +59,12 @@ docs = text_splitter.split_documents(documents)
 embeddings = OpenAIEmbeddings()
 ```
 
-## Semantic similarity search
 
-TiDB supports both cosine and Euclidean distances ('cosine', 'l2'), with 'cosine' being the default choice.
+## 의미적 유사성 검색
 
-The code snippet below creates a table named `TABLE_NAME` in TiDB, optimized for vector searching. Upon successful execution of this code, you will be able to view and access the `TABLE_NAME` table directly within your TiDB database.
+TiDB는 코사인 거리와 유클리드 거리('cosine', 'l2')를 모두 지원하며, 'cosine'이 기본 선택입니다.
+
+아래의 코드 조각은 TiDB에 `TABLE_NAME`이라는 이름의 벡터 검색에 최적화된 테이블을 생성합니다. 이 코드를 성공적으로 실행하면 TiDB 데이터베이스 내에서 `TABLE_NAME` 테이블을 직접 보고 접근할 수 있습니다.
 
 ```python
 TABLE_NAME = "semantic_embeddings"
@@ -73,12 +77,14 @@ db = TiDBVectorStore.from_documents(
 )
 ```
 
+
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db.similarity_search_with_score(query, k=3)
 ```
 
-Please note that a lower cosine distance indicates higher similarity.
+
+코사인 거리가 낮을수록 유사성이 높음을 유의하세요.
 
 ```python
 for doc, score in docs_with_score:
@@ -87,6 +93,7 @@ for doc, score in docs_with_score:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Score:  0.18459301498220004
@@ -127,7 +134,8 @@ So tonight I’m offering a Unity Agenda for the Nation. Four big things we can 
 First, beat the opioid epidemic.
 --------------------------------------------------------------------------------
 ```
-Additionally, the similarity_search_with_relevance_scores method can be used to obtain relevance scores, where a higher score indicates greater similarity.
+
+또한, similarity_search_with_relevance_scores 메서드를 사용하여 관련성 점수를 얻을 수 있으며, 더 높은 점수는 더 큰 유사성을 나타냅니다.
 
 ```python
 docs_with_relevance_score = db.similarity_search_with_relevance_scores(query, k=2)
@@ -137,6 +145,7 @@ for doc, score in docs_with_relevance_score:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Score:  0.8154069850178
@@ -163,19 +172,20 @@ We’re putting in place dedicated immigration judges so families fleeing persec
 We’re securing commitments and supporting partners in South and Central America to host more refugees and secure their own borders.
 --------------------------------------------------------------------------------
 ```
-# Filter with metadata
 
-perform searches using metadata filters to retrieve a specific number of nearest-neighbor results that align with the applied filters.
+# 메타데이터로 필터링
 
-## Supported metadata types
+메타데이터 필터를 사용하여 적용된 필터와 일치하는 특정 수의 최근접 이웃 결과를 검색합니다.
 
-Each vector in the TiDB Vector Store can be paired with metadata, structured as key-value pairs within a JSON object. The keys are strings, and the values can be of the following types:
+## 지원되는 메타데이터 유형
 
-- String
-- Number (integer or floating point)
-- Booleans (true, false)
+TiDB 벡터 저장소의 각 벡터는 JSON 객체 내에서 키-값 쌍으로 구성된 메타데이터와 쌍을 이룰 수 있습니다. 키는 문자열이며, 값은 다음 유형일 수 있습니다:
 
-For instance, consider the following valid metadata payloads:
+- 문자열
+- 숫자 (정수 또는 부동 소수점)
+- 불리언 (true, false)
+
+예를 들어, 다음과 같은 유효한 메타데이터 페이로드를 고려해 보세요:
 
 ```json
 {
@@ -184,22 +194,23 @@ For instance, consider the following valid metadata payloads:
 }
 ```
 
-## Metadata filter syntax
 
-The available filters include:
+## 메타데이터 필터 구문
 
-- $or - Selects vectors that meet any one of the given conditions.
-- $and - Selects vectors that meet all of the given conditions.
-- $eq - Equal to
-- $ne - Not equal to
-- $gt - Greater than
-- $gte - Greater than or equal to
-- $lt - Less than
-- $lte - Less than or equal to
-- $in - In array
-- $nin - Not in array
+사용 가능한 필터는 다음과 같습니다:
 
-Assuming one vector with metada:
+- $or - 주어진 조건 중 하나라도 충족하는 벡터를 선택합니다.
+- $and - 주어진 모든 조건을 충족하는 벡터를 선택합니다.
+- $eq - 같음
+- $ne - 같지 않음
+- $gt - 큼
+- $gte - 크거나 같음
+- $lt - 작음
+- $lte - 작거나 같음
+- $in - 배열에 포함됨
+- $nin - 배열에 포함되지 않음
+
+메타데이터가 있는 하나의 벡터를 가정합니다:
 ```json
 {
     "page": 12,
@@ -207,7 +218,8 @@ Assuming one vector with metada:
 }
 ```
 
-The following metadata filters will match the vector
+
+다음 메타데이터 필터는 벡터와 일치합니다.
 
 ```json
 {"page": 12}
@@ -226,7 +238,8 @@ The following metadata filters will match the vector
 }
 ```
 
-Please note that each key-value pair in the metadata filters is treated as a separate filter clause, and these clauses are combined using the AND logical operator.
+
+메타데이터 필터의 각 키-값 쌍은 별도의 필터 절로 처리되며, 이러한 절은 AND 논리 연산자를 사용하여 결합됩니다.
 
 ```python
 db.add_texts(
@@ -241,10 +254,12 @@ db.add_texts(
 )
 ```
 
+
 ```output
 [UUID('c782cb02-8eec-45be-a31f-fdb78914f0a7'),
  UUID('08dcd2ba-9f16-4f29-a9b7-18141f8edae3')]
 ```
+
 
 ```python
 docs_with_score = db.similarity_search_with_score(
@@ -256,15 +271,17 @@ for doc, score in docs_with_score:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Score:  0.12761409169211535
 TiDB Vector offers advanced, high-speed vector processing capabilities, enhancing AI workflows with efficient data handling and analytics support.
 --------------------------------------------------------------------------------
 ```
-### Using as a Retriever
 
-In Langchain, a retriever is an interface that retrieves documents in response to an unstructured query, offering a broader functionality than a vector store. The code below demonstrates how to utilize TiDB Vector as a retriever.
+### 검색기로 사용하기
+
+Langchain에서 검색기는 비구조적 쿼리에 응답하여 문서를 검색하는 인터페이스로, 벡터 저장소보다 더 넓은 기능을 제공합니다. 아래 코드는 TiDB 벡터를 검색기로 활용하는 방법을 보여줍니다.
 
 ```python
 retriever = db.as_retriever(
@@ -277,6 +294,7 @@ for doc in docs_retrieved:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
@@ -288,13 +306,14 @@ One of the most serious constitutional responsibilities a President has is nomin
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 --------------------------------------------------------------------------------
 ```
-## Advanced Use Case Scenario
 
-Let's look a advanced use case - a travel agent is crafting a custom travel report for clients who desire airports with specific amenities such as clean lounges and vegetarian options. The process involves:
-- A semantic search within airport reviews to extract airport codes meeting these amenities.
-- A subsequent SQL query that joins these codes with route information, detailing airlines and destinations aligned with the clients' preferences.
+## 고급 사용 사례 시나리오
 
-First, let's prepare some airpod related data
+고급 사용 사례를 살펴보겠습니다 - 여행사가 깨끗한 라운지와 채식 옵션과 같은 특정 편의 시설을 원하는 고객을 위해 맞춤형 여행 보고서를 작성하고 있습니다. 이 과정에는 다음이 포함됩니다:
+- 이러한 편의 시설을 충족하는 공항 코드를 추출하기 위한 공항 리뷰 내에서의 의미적 검색.
+- 이러한 코드를 항공사 및 고객의 선호에 맞는 목적지와 관련된 노선 정보와 조인하는 후속 SQL 쿼리.
+
+먼저, 항공편 관련 데이터를 준비해 보겠습니다.
 
 ```python
 # create table to store airplan data
@@ -345,13 +364,15 @@ db.add_texts(
 )
 ```
 
+
 ```output
 [UUID('6dab390f-acd9-4c7d-b252-616606fbc89b'),
  UUID('9e811801-0e6b-4893-8886-60f4fb67ce69'),
  UUID('f426747c-0f7b-4c62-97ed-3eeb7c8dd76e')]
 ```
 
-Finding Airports with Clean Facilities and Vegetarian Options via Vector Search
+
+깨끗한 시설과 채식 옵션이 있는 공항 찾기 - 벡터 검색을 통해
 
 ```python
 retriever = db.as_retriever(
@@ -366,6 +387,7 @@ for r in reviews:
     print(r.metadata)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Clean lounges and excellent vegetarian dining options. Highly recommended.
@@ -376,6 +398,7 @@ Comfortable seating in lounge areas and diverse food selections, including veget
 {'airport_code': 'LAX'}
 --------------------------------------------------------------------------------
 ```
+
 
 ```python
 # Extracting airport codes from the metadata
@@ -389,12 +412,14 @@ airport_details = db.tidb_vector_client.execute(search_query, params)
 airport_details.get("result")
 ```
 
+
 ```output
 [(1, 'JFK', 'DL', 'LAX', 'Non-stop from JFK to LAX.', datetime.timedelta(seconds=21600), 5, 'Boeing 777', Decimal('299.99'), 'None'),
  (2, 'LAX', 'AA', 'ORD', 'Direct LAX to ORD route.', datetime.timedelta(seconds=14400), 3, 'Airbus A320', Decimal('149.99'), 'None')]
 ```
 
-Alternatively, we can streamline the process by utilizing a single SQL query to accomplish the search in one step.
+
+또는 단일 SQL 쿼리를 활용하여 한 번의 단계로 검색을 간소화할 수 있습니다.
 
 ```python
 search_query = f"""
@@ -415,30 +440,35 @@ airport_details = db.tidb_vector_client.execute(search_query, params)
 airport_details.get("result")
 ```
 
+
 ```output
 [(0.1219207353407008, 1, 'JFK', 'DL', 'LAX', 'Non-stop from JFK to LAX.', datetime.timedelta(seconds=21600), 5, 'Boeing 777', Decimal('299.99'), 'None', 'Clean lounges and excellent vegetarian dining options. Highly recommended.'),
  (0.14613754359804654, 2, 'LAX', 'AA', 'ORD', 'Direct LAX to ORD route.', datetime.timedelta(seconds=14400), 3, 'Airbus A320', Decimal('149.99'), 'None', 'Comfortable seating in lounge areas and diverse food selections, including vegetarian.'),
  (0.19840519342700513, 3, 'EFGH', 'UA', 'SEA', 'Daily flights from SFO to SEA.', datetime.timedelta(seconds=9000), 7, 'Boeing 737', Decimal('129.99'), 'None', 'Small airport with basic facilities.')]
 ```
 
+
 ```python
 # clean up
 db.tidb_vector_client.execute("DROP TABLE airplan_routes")
 ```
 
+
 ```output
 {'success': True, 'result': 0, 'error': None}
 ```
 
-# Delete
 
-You can remove the TiDB Vector Store by using the `.drop_vectorstore()` method.
+# 삭제
+
+`.drop_vectorstore()` 메서드를 사용하여 TiDB 벡터 저장소를 제거할 수 있습니다.
 
 ```python
 db.drop_vectorstore()
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

@@ -1,43 +1,41 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/apify/
+description: Apify는 웹 스크래핑 및 데이터 추출을 위한 클라우드 플랫폼으로, 다양한 용도의 1000개 이상의 준비된 앱인 *Actors*를
+  제공합니다.
 ---
 
 # Apify
 
-> [Apify](https://apify.com) is a cloud platform for web scraping and data extraction,
-which provides an [ecosystem](https://apify.com/store) of more than a thousand
-ready-made apps called *Actors* for various scraping, crawling, and extraction use cases.
+> [Apify](https://apify.com)는 웹 스크래핑 및 데이터 추출을 위한 클라우드 플랫폼으로, 다양한 스크래핑, 크롤링 및 추출 사용 사례를 위한 *Actors*라는 천 개 이상의 준비된 앱의 [생태계](https://apify.com/store)를 제공합니다.
 
 [![Apify Actors](/img/ApifyActors.png)](https://apify.com/store)
 
-This integration enables you run Actors on the `Apify` platform and load their results into LangChain to feed your vector
-indexes with documents and data from the web, e.g. to generate answers from websites with documentation,
-blogs, or knowledge bases.
+이 통합을 통해 `Apify` 플랫폼에서 Actors를 실행하고 그 결과를 LangChain에 로드하여 웹의 문서와 데이터로 벡터 인덱스를 채울 수 있습니다. 예를 들어, 문서화된 웹사이트, 블로그 또는 지식 기반에서 답변을 생성하는 데 사용할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the Apify API client for Python with `pip install apify-client`
-- Get your [Apify API token](https://console.apify.com/account/integrations) and either set it as
-an environment variable (`APIFY_API_TOKEN`) or pass it to the `ApifyWrapper` as `apify_api_token` in the constructor.
+- `pip install apify-client`로 Python용 Apify API 클라이언트를 설치합니다.
+- [Apify API 토큰](https://console.apify.com/account/integrations)을 얻고 이를 환경 변수(`APIFY_API_TOKEN`)로 설정하거나 생성자에서 `ApifyWrapper`에 `apify_api_token`으로 전달합니다.
 
-## Utility
+## 유틸리티
 
-You can use the `ApifyWrapper` to run Actors on the Apify platform.
+`ApifyWrapper`를 사용하여 Apify 플랫폼에서 Actors를 실행할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ApifyWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.apify.ApifyWrapper.html", "title": "Apify"}]-->
 from langchain_community.utilities import ApifyWrapper
 ```
 
-For more information on this wrapper, see [the API reference](https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.apify.ApifyWrapper.html).
 
-## Document loader
+이 래퍼에 대한 자세한 정보는 [API 참조](https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.apify.ApifyWrapper.html)를 참조하세요.
 
-You can also use our `ApifyDatasetLoader` to get data from Apify dataset.
+## 문서 로더
+
+`ApifyDatasetLoader`를 사용하여 Apify 데이터셋에서 데이터를 가져올 수도 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ApifyDatasetLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.apify_dataset.ApifyDatasetLoader.html", "title": "Apify"}]-->
 from langchain_community.document_loaders import ApifyDatasetLoader
 ```
 
-For a more detailed walkthrough of this loader, see [this notebook](/docs/integrations/document_loaders/apify_dataset).
+
+이 로더에 대한 더 자세한 설명은 [이 노트북](/docs/integrations/document_loaders/apify_dataset)을 참조하세요.

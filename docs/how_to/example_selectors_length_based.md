@@ -1,11 +1,11 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/example_selectors_length_based/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/example_selectors_length_based.ipynb
+description: 이 문서는 길이에 따라 예제를 선택하는 방법을 설명합니다. 입력 길이에 따라 포함할 예제 수를 조절하는 데 유용합니다.
 ---
 
-# How to select examples by length
+# 길이에 따라 예제를 선택하는 방법
 
-This example selector selects which examples to use based on length. This is useful when you are worried about constructing a prompt that will go over the length of the context window. For longer inputs, it will select fewer examples to include, while for shorter inputs it will select more.
+이 예제 선택기는 길이에 따라 사용할 예제를 선택합니다. 이는 컨텍스트 창의 길이를 초과하는 프롬프트를 구성하는 것에 대해 걱정할 때 유용합니다. 더 긴 입력의 경우 포함할 예제를 더 적게 선택하고, 더 짧은 입력의 경우 더 많은 예제를 선택합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LengthBasedExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.length_based.LengthBasedExampleSelector.html", "title": "How to select examples by length"}, {"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to select examples by length"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to select examples by length"}]-->
@@ -48,10 +48,12 @@ dynamic_prompt = FewShotPromptTemplate(
 )
 ```
 
+
 ```python
 # An example with small input, so it selects all examples.
 print(dynamic_prompt.format(adjective="big"))
 ```
+
 ```output
 Give the antonym of every input
 
@@ -74,11 +76,13 @@ Input: big
 Output:
 ```
 
+
 ```python
 # An example with long input, so it selects only one example.
 long_string = "big and huge and massive and large and gigantic and tall and much much much much much bigger than everything else"
 print(dynamic_prompt.format(adjective=long_string))
 ```
+
 ```output
 Give the antonym of every input
 
@@ -89,12 +93,14 @@ Input: big and huge and massive and large and gigantic and tall and much much mu
 Output:
 ```
 
+
 ```python
 # You can add an example to an example selector as well.
 new_example = {"input": "big", "output": "small"}
 dynamic_prompt.example_selector.add_example(new_example)
 print(dynamic_prompt.format(adjective="enthusiastic"))
 ```
+
 ```output
 Give the antonym of every input
 

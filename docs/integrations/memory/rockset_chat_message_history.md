@@ -1,23 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/rockset_chat_message_history/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/rockset_chat_message_history.ipynb
+description: Rockset을 사용하여 채팅 메시지 기록을 저장하는 방법을 설명하는 노트북입니다. 실시간 분석 데이터베이스 서비스에 대해
+  다룹니다.
 ---
 
-# Rockset
+# 록셋
 
-> [Rockset](https://rockset.com/product/) is a real-time analytics database service for serving low latency, high concurrency analytical queries at scale. It builds a Converged Index™ on structured and semi-structured data with an efficient store for vector embeddings. Its support for running SQL on schemaless data makes it a perfect choice for running vector search with metadata filters. 
+> [록셋](https://rockset.com/product/)은 낮은 지연 시간과 높은 동시성을 가진 분석 쿼리를 대규모로 제공하는 실시간 분석 데이터베이스 서비스입니다. 구조화된 데이터와 반구조화된 데이터에 대해 효율적인 벡터 임베딩 저장소를 갖춘 통합 인덱스™를 구축합니다. 스키마 없는 데이터에서 SQL을 실행할 수 있는 지원 덕분에 메타데이터 필터와 함께 벡터 검색을 실행하는 데 완벽한 선택입니다.
 
-This notebook goes over how to use [Rockset](https://rockset.com/docs) to store chat message history. 
+이 노트북에서는 [록셋](https://rockset.com/docs)을 사용하여 채팅 메시지 기록을 저장하는 방법을 설명합니다.
 
-## Setting up
+## 설정
 
 ```python
 %pip install --upgrade --quiet  rockset langchain-community
 ```
 
-To begin, with get your API key from the [Rockset console](https://console.rockset.com/apikeys). Find your API region for the Rockset [API reference](https://rockset.com/docs/rest-api#introduction).
 
-## Example
+시작하려면 [록셋 콘솔](https://console.rockset.com/apikeys)에서 API 키를 가져옵니다. 록셋 [API 참조](https://rockset.com/docs/rest-api#introduction)에서 API 지역을 찾으세요.
+
+## 예제
 
 ```python
 <!--IMPORTS:[{"imported": "RocksetChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.rocksetdb.RocksetChatMessageHistory.html", "title": "Rockset"}]-->
@@ -40,7 +42,8 @@ history.add_ai_message("whats up?")
 print(history.messages)
 ```
 
-The output should be something like:
+
+출력은 다음과 같아야 합니다:
 
 ```python
 [

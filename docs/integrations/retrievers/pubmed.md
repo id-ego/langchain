@@ -1,26 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/pubmed/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/pubmed.ipynb
+description: 이 문서는 PubMed를 검색기로 사용하는 방법에 대해 설명하며, 생물 의학 문헌에 대한 3,500만 개 이상의 인용을 포함합니다.
 ---
 
 # PubMed
 
-> [PubMed®](https://pubmed.ncbi.nlm.nih.gov/) by `The National Center for Biotechnology Information, National Library of Medicine` comprises more than 35 million citations for biomedical literature from `MEDLINE`, life science journals, and online books. Citations may include links to full text content from `PubMed Central` and publisher web sites.
+> [PubMed®](https://pubmed.ncbi.nlm.nih.gov/)는 `The National Center for Biotechnology Information, National Library of Medicine`에서 제공하며, `MEDLINE`, 생명 과학 저널 및 온라인 서적의 생물 의학 문헌에 대한 3500만 개 이상의 인용을 포함합니다. 인용에는 `PubMed Central` 및 출판사 웹사이트의 전체 텍스트 콘텐츠에 대한 링크가 포함될 수 있습니다.
 
-This notebook goes over how to use `PubMed` as a retriever
+이 노트북은 `PubMed`를 검색기로 사용하는 방법을 설명합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PubMedRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.pubmed.PubMedRetriever.html", "title": "PubMed"}]-->
 from langchain_community.retrievers import PubMedRetriever
 ```
 
+
 ```python
 retriever = PubMedRetriever()
 ```
 
+
 ```python
 retriever.invoke("chatgpt")
 ```
+
 
 ```output
 [Document(page_content='', metadata={'uid': '37549050', 'Title': 'ChatGPT: "To Be or Not to Be" in Bikini Bottom.', 'Published': '--', 'Copyright Information': ''}),
@@ -28,7 +31,8 @@ retriever.invoke("chatgpt")
  Document(page_content='', metadata={'uid': '37548971', 'Title': "Large Language Models Answer Medical Questions Accurately, but Can't Match Clinicians' Knowledge.", 'Published': '2023-08-07', 'Copyright Information': ''})]
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

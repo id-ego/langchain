@@ -1,25 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/lantern/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/lantern.ipynb
+description: Lantern은 Postgres를 위한 오픈 소스 벡터 유사도 검색 도구로, 정확한 및 근사 최근접 이웃 검색을 지원합니다.
 ---
 
-# Lantern
+# 랜턴
 
-> [Lantern](https://github.com/lanterndata/lantern) is an open-source vector similarity search for `Postgres`
+> [랜턴](https://github.com/lanterndata/lantern)은 `Postgres`를 위한 오픈 소스 벡터 유사성 검색입니다.
 
-It supports:
-- Exact and approximate nearest neighbor search
-- L2 squared distance, hamming distance, and cosine distance
+다음 기능을 지원합니다:
+- 정확한 및 근사 최근접 이웃 검색
+- L2 제곱 거리, 해밍 거리 및 코사인 거리
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-This notebook shows how to use the Postgres vector database (`Lantern`).
+이 노트북은 Postgres 벡터 데이터베이스(`랜턴`)를 사용하는 방법을 보여줍니다.
 
-See the [installation instruction](https://github.com/lanterndata/lantern#-quick-install).
+[설치 지침](https://github.com/lanterndata/lantern#-quick-install)을 참조하세요.
 
-We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
+`OpenAIEmbeddings`를 사용하려면 OpenAI API 키를 받아야 합니다.
 
-# Pip install necessary package
+# 필요한 패키지 설치
 !pip install openai
 !pip install psycopg2-binary
 !pip install tiktoken
@@ -30,9 +30,11 @@ import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
+
 ```output
 OpenAI API Key: ········
 ```
+
 
 ```python
 ## Loading Environment Variables
@@ -43,9 +45,11 @@ from dotenv import load_dotenv
 load_dotenv()
 ```
 
+
 ```output
 False
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Lantern"}, {"imported": "Lantern", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.lantern.Lantern.html", "title": "Lantern"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Lantern"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Lantern"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Lantern"}]-->
@@ -56,6 +60,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
+
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
 documents = loader.load()
@@ -64,6 +69,7 @@ docs = text_splitter.split_documents(documents)
 
 embeddings = OpenAIEmbeddings()
 ```
+
 
 ```python
 # Lantern needs the connection string to the database.
@@ -84,10 +90,12 @@ CONNECTION_STRING = getpass.getpass("DB Connection String:")
 
 # or you can pass it via `LANTERN_CONNECTION_STRING` env variable
 ```
+
 ```output
 DB Connection String: ········
 ```
-## Similarity Search with Cosine Distance (Default)
+
+## 코사인 거리로 유사성 검색 (기본값)
 
 ```python
 # The Lantern Module will try to create a table with the name of the collection.
@@ -104,10 +112,12 @@ db = Lantern.from_documents(
 )
 ```
 
+
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db.similarity_search_with_score(query)
 ```
+
 
 ```python
 for doc, score in docs_with_score:
@@ -116,6 +126,7 @@ for doc, score in docs_with_score:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Score:  0.18440479
@@ -174,12 +185,14 @@ Raise the minimum wage to $15 an hour and extend the Child Tax Credit, so no one
 Let’s increase Pell Grants and increase our historic support of HBCUs, and invest in what Jill—our First Lady who teaches full-time—calls America’s best-kept secret: community colleges.
 --------------------------------------------------------------------------------
 ```
-## Maximal Marginal Relevance Search (MMR)
-Maximal marginal relevance optimizes for similarity to query AND diversity among selected documents.
+
+## 최대 한계 관련성 검색 (MMR)
+최대 한계 관련성은 쿼리에 대한 유사성과 선택된 문서 간의 다양성을 최적화합니다.
 
 ```python
 docs_with_score = db.max_marginal_relevance_search_with_score(query)
 ```
+
 
 ```python
 for doc, score in docs_with_score:
@@ -188,6 +201,7 @@ for doc, score in docs_with_score:
     print(doc.page_content)
     print("-" * 80)
 ```
+
 ```output
 --------------------------------------------------------------------------------
 Score:  0.18440479
@@ -264,10 +278,11 @@ When the history of this era is written Putin’s war on Ukraine will have left 
 While it shouldn’t have taken something so terrible for people around the world to see what’s at stake now everyone sees it clearly.
 --------------------------------------------------------------------------------
 ```
-## Working with vectorstore
 
-Above, we created a vectorstore from scratch. However, often times we want to work with an existing vectorstore.
-In order to do that, we can initialize it directly.
+## 벡터 저장소 작업하기
+
+위에서 우리는 처음부터 벡터 저장소를 만들었습니다. 그러나 종종 기존 벡터 저장소로 작업하고 싶습니다.
+이를 위해 우리는 직접 초기화할 수 있습니다.
 
 ```python
 store = Lantern(
@@ -277,42 +292,50 @@ store = Lantern(
 )
 ```
 
-### Add documents
-We can add documents to the existing vectorstore.
+
+### 문서 추가
+기존 벡터 저장소에 문서를 추가할 수 있습니다.
 
 ```python
 store.add_documents([Document(page_content="foo")])
 ```
 
+
 ```output
 ['f8164598-aa28-11ee-a037-acde48001122']
 ```
+
 
 ```python
 docs_with_score = db.similarity_search_with_score("foo")
 ```
 
+
 ```python
 docs_with_score[0]
 ```
+
 
 ```output
 (Document(page_content='foo'), -1.1920929e-07)
 ```
 
+
 ```python
 docs_with_score[1]
 ```
+
 
 ```output
 (Document(page_content='And let’s pass the PRO Act when a majority of workers want to form a union—they shouldn’t be stopped.  \n\nWhen we invest in our workers, when we build the economy from the bottom up and the middle out together, we can do something we haven’t done in a long time: build a better America. \n\nFor more than two years, COVID-19 has impacted every decision in our lives and the life of the nation. \n\nAnd I know you’re tired, frustrated, and exhausted. \n\nBut I also know this. \n\nBecause of the progress we’ve made, because of your resilience and the tools we have, tonight I can say  \nwe are moving forward safely, back to more normal routines.  \n\nWe’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.  \n\nJust a few days ago, the Centers for Disease Control and Prevention—the CDC—issued new mask guidelines. \n\nUnder these new guidelines, most Americans in most of the country can now be mask free.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
  0.24038416)
 ```
 
-### Overriding a vectorstore
 
-If you have an existing collection, you override it by doing `from_documents` and setting `pre_delete_collection` = True
-This will delete the collection before re-populating it
+### 벡터 저장소 덮어쓰기
+
+기존 컬렉션이 있는 경우 `from_documents`를 사용하고 `pre_delete_collection`을 True로 설정하여 덮어씁니다.
+이렇게 하면 재구성하기 전에 컬렉션이 삭제됩니다.
 
 ```python
 db = Lantern.from_documents(
@@ -324,33 +347,40 @@ db = Lantern.from_documents(
 )
 ```
 
+
 ```python
 docs_with_score = db.similarity_search_with_score("foo")
 ```
 
+
 ```python
 docs_with_score[0]
 ```
+
 
 ```output
 (Document(page_content='And let’s pass the PRO Act when a majority of workers want to form a union—they shouldn’t be stopped.  \n\nWhen we invest in our workers, when we build the economy from the bottom up and the middle out together, we can do something we haven’t done in a long time: build a better America. \n\nFor more than two years, COVID-19 has impacted every decision in our lives and the life of the nation. \n\nAnd I know you’re tired, frustrated, and exhausted. \n\nBut I also know this. \n\nBecause of the progress we’ve made, because of your resilience and the tools we have, tonight I can say  \nwe are moving forward safely, back to more normal routines.  \n\nWe’ve reached a new moment in the fight against COVID-19, with severe cases down to a level not seen since last July.  \n\nJust a few days ago, the Centers for Disease Control and Prevention—the CDC—issued new mask guidelines. \n\nUnder these new guidelines, most Americans in most of the country can now be mask free.', metadata={'source': '../../how_to/state_of_the_union.txt'}),
  0.2403456)
 ```
 
-### Using a VectorStore as a Retriever
+
+### 검색기로서의 벡터 저장소 사용
 
 ```python
 retriever = store.as_retriever()
 ```
 
+
 ```python
 print(retriever)
 ```
+
 ```output
 tags=['Lantern', 'OpenAIEmbeddings'] vectorstore=<langchain_community.vectorstores.lantern.Lantern object at 0x11d02f9d0>
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

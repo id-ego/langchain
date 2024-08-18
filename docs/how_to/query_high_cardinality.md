@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/query_high_cardinality/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/query_high_cardinality.ipynb
+description: 고차원 범주형 데이터를 쿼리 분석할 때의 어려움과 해결 방법을 다루는 문서입니다. LLM을 활용한 접근 방식을 설명합니다.
 sidebar_position: 7
 ---
 
-# How deal with high cardinality categoricals when doing query analysis
+# 고차원 범주형 데이터 처리 방법
 
-You may want to do query analysis to create a filter on a categorical column. One of the difficulties here is that you usually need to specify the EXACT categorical value. The issue is you need to make sure the LLM generates that categorical value exactly. This can be done relatively easy with prompting when there are only a few values that are valid. When there are a high number of valid values then it becomes more difficult, as those values may not fit in the LLM context, or (if they do) there may be too many for the LLM to properly attend to.
+쿼리 분석을 통해 범주형 열에 대한 필터를 생성하고자 할 수 있습니다. 여기서의 어려움 중 하나는 일반적으로 정확한 범주형 값을 지정해야 한다는 것입니다. 문제는 LLM이 그 범주형 값을 정확히 생성하도록 해야 한다는 것입니다. 유효한 값이 몇 개 없을 때는 프롬프트를 사용하여 상대적으로 쉽게 할 수 있습니다. 그러나 유효한 값이 많아지면 LLM의 컨텍스트에 맞지 않거나 (맞더라도) LLM이 제대로 처리하기에는 너무 많아지는 경우가 발생합니다.
 
-In this notebook we take a look at how to approach this.
+이 노트북에서는 이를 접근하는 방법을 살펴보겠습니다.
 
-## Setup
-#### Install dependencies
+## 설정
+#### 의존성 설치
 
 ```python
 # %pip install -qU langchain langchain-community langchain-openai faker langchain-chroma
 ```
 
-#### Set environment variables
 
-We'll use OpenAI in this example:
+#### 환경 변수 설정
+
+이 예제에서는 OpenAI를 사용할 것입니다:
 
 ```python
 import getpass
@@ -32,9 +33,10 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-#### Set up data
 
-We will generate a bunch of fake names
+#### 데이터 설정
+
+우리는 많은 가짜 이름을 생성할 것입니다.
 
 ```python
 from faker import Faker
@@ -44,37 +46,44 @@ fake = Faker()
 names = [fake.name() for _ in range(10000)]
 ```
 
-Let's look at some of the names
+
+이름 몇 개를 살펴보겠습니다.
 
 ```python
 names[0]
 ```
 
+
 ```output
 'Hayley Gonzalez'
 ```
+
 
 ```python
 names[567]
 ```
 
+
 ```output
 'Jesse Knight'
 ```
 
-## Query Analysis
 
-We can now set up a baseline query analysis
+## 쿼리 분석
+
+이제 기본 쿼리 분석을 설정할 수 있습니다.
 
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
 ```
+
 
 ```python
 class Search(BaseModel):
     query: str
     author: str
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How deal with high cardinality categoricals when doing query analysis"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How deal with high cardinality categoricals when doing query analysis"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How deal with high cardinality categoricals when doing query analysis"}]-->
@@ -93,33 +102,39 @@ llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
 structured_llm = llm.with_structured_output(Search)
 query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
+
 ```output
 /Users/harrisonchase/workplace/langchain/libs/core/langchain_core/_api/beta_decorator.py:86: LangChainBetaWarning: The function `with_structured_output` is in beta. It is actively being worked on, so the API may change.
   warn_beta(
 ```
-We can see that if we spell the name exactly correctly, it knows how to handle it
+
+이름을 정확하게 맞추면 LLM이 이를 처리하는 방법을 알고 있음을 알 수 있습니다.
 
 ```python
 query_analyzer.invoke("what are books about aliens by Jesse Knight")
 ```
 
+
 ```output
 Search(query='books about aliens', author='Jesse Knight')
 ```
 
-The issue is that the values you want to filter on may NOT be spelled exactly correctly
+
+문제는 필터링하려는 값이 정확하게 맞지 않을 수 있다는 것입니다.
 
 ```python
 query_analyzer.invoke("what are books about aliens by jess knight")
 ```
 
+
 ```output
 Search(query='books about aliens', author='Jess Knight')
 ```
 
-### Add in all values
 
-One way around this is to add ALL possible values to the prompt. That will generally guide the query in the right direction
+### 모든 값 추가하기
+
+이 문제를 해결하는 한 가지 방법은 프롬프트에 가능한 모든 값을 추가하는 것입니다. 이는 일반적으로 쿼리를 올바른 방향으로 안내합니다.
 
 ```python
 system = """Generate a relevant search query for a library system.
@@ -138,11 +153,13 @@ base_prompt = ChatPromptTemplate.from_messages(
 prompt = base_prompt.partial(authors=", ".join(names))
 ```
 
+
 ```python
 query_analyzer_all = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
 
-However... if the list of categoricals is long enough, it may error!
+
+그러나... 범주형 목록이 충분히 길면 오류가 발생할 수 있습니다!
 
 ```python
 try:
@@ -150,10 +167,12 @@ try:
 except Exception as e:
     print(e)
 ```
+
 ```output
 Error code: 400 - {'error': {'message': "This model's maximum context length is 16385 tokens. However, your messages resulted in 33885 tokens (33855 in the messages, 30 in the functions). Please reduce the length of the messages or functions.", 'type': 'invalid_request_error', 'param': 'messages', 'code': 'context_length_exceeded'}}
 ```
-We can try to use a longer context window... but with so much information in there, it is not garunteed to pick it up reliably
+
+더 긴 컨텍스트 창을 사용할 수 있지만, 너무 많은 정보가 포함되어 있어 신뢰성 있게 인식할 수 없을 수도 있습니다.
 
 ```python
 llm_long = ChatOpenAI(model="gpt-4-turbo-preview", temperature=0)
@@ -161,17 +180,20 @@ structured_llm_long = llm_long.with_structured_output(Search)
 query_analyzer_all = {"question": RunnablePassthrough()} | prompt | structured_llm_long
 ```
 
+
 ```python
 query_analyzer_all.invoke("what are books about aliens by jess knight")
 ```
+
 
 ```output
 Search(query='aliens', author='Kevin Knight')
 ```
 
-### Find and all relevant values
 
-Instead, what we can do is create an index over the relevant values and then query that for the N most relevant values,
+### 관련 값 찾기
+
+대신, 관련 값에 대한 인덱스를 생성한 다음 N개의 가장 관련성 높은 값을 쿼리할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How deal with high cardinality categoricals when doing query analysis"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How deal with high cardinality categoricals when doing query analysis"}]-->
@@ -182,12 +204,14 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 vectorstore = Chroma.from_texts(names, embeddings, collection_name="author_names")
 ```
 
+
 ```python
 def select_names(question):
     _docs = vectorstore.similarity_search(question, k=10)
     _names = [d.page_content for d in _docs]
     return ", ".join(_names)
 ```
+
 
 ```python
 create_prompt = {
@@ -196,30 +220,35 @@ create_prompt = {
 } | base_prompt
 ```
 
+
 ```python
 query_analyzer_select = create_prompt | structured_llm
 ```
+
 
 ```python
 create_prompt.invoke("what are books by jess knight")
 ```
 
+
 ```output
 ChatPromptValue(messages=[SystemMessage(content='Generate a relevant search query for a library system.\n\n`author` attribute MUST be one of:\n\nJesse Knight, Kelly Knight, Scott Knight, Richard Knight, Andrew Knight, Katherine Knight, Erica Knight, Ashley Knight, Becky Knight, Kevin Knight\n\nDo NOT hallucinate author name!'), HumanMessage(content='what are books by jess knight')])
 ```
+
 
 ```python
 query_analyzer_select.invoke("what are books about aliens by jess knight")
 ```
 
+
 ```output
 Search(query='books about aliens', author='Jesse Knight')
 ```
 
-### Replace after selection
 
-Another method is to let the LLM fill in whatever value, but then convert that value to a valid value.
-This can actually be done with the Pydantic class itself!
+### 선택 후 교체하기
+
+또 다른 방법은 LLM이 어떤 값을 입력하도록 한 다음, 그 값을 유효한 값으로 변환하는 것입니다. 이는 실제로 Pydantic 클래스 자체로 수행할 수 있습니다!
 
 ```python
 from langchain_core.pydantic_v1 import validator
@@ -233,6 +262,7 @@ class Search(BaseModel):
     def double(cls, v: str) -> str:
         return vectorstore.similarity_search(v, k=1)[0].page_content
 ```
+
 
 ```python
 system = """Generate a relevant search query for a library system"""
@@ -248,13 +278,16 @@ corrective_query_analyzer = (
 )
 ```
 
+
 ```python
 corrective_query_analyzer.invoke("what are books about aliens by jes knight")
 ```
 
+
 ```output
 Search(query='books about aliens', author='Jesse Knight')
 ```
+
 
 ```python
 # TODO: show trigram similarity

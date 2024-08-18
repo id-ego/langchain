@@ -1,26 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/ecloud_vector_search/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/ecloud_vector_search.ipynb
+description: 중국 모바일 ECloud VectorSearch는 구조화/비구조화 데이터에 대한 저비용, 고성능의 검색 및 분석 서비스를 제공합니다.
 ---
 
-# China Mobile ECloud ElasticSearch VectorSearch
+# 차이나 모바일 ECloud ElasticSearch 벡터 검색
 
-> [China Mobile ECloud VectorSearch](https://ecloud.10086.cn/portal/product/elasticsearch) is a fully managed, enterprise-level distributed search and analysis service. China Mobile ECloud VectorSearch provides low-cost, high-performance, and reliable retrieval and analysis platform level product services for structured/unstructured data. As a vector database , it supports multiple index types and similarity distance methods. 
+> [차이나 모바일 ECloud 벡터 검색](https://ecloud.10086.cn/portal/product/elasticsearch)은 완전 관리형 기업 수준의 분산 검색 및 분석 서비스입니다. 차이나 모바일 ECloud 벡터 검색은 구조화된/비구조화된 데이터에 대한 저비용, 고성능 및 신뢰할 수 있는 검색 및 분석 플랫폼 수준의 제품 서비스를 제공합니다. 벡터 데이터베이스로서 여러 인덱스 유형과 유사성 거리 방법을 지원합니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-This notebook shows how to use functionality related to the `ECloud ElasticSearch VectorStore`.
-To run, you should have an [China Mobile ECloud VectorSearch](https://ecloud.10086.cn/portal/product/elasticsearch) instance up and running:
+이 노트북은 `ECloud ElasticSearch VectorStore`와 관련된 기능을 사용하는 방법을 보여줍니다. 실행하려면 [차이나 모바일 ECloud 벡터 검색](https://ecloud.10086.cn/portal/product/elasticsearch) 인스턴스가 실행 중이어야 합니다:
 
-Read the [help document](https://ecloud.10086.cn/op-help-center/doc/category/1094) to quickly familiarize and configure China Mobile ECloud ElasticSearch instance.
+[도움 문서](https://ecloud.10086.cn/op-help-center/doc/category/1094)를 읽어 차이나 모바일 ECloud ElasticSearch 인스턴스를 빠르게 익히고 구성하세요.
 
-After the instance is up and running, follow these steps to split documents, get embeddings, connect to the baidu cloud elasticsearch instance, index documents, and perform vector retrieval.
+인스턴스가 실행 중인 후, 문서를 분할하고, 임베딩을 얻고, 바이두 클라우드 엘라스틱서치 인스턴스에 연결하고, 문서를 인덱싱하고, 벡터 검색을 수행하는 다음 단계를 따르세요.
 
 ```python
 #!pip install elasticsearch == 7.10.1
 ```
 
-First, we want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
+
+먼저, `OpenAIEmbeddings`를 사용하려고 하므로 OpenAI API 키를 가져와야 합니다.
 
 ```python
 import getpass
@@ -29,7 +29,8 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
-Secondly, split documents and get embeddings.
+
+둘째, 문서를 분할하고 임베딩을 얻습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "China Mobile ECloud ElasticSearch VectorSearch"}, {"imported": "EcloudESVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.ecloud_vector_search.EcloudESVectorStore.html", "title": "China Mobile ECloud ElasticSearch VectorSearch"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "China Mobile ECloud ElasticSearch VectorSearch"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "China Mobile ECloud ElasticSearch VectorSearch"}]-->
@@ -38,6 +39,7 @@ from langchain_community.vectorstores import EcloudESVectorStore
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
+
 
 ```python
 loader = TextLoader("../../../state_of_the_union.txt")
@@ -53,7 +55,8 @@ PASSWORD = "your password"
 indexname = "your index name"
 ```
 
-then, index documents
+
+그런 다음, 문서를 인덱싱합니다.
 
 ```python
 docsearch = EcloudESVectorStore.from_documents(
@@ -67,7 +70,8 @@ docsearch = EcloudESVectorStore.from_documents(
 )
 ```
 
-Finally, Query and retrive data
+
+마지막으로, 쿼리하고 데이터를 검색합니다.
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -75,7 +79,8 @@ docs = docsearch.similarity_search(query, k=10)
 print(docs[0].page_content)
 ```
 
-A commonly used case
+
+일반적으로 사용되는 사례
 
 ```python
 def test_dense_float_vectore_lsh_cosine() -> None:
@@ -147,7 +152,8 @@ def test_dense_float_vectore_lsh_cosine() -> None:
     print(docs[0].page_content)
 ```
 
-With filter case
+
+필터 사례와 함께
 
 ```python
 def test_dense_float_vectore_exact_with_filter() -> None:
@@ -208,7 +214,8 @@ def test_dense_float_vectore_exact_with_filter() -> None:
     print(docs[0].page_content)
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

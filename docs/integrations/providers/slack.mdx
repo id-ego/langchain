@@ -1,36 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/slack/
+description: 슬랙은 즉각적인 메시징 프로그램으로, 설치 및 설정이 간편하며 다양한 문서 및 채팅 로더와 도구를 지원합니다.
 ---
 
-# Slack
+# 슬랙
 
-> [Slack](https://slack.com/) is an instant messaging program.
+> [슬랙](https://slack.com/)은 인스턴트 메시징 프로그램입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-There isn't any special setup for it.
+특별한 설정은 필요하지 않습니다.
 
-## Document loader
+## 문서 로더
 
-See a [usage example](/docs/integrations/document_loaders/slack).
+[사용 예제](/docs/integrations/document_loaders/slack)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SlackDirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.slack_directory.SlackDirectoryLoader.html", "title": "Slack"}]-->
 from langchain_community.document_loaders import SlackDirectoryLoader
 ```
 
-## Toolkit
 
-See a [usage example](/docs/integrations/tools/slack).
+## 툴킷
+
+[사용 예제](/docs/integrations/tools/slack)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SlackToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.slack.toolkit.SlackToolkit.html", "title": "Slack"}]-->
 from langchain_community.agent_toolkits import SlackToolkit
 ```
 
-## Chat loader
 
-See a [usage example](/docs/integrations/chat_loaders/slack).
+## 채팅 로더
+
+[사용 예제](/docs/integrations/chat_loaders/slack)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SlackChatLoader", "source": "langchain_community.chat_loaders.slack", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.slack.SlackChatLoader.html", "title": "Slack"}]-->

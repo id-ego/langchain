@@ -1,28 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/contributing/faq/
+description: 이 문서는 Pull Request(PR)에 대한 자주 묻는 질문을 다루며, PR 수정 권한 부여 방법 등을 설명합니다.
 sidebar_label: FAQ
 sidebar_position: 6
 ---
 
-# Frequently Asked Questions
+# 자주 묻는 질문
 
-## Pull Requests (PRs)
+## 풀 리퀘스트 (PRs)
 
-### How do I allow maintainers to edit my PR?
+### 어떻게 유지 관리자가 내 PR을 수정할 수 있도록 허용하나요?
 
-When you submit a pull request, there may be additional changes
-necessary before merging it. Oftentimes, it is more efficient for the
-maintainers to make these changes themselves before merging, rather than asking you
-to do so in code review.
+풀 리퀘스트를 제출할 때, 병합하기 전에 추가적인 변경이 필요할 수 있습니다. 종종 유지 관리자가 코드 리뷰에서 요청하는 것보다 병합 전에 이러한 변경을 직접 수행하는 것이 더 효율적입니다.
 
-By default, most pull requests will have a
-`✅ Maintainers are allowed to edit this pull request.`
-badge in the right-hand sidebar.
+기본적으로 대부분의 풀 리퀘스트는 오른쪽 사이드바에 
+`✅ 유지 관리자가 이 풀 리퀘스트를 수정할 수 있습니다.` 
+배지가 표시됩니다.
 
-If you do not see this badge, you may have this setting off for the fork you are
-pull-requesting from. See [this Github docs page](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)
-for more information.
+이 배지가 보이지 않는 경우, 당신이 풀 리퀘스트를 요청하는 포크에 대해 이 설정이 꺼져 있을 수 있습니다. 더 많은 정보는 [이 Github 문서 페이지](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)를 참조하세요.
 
-Notably, Github doesn't allow this setting to be enabled for forks in **organizations** ([issue](https://github.com/orgs/community/discussions/5634)).
-If you are working in an organization, we recommend submitting your PR from a personal
-fork in order to enable this setting.
+특히, Github는 **조직**의 포크에 대해 이 설정을 활성화하는 것을 허용하지 않습니다 ([문제](https://github.com/orgs/community/discussions/5634)). 조직에서 작업하고 있다면, 이 설정을 활성화하기 위해 개인 포크에서 PR을 제출하는 것을 권장합니다.

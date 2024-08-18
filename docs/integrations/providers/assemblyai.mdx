@@ -1,33 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/assemblyai/
+description: AssemblyAI는 음성 인식, 화자 구분, 음성 요약 등 다양한 Speech AI 모델을 제공하는 플랫폼입니다.
 ---
 
 # AssemblyAI
 
-> [AssemblyAI](https://www.assemblyai.com/) builds `Speech AI` models for tasks like
-speech-to-text, speaker diarization, speech summarization, and more.
-`AssemblyAI’s` Speech AI models include accurate speech-to-text for voice data
-(such as calls, virtual meetings, and podcasts), speaker detection, sentiment analysis,
-chapter detection, PII redaction.
+> [AssemblyAI](https://www.assemblyai.com/)는 음성-텍스트 변환, 화자 구분, 음성 요약 등과 같은 작업을 위한 `Speech AI` 모델을 구축합니다.
+`AssemblyAI`의 Speech AI 모델은 음성 데이터(예: 통화, 가상 회의 및 팟캐스트)에 대한 정확한 음성-텍스트 변환, 화자 감지, 감정 분석, 장(chapter) 감지, PII(개인 식별 정보) 삭제를 포함합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Get your [API key](https://www.assemblyai.com/dashboard/signup).
+[API 키](https://www.assemblyai.com/dashboard/signup)를 받으세요.
 
-Install the `assemblyai` package.
+`assemblyai` 패키지를 설치하세요.
 
 ```bash
 pip install -U assemblyai
 ```
 
-## Document Loader
 
-### AssemblyAI Audio Transcript
+## 문서 로더
 
-The `AssemblyAIAudioTranscriptLoader` transcribes audio files with the `AssemblyAI API`
-and loads the transcribed text into documents.
+### AssemblyAI 오디오 전사
 
-See a [usage example](/docs/integrations/document_loaders/assemblyai).
+`AssemblyAIAudioTranscriptLoader`는 `AssemblyAI API`를 사용하여 오디오 파일을 전사하고, 전사된 텍스트를 문서로 로드합니다.
+
+[사용 예시](/docs/integrations/document_loaders/assemblyai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AssemblyAIAudioTranscriptLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.assemblyai.AssemblyAIAudioTranscriptLoader.html", "title": "AssemblyAI"}]-->

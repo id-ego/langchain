@@ -1,24 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/kinetica/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/kinetica.ipynb
+description: Kinetica 벡터 저장소를 기반으로 한 검색기 사용법을 보여주는 노트북입니다. OpenAI 임베딩과 함께 정확한 유사성
+  검색을 지원합니다.
 ---
 
-# Kinetica Vectorstore based Retriever
+# Kinetica 벡터 저장소 기반 검색기
 
-> [Kinetica](https://www.kinetica.com/) is a database with integrated support for vector similarity search
+> [Kinetica](https://www.kinetica.com/)는 벡터 유사성 검색을 통합 지원하는 데이터베이스입니다.
 
-It supports:
-- exact and approximate nearest neighbor search
-- L2 distance, inner product, and cosine distance
+지원하는 기능:
+- 정확한 및 근사 최근접 이웃 검색
+- L2 거리, 내적, 코사인 거리
 
-This notebook shows how to use a retriever based on Kinetica vector store (`Kinetica`).
+이 노트북은 Kinetica 벡터 저장소(`Kinetica`)를 기반으로 한 검색기를 사용하는 방법을 보여줍니다.
 
 ```python
 # Please ensure that this connector is installed in your working environment.
 %pip install gpudb==7.2.0.9
 ```
 
-We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
+
+우리는 `OpenAIEmbeddings`를 사용하고 싶으므로 OpenAI API 키를 가져와야 합니다.
 
 ```python
 import getpass
@@ -27,12 +29,14 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
+
 ```python
 ## Loading Environment Variables
 from dotenv import load_dotenv
 
 load_dotenv()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Kinetica Vectorstore based Retriever"}, {"imported": "Kinetica", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.Kinetica.html", "title": "Kinetica Vectorstore based Retriever"}, {"imported": "KineticaSettings", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.KineticaSettings.html", "title": "Kinetica Vectorstore based Retriever"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Kinetica Vectorstore based Retriever"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Kinetica Vectorstore based Retriever"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Kinetica Vectorstore based Retriever"}]-->
@@ -45,6 +49,7 @@ from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
+
 
 ```python
 # Kinetica needs the connection to the database.
@@ -59,7 +64,8 @@ def create_config() -> KineticaSettings:
     return KineticaSettings(host=HOST, username=USERNAME, password=PASSWORD)
 ```
 
-## Create Retriever from vector store
+
+## 벡터 저장소에서 검색기 생성
 
 ```python
 loader = TextLoader("../../how_to/state_of_the_union.txt")
@@ -86,7 +92,8 @@ db = Kinetica.from_documents(
 retriever = db.as_retriever(search_kwargs={"k": 2})
 ```
 
-## Search with retriever
+
+## 검색기로 검색하기
 
 ```python
 result = retriever.get_relevant_documents(
@@ -95,7 +102,8 @@ result = retriever.get_relevant_documents(
 print(docs[0].page_content)
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련 자료
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

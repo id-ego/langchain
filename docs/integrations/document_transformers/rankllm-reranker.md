@@ -1,23 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/rankllm-reranker/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/rankllm-reranker.ipynb
+description: RankLLM은 RankVicuna와 RankZephyr와 같은 오픈 소스 LLM을 활용한 리스트 기반 재랭킹 도구를 제공합니다.
 ---
 
 # RankLLM Reranker
 
-[RankLLM](https://github.com/castorini/rank_llm) offers a suite of listwise rerankers, albeit with focus on open source LLMs finetuned for the task - RankVicuna and RankZephyr being two of them.
+[RankLLM](https://github.com/castorini/rank_llm)은 리스트 기반 재정렬기를 제공하며, 이 작업을 위해 미세 조정된 오픈 소스 LLM에 중점을 두고 있습니다 - RankVicuna와 RankZephyr가 그 중 두 가지입니다.
 
 ```python
 %pip install --upgrade --quiet  rank_llm
 ```
 
+
 ```python
 %pip install --upgrade --quiet  langchain_openai
 ```
 
+
 ```python
 %pip install --upgrade --quiet  faiss-cpu
 ```
+
 
 ```python
 import getpass
@@ -25,6 +28,7 @@ import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -36,8 +40,9 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+
+## 기본 벡터 저장소 검색기 설정
+간단한 벡터 저장소 검색기를 초기화하고 2023년 국정 연설을 (청크로) 저장하는 것으로 시작하겠습니다. 검색기를 설정하여 많은 수(20)의 문서를 검색할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "RankLLM Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "RankLLM Reranker"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "RankLLM Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "RankLLM Reranker"}]-->
@@ -56,15 +61,17 @@ embedding = OpenAIEmbeddings(model="text-embedding-ada-002")
 retriever = FAISS.from_documents(texts, embedding).as_retriever(search_kwargs={"k": 20})
 ```
 
-# Retrieval + RankLLM Reranking (RankZephyr)
 
-Retrieval without reranking
+# 검색 + RankLLM 재정렬 (RankZephyr)
+
+재정렬 없이 검색
 
 ```python
 query = "What was done to Russia?"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 Document 1:
 
@@ -254,7 +261,8 @@ We will buy American to make sure everything from the deck of an aircraft carrie
 
 But to compete for the best jobs of the future, we also need to level the playing field with China and other competitors.
 ```
-Retrieval + Reranking with RankZephyr
+
+RankZephyr로 재정렬된 검색
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers.contextual_compression", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "RankLLM Reranker"}, {"imported": "RankLLMRerank", "source": "langchain_community.document_compressors.rankllm_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.rankllm_rerank.RankLLMRerank.html", "title": "RankLLM Reranker"}]-->
@@ -267,10 +275,12 @@ compression_retriever = ContextualCompressionRetriever(
 )
 ```
 
+
 ```python
 compressed_docs = compression_retriever.invoke(query)
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 
@@ -300,7 +310,8 @@ Together with our allies –we are right now enforcing powerful economic sanctio
 ``````output
 
 ```
-Can be used within a QA pipeline
+
+QA 파이프라인 내에서 사용할 수 있습니다
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "RankLLM Reranker"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "RankLLM Reranker"}]-->
@@ -316,20 +327,23 @@ chain = RetrievalQA.from_chain_type(
 chain({"query": query})
 ```
 
+
 ```output
 {'query': 'What was done to Russia?',
  'result': 'Russia has been subjected to powerful economic sanctions, including cutting off its largest banks from the international financial system, preventing its central bank from defending the Russian Ruble, and choking off its access to technology. Additionally, American airspace has been closed to all Russian flights, further isolating Russia and adding pressure on its economy. These actions have led to a significant devaluation of the Ruble, a sharp decline in the Russian stock market, and overall economic turmoil in Russia.'}
 ```
 
-# Retrieval + RankLLM Reranking (RankGPT)
 
-Retrieval without reranking
+# 검색 + RankLLM 재정렬 (RankGPT)
+
+재정렬 없이 검색
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 Document 1:
 
@@ -532,7 +546,8 @@ The United States of America.
 
 May God bless you all. May God protect our troops.
 ```
-Retrieval + Reranking with RankGPT
+
+RankGPT로 재정렬된 검색
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers.contextual_compression", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "RankLLM Reranker"}, {"imported": "RankLLMRerank", "source": "langchain_community.document_compressors.rankllm_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.rankllm_rerank.RankLLMRerank.html", "title": "RankLLM Reranker"}]-->
@@ -545,10 +560,12 @@ compression_retriever = ContextualCompressionRetriever(
 )
 ```
 
+
 ```python
 compressed_docs = compression_retriever.invoke(query)
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 
@@ -570,7 +587,8 @@ While it often appears that we never agree, that isn’t true. I signed 80 bipar
 ``````output
 
 ```
-You can use this retriever within a QA pipeline
+
+이 검색기를 QA 파이프라인 내에서 사용할 수 있습니다
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "RankLLM Reranker"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "RankLLM Reranker"}]-->
@@ -585,6 +603,7 @@ chain = RetrievalQA.from_chain_type(
 
 chain({"query": query})
 ```
+
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',

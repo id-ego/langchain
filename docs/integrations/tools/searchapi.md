@@ -1,11 +1,11 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/searchapi/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/searchapi.ipynb
+description: 이 문서는 SearchApi를 사용하여 웹 검색을 수행하는 방법과 다양한 엔진 및 사용자 정의 매개변수에 대한 예제를 제공합니다.
 ---
 
 # SearchApi
 
-This notebook shows examples of how to use SearchApi to search the web. Go to [https://www.searchapi.io/](https://www.searchapi.io/) to sign up for a free account and get API key.
+이 노트북은 SearchApi를 사용하여 웹을 검색하는 방법에 대한 예제를 보여줍니다. [https://www.searchapi.io/](https://www.searchapi.io/)에 가서 무료 계정에 가입하고 API 키를 받으세요.
 
 ```python
 import os
@@ -13,28 +13,34 @@ import os
 os.environ["SEARCHAPI_API_KEY"] = ""
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "SearchApiAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.searchapi.SearchApiAPIWrapper.html", "title": "SearchApi"}]-->
 from langchain_community.utilities import SearchApiAPIWrapper
 ```
 
+
 ```python
 search = SearchApiAPIWrapper()
 ```
+
 
 ```python
 search.run("Obama's first name?")
 ```
 
+
 ```output
 'Barack Hussein Obama II'
 ```
 
-## Using as part of a Self Ask With Search Chain
+
+## Self Ask With Search Chain의 일환으로 사용하기
 
 ```python
 os.environ["OPENAI_API_KEY"] = ""
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "SearchApi"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "SearchApi"}, {"imported": "SearchApiAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.searchapi.SearchApiAPIWrapper.html", "title": "SearchApi"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "SearchApi"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "SearchApi"}]-->
@@ -58,6 +64,7 @@ self_ask_with_search = initialize_agent(
 )
 self_ask_with_search.run("Who lived longer: Plato, Socrates, or Aristotle?")
 ```
+
 ```output
 
 
@@ -80,37 +87,44 @@ Intermediate answer: [36;1m[1;3m62 years[0m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Plato'
 ```
 
-## Custom parameters
 
-SearchApi wrapper can be customized to use different engines like [Google News](https://www.searchapi.io/docs/google-news), [Google Jobs](https://www.searchapi.io/docs/google-jobs), [Google Scholar](https://www.searchapi.io/docs/google-scholar), or others which can be found in [SearchApi](https://www.searchapi.io/docs/google) documentation. All parameters supported by SearchApi can be passed when executing the query. 
+## 사용자 정의 매개변수
+
+SearchApi 래퍼는 [Google News](https://www.searchapi.io/docs/google-news), [Google Jobs](https://www.searchapi.io/docs/google-jobs), [Google Scholar](https://www.searchapi.io/docs/google-scholar)와 같은 다양한 엔진을 사용하도록 사용자 정의할 수 있으며, 기타 정보는 [SearchApi](https://www.searchapi.io/docs/google) 문서에서 확인할 수 있습니다. SearchApi에서 지원하는 모든 매개변수는 쿼리를 실행할 때 전달할 수 있습니다.
 
 ```python
 search = SearchApiAPIWrapper(engine="google_jobs")
 ```
 
+
 ```python
 search.run("AI Engineer", location="Portugal", gl="pt")[0:500]
 ```
+
 
 ```output
 'Azure AI Engineer Be an XpanderCandidatar-meCandidatar-meCandidatar-me\n\nShare:\n\nAzure AI Engineer\n\nA área Digital Xperience da Xpand IT é uma equipa tecnológica de rápido crescimento que se concentra em tecnologias Microsoft e Mobile. A sua principal missão é fornecer soluções de software de alta qualidade que atendam às necessidades do utilizador final, num mundo tecnológico continuamente exigente e em ritmo acelerado, proporcionando a melhor experiência em termos de personalização, performance'
 ```
 
-## Getting results with metadata
+
+## 메타데이터와 함께 결과 가져오기
 
 ```python
 import pprint
 ```
+
 
 ```python
 search = SearchApiAPIWrapper(engine="google_scholar")
 results = search.results("Large Language Models")
 pprint.pp(results)
 ```
+
 ```output
 {'search_metadata': {'id': 'search_qVdXG2jzvrlqTzayeYoaOb8A',
                      'status': 'Success',
@@ -488,7 +502,8 @@ pprint.pp(results)
                                 '10': 'https://scholar.google.com/scholar?start=90&q=Large+Language+Models&hl=en&as_sdt=0,33'}}}
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

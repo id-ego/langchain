@@ -1,52 +1,46 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/nvidia_ai_endpoints/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/nvidia_ai_endpoints.ipynb
+description: NVIDIA의 채팅 모델을 시작하는 데 도움이 되는 문서로, LangChain 통합 및 NIM 추론 마이크로서비스에 대한 정보를
+  제공합니다.
 sidebar_label: NVIDIA AI Endpoints
 ---
 
 # ChatNVIDIA
 
-This will help you getting started with NVIDIA [chat models](/docs/concepts/#chat-models). For detailed documentation of all `ChatNVIDIA` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html).
+이 문서는 NVIDIA [채팅 모델](/docs/concepts/#chat-models)을 시작하는 데 도움이 됩니다. 모든 `ChatNVIDIA` 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html)에서 확인할 수 있습니다.
 
-## Overview
-The `langchain-nvidia-ai-endpoints` package contains LangChain integrations building applications with models on
-NVIDIA NIM inference microservice. NIM supports models across domains like chat, embedding, and re-ranking models
-from the community as well as NVIDIA. These models are optimized by NVIDIA to deliver the best performance on NVIDIA
-accelerated infrastructure and deployed as a NIM, an easy-to-use, prebuilt containers that deploy anywhere using a single
-command on NVIDIA accelerated infrastructure.
+## 개요
+`langchain-nvidia-ai-endpoints` 패키지는 NVIDIA NIM 추론 마이크로서비스에서 모델을 사용하여 애플리케이션을 구축하는 LangChain 통합을 포함합니다. NIM은 커뮤니티와 NVIDIA의 채팅, 임베딩 및 재순위 모델과 같은 다양한 도메인에서 모델을 지원합니다. 이러한 모델은 NVIDIA에 의해 최적화되어 NVIDIA 가속 인프라에서 최고의 성능을 제공하며, 단일 명령으로 어디서나 배포할 수 있는 사용하기 쉬운 사전 구축된 컨테이너인 NIM으로 배포됩니다.
 
-NVIDIA hosted deployments of NIMs are available to test on the [NVIDIA API catalog](https://build.nvidia.com/). After testing,
-NIMs can be exported from NVIDIA’s API catalog using the NVIDIA AI Enterprise license and run on-premises or in the cloud,
-giving enterprises ownership and full control of their IP and AI application.
+NVIDIA가 호스팅하는 NIM의 배포는 [NVIDIA API 카탈로그](https://build.nvidia.com/)에서 테스트할 수 있습니다. 테스트 후, NIM은 NVIDIA AI 엔터프라이즈 라이센스를 사용하여 NVIDIA의 API 카탈로그에서 내보내고 온프레미스 또는 클라우드에서 실행할 수 있어 기업이 자신의 IP 및 AI 애플리케이션에 대한 소유권과 완전한 제어를 가질 수 있습니다.
 
-NIMs are packaged as container images on a per model basis and are distributed as NGC container images through the NVIDIA NGC Catalog.
-At their core, NIMs provide easy, consistent, and familiar APIs for running inference on an AI model.
+NIM은 모델별로 컨테이너 이미지로 패키징되며 NVIDIA NGC 카탈로그를 통해 NGC 컨테이너 이미지로 배포됩니다. NIM의 핵심은 AI 모델에서 추론을 실행하기 위한 쉽고 일관되며 친숙한 API를 제공하는 것입니다.
 
-This example goes over how to use LangChain to interact with NVIDIA supported via the `ChatNVIDIA` class.
+이 예제는 `ChatNVIDIA` 클래스를 통해 NVIDIA 지원과 상호작용하는 방법을 설명합니다.
 
-For more information on accessing the chat models through this api, check out the [ChatNVIDIA](https://python.langchain.com/docs/integrations/chat/nvidia_ai_endpoints/) documentation.
+이 API를 통해 채팅 모델에 액세스하는 방법에 대한 자세한 내용은 [ChatNVIDIA](https://python.langchain.com/docs/integrations/chat/nvidia_ai_endpoints/) 문서를 확인하십시오.
 
-### Integration details
+### 통합 세부정보
 
-| Class | Package | Local | Serializable | JS support | Package downloads | Package latest |
+| 클래스 | 패키지 | 로컬 | 직렬화 가능 | JS 지원 | 패키지 다운로드 | 패키지 최신 |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [ChatNVIDIA](https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html) | [langchain_nvidia_ai_endpoints](https://api.python.langchain.com/en/latest/nvidia_ai_endpoints_api_reference.html) | ✅ | beta | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain_nvidia_ai_endpoints?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain_nvidia_ai_endpoints?style=flat-square&label=%20) |
 
-### Model features
-| [Tool calling](/docs/how_to/tool_calling) | [Structured output](/docs/how_to/structured_output/) | JSON mode | [Image input](/docs/how_to/multimodal_inputs/) | Audio input | Video input | [Token-level streaming](/docs/how_to/chat_streaming/) | Native async | [Token usage](/docs/how_to/chat_token_usage_tracking/) | [Logprobs](/docs/how_to/logprobs/) |
+### 모델 기능
+| [도구 호출](/docs/how_to/tool_calling) | [구조화된 출력](/docs/how_to/structured_output/) | JSON 모드 | [이미지 입력](/docs/how_to/multimodal_inputs/) | 오디오 입력 | 비디오 입력 | [토큰 수준 스트리밍](/docs/how_to/chat_streaming/) | 네이티브 비동기 | [토큰 사용](/docs/how_to/chat_token_usage_tracking/) | [Logprobs](/docs/how_to/logprobs/) |
 | :---: | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
 | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | 
 
-## Setup
+## 설정
 
-**To get started:**
+**시작하려면:**
 
-1. Create a free account with [NVIDIA](https://build.nvidia.com/), which hosts NVIDIA AI Foundation models.
-2. Click on your model of choice.
-3. Under `Input` select the `Python` tab, and click `Get API Key`. Then click `Generate Key`.
-4. Copy and save the generated key as `NVIDIA_API_KEY`. From there, you should have access to the endpoints.
+1. NVIDIA AI Foundation 모델을 호스팅하는 [NVIDIA](https://build.nvidia.com/)에서 무료 계정을 만드세요.
+2. 원하는 모델을 클릭하세요.
+3. `Input`에서 `Python` 탭을 선택하고 `Get API Key`를 클릭하세요. 그런 다음 `Generate Key`를 클릭하세요.
+4. 생성된 키를 `NVIDIA_API_KEY`로 복사하고 저장하세요. 그 후, 엔드포인트에 액세스할 수 있어야 합니다.
 
-### Credentials
+### 자격 증명
 
 ```python
 import getpass
@@ -57,24 +51,27 @@ if not os.getenv("NVIDIA_API_KEY"):
     os.environ["NVIDIA_API_KEY"] = getpass.getpass("Enter your NVIDIA API key: ")
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+
+모델 호출의 자동 추적을 원하시면 아래의 주석을 해제하여 [LangSmith](https://docs.smith.langchain.com/) API 키를 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 ```
 
-### Installation
 
-The LangChain NVIDIA AI Endpoints integration lives in the `langchain_nvidia_ai_endpoints` package:
+### 설치
+
+LangChain NVIDIA AI Endpoints 통합은 `langchain_nvidia_ai_endpoints` 패키지에 있습니다:
 
 ```python
 %pip install --upgrade --quiet langchain-nvidia-ai-endpoints
 ```
 
-## Instantiation
 
-Now we can access models in the NVIDIA API Catalog:
+## 인스턴스화
+
+이제 NVIDIA API 카탈로그에서 모델에 액세스할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "ChatNVIDIA"}]-->
@@ -84,17 +81,19 @@ from langchain_nvidia_ai_endpoints import ChatNVIDIA
 llm = ChatNVIDIA(model="mistralai/mixtral-8x7b-instruct-v0.1")
 ```
 
-## Invocation
+
+## 호출
 
 ```python
 result = llm.invoke("Write a ballad about LangChain.")
 print(result.content)
 ```
 
-## Working with NVIDIA NIMs
-When ready to deploy, you can self-host models with NVIDIA NIM—which is included with the NVIDIA AI Enterprise software license—and run them anywhere, giving you ownership of your customizations and full control of your intellectual property (IP) and AI applications.
 
-[Learn more about NIMs](https://developer.nvidia.com/blog/nvidia-nim-offers-optimized-inference-microservices-for-deploying-ai-models-at-scale/)
+## NVIDIA NIM 작업
+배포할 준비가 되면 NVIDIA NIM으로 모델을 자체 호스팅할 수 있으며, 이는 NVIDIA AI 엔터프라이즈 소프트웨어 라이센스에 포함되어 있으며 어디서나 실행할 수 있어 사용자 정의에 대한 소유권과 지적 재산(IP) 및 AI 애플리케이션에 대한 완전한 제어를 제공합니다.
+
+[NIM에 대해 자세히 알아보기](https://developer.nvidia.com/blog/nvidia-nim-offers-optimized-inference-microservices-for-deploying-ai-models-at-scale/)
 
 ```python
 <!--IMPORTS:[{"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "ChatNVIDIA"}]-->
@@ -104,9 +103,10 @@ from langchain_nvidia_ai_endpoints import ChatNVIDIA
 llm = ChatNVIDIA(base_url="http://localhost:8000/v1", model="meta/llama3-8b-instruct")
 ```
 
-## Stream, Batch, and Async
 
-These models natively support streaming, and as is the case with all LangChain LLMs they expose a batch method to handle concurrent requests, as well as async methods for invoke, stream, and batch. Below are a few examples.
+## 스트리밍, 배치 및 비동기
+
+이 모델은 기본적으로 스트리밍을 지원하며, 모든 LangChain LLM과 마찬가지로 동시 요청을 처리하기 위한 배치 메서드와 호출, 스트리밍 및 배치를 위한 비동기 메서드를 제공합니다. 아래는 몇 가지 예입니다.
 
 ```python
 print(llm.batch(["What's 2*3?", "What's 2*6?"]))
@@ -114,11 +114,13 @@ print(llm.batch(["What's 2*3?", "What's 2*6?"]))
 # await llm.abatch(["What's 2*3?", "What's 2*6?"])
 ```
 
+
 ```python
 for chunk in llm.stream("How far can a seagull fly in one day?"):
     # Show the token separations
     print(chunk.content, end="|")
 ```
+
 
 ```python
 async for chunk in llm.astream(
@@ -127,28 +129,30 @@ async for chunk in llm.astream(
     print(chunk.content, end="|")
 ```
 
-## Supported models
 
-Querying `available_models` will still give you all of the other models offered by your API credentials.
+## 지원되는 모델
 
-The `playground_` prefix is optional.
+`available_models`를 쿼리하면 API 자격 증명으로 제공되는 모든 다른 모델을 여전히 얻을 수 있습니다.
+
+`playground_` 접두사는 선택 사항입니다.
 
 ```python
 ChatNVIDIA.get_available_models()
 # llm.get_available_models()
 ```
 
-## Model types
 
-All of these models above are supported and can be accessed via `ChatNVIDIA`. 
+## 모델 유형
 
-Some model types support unique prompting techniques and chat messages. We will review a few important ones below.
+위의 모든 모델은 지원되며 `ChatNVIDIA`를 통해 액세스할 수 있습니다.
 
-**To find out more about a specific model, please navigate to the API section of an AI Foundation model [as linked here](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/ai-foundation/models/codellama-13b/api).**
+일부 모델 유형은 고유한 프롬프트 기법 및 채팅 메시지를 지원합니다. 아래에서 몇 가지 중요한 내용을 검토하겠습니다.
 
-### General Chat
+**특정 모델에 대한 자세한 내용을 보려면 AI Foundation 모델의 API 섹션 [여기 링크](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/ai-foundation/models/codellama-13b/api)로 이동하십시오.**
 
-Models such as `meta/llama3-8b-instruct` and `mistralai/mixtral-8x22b-instruct-v0.1` are good all-around models that you can use for with any LangChain chat messages. Example below.
+### 일반 채팅
+
+`meta/llama3-8b-instruct` 및 `mistralai/mixtral-8x22b-instruct-v0.1`와 같은 모델은 LangChain 채팅 메시지와 함께 사용할 수 있는 좋은 전반적인 모델입니다. 아래 예시를 참조하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "ChatNVIDIA"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatNVIDIA"}, {"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "ChatNVIDIA"}]-->
@@ -165,9 +169,10 @@ for txt in chain.stream({"input": "What's your name?"}):
     print(txt, end="")
 ```
 
-### Code Generation
 
-These models accept the same arguments and input structure as regular chat models, but they tend to perform better on code-genreation and structured code tasks. An example of this is `meta/codellama-70b`.
+### 코드 생성
+
+이 모델은 일반 채팅 모델과 동일한 인수 및 입력 구조를 수용하지만 코드 생성 및 구조화된 코드 작업에서 더 나은 성능을 발휘하는 경향이 있습니다. 이의 예로는 `meta/codellama-70b`가 있습니다.
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -185,11 +190,12 @@ for txt in chain.stream({"input": "How do I solve this fizz buzz problem?"}):
     print(txt, end="")
 ```
 
-## Multimodal
 
-NVIDIA also supports multimodal inputs, meaning you can provide both images and text for the model to reason over. An example model supporting multimodal inputs is `nvidia/neva-22b`.
+## 다중 모드
 
-Below is an example use:
+NVIDIA는 또한 다중 모드 입력을 지원하여 모델이 이미지와 텍스트를 모두 제공받아 추론할 수 있습니다. 다중 모드 입력을 지원하는 모델의 예로는 `nvidia/neva-22b`가 있습니다.
+
+아래는 사용 예입니다:
 
 ```python
 import IPython
@@ -201,6 +207,7 @@ image_content = requests.get(image_url).content
 IPython.display.Image(image_content)
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "ChatNVIDIA"}]-->
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
@@ -208,7 +215,8 @@ from langchain_nvidia_ai_endpoints import ChatNVIDIA
 llm = ChatNVIDIA(model="nvidia/neva-22b")
 ```
 
-#### Passing an image as a URL
+
+#### URL로 이미지를 전달하기
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatNVIDIA"}]-->
@@ -226,9 +234,10 @@ llm.invoke(
 )
 ```
 
-#### Passing an image as a base64 encoded string
 
-At the moment, some extra processing happens client-side to support larger images like the one above. But for smaller images (and to better illustrate the process going on under the hood), we can directly pass in the image as shown below: 
+#### base64 인코딩된 문자열로 이미지를 전달하기
+
+현재 위와 같은 큰 이미지를 지원하기 위해 클라이언트 측에서 추가 처리가 발생합니다. 그러나 더 작은 이미지(그리고 프로세스가 진행되는 방식을 더 잘 설명하기 위해)에서는 아래와 같이 이미지를 직접 전달할 수 있습니다:
 
 ```python
 import IPython
@@ -239,6 +248,7 @@ image_content = requests.get(image_url).content
 
 IPython.display.Image(image_content)
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ChatNVIDIA"}]-->
@@ -264,22 +274,25 @@ llm.invoke(
 )
 ```
 
-#### Directly within the string
 
-The NVIDIA API uniquely accepts images as base64 images inlined within `<img/>` HTML tags. While this isn't interoperable with other LLMs, you can directly prompt the model accordingly.
+#### 문자열 내에서 직접
+
+NVIDIA API는 `<img/>` HTML 태그 내에 인라인된 base64 이미지로 이미지를 독특하게 수용합니다. 이는 다른 LLM과 상호 운용되지 않지만, 모델을 적절히 프롬프트할 수 있습니다.
 
 ```python
 base64_with_mime_type = f"data:image/png;base64,{b64_string}"
 llm.invoke(f'What\'s in this image?\n<img src="{base64_with_mime_type}" />')
 ```
 
-## Example usage within a RunnableWithMessageHistory
 
-Like any other integration, ChatNVIDIA is fine to support chat utilities like RunnableWithMessageHistory which is analogous to using `ConversationChain`. Below, we show the [LangChain RunnableWithMessageHistory](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html) example applied to the `mistralai/mixtral-8x22b-instruct-v0.1` model.
+## RunnableWithMessageHistory 내에서의 예제 사용
+
+다른 통합과 마찬가지로 ChatNVIDIA는 `ConversationChain`을 사용하는 것과 유사한 RunnableWithMessageHistory와 같은 채팅 유틸리티를 지원합니다. 아래에서는 `mistralai/mixtral-8x22b-instruct-v0.1` 모델에 적용된 [LangChain RunnableWithMessageHistory](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html) 예제를 보여줍니다.
 
 ```python
 %pip install --upgrade --quiet langchain
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryChatMessageHistory", "source": "langchain_core.chat_history", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.InMemoryChatMessageHistory.html", "title": "ChatNVIDIA"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "ChatNVIDIA"}]-->
@@ -318,12 +331,14 @@ conversation.invoke(
 )
 ```
 
+
 ```python
 conversation.invoke(
     "I'm doing well! Just having a conversation with an AI.",
     config=config,
 )
 ```
+
 
 ```python
 conversation.invoke(
@@ -332,13 +347,14 @@ conversation.invoke(
 )
 ```
 
-## Tool calling
 
-Starting in v0.2, `ChatNVIDIA` supports [bind_tools](https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html#langchain_core.language_models.chat_models.BaseChatModel.bind_tools).
+## 도구 호출
 
-`ChatNVIDIA` provides integration with the variety of models on [build.nvidia.com](https://build.nvidia.com) as well as local NIMs. Not all these models are trained for tool calling. Be sure to select a model that does have tool calling for your experimention and applications.
+v0.2부터 `ChatNVIDIA`는 [bind_tools](https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html#langchain_core.language_models.chat_models.BaseChatModel.bind_tools)를 지원합니다.
 
-You can get a list of models that are known to support tool calling with,
+`ChatNVIDIA`는 [build.nvidia.com](https://build.nvidia.com)에서 다양한 모델과 로컬 NIM과 통합을 제공합니다. 이러한 모든 모델이 도구 호출을 위해 훈련된 것은 아닙니다. 실험 및 애플리케이션을 위해 도구 호출이 가능한 모델을 선택해야 합니다.
+
+도구 호출을 지원하는 모델 목록을 얻으려면,
 
 ```python
 tool_models = [
@@ -347,7 +363,8 @@ tool_models = [
 tool_models
 ```
 
-With a tool capable model,
+
+도구가 가능한 모델로,
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "ChatNVIDIA"}]-->
@@ -368,11 +385,12 @@ response = llm.invoke("What is the weather in Boston?")
 response.tool_calls
 ```
 
-See [How to use chat models to call tools](https://python.langchain.com/v0.2/docs/how_to/tool_calling/) for additional examples.
 
-## Chaining
+추가 예제는 [도구 호출을 위한 채팅 모델 사용 방법](https://python.langchain.com/v0.2/docs/how_to/tool_calling/)을 참조하십시오.
 
-We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
+## 체이닝
+
+프롬프트 템플릿과 함께 모델을 [체인](/docs/how_to/sequence/)할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatNVIDIA"}]-->
@@ -398,11 +416,12 @@ chain.invoke(
 )
 ```
 
-## API reference
 
-For detailed documentation of all `ChatNVIDIA` features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html
+## API 참조
 
-## Related
+모든 `ChatNVIDIA` 기능 및 구성에 대한 자세한 문서는 API 참조에서 확인할 수 있습니다: https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

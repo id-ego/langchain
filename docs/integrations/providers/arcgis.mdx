@@ -1,30 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/arcgis/
+description: ArcGIS는 Esri에서 개발한 GIS 소프트웨어로, Python 라이브러리인 arcgis를 통해 지도 제작, 분석 및 데이터
+  관리 기능을 제공합니다.
 ---
 
 # ArcGIS
 
-> [ArcGIS](https://www.esri.com/en-us/arcgis/about-arcgis/overview) is a family of client,
-server and online geographic information system software developed and maintained by [Esri](https://www.esri.com/).
+> [ArcGIS](https://www.esri.com/en-us/arcgis/about-arcgis/overview)는 [Esri](https://www.esri.com/)에서 개발하고 유지 관리하는 클라이언트, 서버 및 온라인 지리 정보 시스템 소프트웨어의 모음입니다.
 > 
-> `ArcGISLoader` uses the `arcgis` package.
-`arcgis` is a Python library for the vector and raster analysis, geocoding, map making,
-routing and directions. It administers, organizes and manages users,
-groups and information items in your GIS.
-It enables access to ready-to-use maps and curated geographic data from `Esri`
-and other authoritative sources, and works with your own data as well. 
+> `ArcGISLoader`는 `arcgis` 패키지를 사용합니다.
+`arcgis`는 벡터 및 래스터 분석, 지오코딩, 지도 제작, 경로 찾기 및 방향 설정을 위한 Python 라이브러리입니다. 
+이 라이브러리는 GIS에서 사용자, 그룹 및 정보 항목을 관리하고 조직하며 관리합니다.
+Esri 및 기타 권위 있는 출처의 즉시 사용 가능한 지도와 선별된 지리 데이터를 액세스할 수 있게 하며, 귀하의 데이터와도 함께 작업할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-We have to install the `arcgis` package.
+`arcgis` 패키지를 설치해야 합니다.
 
 ```bash
 pip install -U arcgis
 ```
 
-## Document Loader
 
-See a [usage example](/docs/integrations/document_loaders/arcgis).
+## 문서 로더
+
+[사용 예제](/docs/integrations/document_loaders/arcgis)를 참조하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "ArcGISLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.arcgis_loader.ArcGISLoader.html", "title": "ArcGIS"}]-->

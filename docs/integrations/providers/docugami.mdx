@@ -1,23 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/docugami/
+description: Docugami는 비즈니스 문서를 XML 지식 그래프로 변환하여 문서의 의미와 구조적 특성을 포함한 XML 트리를 생성합니다.
 ---
 
 # Docugami
 
-> [Docugami](https://docugami.com) converts business documents into a Document XML Knowledge Graph, generating forests
-of XML semantic trees representing entire documents. This is a rich representation that includes the semantic and
-structural characteristics of various chunks in the document as an XML tree.
+> [Docugami](https://docugami.com)는 비즈니스 문서를 Document XML Knowledge Graph로 변환하여 전체 문서를 나타내는 XML 의미 트리의 숲을 생성합니다. 이는 문서 내 다양한 청크의 의미적 및 구조적 특성을 XML 트리로 포함하는 풍부한 표현입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```bash
 pip install dgml-utils
 pip install docugami-langchain
 ```
 
-## Document Loader
 
-See a [usage example](/docs/integrations/document_loaders/docugami).
+## 문서 로더
+
+[사용 예시](/docs/integrations/document_loaders/docugami)를 참조하세요.
 
 ```python
 from docugami_langchain.document_loaders import DocugamiLoader

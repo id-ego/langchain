@@ -1,36 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/functions/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/functions.ipynb
+description: 사용자 정의 함수를 Runnables로 실행하는 방법을 안내하며, Lambda 함수를 활용한 입력 처리에 대한 정보를 제공합니다.
 keywords:
 - RunnableLambda
 - LCEL
 sidebar_position: 3
 ---
 
-# How to run custom functions
+# 사용자 정의 함수 실행 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language)
-- [Chaining runnables](/docs/how_to/sequence/)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [LangChain 표현 언어 (LCEL)](/docs/concepts/#langchain-expression-language)
+- [Runnable 연결하기](/docs/how_to/sequence/)
 
 :::
 
-You can use arbitrary functions as [Runnables](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable). This is useful for formatting or when you need functionality not provided by other LangChain components, and custom functions used as Runnables are called [`RunnableLambdas`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html).
+임의의 함수를 [Runnables](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable)로 사용할 수 있습니다. 이는 형식을 지정하거나 다른 LangChain 구성 요소에서 제공되지 않는 기능이 필요할 때 유용하며, Runnables로 사용되는 사용자 정의 함수는 [`RunnableLambdas`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html)라고 합니다.
 
-Note that all inputs to these functions need to be a SINGLE argument. If you have a function that accepts multiple arguments, you should write a wrapper that accepts a single dict input and unpacks it into multiple arguments.
+이 함수에 대한 모든 입력은 단일 인수여야 합니다. 여러 인수를 허용하는 함수가 있는 경우, 단일 dict 입력을 허용하고 이를 여러 인수로 풀어내는 래퍼를 작성해야 합니다.
 
-This guide will cover:
+이 가이드는 다음 내용을 다룹니다:
 
-- How to explicitly create a runnable from a custom function using the `RunnableLambda` constructor and the convenience `@chain` decorator
-- Coercion of custom functions into runnables when used in chains
-- How to accept and use run metadata in your custom function
-- How to stream with custom functions by having them return generators
+- `RunnableLambda` 생성자와 편리한 `@chain` 데코레이터를 사용하여 사용자 정의 함수에서 명시적으로 runnable을 생성하는 방법
+- 체인에서 사용될 때 사용자 정의 함수를 runnable로 강제 변환하는 방법
+- 사용자 정의 함수에서 실행 메타데이터를 수용하고 사용하는 방법
+- 사용자 정의 함수가 생성기를 반환하도록 하여 스트리밍하는 방법
 
-## Using the constructor
+## 생성자 사용하기
 
-Below, we explicitly wrap our custom logic using the `RunnableLambda` constructor:
+아래에서 우리는 `RunnableLambda` 생성자를 사용하여 우리의 사용자 정의 논리를 명시적으로 래핑합니다:
 
 ```python
 %pip install -qU langchain langchain_openai
@@ -40,6 +40,7 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to run custom functions"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to run custom functions"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to run custom functions"}]-->
@@ -81,13 +82,15 @@ chain = (
 chain.invoke({"foo": "bar", "bar": "gah"})
 ```
 
+
 ```output
 AIMessage(content='3 + 9 equals 12.', response_metadata={'token_usage': {'completion_tokens': 8, 'prompt_tokens': 14, 'total_tokens': 22}, 'model_name': 'gpt-3.5-turbo', 'system_fingerprint': 'fp_c2295e73ad', 'finish_reason': 'stop', 'logprobs': None}, id='run-73728de3-e483-49e3-ad54-51bd9570e71a-0')
 ```
 
-## The convenience `@chain` decorator
 
-You can also turn an arbitrary function into a chain by adding a `@chain` decorator. This is functionaly equivalent to wrapping the function in a `RunnableLambda` constructor as shown above. Here's an example:
+## 편리한 `@chain` 데코레이터
+
+임의의 함수를 체인으로 변환하려면 `@chain` 데코레이터를 추가할 수 있습니다. 이는 위에서 보여준 것처럼 함수를 `RunnableLambda` 생성자로 래핑하는 것과 기능적으로 동일합니다. 예를 들어:
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to run custom functions"}, {"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to run custom functions"}]-->
@@ -110,17 +113,19 @@ def custom_chain(text):
 custom_chain.invoke("bears")
 ```
 
+
 ```output
 'The subject of the joke is the bear and his girlfriend.'
 ```
 
-Above, the `@chain` decorator is used to convert `custom_chain` into a runnable, which we invoke with the `.invoke()` method.
 
-If you are using a tracing with [LangSmith](https://docs.smith.langchain.com/), you should see a `custom_chain` trace in there, with the calls to OpenAI nested underneath.
+위에서 `@chain` 데코레이터는 `custom_chain`을 runnable로 변환하는 데 사용되며, 우리는 `.invoke()` 메서드로 이를 호출합니다.
 
-## Automatic coercion in chains
+[LangSmith](https://docs.smith.langchain.com/)와 함께 추적을 사용하는 경우, 그 안에 `custom_chain` 추적이 표시되며, OpenAI에 대한 호출이 그 아래에 중첩되어 있어야 합니다.
 
-When using custom functions in chains with the pipe operator (`|`), you can omit the `RunnableLambda` or `@chain` constructor and rely on coercion. Here's a simple example with a function that takes the output from the model and returns the first five letters of it:
+## 체인에서의 자동 강제 변환
+
+파이프 연산자(`|`)로 체인에서 사용자 정의 함수를 사용할 때, `RunnableLambda` 또는 `@chain` 생성자를 생략하고 강제 변환에 의존할 수 있습니다. 다음은 모델의 출력을 받아서 그 첫 다섯 글자를 반환하는 함수의 간단한 예입니다:
 
 ```python
 prompt = ChatPromptTemplate.from_template("tell me a story about {topic}")
@@ -132,15 +137,17 @@ chain_with_coerced_function = prompt | model | (lambda x: x.content[:5])
 chain_with_coerced_function.invoke({"topic": "bears"})
 ```
 
+
 ```output
 'Once '
 ```
 
-Note that we didn't need to wrap the custom function `(lambda x: x.content[:5])` in a `RunnableLambda` constructor because the `model` on the left of the pipe operator is already a Runnable. The custom function is **coerced** into a runnable. See [this section](/docs/how_to/sequence/#coercion) for more information.
 
-## Passing run metadata
+파이프 연산자의 왼쪽에 있는 `model`이 이미 Runnable이기 때문에 우리는 사용자 정의 함수 `(lambda x: x.content[:5])`를 `RunnableLambda` 생성자로 래핑할 필요가 없었습니다. 사용자 정의 함수는 **강제 변환**되어 runnable이 됩니다. 자세한 내용은 [이 섹션](/docs/how_to/sequence/#coercion)을 참조하세요.
 
-Runnable lambdas can optionally accept a [RunnableConfig](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html#langchain_core.runnables.config.RunnableConfig) parameter, which they can use to pass callbacks, tags, and other configuration information to nested runs.
+## 실행 메타데이터 전달하기
+
+Runnable lambdas는 선택적으로 [RunnableConfig](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html#langchain_core.runnables.config.RunnableConfig) 매개변수를 수용할 수 있으며, 이를 사용하여 콜백, 태그 및 기타 구성 정보를 중첩된 실행에 전달할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "How to run custom functions"}]-->
@@ -175,6 +182,7 @@ with get_openai_callback() as cb:
     print(output)
     print(cb)
 ```
+
 ```output
 {'foo': 'bar'}
 Tokens Used: 62
@@ -183,6 +191,7 @@ Tokens Used: 62
 Successful Requests: 1
 Total Cost (USD): $9.6e-05
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "get_openai_callback", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.manager.get_openai_callback.html", "title": "How to run custom functions"}]-->
@@ -195,6 +204,7 @@ with get_openai_callback() as cb:
     print(output)
     print(cb)
 ```
+
 ```output
 {'foo': 'bar'}
 Tokens Used: 62
@@ -203,21 +213,23 @@ Tokens Used: 62
 Successful Requests: 1
 Total Cost (USD): $9.6e-05
 ```
-## Streaming
+
+
+## 스트리밍
 
 :::note
-[RunnableLambda](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html) is best suited for code that does not need to support streaming. If you need to support streaming (i.e., be able to operate on chunks of inputs and yield chunks of outputs), use [RunnableGenerator](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableGenerator.html) instead as in the example below.
+[RunnableLambda](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html)는 스트리밍을 지원할 필요가 없는 코드에 가장 적합합니다. 스트리밍을 지원해야 하는 경우(즉, 입력의 청크를 처리하고 출력의 청크를 생성할 수 있어야 함) 아래의 예와 같이 [RunnableGenerator](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableGenerator.html)를 사용하세요.
 :::
 
-You can use generator functions (ie. functions that use the `yield` keyword, and behave like iterators) in a chain.
+체인에서 생성기 함수(즉, `yield` 키워드를 사용하고 반복자처럼 동작하는 함수)를 사용할 수 있습니다.
 
-The signature of these generators should be `Iterator[Input] -> Iterator[Output]`. Or for async generators: `AsyncIterator[Input] -> AsyncIterator[Output]`.
+이 생성기의 서명은 `Iterator[Input] -> Iterator[Output]`이어야 합니다. 또는 비동기 생성기의 경우: `AsyncIterator[Input] -> AsyncIterator[Output]`.
 
-These are useful for:
-- implementing a custom output parser
-- modifying the output of a previous step, while preserving streaming capabilities
+이는 다음과 같은 경우에 유용합니다:
+- 사용자 정의 출력 파서를 구현할 때
+- 스트리밍 기능을 유지하면서 이전 단계의 출력을 수정할 때
 
-Here's an example of a custom output parser for comma-separated lists. First, we create a chain that generates such a list as text:
+다음은 쉼표로 구분된 목록에 대한 사용자 정의 출력 파서의 예입니다. 먼저, 우리는 그러한 목록을 텍스트로 생성하는 체인을 만듭니다:
 
 ```python
 from typing import Iterator, List
@@ -231,10 +243,13 @@ str_chain = prompt | model | StrOutputParser()
 for chunk in str_chain.stream({"animal": "bear"}):
     print(chunk, end="", flush=True)
 ```
+
 ```output
 lion, tiger, wolf, gorilla, panda
 ```
-Next, we define a custom function that will aggregate the currently streamed output and yield it when the model generates the next comma in the list:
+
+
+다음으로, 현재 스트리밍된 출력을 집계하고 모델이 목록에서 다음 쉼표를 생성할 때 이를 반환하는 사용자 정의 함수를 정의합니다:
 
 ```python
 # This is a custom parser that splits an iterator of llm tokens
@@ -262,6 +277,7 @@ list_chain = str_chain | split_into_list
 for chunk in list_chain.stream({"animal": "bear"}):
     print(chunk, flush=True)
 ```
+
 ```output
 ['lion']
 ['tiger']
@@ -269,19 +285,23 @@ for chunk in list_chain.stream({"animal": "bear"}):
 ['gorilla']
 ['raccoon']
 ```
-Invoking it gives a full array of values:
+
+
+이를 호출하면 값의 전체 배열이 생성됩니다:
 
 ```python
 list_chain.invoke({"animal": "bear"})
 ```
 
+
 ```output
 ['lion', 'tiger', 'wolf', 'gorilla', 'raccoon']
 ```
 
-## Async version
 
-If you are working in an `async` environment, here is an `async` version of the above example:
+## 비동기 버전
+
+비동기 환경에서 작업하는 경우, 위 예제의 비동기 버전은 다음과 같습니다:
 
 ```python
 from typing import AsyncIterator
@@ -307,6 +327,7 @@ list_chain = str_chain | asplit_into_list
 async for chunk in list_chain.astream({"animal": "bear"}):
     print(chunk, flush=True)
 ```
+
 ```output
 ['lion']
 ['tiger']
@@ -315,16 +336,19 @@ async for chunk in list_chain.astream({"animal": "bear"}):
 ['panda']
 ```
 
+
 ```python
 await list_chain.ainvoke({"animal": "bear"})
 ```
+
 
 ```output
 ['lion', 'tiger', 'wolf', 'gorilla', 'panda']
 ```
 
-## Next steps
 
-Now you've learned a few different ways to use custom logic within your chains, and how to implement streaming.
+## 다음 단계
 
-To learn more, see the other how-to guides on runnables in this section.
+이제 체인 내에서 사용자 정의 논리를 사용하는 몇 가지 방법과 스트리밍을 구현하는 방법을 배웠습니다.
+
+더 알아보려면 이 섹션의 다른 runnable에 대한 가이드를 참조하세요.

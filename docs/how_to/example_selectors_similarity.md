@@ -1,11 +1,11 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/example_selectors_similarity/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/example_selectors_similarity.ipynb
+description: 입력과 유사한 예제를 선택하는 방법에 대한 설명으로, 코사인 유사도를 활용한 임베딩 기반 선택 방식을 다룹니다.
 ---
 
-# How to select examples by similarity
+# 유사성에 따라 예제를 선택하는 방법
 
-This object selects examples based on similarity to the inputs. It does this by finding the examples with the embeddings that have the greatest cosine similarity with the inputs.
+이 객체는 입력과의 유사성을 기반으로 예제를 선택합니다. 이는 입력과 가장 큰 코사인 유사성을 가진 임베딩을 가진 예제를 찾아서 수행됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to select examples by similarity"}, {"imported": "SemanticSimilarityExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html", "title": "How to select examples by similarity"}, {"imported": "FewShotPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotPromptTemplate.html", "title": "How to select examples by similarity"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "How to select examples by similarity"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to select examples by similarity"}]-->
@@ -29,6 +29,7 @@ examples = [
 ]
 ```
 
+
 ```python
 example_selector = SemanticSimilarityExampleSelector.from_examples(
     # The list of examples available to select from.
@@ -50,10 +51,12 @@ similar_prompt = FewShotPromptTemplate(
 )
 ```
 
+
 ```python
 # Input is a feeling, so should select the happy/sad example
 print(similar_prompt.format(adjective="worried"))
 ```
+
 ```output
 Give the antonym of every input
 
@@ -64,10 +67,12 @@ Input: worried
 Output:
 ```
 
+
 ```python
 # Input is a measurement, so should select the tall/short example
 print(similar_prompt.format(adjective="large"))
 ```
+
 ```output
 Give the antonym of every input
 
@@ -78,6 +83,7 @@ Input: large
 Output:
 ```
 
+
 ```python
 # You can add new examples to the SemanticSimilarityExampleSelector as well
 similar_prompt.example_selector.add_example(
@@ -85,6 +91,7 @@ similar_prompt.example_selector.add_example(
 )
 print(similar_prompt.format(adjective="passionate"))
 ```
+
 ```output
 Give the antonym of every input
 

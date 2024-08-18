@@ -1,44 +1,47 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/google_drive/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/google_drive.ipynb
+description: 이 문서는 LangChain을 Google Drive API에 연결하는 방법을 안내합니다. 필요한 준비물과 Google Docs
+  데이터 검색 방법을 설명합니다.
 ---
 
-# Google Drive
+# 구글 드라이브
 
-This notebook walks through connecting a LangChain to the `Google Drive API`.
+이 노트북은 LangChain을 `Google Drive API`에 연결하는 방법을 설명합니다.
 
-## Prerequisites
+## 전제 조건
 
-1. Create a Google Cloud project or use an existing project
-2. Enable the [Google Drive API](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com)
-3. [Authorize credentials for desktop app](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)
-4. `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`
+1. 구글 클라우드 프로젝트를 생성하거나 기존 프로젝트를 사용합니다.
+2. [Google Drive API](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com)를 활성화합니다.
+3. [데스크탑 앱에 대한 인증 자격 증명 승인](https://developers.google.com/drive/api/quickstart/python#authorize_credentials_for_a_desktop_application)을 수행합니다.
+4. `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`를 실행합니다.
 
-## Instructions for retrieving your Google Docs data
-By default, the `GoogleDriveTools` and `GoogleDriveWrapper` expects the `credentials.json` file to be `~/.credentials/credentials.json`, but this is configurable using the `GOOGLE_ACCOUNT_FILE` environment variable.
-The location of `token.json` use the same directory (or use the parameter `token_path`). Note that `token.json` will be created automatically the first time you use the tool.
+## Google Docs 데이터 검색 지침
+기본적으로 `GoogleDriveTools`와 `GoogleDriveWrapper`는 `credentials.json` 파일이 `~/.credentials/credentials.json`에 있기를 기대하지만, 이는 `GOOGLE_ACCOUNT_FILE` 환경 변수를 사용하여 구성할 수 있습니다.
+`token.json`의 위치는 동일한 디렉토리를 사용하거나 `token_path` 매개변수를 사용할 수 있습니다. `token.json`은 도구를 처음 사용할 때 자동으로 생성됩니다.
 
-`GoogleDriveSearchTool` can retrieve a selection of files with some requests. 
+`GoogleDriveSearchTool`은 몇 가지 요청으로 파일 선택을 검색할 수 있습니다.
 
-By default, If you use a `folder_id`, all the files inside this folder can be retrieved to `Document`, if the name match the query.
+기본적으로 `folder_id`를 사용하는 경우, 쿼리와 이름이 일치하면 이 폴더 내의 모든 파일을 `Document`로 검색할 수 있습니다.
 
 ```python
 %pip install --upgrade --quiet  google-api-python-client google-auth-httplib2 google-auth-oauthlib langchain-community
 ```
 
-You can obtain your folder and document id from the URL:
 
-* Folder: https://drive.google.com/drive/u/0/folders/1yucgL9WGgWZdM1TOuKkeghlPizuzMYb5 -> folder id is `"1yucgL9WGgWZdM1TOuKkeghlPizuzMYb5"`
-* Document: https://docs.google.com/document/d/1bfaMQ18_i56204VaQDVeAFpqEijJTgvurupdEDiaUQw/edit -> document id is `"1bfaMQ18_i56204VaQDVeAFpqEijJTgvurupdEDiaUQw"`
+URL에서 폴더 및 문서 ID를 얻을 수 있습니다:
 
-The special value `root` is for your personal home.
+* 폴더: https://drive.google.com/drive/u/0/folders/1yucgL9WGgWZdM1TOuKkeghlPizuzMYb5 -> 폴더 ID는 `"1yucgL9WGgWZdM1TOuKkeghlPizuzMYb5"`입니다.
+* 문서: https://docs.google.com/document/d/1bfaMQ18_i56204VaQDVeAFpqEijJTgvurupdEDiaUQw/edit -> 문서 ID는 `"1bfaMQ18_i56204VaQDVeAFpqEijJTgvurupdEDiaUQw"`입니다.
+
+특별 값 `root`는 개인 홈을 나타냅니다.
 
 ```python
 folder_id = "root"
 # folder_id='1yucgL9WGgWZdM1TOuKkeghlPizuzMYb5'
 ```
 
-By default, all files with these mime-type can be converted to `Document`.
+
+기본적으로 이러한 MIME 유형을 가진 모든 파일은 `Document`로 변환될 수 있습니다.
 - text/text
 - text/plain
 - text/html
@@ -56,13 +59,14 @@ By default, all files with these mime-type can be converted to `Document`.
 - application/vnd.openxmlformats-officedocument.presentationml.presentation (PPTX)
 - application/vnd.openxmlformats-officedocument.wordprocessingml.document (DOCX)
 
-It's possible to update or customize this. See the documentation of `GoogleDriveAPIWrapper`.
+이를 업데이트하거나 사용자 정의하는 것이 가능합니다. `GoogleDriveAPIWrapper`의 문서를 참조하십시오.
 
-But, the corresponding packages must installed.
+하지만 해당 패키지는 설치되어 있어야 합니다.
 
 ```python
 %pip install --upgrade --quiet  unstructured
 ```
+
 
 ```python
 from langchain_googledrive.tools.google_drive.tool import GoogleDriveSearchTool
@@ -78,19 +82,23 @@ tool = GoogleDriveSearchTool(
 )
 ```
 
+
 ```python
 import logging
 
 logging.basicConfig(level=logging.INFO)
 ```
 
+
 ```python
 tool.run("machine learning")
 ```
 
+
 ```python
 tool.description
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Google Drive"}]-->
@@ -103,7 +111,8 @@ tools = load_tools(
 )
 ```
 
-## Use within an Agent
+
+## 에이전트 내에서 사용
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Google Drive"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Google Drive"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Google Drive"}]-->
@@ -118,11 +127,13 @@ agent = initialize_agent(
 )
 ```
 
+
 ```python
 agent.run("Search in google drive, who is 'Yann LeCun' ?")
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

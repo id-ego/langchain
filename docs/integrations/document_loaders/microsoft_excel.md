@@ -1,17 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/microsoft_excel/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/microsoft_excel.ipynb
+description: Microsoft Excel 파일을 로드하는 `UnstructuredExcelLoader`에 대한 설명과 Azure AI 문서
+  인텔리전스 사용법을 안내합니다.
 ---
 
-# Microsoft Excel
+# 마이크로소프트 엑셀
 
-The `UnstructuredExcelLoader` is used to load `Microsoft Excel` files. The loader works with both `.xlsx` and `.xls` files. The page content will be the raw text of the Excel file. If you use the loader in `"elements"` mode, an HTML representation of the Excel file will be available in the document metadata under the `text_as_html` key.
+`UnstructuredExcelLoader`는 `Microsoft Excel` 파일을 로드하는 데 사용됩니다. 로더는 `.xlsx` 및 `.xls` 파일 모두에서 작동합니다. 페이지 콘텐츠는 Excel 파일의 원시 텍스트가 됩니다. 로더를 `"elements"` 모드로 사용하면 Excel 파일의 HTML 표현이 문서 메타데이터의 `text_as_html` 키 아래에서 사용할 수 있습니다.
 
-Please see [this guide](/docs/integrations/providers/unstructured/) for more instructions on setting up Unstructured locally, including setting up required system dependencies.
+Unstructured를 로컬에서 설정하는 방법에 대한 추가 지침은 [이 가이드](/docs/integrations/providers/unstructured/)를 참조하십시오. 여기에는 필요한 시스템 종속성 설정이 포함됩니다.
 
 ```python
 %pip install --upgrade --quiet langchain-community unstructured openpyxl
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredExcelLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.excel.UnstructuredExcelLoader.html", "title": "Microsoft Excel"}]-->
@@ -24,9 +26,11 @@ print(len(docs))
 
 docs
 ```
+
 ```output
 4
 ```
+
 
 ```output
 [Document(page_content='Stanley Cups', metadata={'source': './example_data/stanley-cups.xlsx', 'file_directory': './example_data', 'filename': 'stanley-cups.xlsx', 'last_modified': '2023-12-19T13:42:18', 'page_name': 'Stanley Cups', 'page_number': 1, 'languages': ['eng'], 'filetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'category': 'Title'}),
@@ -35,23 +39,23 @@ docs
  Document(page_content='\n\n\nTeam\nLocation\nStanley Cups\n\n\nBlues\nSTL\n1\n\n\nFlyers\nPHI\n2\n\n\nMaple Leafs\nTOR\n0\n\n\n', metadata={'source': './example_data/stanley-cups.xlsx', 'file_directory': './example_data', 'filename': 'stanley-cups.xlsx', 'last_modified': '2023-12-19T13:42:18', 'page_name': 'Stanley Cups Since 67', 'page_number': 2, 'text_as_html': '<table border="1" class="dataframe">\n  <tbody>\n    <tr>\n      <td>Team</td>\n      <td>Location</td>\n      <td>Stanley Cups</td>\n    </tr>\n    <tr>\n      <td>Blues</td>\n      <td>STL</td>\n      <td>1</td>\n    </tr>\n    <tr>\n      <td>Flyers</td>\n      <td>PHI</td>\n      <td>2</td>\n    </tr>\n    <tr>\n      <td>Maple Leafs</td>\n      <td>TOR</td>\n      <td>0</td>\n    </tr>\n  </tbody>\n</table>', 'languages': ['eng'], 'parent_id': 'ee34bd8c186b57e3530d5443ffa58122', 'filetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'category': 'Table'})]
 ```
 
-## Using Azure AI Document Intelligence
 
-> [Azure AI Document Intelligence](https://aka.ms/doc-intelligence) (formerly known as `Azure Form Recognizer`) is machine-learning
-based service that extracts texts (including handwriting), tables, document structures (e.g., titles, section headings, etc.) and key-value-pairs from
-digital or scanned PDFs, images, Office and HTML files.
+## Azure AI 문서 인텔리전스 사용하기
+
+> [Azure AI 문서 인텔리전스](https://aka.ms/doc-intelligence) (이전 이름: `Azure Form Recognizer`)는 기계 학습 기반 서비스로, 디지털 또는 스캔된 PDF, 이미지, Office 및 HTML 파일에서 텍스트(손글씨 포함), 표, 문서 구조(예: 제목, 섹션 제목 등) 및 키-값 쌍을 추출합니다.
 > 
-> Document Intelligence supports `PDF`, `JPEG/JPG`, `PNG`, `BMP`, `TIFF`, `HEIF`, `DOCX`, `XLSX`, `PPTX` and `HTML`.
+> 문서 인텔리전스는 `PDF`, `JPEG/JPG`, `PNG`, `BMP`, `TIFF`, `HEIF`, `DOCX`, `XLSX`, `PPTX` 및 `HTML`을 지원합니다.
 
-This current implementation of a loader using `Document Intelligence` can incorporate content page-wise and turn it into LangChain documents. The default output format is markdown, which can be easily chained with `MarkdownHeaderTextSplitter` for semantic document chunking. You can also use `mode="single"` or `mode="page"` to return pure texts in a single page or document split by page.
+현재 `Document Intelligence`를 사용하는 로더 구현은 콘텐츠를 페이지별로 통합하고 이를 LangChain 문서로 변환할 수 있습니다. 기본 출력 형식은 마크다운이며, 이는 `MarkdownHeaderTextSplitter`와 쉽게 연결되어 의미론적 문서 청크로 나눌 수 있습니다. `mode="single"` 또는 `mode="page"`를 사용하여 단일 페이지의 순수 텍스트 또는 페이지별로 나누어진 문서를 반환할 수 있습니다.
 
-### Prerequisite
+### 전제 조건
 
-An Azure AI Document Intelligence resource in one of the 3 preview regions: **East US**, **West US2**, **West Europe** - follow [this document](https://learn.microsoft.com/azure/ai-services/document-intelligence/create-document-intelligence-resource?view=doc-intel-4.0.0) to create one if you don't have. You will be passing `<endpoint>` and `<key>` as parameters to the loader.
+3개의 미리 보기 지역 중 하나에 Azure AI 문서 인텔리전스 리소스가 필요합니다: **East US**, **West US2**, **West Europe** - 리소스가 없는 경우 [이 문서](https://learn.microsoft.com/azure/ai-services/document-intelligence/create-document-intelligence-resource?view=doc-intel-4.0.0)를 따라 생성하십시오. `<endpoint>` 및 `<key>`를 로더에 대한 매개변수로 전달해야 합니다.
 
 ```python
 %pip install --upgrade --quiet langchain langchain-community azure-ai-documentintelligence
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AzureAIDocumentIntelligenceLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.doc_intelligence.AzureAIDocumentIntelligenceLoader.html", "title": "Microsoft Excel"}]-->
@@ -67,7 +71,8 @@ loader = AzureAIDocumentIntelligenceLoader(
 documents = loader.load()
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

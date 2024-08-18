@@ -1,28 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/lancedb/
+description: LanceDB를 LangChain에서 사용하는 방법을 다루며, 설치 및 설정과 LanceDB 래퍼에 대한 정보를 제공합니다.
 ---
 
 # LanceDB
 
-This page covers how to use [LanceDB](https://github.com/lancedb/lancedb) within LangChain.
-It is broken into two parts: installation and setup, and then references to specific LanceDB wrappers.
+이 페이지는 LangChain 내에서 [LanceDB](https://github.com/lancedb/lancedb)를 사용하는 방법을 다룹니다. 설치 및 설정과 특정 LanceDB 래퍼에 대한 참조로 나뉘어 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the Python SDK with `pip install lancedb`
+- `pip install lancedb`로 Python SDK를 설치합니다.
 
-## Wrappers
+## 래퍼
 
 ### VectorStore
 
-There exists a wrapper around LanceDB databases, allowing you to use it as a vectorstore,
-whether for semantic search or example selection.
+LanceDB 데이터베이스 주위에 래퍼가 존재하여, 의미 검색이나 예제 선택을 위해 벡터 저장소로 사용할 수 있습니다.
 
-To import this vectorstore:
+이 벡터 저장소를 가져오려면:
 
 ```python
 <!--IMPORTS:[{"imported": "LanceDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.lancedb.LanceDB.html", "title": "LanceDB"}]-->
 from langchain_community.vectorstores import LanceDB
 ```
 
-For a more detailed walkthrough of the LanceDB wrapper, see [this notebook](/docs/integrations/vectorstores/lancedb)
+
+LanceDB 래퍼에 대한 보다 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/lancedb)을 참조하세요.

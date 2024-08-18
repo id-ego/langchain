@@ -1,26 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/annoy/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/annoy.ipynb
+description: 이 문서는 Annoy 라이브러리를 사용하여 벡터 데이터베이스를 생성하고 검색하는 방법을 설명합니다. Python 바인딩을 포함합니다.
 ---
 
 # Annoy
 
-> [Annoy](https://github.com/spotify/annoy) (`Approximate Nearest Neighbors Oh Yeah`) is a C++ library with Python bindings to search for points in space that are close to a given query point. It also creates large read-only file-based data structures that are mapped into memory so that many processes may share the same data.
+> [Annoy](https://github.com/spotify/annoy) (`Approximate Nearest Neighbors Oh Yeah`)는 주어진 쿼리 포인트에 가까운 공간의 포인트를 검색하기 위한 C++ 라이브러리로, Python 바인딩을 제공합니다. 또한 많은 프로세스가 동일한 데이터를 공유할 수 있도록 메모리에 매핑된 대규모 읽기 전용 파일 기반 데이터 구조를 생성합니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-This notebook shows how to use functionality related to the `Annoy` vector database.
+이 노트북은 `Annoy` 벡터 데이터베이스와 관련된 기능을 사용하는 방법을 보여줍니다.
 
 ```{note}
 NOTE: Annoy is read-only - once the index is built you cannot add any more embeddings!
 If you want to progressively add new entries to your VectorStore then better choose an alternative!
 ```
 
+
 ```python
 %pip install --upgrade --quiet  annoy
 ```
 
-## Create VectorStore from texts
+
+## 텍스트에서 VectorStore 생성
 
 ```python
 <!--IMPORTS:[{"imported": "Annoy", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.annoy.Annoy.html", "title": "Annoy"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Annoy"}]-->
@@ -30,12 +32,14 @@ from langchain_huggingface import HuggingFaceEmbeddings
 embeddings_func = HuggingFaceEmbeddings()
 ```
 
+
 ```python
 texts = ["pizza is great", "I love salad", "my car", "a dog"]
 
 # default metric is angular
 vector_store = Annoy.from_texts(texts, embeddings_func)
 ```
+
 
 ```python
 # allows for custom annoy parameters, defaults are n_trees=100, n_jobs=-1, metric="angular"
@@ -44,9 +48,11 @@ vector_store_v2 = Annoy.from_texts(
 )
 ```
 
+
 ```python
 vector_store.similarity_search("food", k=3)
 ```
+
 
 ```output
 [Document(page_content='pizza is great', metadata={}),
@@ -54,10 +60,12 @@ vector_store.similarity_search("food", k=3)
  Document(page_content='my car', metadata={})]
 ```
 
+
 ```python
 # the score is a distance metric, so lower is better
 vector_store.similarity_search_with_score("food", k=3)
 ```
+
 
 ```output
 [(Document(page_content='pizza is great', metadata={}), 1.0944390296936035),
@@ -65,7 +73,8 @@ vector_store.similarity_search_with_score("food", k=3)
  (Document(page_content='my car', metadata={}), 1.1580758094787598)]
 ```
 
-## Create VectorStore from docs
+
+## 문서에서 VectorStore 생성
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Annoy"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Annoy"}]-->
@@ -78,9 +87,11 @@ text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)
 ```
 
+
 ```python
 docs[:5]
 ```
+
 
 ```output
 [Document(page_content='Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  \n\nLast year COVID-19 kept us apart. This year we are finally together again. \n\nTonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. \n\nWith a duty to one another to the American people to the Constitution. \n\nAnd with an unwavering resolve that freedom will always triumph over tyranny. \n\nSix days ago, Russia’s Vladimir Putin sought to shake the foundations of the free world thinking he could make it bend to his menacing ways. But he badly miscalculated. \n\nHe thought he could roll into Ukraine and the world would roll over. Instead he met a wall of strength he never imagined. \n\nHe met the Ukrainian people. \n\nFrom President Zelenskyy to every Ukrainian, their fearlessness, their courage, their determination, inspires the world.', metadata={'source': '../../../state_of_the_union.txt'}),
@@ -90,26 +101,32 @@ docs[:5]
  Document(page_content='And tonight I am announcing that we will join our allies in closing off American air space to all Russian flights – further isolating Russia – and adding an additional squeeze –on their economy. The Ruble has lost 30% of its value. \n\nThe Russian stock market has lost 40% of its value and trading remains suspended. Russia’s economy is reeling and Putin alone is to blame. \n\nTogether with our allies we are providing support to the Ukrainians in their fight for freedom. Military assistance. Economic assistance. Humanitarian assistance. \n\nWe are giving more than $1 Billion in direct assistance to Ukraine. \n\nAnd we will continue to aid the Ukrainian people as they defend their country and to help ease their suffering.  \n\nLet me be clear, our forces are not engaged and will not engage in conflict with Russian forces in Ukraine.  \n\nOur forces are not going to Europe to fight in Ukraine, but to defend our NATO Allies – in the event that Putin decides to keep moving west.', metadata={'source': '../../../state_of_the_union.txt'})]
 ```
 
+
 ```python
 vector_store_from_docs = Annoy.from_documents(docs, embeddings_func)
 ```
+
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = vector_store_from_docs.similarity_search(query)
 ```
 
+
 ```python
 print(docs[0].page_content[:100])
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Ac
 ```
-## Create VectorStore via existing embeddings
+
+## 기존 임베딩을 통한 VectorStore 생성
 
 ```python
 embs = embeddings_func.embed_documents(texts)
 ```
+
 
 ```python
 data = list(zip(texts, embs))
@@ -117,9 +134,11 @@ data = list(zip(texts, embs))
 vector_store_from_embeddings = Annoy.from_embeddings(data, embeddings_func)
 ```
 
+
 ```python
 vector_store_from_embeddings.similarity_search_with_score("food", k=3)
 ```
+
 
 ```output
 [(Document(page_content='pizza is great', metadata={}), 1.0944390296936035),
@@ -127,15 +146,18 @@ vector_store_from_embeddings.similarity_search_with_score("food", k=3)
  (Document(page_content='my car', metadata={}), 1.1580758094787598)]
 ```
 
-## Search via embeddings
+
+## 임베딩을 통한 검색
 
 ```python
 motorbike_emb = embeddings_func.embed_query("motorbike")
 ```
 
+
 ```python
 vector_store.similarity_search_by_vector(motorbike_emb, k=3)
 ```
+
 
 ```output
 [Document(page_content='my car', metadata={}),
@@ -143,9 +165,11 @@ vector_store.similarity_search_by_vector(motorbike_emb, k=3)
  Document(page_content='pizza is great', metadata={})]
 ```
 
+
 ```python
 vector_store.similarity_search_with_score_by_vector(motorbike_emb, k=3)
 ```
+
 
 ```output
 [(Document(page_content='my car', metadata={}), 1.0870471000671387),
@@ -153,11 +177,13 @@ vector_store.similarity_search_with_score_by_vector(motorbike_emb, k=3)
  (Document(page_content='pizza is great', metadata={}), 1.3254905939102173)]
 ```
 
-## Search via docstore id
+
+## docstore ID를 통한 검색
 
 ```python
 vector_store.index_to_docstore_id
 ```
+
 
 ```output
 {0: '2d1498a8-a37c-4798-acb9-0016504ed798',
@@ -166,20 +192,24 @@ vector_store.index_to_docstore_id
  3: '3056ddcf-a62f-48c8-bd98-b9e57a3dfcae'}
 ```
 
+
 ```python
 some_docstore_id = 0  # texts[0]
 
 vector_store.docstore._dict[vector_store.index_to_docstore_id[some_docstore_id]]
 ```
 
+
 ```output
 Document(page_content='pizza is great', metadata={})
 ```
+
 
 ```python
 # same document has distance 0
 vector_store.similarity_search_with_score_by_index(some_docstore_id, k=3)
 ```
+
 
 ```output
 [(Document(page_content='pizza is great', metadata={}), 0.0),
@@ -187,14 +217,17 @@ vector_store.similarity_search_with_score_by_index(some_docstore_id, k=3)
  (Document(page_content='my car', metadata={}), 1.2895267009735107)]
 ```
 
-## Save and load
+
+## 저장 및 로드
 
 ```python
 vector_store.save_local("my_annoy_index_and_docstore")
 ```
+
 ```output
 saving config
 ```
+
 
 ```python
 loaded_vector_store = Annoy.load_local(
@@ -202,10 +235,12 @@ loaded_vector_store = Annoy.load_local(
 )
 ```
 
+
 ```python
 # same document has distance 0
 loaded_vector_store.similarity_search_with_score_by_index(some_docstore_id, k=3)
 ```
+
 
 ```output
 [(Document(page_content='pizza is great', metadata={}), 0.0),
@@ -213,7 +248,8 @@ loaded_vector_store.similarity_search_with_score_by_index(some_docstore_id, k=3)
  (Document(page_content='my car', metadata={}), 1.2895267009735107)]
 ```
 
-## Construct from scratch
+
+## 처음부터 구성
 
 ```python
 <!--IMPORTS:[{"imported": "InMemoryDocstore", "source": "langchain_community.docstore.in_memory", "docs": "https://api.python.langchain.com/en/latest/docstore/langchain_community.docstore.in_memory.InMemoryDocstore.html", "title": "Annoy"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Annoy"}]-->
@@ -253,9 +289,11 @@ db_manually = Annoy(
 )
 ```
 
+
 ```python
 db_manually.similarity_search_with_score("eating!", k=3)
 ```
+
 
 ```output
 [(Document(page_content='pizza is great', metadata={'x': 'food'}),
@@ -265,7 +303,8 @@ db_manually.similarity_search_with_score("eating!", k=3)
  (Document(page_content='my car', metadata={'x': 'stuff'}), 1.226445198059082)]
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

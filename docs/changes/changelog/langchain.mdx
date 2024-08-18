@@ -1,16 +1,17 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/changes/changelog/langchain/
+description: 이 문서는 langchain 0.2.0 버전의 통합 비의존성 요구 사항과 특정 LLM 및 임베딩 모델을 명시적으로 전달해야
+  하는 기능을 설명합니다.
 ---
 
 # langchain
 
 ## 0.2.0
 
-### Deleted
+### 삭제됨
 
-As of release 0.2.0, `langchain` is required to be integration-agnostic. This means that code in `langchain`  should not by default instantiate any specific chat models, llms, embedding models, vectorstores etc; instead, the user will be required to specify those explicitly.
+버전 0.2.0부터 `langchain`은 통합에 구애받지 않아야 합니다. 이는 `langchain`의 코드가 기본적으로 특정 채팅 모델, LLM, 임베딩 모델, 벡터 저장소 등을 인스턴스화하지 않아야 함을 의미하며, 대신 사용자가 이를 명시적으로 지정해야 합니다.
 
-The following functions and classes require an explicit LLM to be passed as an argument:
+다음 함수 및 클래스는 명시적인 LLM을 인수로 전달해야 합니다:
 
 - `langchain.agents.agent_toolkits.vectorstore.toolkit.VectorStoreToolkit`
 - `langchain.agents.agent_toolkits.vectorstore.toolkit.VectorStoreRouterToolkit`
@@ -21,27 +22,28 @@ The following functions and classes require an explicit LLM to be passed as an a
 - `langchain.indexes.VectorStoreIndexWrapper.aquery_with_sources`
 - `langchain.chains.flare.FlareChain`
 
-The following classes now require passing an explicit Embedding model as an argument:
+다음 클래스는 이제 명시적인 임베딩 모델을 인수로 전달해야 합니다:
 
 - `langchain.indexes.VectostoreIndexCreator`
 
-The following code has been removed:
+다음 코드는 제거되었습니다:
 
-- `langchain.natbot.NatBotChain.from_default` removed in favor of the `from_llm` class method.
+- `langchain.natbot.NatBotChain.from_default`는 `from_llm` 클래스 메서드로 대체되었습니다.
 
-### Deprecated
+### 사용 중단
 
-We have two main types of deprecations:
+우리는 두 가지 주요 유형의 사용 중단이 있습니다:
 
-1. Code that was moved from `langchain` into another package (e.g, `langchain-community`)
+1. `langchain`에서 다른 패키지로 이동된 코드 (예: `langchain-community`)
 
-If you try to import it from `langchain`, the import will keep on working, but will raise a deprecation warning. The warning will provide a replacement import statement.
+`langchain`에서 이를 가져오려고 하면 가져오기는 계속 작동하지만 사용 중단 경고가 발생합니다. 경고는 대체 가져오기 문을 제공합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredMarkdownLoader", "source": "langchain.document_loaders.markdown", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.markdown.UnstructuredMarkdownLoader.html", "title": "langchain"}]-->
 python -c "from langchain.document_loaders.markdown import UnstructuredMarkdownLoader"
 
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredMarkdownLoader", "source": "langchain.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.markdown.UnstructuredMarkdownLoader.html", "title": "langchain"}, {"imported": "UnstructuredMarkdownLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.markdown.UnstructuredMarkdownLoader.html", "title": "langchain"}]-->
@@ -54,45 +56,46 @@ with new imports of:
 >> from langchain_community.document_loaders import UnstructuredMarkdownLoader
 ```
 
-We will continue supporting the imports in `langchain` until release 0.4 as long as the relevant package where the code lives is installed. (e.g., as long as `langchain_community` is installed.)
 
-However, we advise for users to not rely on these imports and instead migrate to the new imports. To help with this process, we’re releasing a migration script via the LangChain CLI. See further instructions in migration guide.
+우리는 코드가 있는 관련 패키지가 설치되어 있는 한 `langchain`에서의 가져오기를 0.4 버전까지 계속 지원할 것입니다. (예: `langchain_community`가 설치되어 있는 한.)
 
-1. Code that has better alternatives available and will eventually be removed, so there’s only a single way to do things. (e.g., `predict_messages` method in ChatModels has been deprecated in favor of `invoke`).
+그러나 우리는 사용자에게 이러한 가져오기에 의존하지 말고 새로운 가져오기로 마이그레이션할 것을 권장합니다. 이 프로세스를 돕기 위해 LangChain CLI를 통해 마이그레이션 스크립트를 출시할 것입니다. 마이그레이션 가이드에서 추가 지침을 참조하십시오.
 
-Many of these were marked for removal in 0.2. We have bumped the removal to 0.3.
+1. 더 나은 대안이 있는 코드로, 결국 제거될 것이므로 단일 방법만 존재합니다. (예: ChatModels의 `predict_messages` 메서드는 `invoke`로 대체되었습니다.)
 
-## 0.1.0 (Jan 5, 2024)
+이 중 많은 것들이 0.2에서 제거될 예정으로 표시되었습니다. 우리는 제거를 0.3으로 연기했습니다.
 
-### Deleted
+## 0.1.0 (2024년 1월 5일)
 
-No deletions.
+### 삭제됨
 
-### Deprecated
+삭제된 항목 없음.
 
-Deprecated classes and methods will be removed in 0.2.0
+### 사용 중단
 
-| Deprecated                      | Alternative                       | Reason                                         |
+사용 중단된 클래스 및 메서드는 0.2.0에서 제거될 것입니다.
+
+| 사용 중단                      | 대안                             | 이유                                         |
 |---------------------------------|-----------------------------------|------------------------------------------------|
-| ChatVectorDBChain               | ConversationalRetrievalChain      | More general to all retrievers                 |
-| create_ernie_fn_chain           | create_ernie_fn_runnable          | Use LCEL under the hood                        |
-| created_structured_output_chain | create_structured_output_runnable | Use LCEL under the hood                        |
-| NatBotChain                     |                                   | Not used                                       |
-| create_openai_fn_chain          | create_openai_fn_runnable         | Use LCEL under the hood                        |
-| create_structured_output_chain  | create_structured_output_runnable | Use LCEL under the hood                        |
-| load_query_constructor_chain    | load_query_constructor_runnable   | Use LCEL under the hood                        |
-| VectorDBQA                      | RetrievalQA                       | More general to all retrievers                 |
-| Sequential Chain                | LCEL                              | Obviated by LCEL                               |
-| SimpleSequentialChain           | LCEL                              | Obviated by LCEL                               |
-| TransformChain                  | LCEL/RunnableLambda               | Obviated by LCEL                               |
-| create_tagging_chain            | create_structured_output_runnable | Use LCEL under the hood                        |
-| ChatAgent                       | create_react_agent                | Use LCEL builder over a class                  |
-| ConversationalAgent             | create_react_agent                | Use LCEL builder over a class                  |
-| ConversationalChatAgent         | create_json_chat_agent            | Use LCEL builder over a class                  |
-| initialize_agent                | Individual create agent methods   | Individual create agent methods are more clear |
-| ZeroShotAgent                   | create_react_agent                | Use LCEL builder over a class                  |
-| OpenAIFunctionsAgent            | create_openai_functions_agent     | Use LCEL builder over a class                  |
-| OpenAIMultiFunctionsAgent       | create_openai_tools_agent         | Use LCEL builder over a class                  |
-| SelfAskWithSearchAgent          | create_self_ask_with_search       | Use LCEL builder over a class                  |
-| StructuredChatAgent             | create_structured_chat_agent      | Use LCEL builder over a class                  |
-| XMLAgent                        | create_xml_agent                  | Use LCEL builder over a class                  |
+| ChatVectorDBChain               | ConversationalRetrievalChain      | 모든 검색자에 더 일반적임                   |
+| create_ernie_fn_chain           | create_ernie_fn_runnable          | 내부에서 LCEL 사용                           |
+| created_structured_output_chain | create_structured_output_runnable | 내부에서 LCEL 사용                           |
+| NatBotChain                     |                                   | 사용되지 않음                               |
+| create_openai_fn_chain          | create_openai_fn_runnable         | 내부에서 LCEL 사용                           |
+| create_structured_output_chain  | create_structured_output_runnable | 내부에서 LCEL 사용                           |
+| load_query_constructor_chain    | load_query_constructor_runnable   | 내부에서 LCEL 사용                           |
+| VectorDBQA                      | RetrievalQA                       | 모든 검색자에 더 일반적임                   |
+| Sequential Chain                | LCEL                              | LCEL에 의해 대체됨                          |
+| SimpleSequentialChain           | LCEL                              | LCEL에 의해 대체됨                          |
+| TransformChain                  | LCEL/RunnableLambda               | LCEL에 의해 대체됨                          |
+| create_tagging_chain            | create_structured_output_runnable | 내부에서 LCEL 사용                           |
+| ChatAgent                       | create_react_agent                | 클래스를 사용하는 것보다 LCEL 빌더 사용     |
+| ConversationalAgent             | create_react_agent                | 클래스를 사용하는 것보다 LCEL 빌더 사용     |
+| ConversationalChatAgent         | create_json_chat_agent            | 클래스를 사용하는 것보다 LCEL 빌더 사용     |
+| initialize_agent                | 개별 생성 에이전트 메서드       | 개별 생성 에이전트 메서드가 더 명확함      |
+| ZeroShotAgent                   | create_react_agent                | 클래스를 사용하는 것보다 LCEL 빌더 사용     |
+| OpenAIFunctionsAgent            | create_openai_functions_agent     | 클래스를 사용하는 것보다 LCEL 빌더 사용     |
+| OpenAIMultiFunctionsAgent       | create_openai_tools_agent         | 클래스를 사용하는 것보다 LCEL 빌더 사용     |
+| SelfAskWithSearchAgent          | create_self_ask_with_search       | 클래스를 사용하는 것보다 LCEL 빌더 사용     |
+| StructuredChatAgent             | create_structured_chat_agent      | 클래스를 사용하는 것보다 LCEL 빌더 사용     |
+| XMLAgent                        | create_xml_agent                  | 클래스를 사용하는 것보다 LCEL 빌더 사용     |

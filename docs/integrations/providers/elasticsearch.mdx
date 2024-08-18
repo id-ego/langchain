@@ -1,75 +1,81 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/elasticsearch/
+description: Elasticsearch는 분산형 RESTful 검색 및 분석 엔진으로, HTTP 웹 인터페이스와 스키마 없는 JSON 문서를
+  제공합니다.
 ---
 
 # Elasticsearch
 
-> [Elasticsearch](https://www.elastic.co/elasticsearch/) is a distributed, RESTful search and analytics engine.
-It provides a distributed, multi-tenant-capable full-text search engine with an HTTP web interface and schema-free
-JSON documents.
+> [Elasticsearch](https://www.elastic.co/elasticsearch/)는 분산형 RESTful 검색 및 분석 엔진입니다.
+HTTP 웹 인터페이스와 스키마가 없는 JSON 문서를 제공하는 분산형 다중 테넌트 지원 전체 텍스트 검색 엔진을 제공합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-There are two ways to get started with Elasticsearch:
+Elasticsearch를 시작하는 방법은 두 가지가 있습니다:
 
-#### Install Elasticsearch on your local machine via docker
+#### 도커를 통해 로컬 머신에 Elasticsearch 설치
 
-Example: Run a single-node Elasticsearch instance with security disabled. This is not recommended for production use.
+예: 보안이 비활성화된 단일 노드 Elasticsearch 인스턴스를 실행합니다. 이는 프로덕션 사용에는 권장되지 않습니다.
 
 ```bash
     docker run -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -e "xpack.security.http.ssl.enabled=false" docker.elastic.co/elasticsearch/elasticsearch:8.9.0
 ```
 
-#### Deploy Elasticsearch on Elastic Cloud
 
-Elastic Cloud is a managed Elasticsearch service. Signup for a [free trial](https://cloud.elastic.co/registration?utm_source=langchain&utm_content=documentation).
+#### Elastic Cloud에 Elasticsearch 배포
 
-### Install Client
+Elastic Cloud는 관리형 Elasticsearch 서비스입니다. [무료 체험](https://cloud.elastic.co/registration?utm_source=langchain&utm_content=documentation)에 가입하세요.
+
+### 클라이언트 설치
 
 ```bash
 pip install elasticsearch
 pip install langchain-elasticsearch
 ```
 
-## Embedding models
 
-See a [usage example](/docs/integrations/text_embedding/elasticsearch).
+## 임베딩 모델
+
+[사용 예시](/docs/integrations/text_embedding/elasticsearch)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticsearchEmbeddings", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_elasticsearch.embeddings.ElasticsearchEmbeddings.html", "title": "Elasticsearch"}]-->
 from langchain_elasticsearch import ElasticsearchEmbeddings
 ```
 
-## Vector store
 
-See a [usage example](/docs/integrations/vectorstores/elasticsearch).
+## 벡터 저장소
+
+[사용 예시](/docs/integrations/vectorstores/elasticsearch)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticsearchStore", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_elasticsearch.vectorstores.ElasticsearchStore.html", "title": "Elasticsearch"}]-->
 from langchain_elasticsearch import ElasticsearchStore
 ```
 
-## Memory
 
-See a [usage example](/docs/integrations/memory/elasticsearch_chat_message_history).
+## 메모리
+
+[사용 예시](/docs/integrations/memory/elasticsearch_chat_message_history)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticsearchChatMessageHistory", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_elasticsearch.chat_history.ElasticsearchChatMessageHistory.html", "title": "Elasticsearch"}]-->
 from langchain_elasticsearch import ElasticsearchChatMessageHistory
 ```
 
-## LLM cache
 
-See a [usage example](/docs/integrations/llm_caching/#elasticsearch-cache).
+## LLM 캐시
+
+[사용 예시](/docs/integrations/llm_caching/#elasticsearch-cache)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticsearchCache", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_elasticsearch.cache.ElasticsearchCache.html", "title": "Elasticsearch"}]-->
 from langchain_elasticsearch import ElasticsearchCache
 ```
 
-## Byte Store
 
-See a [usage example](/docs/integrations/stores/elasticsearch).
+## 바이트 저장소
+
+[사용 예시](/docs/integrations/stores/elasticsearch)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticsearchEmbeddingsCache", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_elasticsearch.cache.ElasticsearchEmbeddingsCache.html", "title": "Elasticsearch"}]-->

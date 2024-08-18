@@ -1,24 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/cogniswitch/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/cogniswitch.ipynb
+description: CogniSwitch는 Langchain 프레임워크를 사용하여 지식을 효율적으로 소비, 조직 및 검색할 수 있는 프로덕션 준비
+  애플리케이션을 구축하는 도구입니다.
 ---
 
 # Cogniswitch Toolkit
 
-CogniSwitch is used to build production ready applications that can consume, organize and retrieve knowledge flawlessly. Using the framework of your choice, in this case Langchain, CogniSwitch helps alleviate the stress of decision making when it comes to, choosing the right storage and retrieval formats. It also eradicates reliability issues and hallucinations when it comes to responses that are generated. 
+CogniSwitch는 지식을 완벽하게 소비, 조직 및 검색할 수 있는 생산 준비 애플리케이션을 구축하는 데 사용됩니다. 이 경우 Langchain과 같은 선택한 프레임워크를 사용하여 CogniSwitch는 올바른 저장 및 검색 형식을 선택할 때 의사 결정의 스트레스를 완화하는 데 도움을 줍니다. 또한 생성된 응답에 대한 신뢰성 문제와 환각을 제거합니다.
 
 ## Setup
 
-Visit [this page](https://www.cogniswitch.ai/developer?utm_source=langchain&utm_medium=langchainbuild&utm_id=dev) to register a Cogniswitch account.
+[Cogniswitch 계정을 등록하려면 이 페이지를 방문하세요](https://www.cogniswitch.ai/developer?utm_source=langchain&utm_medium=langchainbuild&utm_id=dev).
 
-- Signup with your email and verify your registration 
-- You will get a mail with a platform token and oauth token for using the services.
+- 이메일로 가입하고 등록을 확인하세요.
+- 서비스 사용을 위한 플랫폼 토큰과 OAuth 토큰이 포함된 메일을 받게 됩니다.
 
 ```python
 %pip install -qU langchain-community
 ```
 
-## Import necessary libraries
+
+## 필요한 라이브러리 가져오기
 
 ```python
 <!--IMPORTS:[{"imported": "create_conversational_retrieval_agent", "source": "langchain.agents.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_toolkits.conversational_retrieval.openai_functions.create_conversational_retrieval_agent.html", "title": "Cogniswitch Toolkit"}, {"imported": "CogniswitchToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.cogniswitch.toolkit.CogniswitchToolkit.html", "title": "Cogniswitch Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Cogniswitch Toolkit"}]-->
@@ -33,7 +35,8 @@ from langchain_community.agent_toolkits import CogniswitchToolkit
 from langchain_openai import ChatOpenAI
 ```
 
-## Cogniswitch platform token, OAuth token and OpenAI API key
+
+## Cogniswitch 플랫폼 토큰, OAuth 토큰 및 OpenAI API 키
 
 ```python
 cs_token = "Your CogniSwitch token"
@@ -43,7 +46,8 @@ oauth_token = "Your CogniSwitch authentication token"
 os.environ["OPENAI_API_KEY"] = OAI_token
 ```
 
-## Instantiate the cogniswitch toolkit with the credentials
+
+## 자격 증명으로 cogniswitch 툴킷 인스턴스화
 
 ```python
 cogniswitch_toolkit = CogniswitchToolkit(
@@ -51,13 +55,15 @@ cogniswitch_toolkit = CogniswitchToolkit(
 )
 ```
 
-### Get the list of cogniswitch tools
+
+### cogniswitch 도구 목록 가져오기
 
 ```python
 tool_lst = cogniswitch_toolkit.get_tools()
 ```
 
-## Instantiate the LLM
+
+## LLM 인스턴스화
 
 ```python
 llm = ChatOpenAI(
@@ -68,41 +74,48 @@ llm = ChatOpenAI(
 )
 ```
 
-## Use the LLM with the Toolkit
 
-### Create an agent with the LLM and Toolkit
+## 툴킷과 함께 LLM 사용하기
+
+### LLM 및 툴킷으로 에이전트 생성
 
 ```python
 agent_executor = create_conversational_retrieval_agent(llm, tool_lst, verbose=False)
 ```
 
-### Invoke the agent to upload a URL
+
+### URL 업로드를 위해 에이전트 호출
 
 ```python
 response = agent_executor.invoke("upload this url https://cogniswitch.ai/developer")
 
 print(response["output"])
 ```
+
 ```output
 The URL https://cogniswitch.ai/developer has been uploaded successfully. The status of the document is currently being processed. You will receive an email notification once the processing is complete.
 ```
-### Invoke the agent to upload a File
+
+### 파일 업로드를 위해 에이전트 호출
 
 ```python
 response = agent_executor.invoke("upload this file example_file.txt")
 
 print(response["output"])
 ```
+
 ```output
 The file example_file.txt has been uploaded successfully. The status of the document is currently being processed. You will receive an email notification once the processing is complete.
 ```
-### Invoke the agent to get the status of a document
+
+### 문서 상태를 가져오기 위해 에이전트 호출
 
 ```python
 response = agent_executor.invoke("Tell me the status of this document example_file.txt")
 
 print(response["output"])
 ```
+
 ```output
 The status of the document example_file.txt is as follows:
 
@@ -115,13 +128,15 @@ The status of the document example_file.txt is as follows:
 
 The document is currently being processed.
 ```
-### Invoke the agent with query and get the answer
+
+### 쿼리와 함께 에이전트를 호출하고 답변 받기
 
 ```python
 response = agent_executor.invoke("How can cogniswitch help develop GenAI applications?")
 
 print(response["output"])
 ```
+
 ```output
 CogniSwitch can help develop GenAI applications in several ways:
 
@@ -138,7 +153,8 @@ CogniSwitch can help develop GenAI applications in several ways:
 Overall, CogniSwitch provides a range of AI-powered capabilities that can enhance the development of GenAI applications by enabling knowledge extraction, natural language processing, sentiment analysis, knowledge base integration, and document analysis.
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

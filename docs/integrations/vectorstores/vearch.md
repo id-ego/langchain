@@ -1,17 +1,17 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/vearch/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/vearch.ipynb
+description: Vearch는 딥러닝 및 AI 애플리케이션을 위한 벡터 검색 인프라로, 설치 및 사용 방법을 안내합니다.
 ---
 
 # Vearch
 
-> [Vearch](https://vearch.readthedocs.io) is the vector search infrastructure for deeping learning and AI applications.
+> [Vearch](https://vearch.readthedocs.io)는 딥 러닝 및 AI 애플리케이션을 위한 벡터 검색 인프라입니다.
 
-## Setting up
+## 설정
 
-Follow [instructions](https://vearch.readthedocs.io/en/latest/quick-start-guide.html#).
+[지침](https://vearch.readthedocs.io/en/latest/quick-start-guide.html#)을 따르세요.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet  vearch
@@ -21,7 +21,8 @@ You'll need to install `langchain-community` with `pip install -qU langchain-com
 %pip install --upgrade --quiet  vearch_cluster
 ```
 
-## Example
+
+## 예시
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Vearch"}, {"imported": "Vearch", "source": "langchain_community.vectorstores.vearch", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vearch.Vearch.html", "title": "Vearch"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Vearch"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Vearch"}]-->
@@ -37,9 +38,11 @@ model_path = "/data/zhx/zhx/langchain-ChatGLM_new/chatglm2-6b"
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 model = AutoModel.from_pretrained(model_path, trust_remote_code=True).half().cuda(0)
 ```
+
 ```output
 Loading checkpoint shards: 100%|██████████| 7/7 [00:07<00:00,  1.01s/it]
 ```
+
 
 ```python
 query = "你好!"
@@ -49,6 +52,7 @@ query = "你知道凌波微步吗，你知道都有谁学会了吗?"
 response, history = model.chat(tokenizer, query, history=history)
 print(f"Human: {query}\nChatGLM:{response}\n")
 ```
+
 ```output
 Human: 你好!
 ChatGLM:你好👋！我是人工智能助手 ChatGLM2-6B，很高兴见到你，欢迎问我任何问题。
@@ -56,6 +60,7 @@ ChatGLM:你好👋！我是人工智能助手 ChatGLM2-6B，很高兴见到你�
 Human: 你知道凌波微步吗，你知道都有谁学会了吗?
 ChatGLM:凌波微步是一种步伐，最早出自《倚天屠龙记》。在电视剧《人民的名义》中，侯亮平也学会了凌波微步。
 ```
+
 
 ```python
 # Add your local knowledge files
@@ -71,9 +76,11 @@ texts = text_splitter.split_documents(documents)
 embedding_path = "/data/zhx/zhx/langchain-ChatGLM_new/text2vec/text2vec-large-chinese"
 embeddings = HuggingFaceEmbeddings(model_name=embedding_path)
 ```
+
 ```output
 No sentence-transformers model found with name /data/zhx/zhx/langchain-ChatGLM_new/text2vec/text2vec-large-chinese. Creating a new one with MEAN pooling.
 ```
+
 
 ```python
 # first add your document into vearch vectorstore
@@ -96,11 +103,13 @@ vearch_cluster = Vearch.from_documents(
     flag=1,
 )
 ```
+
 ```output
 docids ['18ce6747dca04a2c833e60e8dfd83c04', 'aafacb0e46574b378a9f433877ab06a8', '9776bccfdd8643a8b219ccee0596f370']
 ***************after is cluster res*****************
 docids ['1841638988191686991', '-4519586577642625749', '5028230008472292907']
 ```
+
 
 ```python
 query = "你知道凌波微步吗，你知道都有谁会凌波微步?"
@@ -127,6 +136,7 @@ new_query_c = f"基于以下信息，尽可能准确的来回答用户的问题�
 response_c, history_c = model.chat(tokenizer, new_query_c, history=[])
 print(f"********ChatGLM:{response_c}\n")
 ```
+
 ```output
 ####################第 1 段相关文档####################
 
@@ -200,6 +210,7 @@ print(f"********ChatGLM:{response_c}\n")
 ********ChatGLM:凌波微步是一门极上乘的轻功，源于《易经》中的六十四卦。使用者按照特定顺序踏着卦象方位行进，从第一步到最后一步正好行走一个大圈。这门轻功精妙异常，可以使人内力增进，但需要谨慎练习，避免伤害他人。凌波微步在逍遥派中尤为流行，但并非所有逍遥派弟子都会凌波微步。
 ```
 
+
 ```python
 query = "你知道 vearch 是什么吗?"
 response, history = model.chat(tokenizer, query, history=history)
@@ -227,6 +238,7 @@ print("*****************after is cluster res********************")
 
 vearch_cluster.add_texts(vearch_info, vearch_source)
 ```
+
 ```output
 Human: 你知道 vearch 是什么吗?
 ChatGLM:是的，我知道 Vearch。Vearch 是一种用于计算机械系统极化子的工具，它可以用于模拟和优化电路的性能。它是一个基于 Matlab 的电路仿真软件，可以用于设计和分析各种类型的电路，包括交流电路和直流电路。
@@ -236,9 +248,11 @@ docids ['eee5e7468434427eb49829374c1e8220', '2776754da8fc4bb58d3e482006010716', 
 docids ['-4311783201092343475', '-2899734009733762895', '1342026762029067927']
 ```
 
+
 ```output
 ['-4311783201092343475', '-2899734009733762895', '1342026762029067927']
 ```
+
 
 ```python
 query3 = "你知道 vearch 是什么吗?"
@@ -264,6 +278,7 @@ response_c, history_c = model.chat(tokenizer, new_query1_c, history=[])
 
 print(f"***************ChatGLM:{response_c}\n")
 ```
+
 ```output
 ####################第 1 段相关文档####################
 
@@ -294,6 +309,7 @@ vearch 是基于 C 语言,go 语言开发的，并提供 python 接口，可以�
 
 ***************ChatGLM:是的，Varch 是一个向量数据库，旨在存储和快速搜索模型 embedding 后的向量。它支持 OpenAI，ChatGLM 等模型，并可用于基于个人知识库的大模型应用。Varch 基于 C 语言和 Go 语言开发，并提供 Python 接口，可以通过 pip 安装。
 ```
+
 
 ```python
 ##delete and get function need to maintian  docids
@@ -352,6 +368,7 @@ get_id_doc = vearch_cluster.get(
 )
 print("get existed docid", get_id_doc)
 ```
+
 ```output
 delete vearch standalone docid True
 Human: 你知道 vearch 是什么吗?
@@ -373,7 +390,8 @@ after delete docid to query again: {}
 get existed docid {'1841638988191686991': Document(page_content='《天龙八部》第二回 玉壁月华明\n\n 再展帛卷，长卷上源源皆是裸女画像，或立或卧，或现前胸，或见后背。人像的面容都是一般，但或喜或愁，或含情凝眸，或轻嗔薄怒，神情各异。一共有三十六幅图像，每幅像上均有颜色细线，注明穴道部位及练功法诀。\n\n 帛卷尽处题着“凌波微步”四字，其后绘的是无数足印，注明“妇妹”、“无妄”等等字样，尽是《易经》中的方位。段誉前几日还正全心全意地钻研《易经》，一见到这些名称，登时精神大振，便似遇到故交良友一般。只见足印密密麻麻，不知有几千百个，自一个足印至另一个足印均有绿线贯串，线上绘有箭头，最后写着一行字道：“步法神妙，保身避敌，待积内力，再取敌命。”\n\n 段誉心道：“神仙姊姊所遗的步法，必定精妙之极，遇到强敌时脱身逃走，那就很好，‘再取敌命’也就不必了。”\n 卷好帛卷，对之作了两个揖，珍而重之地揣入怀中，转身对那玉像道：“神仙姊姊，你吩咐我朝午晚三次练功，段誉不敢有违。今后我对人加倍客气，别人不会来打我，我自然也不会去吸他内力。你这套‘凌波微步’我更要用心练熟，眼见不对，立刻溜之大吉，就吸不到他内力了。”至于“杀尽我逍遥派弟子”一节，却想也不敢去想。', metadata={'source': '/data/zhx/zhx/langchain-ChatGLM_new/knowledge_base/天龙八部/lingboweibu.txt'}), '-4519586577642625749': Document(page_content='《天龙八部》第五回 微步縠纹生\n\n 卷轴中此外诸种经脉修习之法甚多，皆是取人内力的法门，段誉虽自语宽解，总觉习之有违本性，单是贪多务得，便非好事，当下暂不理会。\n\n 卷到卷轴末端，又见到了“凌波微步”那四字，登时便想起《洛神赋》中那些句子来：“凌波微步，罗袜生尘……转眄流精，光润玉颜。含辞未吐，气若幽兰。华容婀娜，令我忘餐。”曹子建那些千古名句，在脑海中缓缓流过：“秾纤得衷，修短合度，肩若削成，腰如约素。延颈秀项，皓质呈露。芳泽无加，铅华弗御。云髻峨峨，修眉连娟。丹唇外朗，皓齿内鲜。明眸善睐，靥辅承权。瑰姿艳逸，仪静体闲。柔情绰态，媚于语言……”这些句子用在木婉清身上，“这话倒也有理”；但如用之于神仙姊姊，只怕更为适合。想到神仙姊姊的姿容体态，“皎若太阳升朝霞，灼若芙蓉出绿波”，但觉依她吩咐行事，实为人生至乐，心想：“我先来练这‘凌波微步’，此乃逃命之妙法，非害人之手段也，练之有百利而无一害。”', metadata={'source': '/data/zhx/zhx/langchain-ChatGLM_new/knowledge_base/天龙八部/lingboweibu.txt'}), '5028230008472292907': Document(page_content='午饭过后，段誉又练“凌波微步”，走一步，吸一口气，走第二步时将气呼出，六十四卦走完，四肢全无麻痹之感，料想呼吸顺畅，便无害处。第二次再走时连走两步吸一口气，再走两步始行呼出。这“凌波微步”是以动功修习内功，脚步踏遍六十四卦一个周天，内息自然而然地也转了一个周天。因此他每走一遍，内力便有一分进益。\n\n 这般练了几天，“凌波微步”已走得颇为纯熟，不须再数呼吸，纵然疾行，气息也已无所窒滞。心意既畅，跨步时渐渐想到《洛神赋》中那些与“凌波微步”有关的句子：“仿佛兮若轻云之蔽月，飘飘兮若流风之回雪”，“竦轻躯以鹤立，若将飞而未翔”，“体迅飞凫，飘忽若神”，“动无常则，若危若安。进止难期，若往若还”。\n\n\n\n 百度简介\n\n 凌波微步是「逍遥派」独门轻功身法，精妙异常。\n\n 凌波微步乃是一门极上乘的轻功，所以列于卷轴之末，以易经八八六十四卦为基础，使用者按特定顺序踏着卦象方位行进，从第一步到最后一步正好行走一个大圈。此步法精妙异常，原是要待人练成「北冥神功」，吸人内力，自身内力已【颇为深厚】之后再练。', metadata={'source': '/data/zhx/zhx/langchain-ChatGLM_new/knowledge_base/天龙八部/lingboweibu.txt'})}
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

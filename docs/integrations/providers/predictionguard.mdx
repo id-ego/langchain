@@ -1,42 +1,46 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/predictionguard/
+description: 이 문서는 LangChain 내 Prediction Guard 생태계 사용 방법을 다루며, 설치, 설정 및 LLM 래퍼에 대한
+  참조를 포함합니다.
 ---
 
-# Prediction Guard
+# 예측 가드
 
-This page covers how to use the Prediction Guard ecosystem within LangChain.
-It is broken into two parts: installation and setup, and then references to specific Prediction Guard wrappers.
+이 페이지에서는 LangChain 내에서 예측 가드 생태계를 사용하는 방법을 다룹니다. 설치 및 설정과 특정 예측 가드 래퍼에 대한 참조로 두 부분으로 나뉩니다.
 
-## Installation and Setup
-- Install the Python SDK with `pip install predictionguard`
-- Get a Prediction Guard access token (as described [here](https://docs.predictionguard.com/)) and set it as an environment variable (`PREDICTIONGUARD_TOKEN`)
+## 설치 및 설정
+- `pip install predictionguard`로 Python SDK를 설치합니다.
+- 예측 가드 액세스 토큰을 얻고(자세한 내용은 [여기](https://docs.predictionguard.com/) 참조) 이를 환경 변수(`PREDICTIONGUARD_TOKEN`)로 설정합니다.
 
-## LLM Wrapper
+## LLM 래퍼
 
-There exists a Prediction Guard LLM wrapper, which you can access with 
+예측 가드 LLM 래퍼가 존재하며, 다음을 통해 접근할 수 있습니다.
 ```python
 <!--IMPORTS:[{"imported": "PredictionGuard", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predictionguard.PredictionGuard.html", "title": "Prediction Guard"}]-->
 from langchain_community.llms import PredictionGuard
 ```
 
-You can provide the name of the Prediction Guard model as an argument when initializing the LLM:
+
+LLM을 초기화할 때 예측 가드 모델의 이름을 인수로 제공할 수 있습니다:
 ```python
 pgllm = PredictionGuard(model="MPT-7B-Instruct")
 ```
 
-You can also provide your access token directly as an argument:
+
+액세스 토큰을 직접 인수로 제공할 수도 있습니다:
 ```python
 pgllm = PredictionGuard(model="MPT-7B-Instruct", token="<your access token>")
 ```
 
-Finally, you can provide an "output" argument that is used to structure/ control the output of the LLM:
+
+마지막으로, LLM의 출력을 구조화/제어하는 데 사용되는 "output" 인수를 제공할 수 있습니다:
 ```python
 pgllm = PredictionGuard(model="MPT-7B-Instruct", output={"type": "boolean"})
 ```
 
-## Example usage
 
-Basic usage of the controlled or guarded LLM wrapper:
+## 사용 예시
+
+제어되거나 보호된 LLM 래퍼의 기본 사용법:
 ```python
 <!--IMPORTS:[{"imported": "PredictionGuard", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predictionguard.PredictionGuard.html", "title": "Prediction Guard"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Prediction Guard"}, {"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Prediction Guard"}]-->
 import os
@@ -79,7 +83,8 @@ pgllm = PredictionGuard(model="MPT-7B-Instruct",
 pgllm(prompt.format(query="What kind of post is this?"))
 ```
 
-Basic LLM Chaining with the Prediction Guard wrapper:
+
+예측 가드 래퍼를 사용한 기본 LLM 체이닝:
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Prediction Guard"}, {"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Prediction Guard"}, {"imported": "PredictionGuard", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.predictionguard.PredictionGuard.html", "title": "Prediction Guard"}]-->
 import os

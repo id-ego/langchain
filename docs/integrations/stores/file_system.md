@@ -1,34 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/stores/file_system/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/stores/file_system.ipynb
+description: '`LocalFileStore`는 선택한 폴더에 데이터를 저장하는 지속적인 `ByteStore` 구현체로, 단일 머신에서 사용하기에
+  적합합니다.'
 sidebar_label: Local Filesystem
 ---
 
 # LocalFileStore
 
-This will help you get started with local filesystem [key-value stores](/docs/concepts/#key-value-stores). For detailed documentation of all LocalFileStore features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html).
+이 문서는 로컬 파일 시스템 [키-값 저장소](/docs/concepts/#key-value-stores)를 시작하는 데 도움이 됩니다. 모든 LocalFileStore 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html)에서 확인하세요.
 
-## Overview
+## 개요
 
-The `LocalFileStore` is a persistent implementation of `ByteStore` that stores everything in a folder of your choosing. It's useful if you're using a single machine and are tolerant of files being added or deleted.
+`LocalFileStore`는 선택한 폴더에 모든 것을 저장하는 `ByteStore`의 지속적인 구현입니다. 단일 머신을 사용하고 파일이 추가되거나 삭제되는 것에 관대하다면 유용합니다.
 
-### Integration details
+### 통합 세부정보
 
-| Class | Package | Local | [JS support](https://js.langchain.com/v0.2/docs/integrations/stores/file_system) | Package downloads | Package latest |
+| 클래스 | 패키지 | 로컬 | [JS 지원](https://js.langchain.com/v0.2/docs/integrations/stores/file_system) | 패키지 다운로드 | 패키지 최신 |
 | :--- | :--- | :---: | :---: |  :---: | :---: |
 | [LocalFileStore](https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html) | [langchain](https://api.python.langchain.com/en/latest/langchain_api_reference.html) | ✅ | ✅ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain?style=flat-square&label=%20) |
 
-### Installation
+### 설치
 
-The LangChain `LocalFileStore` integration lives in the `langchain` package:
+LangChain `LocalFileStore` 통합은 `langchain` 패키지에 있습니다:
 
 ```python
 %pip install -qU langchain
 ```
 
-## Instantiation
 
-Now we can instantiate our byte store:
+## 인스턴스화
+
+이제 우리의 바이트 저장소를 인스턴스화할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "LocalFileStore", "source": "langchain.storage", "docs": "https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html", "title": "LocalFileStore"}]-->
@@ -41,9 +43,10 @@ root_path = Path.cwd() / "data"  # can also be a path set by a string
 kv_store = LocalFileStore(root_path)
 ```
 
-## Usage
 
-You can set data under keys like this using the `mset` method:
+## 사용법
+
+`mset` 메서드를 사용하여 다음과 같이 키 아래에 데이터를 설정할 수 있습니다:
 
 ```python
 kv_store.mset(
@@ -61,19 +64,23 @@ kv_store.mget(
 )
 ```
 
+
 ```output
 [b'value1', b'value2']
 ```
 
-You can see the created files in your `data` folder:
+
+생성된 파일은 `data` 폴더에서 확인할 수 있습니다:
 
 ```python
 !ls {root_path}
 ```
+
 ```output
 key1 key2
 ```
-And you can delete data using the `mdelete` method:
+
+그리고 `mdelete` 메서드를 사용하여 데이터를 삭제할 수 있습니다:
 
 ```python
 kv_store.mdelete(
@@ -91,14 +98,16 @@ kv_store.mget(
 )
 ```
 
+
 ```output
 [None, None]
 ```
 
-## API reference
 
-For detailed documentation of all `LocalFileStore` features and configurations, head to the API reference: https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html
+## API 참조
 
-## Related
+모든 `LocalFileStore` 기능 및 구성에 대한 자세한 문서는 API 참조를 확인하세요: https://api.python.langchain.com/en/latest/storage/langchain.storage.file_system.LocalFileStore.html
 
-- [Key-value store conceptual guide](/docs/concepts/#key-value-stores)
+## 관련
+
+- [키-값 저장소 개념 가이드](/docs/concepts/#key-value-stores)

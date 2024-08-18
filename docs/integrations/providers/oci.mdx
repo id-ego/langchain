@@ -1,24 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/oci/
+description: Oracle Cloud Infrastructure(OCI)의 Generative AI 서비스에 대한 통합 및 사용 예제를 소개하는
+  문서입니다.
 ---
 
-# Oracle Cloud Infrastructure (OCI)
+# 오라클 클라우드 인프라스트럭처 (OCI)
 
-The `LangChain` integrations related to [Oracle Cloud Infrastructure](https://www.oracle.com/artificial-intelligence/).
+`LangChain` 통합과 관련된 [오라클 클라우드 인프라스트럭처](https://www.oracle.com/artificial-intelligence/)입니다.
 
-## OCI Generative AI
-> Oracle Cloud Infrastructure (OCI) [Generative AI](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm) is a fully managed service that provides a set of state-of-the-art,
-customizable large language models (LLMs) that cover a wide range of use cases, and which are available through a single API.
-Using the OCI Generative AI service you can access ready-to-use pretrained models, or create and host your own fine-tuned
-custom models based on your own data on dedicated AI clusters. 
+## OCI 생성 AI
+> 오라클 클라우드 인프라스트럭처 (OCI) [생성 AI](https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm)는 최첨단의 사용자 정의 가능한 대형 언어 모델(LLM) 세트를 제공하는 완전 관리형 서비스로, 광범위한 사용 사례를 포괄하며 단일 API를 통해 제공됩니다. OCI 생성 AI 서비스를 사용하면 즉시 사용할 수 있는 사전 훈련된 모델에 접근하거나, 전용 AI 클러스터에서 자신의 데이터에 기반하여 세밀하게 조정된 사용자 정의 모델을 생성하고 호스팅할 수 있습니다.
 
-To use, you should have the latest `oci` python SDK and the langchain_community package installed.
+사용하려면 최신 `oci` 파이썬 SDK와 langchain_community 패키지가 설치되어 있어야 합니다.
 
 ```bash
 pip install -U oci langchain-community
 ```
 
-See [chat](/docs/integrations/llms/oci_generative_ai), [complete](/docs/integrations/chat/oci_generative_ai), and [embedding](/docs/integrations/text_embedding/oci_generative_ai) usage examples.
+
+[채팅](/docs/integrations/llms/oci_generative_ai), [완료](/docs/integrations/chat/oci_generative_ai), 및 [임베딩](/docs/integrations/text_embedding/oci_generative_ai) 사용 예제를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOCIGenAI", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.oci_generative_ai.ChatOCIGenAI.html", "title": "Oracle Cloud Infrastructure (OCI)"}, {"imported": "OCIGenAI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.oci_generative_ai.OCIGenAI.html", "title": "Oracle Cloud Infrastructure (OCI)"}, {"imported": "OCIGenAIEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.oci_generative_ai.OCIGenAIEmbeddings.html", "title": "Oracle Cloud Infrastructure (OCI)"}]-->
@@ -29,24 +28,21 @@ from langchain_community.llms import OCIGenAI
 from langchain_community.embeddings import OCIGenAIEmbeddings
 ```
 
-## OCI Data Science Model Deployment Endpoint
 
-> [OCI Data Science](https://docs.oracle.com/en-us/iaas/data-science/using/home.htm) is a
-fully managed and serverless platform for data science teams. Using the OCI Data Science
-platform you can build, train, and manage machine learning models, and then deploy them
-as an OCI Model Deployment Endpoint using the
-[OCI Data Science Model Deployment Service](https://docs.oracle.com/en-us/iaas/data-science/using/model-dep-about.htm).
+## OCI 데이터 과학 모델 배포 엔드포인트
 
-If you deployed a LLM with the VLLM or TGI framework, you can use the
-`OCIModelDeploymentVLLM` or `OCIModelDeploymentTGI` classes to interact with it.
+> [OCI 데이터 과학](https://docs.oracle.com/en-us/iaas/data-science/using/home.htm)은 데이터 과학 팀을 위한 완전 관리형 서버리스 플랫폼입니다. OCI 데이터 과학 플랫폼을 사용하면 기계 학습 모델을 구축, 훈련 및 관리한 후, [OCI 데이터 과학 모델 배포 서비스](https://docs.oracle.com/en-us/iaas/data-science/using/model-dep-about.htm)를 사용하여 OCI 모델 배포 엔드포인트로 배포할 수 있습니다.
 
-To use, you should have the latest `oracle-ads` python SDK installed.
+VLLM 또는 TGI 프레임워크로 LLM을 배포한 경우, `OCIModelDeploymentVLLM` 또는 `OCIModelDeploymentTGI` 클래스를 사용하여 상호작용할 수 있습니다.
+
+사용하려면 최신 `oracle-ads` 파이썬 SDK가 설치되어 있어야 합니다.
 
 ```bash
 pip install -U oracle-ads
 ```
 
-See [usage examples](/docs/integrations/llms/oci_model_deployment_endpoint).
+
+[사용 예제](/docs/integrations/llms/oci_model_deployment_endpoint)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "OCIModelDeploymentVLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.oci_data_science_model_deployment_endpoint.OCIModelDeploymentVLLM.html", "title": "Oracle Cloud Infrastructure (OCI)"}, {"imported": "OCIModelDeploymentTGI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.oci_data_science_model_deployment_endpoint.OCIModelDeploymentTGI.html", "title": "Oracle Cloud Infrastructure (OCI)"}]-->

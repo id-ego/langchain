@@ -1,35 +1,33 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/athena/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/athena.ipynb
+description: 아마존 아테나는 서버리스 인터랙티브 분석 서비스로, S3 데이터 레이크와 다양한 데이터 소스를 SQL 또는 Python으로
+  분석할 수 있습니다.
 ---
 
-# Athena
+# 아테나
 
-> [Amazon Athena](https://aws.amazon.com/athena/) is a serverless, interactive analytics service built
-on open-source frameworks, supporting open-table and file formats. `Athena` provides a simplified,
-flexible way to analyze petabytes of data where it lives. Analyze data or build applications
-from an Amazon Simple Storage Service (S3) data lake and 30 data sources, including on-premises data
-sources or other cloud systems using SQL or Python. `Athena` is built on open-source `Trino`
-and `Presto` engines and `Apache Spark` frameworks, with no provisioning or configuration effort required.
+> [아마존 아테나](https://aws.amazon.com/athena/)는 오픈 소스 프레임워크를 기반으로 구축된 서버리스 대화형 분석 서비스로, 오픈 테이블 및 파일 형식을 지원합니다. `아테나`는 데이터가 있는 곳에서 페타바이트의 데이터를 분석하는 간소화되고 유연한 방법을 제공합니다. SQL 또는 Python을 사용하여 아마존 간단 저장 서비스(S3) 데이터 레이크와 온프레미스 데이터 소스 또는 기타 클라우드 시스템을 포함한 30개의 데이터 소스에서 데이터를 분석하거나 애플리케이션을 구축할 수 있습니다. `아테나`는 오픈 소스 `트리노`와 `프레스토` 엔진 및 `아파치 스파크` 프레임워크를 기반으로 하며, 프로비저닝이나 구성 작업이 필요하지 않습니다.
 
-This notebook goes over how to load documents from `AWS Athena`.
+이 노트북은 `AWS 아테나`에서 문서를 로드하는 방법을 다룹니다.
 
-## Setting up
+## 설정하기
 
-Follow [instructions to set up an AWS accoung](https://docs.aws.amazon.com/athena/latest/ug/setting-up.html).
+[AWS 계정을 설정하는 방법](https://docs.aws.amazon.com/athena/latest/ug/setting-up.html)을 따르세요.
 
-Install a python library:
+파이썬 라이브러리를 설치합니다:
 
 ```python
 ! pip install boto3
 ```
 
-## Example
+
+## 예시
 
 ```python
 <!--IMPORTS:[{"imported": "AthenaLoader", "source": "langchain_community.document_loaders.athena", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.athena.AthenaLoader.html", "title": "Athena"}]-->
 from langchain_community.document_loaders.athena import AthenaLoader
 ```
+
 
 ```python
 database_name = "my_database"
@@ -48,7 +46,8 @@ documents = loader.load()
 print(documents)
 ```
 
-Example with metadata columns
+
+메타데이터 열이 있는 예시
 
 ```python
 database_name = "my_database"
@@ -69,7 +68,8 @@ documents = loader.load()
 print(documents)
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

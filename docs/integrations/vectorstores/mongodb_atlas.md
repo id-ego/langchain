@@ -1,33 +1,35 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/mongodb_atlas/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/mongodb_atlas.ipynb
+description: 이 문서는 LangChain에서 MongoDB Atlas 벡터 검색을 사용하는 방법과 `langchain-mongodb` 패키지에
+  대해 설명합니다.
 ---
 
 # MongoDB Atlas
 
-This notebook covers how to MongoDB Atlas vector search in LangChain, using the `langchain-mongodb` package.
+이 노트북은 `langchain-mongodb` 패키지를 사용하여 LangChain에서 MongoDB Atlas 벡터 검색을 수행하는 방법을 다룹니다.
 
-> [MongoDB Atlas](https://www.mongodb.com/docs/atlas/) is a fully-managed cloud database available in AWS, Azure, and GCP.  It supports native Vector Search and full text search (BM25) on your MongoDB document data.
+> [MongoDB Atlas](https://www.mongodb.com/docs/atlas/)는 AWS, Azure 및 GCP에서 사용할 수 있는 완전 관리형 클라우드 데이터베이스입니다. MongoDB 문서 데이터에 대한 기본 벡터 검색 및 전체 텍스트 검색(BM25)을 지원합니다.
 
-> [MongoDB Atlas Vector Search](https://www.mongodb.com/products/platform/atlas-vector-search) allows to store your embeddings in MongoDB documents, create a vector search index, and perform KNN search with an approximate nearest neighbor algorithm (`Hierarchical Navigable Small Worlds`). It uses the [$vectorSearch MQL Stage](https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-overview/). 
+> [MongoDB Atlas 벡터 검색](https://www.mongodb.com/products/platform/atlas-vector-search)은 MongoDB 문서에 임베딩을 저장하고, 벡터 검색 인덱스를 생성하며, 근사 최근접 이웃 알고리즘(`Hierarchical Navigable Small Worlds`)을 사용하여 KNN 검색을 수행할 수 있게 해줍니다. 이는 [$vectorSearch MQL Stage](https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-overview/)를 사용합니다.
 
-## Setup
+## 설정
 
-> *An Atlas cluster running MongoDB version 6.0.11, 7.0.2, or later (including RCs).
+> *MongoDB 버전 6.0.11, 7.0.2 이상(RC 포함)에서 실행되는 Atlas 클러스터.
 
-To use MongoDB Atlas, you must first deploy a cluster. We have a Forever-Free tier of clusters available. To get started head over to Atlas here: [quick start](https://www.mongodb.com/docs/atlas/getting-started/).
+MongoDB Atlas를 사용하려면 먼저 클러스터를 배포해야 합니다. Forever-Free 계층의 클러스터가 제공됩니다. 시작하려면 여기에서 Atlas로 이동하세요: [빠른 시작](https://www.mongodb.com/docs/atlas/getting-started/).
 
-You'll need to install `langchain-mongodb` and `pymongo` to use this integration.
+이 통합을 사용하려면 `langchain-mongodb`와 `pymongo`를 설치해야 합니다.
 
 ```python
 pip install -qU langchain-mongodb pymongo
 ```
 
-### Credentials
 
-For this notebook you will need to find your MongoDB cluster URI.
+### 자격 증명
 
-For information on finding your cluster URI read through [this guide](https://www.mongodb.com/docs/manual/reference/connection-string/).
+이 노트북을 위해 MongoDB 클러스터 URI를 찾아야 합니다.
+
+클러스터 URI를 찾는 방법에 대한 정보는 [이 가이드](https://www.mongodb.com/docs/manual/reference/connection-string/)를 읽어보세요.
 
 ```python
 import getpass
@@ -35,19 +37,20 @@ import getpass
 MONGODB_ATLAS_CLUSTER_URI = getpass.getpass("MongoDB Atlas Cluster URI:")
 ```
 
-If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+
+모델 호출에 대한 최고의 자동 추적을 얻고 싶다면 아래의 주석을 해제하여 [LangSmith](https://docs.smith.langchain.com/) API 키를 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-## Initialization
+
+## 초기화
 
 import EmbeddingTabs from "@theme/EmbeddingTabs";
 
 <EmbeddingTabs/>
-
 
 ```python
 <!--IMPORTS:[{"imported": "MongoDBAtlasVectorSearch", "source": "langchain_mongodb.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_mongodb.vectorstores.MongoDBAtlasVectorSearch.html", "title": "MongoDB Atlas"}]-->
@@ -71,13 +74,14 @@ vector_store = MongoDBAtlasVectorSearch(
 )
 ```
 
-## Manage vector store
 
-Once you have created your vector store, we can interact with it by adding and deleting different items.
+## 벡터 저장소 관리
 
-### Add items to vector store
+벡터 저장소를 생성한 후에는 다양한 항목을 추가하고 삭제하여 상호작용할 수 있습니다.
 
-We can add items to our vector store by using the `add_documents` function.
+### 벡터 저장소에 항목 추가
+
+`add_documents` 함수를 사용하여 벡터 저장소에 항목을 추가할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "MongoDB Atlas"}]-->
@@ -152,6 +156,7 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
+
 ```output
 ['03ad81e8-32a0-46f0-b7d8-f5b977a6b52a',
  '8396a68d-f4a3-4176-a581-a1a8c303eea4',
@@ -165,25 +170,28 @@ vector_store.add_documents(documents=documents, ids=uuids)
  '30d599a7-4a1a-47a9-bbf8-6ed393e2e33c']
 ```
 
-### Delete items from vector store
+
+### 벡터 저장소에서 항목 삭제
 
 ```python
 vector_store.delete(ids=[uuids[-1]])
 ```
 
+
 ```output
 True
 ```
 
-## Query vector store
 
-Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent. 
+## 벡터 저장소 쿼리
 
-### Query directly
+벡터 저장소가 생성되고 관련 문서가 추가되면 체인이나 에이전트를 실행하는 동안 쿼리하고 싶을 것입니다.
 
-#### Similarity search
+### 직접 쿼리
 
-Performing a simple similarity search can be done as follows:
+#### 유사성 검색
+
+간단한 유사성 검색은 다음과 같이 수행할 수 있습니다:
 
 ```python
 results = vector_store.similarity_search(
@@ -192,25 +200,31 @@ results = vector_store.similarity_search(
 for res in results:
     print(f"* {res.page_content} [{res.metadata}]")
 ```
+
 ```output
 * Building an exciting new project with LangChain - come check it out! [{'_id': 'e7d95150-67f6-499f-b611-84367c50fa60', 'source': 'tweet'}]
 * LangGraph is the best framework for building stateful, agentic applications! [{'_id': '7614bb54-4eb5-4b3b-990c-00e35cb31f99', 'source': 'tweet'}]
 ```
-#### Similarity search with score
 
-You can also search with score:
+
+#### 점수가 있는 유사성 검색
+
+점수가 있는 검색도 가능합니다:
 
 ```python
 results = vector_store.similarity_search_with_score("Will it be hot tomorrow?", k=1)
 for res, score in results:
     print(f"* [SIM={score:3f}] {res.page_content} [{res.metadata}]")
 ```
+
 ```output
 * [SIM=0.784560] The weather forecast for tomorrow is cloudy and overcast, with a high of 62 degrees. [{'_id': '8396a68d-f4a3-4176-a581-a1a8c303eea4', 'source': 'news'}]
 ```
-### Pre-filtering with Similarity Search
 
-Atlas Vector Search supports pre-filtering using MQL Operators for filtering.  Below is an example index and query on the same data loaded above that allows you do metadata filtering on the "page" field.  You can update your existing index with the filter defined and do pre-filtering with vector search.
+
+### 유사성 검색을 통한 사전 필터링
+
+Atlas 벡터 검색은 필터링을 위한 MQL 연산자를 사용하여 사전 필터링을 지원합니다. 아래는 위에 로드된 동일한 데이터에 대한 예제 인덱스와 쿼리로, "page" 필드에서 메타데이터 필터링을 수행할 수 있게 해줍니다. 정의된 필터로 기존 인덱스를 업데이트하고 벡터 검색으로 사전 필터링을 수행할 수 있습니다.
 
 ```json
 {
@@ -229,7 +243,8 @@ Atlas Vector Search supports pre-filtering using MQL Operators for filtering.  B
 }
 ```
 
-You can also update the index programmatically using the `MongoDBAtlasVectorSearch.create_index` method.
+
+`MongoDBAtlasVectorSearch.create_index` 메서드를 사용하여 프로그래밍 방식으로 인덱스를 업데이트할 수도 있습니다.
 
 ```python
 vectorstore.create_index(
@@ -239,7 +254,8 @@ vectorstore.create_index(
 )
 ```
 
-And then you can run a query with filter as follows:
+
+그런 다음 다음과 같이 필터와 함께 쿼리를 실행할 수 있습니다:
 
 ```python
 results = vector_store.similarity_search(query="foo",k=1,pre_filter={"source": {"$eq": "https://example.com"}})
@@ -247,15 +263,16 @@ for doc in results:
     print(f"* {doc.page_content} [{doc.metadata}]")
 ```
 
-#### Other search methods
 
-There are a variety of other search methods that are not covered in this notebook, such as MMR search or searching by vector. For a full list of the search abilities available for `AstraDBVectorStore` check out the [API reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html).
+#### 기타 검색 방법
 
-### Query by turning into retriever
+MMR 검색이나 벡터로 검색하는 것과 같이 이 노트북에서 다루지 않는 다양한 다른 검색 방법이 있습니다. `AstraDBVectorStore`에 대해 사용할 수 있는 검색 기능의 전체 목록은 [API 참조](https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html)를 확인하세요.
 
-You can also transform the vector store into a retriever for easier usage in your chains. 
+### 검색기로 변환하여 쿼리하기
 
-Here is how to transform your vector store into a retriever and then invoke the retreiever with a simple query and filter.
+벡터 저장소를 검색기로 변환하여 체인에서 더 쉽게 사용할 수 있습니다.
+
+벡터 저장소를 검색기로 변환하고 간단한 쿼리와 필터로 검색기를 호출하는 방법은 다음과 같습니다.
 
 ```python
 retriever = vector_store.as_retriever(
@@ -265,29 +282,31 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime")
 ```
 
+
 ```output
 [Document(metadata={'_id': '8c31b84e-2636-48b6-8b99-9fccb47f7051', 'source': 'news'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
 
-## Usage for retrieval-augmented generation
 
-For guides on how to use this vector store for retrieval-augmented generation (RAG), see the following sections:
+## 검색 보강 생성에 대한 사용법
 
-- [Tutorials: working with external knowledge](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
-- [How-to: Question and answer with RAG](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
-- [Retrieval conceptual docs](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
+검색 보강 생성(RAG)을 위해 이 벡터 저장소를 사용하는 방법에 대한 가이드는 다음 섹션을 참조하세요:
 
-# Other Notes
-> * More documentation can be found at [LangChain-MongoDB](https://www.mongodb.com/docs/atlas/atlas-vector-search/ai-integrations/langchain/) site
-> * This feature is Generally Available and ready for production deployments.
-> * The langchain version 0.0.305 ([release notes](https://github.com/langchain-ai/langchain/releases/tag/v0.0.305)) introduces the support for $vectorSearch MQL stage, which is available with MongoDB Atlas 6.0.11 and 7.0.2. Users utilizing earlier versions of MongoDB Atlas need to pin their LangChain version to <=0.0.304
+- [튜토리얼: 외부 지식 작업하기](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
+- [방법: RAG를 통한 질문 및 답변](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
+- [검색 개념 문서](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
+
+# 기타 참고 사항
+> * 더 많은 문서는 [LangChain-MongoDB](https://www.mongodb.com/docs/atlas/atlas-vector-search/ai-integrations/langchain/) 사이트에서 확인할 수 있습니다.
+> * 이 기능은 일반적으로 사용 가능하며 프로덕션 배포를 위해 준비되었습니다.
+> * langchain 버전 0.0.305 ([릴리스 노트](https://github.com/langchain-ai/langchain/releases/tag/v0.0.305))는 MongoDB Atlas 6.0.11 및 7.0.2와 함께 사용할 수 있는 $vectorSearch MQL 단계를 지원합니다. 이전 버전의 MongoDB Atlas를 사용하는 사용자는 LangChain 버전을 <=0.0.304로 고정해야 합니다.
 > 
 
-## API reference
+## API 참조
 
-For detailed documentation of all `MongoDBAtlasVectorSearch` features and configurations head to the API reference: https://api.python.langchain.com/en/latest/mongodb_api_reference.html
+`MongoDBAtlasVectorSearch`의 모든 기능 및 구성에 대한 자세한 문서는 API 참조를 참조하세요: https://api.python.langchain.com/en/latest/mongodb_api_reference.html
 
-## Related
+## 관련
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

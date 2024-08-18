@@ -1,34 +1,35 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/qa_sources/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/qa_sources.ipynb
+description: RAG 애플리케이션에서 답변에 사용된 출처를 반환하는 방법을 설명합니다. 두 가지 접근 방식을 다룹니다.
 ---
 
-# How to get your RAG application to return sources
+# RAG 애플리케이션에서 출처를 반환하는 방법
 
-Often in Q&A applications it's important to show users the sources that were used to generate the answer. The simplest way to do this is for the chain to return the Documents that were retrieved in each generation.
+Q&A 애플리케이션에서는 사용자가 답변을 생성하는 데 사용된 출처를 보여주는 것이 중요합니다. 이를 가장 간단하게 수행하는 방법은 체인이 각 생성에서 검색된 문서를 반환하는 것입니다.
 
-We'll work off of the Q&A app we built over the [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng in the [RAG tutorial](/docs/tutorials/rag).
+우리는 Lilian Weng의 [RAG 튜토리얼](/docs/tutorials/rag) 블로그 게시물에서 구축한 Q&A 앱을 기반으로 작업할 것입니다. 
 
-We will cover two approaches:
+두 가지 접근 방식을 다룰 것입니다:
 
-1. Using the built-in [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html), which returns sources by default;
-2. Using a simple [LCEL](/docs/concepts#langchain-expression-language-lcel) implementation, to show the operating principle.
+1. 기본적으로 출처를 반환하는 내장 [create_retrieval_chain](https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html) 사용;
+2. 운영 원리를 보여주기 위한 간단한 [LCEL](/docs/concepts#langchain-expression-language-lcel) 구현.
 
-We will also show how to structure sources into the model response, such that a model can report what specific sources it used in generating its answer.
+또한 모델 응답에 출처를 구조화하는 방법을 보여드릴 것이며, 이를 통해 모델이 답변을 생성하는 데 사용한 특정 출처를 보고할 수 있습니다.
 
-## Setup
+## 설정
 
-### Dependencies
+### 종속성
 
-We'll use OpenAI embeddings and a Chroma vector store in this walkthrough, but everything shown here works with any [Embeddings](/docs/concepts#embedding-models), [VectorStore](/docs/concepts#vectorstores) or [Retriever](/docs/concepts#retrievers). 
+이 안내서에서는 OpenAI 임베딩과 Chroma 벡터 저장소를 사용할 것이지만, 여기에서 보여지는 모든 것은 어떤 [임베딩](/docs/concepts#embedding-models), [벡터 저장소](/docs/concepts#vectorstores) 또는 [검색기](/docs/concepts#retrievers)와도 작동합니다.
 
-We'll use the following packages:
+다음 패키지를 사용할 것입니다:
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchainhub langchain-openai langchain-chroma bs4
 ```
 
-We need to set environment variable `OPENAI_API_KEY`, which can be done directly or loaded from a `.env` file like so:
+
+환경 변수 `OPENAI_API_KEY`를 설정해야 하며, 이는 직접 설정하거나 다음과 같이 `.env` 파일에서 로드할 수 있습니다:
 
 ```python
 import getpass
@@ -41,27 +42,28 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # dotenv.load_dotenv()
 ```
 
+
 ### LangSmith
 
-Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls. As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent. The best way to do this is with [LangSmith](https://smith.langchain.com).
+LangChain으로 구축하는 많은 애플리케이션은 여러 단계와 여러 LLM 호출을 포함합니다. 이러한 애플리케이션이 점점 더 복잡해짐에 따라 체인이나 에이전트 내부에서 정확히 무슨 일이 일어나고 있는지를 검사할 수 있는 것이 중요해집니다. 이를 가장 잘 수행하는 방법은 [LangSmith](https://smith.langchain.com)입니다.
 
-Note that LangSmith is not needed, but it is helpful. If you do want to use LangSmith, after you sign up at the link above, make sure to set your environment variables to start logging traces:
+LangSmith는 필요하지 않지만 유용합니다. LangSmith를 사용하고 싶다면 위 링크에서 가입한 후 환경 변수를 설정하여 추적 로그를 시작하세요:
 
 ```python
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-## Using `create_retrieval_chain`
 
-Let's first select a LLM:
+## `create_retrieval_chain` 사용하기
+
+먼저 LLM을 선택해 보겠습니다:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="llm" />
 
-
-Here is Q&A app with sources we built over the [LLM Powered Autonomous Agents](https://lilianweng.github.io/posts/2023-06-23-agent/) blog post by Lilian Weng in the [RAG tutorial](/docs/tutorials/rag):
+다음은 Lilian Weng의 [RAG 튜토리얼](/docs/tutorials/rag) 블로그 게시물에서 구축한 출처가 포함된 Q&A 앱입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "How to get your RAG application to return sources"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "How to get your RAG application to return sources"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to get your RAG application to return sources"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "How to get your RAG application to return sources"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to get your RAG application to return sources"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to get your RAG application to return sources"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to get your RAG application to return sources"}]-->
@@ -113,15 +115,18 @@ question_answer_chain = create_stuff_documents_chain(llm, prompt)
 rag_chain = create_retrieval_chain(retriever, question_answer_chain)
 ```
 
+
 ```python
 result = rag_chain.invoke({"input": "What is Task Decomposition?"})
 ```
 
-Note that `result` is a dict with keys `"input"`, `"context"`, and `"answer"`:
+
+`result`는 `"input"`, `"context"`, `"answer"` 키를 가진 dict입니다:
 
 ```python
 result
 ```
+
 
 ```output
 {'input': 'What is Task Decomposition?',
@@ -132,14 +137,15 @@ result
  'answer': 'Task decomposition involves breaking down a complex task into smaller and more manageable steps. This process helps agents or models tackle difficult tasks by dividing them into simpler subtasks or components. Task decomposition can be achieved through techniques like Chain of Thought or Tree of Thoughts, which guide the agent in breaking down tasks into sequential or branching steps.'}
 ```
 
-Here, `"context"` contains the sources that the LLM used in generating the response in `"answer"`.
 
-## Custom LCEL implementation
+여기서 `"context"`는 LLM이 `"answer"`에서 응답을 생성하는 데 사용한 출처를 포함합니다.
 
-Below we construct a chain similar to those built by `create_retrieval_chain`. It works by building up a dict: 
+## 사용자 정의 LCEL 구현
 
-1. Starting with a dict with the input query, add the retrieved docs in the `"context"` key;
-2. Feed both the query and context into a RAG chain and add the result to the dict.
+아래에서는 `create_retrieval_chain`으로 구축된 것과 유사한 체인을 구성합니다. 이는 dict를 구축하여 작동합니다:
+
+1. 입력 쿼리로 dict를 시작하고, `"context"` 키에 검색된 문서를 추가합니다;
+2. 쿼리와 컨텍스트를 RAG 체인에 공급하고 결과를 dict에 추가합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to get your RAG application to return sources"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to get your RAG application to return sources"}]-->
@@ -177,6 +183,7 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 chain.invoke({"input": "What is Task Decomposition"})
 ```
 
+
 ```output
 {'input': 'What is Task Decomposition',
  'context': [Document(metadata={'source': 'https://lilianweng.github.io/posts/2023-06-23-agent/'}, page_content='Fig. 1. Overview of a LLM-powered autonomous agent system.\nComponent One: Planning#\nA complicated task usually involves many steps. An agent needs to know what they are and plan ahead.\nTask Decomposition#\nChain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks. The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.'),
@@ -186,20 +193,21 @@ chain.invoke({"input": "What is Task Decomposition"})
  'answer': 'Task decomposition is a technique used in artificial intelligence to break down complex tasks into smaller and more manageable subtasks. This approach helps agents or models to tackle difficult problems by dividing them into simpler steps, improving performance and interpretability. Different methods like Chain of Thought and Tree of Thoughts have been developed to enhance task decomposition in AI systems.'}
 ```
 
+
 :::tip
 
-Check out the [LangSmith trace](https://smith.langchain.com/public/1c055a3b-0236-4670-a3fb-023d418ba796/r)
+[LangSmith 추적](https://smith.langchain.com/public/1c055a3b-0236-4670-a3fb-023d418ba796/r)을 확인하세요.
 
 :::
 
-## Structure sources in model response
+## 모델 응답에 출처 구조화하기
 
-Up to this point, we've simply propagated the documents returned from the retrieval step through to the final response. But this may not illustrate what subset of information the model relied on when generating its answer. Below, we show how to structure sources into the model response, allowing the model to report what specific context it relied on for its answer.
+지금까지 우리는 검색 단계에서 반환된 문서를 최종 응답으로 단순히 전달했습니다. 하지만 이는 모델이 답변을 생성하는 데 의존한 정보의 하위 집합을 설명하지 않을 수 있습니다. 아래에서는 출처를 모델 응답에 구조화하는 방법을 보여주어, 모델이 답변을 위해 의존한 특정 컨텍스트를 보고할 수 있도록 합니다.
 
-Because the above LCEL implementation is composed of [Runnable](/docs/concepts/#runnable-interface) primitives, it is straightforward to extend. Below, we make a simple change:
+위의 LCEL 구현은 [Runnable](/docs/concepts/#runnable-interface) 원시 요소로 구성되어 있으므로 확장하기가 간단합니다. 아래에서는 간단한 변경을 합니다:
 
-- We use the model's tool-calling features to generate [structured output](/docs/how_to/structured_output/), consisting of an answer and list of sources. The schema for the response is represented in the `AnswerWithSources` TypedDict, below.
-- We remove the `StrOutputParser()`, as we expect `dict` output in this scenario.
+- 모델의 도구 호출 기능을 사용하여 답변과 출처 목록으로 구성된 [구조화된 출력](/docs/how_to/structured_output/)을 생성합니다. 응답의 스키마는 아래의 `AnswerWithSources` TypedDict로 표현됩니다.
+- 이 시나리오에서는 `dict` 출력을 예상하므로 `StrOutputParser()`를 제거합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to get your RAG application to return sources"}]-->
@@ -242,11 +250,13 @@ chain = RunnablePassthrough.assign(context=retrieve_docs).assign(
 response = chain.invoke({"input": "What is Chain of Thought?"})
 ```
 
+
 ```python
 import json
 
 print(json.dumps(response["answer"], indent=2))
 ```
+
 ```output
 {
   "answer": "Chain of Thought (CoT) is a prompting technique that enhances model performance on complex tasks by instructing the model to \"think step by step\" to decompose hard tasks into smaller and simpler steps. It transforms big tasks into multiple manageable tasks and sheds light on the interpretation of the model's thinking process.",
@@ -255,8 +265,9 @@ print(json.dumps(response["answer"], indent=2))
   ]
 }
 ```
+
 :::tip
 
-View [LangSmith trace](https://smith.langchain.com/public/0eeddf06-3a7b-4f27-974c-310ca8160f60/r)
+[LangSmith 추적](https://smith.langchain.com/public/0eeddf06-3a7b-4f27-974c-310ca8160f60/r)을 확인하세요.
 
 :::

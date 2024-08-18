@@ -1,27 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/google_finance/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/google_finance.ipynb
+description: 구글 파이낸스 도구를 사용하여 구글 파이낸스 페이지에서 정보를 얻는 방법을 다루는 노트북입니다.
 ---
 
-# Google Finance
+# 구글 금융
 
-This notebook goes over how to use the Google Finance Tool to get information from the Google Finance page
+이 노트북은 구글 금융 페이지에서 정보를 얻기 위해 구글 금융 도구를 사용하는 방법을 설명합니다.
 
-To get an SerpApi key key, sign up at: https://serpapi.com/users/sign_up.
+SerpApi 키를 얻으려면 다음 링크에서 가입하세요: https://serpapi.com/users/sign_up.
 
-Then install google-search-results with the command: 
+그런 다음 다음 명령어로 google-search-results를 설치하세요: 
 
 pip install google-search-results
 
-Then set the environment variable SERPAPI_API_KEY to your SerpApi key
+그런 다음 환경 변수 SERPAPI_API_KEY를 귀하의 SerpApi 키로 설정하세요.
 
-Or pass the key in as a argument to the wrapper serp_api_key="your secret key"
+또는 래퍼에 인수로 키를 전달하세요: serp_api_key="your secret key"
 
-Use the Tool
+도구 사용하기
 
 ```python
 %pip install --upgrade --quiet  google-search-results langchain-community
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "GoogleFinanceQueryRun", "source": "langchain_community.tools.google_finance", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.google_finance.tool.GoogleFinanceQueryRun.html", "title": "Google Finance"}, {"imported": "GoogleFinanceAPIWrapper", "source": "langchain_community.utilities.google_finance", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_finance.GoogleFinanceAPIWrapper.html", "title": "Google Finance"}]-->
@@ -34,11 +35,13 @@ os.environ["SERPAPI_API_KEY"] = ""
 tool = GoogleFinanceQueryRun(api_wrapper=GoogleFinanceAPIWrapper())
 ```
 
+
 ```python
 tool.run("Google")
 ```
 
-Using it with Langchain
+
+Langchain과 함께 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Google Finance"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Google Finance"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Google Finance"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Google Finance"}]-->
@@ -57,7 +60,8 @@ agent = initialize_agent(
 agent.run("what is google's stock")
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

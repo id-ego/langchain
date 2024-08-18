@@ -1,26 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/rss/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/rss.ipynb
+description: HTML 뉴스 기사를 RSS 피드 URL 목록에서 문서 형식으로 로드하는 방법을 다룹니다. 이를 통해 후속 작업에 활용할 수
+  있습니다.
 ---
 
-# RSS Feeds
+# RSS 피드
 
-This covers how to load HTML news articles from a list of RSS feed URLs into a document format that we can use downstream.
+이 문서는 RSS 피드 URL 목록에서 HTML 뉴스 기사를 문서 형식으로 로드하는 방법을 다룹니다.
 
 ```python
 %pip install --upgrade --quiet  feedparser newspaper3k listparser
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RSSFeedLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.rss.RSSFeedLoader.html", "title": "RSS Feeds"}]-->
 from langchain_community.document_loaders import RSSFeedLoader
 ```
 
+
 ```python
 urls = ["https://news.ycombinator.com/rss"]
 ```
 
-Pass in urls to load them into Documents
+
+문서로 로드할 URL을 전달합니다.
 
 ```python
 loader = RSSFeedLoader(urls=urls)
@@ -28,9 +32,11 @@ data = loader.load()
 print(len(data))
 ```
 
+
 ```python
 print(data[0].page_content)
 ```
+
 ```output
 (next Rich)
 
@@ -52,13 +58,15 @@ I have made many friends through Clojure and Cognitect, and I hope to nurture th
 
 Retirement returns me to the freedom and independence I had when originally developing Clojure. The journey continues!
 ```
-You can pass arguments to the NewsURLLoader which it uses to load articles.
+
+뉴스 URL 로더에 인수를 전달하여 기사를 로드할 수 있습니다.
 
 ```python
 loader = RSSFeedLoader(urls=urls, nlp=True)
 data = loader.load()
 print(len(data))
 ```
+
 ```output
 Error fetching or processing https://twitter.com/andrewmccalip/status/1687405505604734978, exception: You must `parse()` an article first!
 Error processing entry https://twitter.com/andrewmccalip/status/1687405505604734978, exception: list index out of range
@@ -66,9 +74,11 @@ Error processing entry https://twitter.com/andrewmccalip/status/1687405505604734
 13
 ```
 
+
 ```python
 data[0].metadata["keywords"]
 ```
+
 
 ```output
 ['nubank',
@@ -84,15 +94,18 @@ data[0].metadata["keywords"]
  'datomic']
 ```
 
+
 ```python
 data[0].metadata["summary"]
 ```
+
 
 ```output
 'It’s been thrilling to see Clojure and Datomic successfully applied at scale.\nI look forward to continuing to lead ongoing work maintaining and enhancing Clojure with Alex, Stu, Fogus and many others, as an independent developer once again.\nThe community remains friendly, mature and productive, and is taking Clojure into many interesting new domains.\nI want to highlight and thank Nubank for their ongoing sponsorship of Alex, Fogus and the core team, as well as the Clojure community at large.\nStu will continue to lead the development of Datomic at Nubank, where the Datomic team grows and thrives.'
 ```
 
-You can also use an OPML file such as a Feedly export.  Pass in either a URL or the OPML contents.
+
+Feedly 내보내기와 같은 OPML 파일을 사용할 수도 있습니다. URL 또는 OPML 내용을 전달합니다.
 
 ```python
 with open("example_data/sample_rss_feeds.opml", "r") as f:
@@ -100,21 +113,25 @@ with open("example_data/sample_rss_feeds.opml", "r") as f:
 data = loader.load()
 print(len(data))
 ```
+
 ```output
 Error fetching http://www.engadget.com/rss-full.xml, exception: Error fetching http://www.engadget.com/rss-full.xml, exception: document declared as us-ascii, but parsed as utf-8
 ``````output
 20
 ```
 
+
 ```python
 data[0].page_content
 ```
+
 
 ```output
 'The electric vehicle startup Fisker made a splash in Huntington Beach last night, showing off a range of new EVs it plans to build alongside the Fisker Ocean, which is slowly beginning deliveries in Europe and the US. With shades of Lotus circa 2010, it seems there\'s something for most tastes, with a powerful four-door GT, a versatile pickup truck, and an affordable electric city car.\n\n"We want the world to know that we have big plans and intend to move into several different segments, redefining each with our unique blend of design, innovation, and sustainability," said CEO Henrik Fisker.\n\nStarting with the cheapest, the Fisker PEAR—a cutesy acronym for "Personal Electric Automotive Revolution"—is said to use 35 percent fewer parts than other small EVs. Although it\'s a smaller car, the PEAR seats six thanks to front and rear bench seats. Oh, and it has a frunk, which the company is calling the "froot," something that will satisfy some British English speakers like Ars\' friend and motoring journalist Jonny Smith.\n\nBut most exciting is the price—starting at $29,900 and scheduled for 2025. Fisker plans to contract with Foxconn to build the PEAR in Lordstown, Ohio, meaning it would be eligible for federal tax incentives.\n\nAdvertisement\n\nThe Fisker Alaska is the company\'s pickup truck, built on a modified version of the platform used by the Ocean. It has an extendable cargo bed, which can be as little as 4.5 feet (1,371 mm) or as much as 9.2 feet (2,804 mm) long. Fisker claims it will be both the lightest EV pickup on sale and the most sustainable pickup truck in the world. Range will be an estimated 230–240 miles (370–386 km).\n\nThis, too, is slated for 2025, and also at a relatively affordable price, starting at $45,400. Fisker hopes to build this car in North America as well, although it isn\'t saying where that might take place.\n\nFinally, there\'s the Ronin, a four-door GT that bears more than a passing resemblance to the Fisker Karma, Henrik Fisker\'s 2012 creation. There\'s no price for this one, but Fisker says its all-wheel drive powertrain will boast 1,000 hp (745 kW) and will hit 60 mph from a standing start in two seconds—just about as fast as modern tires will allow. Expect a massive battery in this one, as Fisker says it\'s targeting a 600-mile (956 km) range.\n\n"Innovation and sustainability, along with design, are our three brand values. By 2027, we intend to produce the world’s first climate-neutral vehicle, and as our customers reinvent their relationships with mobility, we want to be a leader in software-defined transportation," Fisker said.'
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

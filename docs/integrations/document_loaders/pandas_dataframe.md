@@ -1,27 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/pandas_dataframe/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/pandas_dataframe.ipynb
+description: 이 노트북은 pandas DataFrame에서 데이터를 로드하는 방법에 대해 설명합니다. 다양한 코드 예제를 통해 실습할 수
+  있습니다.
 ---
 
-# Pandas DataFrame
+# 판다스 데이터프레임
 
-This notebook goes over how to load data from a [pandas](https://pandas.pydata.org/pandas-docs/stable/user_guide/index) DataFrame.
+이 노트북은 [판다스](https://pandas.pydata.org/pandas-docs/stable/user_guide/index) 데이터프레임에서 데이터를 로드하는 방법에 대해 설명합니다.
 
 ```python
 %pip install --upgrade --quiet  pandas
 ```
 
+
 ```python
 import pandas as pd
 ```
+
 
 ```python
 df = pd.read_csv("example_data/mlb_teams_2012.csv")
 ```
 
+
 ```python
 df.head()
 ```
+
 
 ```html
 <div>
@@ -83,18 +88,22 @@ df.head()
 </div> 
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "DataFrameLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dataframe.DataFrameLoader.html", "title": "Pandas DataFrame"}]-->
 from langchain_community.document_loaders import DataFrameLoader
 ```
 
+
 ```python
 loader = DataFrameLoader(df, page_content_column="Team")
 ```
 
+
 ```python
 loader.load()
 ```
+
 
 ```output
 [Document(page_content='Nationals', metadata={' "Payroll (millions)"': 81.34, ' "Wins"': 98}),
@@ -129,11 +138,13 @@ loader.load()
  Document(page_content='Astros', metadata={' "Payroll (millions)"': 60.65, ' "Wins"': 55})]
 ```
 
+
 ```python
 # Use lazy load for larger table, which won't read the full table into memory
 for i in loader.lazy_load():
     print(i)
 ```
+
 ```output
 page_content='Nationals' metadata={' "Payroll (millions)"': 81.34, ' "Wins"': 98}
 page_content='Reds' metadata={' "Payroll (millions)"': 82.2, ' "Wins"': 97}
@@ -167,7 +178,8 @@ page_content='Cubs' metadata={' "Payroll (millions)"': 88.19, ' "Wins"': 61}
 page_content='Astros' metadata={' "Payroll (millions)"': 60.65, ' "Wins"': 55}
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

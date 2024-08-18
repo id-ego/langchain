@@ -1,39 +1,43 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/google_ai/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/google_ai.ipynb
+description: Google Generative AI 모델을 Langchain과 함께 사용하는 방법에 대한 가이드입니다. API 키 생성 및
+  설정 방법을 포함합니다.
 keywords:
 - gemini
 - GoogleGenerativeAI
 - gemini-pro
 ---
 
-# Google AI
+# 구글 AI
 
 :::caution
-You are currently on a page documenting the use of Google models as [text completion models](/docs/concepts/#llms). Many popular Google models are [chat completion models](/docs/concepts/#chat-models).
+현재 [텍스트 완성 모델](/docs/concepts/#llms)로서 구글 모델 사용에 대한 문서 페이지에 있습니다. 많은 인기 있는 구글 모델은 [채팅 완성 모델](/docs/concepts/#chat-models)입니다.
 
-You may be looking for [this page instead](/docs/integrations/chat/google_generative_ai/).
+대신 [이 페이지](/docs/integrations/chat/google_generative_ai/)를 찾고 있을 수 있습니다.
 :::
 
-A guide on using [Google Generative AI](https://developers.generativeai.google/) models with Langchain. Note: It's separate from Google Cloud Vertex AI [integration](/docs/integrations/llms/google_vertex_ai_palm).
+Langchain과 함께 [구글 생성 AI](https://developers.generativeai.google/) 모델을 사용하는 가이드입니다. 주의: 이는 구글 클라우드 버텍스 AI [통합](/docs/integrations/llms/google_vertex_ai_palm)과는 별개입니다.
 
-## Setting up
+## 설정하기
 
-To use Google Generative AI you must install the `langchain-google-genai` Python package and generate an API key. [Read more details](https://developers.generativeai.google/).
+구글 생성 AI를 사용하려면 `langchain-google-genai` Python 패키지를 설치하고 API 키를 생성해야 합니다. [자세한 내용 읽기](https://developers.generativeai.google/).
 
 ```python
 %pip install --upgrade --quiet  langchain-google-genai
 ```
 
+
 ```python
 from langchain_google_genai import GoogleGenerativeAI
 ```
+
 
 ```python
 from getpass import getpass
 
 api_key = getpass()
 ```
+
 
 ```python
 llm = GoogleGenerativeAI(model="models/text-bison-001", google_api_key=api_key)
@@ -43,6 +47,7 @@ print(
     )
 )
 ```
+
 ```output
 **Pros of Python:**
 
@@ -62,6 +67,7 @@ print(
 Overall, Python is a very good programming language for beginners. It's easy to learn, versatile, and has a large community of developers. However, it's important to be aware of its limitations, such as its slow performance and lack of performance.
 ```
 
+
 ```python
 llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=api_key)
 print(
@@ -70,6 +76,7 @@ print(
     )
 )
 ```
+
 ```output
 **Pros:**
 
@@ -95,12 +102,14 @@ print(
 
 * **Package Management:** While Python has a vast ecosystem of libraries and packages, managing dependencies and package versions can be challenging. The Python Package Index (PyPI) is the official repository for Python packages, but it can be difficult to ensure compatibility and avoid conflicts between different versions of packages.
 ```
-## Using in a chain
+
+## 체인에서 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Google AI"}]-->
 from langchain_core.prompts import PromptTemplate
 ```
+
 
 ```python
 template = """Question: {question}
@@ -113,10 +122,12 @@ chain = prompt | llm
 question = "How much is 2+2?"
 print(chain.invoke({"question": question}))
 ```
+
 ```output
 4
 ```
-## Streaming calls
+
+## 스트리밍 호출
 
 ```python
 import sys
@@ -125,6 +136,7 @@ for chunk in llm.stream("Tell me a short poem about snow"):
     sys.stdout.write(chunk)
     sys.stdout.flush()
 ```
+
 ```output
 In winter's embrace, a silent ballet,
 Snowflakes descend, a celestial display.
@@ -151,9 +163,10 @@ As snowflakes fall, with a gentle kiss.
 For in their embrace, we find a peace profound,
 A frozen world, with magic all around.
 ```
-### Safety Settings
 
-Gemini models have default safety settings that can be overridden. If you are receiving lots of "Safety Warnings" from your models, you can try tweaking the `safety_settings` attribute of the model. For example, to turn off safety blocking for dangerous content, you can construct your LLM as follows:
+### 안전 설정
+
+제미니 모델은 기본 안전 설정이 있으며 이를 재정의할 수 있습니다. 모델에서 "안전 경고"가 많이 발생하는 경우 모델의 `safety_settings` 속성을 조정해 볼 수 있습니다. 예를 들어, 위험한 콘텐츠에 대한 안전 차단을 끄려면 LLM을 다음과 같이 구성할 수 있습니다:
 
 ```python
 from langchain_google_genai import GoogleGenerativeAI, HarmBlockThreshold, HarmCategory
@@ -167,9 +180,10 @@ llm = GoogleGenerativeAI(
 )
 ```
 
-For an enumeration of the categories and thresholds available, see Google's [safety setting types](https://ai.google.dev/api/python/google/generativeai/types/SafetySettingDict).
 
-## Related
+사용 가능한 카테고리 및 임계값의 열거는 구글의 [안전 설정 유형](https://ai.google.dev/api/python/google/generativeai/types/SafetySettingDict)을 참조하세요.
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

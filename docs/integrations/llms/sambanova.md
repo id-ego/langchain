@@ -1,28 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/sambanova/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/sambanova.ipynb
+description: SambaNova의 Sambaverse와 Sambastudio를 사용하여 오픈 소스 모델과 상호작용하는 방법을 소개합니다.
+  LangChain과 함께 활용해보세요.
 ---
 
 # SambaNova
 
-**[SambaNova](https://sambanova.ai/)'s** [Sambaverse](https://sambaverse.sambanova.ai/) and [Sambastudio](https://sambanova.ai/technology/full-stack-ai-platform) are platforms for running your own open-source models
+**[SambaNova](https://sambanova.ai/)**의 **[Sambaverse](https://sambaverse.sambanova.ai/)**와 **[Sambastudio](https://sambanova.ai/technology/full-stack-ai-platform)**는 오픈 소스 모델을 실행하기 위한 플랫폼입니다.
 
-This example goes over how to use LangChain to interact with SambaNova models
+이 예제는 LangChain을 사용하여 SambaNova 모델과 상호작용하는 방법을 설명합니다.
 
 ## Sambaverse
 
-**Sambaverse** allows you to interact with multiple open-source models. You can view the list of available models and interact with them in the [playground](https://sambaverse.sambanova.ai/playground).
-**Please note that Sambaverse's free offering is performance-limited.** Companies that are ready to evaluate the production tokens-per-second performance, volume throughput, and 10x lower total cost of ownership (TCO) of SambaNova should [contact us](https://sambaverse.sambanova.ai/contact-us) for a non-limited evaluation instance.
+**Sambaverse**는 여러 오픈 소스 모델과 상호작용할 수 있게 해줍니다. 사용 가능한 모델 목록을 보고 [playground](https://sambaverse.sambanova.ai/playground)에서 상호작용할 수 있습니다.  
+**Sambaverse의 무료 제공은 성능이 제한되어 있습니다.** 생산 토큰 당 초당 성능, 볼륨 처리량 및 SambaNova의 총 소유 비용(TCO)을 10배 낮출 준비가 된 회사는 [문의해 주시기 바랍니다](https://sambaverse.sambanova.ai/contact-us) 비제한 평가 인스턴스를 위해.
 
-An API key is required to access Sambaverse models. To get a key, create an account at [sambaverse.sambanova.ai](https://sambaverse.sambanova.ai/)
+Sambaverse 모델에 접근하려면 API 키가 필요합니다. 키를 얻으려면 [sambaverse.sambanova.ai](https://sambaverse.sambanova.ai/)에서 계정을 생성하세요.
 
-The [sseclient-py](https://pypi.org/project/sseclient-py/) package is required to run streaming predictions 
+스트리밍 예측을 실행하려면 [sseclient-py](https://pypi.org/project/sseclient-py/) 패키지가 필요합니다.
 
 ```python
 %pip install --quiet sseclient-py==1.8.0
 ```
 
-Register your API key as an environment variable:
+
+API 키를 환경 변수로 등록하세요:
 
 ```python
 import os
@@ -33,7 +35,8 @@ sambaverse_api_key = "<Your sambaverse API key>"
 os.environ["SAMBAVERSE_API_KEY"] = sambaverse_api_key
 ```
 
-Call Sambaverse models directly from LangChain!
+
+LangChain에서 직접 Sambaverse 모델을 호출하세요!
 
 ```python
 <!--IMPORTS:[{"imported": "Sambaverse", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.Sambaverse.html", "title": "SambaNova"}]-->
@@ -57,6 +60,7 @@ llm = Sambaverse(
 
 print(llm.invoke("Why should I use open source models?"))
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Sambaverse", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.Sambaverse.html", "title": "SambaNova"}]-->
@@ -84,19 +88,21 @@ for chunk in llm.stream("Why should I use open source models?"):
     print(chunk, end="", flush=True)
 ```
 
+
 ## SambaStudio
 
-**SambaStudio** allows you to train, run batch inference jobs, and deploy online inference endpoints to run open source models that you fine tuned yourself.
+**SambaStudio**는 모델을 훈련하고, 배치 추론 작업을 실행하며, 직접 조정한 오픈 소스 모델을 실행하기 위한 온라인 추론 엔드포인트를 배포할 수 있게 해줍니다.
 
-A SambaStudio environment is required to deploy a model. Get more information at [sambanova.ai/products/enterprise-ai-platform-sambanova-suite](https://sambanova.ai/products/enterprise-ai-platform-sambanova-suite)
+모델을 배포하려면 SambaStudio 환경이 필요합니다. 더 많은 정보는 [sambanova.ai/products/enterprise-ai-platform-sambanova-suite](https://sambanova.ai/products/enterprise-ai-platform-sambanova-suite)에서 확인하세요.
 
-The [sseclient-py](https://pypi.org/project/sseclient-py/) package is required to run streaming predictions 
+스트리밍 예측을 실행하려면 [sseclient-py](https://pypi.org/project/sseclient-py/) 패키지가 필요합니다.
 
 ```python
 %pip install --quiet sseclient-py==1.8.0
 ```
 
-Register your environment variables:
+
+환경 변수를 등록하세요:
 
 ```python
 import os
@@ -115,7 +121,8 @@ os.environ["SAMBASTUDIO_ENDPOINT_ID"] = sambastudio_endpoint_id
 os.environ["SAMBASTUDIO_API_KEY"] = sambastudio_api_key
 ```
 
-Call SambaStudio models directly from LangChain!
+
+LangChain에서 직접 SambaStudio 모델을 호출하세요!
 
 ```python
 <!--IMPORTS:[{"imported": "SambaStudio", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.SambaStudio.html", "title": "SambaNova"}]-->
@@ -136,6 +143,7 @@ llm = SambaStudio(
 
 print(llm.invoke("Why should I use open source models?"))
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "SambaStudio", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.SambaStudio.html", "title": "SambaNova"}]-->
@@ -160,7 +168,8 @@ for chunk in llm.stream("Why should I use open source models?"):
     print(chunk, end="", flush=True)
 ```
 
-You can also call a CoE endpoint expert model 
+
+CoE 엔드포인트 전문가 모델도 호출할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "SambaStudio", "source": "langchain_community.llms.sambanova", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sambanova.SambaStudio.html", "title": "SambaNova"}]-->
@@ -186,7 +195,8 @@ llm = SambaStudio(
 print(llm.invoke("Why should I use open source models?"))
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

@@ -1,23 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/query_multiple_queries/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/query_multiple_queries.ipynb
+description: 쿼리 분석 시 여러 쿼리를 처리하는 방법을 설명하고, 결과를 결합하는 간단한 예제를 제공합니다.
 sidebar_position: 4
 ---
 
-# How to handle multiple queries when doing query analysis
+# 여러 쿼리를 처리하는 방법: 쿼리 분석 시
 
-Sometimes, a query analysis technique may allow for multiple queries to be generated. In these cases, we need to remember to run all queries and then to combine the results. We will show a simple example (using mock data) of how to do that.
+때때로, 쿼리 분석 기법은 여러 쿼리를 생성할 수 있게 합니다. 이러한 경우, 모든 쿼리를 실행하고 결과를 결합해야 한다는 것을 기억해야 합니다. 이를 수행하는 간단한 예시(모의 데이터를 사용)를 보여드리겠습니다.
 
-## Setup
-#### Install dependencies
+## 설정
+#### 의존성 설치
 
 ```python
 # %pip install -qU langchain langchain-community langchain-openai langchain-chroma
 ```
 
-#### Set environment variables
 
-We'll use OpenAI in this example:
+#### 환경 변수 설정
+
+이번 예시에서는 OpenAI를 사용할 것입니다:
 
 ```python
 import getpass
@@ -30,9 +31,10 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-### Create Index
 
-We will create a vectorstore over fake information.
+### 인덱스 생성
+
+우리는 가짜 정보를 기반으로 벡터 저장소를 생성할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to handle multiple queries when doing query analysis"}]-->
@@ -49,9 +51,10 @@ vectorstore = Chroma.from_texts(
 retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
 ```
 
-## Query analysis
 
-We will use function calling to structure the output. We will let it return multiple queries.
+## 쿼리 분석
+
+우리는 함수 호출을 사용하여 출력을 구조화할 것입니다. 여러 쿼리를 반환하도록 하겠습니다.
 
 ```python
 from typing import List, Optional
@@ -67,6 +70,7 @@ class Search(BaseModel):
         description="Distinct queries to search for",
     )
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticToolsParser", "source": "langchain_core.output_parsers.openai_tools", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.openai_tools.PydanticToolsParser.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to handle multiple queries when doing query analysis"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to handle multiple queries when doing query analysis"}]-->
@@ -90,36 +94,43 @@ llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
 structured_llm = llm.with_structured_output(Search)
 query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
+
 ```output
 /Users/harrisonchase/workplace/langchain/libs/core/langchain_core/_api/beta_decorator.py:86: LangChainBetaWarning: The function `with_structured_output` is in beta. It is actively being worked on, so the API may change.
   warn_beta(
 ```
-We can see that this allows for creating multiple queries
+
+이렇게 하면 여러 쿼리를 생성할 수 있음을 알 수 있습니다.
 
 ```python
 query_analyzer.invoke("where did Harrison Work")
 ```
 
+
 ```output
 Search(queries=['Harrison work location'])
 ```
+
 
 ```python
 query_analyzer.invoke("where did Harrison and ankush Work")
 ```
 
+
 ```output
 Search(queries=['Harrison work place', 'Ankush work place'])
 ```
 
-## Retrieval with query analysis
 
-So how would we include this in a chain? One thing that will make this a lot easier is if we call our retriever asyncronously - this will let us loop over the queries and not get blocked on the response time.
+## 쿼리 분석을 통한 검색
+
+그렇다면 이것을 체인에 어떻게 포함할 수 있을까요? 이를 훨씬 쉽게 만드는 한 가지 방법은 리트리버를 비동기적으로 호출하는 것입니다. 이렇게 하면 쿼리를 반복하면서 응답 시간에 차단되지 않을 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to handle multiple queries when doing query analysis"}]-->
 from langchain_core.runnables import chain
 ```
+
 
 ```python
 @chain
@@ -134,17 +145,21 @@ async def custom_chain(question):
     return docs
 ```
 
+
 ```python
 await custom_chain.ainvoke("where did Harrison Work")
 ```
+
 
 ```output
 [Document(page_content='Harrison worked at Kensho')]
 ```
 
+
 ```python
 await custom_chain.ainvoke("where did Harrison and ankush Work")
 ```
+
 
 ```output
 [Document(page_content='Harrison worked at Kensho'),

@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/mlx_pipelines/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/mlx_pipelines.ipynb
+description: MLX 모델을 로컬에서 실행하는 방법과 MLX 커뮤니티의 다양한 모델을 활용하는 방법을 소개합니다.
 ---
 
-# MLX Local Pipelines
+# MLX 로컬 파이프라인
 
-MLX models can be run locally through the `MLXPipeline` class.
+MLX 모델은 `MLXPipeline` 클래스를 통해 로컬에서 실행할 수 있습니다.
 
-The [MLX Community](https://huggingface.co/mlx-community) hosts over 150 models, all open source and publicly available on Hugging Face Model Hub a online platform where people can easily collaborate and build ML together.
+[MLX 커뮤니티](https://huggingface.co/mlx-community)는 150개 이상의 모델을 호스팅하며, 모두 오픈 소스이고 Hugging Face Model Hub에서 공개적으로 이용 가능합니다. 이 플랫폼은 사람들이 쉽게 협력하고 ML을 함께 구축할 수 있도록 합니다.
 
-These can be called from LangChain either through this local pipeline wrapper or by calling their hosted inference endpoints through the MlXPipeline class. For more information on mlx, see the [examples repo](https://github.com/ml-explore/mlx-examples/tree/main/llms) notebook.
+이들은 LangChain에서 이 로컬 파이프라인 래퍼를 통해 호출하거나 MlXPipeline 클래스를 통해 호스팅된 추론 엔드포인트를 호출하여 사용할 수 있습니다. mlx에 대한 자세한 내용은 [예제 레포지토리](https://github.com/ml-explore/mlx-examples/tree/main/llms) 노트를 참조하세요.
 
-To use, you should have the `mlx-lm` python [package installed](https://pypi.org/project/mlx-lm/), as well as [transformers](https://pypi.org/project/transformers/). You can also install `huggingface_hub`.
+사용하려면 `mlx-lm` 파이썬 [패키지를 설치해야](https://pypi.org/project/mlx-lm/) 하며, [transformers](https://pypi.org/project/transformers/)도 설치해야 합니다. `huggingface_hub`도 설치할 수 있습니다.
 
 ```python
 %pip install --upgrade --quiet  mlx-lm transformers huggingface_hub
 ```
 
-### Model Loading
 
-Models can be loaded by specifying the model parameters using the `from_model_id` method.
+### 모델 로딩
+
+모델은 `from_model_id` 메서드를 사용하여 모델 매개변수를 지정하여 로딩할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "MLXPipeline", "source": "langchain_community.llms.mlx_pipeline", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.mlx_pipeline.MLXPipeline.html", "title": "MLX Local Pipelines"}]-->
@@ -31,7 +32,8 @@ pipe = MLXPipeline.from_model_id(
 )
 ```
 
-They can also be loaded by passing in an existing `transformers` pipeline directly
+
+기존의 `transformers` 파이프라인을 직접 전달하여 로딩할 수도 있습니다.
 
 ```python
 from mlx_lm import load
@@ -40,10 +42,10 @@ model, tokenizer = load("mlx-community/quantized-gemma-2b-it")
 pipe = MLXPipeline(model=model, tokenizer=tokenizer)
 ```
 
-### Create Chain
 
-With the model loaded into memory, you can compose it with a prompt to
-form a chain.
+### 체인 생성
+
+모델이 메모리에 로드되면, 프롬프트와 조합하여 체인을 형성할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "MLX Local Pipelines"}]-->
@@ -61,7 +63,8 @@ question = "What is electroencephalography?"
 print(chain.invoke({"question": question}))
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

@@ -1,36 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/chat_token_usage_tracking/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/chat_token_usage_tracking.ipynb
+description: 이 문서는 LangChain 모델 호출에서 토큰 사용량을 추적하고 비용을 계산하는 방법에 대해 설명합니다.
 ---
 
-# How to track token usage in ChatModels
+# ChatModels에서 토큰 사용량 추적하는 방법
 
-:::info Prerequisites
+:::info 필수 조건
 
-This guide assumes familiarity with the following concepts:
-- [Chat models](/docs/concepts/#chat-models)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [채팅 모델](/docs/concepts/#chat-models)
 
 :::
 
-Tracking token usage to calculate cost is an important part of putting your app in production. This guide goes over how to obtain this information from your LangChain model calls.
+비용을 계산하기 위해 토큰 사용량을 추적하는 것은 앱을 프로덕션에 배포하는 데 중요한 부분입니다. 이 가이드는 LangChain 모델 호출에서 이 정보를 얻는 방법을 설명합니다.
 
-This guide requires `langchain-openai >= 0.1.9`.
+이 가이드는 `langchain-openai >= 0.1.9`가 필요합니다.
 
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
 ```
 
-## Using LangSmith
 
-You can use [LangSmith](https://www.langchain.com/langsmith) to help track token usage in your LLM application. See the [LangSmith quick start guide](https://docs.smith.langchain.com/).
+## LangSmith 사용하기
 
-## Using AIMessage.usage_metadata
+[LangSmith](https://www.langchain.com/langsmith)를 사용하여 LLM 애플리케이션에서 토큰 사용량을 추적할 수 있습니다. [LangSmith 빠른 시작 가이드](https://docs.smith.langchain.com/)를 참조하세요.
 
-A number of model providers return token usage information as part of the chat generation response. When available, this information will be included on the `AIMessage` objects produced by the corresponding model.
+## AIMessage.usage_metadata 사용하기
 
-LangChain `AIMessage` objects include a [usage_metadata](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.usage_metadata) attribute. When populated, this attribute will be a [UsageMetadata](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.UsageMetadata.html) dictionary with standard keys (e.g., `"input_tokens"` and `"output_tokens"`).
+여러 모델 제공자는 채팅 생성 응답의 일부로 토큰 사용량 정보를 반환합니다. 사용 가능한 경우, 이 정보는 해당 모델이 생성한 `AIMessage` 객체에 포함됩니다.
 
-Examples:
+LangChain `AIMessage` 객체에는 [usage_metadata](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.usage_metadata) 속성이 포함되어 있습니다. 이 속성이 채워지면, 표준 키(예: `"input_tokens"` 및 `"output_tokens"`)를 가진 [UsageMetadata](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.UsageMetadata.html) 사전이 됩니다.
+
+예시:
 
 **OpenAI**:
 
@@ -45,9 +46,11 @@ openai_response = llm.invoke("hello")
 openai_response.usage_metadata
 ```
 
+
 ```output
 {'input_tokens': 8, 'output_tokens': 9, 'total_tokens': 17}
 ```
+
 
 **Anthropic**:
 
@@ -62,33 +65,37 @@ anthropic_response = llm.invoke("hello")
 anthropic_response.usage_metadata
 ```
 
+
 ```output
 {'input_tokens': 8, 'output_tokens': 12, 'total_tokens': 20}
 ```
 
-### Using AIMessage.response_metadata
 
-Metadata from the model response is also included in the AIMessage [response_metadata](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.response_metadata) attribute. These data are typically not standardized. Note that different providers adopt different conventions for representing token counts:
+### AIMessage.response_metadata 사용하기
+
+모델 응답의 메타데이터는 AIMessage [response_metadata](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.response_metadata) 속성에도 포함됩니다. 이러한 데이터는 일반적으로 표준화되어 있지 않습니다. 서로 다른 제공자가 토큰 수를 나타내기 위해 서로 다른 규칙을 채택한다는 점에 유의하세요:
 
 ```python
 print(f'OpenAI: {openai_response.response_metadata["token_usage"]}\n')
 print(f'Anthropic: {anthropic_response.response_metadata["usage"]}')
 ```
+
 ```output
 OpenAI: {'completion_tokens': 9, 'prompt_tokens': 8, 'total_tokens': 17}
 
 Anthropic: {'input_tokens': 8, 'output_tokens': 12}
 ```
-### Streaming
 
-Some providers support token count metadata in a streaming context.
+### 스트리밍
+
+일부 제공자는 스트리밍 컨텍스트에서 토큰 수 메타데이터를 지원합니다.
 
 #### OpenAI
 
-For example, OpenAI will return a message [chunk](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html) at the end of a stream with token usage information. This behavior is supported by `langchain-openai >= 0.1.9` and can be enabled by setting `stream_usage=True`. This attribute can also be set when `ChatOpenAI` is instantiated.
+예를 들어, OpenAI는 스트림의 끝에서 토큰 사용량 정보가 포함된 메시지 [청크](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html)를 반환합니다. 이 동작은 `langchain-openai >= 0.1.9`에 의해 지원되며, `stream_usage=True`로 설정하여 활성화할 수 있습니다. 이 속성은 `ChatOpenAI`가 인스턴스화될 때도 설정할 수 있습니다.
 
 :::note
-By default, the last message chunk in a stream will include a `"finish_reason"` in the message's `response_metadata` attribute. If we include token usage in streaming mode, an additional chunk containing usage metadata will be added to the end of the stream, such that `"finish_reason"` appears on the second to last message chunk.
+기본적으로 스트림의 마지막 메시지 청크에는 메시지의 `response_metadata` 속성에 `"finish_reason"`이 포함됩니다. 스트리밍 모드에서 토큰 사용량을 포함하면, 사용 메타데이터가 포함된 추가 청크가 스트림 끝에 추가되어 `"finish_reason"`이 마지막에서 두 번째 메시지 청크에 나타납니다.
 :::
 
 ```python
@@ -99,6 +106,7 @@ for chunk in llm.stream("hello", stream_usage=True):
     print(chunk)
     aggregate = chunk if aggregate is None else aggregate + chunk
 ```
+
 ```output
 content='' id='run-adb20c31-60c7-43a2-99b2-d4a53ca5f623'
 content='Hello' id='run-adb20c31-60c7-43a2-99b2-d4a53ca5f623'
@@ -113,23 +121,27 @@ content='?' id='run-adb20c31-60c7-43a2-99b2-d4a53ca5f623'
 content='' response_metadata={'finish_reason': 'stop', 'model_name': 'gpt-3.5-turbo-0125'} id='run-adb20c31-60c7-43a2-99b2-d4a53ca5f623'
 content='' id='run-adb20c31-60c7-43a2-99b2-d4a53ca5f623' usage_metadata={'input_tokens': 8, 'output_tokens': 9, 'total_tokens': 17}
 ```
-Note that the usage metadata will be included in the sum of the individual message chunks:
+
+사용 메타데이터는 개별 메시지 청크의 합계에 포함됩니다:
 
 ```python
 print(aggregate.content)
 print(aggregate.usage_metadata)
 ```
+
 ```output
 Hello! How can I assist you today?
 {'input_tokens': 8, 'output_tokens': 9, 'total_tokens': 17}
 ```
-To disable streaming token counts for OpenAI, set `stream_usage` to False, or omit it from the parameters:
+
+OpenAI의 스트리밍 토큰 수를 비활성화하려면 `stream_usage`를 False로 설정하거나 매개변수에서 생략하세요:
 
 ```python
 aggregate = None
 for chunk in llm.stream("hello"):
     print(chunk)
 ```
+
 ```output
 content='' id='run-8e758550-94b0-4cca-a298-57482793c25d'
 content='Hello' id='run-8e758550-94b0-4cca-a298-57482793c25d'
@@ -143,9 +155,10 @@ content=' today' id='run-8e758550-94b0-4cca-a298-57482793c25d'
 content='?' id='run-8e758550-94b0-4cca-a298-57482793c25d'
 content='' response_metadata={'finish_reason': 'stop', 'model_name': 'gpt-3.5-turbo-0125'} id='run-8e758550-94b0-4cca-a298-57482793c25d'
 ```
-You can also enable streaming token usage by setting `stream_usage` when instantiating the chat model. This can be useful when incorporating chat models into LangChain [chains](/docs/concepts#langchain-expression-language-lcel): usage metadata can be monitored when [streaming intermediate steps](/docs/how_to/streaming#using-stream-events) or using tracing software such as [LangSmith](https://docs.smith.langchain.com/).
 
-See the below example, where we return output structured to a desired schema, but can still observe token usage streamed from intermediate steps.
+채팅 모델을 인스턴스화할 때 `stream_usage`를 설정하여 스트리밍 토큰 사용량을 활성화할 수도 있습니다. 이는 LangChain [체인](/docs/concepts#langchain-expression-language-lcel)에 채팅 모델을 통합할 때 유용할 수 있습니다: [중간 단계 스트리밍](/docs/how_to/streaming#using-stream-events) 또는 [LangSmith](https://docs.smith.langchain.com/)와 같은 추적 소프트웨어를 사용할 때 사용 메타데이터를 모니터링할 수 있습니다.
+
+아래 예시를 참조하세요. 원하는 스키마로 구조화된 출력을 반환하지만, 여전히 중간 단계에서 스트리밍된 토큰 사용량을 관찰할 수 있습니다.
 
 ```python
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -174,20 +187,22 @@ async for event in structured_llm.astream_events("Tell me a joke", version="v2")
     else:
         pass
 ```
+
 ```output
 Token usage: {'input_tokens': 79, 'output_tokens': 23, 'total_tokens': 102}
 
 setup='Why was the math book sad?' punchline='Because it had too many problems.'
 ```
-Token usage is also visible in the corresponding [LangSmith trace](https://smith.langchain.com/public/fe6513d5-7212-4045-82e0-fefa28bc7656/r) in the payload from the chat model.
 
-## Using callbacks
+토큰 사용량은 채팅 모델의 페이로드에서 해당 [LangSmith 추적](https://smith.langchain.com/public/fe6513d5-7212-4045-82e0-fefa28bc7656/r)에서도 확인할 수 있습니다.
 
-There are also some API-specific callback context managers that allow you to track token usage across multiple calls. It is currently only implemented for the OpenAI API and Bedrock Anthropic API.
+## 콜백 사용하기
+
+여러 호출에 걸쳐 토큰 사용량을 추적할 수 있는 API 전용 콜백 컨텍스트 관리자가 있습니다. 현재 OpenAI API와 Bedrock Anthropic API에 대해서만 구현되어 있습니다.
 
 ### OpenAI
 
-Let's first look at an extremely simple example of tracking token usage for a single Chat model call.
+단일 채팅 모델 호출에 대한 토큰 사용량을 추적하는 매우 간단한 예제를 먼저 살펴보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "get_openai_callback", "source": "langchain_community.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.manager.get_openai_callback.html", "title": "How to track token usage in ChatModels"}]-->
@@ -205,6 +220,7 @@ with get_openai_callback() as cb:
     result = llm.invoke("Tell me a joke")
     print(cb)
 ```
+
 ```output
 Tokens Used: 27
 	Prompt Tokens: 11
@@ -212,7 +228,8 @@ Tokens Used: 27
 Successful Requests: 1
 Total Cost (USD): $2.95e-05
 ```
-Anything inside the context manager will get tracked. Here's an example of using it to track multiple calls in sequence.
+
+컨텍스트 관리자 내부의 모든 것이 추적됩니다. 다음은 여러 호출을 순차적으로 추적하는 데 사용하는 예입니다.
 
 ```python
 with get_openai_callback() as cb:
@@ -220,9 +237,11 @@ with get_openai_callback() as cb:
     result2 = llm.invoke("Tell me a joke")
     print(cb.total_tokens)
 ```
+
 ```output
 54
 ```
+
 
 ```python
 with get_openai_callback() as cb:
@@ -230,6 +249,7 @@ with get_openai_callback() as cb:
         pass
     print(cb)
 ```
+
 ```output
 Tokens Used: 27
 	Prompt Tokens: 11
@@ -237,7 +257,8 @@ Tokens Used: 27
 Successful Requests: 1
 Total Cost (USD): $2.95e-05
 ```
-If a chain or agent with multiple steps in it is used, it will track all those steps.
+
+여러 단계가 있는 체인이나 에이전트를 사용하는 경우, 모든 단계를 추적합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to track token usage in ChatModels"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to track token usage in ChatModels"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "How to track token usage in ChatModels"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to track token usage in ChatModels"}]-->
@@ -256,6 +277,7 @@ agent = create_tool_calling_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
 
+
 ```python
 with get_openai_callback() as cb:
     response = agent_executor.invoke(
@@ -268,6 +290,7 @@ with get_openai_callback() as cb:
     print(f"Completion Tokens: {cb.completion_tokens}")
     print(f"Total Cost (USD): ${cb.total_cost}")
 ```
+
 ```output
 
 
@@ -313,9 +336,10 @@ Prompt Tokens: 1538
 Completion Tokens: 137
 Total Cost (USD): $0.0009745000000000001
 ```
+
 ### Bedrock Anthropic
 
-The `get_bedrock_anthropic_callback` works very similarly:
+`get_bedrock_anthropic_callback`는 매우 유사하게 작동합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "get_bedrock_anthropic_callback", "source": "langchain_community.callbacks.manager", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.manager.get_bedrock_anthropic_callback.html", "title": "How to track token usage in ChatModels"}]-->
@@ -330,6 +354,7 @@ with get_bedrock_anthropic_callback() as cb:
     result2 = llm.invoke("Tell me a joke")
     print(cb)
 ```
+
 ```output
 Tokens Used: 96
 	Prompt Tokens: 26
@@ -337,8 +362,9 @@ Tokens Used: 96
 Successful Requests: 2
 Total Cost (USD): $0.001888
 ```
-## Next steps
 
-You've now seen a few examples of how to track token usage for supported providers.
+## 다음 단계
 
-Next, check out the other how-to guides chat models in this section, like [how to get a model to return structured output](/docs/how_to/structured_output) or [how to add caching to your chat models](/docs/how_to/chat_model_caching).
+이제 지원되는 제공자에 대한 토큰 사용량을 추적하는 몇 가지 예를 보았습니다.
+
+다음으로, 이 섹션의 다른 채팅 모델 사용 방법 가이드를 확인하세요. 예를 들어, [모델이 구조화된 출력을 반환하도록 하는 방법](/docs/how_to/structured_output)이나 [채팅 모델에 캐싱 추가하는 방법](/docs/how_to/chat_model_caching) 등이 있습니다.

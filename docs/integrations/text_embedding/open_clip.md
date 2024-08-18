@@ -1,23 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/open_clip/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/open_clip.ipynb
+description: OpenClip은 OpenAI의 CLIP을 구현한 소스 코드로, 이미지와 텍스트를 임베딩하는 다중 모달 임베딩을 제공합니다.
 ---
 
 # OpenClip
 
-[OpenClip](https://github.com/mlfoundations/open_clip/tree/main) is an source implementation of OpenAI's CLIP.
+[OpenClip](https://github.com/mlfoundations/open_clip/tree/main)은 OpenAI의 CLIP의 소스 구현입니다.
 
-These multi-modal embeddings can be used to embed images or text.
+이 다중 모달 임베딩은 이미지나 텍스트를 임베드하는 데 사용될 수 있습니다.
 
 ```python
 %pip install --upgrade --quiet  langchain-experimental
 ```
 
+
 ```python
 %pip install --upgrade --quiet  pillow open_clip_torch torch matplotlib
 ```
 
-We can the list of available CLIP embedding models and checkpoints:
+
+사용 가능한 CLIP 임베딩 모델 및 체크포인트 목록을 확인할 수 있습니다:
 
 ```python
 import open_clip
@@ -25,23 +27,26 @@ import open_clip
 open_clip.list_pretrained()
 ```
 
-Below, I test a larger but more performant model based on the table ([here](https://github.com/mlfoundations/open_clip)):
+
+아래에서는 테이블을 기반으로 한 더 크지만 성능이 더 좋은 모델을 테스트합니다 ([여기](https://github.com/mlfoundations/open_clip)):
 ```
 model_name = "ViT-g-14"
 checkpoint = "laion2b_s34b_b88k"
 ```
 
-But, you can also opt for a smaller, less performant model:
+
+하지만, 더 작고 성능이 낮은 모델을 선택할 수도 있습니다:
 ```
 model_name = "ViT-B-32"
 checkpoint = "laion2b_s34b_b79k"
 ```
 
-The model `model_name`,`checkpoint`  are set in `langchain_experimental.open_clip.py`.
 
-For text, use the same method `embed_documents` as with other embedding models.
+모델 `model_name`, `checkpoint`는 `langchain_experimental.open_clip.py`에 설정됩니다.
 
-For images, use `embed_image` and simply pass a list of uris for the images.
+텍스트의 경우, 다른 임베딩 모델과 동일한 방법인 `embed_documents`를 사용하십시오.
+
+이미지의 경우, `embed_image`를 사용하고 이미지의 URI 목록을 간단히 전달하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "OpenCLIPEmbeddings", "source": "langchain_experimental.open_clip", "docs": "https://api.python.langchain.com/en/latest/open_clip/langchain_experimental.open_clip.open_clip.OpenCLIPEmbeddings.html", "title": "OpenClip"}]-->
@@ -61,9 +66,10 @@ text_feat_dog = clip_embd.embed_documents(["dog"])
 text_feat_house = clip_embd.embed_documents(["house"])
 ```
 
+
 ## Sanity Check
 
-Let's reproduce results shown in the OpenClip Colab [here](https://colab.research.google.com/github/mlfoundations/open_clip/blob/master/docs/Interacting_with_open_clip.ipynb#scrollTo=tMc1AXzBlhzm).
+OpenClip Colab에서 보여준 결과를 재현해 보겠습니다 [여기](https://colab.research.google.com/github/mlfoundations/open_clip/blob/master/docs/Interacting_with_open_clip.ipynb#scrollTo=tMc1AXzBlhzm).
 
 ```python
 import os
@@ -120,6 +126,7 @@ for filename in [
 plt.tight_layout()
 ```
 
+
 ![](/img/98172ca2186c619eccc65c6d5e362a22.png)
 
 ```python
@@ -159,13 +166,15 @@ plt.ylim([count + 0.5, -2])
 plt.title("Cosine similarity between text and image features", size=20)
 ```
 
+
 ```output
 Text(0.5, 1.0, 'Cosine similarity between text and image features')
 ```
+
 
 ![](/img/8eea16a4f653471adb675babc9733590.png)
 
 ## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

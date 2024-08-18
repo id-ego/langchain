@@ -1,44 +1,46 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/wolfram_alpha/
+description: Wolfram Alpha API를 LangChain에서 사용하는 방법과 설치, 설정, 유틸리티 및 도구에 대한 정보를 제공합니다.
 ---
 
 # Wolfram Alpha
 
-> [WolframAlpha](https://en.wikipedia.org/wiki/WolframAlpha) is an answer engine developed by `Wolfram Research`.
-It answers factual queries by computing answers from externally sourced data.
+> [WolframAlpha](https://en.wikipedia.org/wiki/WolframAlpha)는 `Wolfram Research`에서 개발한 답변 엔진입니다.  
+사실적인 질문에 대해 외부 소스 데이터를 계산하여 답변합니다.
 
-This page covers how to use the `Wolfram Alpha API` within LangChain.
+이 페이지는 LangChain 내에서 `Wolfram Alpha API`를 사용하는 방법을 다룹니다.
 
-## Installation and Setup
-- Install requirements with 
+## 설치 및 설정
+- 다음을 사용하여 요구 사항을 설치합니다.  
 ```bash
 pip install wolframalpha
 ```
-- Go to wolfram alpha and sign up for a developer account [here](https://developer.wolframalpha.com/)
-- Create an app and get your `APP ID`
-- Set your APP ID as an environment variable `WOLFRAM_ALPHA_APPID`
+  
+- Wolfram Alpha에 가서 개발자 계정을 [여기](https://developer.wolframalpha.com/)에서 등록합니다.  
+- 앱을 생성하고 `APP ID`를 받습니다.  
+- 환경 변수 `WOLFRAM_ALPHA_APPID`로 APP ID를 설정합니다.
 
-## Wrappers
+## 래퍼
 
-### Utility
+### 유틸리티
 
-There exists a WolframAlphaAPIWrapper utility which wraps this API. To import this utility:
-
+이 API를 래핑하는 WolframAlphaAPIWrapper 유틸리티가 존재합니다. 이 유틸리티를 가져오려면:  
 ```python
 <!--IMPORTS:[{"imported": "WolframAlphaAPIWrapper", "source": "langchain_community.utilities.wolfram_alpha", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wolfram_alpha.WolframAlphaAPIWrapper.html", "title": "Wolfram Alpha"}]-->
 from langchain_community.utilities.wolfram_alpha import WolframAlphaAPIWrapper
 ```
+  
 
-For a more detailed walkthrough of this wrapper, see [this notebook](/docs/integrations/tools/wolfram_alpha).
+이 래퍼에 대한 더 자세한 설명은 [이 노트북](/docs/integrations/tools/wolfram_alpha)을 참조하세요.
 
-### Tool
+### 도구
 
-You can also easily load this wrapper as a Tool (to use with an Agent).
-You can do this with:
+이 래퍼를 도구로 쉽게 로드할 수도 있습니다(에이전트와 함께 사용).  
+다음과 같이 할 수 있습니다:  
 ```python
 <!--IMPORTS:[{"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Wolfram Alpha"}]-->
 from langchain.agents import load_tools
 tools = load_tools(["wolfram-alpha"])
 ```
+  
 
-For more information on tools, see [this page](/docs/how_to/tools_builtin).
+도구에 대한 더 많은 정보는 [이 페이지](/docs/how_to/tools_builtin)를 참조하세요.

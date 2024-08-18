@@ -1,57 +1,57 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/streaming/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/streaming.ipynb
+description: 이 문서는 LLM 기반 애플리케이션의 반응성을 높이기 위한 스트리밍 실행 방법과 LangChain의 런너블 인터페이스를 설명합니다.
 keywords:
 - stream
 ---
 
-# How to stream runnables
+# 실행 가능한 스트리밍 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [Chat models](/docs/concepts/#chat-models)
-- [LangChain Expression Language](/docs/concepts/#langchain-expression-language)
-- [Output parsers](/docs/concepts/#output-parsers)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [채팅 모델](/docs/concepts/#chat-models)
+- [LangChain 표현 언어](/docs/concepts/#langchain-expression-language)
+- [출력 파서](/docs/concepts/#output-parsers)
 
 :::
 
-Streaming is critical in making applications based on LLMs feel responsive to end-users.
+스트리밍은 LLM 기반 애플리케이션이 최종 사용자에게 반응하는 느낌을 주는 데 중요합니다.
 
-Important LangChain primitives like [chat models](/docs/concepts/#chat-models), [output parsers](/docs/concepts/#output-parsers), [prompts](/docs/concepts/#prompt-templates), [retrievers](/docs/concepts/#retrievers), and [agents](/docs/concepts/#agents) implement the LangChain [Runnable Interface](/docs/concepts#interface).
+[채팅 모델](/docs/concepts/#chat-models), [출력 파서](/docs/concepts/#output-parsers), [프롬프트](/docs/concepts/#prompt-templates), [검색기](/docs/concepts/#retrievers), [에이전트](/docs/concepts/#agents)와 같은 중요한 LangChain 기본 요소들은 LangChain [Runnable 인터페이스](/docs/concepts#interface)를 구현합니다.
 
-This interface provides two general approaches to stream content:
+이 인터페이스는 콘텐츠를 스트리밍하는 두 가지 일반적인 접근 방식을 제공합니다:
 
-1. sync `stream` and async `astream`: a **default implementation** of streaming that streams the **final output** from the chain.
-2. async `astream_events` and async `astream_log`: these provide a way to stream both **intermediate steps** and **final output** from the chain.
+1. 동기 `stream` 및 비동기 `astream`: 체인에서 **최종 출력**을 스트리밍하는 **기본 구현**입니다.
+2. 비동기 `astream_events` 및 비동기 `astream_log`: 이들은 체인에서 **중간 단계**와 **최종 출력**을 모두 스트리밍하는 방법을 제공합니다.
 
-Let's take a look at both approaches, and try to understand how to use them.
+두 가지 접근 방식을 살펴보고 이를 사용하는 방법을 이해해 보겠습니다.
 
 :::info
-For a higher-level overview of streaming techniques in LangChain, see [this section of the conceptual guide](/docs/concepts/#streaming).
+LangChain의 스트리밍 기술에 대한 더 높은 수준의 개요는 [개념 가이드의 이 섹션](/docs/concepts/#streaming)을 참조하십시오.
 :::
 
-## Using Stream
+## 스트림 사용하기
 
-All `Runnable` objects implement a sync method called `stream` and an async variant called `astream`. 
+모든 `Runnable` 객체는 `stream`이라는 동기 메서드와 `astream`이라는 비동기 변형을 구현합니다.
 
-These methods are designed to stream the final output in chunks, yielding each chunk as soon as it is available.
+이 메서드는 최종 출력을 청크로 스트리밍하도록 설계되었으며, 각 청크가 사용 가능해지는 즉시 이를 반환합니다.
 
-Streaming is only possible if all steps in the program know how to process an **input stream**; i.e., process an input chunk one at a time, and yield a corresponding output chunk.
+스트리밍은 프로그램의 모든 단계가 **입력 스트림**을 처리하는 방법을 알고 있을 때만 가능합니다; 즉, 입력 청크를 하나씩 처리하고 해당 출력 청크를 반환해야 합니다.
 
-The complexity of this processing can vary, from straightforward tasks like emitting tokens produced by an LLM, to more challenging ones like streaming parts of JSON results before the entire JSON is complete.
+이 처리의 복잡성은 LLM이 생성한 토큰을 방출하는 것과 같은 간단한 작업에서부터 전체 JSON이 완료되기 전에 JSON 결과의 일부를 스트리밍하는 것과 같은 더 도전적인 작업까지 다양할 수 있습니다.
 
-The best place to start exploring streaming is with the single most important components in LLMs apps-- the LLMs themselves!
+스트리밍을 탐색하기 시작하는 가장 좋은 장소는 LLM 애플리케이션에서 가장 중요한 구성 요소인 LLM 자체입니다!
 
-### LLMs and Chat Models
+### LLM 및 채팅 모델
 
-Large language models and their chat variants are the primary bottleneck in LLM based apps.
+대형 언어 모델과 그 채팅 변형은 LLM 기반 애플리케이션의 주요 병목 현상입니다.
 
-Large language models can take **several seconds** to generate a complete response to a query. This is far slower than the **~200-300 ms** threshold at which an application feels responsive to an end user.
+대형 언어 모델은 쿼리에 대한 완전한 응답을 생성하는 데 **수 초**가 걸릴 수 있습니다. 이는 애플리케이션이 최종 사용자에게 반응하는 느낌을 주는 **~200-300 ms** 임계값보다 훨씬 느립니다.
 
-The key strategy to make the application feel more responsive is to show intermediate progress; viz., to stream the output from the model **token by token**.
+애플리케이션이 더 반응적으로 느껴지도록 하는 핵심 전략은 중간 진행 상황을 보여주는 것입니다; 즉, 모델의 출력을 **토큰 단위로** 스트리밍하는 것입니다.
 
-We will show examples of streaming using a chat model. Choose one from the options below:
+채팅 모델을 사용하여 스트리밍 예제를 보여드리겠습니다. 아래 옵션 중 하나를 선택하세요:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -59,7 +59,7 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 customVarName="model"
 />
 
-Let's start with the sync `stream` API:
+동기 `stream` API부터 시작해 보겠습니다:
 
 ```python
 chunks = []
@@ -67,10 +67,12 @@ for chunk in model.stream("what color is the sky?"):
     chunks.append(chunk)
     print(chunk.content, end="|", flush=True)
 ```
+
 ```output
 The| sky| appears| blue| during| the| day|.|
 ```
-Alternatively, if you're working in an async environment, you may consider using the async `astream` API:
+
+대안으로 비동기 환경에서 작업하는 경우 비동기 `astream` API를 사용하는 것을 고려할 수 있습니다:
 
 ```python
 chunks = []
@@ -78,41 +80,47 @@ async for chunk in model.astream("what color is the sky?"):
     chunks.append(chunk)
     print(chunk.content, end="|", flush=True)
 ```
+
 ```output
 The| sky| appears| blue| during| the| day|.|
 ```
-Let's inspect one of the chunks
+
+청크 중 하나를 살펴보겠습니다
 
 ```python
 chunks[0]
 ```
 
+
 ```output
 AIMessageChunk(content='The', id='run-b36bea64-5511-4d7a-b6a3-a07b3db0c8e7')
 ```
 
-We got back something called an `AIMessageChunk`. This chunk represents a part of an `AIMessage`.
 
-Message chunks are additive by design -- one can simply add them up to get the state of the response so far!
+우리는 `AIMessageChunk`라는 것을 받았습니다. 이 청크는 `AIMessage`의 일부를 나타냅니다.
+
+메시지 청크는 설계상 추가적입니다 -- 단순히 더하여 지금까지의 응답 상태를 얻을 수 있습니다!
 
 ```python
 chunks[0] + chunks[1] + chunks[2] + chunks[3] + chunks[4]
 ```
 
+
 ```output
 AIMessageChunk(content='The sky appears blue during', id='run-b36bea64-5511-4d7a-b6a3-a07b3db0c8e7')
 ```
 
-### Chains
 
-Virtually all LLM applications involve more steps than just a call to a language model.
+### 체인
 
-Let's build a simple chain using `LangChain Expression Language` (`LCEL`) that combines a prompt, model and a parser and verify that streaming works.
+사실상 모든 LLM 애플리케이션은 언어 모델에 대한 호출 이상의 단계를 포함합니다.
 
-We will use [`StrOutputParser`](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html) to parse the output from the model. This is a simple parser that extracts the `content` field from an `AIMessageChunk`, giving us the `token` returned by the model.
+프롬프트, 모델 및 파서를 결합하여 스트리밍이 작동하는지 확인하는 간단한 체인을 `LangChain 표현 언어`(`LCEL`)를 사용하여 구축해 보겠습니다.
+
+우리는 [`StrOutputParser`](https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html)를 사용하여 모델의 출력을 파싱할 것입니다. 이는 `AIMessageChunk`에서 `content` 필드를 추출하여 모델이 반환한 `token`을 제공합니다.
 
 :::tip
-LCEL is a *declarative* way to specify a "program" by chainining together different LangChain primitives. Chains created using LCEL benefit from an automatic implementation of `stream` and `astream` allowing streaming of the final output. In fact, chains created with LCEL implement the entire standard Runnable interface.
+LCEL은 다양한 LangChain 기본 요소를 연결하여 "프로그램"을 지정하는 *선언적* 방법입니다. LCEL을 사용하여 생성된 체인은 최종 출출의 스트리밍을 허용하는 `stream` 및 `astream`의 자동 구현의 이점을 누립니다. 실제로 LCEL로 생성된 체인은 전체 표준 Runnable 인터페이스를 구현합니다.
 :::
 
 ```python
@@ -127,6 +135,7 @@ chain = prompt | model | parser
 async for chunk in chain.astream({"topic": "parrot"}):
     print(chunk, end="|", flush=True)
 ```
+
 ```output
 Here|'s| a| joke| about| a| par|rot|:|
 
@@ -140,29 +149,28 @@ He| pays| an|d leaves| with| the| par|rot|.| As| he|'s| walking| down| the| stre
 
 The| man| is| stun|ne|d an|d looks| at| the| par|rot| in| dis|bel|ief|.| The| par|rot| continues|,| "|Yes|,| you| got| r|ippe|d off| big| time|!| I| can| talk| just| as| well| as| that| other| par|rot|,| an|d you| only| pai|d $|20| |for| me|!"|
 ```
-Note that we're getting streaming output even though we're using `parser` at the end of the chain above. The `parser` operates on each streaming chunk individidually. Many of the [LCEL primitives](/docs/how_to#langchain-expression-language-lcel) also support this kind of transform-style passthrough streaming, which can be very convenient when constructing apps. 
 
-Custom functions can be [designed to return generators](/docs/how_to/functions#streaming), which are able to operate on streams.
+위의 체인 끝에서 `parser`를 사용하고 있음에도 불구하고 스트리밍 출력을 받고 있다는 점에 유의하십시오. `parser`는 각 스트리밍 청크를 개별적으로 처리합니다. 많은 [LCEL 기본 요소](/docs/how_to#langchain-expression-language-lcel)도 이러한 변환 스타일의 통과 스트리밍을 지원하며, 이는 애플리케이션을 구성할 때 매우 편리할 수 있습니다.
 
-Certain runnables, like [prompt templates](/docs/how_to#prompt-templates) and [chat models](/docs/how_to#chat-models), cannot process individual chunks and instead aggregate all previous steps. Such runnables can interrupt the streaming process.
+사용자 정의 함수는 [제너레이터를 반환하도록 설계될 수 있습니다](/docs/how_to/functions#streaming), 이는 스트림에서 작동할 수 있습니다.
+
+일부 실행 가능 요소, 예를 들어 [프롬프트 템플릿](/docs/how_to#prompt-templates) 및 [채팅 모델](/docs/how_to#chat-models)은 개별 청크를 처리할 수 없으며 대신 모든 이전 단계를 집계합니다. 이러한 실행 가능 요소는 스트리밍 프로세스를 중단할 수 있습니다.
 
 :::note
-The LangChain Expression language allows you to separate the construction of a chain from the mode in which it is used (e.g., sync/async, batch/streaming etc.). If this is not relevant to what you're building, you can also rely on a standard **imperative** programming approach by
-caling `invoke`, `batch` or `stream` on each component individually, assigning the results to variables and then using them downstream as you see fit.
-
+LangChain 표현 언어는 체인의 구성과 사용 모드(예: 동기/비동기, 배치/스트리밍 등)를 분리할 수 있습니다. 이것이 당신이 구축하는 것과 관련이 없다면, 각 구성 요소에 대해 `invoke`, `batch` 또는 `stream`을 호출하여 표준 **명령형** 프로그래밍 접근 방식을 사용할 수 있으며, 결과를 변수에 할당한 다음 필요에 따라 하류에서 사용할 수 있습니다.
 :::
 
-### Working with Input Streams
+### 입력 스트림 작업하기
 
-What if you wanted to stream JSON from the output as it was being generated?
+출력이 생성되는 동안 JSON을 스트리밍하고 싶다면 어떻게 해야 할까요?
 
-If you were to rely on `json.loads` to parse the partial json, the parsing would fail as the partial json wouldn't be valid json.
+`json.loads`를 사용하여 부분 JSON을 파싱하려고 하면, 부분 JSON이 유효한 JSON이 아니기 때문에 파싱이 실패할 것입니다.
 
-You'd likely be at a complete loss of what to do and claim that it wasn't possible to stream JSON.
+당신은 아마도 무엇을 해야 할지 완전히 막막해질 것이며 JSON을 스트리밍하는 것이 불가능하다고 주장할 것입니다.
 
-Well, turns out there is a way to do it -- the parser needs to operate on the **input stream**, and attempt to "auto-complete" the partial json into a valid state.
+하지만, 방법이 있습니다 -- 파서는 **입력 스트림**에서 작동해야 하며, 부분 JSON을 유효한 상태로 "자동 완성"하려고 시도해야 합니다.
 
-Let's see such a parser in action to understand what this means.
+이것이 의미하는 바를 이해하기 위해 이러한 파서를 실제로 살펴보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "JsonOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.json.JsonOutputParser.html", "title": "How to stream runnables"}]-->
@@ -178,6 +186,7 @@ async for text in chain.astream(
 ):
     print(text, flush=True)
 ```
+
 ```output
 {}
 {'countries': []}
@@ -200,14 +209,15 @@ async for text in chain.astream(
 {'countries': [{'name': 'France', 'population': 67413000}, {'name': 'Spain', 'population': 47351567}, {'name': 'Japan', 'population': 125584}]}
 {'countries': [{'name': 'France', 'population': 67413000}, {'name': 'Spain', 'population': 47351567}, {'name': 'Japan', 'population': 125584000}]}
 ```
-Now, let's **break** streaming. We'll use the previous example and append an extraction function at the end that extracts the country names from the finalized JSON.
+
+이제 스트리밍을 **중단**해 보겠습니다. 이전 예제를 사용하고 최종 JSON에서 국가 이름을 추출하는 함수를 끝에 추가하겠습니다.
 
 :::warning
-Any steps in the chain that operate on **finalized inputs** rather than on **input streams** can break streaming functionality via `stream` or `astream`.
+체인에서 **최종화된 입력**에서 작동하는 모든 단계는 `stream` 또는 `astream`을 통해 스트리밍 기능을 중단할 수 있습니다.
 :::
 
 :::tip
-Later, we will discuss the `astream_events` API which streams results from intermediate steps. This API will stream results from intermediate steps even if the chain contains steps that only operate on **finalized inputs**.
+나중에 중간 단계에서 결과를 스트리밍하는 `astream_events` API에 대해 논의할 것입니다. 이 API는 체인에 **최종화된 입력**에서만 작동하는 단계가 포함되어 있더라도 중간 단계에서 결과를 스트리밍합니다.
 :::
 
 ```python
@@ -247,15 +257,17 @@ async for text in chain.astream(
 ):
     print(text, end="|", flush=True)
 ```
+
 ```output
 ['France', 'Spain', 'Japan']|
 ```
-#### Generator Functions
 
-Let's fix the streaming using a generator function that can operate on the **input stream**.
+#### 제너레이터 함수
+
+입력 스트림에서 작동할 수 있는 제너레이터 함수를 사용하여 스트리밍을 수정해 보겠습니다.
 
 :::tip
-A generator function (a function that uses `yield`) allows writing code that operates on **input streams**
+제너레이터 함수(즉, `yield`를 사용하는 함수)는 **입력 스트림**에서 작동하는 코드를 작성할 수 있게 해줍니다.
 :::
 
 ```python
@@ -297,18 +309,20 @@ async for text in chain.astream(
 ):
     print(text, end="|", flush=True)
 ```
+
 ```output
 France|Spain|Japan|
 ```
-:::note
-Because the code above is relying on JSON auto-completion, you may see partial names of countries (e.g., `Sp` and `Spain`), which is not what one would want for an extraction result!
 
-We're focusing on streaming concepts, not necessarily the results of the chains.
+:::note
+위의 코드는 JSON 자동 완성에 의존하고 있기 때문에 국가의 부분 이름(예: `Sp`와 `Spain`)이 표시될 수 있으며, 이는 추출 결과로 원하는 것이 아닙니다!
+
+우리는 스트리밍 개념에 집중하고 있으며, 체인의 결과는 반드시 포함되지 않습니다.
 :::
 
-### Non-streaming components
+### 비스트리밍 구성 요소
 
-Some built-in components like Retrievers do not offer any `streaming`. What happens if we try to `stream` them? 🤨
+검색기와 같은 일부 내장 구성 요소는 `스트리밍`을 제공하지 않습니다. 이들을 `stream`하려고 하면 어떻게 될까요? 🤨
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to stream runnables"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to stream runnables"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to stream runnables"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to stream runnables"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to stream runnables"}]-->
@@ -335,17 +349,19 @@ chunks = [chunk for chunk in retriever.stream("where did harrison work?")]
 chunks
 ```
 
+
 ```output
 [[Document(page_content='harrison worked at kensho'),
   Document(page_content='harrison likes spicy food')]]
 ```
 
-Stream just yielded the final result from that component.
 
-This is OK 🥹! Not all components have to implement streaming -- in some cases streaming is either unnecessary, difficult or just doesn't make sense.
+스트림은 해당 구성 요소에서 최종 결과를 반환했습니다.
+
+괜찮습니다 🥹! 모든 구성 요소가 스트리밍을 구현해야 하는 것은 아닙니다 -- 경우에 따라 스트리밍은 불필요하거나 어렵거나 그저 의미가 없을 수 있습니다.
 
 :::tip
-An LCEL chain constructed using non-streaming components, will still be able to stream in a lot of cases, with streaming of partial output starting after the last non-streaming step in the chain.
+비스트리밍 구성 요소를 사용하여 구성된 LCEL 체인은 여전히 많은 경우에 스트리밍할 수 있으며, 체인에서 마지막 비스트리밍 단계 이후에 부분 출력을 스트리밍하기 시작합니다.
 :::
 
 ```python
@@ -360,12 +376,14 @@ retrieval_chain = (
 )
 ```
 
+
 ```python
 for chunk in retrieval_chain.stream(
     "Where did harrison work? " "Write 3 made up sentences about this place."
 ):
     print(chunk, end="|", flush=True)
 ```
+
 ```output
 Base|d on| the| given| context|,| Harrison| worke|d at| K|ens|ho|.|
 
@@ -377,15 +395,16 @@ Here| are| |3| |made| up| sentences| about| this| place|:|
 
 3|.| With| its| prime| location| in| the| heart| of| the| city|,| K|ens|ho| attracte|d top| talent| from| aroun|d the| worl|d,| creating| a| diverse| an|d dynamic| work| environment|.|
 ```
-Now that we've seen how `stream` and `astream` work, let's venture into the world of streaming events. 🏞️
 
-## Using Stream Events
+이제 `stream`과 `astream`이 어떻게 작동하는지 살펴보았으니, 스트리밍 이벤트의 세계로 나아가 보겠습니다. 🏞️
 
-Event Streaming is a **beta** API. This API may change a bit based on feedback.
+## 스트림 이벤트 사용하기
+
+이벤트 스트리밍은 **베타** API입니다. 이 API는 피드백에 따라 약간 변경될 수 있습니다.
 
 :::note
 
-This guide demonstrates the `V2` API and requires langchain-core >= 0.2. For the `V1` API compatible with older versions of LangChain, see [here](https://python.langchain.com/v0.1/docs/expression_language/streaming/#using-stream-events).
+이 가이드는 `V2` API를 보여주며 langchain-core >= 0.2가 필요합니다. 이전 버전의 LangChain과 호환되는 `V1` API는 [여기](https://python.langchain.com/v0.1/docs/expression_language/streaming/#using-stream-events)를 참조하십시오.
 :::
 
 ```python
@@ -394,29 +413,30 @@ import langchain_core
 langchain_core.__version__
 ```
 
-For the `astream_events` API to work properly:
 
-* Use `async` throughout the code to the extent possible (e.g., async tools etc)
-* Propagate callbacks if defining custom functions / runnables
-* Whenever using runnables without LCEL, make sure to call `.astream()` on LLMs rather than `.ainvoke` to force the LLM to stream tokens.
-* Let us know if anything doesn't work as expected! :)
+`astream_events` API가 제대로 작동하려면:
 
-### Event Reference
+* 가능한 한 코드 전반에 걸쳐 `async`를 사용하십시오 (예: 비동기 도구 등)
+* 사용자 정의 함수/실행 가능 요소를 정의할 경우 콜백을 전파하십시오.
+* LCEL 없이 실행 가능 요소를 사용할 때는 LLM에서 `.ainvoke` 대신 `.astream()`을 호출하여 LLM이 토큰을 스트리밍하도록 강제하십시오.
+* 예상대로 작동하지 않는 것이 있다면 알려주세요! :)
 
-Below is a reference table that shows some events that might be emitted by the various Runnable objects.
+### 이벤트 참조
+
+아래는 다양한 Runnable 객체에서 발생할 수 있는 몇 가지 이벤트를 보여주는 참조 표입니다.
 
 :::note
-When streaming is implemented properly, the inputs to a runnable will not be known until after the input stream has been entirely consumed. This means that `inputs` will often be included only for `end` events and rather than for `start` events.
+스트리밍이 제대로 구현되면, 실행 가능 요소에 대한 입력은 입력 스트림이 완전히 소모된 후에만 알려집니다. 이는 `inputs`가 종종 `end` 이벤트에만 포함되고 `start` 이벤트에는 포함되지 않음을 의미합니다.
 :::
 
-| event                | name             | chunk                           | input                                         | output                                          |
+| 이벤트                | 이름             | 청크                           | 입력                                         | 출력                                          |
 |----------------------|------------------|---------------------------------|-----------------------------------------------|-------------------------------------------------|
-| on_chat_model_start  | [model name]     |                                 | {"messages": [[SystemMessage, HumanMessage]]} |                                                 |
-| on_chat_model_stream | [model name]     | AIMessageChunk(content="hello") |                                               |                                                 |
-| on_chat_model_end    | [model name]     |                                 | {"messages": [[SystemMessage, HumanMessage]]} | AIMessageChunk(content="hello world")           |
-| on_llm_start         | [model name]     |                                 | {'input': 'hello'}                            |                                                 |
-| on_llm_stream        | [model name]     | 'Hello'                         |                                               |                                                 |
-| on_llm_end           | [model name]     |                                 | 'Hello human!'                                |                                                 |
+| on_chat_model_start  | [모델 이름]     |                                 | {"messages": [[SystemMessage, HumanMessage]]} |                                                 |
+| on_chat_model_stream | [모델 이름]     | AIMessageChunk(content="hello") |                                               |                                                 |
+| on_chat_model_end    | [모델 이름]     |                                 | {"messages": [[SystemMessage, HumanMessage]]} | AIMessageChunk(content="hello world")           |
+| on_llm_start         | [모델 이름]     |                                 | {'input': 'hello'}                            |                                                 |
+| on_llm_stream        | [모델 이름]     | 'Hello'                         |                                               |                                                 |
+| on_llm_end           | [모델 이름]     |                                 | 'Hello human!'                                |                                                 |
 | on_chain_start       | format_docs      |                                 |                                               |                                                 |
 | on_chain_stream      | format_docs      | "hello world!, goodbye world!"  |                                               |                                                 |
 | on_chain_end         | format_docs      |                                 | [Document(...)]                               | "hello world!, goodbye world!"                  |
@@ -427,38 +447,41 @@ When streaming is implemented properly, the inputs to a runnable will not be kno
 | on_prompt_start      | [template_name]  |                                 | {"question": "hello"}                         |                                                 |
 | on_prompt_end        | [template_name]  |                                 | {"question": "hello"}                         | ChatPromptValue(messages: [SystemMessage, ...]) |
 
-### Chat Model
+### 채팅 모델
 
-Let's start off by looking at the events produced by a chat model.
+채팅 모델에서 생성된 이벤트를 살펴보겠습니다.
 
 ```python
 events = []
 async for event in model.astream_events("hello", version="v2"):
     events.append(event)
 ```
+
 ```output
 /home/eugene/src/langchain/libs/core/langchain_core/_api/beta_decorator.py:87: LangChainBetaWarning: This API is in beta and may change in the future.
   warn_beta(
 ```
+
 :::note
 
-Hey what's that funny version="v2" parameter in the API?! 😾
+API의 그 재미있는 version="v2" 매개변수는 무엇인가요?! 😾
 
-This is a **beta API**, and we're almost certainly going to make some changes to it (in fact, we already have!)
+이것은 **베타 API**이며, 우리는 거의 확실히 이를 변경할 것입니다 (사실, 이미 변경했습니다!)
 
-This version parameter will allow us to minimize such breaking changes to your code. 
+이 버전 매개변수는 코드에 대한 이러한 파괴적인 변경을 최소화할 수 있게 해줍니다.
 
-In short, we are annoying you now, so we don't have to annoy you later.
+간단히 말해, 우리는 지금 당신을 귀찮게 하고 있으므로, 나중에 귀찮게 하지 않기 위해서입니다.
 
-`v2` is only available for langchain-core>=0.2.0.
+`v2`는 langchain-core>=0.2.0에서만 사용할 수 있습니다.
 
 :::
 
-Let's take a look at the few of the start event and a few of the end events.
+시작 이벤트 몇 개와 종료 이벤트 몇 개를 살펴보겠습니다.
 
 ```python
 events[:3]
 ```
+
 
 ```output
 [{'event': 'on_chat_model_start',
@@ -481,9 +504,11 @@ events[:3]
   'metadata': {}}]
 ```
 
+
 ```python
 events[-2:]
 ```
+
 
 ```output
 [{'event': 'on_chat_model_stream',
@@ -500,9 +525,10 @@ events[-2:]
   'metadata': {}}]
 ```
 
-### Chain
 
-Let's revisit the example chain that parsed streaming JSON to explore the streaming events API.
+### 체인
+
+스트리밍 JSON을 파싱한 예제 체인으로 돌아가 스트리밍 이벤트 API를 탐색해 보겠습니다.
 
 ```python
 chain = (
@@ -520,17 +546,19 @@ events = [
 ]
 ```
 
-If you examine at the first few events, you'll notice that there are **3** different start events rather than **2** start events.
 
-The three start events correspond to:
+처음 몇 개의 이벤트를 살펴보면, **2**개의 시작 이벤트가 아닌 **3**개의 시작 이벤트가 있다는 것을 알 수 있습니다.
 
-1. The chain (model + parser)
-2. The model
-3. The parser
+세 개의 시작 이벤트는 다음에 해당합니다:
+
+1. 체인 (모델 + 파서)
+2. 모델
+3. 파서
 
 ```python
 events[:3]
 ```
+
 
 ```output
 [{'event': 'on_chain_start',
@@ -553,9 +581,10 @@ events[:3]
   'metadata': {}}]
 ```
 
-What do you think you'd see if you looked at the last 3 events? what about the middle?
 
-Let's use this API to take output the stream events from the model and the parser. We're ignoring start events, end events and events from the chain.
+마지막 3개의 이벤트를 살펴보면 무엇을 보게 될까요? 중간은 어떨까요?
+
+이 API를 사용하여 모델과 파서의 스트림 이벤트 출력을 가져오겠습니다. 우리는 시작 이벤트, 종료 이벤트 및 체인에서의 이벤트는 무시하고 있습니다.
 
 ```python
 num_events = 0
@@ -580,6 +609,7 @@ async for event in chain.astream_events(
         print("...")
         break
 ```
+
 ```output
 Chat model chunk: '{'
 Parser chunk: {}
@@ -606,15 +636,16 @@ Chat model chunk: '"'
 Chat model chunk: 'population'
 ...
 ```
-Because both the model and the parser support streaming, we see streaming events from both components in real time! Kind of cool isn't it? 🦜
 
-### Filtering Events
+모델과 파서 모두 스트리밍을 지원하므로, 두 구성 요소에서 실시간으로 스트리밍 이벤트를 볼 수 있습니다! 멋지지 않나요? 🦜
 
-Because this API produces so many events, it is useful to be able to filter on events.
+### 이벤트 필터링
 
-You can filter by either component `name`, component `tags` or component `type`.
+이 API는 많은 이벤트를 생성하므로, 이벤트를 필터링할 수 있는 기능이 유용합니다.
 
-#### By Name
+구성 요소 `name`, 구성 요소 `tags` 또는 구성 요소 `type`으로 필터링할 수 있습니다.
+
+#### 이름으로 필터링
 
 ```python
 chain = model.with_config({"run_name": "model"}) | JsonOutputParser().with_config(
@@ -636,6 +667,7 @@ async for event in chain.astream_events(
         print("...")
         break
 ```
+
 ```output
 {'event': 'on_parser_start', 'data': {'input': 'output a list of the countries france, spain and japan and their populations in JSON format. Use a dict with an outer key of "countries" which contains a list of countries. Each country should have the key `name` and `population`'}, 'name': 'my_parser', 'tags': ['seq:step:2'], 'run_id': 'e058d750-f2c2-40f6-aa61-10f84cd671a9', 'metadata': {}}
 {'event': 'on_parser_stream', 'data': {'chunk': {}}, 'run_id': 'e058d750-f2c2-40f6-aa61-10f84cd671a9', 'name': 'my_parser', 'tags': ['seq:step:2'], 'metadata': {}}
@@ -650,7 +682,8 @@ async for event in chain.astream_events(
 {'event': 'on_parser_stream', 'data': {'chunk': {'countries': [{'name': 'France', 'population': 67413000}, {'name': ''}]}}, 'run_id': 'e058d750-f2c2-40f6-aa61-10f84cd671a9', 'name': 'my_parser', 'tags': ['seq:step:2'], 'metadata': {}}
 ...
 ```
-#### By Type
+
+#### 유형으로 필터링
 
 ```python
 chain = model.with_config({"run_name": "model"}) | JsonOutputParser().with_config(
@@ -670,6 +703,7 @@ async for event in chain.astream_events(
         print("...")
         break
 ```
+
 ```output
 {'event': 'on_chat_model_start', 'data': {'input': 'output a list of the countries france, spain and japan and their populations in JSON format. Use a dict with an outer key of "countries" which contains a list of countries. Each country should have the key `name` and `population`'}, 'name': 'model', 'tags': ['seq:step:1'], 'run_id': 'db246792-2a91-4eb3-a14b-29658947065d', 'metadata': {}}
 {'event': 'on_chat_model_stream', 'data': {'chunk': AIMessageChunk(content='{', id='run-db246792-2a91-4eb3-a14b-29658947065d')}, 'run_id': 'db246792-2a91-4eb3-a14b-29658947065d', 'name': 'model', 'tags': ['seq:step:1'], 'metadata': {}}
@@ -684,13 +718,14 @@ async for event in chain.astream_events(
 {'event': 'on_chat_model_stream', 'data': {'chunk': AIMessageChunk(content='"', id='run-db246792-2a91-4eb3-a14b-29658947065d')}, 'run_id': 'db246792-2a91-4eb3-a14b-29658947065d', 'name': 'model', 'tags': ['seq:step:1'], 'metadata': {}}
 ...
 ```
-#### By Tags
+
+#### 태그로 필터링
 
 :::caution
 
-Tags are inherited by child components of a given runnable. 
+태그는 주어진 실행 가능 요소의 자식 구성 요소에 의해 상속됩니다.
 
-If you're using tags to filter, make sure that this is what you want.
+필터링에 태그를 사용하는 경우, 이것이 당신이 원하는 것인지 확인하십시오.
 :::
 
 ```python
@@ -709,6 +744,7 @@ async for event in chain.astream_events(
         print("...")
         break
 ```
+
 ```output
 {'event': 'on_chain_start', 'data': {'input': 'output a list of the countries france, spain and japan and their populations in JSON format. Use a dict with an outer key of "countries" which contains a list of countries. Each country should have the key `name` and `population`'}, 'name': 'RunnableSequence', 'tags': ['my_chain'], 'run_id': 'fd68dd64-7a4d-4bdb-a0c2-ee592db0d024', 'metadata': {}}
 {'event': 'on_chat_model_start', 'data': {'input': {'messages': [[HumanMessage(content='output a list of the countries france, spain and japan and their populations in JSON format. Use a dict with an outer key of "countries" which contains a list of countries. Each country should have the key `name` and `population`')]]}}, 'name': 'ChatAnthropic', 'tags': ['seq:step:1', 'my_chain'], 'run_id': 'efd3c8af-4be5-4f6c-9327-e3f9865dd1cd', 'metadata': {}}
@@ -723,11 +759,12 @@ async for event in chain.astream_events(
 {'event': 'on_chat_model_stream', 'data': {'chunk': AIMessageChunk(content=' [', id='run-efd3c8af-4be5-4f6c-9327-e3f9865dd1cd')}, 'run_id': 'efd3c8af-4be5-4f6c-9327-e3f9865dd1cd', 'name': 'ChatAnthropic', 'tags': ['seq:step:1', 'my_chain'], 'metadata': {}}
 ...
 ```
-### Non-streaming components
 
-Remember how some components don't stream well because they don't operate on **input streams**?
+### 비스트리밍 컴포넌트
 
-While such components can break streaming of the final output when using `astream`, `astream_events` will still yield streaming events from intermediate steps that support streaming!
+일부 컴포넌트가 **입력 스트림**에서 작동하지 않기 때문에 스트리밍이 잘 되지 않는다는 것을 기억하나요?
+
+이러한 컴포넌트는 `astream`을 사용할 때 최종 출력의 스트리밍을 중단할 수 있지만, `astream_events`는 여전히 스트리밍을 지원하는 중간 단계에서 스트리밍 이벤트를 생성합니다!
 
 ```python
 # Function that does not support streaming.
@@ -757,7 +794,8 @@ chain = (
 )  # This parser only works with OpenAI right now
 ```
 
-As expected, the `astream` API doesn't work correctly because `_extract_country_names` doesn't operate on streams.
+
+예상대로, `_extract_country_names`가 스트림에서 작동하지 않기 때문에 `astream` API는 제대로 작동하지 않습니다.
 
 ```python
 async for chunk in chain.astream(
@@ -767,10 +805,12 @@ async for chunk in chain.astream(
 ):
     print(chunk, flush=True)
 ```
+
 ```output
 ['France', 'Spain', 'Japan']
 ```
-Now, let's confirm that with astream_events we're still seeing streaming output from the model and the parser.
+
+이제, `astream_events`를 사용하여 모델과 파서에서 여전히 스트리밍 출력을 보고 있는지 확인해 봅시다.
 
 ```python
 num_events = 0
@@ -795,6 +835,7 @@ async for event in chain.astream_events(
         print("...")
         break
 ```
+
 ```output
 Chat model chunk: '{'
 Parser chunk: {}
@@ -825,14 +866,15 @@ Chat model chunk: '67'
 Parser chunk: {'countries': [{'name': 'France', 'population': 67}]}
 ...
 ```
-### Propagating Callbacks
+
+### 콜백 전파
 
 :::caution
-If you're using invoking runnables inside your tools, you need to propagate callbacks to the runnable; otherwise, no stream events will be generated.
+도구 내에서 실행 가능한 항목을 호출하는 경우, 콜백을 실행 가능한 항목으로 전파해야 합니다. 그렇지 않으면 스트림 이벤트가 생성되지 않습니다.
 :::
 
 :::note
-When using `RunnableLambdas` or `@chain` decorator, callbacks are propagated automatically behind the scenes.
+`RunnableLambdas` 또는 `@chain` 데코레이터를 사용할 때, 콜백은 자동으로 뒷면에서 전파됩니다.
 :::
 
 ```python
@@ -857,13 +899,15 @@ def bad_tool(word: str):
 async for event in bad_tool.astream_events("hello", version="v2"):
     print(event)
 ```
+
 ```output
 {'event': 'on_tool_start', 'data': {'input': 'hello'}, 'name': 'bad_tool', 'tags': [], 'run_id': 'ea900472-a8f7-425d-b627-facdef936ee8', 'metadata': {}}
 {'event': 'on_chain_start', 'data': {'input': 'hello'}, 'name': 'reverse_word', 'tags': [], 'run_id': '77b01284-0515-48f4-8d7c-eb27c1882f86', 'metadata': {}}
 {'event': 'on_chain_end', 'data': {'output': 'olleh', 'input': 'hello'}, 'run_id': '77b01284-0515-48f4-8d7c-eb27c1882f86', 'name': 'reverse_word', 'tags': [], 'metadata': {}}
 {'event': 'on_tool_end', 'data': {'output': 'olleh'}, 'run_id': 'ea900472-a8f7-425d-b627-facdef936ee8', 'name': 'bad_tool', 'tags': [], 'metadata': {}}
 ```
-Here's a re-implementation that does propagate callbacks correctly. You'll notice that now we're getting events from the `reverse_word` runnable as well.
+
+콜백을 올바르게 전파하는 재구현이 있습니다. 이제 `reverse_word` 실행 가능한 항목에서 이벤트를 받고 있다는 것을 알 수 있습니다.
 
 ```python
 @tool
@@ -875,13 +919,15 @@ def correct_tool(word: str, callbacks):
 async for event in correct_tool.astream_events("hello", version="v2"):
     print(event)
 ```
+
 ```output
 {'event': 'on_tool_start', 'data': {'input': 'hello'}, 'name': 'correct_tool', 'tags': [], 'run_id': 'd5ea83b9-9278-49cc-9f1d-aa302d671040', 'metadata': {}}
 {'event': 'on_chain_start', 'data': {'input': 'hello'}, 'name': 'reverse_word', 'tags': [], 'run_id': '44dafbf4-2f87-412b-ae0e-9f71713810df', 'metadata': {}}
 {'event': 'on_chain_end', 'data': {'output': 'olleh', 'input': 'hello'}, 'run_id': '44dafbf4-2f87-412b-ae0e-9f71713810df', 'name': 'reverse_word', 'tags': [], 'metadata': {}}
 {'event': 'on_tool_end', 'data': {'output': 'olleh'}, 'run_id': 'd5ea83b9-9278-49cc-9f1d-aa302d671040', 'name': 'correct_tool', 'tags': [], 'metadata': {}}
 ```
-If you're invoking runnables from within Runnable Lambdas or `@chains`, then callbacks will be passed automatically on your behalf.
+
+`Runnable Lambdas` 또는 `@chains` 내에서 실행 가능한 항목을 호출하는 경우, 콜백은 자동으로 귀하를 대신하여 전달됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to stream runnables"}]-->
@@ -899,6 +945,7 @@ await reverse_and_double.ainvoke("1234")
 async for event in reverse_and_double.astream_events("1234", version="v2"):
     print(event)
 ```
+
 ```output
 {'event': 'on_chain_start', 'data': {'input': '1234'}, 'name': 'reverse_and_double', 'tags': [], 'run_id': '03b0e6a1-3e60-42fc-8373-1e7829198d80', 'metadata': {}}
 {'event': 'on_chain_start', 'data': {'input': '1234'}, 'name': 'reverse_word', 'tags': [], 'run_id': '5cf26fc8-840b-4642-98ed-623dda28707a', 'metadata': {}}
@@ -906,7 +953,8 @@ async for event in reverse_and_double.astream_events("1234", version="v2"):
 {'event': 'on_chain_stream', 'data': {'chunk': '43214321'}, 'run_id': '03b0e6a1-3e60-42fc-8373-1e7829198d80', 'name': 'reverse_and_double', 'tags': [], 'metadata': {}}
 {'event': 'on_chain_end', 'data': {'output': '43214321'}, 'run_id': '03b0e6a1-3e60-42fc-8373-1e7829198d80', 'name': 'reverse_and_double', 'tags': [], 'metadata': {}}
 ```
-And with the `@chain` decorator:
+
+그리고 `@chain` 데코레이터와 함께:
 
 ```python
 <!--IMPORTS:[{"imported": "chain", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.chain.html", "title": "How to stream runnables"}]-->
@@ -923,6 +971,7 @@ await reverse_and_double.ainvoke("1234")
 async for event in reverse_and_double.astream_events("1234", version="v2"):
     print(event)
 ```
+
 ```output
 {'event': 'on_chain_start', 'data': {'input': '1234'}, 'name': 'reverse_and_double', 'tags': [], 'run_id': '1bfcaedc-f4aa-4d8e-beee-9bba6ef17008', 'metadata': {}}
 {'event': 'on_chain_start', 'data': {'input': '1234'}, 'name': 'reverse_word', 'tags': [], 'run_id': '64fc99f0-5d7d-442b-b4f5-4537129f67d1', 'metadata': {}}
@@ -930,8 +979,9 @@ async for event in reverse_and_double.astream_events("1234", version="v2"):
 {'event': 'on_chain_stream', 'data': {'chunk': '43214321'}, 'run_id': '1bfcaedc-f4aa-4d8e-beee-9bba6ef17008', 'name': 'reverse_and_double', 'tags': [], 'metadata': {}}
 {'event': 'on_chain_end', 'data': {'output': '43214321'}, 'run_id': '1bfcaedc-f4aa-4d8e-beee-9bba6ef17008', 'name': 'reverse_and_double', 'tags': [], 'metadata': {}}
 ```
-## Next steps
 
-Now you've learned some ways to stream both final outputs and internal steps with LangChain.
+## 다음 단계
 
-To learn more, check out the other how-to guides in this section, or the [conceptual guide on Langchain Expression Language](/docs/concepts/#langchain-expression-language/).
+이제 LangChain을 사용하여 최종 출력과 내부 단계를 스트리밍하는 몇 가지 방법을 배웠습니다.
+
+더 알아보려면 이 섹션의 다른 사용 방법 가이드를 확인하거나 [Langchain 표현 언어에 대한 개념 가이드](/docs/concepts/#langchain-expression-language/)를 참조하세요.

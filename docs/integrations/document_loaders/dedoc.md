@@ -1,60 +1,59 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/dedoc/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/dedoc.ipynb
+description: 이 문서는 `Dedoc`와 `LangChain`을 결합하여 다양한 형식의 문서에서 텍스트와 구조를 추출하는 방법을 보여줍니다.
 ---
 
 # Dedoc
 
-This sample demonstrates the use of `Dedoc` in combination with `LangChain` as a `DocumentLoader`.
+이 샘플은 `LangChain`과 함께 `DocumentLoader`로서 `Dedoc`의 사용을 보여줍니다.
 
-## Overview
+## 개요
 
-[Dedoc](https://dedoc.readthedocs.io) is an [open-source](https://github.com/ispras/dedoc)
-library/service that extracts texts, tables, attached files and document structure
-(e.g., titles, list items, etc.) from files of various formats.
+[Dedoc](https://dedoc.readthedocs.io)는 다양한 형식의 파일에서 텍스트, 표, 첨부 파일 및 문서 구조(예: 제목, 목록 항목 등)를 추출하는 [오픈 소스](https://github.com/ispras/dedoc) 라이브러리/서비스입니다.
 
-`Dedoc` supports `DOCX`, `XLSX`, `PPTX`, `EML`, `HTML`, `PDF`, images and more.
-Full list of supported formats can be found [here](https://dedoc.readthedocs.io/en/latest/#id1).
+`Dedoc`는 `DOCX`, `XLSX`, `PPTX`, `EML`, `HTML`, `PDF`, 이미지 등을 지원합니다. 지원되는 형식의 전체 목록은 [여기](https://dedoc.readthedocs.io/en/latest/#id1)에서 확인할 수 있습니다.
 
-### Integration details
+### 통합 세부정보
 
-| Class                                                                                                                                                | Package                                                                                        | Local | Serializable | JS support |
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------|:-----:|:------------:|:----------:|
-| [DedocFileLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocFileLoader.html)       | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) |   ❌   |     beta     |     ❌      |
-| [DedocPDFLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.DedocPDFLoader.html)           | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) |   ❌   |     beta     |     ❌      |
-| [DedocAPIFileLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocAPIFileLoader.html) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) |   ❌   |     beta     |     ❌      | 
+| 클래스                                                                                                                                               | 패키지                                                                                         | 로컬 | 직렬화 가능 | JS 지원 |
+|:---------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------|:-----:|:----------:|:------:|
+| [DedocFileLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocFileLoader.html)       | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) |   ❌   |    beta    |   ❌   |
+| [DedocPDFLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.DedocPDFLoader.html)           | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) |   ❌   |    beta    |   ❌   |
+| [DedocAPIFileLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocAPIFileLoader.html) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) |   ❌   |    beta    |   ❌   | 
 
-### Loader features
+### 로더 기능
 
-Methods for lazy loading and async loading are available, but in fact, document loading is executed synchronously.
+지연 로딩 및 비동기 로딩을 위한 메서드가 제공되지만, 실제로 문서 로딩은 동기적으로 실행됩니다.
 
-|       Source       | Document Lazy Loading | Async Support |
-|:------------------:|:---------------------:|:-------------:|
-|  DedocFileLoader   |           ❌           |       ❌       |
-|   DedocPDFLoader   |           ❌           |       ❌       |
-| DedocAPIFileLoader |           ❌           |       ❌       | 
+|       소스       | 문서 지연 로딩 | 비동기 지원 |
+|:----------------:|:--------------:|:-----------:|
+|  DedocFileLoader |       ❌       |     ❌      |
+|   DedocPDFLoader |       ❌       |     ❌      |
+| DedocAPIFileLoader |     ❌       |     ❌      | 
 
-## Setup
+## 설정
 
-* To access `DedocFileLoader` and `DedocPDFLoader` document loaders, you'll need to install the `dedoc` integration package.
-* To access `DedocAPIFileLoader`, you'll need to run the `Dedoc` service, e.g. `Docker` container (please see [the documentation](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html#install-and-run-dedoc-using-docker)
-for more details):
+* `DedocFileLoader` 및 `DedocPDFLoader` 문서 로더에 접근하려면 `dedoc` 통합 패키지를 설치해야 합니다.
+* `DedocAPIFileLoader`에 접근하려면 `Dedoc` 서비스를 실행해야 하며, 예를 들어 `Docker` 컨테이너를 사용할 수 있습니다 (자세한 내용은 [문서](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html#install-and-run-dedoc-using-docker)를 참조하십시오):
 
 ```bash
 docker pull dedocproject/dedoc
 docker run -p 1231:1231
 ```
 
-`Dedoc` installation instruction is given [here](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html).
+
+`Dedoc` 설치 지침은 [여기](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html)에 있습니다.
 
 ```python
 # Install package
 %pip install --quiet "dedoc[torch]"
 ```
+
 ```output
 Note: you may need to restart the kernel to use updated packages.
 ```
-## Instantiation
+
+## 인스턴스화
 
 ```python
 <!--IMPORTS:[{"imported": "DedocFileLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocFileLoader.html", "title": "Dedoc"}]-->
@@ -63,18 +62,21 @@ from langchain_community.document_loaders import DedocFileLoader
 loader = DedocFileLoader("./example_data/state_of_the_union.txt")
 ```
 
-## Load
+
+## 로드
 
 ```python
 docs = loader.load()
 docs[0].page_content[:100]
 ```
 
+
 ```output
 '\nMadam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and t'
 ```
 
-## Lazy Load
+
+## 지연 로드
 
 ```python
 docs = loader.lazy_load()
@@ -83,31 +85,27 @@ for doc in docs:
     print(doc.page_content[:100])
     break
 ```
+
 ```output
 
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and t
 ```
-## API reference
 
-For detailed information on configuring and calling `Dedoc` loaders, please see the API references: 
+## API 참조
+
+`Dedoc` 로더 구성 및 호출에 대한 자세한 정보는 API 참조를 참조하십시오: 
 
 * https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocFileLoader.html
 * https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.DedocPDFLoader.html
 * https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocAPIFileLoader.html
 
-## Loading any file
+## 모든 파일 로딩
 
-For automatic handling of any file in a [supported format](https://dedoc.readthedocs.io/en/latest/#id1),
-`DedocFileLoader` can be useful.
-The file loader automatically detects the file type with a correct extension.
+[지원되는 형식](https://dedoc.readthedocs.io/en/latest/#id1)의 파일을 자동으로 처리하려면 `DedocFileLoader`가 유용할 수 있습니다. 파일 로더는 올바른 확장자로 파일 유형을 자동으로 감지합니다.
 
-File parsing process can be configured through `dedoc_kwargs` during the `DedocFileLoader` class initialization.
-Here the basic examples of some options usage are given,
-please see the documentation of `DedocFileLoader` and
-[dedoc documentation](https://dedoc.readthedocs.io/en/latest/parameters/parameters.html)
-to get more details about configuration parameters.
+파일 파싱 프로세스는 `DedocFileLoader` 클래스 초기화 중에 `dedoc_kwargs`를 통해 구성할 수 있습니다. 여기에는 몇 가지 옵션 사용의 기본 예가 제공되며, `DedocFileLoader` 문서 및 [dedoc 문서](https://dedoc.readthedocs.io/en/latest/parameters/parameters.html)를 참조하여 구성 매개변수에 대한 자세한 내용을 확인하십시오.
 
-### Basic example
+### 기본 예
 
 ```python
 <!--IMPORTS:[{"imported": "DedocFileLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocFileLoader.html", "title": "Dedoc"}]-->
@@ -120,18 +118,19 @@ docs = loader.load()
 docs[0].page_content[:400]
 ```
 
+
 ```output
 '\nMadam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  \n\n\n\nLast year COVID-19 kept us apart. This year we are finally together again. \n\n\n\nTonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. \n\n\n\nWith a duty to one another to the American people to '
 ```
 
-### Modes of split
 
-`DedocFileLoader` supports different types of document splitting into parts (each part is returned separately).
-For this purpose, `split` parameter is used with the following options:
-* `document` (default value): document text is returned as a single langchain `Document` object (don't split);
-* `page`: split document text into pages (works for `PDF`, `DJVU`, `PPTX`, `PPT`, `ODP`);
-* `node`: split document text into `Dedoc` tree nodes (title nodes, list item nodes, raw text nodes);
-* `line`: split document text into textual lines.
+### 분할 모드
+
+`DedocFileLoader`는 문서를 여러 부분으로 분할하는 다양한 유형을 지원합니다(각 부분은 별도로 반환됨). 이를 위해 `split` 매개변수가 다음 옵션과 함께 사용됩니다:
+* `document` (기본값): 문서 텍스트가 단일 langchain `Document` 객체로 반환됨 (분할하지 않음);
+* `page`: 문서 텍스트를 페이지로 분할 (PDF, DJVU, PPTX, PPT, ODP에 대해 작동);
+* `node`: 문서 텍스트를 `Dedoc` 트리 노드로 분할 (제목 노드, 목록 항목 노드, 원시 텍스트 노드);
+* `line`: 문서 텍스트를 텍스트 줄로 분할.
 
 ```python
 loader = DedocFileLoader(
@@ -145,18 +144,17 @@ docs = loader.load()
 len(docs)
 ```
 
+
 ```output
 2
 ```
 
-### Handling tables
 
-`DedocFileLoader` supports tables handling when `with_tables` parameter is
-set to `True` during loader initialization (`with_tables=True` by default). 
+### 표 처리
 
-Tables are not split - each table corresponds to one langchain `Document` object.
-For tables, `Document` object has additional `metadata` fields `type="table"`
-and `text_as_html` with table `HTML` representation.
+`DedocFileLoader`는 로더 초기화 중에 `with_tables` 매개변수가 `True`로 설정될 때 표 처리를 지원합니다 (`with_tables=True`가 기본값). 
+
+표는 분할되지 않으며 각 표는 하나의 langchain `Document` 객체에 해당합니다. 표의 경우, `Document` 객체는 추가 `metadata` 필드 `type="table"` 및 표의 `HTML` 표현을 가진 `text_as_html`을 가집니다.
 
 ```python
 loader = DedocFileLoader("./example_data/mlb_teams_2012.csv")
@@ -166,19 +164,18 @@ docs = loader.load()
 docs[1].metadata["type"], docs[1].metadata["text_as_html"][:200]
 ```
 
+
 ```output
 ('table',
  '<table border="1" style="border-collapse: collapse; width: 100%;">\n<tbody>\n<tr>\n<td colspan="1" rowspan="1">Team</td>\n<td colspan="1" rowspan="1"> &quot;Payroll (millions)&quot;</td>\n<td colspan="1" r')
 ```
 
-### Handling attached files
 
-`DedocFileLoader` supports attached files handling when `with_attachments` is set
-to `True` during loader initialization (`with_attachments=False` by default). 
+### 첨부 파일 처리
 
-Attachments are split according to the `split` parameter.
-For attachments, langchain `Document` object has an additional metadata
-field `type="attachment"`.
+`DedocFileLoader`는 로더 초기화 중에 `with_attachments`가 `True`로 설정될 때 첨부 파일 처리를 지원합니다 (`with_attachments=False`가 기본값). 
+
+첨부 파일은 `split` 매개변수에 따라 분할됩니다. 첨부 파일의 경우, langchain `Document` 객체는 추가 메타데이터 필드 `type="attachment"`를 가집니다.
 
 ```python
 loader = DedocFileLoader(
@@ -191,25 +188,20 @@ docs = loader.load()
 docs[1].metadata["type"], docs[1].page_content
 ```
 
+
 ```output
 ('attachment',
  '\nContent-Type\nmultipart/mixed; boundary="0000000000005d654405f082adb7"\nDate\nFri, 23 Dec 2022 12:08:48 -0600\nFrom\nMallori Harrell <mallori@unstructured.io>\nMIME-Version\n1.0\nMessage-ID\n<CAPgNNXSzLVJ-d1OCX_TjFgJU7ugtQrjFybPtAMmmYZzphxNFYg@mail.gmail.com>\nSubject\nFake email with attachment\nTo\nMallori Harrell <mallori@unstructured.io>')
 ```
 
-## Loading PDF file
 
-If you want to handle only `PDF` documents, you can use `DedocPDFLoader` with only `PDF` support.
-The loader supports the same parameters for document split, tables and attachments extraction.
+## PDF 파일 로딩
 
-`Dedoc` can extract `PDF` with or without a textual layer,
-as well as automatically detect its presence and correctness.
-Several `PDF` handlers are available, you can use `pdf_with_text_layer`
-parameter to choose one of them.
-Please see [parameters description](https://dedoc.readthedocs.io/en/latest/parameters/pdf_handling.html)
-to get more details.
+`PDF` 문서만 처리하려면 `DedocPDFLoader`를 사용할 수 있으며, 이는 오직 `PDF` 지원만 제공합니다. 로더는 문서 분할, 표 및 첨부 파일 추출을 위한 동일한 매개변수를 지원합니다.
 
-For `PDF` without a textual layer, `Tesseract OCR` and its language packages should be installed.
-In this case, [the instruction](https://dedoc.readthedocs.io/en/latest/tutorials/add_new_language.html) can be useful.
+`Dedoc`는 텍스트 레이어가 있거나 없는 `PDF`를 추출할 수 있으며, 그 존재 및 정확성을 자동으로 감지할 수 있습니다. 여러 `PDF` 핸들러가 제공되며, `pdf_with_text_layer` 매개변수를 사용하여 그 중 하나를 선택할 수 있습니다. 자세한 내용은 [매개변수 설명](https://dedoc.readthedocs.io/en/latest/parameters/pdf_handling.html)을 참조하십시오.
+
+텍스트 레이어가 없는 `PDF`의 경우, `Tesseract OCR` 및 해당 언어 패키지를 설치해야 합니다. 이 경우, [지침](https://dedoc.readthedocs.io/en/latest/tutorials/add_new_language.html)이 유용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "DedocPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.DedocPDFLoader.html", "title": "Dedoc"}]-->
@@ -224,26 +216,27 @@ docs = loader.load()
 docs[0].page_content[:400]
 ```
 
+
 ```output
 '\n2\n\nZ. Shen et al.\n\n37], layout detection [38, 22], table detection [26], and scene text detection [4].\n\nA generalized learning-based framework dramatically reduces the need for the\n\nmanual speciﬁcation of complicated rules, which is the status quo with traditional\n\nmethods. DL has the potential to transform DIA pipelines and beneﬁt a broad\n\nspectrum of large-scale document digitization projects.\n'
 ```
 
+
 ## Dedoc API
 
-If you want to get up and running with less set up, you can use `Dedoc` as a service.
-**`DedocAPIFileLoader` can be used without installation of `dedoc` library.**
-The loader supports the same parameters as `DedocFileLoader` and
-also automatically detects input file types.
+설정이 덜 필요하게 시작하려면 `Dedoc`를 서비스로 사용할 수 있습니다.
+**`DedocAPIFileLoader`는 `dedoc` 라이브러리를 설치하지 않고도 사용할 수 있습니다.**
+로더는 `DedocFileLoader`와 동일한 매개변수를 지원하며, 입력 파일 유형을 자동으로 감지합니다.
 
-To use `DedocAPIFileLoader`, you should run the `Dedoc` service, e.g. `Docker` container (please see [the documentation](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html#install-and-run-dedoc-using-docker)
-for more details):
+`DedocAPIFileLoader`를 사용하려면 `Dedoc` 서비스를 실행해야 하며, 예를 들어 `Docker` 컨테이너를 사용할 수 있습니다 (자세한 내용은 [문서](https://dedoc.readthedocs.io/en/latest/getting_started/installation.html#install-and-run-dedoc-using-docker)를 참조하십시오):
 
 ```bash
 docker pull dedocproject/dedoc
 docker run -p 1231:1231
 ```
 
-Please do not use our demo URL `https://dedoc-readme.hf.space` in your code.
+
+코드에서 우리의 데모 URL `https://dedoc-readme.hf.space`를 사용하지 마십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "DedocAPIFileLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.dedoc.DedocAPIFileLoader.html", "title": "Dedoc"}]-->
@@ -259,11 +252,13 @@ docs = loader.load()
 docs[0].page_content[:400]
 ```
 
+
 ```output
 '\nMadam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  \n\n\n\nLast year COVID-19 kept us apart. This year we are finally together again. \n\n\n\nTonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. \n\n\n\nWith a duty to one another to the American people to '
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

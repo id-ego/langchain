@@ -1,33 +1,35 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/nlpcloud/
+description: NLP Cloud는 최신 AI 엔진을 사용하고, 사용자 데이터를 통해 자체 엔진을 훈련할 수 있는 인공지능 플랫폼입니다.
 ---
 
 # NLPCloud
 
-> [NLP Cloud](https://docs.nlpcloud.com/#introduction) is an artificial intelligence platform that allows you to use the most advanced AI engines, and even train your own engines with your own data. 
+> [NLP Cloud](https://docs.nlpcloud.com/#introduction)는 가장 진보된 AI 엔진을 사용할 수 있도록 해주는 인공지능 플랫폼이며, 자신의 데이터로 엔진을 훈련할 수도 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the `nlpcloud` package.
+- `nlpcloud` 패키지를 설치합니다.
 
 ```bash
 pip install nlpcloud
 ```
 
-- Get an NLPCloud api key and set it as an environment variable (`NLPCLOUD_API_KEY`)
+
+- NLPCloud API 키를 얻고 이를 환경 변수(`NLPCLOUD_API_KEY`)로 설정합니다.
 
 ## LLM
 
-See a [usage example](/docs/integrations/llms/nlpcloud).
+[사용 예시](/docs/integrations/llms/nlpcloud)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "NLPCloud", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.nlpcloud.NLPCloud.html", "title": "NLPCloud"}]-->
 from langchain_community.llms import NLPCloud
 ```
 
-## Text Embedding Models
 
-See a [usage example](/docs/integrations/text_embedding/nlp_cloud)
+## 텍스트 임베딩 모델
+
+[사용 예시](/docs/integrations/text_embedding/nlp_cloud)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "NLPCloudEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.nlpcloud.NLPCloudEmbeddings.html", "title": "NLPCloud"}]-->

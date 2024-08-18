@@ -1,22 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/html2text/
+description: HTML을 깔끔하고 읽기 쉬운 ASCII 텍스트로 변환하는 Python 패키지인 html2text에 대한 설치 및 사용법을
+  설명합니다.
 ---
 
 # HTML to text
 
-> [html2text](https://github.com/Alir3z4/html2text/) is a Python package that converts a page of `HTML` into clean, easy-to-read plain `ASCII text`. 
+> [html2text](https://github.com/Alir3z4/html2text/)는 `HTML` 페이지를 깔끔하고 읽기 쉬운 일반 `ASCII 텍스트`로 변환하는 Python 패키지입니다.
 
-The ASCII also happens to be a valid `Markdown` (a text-to-HTML format).
+ASCII는 유효한 `Markdown`(텍스트-HTML 형식)이기도 합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```bash
 pip install html2text
 ```
 
-## Document Transformer
 
-See a [usage example](/docs/integrations/document_transformers/html2text).
+## 문서 변환기
+
+[사용 예제](/docs/integrations/document_transformers/html2text)를 참조하세요.
 
 ```python
 from langchain_community.document_loaders import Html2TextTransformer

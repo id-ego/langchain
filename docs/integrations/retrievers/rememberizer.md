@@ -1,27 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/rememberizer/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/rememberizer.ipynb
+description: Rememberizer는 AI 애플리케이션을 위한 지식 향상 서비스로, 문서를 검색하고 활용하는 방법을 보여주는 노트북입니다.
 ---
 
 # Rememberizer
 
-> [Rememberizer](https://rememberizer.ai/) is a knowledge enhancement service for AI applications created by  SkyDeck AI Inc.
+> [Rememberizer](https://rememberizer.ai/)는 SkyDeck AI Inc.에서 만든 AI 애플리케이션을 위한 지식 향상 서비스입니다.
 
-This notebook shows how to retrieve documents from `Rememberizer` into the Document format that is used downstream.
+이 노트북은 `Rememberizer`에서 문서를 검색하여 하류에서 사용되는 문서 형식으로 변환하는 방법을 보여줍니다.
 
-# Preparation
+# 준비
 
-You will need an API key: you can get one after creating a common knowledge at [https://rememberizer.ai](https://rememberizer.ai/). Once you have an API key, you must set it as an environment variable `REMEMBERIZER_API_KEY` or pass it as `rememberizer_api_key` when initializing `RememberizerRetriever`.
+API 키가 필요합니다: [https://rememberizer.ai](https://rememberizer.ai/)에서 공통 지식을 생성한 후에 받을 수 있습니다. API 키를 받은 후, 환경 변수 `REMEMBERIZER_API_KEY`로 설정하거나 `RememberizerRetriever`를 초기화할 때 `rememberizer_api_key`로 전달해야 합니다.
 
-`RememberizerRetriever` has these arguments:
-- optional `top_k_results`: default=10. Use it to limit number of returned documents. 
-- optional `rememberizer_api_key`: required if you don't set the environment variable `REMEMBERIZER_API_KEY`.
+`RememberizerRetriever`는 다음과 같은 인수를 가집니다:
+- 선택적 `top_k_results`: 기본값=10. 반환되는 문서 수를 제한하는 데 사용합니다.
+- 선택적 `rememberizer_api_key`: 환경 변수 `REMEMBERIZER_API_KEY`를 설정하지 않은 경우 필수입니다.
 
-`get_relevant_documents()` has one argument, `query`: free text which used to find documents in the common knowledge of `Rememberizer.ai`
+`get_relevant_documents()`는 하나의 인수 `query`를 가집니다: `Rememberizer.ai`의 공통 지식에서 문서를 찾는 데 사용되는 자유 텍스트입니다.
 
-# Examples
+# 예제
 
-## Basic usage
+## 기본 사용법
 
 ```python
 # Setup API key
@@ -29,6 +29,7 @@ from getpass import getpass
 
 REMEMBERIZER_API_KEY = getpass()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RememberizerRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.rememberizer.RememberizerRetriever.html", "title": "Rememberizer"}]-->
@@ -40,13 +41,16 @@ os.environ["REMEMBERIZER_API_KEY"] = REMEMBERIZER_API_KEY
 retriever = RememberizerRetriever(top_k_results=5)
 ```
 
+
 ```python
 docs = retriever.get_relevant_documents(query="How does Large Language Models works?")
 ```
 
+
 ```python
 docs[0].metadata  # meta-information of the Document
 ```
+
 
 ```output
 {'id': 13646493,
@@ -62,21 +66,26 @@ docs[0].metadata  # meta-information of the Document
  'integration': {'id': 347, 'integration_type': 'google_drive'}}
 ```
 
+
 ```python
 print(docs[0].page_content[:400])  # a content of the Document
 ```
+
 ```output
 before, or contextualized in new ways. on some level they " understand " semantics in that they can associate words and concepts by their meaning, having seen them grouped together in that way millions or billions of times. how developers can quickly start building their own llms to build llm applications, developers need easy access to multiple data sets, and they need places for those data sets
 ```
-# Usage in a chain
+
+# 체인에서의 사용
 
 ```python
 OPENAI_API_KEY = getpass()
 ```
 
+
 ```python
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ConversationalRetrievalChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.conversational_retrieval.base.ConversationalRetrievalChain.html", "title": "Rememberizer"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Rememberizer"}]-->
@@ -86,6 +95,7 @@ from langchain_openai import ChatOpenAI
 model = ChatOpenAI(model_name="gpt-3.5-turbo")
 qa = ConversationalRetrievalChain.from_llm(model, retriever=retriever)
 ```
+
 
 ```python
 questions = [
@@ -100,6 +110,7 @@ for question in questions:
     print(f"-> **Question**: {question} \n")
     print(f"**Answer**: {result['answer']} \n")
 ```
+
 ```output
 -> **Question**: What is RAG? 
 
@@ -110,7 +121,8 @@ for question in questions:
 **Answer**: Large Language Models (LLMs) work by analyzing massive data sets of language to comprehend and generate human language text. They are built on machine learning, specifically deep learning, which involves training a program to recognize features of data without human intervention. LLMs use neural networks, specifically transformer models, to understand context in human language, making them better at interpreting language even in vague or new contexts. Developers can quickly start building their own LLMs by accessing multiple data sets and using services like Cloudflare's Vectorize and Cloudflare Workers AI platform.
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

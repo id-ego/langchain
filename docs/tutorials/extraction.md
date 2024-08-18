@@ -1,38 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/tutorials/extraction/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/tutorials/extraction.ipynb
+description: 이 튜토리얼에서는 비구조화된 텍스트에서 구조화된 정보를 추출하는 체인을 구축하는 방법을 안내합니다.
 sidebar_position: 4
 ---
 
-# Build an Extraction Chain
+# 추출 체인 구축하기
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
 
-- [Chat Models](/docs/concepts/#chat-models)
-- [Tools](/docs/concepts/#tools)
-- [Tool calling](/docs/concepts/#function-tool-calling)
+- [채팅 모델](/docs/concepts/#chat-models)
+- [도구](/docs/concepts/#tools)
+- [도구 호출](/docs/concepts/#function-tool-calling)
 
 :::
 
-In this tutorial, we will build a chain to extract structured information from unstructured text. 
+이 튜토리얼에서는 비구조적 텍스트에서 구조화된 정보를 추출하는 체인을 구축할 것입니다.
 
 :::important
-This tutorial will only work with models that support **tool calling**
+이 튜토리얼은 **도구 호출**을 지원하는 모델에서만 작동합니다.
 :::
 
-## Setup
+## 설정
 
-### Jupyter Notebook
+### 주피터 노트북
 
-This guide (and most of the other guides in the documentation) uses [Jupyter notebooks](https://jupyter.org/) and assumes the reader is as well. Jupyter notebooks are perfect for learning how to work with LLM systems because oftentimes things can go wrong (unexpected output, API down, etc) and going through guides in an interactive environment is a great way to better understand them.
+이 가이드(및 문서의 다른 대부분의 가이드)는 [주피터 노트북](https://jupyter.org/)을 사용하며, 독자가 주피터 노트북을 사용하고 있다고 가정합니다. 주피터 노트북은 LLM 시스템을 다루는 방법을 배우기에 완벽합니다. 종종 예상치 못한 출력, API 다운 등 문제가 발생할 수 있으며, 인터랙티브 환경에서 가이드를 진행하는 것은 이를 더 잘 이해하는 데 큰 도움이 됩니다.
 
-This and other tutorials are perhaps most conveniently run in a Jupyter notebook. See [here](https://jupyter.org/install) for instructions on how to install.
+이 튜토리얼과 다른 튜토리얼은 주피터 노트북에서 가장 편리하게 실행됩니다. 설치 방법은 [여기](https://jupyter.org/install)를 참조하세요.
 
-### Installation
+### 설치
 
-To install LangChain run:
+LangChain을 설치하려면 다음을 실행하세요:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -47,23 +47,21 @@ import CodeBlock from "@theme/CodeBlock";
   </TabItem>
 </Tabs>
 
-
-For more details, see our [Installation guide](/docs/how_to/installation).
+자세한 내용은 [설치 가이드](/docs/how_to/installation)를 참조하세요.
 
 ### LangSmith
 
-Many of the applications you build with LangChain will contain multiple steps with multiple invocations of LLM calls.
-As these applications get more and more complex, it becomes crucial to be able to inspect what exactly is going on inside your chain or agent.
-The best way to do this is with [LangSmith](https://smith.langchain.com).
+LangChain으로 구축하는 많은 애플리케이션은 여러 단계와 LLM 호출의 여러 번의 호출을 포함합니다. 이러한 애플리케이션이 점점 더 복잡해짐에 따라 체인이나 에이전트 내부에서 정확히 무슨 일이 일어나고 있는지를 검사할 수 있는 것이 중요해집니다. 이를 위한 가장 좋은 방법은 [LangSmith](https://smith.langchain.com)를 사용하는 것입니다.
 
-After you sign up at the link above, make sure to set your environment variables to start logging traces:
+위 링크에서 가입한 후, 추적 로그를 시작하기 위해 환경 변수를 설정하세요:
 
 ```shell
 export LANGCHAIN_TRACING_V2="true"
 export LANGCHAIN_API_KEY="..."
 ```
 
-Or, if in a notebook, you can set them with:
+
+또는, 노트북에서 다음과 같이 설정할 수 있습니다:
 
 ```python
 import getpass
@@ -73,11 +71,12 @@ os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-## The Schema
 
-First, we need to describe what information we want to extract from the text.
+## 스키마
 
-We'll use Pydantic to define an example schema  to extract personal information.
+먼저, 텍스트에서 추출하고자 하는 정보를 설명해야 합니다.
+
+개인 정보를 추출하기 위한 예제 스키마를 정의하기 위해 Pydantic을 사용할 것입니다.
 
 ```python
 from typing import Optional
@@ -105,18 +104,19 @@ class Person(BaseModel):
     )
 ```
 
-There are two best practices when defining schema:
 
-1. Document the **attributes** and the **schema** itself: This information is sent to the LLM and is used to improve the quality of information extraction.
-2. Do not force the LLM to make up information! Above we used `Optional` for the attributes allowing the LLM to output `None` if it doesn't know the answer.
+스키마를 정의할 때 두 가지 모범 사례가 있습니다:
+
+1. **속성** 및 **스키마** 자체를 문서화하세요: 이 정보는 LLM에 전송되며 정보 추출 품질을 개선하는 데 사용됩니다.
+2. LLM이 정보를 만들어내도록 강요하지 마세요! 위에서 속성에 대해 `Optional`을 사용하여 LLM이 답을 모를 경우 `None`을 출력할 수 있도록 했습니다.
 
 :::important
-For best performance, document the schema well and make sure the model isn't force to return results if there's no information to be extracted in the text.
+최고의 성능을 위해 스키마를 잘 문서화하고, 텍스트에서 추출할 정보가 없을 경우 모델이 결과를 반환하지 않도록 하세요.
 :::
 
-## The Extractor
+## 추출기
 
-Let's create an information extractor using the schema we defined above.
+위에서 정의한 스키마를 사용하여 정보 추출기를 만들어 봅시다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build an Extraction Chain"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Build an Extraction Chain"}]-->
@@ -146,9 +146,10 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-We need to use a model that supports function/tool calling.
 
-Please review [the documentation](/docs/concepts#function-tool-calling) for list of some models that can be used with this API.
+함수/도구 호출을 지원하는 모델을 사용해야 합니다.
+
+이 API와 함께 사용할 수 있는 모델 목록은 [문서](https://docs/concepts#function-tool-calling)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMistralAI", "source": "langchain_mistralai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_mistralai.chat_models.ChatMistralAI.html", "title": "Build an Extraction Chain"}]-->
@@ -158,36 +159,39 @@ llm = ChatMistralAI(model="mistral-large-latest", temperature=0)
 
 runnable = prompt | llm.with_structured_output(schema=Person)
 ```
+
 ```output
 /Users/harrisonchase/workplace/langchain/libs/core/langchain_core/_api/beta_decorator.py:87: LangChainBetaWarning: The method `ChatMistralAI.with_structured_output` is in beta. It is actively being worked on, so the API may change.
   warn_beta(
 ```
-Let's test it out
+
+테스트해 보겠습니다.
 
 ```python
 text = "Alan Smith is 6 feet tall and has blond hair."
 runnable.invoke({"text": text})
 ```
 
+
 ```output
 Person(name='Alan Smith', hair_color='blond', height_in_meters='1.83')
 ```
 
+
 :::important 
 
-Extraction is Generative 🤯
+추출은 생성적입니다 🤯
 
-LLMs are generative models, so they can do some pretty cool things like correctly extract the height of the person in meters
-even though it was provided in feet!
+LLM은 생성 모델이므로 피트로 제공된 사람의 신장을 미터로 정확하게 추출하는 것과 같은 멋진 일을 할 수 있습니다!
 :::
 
-We can see the LangSmith trace here: https://smith.langchain.com/public/44b69a63-3b3b-47b8-8a6d-61b46533f015/r
+여기에서 LangSmith 추적을 볼 수 있습니다: https://smith.langchain.com/public/44b69a63-3b3b-47b8-8a6d-61b46533f015/r
 
-## Multiple Entities
+## 다중 엔티티
 
-In **most cases**, you should be extracting a list of entities rather than a single entity.
+**대부분의 경우**, 단일 엔티티보다는 엔티티 목록을 추출해야 합니다.
 
-This can be easily achieved using pydantic by nesting models inside one another.
+이는 Pydantic을 사용하여 모델을 서로 중첩시킴으로써 쉽게 달성할 수 있습니다.
 
 ```python
 from typing import List, Optional
@@ -222,8 +226,9 @@ class Data(BaseModel):
     people: List[Person]
 ```
 
+
 :::important
-Extraction might not be perfect here. Please continue to see how to use **Reference Examples** to improve the quality of extraction, and see the **guidelines** section!
+추출이 완벽하지 않을 수 있습니다. **참조 예제**를 사용하여 추출 품질을 개선하는 방법과 **지침** 섹션을 계속 확인하세요!
 :::
 
 ```python
@@ -232,23 +237,24 @@ text = "My name is Jeff, my hair is black and i am 6 feet tall. Anna has the sam
 runnable.invoke({"text": text})
 ```
 
+
 ```output
 Data(people=[Person(name='Jeff', hair_color=None, height_in_meters=None), Person(name='Anna', hair_color=None, height_in_meters=None)])
 ```
 
-:::tip
-When the schema accommodates the extraction of **multiple entities**, it also allows the model to extract **no entities** if no relevant information
-is in the text by providing an empty list. 
 
-This is usually a **good** thing! It allows specifying **required** attributes on an entity without necessarily forcing the model to detect this entity.
+:::tip
+스키마가 **다중 엔티티** 추출을 수용할 때, 모델이 텍스트에 관련 정보가 없을 경우 **엔티티 없음**을 추출할 수 있도록 빈 목록을 제공할 수 있습니다. 
+
+이는 일반적으로 **좋은** 일입니다! 이는 엔티티에 대해 **필수** 속성을 지정할 수 있게 하면서 모델이 반드시 이 엔티티를 감지하도록 강요하지 않습니다.
 :::
 
-We can see the LangSmith trace here: https://smith.langchain.com/public/7173764d-5e76-45fe-8496-84460bd9cdef/r
+여기에서 LangSmith 추적을 볼 수 있습니다: https://smith.langchain.com/public/7173764d-5e76-45fe-8496-84460bd9cdef/r
 
-## Next steps
+## 다음 단계
 
-Now that you understand the basics of extraction with LangChain, you're ready to proceed to the rest of the how-to guides:
+LangChain을 사용한 추출의 기본을 이해했으므로, 나머지 사용 방법 가이드로 진행할 준비가 되었습니다:
 
-- [Add Examples](/docs/how_to/extraction_examples): Learn how to use **reference examples** to improve performance.
-- [Handle Long Text](/docs/how_to/extraction_long_text): What should you do if the text does not fit into the context window of the LLM?
-- [Use a Parsing Approach](/docs/how_to/extraction_parse): Use a prompt based approach to extract with models that do not support **tool/function calling**.
+- [예제 추가하기](/docs/how_to/extraction_examples): **참조 예제**를 사용하여 성능을 개선하는 방법을 배우세요.
+- [긴 텍스트 처리하기](/docs/how_to/extraction_long_text): 텍스트가 LLM의 컨텍스트 창에 맞지 않을 경우 어떻게 해야 하나요?
+- [파싱 접근 방식 사용하기](/docs/how_to/extraction_parse): **도구/함수 호출**을 지원하지 않는 모델로 추출하기 위해 프롬프트 기반 접근 방식을 사용하세요.

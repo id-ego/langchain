@@ -1,42 +1,43 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/upstage/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/providers/upstage.ipynb
+description: Upstage는 영어와 한국어에 최적화된 고급 대화형 AI 모델인 Solar Mini Chat을 제공하는 인공지능 전문 기업입니다.
 ---
 
-# Upstage
+# 업스테이지
 
-[Upstage](https://upstage.ai) is a leading artificial intelligence (AI) company specializing in delivering above-human-grade performance LLM components. 
+[업스테이지](https://upstage.ai)는 인간 이상의 성능을 제공하는 LLM 컴포넌트를 전문으로 하는 선도적인 인공지능(AI) 회사입니다.
 
-## Solar LLM
+## 솔라 LLM
 
-**Solar Mini Chat** is a fast yet powerful advanced large language model focusing on English and Korean. It has been specifically fine-tuned for multi-turn chat purposes, showing enhanced performance across a wide range of natural language processing tasks, like multi-turn conversation or tasks that require an understanding of long contexts, such as RAG (Retrieval-Augmented Generation), compared to other models of a similar size. This fine-tuning equips it with the ability to handle longer conversations more effectively, making it particularly adept for interactive applications.
+**솔라 미니 챗**은 영어와 한국어에 중점을 둔 빠르고 강력한 고급 대형 언어 모델입니다. 이 모델은 다중 턴 채팅 목적을 위해 특별히 미세 조정되어, 유사한 크기의 다른 모델에 비해 다중 턴 대화나 RAG(검색 증강 생성)과 같은 긴 맥락 이해가 필요한 작업에서 자연어 처리 작업의 성능이 향상되었습니다. 이 미세 조정은 긴 대화를 보다 효과적으로 처리할 수 있는 능력을 부여하여, 특히 상호작용 애플리케이션에 적합합니다.
 
-Other than Solar, Upstage also offers features for real-world RAG (retrieval-augmented generation), such as **Groundedness Check** and **Layout Analysis**. 
+솔라 외에도 업스테이지는 **그라운드니스 체크** 및 **레이아웃 분석**과 같은 실제 RAG(검색 증강 생성)를 위한 기능도 제공합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install `langchain-upstage` package:
+`langchain-upstage` 패키지를 설치합니다:
 
 ```bash
 pip install -qU langchain-core langchain-upstage
 ```
 
-Get [API Keys](https://console.upstage.ai) and set environment variable `UPSTAGE_API_KEY`.
 
-## Upstage LangChain integrations
+[API 키](https://console.upstage.ai)를 얻고 환경 변수 `UPSTAGE_API_KEY`를 설정합니다.
 
-| API | Description | Import | Example usage |
+## 업스테이지 LangChain 통합
+
+| API | 설명 | 가져오기 | 사용 예 |
 | --- | --- | --- | --- |
-| Chat | Build assistants using Solar Mini Chat | `from langchain_upstage import ChatUpstage` | [Go](../../chat/upstage) |
-| Text Embedding | Embed strings to vectors | `from langchain_upstage import UpstageEmbeddings` | [Go](../../text_embedding/upstage) |
-| Groundedness Check | Verify groundedness of assistant's response | `from langchain_upstage import UpstageGroundednessCheck` | [Go](../../tools/upstage_groundedness_check) |
-| Layout Analysis | Serialize documents with tables and figures | `from langchain_upstage import UpstageLayoutAnalysisLoader` | [Go](../../document_loaders/upstage) |
+| 채팅 | 솔라 미니 챗을 사용하여 어시스턴트 구축 | `from langchain_upstage import ChatUpstage` | [이동](../../chat/upstage) |
+| 텍스트 임베딩 | 문자열을 벡터로 임베드 | `from langchain_upstage import UpstageEmbeddings` | [이동](../../text_embedding/upstage) |
+| 그라운드니스 체크 | 어시스턴트의 응답의 그라운드니스 확인 | `from langchain_upstage import UpstageGroundednessCheck` | [이동](../../tools/upstage_groundedness_check) |
+| 레이아웃 분석 | 테이블 및 그림이 포함된 문서 직렬화 | `from langchain_upstage import UpstageLayoutAnalysisLoader` | [이동](../../document_loaders/upstage) |
 
-See [documentations](https://developers.upstage.ai/) for more details about the features.
+기능에 대한 자세한 내용은 [문서](https://developers.upstage.ai/)를 참조하세요.
 
-## Quick Examples
+## 빠른 예제
 
-### Environment Setup
+### 환경 설정
 
 ```python
 import os
@@ -44,7 +45,8 @@ import os
 os.environ["UPSTAGE_API_KEY"] = "YOUR_API_KEY"
 ```
 
-### Chat
+
+### 채팅
 
 ```python
 from langchain_upstage import ChatUpstage
@@ -54,7 +56,8 @@ response = chat.invoke("Hello, how are you?")
 print(response)
 ```
 
-### Text embedding
+
+### 텍스트 임베딩
 
 ```python
 from langchain_upstage import UpstageEmbeddings
@@ -69,7 +72,8 @@ query_result = embeddings.embed_query("What does Sung do?")
 print(query_result)
 ```
 
-### Groundedness Check
+
+### 그라운드니스 체크
 
 ```python
 from langchain_upstage import UpstageGroundednessCheck
@@ -84,7 +88,8 @@ response = groundedness_check.invoke(request_input)
 print(response)
 ```
 
-### Layout Analysis
+
+### 레이아웃 분석
 
 ```python
 from langchain_upstage import UpstageLayoutAnalysisLoader

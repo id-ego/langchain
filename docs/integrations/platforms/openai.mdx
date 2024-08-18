@@ -1,130 +1,137 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/platforms/openai/
+description: OpenAI는 인공지능 연구를 선도하는 기관으로, 다양한 모델과 API를 통해 친근한 AI 개발을 목표로 합니다.
 keywords:
 - openai
 ---
 
 # OpenAI
 
-All functionality related to OpenAI
+OpenAI와 관련된 모든 기능
 
-> [OpenAI](https://en.wikipedia.org/wiki/OpenAI) is American artificial intelligence (AI) research laboratory
-consisting of the non-profit `OpenAI Incorporated`
-and its for-profit subsidiary corporation `OpenAI Limited Partnership`.
-`OpenAI` conducts AI research with the declared intention of promoting and developing a friendly AI.
-`OpenAI` systems run on an `Azure`-based supercomputing platform from `Microsoft`.
+> [OpenAI](https://en.wikipedia.org/wiki/OpenAI)는 비영리 `OpenAI Incorporated`와 그 영리 자회사 `OpenAI Limited Partnership`로 구성된 미국의 인공지능(AI) 연구소입니다.  
+`OpenAI`는 친근한 AI를 촉진하고 개발하기 위한 선언된 의도를 가지고 AI 연구를 수행합니다.  
+`OpenAI` 시스템은 `Microsoft`의 `Azure` 기반 슈퍼컴퓨팅 플랫폼에서 실행됩니다.
 
-> The [OpenAI API](https://platform.openai.com/docs/models) is powered by a diverse set of models with different capabilities and price points.
-> 
-> [ChatGPT](https://chat.openai.com) is the Artificial Intelligence (AI) chatbot developed by `OpenAI`.
+> [OpenAI API](https://platform.openai.com/docs/models)는 다양한 기능과 가격대의 모델로 구동됩니다.  
+>  
+> [ChatGPT](https://chat.openai.com)는 `OpenAI`에서 개발한 인공지능(AI) 챗봇입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the integration package with
+통합 패키지를 설치하려면  
 ```bash
 pip install langchain-openai
 ```
 
-Get an OpenAI api key and set it as an environment variable (`OPENAI_API_KEY`)
 
-## Chat model
+OpenAI API 키를 얻고 이를 환경 변수(`OPENAI_API_KEY`)로 설정합니다.
 
-See a [usage example](/docs/integrations/chat/openai).
+## 채팅 모델
+
+[사용 예제](/docs/integrations/chat/openai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "OpenAI"}]-->
 from langchain_openai import ChatOpenAI
 ```
 
-If you are using a model hosted on `Azure`, you should use different wrapper for that:
+
+`Azure`에 호스팅된 모델을 사용하는 경우, 이를 위해 다른 래퍼를 사용해야 합니다:  
 ```python
 <!--IMPORTS:[{"imported": "AzureChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.azure.AzureChatOpenAI.html", "title": "OpenAI"}]-->
 from langchain_openai import AzureChatOpenAI
 ```
-For a more detailed walkthrough of the `Azure` wrapper, see [here](/docs/integrations/chat/azure_chat_openai).
+  
+`Azure` 래퍼에 대한 보다 자세한 설명은 [여기](/docs/integrations/chat/azure_chat_openai)를 참조하세요.
 
 ## LLM
 
-See a [usage example](/docs/integrations/llms/openai).
+[사용 예제](/docs/integrations/llms/openai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "OpenAI"}]-->
 from langchain_openai import OpenAI
 ```
 
-If you are using a model hosted on `Azure`, you should use different wrapper for that:
+
+`Azure`에 호스팅된 모델을 사용하는 경우, 이를 위해 다른 래퍼를 사용해야 합니다:  
 ```python
 <!--IMPORTS:[{"imported": "AzureOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.azure.AzureOpenAI.html", "title": "OpenAI"}]-->
 from langchain_openai import AzureOpenAI
 ```
-For a more detailed walkthrough of the `Azure` wrapper, see [here](/docs/integrations/llms/azure_openai).
+  
+`Azure` 래퍼에 대한 보다 자세한 설명은 [여기](/docs/integrations/llms/azure_openai)를 참조하세요.
 
-## Embedding Model
+## 임베딩 모델
 
-See a [usage example](/docs/integrations/text_embedding/openai)
+[사용 예제](/docs/integrations/text_embedding/openai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "OpenAI"}]-->
 from langchain_openai import OpenAIEmbeddings
 ```
 
-## Document Loader
 
-See a [usage example](/docs/integrations/document_loaders/chatgpt_loader).
+## 문서 로더
+
+[사용 예제](/docs/integrations/document_loaders/chatgpt_loader)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatGPTLoader", "source": "langchain_community.document_loaders.chatgpt", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.chatgpt.ChatGPTLoader.html", "title": "OpenAI"}]-->
 from langchain_community.document_loaders.chatgpt import ChatGPTLoader
 ```
 
-## Retriever
 
-See a [usage example](/docs/integrations/retrievers/chatgpt-plugin).
+## 검색기
+
+[사용 예제](/docs/integrations/retrievers/chatgpt-plugin)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatGPTPluginRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.chatgpt_plugin_retriever.ChatGPTPluginRetriever.html", "title": "OpenAI"}]-->
 from langchain.retrievers import ChatGPTPluginRetriever
 ```
 
-## Tools
 
-### Dall-E Image Generator
+## 도구
 
-> [OpenAI Dall-E](https://openai.com/dall-e-3) are text-to-image models developed by `OpenAI`
-using deep learning methodologies to generate digital images from natural language descriptions,
-called "prompts".
+### Dall-E 이미지 생성기
 
-See a [usage example](/docs/integrations/tools/dalle_image_generator).
+> [OpenAI Dall-E](https://openai.com/dall-e-3)는 자연어 설명에서 디지털 이미지를 생성하기 위해 `OpenAI`에서 개발한 텍스트-투-이미지 모델입니다.  
+"프롬프트"라고 불리는 방법론을 사용하여 생성됩니다.
+
+[사용 예제](/docs/integrations/tools/dalle_image_generator)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "DallEAPIWrapper", "source": "langchain_community.utilities.dalle_image_generator", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.dalle_image_generator.DallEAPIWrapper.html", "title": "OpenAI"}]-->
 from langchain_community.utilities.dalle_image_generator import DallEAPIWrapper
 ```
 
-## Adapter
 
-See a [usage example](/docs/integrations/adapters/openai).
+## 어댑터
+
+[사용 예제](/docs/integrations/adapters/openai)를 참조하세요.
 
 ```python
 from langchain.adapters import openai as lc_openai
 ```
 
-## Tokenizer
 
-There are several places you can use the `tiktoken` tokenizer. By default, it is used to count tokens
-for OpenAI LLMs.
+## 토크나이저
 
-You can also use it to count tokens when splitting documents with 
+`tiktoken` 토크나이저를 사용할 수 있는 여러 장소가 있습니다. 기본적으로 OpenAI LLM의 토큰 수를 세는 데 사용됩니다.
+
+문서를 분할할 때 토큰 수를 세는 데에도 사용할 수 있습니다.  
 ```python
 <!--IMPORTS:[{"imported": "CharacterTextSplitter", "source": "langchain.text_splitter", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "OpenAI"}]-->
 from langchain.text_splitter import CharacterTextSplitter
 CharacterTextSplitter.from_tiktoken_encoder(...)
 ```
-For a more detailed walkthrough of this, see [this notebook](/docs/how_to/split_by_token/#tiktoken)
+  
+이에 대한 보다 자세한 설명은 [이 노트북](/docs/how_to/split_by_token/#tiktoken)을 참조하세요.
 
-## Chain
+## 체인
 
-See a [usage example](https://python.langchain.com/v0.1/docs/guides/productionization/safety/moderation).
+[사용 예제](https://python.langchain.com/v0.1/docs/guides/productionization/safety/moderation)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAIModerationChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.moderation.OpenAIModerationChain.html", "title": "OpenAI"}]-->

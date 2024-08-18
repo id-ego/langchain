@@ -1,37 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/zep_memorystore/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/zep_memorystore.ipynb
+description: Zep은 AI 비서 앱을 위한 장기 기억 서비스로, 과거 대화를 기억하고 개인화된 AI 경험을 제공합니다.
 ---
 
-# Zep Open Source
-## Retriever Example for [Zep](https://docs.getzep.com/)
+# Zep 오픈 소스
+## [Zep](https://docs.getzep.com/)을 위한 검색기 예제
 
-> Recall, understand, and extract data from chat histories. Power personalized AI experiences.
+> 채팅 기록에서 데이터를 기억하고 이해하며 추출합니다. 개인화된 AI 경험을 강화합니다.
 
-> [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-while also reducing hallucinations, latency, and cost.
+> [Zep](https://www.getzep.com)은 AI 어시스턴트 앱을 위한 장기 기억 서비스입니다.
+Zep을 사용하면 AI 어시스턴트가 과거의 대화를 기억할 수 있는 능력을 제공하며,
+환각, 지연 및 비용을 줄일 수 있습니다.
 
-> Interested in Zep Cloud? See [Zep Cloud Installation Guide](https://help.getzep.com/sdks) and [Zep Cloud Retriever Example](https://help.getzep.com/langchain/examples/rag-message-history-example)
+> Zep Cloud에 관심이 있으신가요? [Zep Cloud 설치 가이드](https://help.getzep.com/sdks) 및 [Zep Cloud 검색기 예제](https://help.getzep.com/langchain/examples/rag-message-history-example)를 참조하세요.
 
-## Open Source Installation and Setup
+## 오픈 소스 설치 및 설정
 
-> Zep Open Source project: [https://github.com/getzep/zep](https://github.com/getzep/zep)
-Zep Open Source Docs: [https://docs.getzep.com/](https://docs.getzep.com/)
+> Zep 오픈 소스 프로젝트: [https://github.com/getzep/zep](https://github.com/getzep/zep)
+Zep 오픈 소스 문서: [https://docs.getzep.com/](https://docs.getzep.com/)
 
-## Retriever Example
+## 검색기 예제
 
-This notebook demonstrates how to search historical chat message histories using the [Zep Long-term Memory Store](https://getzep.github.io/).
+이 노트북은 [Zep 장기 기억 저장소](https://getzep.github.io/)를 사용하여 과거 채팅 메시지 기록을 검색하는 방법을 보여줍니다.
 
-We'll demonstrate:
+다음과 같은 내용을 시연할 것입니다:
 
-1. Adding conversation history to the Zep memory store.
-2. Vector search over the conversation history: 
-   1. With a similarity search over chat messages
-   2. Using maximal marginal relevance re-ranking of a chat message search
-   3. Filtering a search using metadata filters
-   4. A similarity search over summaries of the chat messages
-   5. Using maximal marginal relevance re-ranking of a summary search
+1. Zep 메모리 저장소에 대화 기록 추가.
+2. 대화 기록에 대한 벡터 검색:
+   1. 채팅 메시지에 대한 유사성 검색
+   2. 채팅 메시지 검색의 최대 한계 관련성 재순위 지정
+   3. 메타데이터 필터를 사용한 검색 필터링
+   4. 채팅 메시지 요약에 대한 유사성 검색
+   5. 요약 검색의 최대 한계 관련성 재순위 지정
 
 ```python
 <!--IMPORTS:[{"imported": "ZepMemory", "source": "langchain_community.memory.zep_memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain_community.memory.zep_memory.ZepMemory.html", "title": "Zep Open Source"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Zep Open Source"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Zep Open Source"}]-->
@@ -46,9 +46,10 @@ from langchain_core.messages import AIMessage, HumanMessage
 ZEP_API_URL = "http://localhost:8000"
 ```
 
-### Initialize the Zep Chat Message History Class and add a chat message history to the memory store
 
-**NOTE:** Unlike other Retrievers, the content returned by the Zep Retriever is session/user specific. A `session_id` is required when instantiating the Retriever.
+### Zep 채팅 메시지 기록 클래스를 초기화하고 메모리 저장소에 채팅 메시지 기록 추가
+
+**참고:** 다른 검색기와 달리, Zep 검색기가 반환하는 콘텐츠는 세션/사용자 특정입니다. 검색기를 인스턴스화할 때 `session_id`가 필요합니다.
 
 ```python
 # Provide your Zep API key. Note that this is optional. See https://docs.getzep.com/deployment/auth
@@ -59,12 +60,14 @@ if AUTHENTICATE:
     zep_api_key = getpass.getpass()
 ```
 
+
 ```python
 session_id = str(uuid4())  # This is a unique identifier for the user/session
 
 # Initialize the Zep Memory Class
 zep_memory = ZepMemory(session_id=session_id, url=ZEP_API_URL, api_key=zep_api_key)
 ```
+
 
 ```python
 # Preload some messages into the memory. The default message window is 12 messages. We want to push beyond this to demonstrate auto-summarization.
@@ -193,11 +196,12 @@ time.sleep(
 )  # Wait for the messages to be embedded and summarized. Speed depends on OpenAI API latency and your rate limits.
 ```
 
-### Use the Zep Retriever to vector search over the Zep memory
 
-Zep provides native vector search over historical conversation memory. Embedding happens automatically.
+### Zep 메모리에서 벡터 검색을 위한 Zep 검색기 사용
 
-NOTE: Embedding of messages occurs asynchronously, so the first query may not return results. Subsequent queries will return results as the embeddings are generated.
+Zep은 역사적인 대화 기억에 대한 기본 벡터 검색을 제공합니다. 임베딩은 자동으로 발생합니다.
+
+참고: 메시지의 임베딩은 비동기적으로 발생하므로 첫 번째 쿼리는 결과를 반환하지 않을 수 있습니다. 이후 쿼리는 임베딩이 생성됨에 따라 결과를 반환합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "SearchScope", "source": "langchain_community.retrievers.zep", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.zep.SearchScope.html", "title": "Zep Open Source"}, {"imported": "SearchType", "source": "langchain_community.retrievers.zep", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.zep.SearchType.html", "title": "Zep Open Source"}, {"imported": "ZepRetriever", "source": "langchain_community.retrievers.zep", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.zep.ZepRetriever.html", "title": "Zep Open Source"}]-->
@@ -213,6 +217,7 @@ zep_retriever = ZepRetriever(
 await zep_retriever.ainvoke("Who wrote Parable of the Sower?")
 ```
 
+
 ```output
 [Document(page_content="What is the 'Parable of the Sower'?", metadata={'score': 0.9250216484069824, 'uuid': '4cbfb1c0-6027-4678-af43-1e18acb224bb', 'created_at': '2023-11-01T00:32:40.224256Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'human', 'metadata': {'system': {'entities': [{'Label': 'WORK_OF_ART', 'Matches': [{'End': 34, 'Start': 13, 'Text': "Parable of the Sower'"}], 'Name': "Parable of the Sower'"}]}}, 'token_count': 13}),
  Document(page_content='Parable of the Sower is a science fiction novel by Octavia Butler, published in 1993. It follows the story of Lauren Olamina, a young woman living in a dystopian future where society has collapsed due to environmental disasters, poverty, and violence.', metadata={'score': 0.8897348046302795, 'uuid': '3dd9f5ed-9dc9-4427-9da6-aba1b8278a5c', 'created_at': '2023-11-01T00:32:40.192527Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'ai', 'metadata': {'system': {'entities': [{'Label': 'GPE', 'Matches': [{'End': 20, 'Start': 15, 'Text': 'Sower'}], 'Name': 'Sower'}, {'Label': 'PERSON', 'Matches': [{'End': 65, 'Start': 51, 'Text': 'Octavia Butler'}], 'Name': 'Octavia Butler'}, {'Label': 'DATE', 'Matches': [{'End': 84, 'Start': 80, 'Text': '1993'}], 'Name': '1993'}, {'Label': 'PERSON', 'Matches': [{'End': 124, 'Start': 110, 'Text': 'Lauren Olamina'}], 'Name': 'Lauren Olamina'}], 'intent': 'Providing information'}}, 'token_count': 56}),
@@ -221,11 +226,13 @@ await zep_retriever.ainvoke("Who wrote Parable of the Sower?")
  Document(page_content="In addition to 'Parable of the Sower', Butler has written several other notable works, including 'Kindred', 'Dawn', and 'Parable of the Talents'.", metadata={'score': 0.8745182752609253, 'uuid': '45d8aa08-85ab-432f-8902-81712fe363b9', 'created_at': '2023-11-01T00:32:40.245081Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'ai', 'metadata': {'system': {'entities': [{'Label': 'WORK_OF_ART', 'Matches': [{'End': 37, 'Start': 16, 'Text': "Parable of the Sower'"}], 'Name': "Parable of the Sower'"}, {'Label': 'ORG', 'Matches': [{'End': 45, 'Start': 39, 'Text': 'Butler'}], 'Name': 'Butler'}, {'Label': 'GPE', 'Matches': [{'End': 105, 'Start': 98, 'Text': 'Kindred'}], 'Name': 'Kindred'}, {'Label': 'WORK_OF_ART', 'Matches': [{'End': 144, 'Start': 121, 'Text': "Parable of the Talents'"}], 'Name': "Parable of the Talents'"}]}}, 'token_count': 39})]
 ```
 
-We can also use the Zep sync API to retrieve results:
+
+Zep 동기 API를 사용하여 결과를 검색할 수도 있습니다:
 
 ```python
 zep_retriever.invoke("Who wrote Parable of the Sower?")
 ```
+
 
 ```output
 [Document(page_content="What is the 'Parable of the Sower'?", metadata={'score': 0.9250596761703491, 'uuid': '4cbfb1c0-6027-4678-af43-1e18acb224bb', 'created_at': '2023-11-01T00:32:40.224256Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'human', 'metadata': {'system': {'entities': [{'Label': 'WORK_OF_ART', 'Matches': [{'End': 34, 'Start': 13, 'Text': "Parable of the Sower'"}], 'Name': "Parable of the Sower'"}]}}, 'token_count': 13}),
@@ -235,9 +242,10 @@ zep_retriever.invoke("Who wrote Parable of the Sower?")
  Document(page_content="In addition to 'Parable of the Sower', Butler has written several other notable works, including 'Kindred', 'Dawn', and 'Parable of the Talents'.", metadata={'score': 0.8745154142379761, 'uuid': '45d8aa08-85ab-432f-8902-81712fe363b9', 'created_at': '2023-11-01T00:32:40.245081Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'ai', 'metadata': {'system': {'entities': [{'Label': 'WORK_OF_ART', 'Matches': [{'End': 37, 'Start': 16, 'Text': "Parable of the Sower'"}], 'Name': "Parable of the Sower'"}, {'Label': 'ORG', 'Matches': [{'End': 45, 'Start': 39, 'Text': 'Butler'}], 'Name': 'Butler'}, {'Label': 'GPE', 'Matches': [{'End': 105, 'Start': 98, 'Text': 'Kindred'}], 'Name': 'Kindred'}, {'Label': 'WORK_OF_ART', 'Matches': [{'End': 144, 'Start': 121, 'Text': "Parable of the Talents'"}], 'Name': "Parable of the Talents'"}]}}, 'token_count': 39})]
 ```
 
-### Reranking using MMR (Maximal Marginal Relevance)
 
-Zep has native, SIMD-accelerated support for reranking results using MMR. This is useful for removing redundancy in results.
+### MMR(최대 한계 관련성)을 사용한 재순위 지정
+
+Zep은 MMR을 사용하여 결과를 재순위 지정하는 기본 SIMD 가속 지원을 제공합니다. 이는 결과의 중복성을 제거하는 데 유용합니다.
 
 ```python
 zep_retriever = ZepRetriever(
@@ -252,6 +260,7 @@ zep_retriever = ZepRetriever(
 await zep_retriever.ainvoke("Who wrote Parable of the Sower?")
 ```
 
+
 ```output
 [Document(page_content="What is the 'Parable of the Sower'?", metadata={'score': 0.9250596761703491, 'uuid': '4cbfb1c0-6027-4678-af43-1e18acb224bb', 'created_at': '2023-11-01T00:32:40.224256Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'human', 'metadata': {'system': {'entities': [{'Label': 'WORK_OF_ART', 'Matches': [{'End': 34, 'Start': 13, 'Text': "Parable of the Sower'"}], 'Name': "Parable of the Sower'"}]}}, 'token_count': 13}),
  Document(page_content='What other books has she written?', metadata={'score': 0.77488774061203, 'uuid': '1b3c5079-9cab-46f3-beae-fb56c572e0fd', 'created_at': '2023-11-01T00:32:40.240135Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'human', 'token_count': 9}),
@@ -260,17 +269,19 @@ await zep_retriever.ainvoke("Who wrote Parable of the Sower?")
  Document(page_content='Who is the protagonist?', metadata={'score': 0.7858647704124451, 'uuid': 'ee514b37-a0b0-4d24-b0c9-3e9f8ad9d52d', 'created_at': '2023-11-01T00:32:40.203891Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'human', 'metadata': {'system': {'intent': 'The subject is asking about the identity of the protagonist in a specific context, such as a story, movie, or game.'}}, 'token_count': 7})]
 ```
 
-### Using metadata filters to refine search results
 
-Zep supports filtering results by metadata. This is useful for filtering results by entity type, or other metadata.
+### 검색 결과를 정제하기 위한 메타데이터 필터 사용
 
-More information here: https://docs.getzep.com/sdk/search_query/
+Zep은 메타데이터로 결과를 필터링하는 것을 지원합니다. 이는 엔터티 유형 또는 기타 메타데이터에 따라 결과를 필터링하는 데 유용합니다.
+
+자세한 정보는 여기에서 확인하세요: https://docs.getzep.com/sdk/search_query/
 
 ```python
 filter = {"where": {"jsonpath": '$[*] ? (@.Label == "WORK_OF_ART")'}}
 
 await zep_retriever.ainvoke("Who wrote Parable of the Sower?", metadata=filter)
 ```
+
 
 ```output
 [Document(page_content="What is the 'Parable of the Sower'?", metadata={'score': 0.9251098036766052, 'uuid': '4cbfb1c0-6027-4678-af43-1e18acb224bb', 'created_at': '2023-11-01T00:32:40.224256Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'human', 'metadata': {'system': {'entities': [{'Label': 'WORK_OF_ART', 'Matches': [{'End': 34, 'Start': 13, 'Text': "Parable of the Sower'"}], 'Name': "Parable of the Sower'"}]}}, 'token_count': 13}),
@@ -280,12 +291,13 @@ await zep_retriever.ainvoke("Who wrote Parable of the Sower?", metadata=filter)
  Document(page_content='Who is the protagonist?', metadata={'score': 0.7858127355575562, 'uuid': 'ee514b37-a0b0-4d24-b0c9-3e9f8ad9d52d', 'created_at': '2023-11-01T00:32:40.203891Z', 'updated_at': '0001-01-01T00:00:00Z', 'role': 'human', 'metadata': {'system': {'intent': 'The subject is asking about the identity of the protagonist in a specific context, such as a story, movie, or game.'}}, 'token_count': 7})]
 ```
 
-### Searching over Summaries with MMR Reranking
 
-Zep automatically generates summaries of chat messages. These summaries can be searched over using the Zep Retriever. Since a summary is a distillation of a conversation, they're more likely to match your search query and offer rich, succinct context to the LLM.
+### MMR 재순위 지정을 통한 요약 검색
 
-Successive summaries may include similar content, with Zep's similarity search returning the highest matching results but with little diversity.
-MMR re-ranks the results to ensure that the summaries you populate into your prompt are both relevant and each offers additional information to the LLM.
+Zep은 채팅 메시지의 요약을 자동으로 생성합니다. 이러한 요약은 Zep 검색기를 사용하여 검색할 수 있습니다. 요약은 대화의 정제된 형태이므로, 검색 쿼리와 더 잘 일치하고 LLM에 풍부하고 간결한 맥락을 제공합니다.
+
+연속적인 요약은 유사한 내용을 포함할 수 있으며, Zep의 유사성 검색은 가장 높은 일치 결과를 반환하지만 다양성은 적습니다.
+MMR은 결과를 재순위 지정하여 프롬프트에 채워 넣는 요약이 모두 관련성이 있고 LLM에 추가 정보를 제공하도록 보장합니다.
 
 ```python
 zep_retriever = ZepRetriever(
@@ -301,13 +313,15 @@ zep_retriever = ZepRetriever(
 await zep_retriever.ainvoke("Who wrote Parable of the Sower?")
 ```
 
+
 ```output
 [Document(page_content='The human asks about Octavia Butler and the AI informs them that she was an American science fiction author. The human\nasks which of her books were made into movies and the AI mentions the FX series Kindred. The human then asks about her\ncontemporaries and the AI lists Ursula K. Le Guin, Samuel R. Delany, and Joanna Russ. The human also asks about the awards\nshe won and the AI mentions the Hugo Award, the Nebula Award, and the MacArthur Fellowship. The human asks about other women sci-fi writers to read and the AI suggests Ursula K. Le Guin and Joanna Russ. The human then asks for a synopsis of Butler\'s book "Parable of the Sower" and the AI describes it.', metadata={'score': 0.7882999777793884, 'uuid': '3c95a29a-52dc-4112-b8a7-e6b1dc414d45', 'created_at': '2023-11-01T00:32:47.76449Z', 'token_count': 155}),
  Document(page_content='The human asks about Octavia Butler. The AI informs the human that Octavia Estelle Butler was an American science \nfiction author. The human then asks which books of hers were made into movies and the AI mentions the FX series Kindred, \nbased on her novel of the same name.', metadata={'score': 0.7407922744750977, 'uuid': '0e027f4d-d71f-42ae-977f-696b8948b8bf', 'created_at': '2023-11-01T00:32:41.637098Z', 'token_count': 59}),
  Document(page_content='The human asks about Octavia Butler and the AI informs them that she was an American science fiction author. The human\nasks which of her books were made into movies and the AI mentions the FX series Kindred. The human then asks about her\ncontemporaries and the AI lists Ursula K. Le Guin, Samuel R. Delany, and Joanna Russ. The human also asks about the awards\nshe won and the AI mentions the Hugo Award, the Nebula Award, and the MacArthur Fellowship.', metadata={'score': 0.7436535358428955, 'uuid': 'b3500d1b-1a78-4aef-9e24-6b196cfa83cb', 'created_at': '2023-11-01T00:32:44.24744Z', 'token_count': 104})]
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

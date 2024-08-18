@@ -1,25 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/ainetwork/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/ainetwork.ipynb
+description: AINetwork Toolkit은 AINetwork 블록체인과 상호작용하기 위한 도구 세트로, AIN 전송, 앱 생성 및 권한
+  설정을 지원합니다.
 ---
 
 # AINetwork Toolkit
 
-> [AI Network](https://www.ainetwork.ai/build-on-ain) is a layer 1 blockchain designed to accommodate large-scale AI models, utilizing a decentralized GPU network powered by the [$AIN token](https://www.ainetwork.ai/token), enriching AI-driven `NFTs` (`AINFTs`).
+> [AI Network](https://www.ainetwork.ai/build-on-ain)은 대규모 AI 모델을 수용하도록 설계된 레이어 1 블록체인으로, [$AIN 토큰](https://www.ainetwork.ai/token)으로 구동되는 분산 GPU 네트워크를 활용하여 AI 기반 `NFTs`(`AINFTs`)를 풍부하게 합니다.
 > 
-> The `AINetwork Toolkit` is a set of tools for interacting with the [AINetwork Blockchain](https://www.ainetwork.ai/public/whitepaper.pdf). These tools allow you to transfer `AIN`, read and write values, create apps, and set permissions for specific paths within the blockchain database.
+> `AINetwork Toolkit`은 [AINetwork Blockchain](https://www.ainetwork.ai/public/whitepaper.pdf)과 상호작용하기 위한 도구 모음입니다. 이 도구를 사용하면 `AIN`을 전송하고, 값을 읽고 쓸 수 있으며, 앱을 만들고 블록체인 데이터베이스 내 특정 경로에 대한 권한을 설정할 수 있습니다.
 
-## Installing dependencies
+## 종속성 설치
 
-Before using the AINetwork Toolkit, you need to install the ain-py package. You can install it with pip:
+AINetwork Toolkit을 사용하기 전에 ain-py 패키지를 설치해야 합니다. pip를 사용하여 설치할 수 있습니다:
 
 ```python
 %pip install --upgrade --quiet  ain-py langchain-community
 ```
 
-## Set environmental variables
 
-You need to set the `AIN_BLOCKCHAIN_ACCOUNT_PRIVATE_KEY` environmental variable to your AIN Blockchain Account Private Key.
+## 환경 변수 설정
+
+`AIN_BLOCKCHAIN_ACCOUNT_PRIVATE_KEY` 환경 변수를 AIN 블록체인 계정 개인 키로 설정해야 합니다.
 
 ```python
 import os
@@ -27,7 +29,8 @@ import os
 os.environ["AIN_BLOCKCHAIN_ACCOUNT_PRIVATE_KEY"] = ""
 ```
 
-### Get AIN Blockchain private key
+
+### AIN 블록체인 개인 키 가져오기
 
 ```python
 import os
@@ -49,14 +52,17 @@ private_key: {account.private_key}
 #  private key in a secure place. Losing access to your private key means losing
 #  access to your account.
 ```
+
 ```output
 
 address: 0x5BEB4Defa2ccc274498416Fd7Cb34235DbC122Ac
 private_key: f5e2f359bb6b7836a2ac70815473d1a290c517f847d096f5effe818de8c2cf14
 ```
-## Initialize the AINetwork Toolkit
 
-You can initialize the AINetwork Toolkit like this:
+
+## AINetwork Toolkit 초기화
+
+다음과 같이 AINetwork Toolkit을 초기화할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "AINetworkToolkit", "source": "langchain_community.agent_toolkits.ainetwork.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.ainetwork.toolkit.AINetworkToolkit.html", "title": "AINetwork Toolkit"}]-->
@@ -67,9 +73,10 @@ tools = toolkit.get_tools()
 address = tools[0].interface.wallet.defaultAccount.address
 ```
 
-## Initialize the Agent with the AINetwork Toolkit
 
-You can initialize the agent with the AINetwork Toolkit like this:
+## AINetwork Toolkit으로 에이전트 초기화
+
+다음과 같이 AINetwork Toolkit으로 에이전트를 초기화할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "AINetwork Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "AINetwork Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "AINetwork Toolkit"}]-->
@@ -85,17 +92,19 @@ agent = initialize_agent(
 )
 ```
 
-## Example Usage
 
-Here are some examples of how you can use the agent with the AINetwork Toolkit:
+## 사용 예시
 
-### Define App name to test
+다음은 AINetwork Toolkit과 함께 에이전트를 사용하는 방법에 대한 몇 가지 예시입니다:
+
+### 테스트할 앱 이름 정의
 
 ```python
 appName = f"langchain_demo_{address.lower()}"
 ```
 
-### Create an app in the AINetwork Blockchain database
+
+### AINetwork 블록체인 데이터베이스에 앱 생성
 
 ```python
 print(
@@ -104,6 +113,7 @@ print(
     )
 )
 ```
+
 ```output
 
 
@@ -117,13 +127,16 @@ Invoking: `AINappOps` with `{'type': 'SET_ADMIN', 'appName': 'langchain_demo_0x5
 [1m> Finished chain.[0m
 The app with the name "langchain_demo_0x5beb4defa2ccc274498416fd7cb34235dbc122ac" has been created in the AINetwork Blockchain database.
 ```
-### Set a value at a given path in the AINetwork Blockchain database
+
+
+### AINetwork 블록체인 데이터베이스의 주어진 경로에 값 설정
 
 ```python
 print(
     agent.run(f"Set the value {{1: 2, '34': 56}} at the path /apps/{appName}/object .")
 )
 ```
+
 ```output
 
 
@@ -137,7 +150,9 @@ Invoking: `AINvalueOps` with `{'type': 'SET', 'path': '/apps/langchain_demo_0x5b
 [1m> Finished chain.[0m
 The value {1: 2, '34': 56} has been set at the path /apps/langchain_demo_0x5beb4defa2ccc274498416fd7cb34235dbc122ac/object.
 ```
-### Set permissions for a path in the AINetwork Blockchain database
+
+
+### AINetwork 블록체인 데이터베이스의 경로에 대한 권한 설정
 
 ```python
 print(
@@ -147,6 +162,7 @@ print(
     )
 )
 ```
+
 ```output
 
 
@@ -160,11 +176,14 @@ Invoking: `AINruleOps` with `{'type': 'SET', 'path': '/apps/langchain_demo_0x5be
 [1m> Finished chain.[0m
 The write permissions for the path `/apps/langchain_demo_0x5beb4defa2ccc274498416fd7cb34235dbc122ac/user/$from` have been set with the eval string `auth.addr===$from`.
 ```
-### Retrieve the permissions for a path in the AINetwork Blockchain database
+
+
+### AINetwork 블록체인 데이터베이스의 경로에 대한 권한 검색
 
 ```python
 print(agent.run(f"Retrieve the permissions for the path /apps/{appName}."))
 ```
+
 ```output
 
 
@@ -190,19 +209,25 @@ The permissions for the path /apps/langchain_demo_0x5beb4defa2ccc274498416fd7cb3
   - write_owner: true
   - write_rule: true
 ```
-### Get AIN from faucet
+
+
+### 수도꼭지에서 AIN 받기
 
 ```python
 !curl http://faucet.ainetwork.ai/api/test/{address}/
 ```
+
 ```output
 {"result":"0x0eb07b67b7d0a702cb60e865d3deafff3070d8508077ef793d69d6819fd92ea3","time":1692348112376}
 ```
-### Get AIN Balance
+
+
+### AIN 잔액 확인
 
 ```python
 print(agent.run(f"Check AIN balance of {address}"))
 ```
+
 ```output
 
 
@@ -216,7 +241,9 @@ Invoking: `AINvalueOps` with `{'type': 'GET', 'path': '/accounts/0x5BEB4Defa2ccc
 [1m> Finished chain.[0m
 The AIN balance of address 0x5BEB4Defa2ccc274498416Fd7Cb34235DbC122Ac is 100 AIN.
 ```
-### Transfer AIN
+
+
+### AIN 전송
 
 ```python
 print(
@@ -225,6 +252,7 @@ print(
     )
 )
 ```
+
 ```output
 
 
@@ -239,7 +267,8 @@ Invoking: `AINtransfer` with `{'address': '0x19937b227b1b13f29e7ab18676a89ea3bde
 The transfer of 100 AIN to the address 0x19937b227b1b13f29e7ab18676a89ea3bdea9c5b was successful. The transaction hash is 0xa59d15d23373bcc00e413ac8ba18cb016bb3bdd54058d62606aec688c6ad3d2e.
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

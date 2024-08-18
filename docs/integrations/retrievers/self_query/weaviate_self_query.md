@@ -1,23 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/self_query/weaviate_self_query/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/self_query/weaviate_self_query.ipynb
+description: Weaviate는 오픈 소스 벡터 데이터베이스로, ML 모델의 데이터 객체와 벡터 임베딩을 저장하고 수십억 개의 데이터 객체로
+  확장할 수 있습니다.
 ---
 
 # Weaviate
 
-> [Weaviate](https://weaviate.io/) is an open-source vector database. It allows you to store data objects and vector embeddings from
-your favorite ML models, and scale seamlessly into billions of data objects.
+> [Weaviate](https://weaviate.io/)는 오픈 소스 벡터 데이터베이스입니다. 이는 좋아하는 ML 모델의 데이터 객체와 벡터 임베딩을 저장할 수 있게 해주며, 수십억 개의 데이터 객체로 원활하게 확장할 수 있습니다.
 
-In the notebook, we'll demo the `SelfQueryRetriever` wrapped around a `Weaviate` vector store. 
+노트북에서는 `Weaviate` 벡터 저장소 주위에 감싸진 `SelfQueryRetriever`를 시연할 것입니다.
 
-## Creating a Weaviate vector store
-First we'll want to create a Weaviate vector store and seed it with some data. We've created a small demo set of documents that contain summaries of movies.
+## Weaviate 벡터 저장소 생성
+먼저 Weaviate 벡터 저장소를 생성하고 일부 데이터로 초기화해야 합니다. 우리는 영화 요약이 포함된 작은 데모 문서 세트를 만들었습니다.
 
-**Note:** The self-query retriever requires you to have `lark` installed (`pip install lark`). We also need the `weaviate-client` package.
+**참고:** 자가 쿼리 검색기를 사용하려면 `lark`가 설치되어 있어야 합니다 (`pip install lark`). 또한 `weaviate-client` 패키지가 필요합니다.
 
 ```python
 %pip install --upgrade --quiet  lark weaviate-client
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Weaviate", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.weaviate.Weaviate.html", "title": "Weaviate"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Weaviate"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Weaviate"}]-->
@@ -27,6 +28,7 @@ from langchain_openai import OpenAIEmbeddings
 
 embeddings = OpenAIEmbeddings()
 ```
+
 
 ```python
 docs = [
@@ -65,8 +67,9 @@ vectorstore = Weaviate.from_documents(
 )
 ```
 
-## Creating our self-querying retriever
-Now we can instantiate our retriever. To do this we'll need to provide some information upfront about the metadata fields that our documents support and a short description of the document contents.
+
+## 자가 쿼리 검색기 생성
+이제 검색기를 인스턴스화할 수 있습니다. 이를 위해 문서가 지원하는 메타데이터 필드에 대한 정보를 미리 제공하고 문서 내용에 대한 간단한 설명을 제공해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AttributeInfo", "source": "langchain.chains.query_constructor.base", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.query_constructor.schema.AttributeInfo.html", "title": "Weaviate"}, {"imported": "SelfQueryRetriever", "source": "langchain.retrievers.self_query.base", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.self_query.base.SelfQueryRetriever.html", "title": "Weaviate"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Weaviate"}]-->
@@ -101,16 +104,19 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
-## Testing it out
-And now we can try actually using our retriever!
+
+## 테스트해보기
+이제 실제로 검색기를 사용해 볼 수 있습니다!
 
 ```python
 # This example only specifies a relevant query
 retriever.invoke("What are some movies about dinosaurs")
 ```
+
 ```output
 query='dinosaur' filter=None limit=None
 ```
+
 
 ```output
 [Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'genre': 'science fiction', 'rating': 7.7, 'year': 1993}),
@@ -119,23 +125,27 @@ query='dinosaur' filter=None limit=None
  Document(page_content='A psychologist / detective gets lost in a series of dreams within dreams within dreams and Inception reused the idea', metadata={'genre': None, 'rating': 8.6, 'year': 2006})]
 ```
 
+
 ```python
 # This example specifies a query and a filter
 retriever.invoke("Has Greta Gerwig directed any movies about women")
 ```
+
 ```output
 query='women' filter=Comparison(comparator=<Comparator.EQ: 'eq'>, attribute='director', value='Greta Gerwig') limit=None
 ```
+
 
 ```output
 [Document(page_content='A bunch of normal-sized women are supremely wholesome and some men pine after them', metadata={'genre': None, 'rating': 8.3, 'year': 2019})]
 ```
 
-## Filter k
 
-We can also use the self query retriever to specify `k`: the number of documents to fetch.
+## k 필터링
 
-We can do this by passing `enable_limit=True` to the constructor.
+자가 쿼리 검색기를 사용하여 `k`: 가져올 문서 수를 지정할 수도 있습니다.
+
+이는 생성자에 `enable_limit=True`를 전달하여 수행할 수 있습니다.
 
 ```python
 retriever = SelfQueryRetriever.from_llm(
@@ -148,13 +158,16 @@ retriever = SelfQueryRetriever.from_llm(
 )
 ```
 
+
 ```python
 # This example only specifies a relevant query
 retriever.invoke("what are two movies about dinosaurs")
 ```
+
 ```output
 query='dinosaur' filter=None limit=2
 ```
+
 
 ```output
 [Document(page_content='A bunch of scientists bring back dinosaurs and mayhem breaks loose', metadata={'genre': 'science fiction', 'rating': 7.7, 'year': 1993}),

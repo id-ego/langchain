@@ -1,48 +1,57 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/pyspark_dataframe/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/pyspark_dataframe.ipynb
+description: 이 문서는 PySpark DataFrame에서 데이터를 로드하는 방법에 대해 설명합니다. 다양한 코드 예제를 통해 이해를 돕습니다.
 ---
 
 # PySpark
 
-This notebook goes over how to load data from a [PySpark](https://spark.apache.org/docs/latest/api/python/) DataFrame.
+이 노트북은 [PySpark](https://spark.apache.org/docs/latest/api/python/) DataFrame에서 데이터를 로드하는 방법에 대해 설명합니다.
 
 ```python
 %pip install --upgrade --quiet  pyspark
 ```
 
+
 ```python
 from pyspark.sql import SparkSession
 ```
 
+
 ```python
 spark = SparkSession.builder.getOrCreate()
 ```
+
 ```output
 Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
 23/05/31 14:08:33 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 ```
 
+
 ```python
 df = spark.read.csv("example_data/mlb_teams_2012.csv", header=True)
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "PySparkDataFrameLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pyspark_dataframe.PySparkDataFrameLoader.html", "title": "PySpark"}]-->
 from langchain_community.document_loaders import PySparkDataFrameLoader
 ```
 
+
 ```python
 loader = PySparkDataFrameLoader(spark, df, page_content_column="Team")
 ```
 
+
 ```python
 loader.load()
 ```
+
 ```output
 [Stage 8:>                                                          (0 + 1) / 1]
 ```
+
 
 ```output
 [Document(page_content='Nationals', metadata={' "Payroll (millions)"': '     81.34', ' "Wins"': ' 98'}),
@@ -77,7 +86,8 @@ loader.load()
  Document(page_content='Astros', metadata={' "Payroll (millions)"': '        60.65', ' "Wins"': ' 55'})]
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

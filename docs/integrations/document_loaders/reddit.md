@@ -1,24 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/reddit/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/reddit.ipynb
+description: 레딧은 미국의 소셜 뉴스 집계 및 토론 웹사이트로, `praw` 패키지를 사용하여 서브레딧 또는 사용자 게시물의 텍스트를 가져옵니다.
 ---
 
-# Reddit
+# 레딧
 
-> [Reddit](https://www.reddit.com) is an American social news aggregation, content rating, and discussion website.
+> [레딧](https://www.reddit.com)은 미국의 소셜 뉴스 집계, 콘텐츠 평가 및 토론 웹사이트입니다.
 
-This loader fetches the text from the Posts of Subreddits or Reddit users, using the `praw` Python package.
+이 로더는 `praw` 파이썬 패키지를 사용하여 서브레딧 또는 레딧 사용자 게시물에서 텍스트를 가져옵니다.
 
-Make a [Reddit Application](https://www.reddit.com/prefs/apps/) and initialize the loader with with your Reddit API credentials.
+[레딧 애플리케이션](https://www.reddit.com/prefs/apps/)을 만들고 레딧 API 자격 증명으로 로더를 초기화하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "RedditPostsLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.reddit.RedditPostsLoader.html", "title": "Reddit"}]-->
 from langchain_community.document_loaders import RedditPostsLoader
 ```
 
+
 ```python
 %pip install --upgrade --quiet  praw
 ```
+
 
 ```python
 # load using 'subreddit' mode
@@ -49,10 +51,12 @@ loader = RedditPostsLoader(
 # Note: Categories can be only of following value - "controversial" "hot" "new" "rising" "top"
 ```
 
+
 ```python
 documents = loader.load()
 documents[:5]
 ```
+
 
 ```output
 [Document(page_content='Hello, I am not looking for investment advice. I will apply my own due diligence. However, I am interested if anyone knows as a UK resident how fees and exchange rate differences would impact performance?\n\nI am planning to create a pie of index funds (perhaps UK, US, europe) or find a fund with a good track record of long term growth at low rates. \n\nDoes anyone have any ideas?', metadata={'post_subreddit': 'r/investing', 'post_category': 'new', 'post_title': 'Long term retirement funds fees/exchange rate query', 'post_score': 1, 'post_id': '130pa6m', 'post_url': 'https://www.reddit.com/r/investing/comments/130pa6m/long_term_retirement_funds_feesexchange_rate_query/', 'post_author': Redditor(name='Badmanshiz')}),
@@ -62,7 +66,8 @@ documents[:5]
  Document(page_content='Hello everyone,\n\nI would really like to invest in an ETF that follows spy or another big index, as I think this form of investment suits me best. \n\nThe problem is, that I live in Denmark where ETFs and funds are taxed annually on unrealised gains at quite a steep rate. This means that an ETF growing say 10% per year will only grow about 6%, which really ruins the long term effects of compounding interest.\n\nHowever stocks are only taxed on realised gains which is why they look more interesting to hold long term.\n\nI do not like the lack of diversification this brings, as I am looking to spend tonnes of time picking the right long term stocks.\n\nIt would be ideal to find a few stocks that over the long term somewhat follows the indexes. Does anyone have suggestions?\n\nI have looked at Nasdaq Inc. which quite closely follows Nasdaq 100. \n\nI really appreciate any help.', metadata={'post_subreddit': 'r/investing', 'post_category': 'new', 'post_title': 'Stocks that track an index', 'post_score': 7, 'post_id': '130auvj', 'post_url': 'https://www.reddit.com/r/investing/comments/130auvj/stocks_that_track_an_index/', 'post_author': Redditor(name='LeAlbertP')})]
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

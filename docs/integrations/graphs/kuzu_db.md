@@ -1,27 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/graphs/kuzu_db/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/graphs/kuzu_db.ipynb
+description: Kùzu는 쿼리 속도와 확장성을 위해 설계된 임베디드 속성 그래프 데이터베이스 관리 시스템입니다. Cypher를 사용하여 효율적인
+  데이터 쿼리를 제공합니다.
 ---
 
 # Kuzu
 
-> [Kùzu](https://kuzudb.com) is an embeddable property graph database management system built for query speed and scalability.
+> [Kùzu](https://kuzudb.com)는 쿼리 속도와 확장성을 위해 구축된 임베디드 속성 그래프 데이터베이스 관리 시스템입니다.
 > 
-> Kùzu has a permissive (MIT) open source license and implements [Cypher](https://en.wikipedia.org/wiki/Cypher_(query_language)), a declarative graph query language that allows for expressive and efficient data querying in a property graph.
-It uses columnar storage and its query processor contains novel join algorithms that allow it to scale to very large graphs without sacrificing query performance.
+> Kùzu는 관대한 (MIT) 오픈 소스 라이센스를 가지고 있으며, 속성 그래프에서 표현력 있고 효율적인 데이터 쿼리를 허용하는 선언적 그래프 쿼리 언어인 [Cypher](https://en.wikipedia.org/wiki/Cypher_(query_language))를 구현합니다. 
+열 저장소를 사용하며, 쿼리 프로세서에는 쿼리 성능을 희생하지 않고 매우 큰 그래프에 확장할 수 있는 새로운 조인 알고리즘이 포함되어 있습니다.
 > 
-> This notebook shows how to use LLMs to provide a natural language interface to [Kùzu](https://kuzudb.com) database with Cypher.
+> 이 노트북은 LLM을 사용하여 [Kùzu](https://kuzudb.com) 데이터베이스에 Cypher를 통해 자연어 인터페이스를 제공하는 방법을 보여줍니다.
 
-## Setting up
+## 설정하기
 
-Kùzu is an embedded database (it runs in-process), so there are no servers to manage.
-Simply install it via its Python package:
+Kùzu는 임베디드 데이터베이스(프로세스 내에서 실행됨)로, 관리할 서버가 없습니다.
+단순히 Python 패키지를 통해 설치합니다:
 
 ```bash
 pip install kuzu
 ```
 
-Create a database on the local machine and connect to it:
+
+로컬 머신에 데이터베이스를 생성하고 연결합니다:
 
 ```python
 import kuzu
@@ -30,7 +32,8 @@ db = kuzu.Database("test_db")
 conn = kuzu.Connection(db)
 ```
 
-First, we create the schema for a simple movie database:
+
+먼저, 간단한 영화 데이터베이스의 스키마를 생성합니다:
 
 ```python
 conn.execute("CREATE NODE TABLE Movie (name STRING, PRIMARY KEY(name))")
@@ -40,11 +43,13 @@ conn.execute(
 conn.execute("CREATE REL TABLE ActedIn (FROM Person TO Movie)")
 ```
 
+
 ```output
 <kuzu.query_result.QueryResult at 0x103a72290>
 ```
 
-Then we can insert some data.
+
+그런 다음 일부 데이터를 삽입할 수 있습니다.
 
 ```python
 conn.execute("CREATE (:Person {name: 'Al Pacino', birthDate: '1940-04-25'})")
@@ -68,13 +73,15 @@ conn.execute(
 )
 ```
 
+
 ```output
 <kuzu.query_result.QueryResult at 0x103a9e750>
 ```
 
-## Creating `KuzuQAChain`
 
-We can now create the `KuzuGraph` and `KuzuQAChain`. To create the `KuzuGraph` we simply need to pass the database object to the `KuzuGraph` constructor.
+## `KuzuQAChain` 생성하기
+
+이제 `KuzuGraph`와 `KuzuQAChain`을 생성할 수 있습니다. `KuzuGraph`를 생성하려면 데이터베이스 객체를 `KuzuGraph` 생성자에 전달하기만 하면 됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "KuzuQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.kuzu.KuzuQAChain.html", "title": "Kuzu"}, {"imported": "KuzuGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.kuzu_graph.KuzuGraph.html", "title": "Kuzu"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Kuzu"}]-->
@@ -83,9 +90,11 @@ from langchain_community.graphs import KuzuGraph
 from langchain_openai import ChatOpenAI
 ```
 
+
 ```python
 graph = KuzuGraph(db)
 ```
+
 
 ```python
 chain = KuzuQAChain.from_llm(
@@ -95,30 +104,36 @@ chain = KuzuQAChain.from_llm(
 )
 ```
 
-## Refresh graph schema information
 
-If the schema of database changes, you can refresh the schema information needed to generate Cypher statements.
-You can also display the schema of the Kùzu graph as demonstrated below.
+## 그래프 스키마 정보 새로 고침
+
+데이터베이스의 스키마가 변경되면 Cypher 문을 생성하는 데 필요한 스키마 정보를 새로 고칠 수 있습니다.
+아래와 같이 Kùzu 그래프의 스키마를 표시할 수도 있습니다.
 
 ```python
 # graph.refresh_schema()
 ```
 
+
 ```python
 print(graph.get_schema)
 ```
+
 ```output
 Node properties: [{'properties': [('name', 'STRING')], 'label': 'Movie'}, {'properties': [('name', 'STRING'), ('birthDate', 'STRING')], 'label': 'Person'}]
 Relationships properties: [{'properties': [], 'label': 'ActedIn'}]
 Relationships: ['(:Person)-[:ActedIn]->(:Movie)']
 ```
-## Querying the graph
 
-We can now use the `KuzuQAChain` to ask questions of the graph.
+
+## 그래프 쿼리하기
+
+이제 `KuzuQAChain`을 사용하여 그래프에 질문할 수 있습니다.
 
 ```python
 chain.invoke("Who acted in The Godfather: Part II?")
 ```
+
 ```output
 
 
@@ -133,14 +148,17 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'query': 'Who acted in The Godfather: Part II?',
  'result': 'Al Pacino, Robert De Niro acted in The Godfather: Part II.'}
 ```
 
+
 ```python
 chain.invoke("Robert De Niro played in which movies?")
 ```
+
 ```output
 
 
@@ -155,14 +173,17 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'query': 'Robert De Niro played in which movies?',
  'result': 'Robert De Niro played in The Godfather: Part II.'}
 ```
 
+
 ```python
 chain.invoke("How many actors played in the Godfather: Part II?")
 ```
+
 ```output
 
 
@@ -176,14 +197,17 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'query': 'How many actors played in the Godfather: Part II?',
  'result': "I don't know the answer."}
 ```
 
+
 ```python
 chain.invoke("Who is the oldest actor who played in The Godfather: Part II?")
 ```
+
 ```output
 
 
@@ -199,14 +223,16 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'query': 'Who is the oldest actor who played in The Godfather: Part II?',
  'result': 'Al Pacino is the oldest actor who played in The Godfather: Part II.'}
 ```
 
-## Use separate LLMs for Cypher and answer generation
 
-You can specify `cypher_llm` and `qa_llm` separately to use different LLMs for Cypher generation and answer generation.
+## Cypher 및 답변 생성을 위한 별도의 LLM 사용하기
+
+Cypher 생성 및 답변 생성을 위해 서로 다른 LLM을 사용하려면 `cypher_llm`과 `qa_llm`을 별도로 지정할 수 있습니다.
 
 ```python
 chain = KuzuQAChain.from_llm(
@@ -216,14 +242,17 @@ chain = KuzuQAChain.from_llm(
     verbose=True,
 )
 ```
+
 ```output
 /Users/prrao/code/langchain/.venv/lib/python3.11/site-packages/langchain_core/_api/deprecation.py:119: LangChainDeprecationWarning: The class `LLMChain` was deprecated in LangChain 0.1.17 and will be removed in 0.3.0. Use RunnableSequence, e.g., `prompt | llm` instead.
   warn_deprecated(
 ```
 
+
 ```python
 chain.invoke("How many actors played in The Godfather: Part II?")
 ```
+
 ```output
 
 
@@ -244,6 +273,7 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
+
 
 ```output
 {'query': 'How many actors played in The Godfather: Part II?',

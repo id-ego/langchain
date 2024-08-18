@@ -1,80 +1,80 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/overview/
+description: LangChain v0.2의 새로운 기능과 개선 사항을 소개합니다. 스트리밍 지원, 도구 호출 표준화 등 다양한 업데이트가
+  포함되어 있습니다.
 sidebar_label: Overview of v0.2
 sidebar_position: 0
 ---
 
-# Overview of LangChain v0.2
+# LangChain v0.2 개요
 
-## What’s new in LangChain?
+## LangChain의 새로운 기능은 무엇인가요?
 
-The following features have been added during the development of 0.1.x:
+0.1.x 개발 중에 다음 기능이 추가되었습니다:
 
-- Better streaming support via the [Event Streaming API](https://python.langchain.com/docs/expression_language/streaming/#using-stream-events).
-- [Standardized tool calling support](https://blog.langchain.dev/tool-calling-with-langchain/)
-- A standardized interface for [structuring output](https://github.com/langchain-ai/langchain/discussions/18154)
-- [@chain decorator](https://python.langchain.com/docs/expression_language/how_to/decorator/) to more easily create **RunnableLambdas**
+- [Event Streaming API](https://python.langchain.com/docs/expression_language/streaming/#using-stream-events)를 통한 더 나은 스트리밍 지원.
+- [표준화된 도구 호출 지원](https://blog.langchain.dev/tool-calling-with-langchain/)
+- [출력 구조화](https://github.com/langchain-ai/langchain/discussions/18154)를 위한 표준화된 인터페이스
+- **RunnableLambdas**를 더 쉽게 생성하기 위한 [@chain 데코레이터](https://python.langchain.com/docs/expression_language/how_to/decorator/)
 - https://python.langchain.com/docs/expression_language/how_to/inspect/
-- In Python, better async support for many core abstractions (thank you [@cbornet](https://github.com/cbornet)!!)
-- Include response metadata in `AIMessage` to make it easy to access raw output from the underlying models
-- Tooling to visualize [your runnables](https://python.langchain.com/docs/expression_language/how_to/inspect/) or [your langgraph app](https://github.com/langchain-ai/langgraph/blob/main/examples/visualization.ipynb)
-- Interoperability of chat message histories across most providers
-- [Over 20+ partner packages in python](https://python.langchain.com/docs/integrations/platforms/) for popular integrations
+- Python에서 많은 핵심 추상화에 대한 더 나은 비동기 지원 (감사합니다 [@cbornet](https://github.com/cbornet)!!)
+- 기본 모델에서 원시 출력을 쉽게 접근할 수 있도록 `AIMessage`에 응답 메타데이터 포함
+- [당신의 실행 가능 코드](https://python.langchain.com/docs/expression_language/how_to/inspect/) 또는 [당신의 langgraph 앱](https://github.com/langchain-ai/langgraph/blob/main/examples/visualization.ipynb)을 시각화하는 도구
+- 대부분의 제공업체 간의 채팅 메시지 기록 상호 운용성
+- 인기 있는 통합을 위한 [20개 이상의 파트너 패키지](https://python.langchain.com/docs/integrations/platforms/) 
 
-## What’s coming to LangChain?
+## LangChain에 무엇이 다가오고 있나요?
 
-- We’ve been working hard on [langgraph](https://langchain-ai.github.io/langgraph/). We will be building more capabilities on top of it and focusing on making it the go-to framework for agent architectures.
-- Vectorstores V2! We’ll be revisiting our vectorstores abstractions to help improve usability and reliability.
-- Better documentation and versioned docs!
-- We’re planning a breaking release (0.3.0) sometime between July-September to [upgrade to full support of Pydantic 2](https://github.com/langchain-ai/langchain/discussions/19339), and will drop support for Pydantic 1 (including objects originating from the `v1` namespace of Pydantic 2).
+- 우리는 [langgraph](https://langchain-ai.github.io/langgraph/)에 열심히 작업하고 있습니다. 우리는 그 위에 더 많은 기능을 구축하고 에이전트 아키텍처를 위한 주요 프레임워크로 만들기 위해 집중할 것입니다.
+- Vectorstores V2! 우리는 사용성과 신뢰성을 개선하기 위해 벡터 저장소 추상화를 재검토할 것입니다.
+- 더 나은 문서화 및 버전화된 문서!
+- 우리는 7월에서 9월 사이에 Pydantic 2의 전체 지원으로 [업그레이드하기 위한](https://github.com/langchain-ai/langchain/discussions/19339) 파괴적인 릴리스(0.3.0)를 계획하고 있으며, Pydantic 1에 대한 지원을 중단할 것입니다 (Pydantic 2의 `v1` 네임스페이스에서 유래된 객체 포함).
 
-## What changed?
+## 무엇이 변경되었나요?
 
-Due to the rapidly evolving field, LangChain has also evolved rapidly.
+빠르게 발전하는 분야 덕분에 LangChain도 빠르게 발전했습니다.
 
-This document serves to outline at a high level what has changed and why.
+이 문서는 무엇이 변경되었는지와 그 이유를 높은 수준에서 개요하는 역할을 합니다.
 
-### TLDR
+### 요약
 
-**As of 0.2.0:**
+**0.2.0 기준:**
 
-- This release completes the work that we started with release 0.1.0 by removing the dependency of `langchain` on `langchain-community`.
-- `langchain` package no longer requires `langchain-community` . Instead `langchain-community` will now depend on `langchain-core` and `langchain` .
-- User code that still relies on deprecated imports from `langchain` will continue to work as long `langchain_community` is installed. These imports will start raising errors in release 0.4.x.
+- 이 릴리스는 `langchain`이 `langchain-community`에 의존하는 것을 제거하여 0.1.0 릴리스에서 시작한 작업을 완료합니다.
+- `langchain` 패키지는 더 이상 `langchain-community`를 요구하지 않습니다. 대신 `langchain-community`는 이제 `langchain-core`와 `langchain`에 의존합니다.
+- 여전히 `langchain`의 사용 중단된 가져오기에 의존하는 사용자 코드는 `langchain_community`가 설치되어 있는 한 계속 작동합니다. 이러한 가져오기는 0.4.x 릴리스에서 오류를 발생시키기 시작할 것입니다.
 
-**As of 0.1.0:**
+**0.1.0 기준:**
 
-- `langchain` was split into the following component packages: `langchain-core`, `langchain`, `langchain-community`, `langchain-[partner]` to improve the usability of langchain code in production settings. You can read more about it on our [blog](https://blog.langchain.dev/langchain-v0-1-0/).
+- `langchain`은 프로덕션 환경에서 langchain 코드의 사용성을 개선하기 위해 다음과 같은 구성 요소 패키지로 분할되었습니다: `langchain-core`, `langchain`, `langchain-community`, `langchain-[partner]`. 이에 대한 자세한 내용은 [블로그](https://blog.langchain.dev/langchain-v0-1-0/)를 참조하세요.
 
-### Ecosystem organization
+### 생태계 조직
 
-By the release of 0.1.0, LangChain had grown to a large ecosystem with many integrations and a large community.
+0.1.0 릴리스 시점에서 LangChain은 많은 통합과 대규모 커뮤니티를 가진 큰 생태계로 성장했습니다.
 
-To improve the usability of LangChain in production, we split the single `langchain` package into multiple packages. This allowed us to create a good foundation architecture for the LangChain ecosystem and improve the usability of `langchain` in production.
+LangChain의 프로덕션에서의 사용성을 개선하기 위해 단일 `langchain` 패키지를 여러 패키지로 분할했습니다. 이를 통해 LangChain 생태계에 대한 좋은 기반 아키텍처를 만들고 `langchain`의 프로덕션에서의 사용성을 개선할 수 있었습니다.
 
-Here is the high level break down of the Eco-system:
+생태계의 높은 수준의 분해는 다음과 같습니다:
 
-- **langchain-core**:  contains core abstractions involving LangChain Runnables, tooling for observability, and base implementations of important abstractions (e.g., Chat Models).
-- **langchain:** contains generic code that is built using interfaces defined in `langchain-core`. This package is for code that generalizes well across different implementations of specific interfaces. For example, `create_tool_calling_agent` works across chat models that support [tool calling capabilities](https://blog.langchain.dev/tool-calling-with-langchain/).
-- **langchain-community**: community maintained 3rd party integrations. Contains integrations based on interfaces defined in **langchain-core**. Maintained by the LangChain community.
-- **Partner Packages (e.g., langchain-[partner])**: Partner packages are packages dedicated to especially popular integrations (e.g., `langchain-openai`, `langchain-anthropic` etc.). The dedicated packages generally benefit from better reliability and support.
-- `langgraph`: Build robust and stateful multi-actor applications with LLMs by modeling steps as edges and nodes in a graph.
-- `langserve`: Deploy LangChain chains as REST APIs.
+- **langchain-core**: LangChain Runnables, 관찰 가능성을 위한 도구 및 중요한 추상화(예: 채팅 모델)의 기본 구현을 포함하는 핵심 추상화.
+- **langchain:** `langchain-core`에 정의된 인터페이스를 사용하여 구축된 일반 코드를 포함합니다. 이 패키지는 특정 인터페이스의 다양한 구현에서 잘 일반화되는 코드에 해당합니다. 예를 들어, `create_tool_calling_agent`는 [도구 호출 기능](https://blog.langchain.dev/tool-calling-with-langchain/)을 지원하는 채팅 모델에서 작동합니다.
+- **langchain-community**: 커뮤니티에서 유지 관리하는 제3자 통합. **langchain-core**에 정의된 인터페이스를 기반으로 한 통합을 포함합니다. LangChain 커뮤니티에서 유지 관리됩니다.
+- **파트너 패키지 (예: langchain-[partner])**: 파트너 패키지는 특히 인기 있는 통합을 위한 패키지입니다 (예: `langchain-openai`, `langchain-anthropic` 등). 전용 패키지는 일반적으로 더 나은 신뢰성과 지원을 제공합니다.
+- `langgraph`: LLM을 사용하여 단계들을 그래프의 엣지와 노드로 모델링하여 강력하고 상태 유지 가능한 다중 액터 애플리케이션을 구축합니다.
+- `langserve`: LangChain 체인을 REST API로 배포합니다.
 
-In the 0.1.0 release, `langchain-community` was retained as required a dependency of `langchain`.
+0.1.0 릴리스에서 `langchain-community`는 `langchain`의 필수 종속성으로 유지되었습니다.
 
-This allowed imports of vectorstores, chat models, and other integrations to continue working through `langchain`
-rather than forcing users to update all of their imports to `langchain-community`.
+이로 인해 벡터 저장소, 채팅 모델 및 기타 통합의 가져오기가 `langchain`을 통해 계속 작동할 수 있었고, 사용자가 모든 가져오기를 `langchain-community`로 업데이트해야 하는 강제를 피할 수 있었습니다.
 
-For the 0.2.0 release, we’re removing the dependency of `langchain` on `langchain-community`. This is something we’ve been planning to do since the 0.1 release because we believe this is the right package architecture.
+0.2.0 릴리스에서는 `langchain`이 `langchain-community`에 대한 의존성을 제거하고 있습니다. 이는 0.1 릴리스 이후로 우리가 계획해온 사항으로, 이는 올바른 패키지 아키텍처라고 믿기 때문입니다.
 
-Old imports will continue to work as long as `langchain-community` is installed. These imports will be removed in the 0.4.0 release.
+구식 가져오기는 `langchain-community`가 설치되어 있는 한 계속 작동합니다. 이러한 가져오기는 0.4.0 릴리스에서 제거될 것입니다.
 
-To understand why we think breaking the dependency of `langchain` on `langchain-community` is best we should understand what each package is meant to do.
+`langchain`이 `langchain-community`에 대한 의존성을 끊는 것이 최선이라고 생각하는 이유를 이해하기 위해서는 각 패키지가 수행해야 하는 역할을 이해해야 합니다.
 
-`langchain` is meant to contain high-level chains and agent architectures. The logic in these should be specified at the level of abstractions like `ChatModel` and `Retriever`, and should not be specific to any one integration. This has two main benefits:
+`langchain`은 고수준의 체인과 에이전트 아키텍처를 포함하도록 설계되었습니다. 이들 내의 논리는 `ChatModel` 및 `Retriever`와 같은 추상화 수준에서 지정되어야 하며, 특정 통합에 국한되어서는 안 됩니다. 이는 두 가지 주요 이점을 가지고 있습니다:
 
-1. `langchain` is fairly lightweight. Here is the full list of required dependencies (after the split)
+1. `langchain`은 상당히 경량입니다. 분할 후 필요한 종속성의 전체 목록은 다음과 같습니다.
    
    ```toml
    python = ">=3.8.1,<4.0"
@@ -90,12 +90,13 @@ To understand why we think breaking the dependency of `langchain` on `langchain-
    tenacity = "^8.1.0"
    jsonpatch = "^1.33"
    ```
-2. `langchain` chains/agents are largely integration-agnostic, which makes it easy to experiment with different integrations and future-proofs your code should there be issues with one specific integration.
 
-There is also a third less tangible benefit which is that being integration-agnostic forces us to find only those very generic abstractions and architectures which generalize well across integrations. Given how general the abilities of the foundational tech are, and how quickly the space is moving, having generic architectures is a good way of future-proofing your applications.
+2. `langchain` 체인/에이전트는 대체로 통합에 구애받지 않으므로 다양한 통합을 실험하기 쉽고 특정 통합에 문제가 발생할 경우 코드의 미래를 보장합니다.
 
-`langchain-community` is intended to have all integration-specific components that are not yet being maintained in separate `langchain-{partner}` packages. Today this is still the majority of integrations and a lot of code. This code is primarily contributed by the community, while `langchain` is largely written by core maintainers. All of these integrations use optional dependencies and conditional imports, which prevents dependency bloat and conflicts but means compatible dependency versions are not made explicit. Given the volume of integrations in `langchain-community` and the speed at which integrations change, it’s very hard to follow semver versioning, and we currently don’t.
+또한 통합에 구애받지 않는다는 세 번째 덜 구체적인 이점이 있습니다. 이는 우리가 통합 전반에 걸쳐 잘 일반화되는 매우 일반적인 추상화와 아키텍처만 찾도록 강요합니다. 기본 기술의 능력이 얼마나 일반적인지, 그리고 이 분야가 얼마나 빠르게 변화하고 있는지를 고려할 때, 일반적인 아키텍처를 갖는 것은 애플리케이션의 미래를 보장하는 좋은 방법입니다.
 
-All of which is to say that there’s no large benefits to `langchain` depending on `langchain-community` and some obvious downsides: the functionality in `langchain` should be integration agnostic anyways, `langchain-community` can’t be properly versioned, and depending on `langchain-community` increases the [vulnerability surface](https://github.com/langchain-ai/langchain/discussions/19083) of `langchain`.
+`langchain-community`는 아직 별도의 `langchain-{partner}` 패키지에서 유지 관리되지 않는 모든 통합 특정 구성 요소를 포함하도록 설계되었습니다. 오늘날 이것은 여전히 대부분의 통합과 많은 코드입니다. 이 코드는 주로 커뮤니티에 의해 기여되며, `langchain`은 주로 핵심 유지 관리자가 작성합니다. 이러한 모든 통합은 선택적 종속성과 조건부 가져오기를 사용하여 종속성 부풀림과 충돌을 방지하지만 호환 가능한 종속성 버전이 명시되지 않습니다. `langchain-community`의 통합 수와 통합 변경 속도를 고려할 때, semver 버전 관리를 따르기가 매우 어렵고 현재는 따르지 않고 있습니다.
 
-For more context about the reason for the organization please see our blog: https://blog.langchain.dev/langchain-v0-1-0/
+즉, `langchain`이 `langchain-community`에 의존하는 것은 큰 이점이 없으며 몇 가지 명백한 단점이 있습니다: `langchain`의 기능은 어쨌든 통합에 구애받지 않아야 하며, `langchain-community`는 제대로 버전 관리될 수 없으며, `langchain-community`에 의존하는 것은 `langchain`의 [취약성 표면](https://github.com/langchain-ai/langchain/discussions/19083)을 증가시킵니다.
+
+조직의 이유에 대한 더 많은 맥락은 우리의 블로그를 참조하세요: https://blog.langchain.dev/langchain-v0-1-0/

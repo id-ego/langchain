@@ -1,33 +1,35 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/google_speech_to_text/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/google_speech_to_text.ipynb
+description: Google Speech-to-Text API를 사용하여 오디오 파일을 전사하고 문서로 로드하는 방법을 설명합니다. 설치 및
+  설정 방법도 포함되어 있습니다.
 ---
 
-# Google Speech-to-Text Audio Transcripts
+# 구글 음성-텍스트 오디오 전사
 
-The `GoogleSpeechToTextLoader` allows to transcribe audio files with the [Google Cloud Speech-to-Text API](https://cloud.google.com/speech-to-text) and loads the transcribed text into documents.
+`GoogleSpeechToTextLoader`는 [Google Cloud Speech-to-Text API](https://cloud.google.com/speech-to-text)를 사용하여 오디오 파일을 전사하고 전사된 텍스트를 문서로 로드할 수 있습니다.
 
-To use it, you should have the `google-cloud-speech` python package installed, and a Google Cloud project with the [Speech-to-Text API enabled](https://cloud.google.com/speech-to-text/v2/docs/transcribe-client-libraries#before_you_begin).
+사용하려면 `google-cloud-speech` 파이썬 패키지가 설치되어 있어야 하며, [Speech-to-Text API가 활성화된](https://cloud.google.com/speech-to-text/v2/docs/transcribe-client-libraries#before_you_begin) Google Cloud 프로젝트가 필요합니다.
 
-- [Bringing the power of large models to Google Cloud’s Speech API](https://cloud.google.com/blog/products/ai-machine-learning/bringing-power-large-models-google-clouds-speech-api)
+- [구글 클라우드의 음성 API에 대형 모델의 힘을 가져오기](https://cloud.google.com/blog/products/ai-machine-learning/bringing-power-large-models-google-clouds-speech-api)
 
-## Installation & setup
+## 설치 및 설정
 
-First, you need to install the `google-cloud-speech` python package.
+먼저, `google-cloud-speech` 파이썬 패키지를 설치해야 합니다.
 
-You can find more info about it on the [Speech-to-Text client libraries](https://cloud.google.com/speech-to-text/v2/docs/libraries) page.
+자세한 정보는 [Speech-to-Text 클라이언트 라이브러리](https://cloud.google.com/speech-to-text/v2/docs/libraries) 페이지에서 확인할 수 있습니다.
 
-Follow the [quickstart guide](https://cloud.google.com/speech-to-text/v2/docs/sync-recognize) in the Google Cloud documentation to create a project and enable the API.
+Google Cloud 문서의 [빠른 시작 가이드](https://cloud.google.com/speech-to-text/v2/docs/sync-recognize)를 따라 프로젝트를 생성하고 API를 활성화하세요.
 
 ```python
 %pip install --upgrade --quiet langchain-google-community[speech]
 ```
 
-## Example
 
-The `GoogleSpeechToTextLoader` must include the `project_id` and `file_path` arguments. Audio files can be specified as a Google Cloud Storage URI (`gs://...`) or a local file path.
+## 예제
 
-Only synchronous requests are supported by the loader, which has a [limit of 60 seconds or 10MB](https://cloud.google.com/speech-to-text/v2/docs/sync-recognize#:~:text=60%20seconds%20and/or%2010%20MB) per audio file.
+`GoogleSpeechToTextLoader`는 `project_id`와 `file_path` 인수를 포함해야 합니다. 오디오 파일은 Google Cloud Storage URI(`gs://...`) 또는 로컬 파일 경로로 지정할 수 있습니다.
+
+로더는 동기 요청만 지원하며, [오디오 파일당 60초 또는 10MB의 제한](https://cloud.google.com/speech-to-text/v2/docs/sync-recognize#:~:text=60%20seconds%20and/or%2010%20MB)이 있습니다.
 
 ```python
 from langchain_google_community import GoogleSpeechToTextLoader
@@ -41,23 +43,27 @@ loader = GoogleSpeechToTextLoader(project_id=project_id, file_path=file_path)
 docs = loader.load()
 ```
 
-Note: Calling `loader.load()` blocks until the transcription is finished.
 
-The transcribed text is available in the `page_content`:
+참고: `loader.load()`를 호출하면 전사가 완료될 때까지 차단됩니다.
+
+전사된 텍스트는 `page_content`에서 사용할 수 있습니다:
 
 ```python
 docs[0].page_content
 ```
 
+
 ```
 "How old is the Brooklyn Bridge?"
 ```
 
-The `metadata` contains the full JSON response with more meta information:
+
+`metadata`는 더 많은 메타 정보가 포함된 전체 JSON 응답을 포함합니다:
 
 ```python
 docs[0].metadata
 ```
+
 
 ```json
 {
@@ -66,18 +72,19 @@ docs[0].metadata
 }
 ```
 
-## Recognition Config
 
-You can specify the `config` argument to use different speech recognition models and enable specific features.
+## 인식 구성
 
-Refer to the [Speech-to-Text recognizers documentation](https://cloud.google.com/speech-to-text/v2/docs/recognizers) and the [`RecognizeRequest`](https://cloud.google.com/python/docs/reference/speech/latest/google.cloud.speech_v2.types.RecognizeRequest) API reference for information on how to set a custom configuation.
+다양한 음성 인식 모델을 사용하고 특정 기능을 활성화하려면 `config` 인수를 지정할 수 있습니다.
 
-If you don't specify a `config`, the following options will be selected automatically:
+사용자 정의 구성을 설정하는 방법에 대한 정보는 [Speech-to-Text 인식기 문서](https://cloud.google.com/speech-to-text/v2/docs/recognizers)와 [`RecognizeRequest`](https://cloud.google.com/python/docs/reference/speech/latest/google.cloud.speech_v2.types.RecognizeRequest) API 참조를 참조하세요.
 
-- Model: [Chirp Universal Speech Model](https://cloud.google.com/speech-to-text/v2/docs/chirp-model)
-- Language: `en-US`
-- Audio Encoding: Automatically Detected
-- Automatic Punctuation: Enabled
+`config`를 지정하지 않으면 다음 옵션이 자동으로 선택됩니다:
+
+- 모델: [Chirp Universal Speech Model](https://cloud.google.com/speech-to-text/v2/docs/chirp-model)
+- 언어: `en-US`
+- 오디오 인코딩: 자동 감지
+- 자동 구두점: 활성화
 
 ```python
 from google.cloud.speech_v2 import (
@@ -113,7 +120,8 @@ loader = GoogleSpeechToTextLoader(
 )
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

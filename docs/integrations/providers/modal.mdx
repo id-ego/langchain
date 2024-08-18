@@ -1,23 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/modal/
+description: 이 문서는 Modal 생태계를 사용하여 LangChain 사용자 정의 LLM을 실행하는 방법을 다룹니다. 설치, 웹 엔드포인트
+  배포 및 사용법을 설명합니다.
 ---
 
-# Modal
+# 모달
 
-This page covers how to use the Modal ecosystem to run LangChain custom LLMs.
-It is broken into two parts: 
+이 페이지에서는 LangChain 커스텀 LLM을 실행하기 위해 모달 생태계를 사용하는 방법을 다룹니다.
+두 부분으로 나뉘어 있습니다:
 
-1. Modal installation and web endpoint deployment
-2. Using deployed web endpoint with `LLM` wrapper class.
+1. 모달 설치 및 웹 엔드포인트 배포
+2. `LLM` 래퍼 클래스를 사용하여 배포된 웹 엔드포인트 사용하기.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install with `pip install modal`
-- Run `modal token new`
+- `pip install modal`로 설치
+- `modal token new` 실행
 
-## Define your Modal Functions and Webhooks
+## 모달 함수 및 웹훅 정의
 
-You must include a prompt. There is a rigid response structure:
+프롬프트를 포함해야 합니다. 엄격한 응답 구조가 있습니다:
 
 ```python
 class Item(BaseModel):
@@ -29,7 +30,8 @@ def get_text(item: Item):
     return {"prompt": run_gpt2.call(item.prompt)}
 ```
 
-The following is an example with the GPT2 model:
+
+다음은 GPT2 모델의 예입니다:
 
 ```python
 from pydantic import BaseModel
@@ -75,14 +77,15 @@ def get_text(item: Item):
     return {"prompt": run_gpt2.call(item.prompt)}
 ```
 
-### Deploy the web endpoint
 
-Deploy the web endpoint to Modal cloud with the [`modal deploy`](https://modal.com/docs/reference/cli/deploy) CLI command.
-Your web endpoint will acquire a persistent URL under the `modal.run` domain.
+### 웹 엔드포인트 배포
 
-## LLM wrapper around Modal web endpoint
+[`modal deploy`](https://modal.com/docs/reference/cli/deploy) CLI 명령어를 사용하여 모달 클라우드에 웹 엔드포인트를 배포합니다.
+귀하의 웹 엔드포인트는 `modal.run` 도메인 아래에 지속적인 URL을 획득합니다.
 
-The  `Modal` LLM wrapper class which will accept your deployed web endpoint's URL.
+## 모달 웹 엔드포인트 주위의 LLM 래퍼
+
+배포된 웹 엔드포인트의 URL을 수용할 `Modal` LLM 래퍼 클래스입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Modal", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.modal.Modal.html", "title": "Modal"}]-->

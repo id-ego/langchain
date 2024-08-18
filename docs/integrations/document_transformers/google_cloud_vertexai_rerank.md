@@ -1,21 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/google_cloud_vertexai_rerank/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/google_cloud_vertexai_rerank.ipynb
+description: Google Cloud Vertex AI Reranker는 쿼리에 대한 문서의 관련성을 기반으로 문서를 재정렬하는 API입니다.
 ---
 
-# Google Cloud Vertex AI Reranker
+# 구글 클라우드 버텍스 AI 재순위 지정기
 
-> The [Vertex Search Ranking API](https://cloud.google.com/generative-ai-app-builder/docs/ranking) is one of the standalone APIs in [Vertex AI Agent Builder](https://cloud.google.com/generative-ai-app-builder/docs/builder-apis). It takes a list of documents and reranks those documents based on how relevant the documents are to a query. Compared to embeddings, which look only at the semantic similarity of a document and a query, the ranking API can give you precise scores for how well a document answers a given query. The ranking API can be used to improve the quality of search results after retrieving an initial set of candidate documents.
+> [Vertex Search Ranking API](https://cloud.google.com/generative-ai-app-builder/docs/ranking)는 [Vertex AI Agent Builder](https://cloud.google.com/generative-ai-app-builder/docs/builder-apis)의 독립형 API 중 하나입니다. 이 API는 문서 목록을 가져와 쿼리에 대한 문서의 관련성에 따라 문서를 재순위 지정합니다. 문서와 쿼리의 의미적 유사성만을 고려하는 임베딩과 비교할 때, 순위 API는 주어진 쿼리에 대한 문서의 응답 품질을 정확하게 점수화할 수 있습니다. 순위 API는 초기 후보 문서 세트를 검색한 후 검색 결과의 품질을 향상시키는 데 사용할 수 있습니다.
 
-> The ranking API is stateless so there's no need to index documents before calling the API. All you need to do is pass in the query and documents. This makes the API well suited for reranking documents from any document retrievers.
+> 순위 API는 상태 비저장(stateless) 방식이므로 API를 호출하기 전에 문서를 인덱싱할 필요가 없습니다. 쿼리와 문서만 전달하면 됩니다. 이는 API가 모든 문서 검색기에서 문서를 재순위 지정하는 데 적합하게 만듭니다.
 
-> For more information, see [Rank and rerank documents](https://cloud.google.com/generative-ai-app-builder/docs/ranking).
+> 자세한 내용은 [문서 순위 지정 및 재순위 지정](https://cloud.google.com/generative-ai-app-builder/docs/ranking)을 참조하세요.
 
 ```python
 %pip install --upgrade --quiet langchain langchain-community langchain-google-community langchain-google-community[vertexaisearch] langchain-google-vertexai langchain-chroma langchain-text-splitters
 ```
 
-### Setup
+
+### 설정
 
 ```python
 PROJECT_ID = ""
@@ -28,13 +29,14 @@ from google.cloud import aiplatform
 aiplatform.init(project=PROJECT_ID, location=REGION)
 ```
 
-### Load and Prepare data
 
-For this example, we will be using the [Google Wiki page](https://en.wikipedia.org/wiki/Google)to demonstrate how the Vertex Ranking API works.
+### 데이터 로드 및 준비
 
-We use a standard pipeline of `load -> split -> embed data`.
+이 예제에서는 [구글 위키 페이지](https://en.wikipedia.org/wiki/Google)를 사용하여 Vertex Ranking API가 작동하는 방식을 시연합니다.
 
-The embeddings are created using the [Vertex Embeddings API](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings#supported_models) model - `textembedding-gecko@003`
+우리는 `로드 -> 분할 -> 데이터 임베드`의 표준 파이프라인을 사용합니다.
+
+임베딩은 [Vertex Embeddings API](https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings#supported_models) 모델인 `textembedding-gecko@003`을 사용하여 생성됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "WebBaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.web_base.WebBaseLoader.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Google Cloud Vertex AI Reranker"}]-->
@@ -61,9 +63,11 @@ if vectordb is not None:  # delete existing vectordb if it already exists
 embedding = VertexAIEmbeddings(model_name="textembedding-gecko@003")
 vectordb = Chroma.from_documents(documents=splits, embedding=embedding)
 ```
+
 ```output
 Your 1 documents have been split into 266 chunks
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers.contextual_compression", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Google Cloud Vertex AI Reranker"}]-->
@@ -88,15 +92,16 @@ retriever_with_reranker = ContextualCompressionRetriever(
 )
 ```
 
-### Testing out the Vertex Ranking API
 
-Let's query both the `basic_retriever` and `retriever_with_reranker` with the same query and compare the retrieved documents.
+### Vertex Ranking API 테스트
 
-The Ranking API takes in the input from the `basic_retriever` and passes it to the Ranking API.
+같은 쿼리로 `basic_retriever`와 `retriever_with_reranker`를 모두 쿼리하고 검색된 문서를 비교해 보겠습니다.
 
-The ranking API is used to improve the quality of the ranking and determine a score that indicates the relevance of each record to the query.
+순위 API는 `basic_retriever`에서 입력을 받아 순위 API로 전달합니다.
 
-You can see the difference between the Unranked and the Ranked Documents. The Ranking API moves the most semantically relevant documents to the top of the context window of the LLM thus helping it form a better answer with reasoning.
+순위 API는 순위의 품질을 향상시키고 각 기록이 쿼리에 얼마나 관련성이 있는지를 나타내는 점수를 결정하는 데 사용됩니다.
+
+비순위 문서와 순위 문서 간의 차이를 확인할 수 있습니다. 순위 API는 가장 의미적으로 관련성이 높은 문서를 LLM의 컨텍스트 창 상단으로 이동시켜 더 나은 답변을 형성하는 데 도움을 줍니다.
 
 ```python
 import pandas as pd
@@ -120,6 +125,7 @@ comparison_df = pd.DataFrame(
 
 comparison_df
 ```
+
 
 ```html
 
@@ -442,7 +448,8 @@ comparison_df
  
 ```
 
-Let's inspect a couple of reranked documents. We observe that the retriever still returns the relevant Langchain type [documents](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html) but as part of the metadata field, we also recieve the `relevance_score` from the Ranking API.
+
+재순위 지정된 문서를 몇 개 살펴보겠습니다. 검색기가 여전히 관련된 Langchain 유형의 [문서](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html)를 반환하지만, 메타데이터 필드의 일부로 순위 API에서 `relevance_score`도 수신합니다.
 
 ```python
 for i in range(2):
@@ -450,6 +457,7 @@ for i in range(2):
     print(reranked_docs[i])
     print("----------------------------------------------------------\n")
 ```
+
 
 ```html
 
@@ -460,6 +468,7 @@ for i in range(2):
 </style>
  
 ```
+
 ```output
 Document 0
 page_content='The name "Google" originated from a misspelling of "googol",[211][212] which refers to the number represented by a 1 followed by one-hundred zeros. Page and Brin write in their original paper on PageRank:[33] "We chose our system name, Google, because it is a common spelling of googol, or 10100[,] and fits well with our goal of building very large-scale search engines." Having found its way increasingly into everyday language, the verb "google" was added to the Merriam Webster Collegiate Dictionary and the Oxford English Dictionary in 2006, meaning "to use the Google search engine to obtain information on the Internet."[213][214] Google\'s mission statement, from the outset, was "to organize the world\'s information and make it universally accessible and useful",[215] and its unofficial' metadata={'id': '2', 'relevance_score': 0.9800000190734863, 'source': 'https://en.wikipedia.org/wiki/Google'}
@@ -469,9 +478,10 @@ Document 1
 page_content='Eventually, they changed the name to Google; the name of the search engine was a misspelling of the word googol,[21][36][37] a very large number written 10100 (1 followed by 100 zeros), picked to signify that the search engine was intended to provide large quantities of information.[38]' metadata={'id': '1', 'relevance_score': 0.75, 'source': 'https://en.wikipedia.org/wiki/Google'}
 ----------------------------------------------------------
 ```
-### Putting it all together
 
-This shows an example of a complete RAG chain with a simple prompt template on how you can perform reranking using the Vertex Ranking API.
+### 모든 것을 종합하기
+
+이것은 Vertex Ranking API를 사용하여 재순위 지정을 수행하는 방법에 대한 간단한 프롬프트 템플릿이 포함된 완전한 RAG 체인의 예를 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "Google Cloud Vertex AI Reranker"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Google Cloud Vertex AI Reranker"}]-->
@@ -521,6 +531,7 @@ reranker_setup_and_retrieval = RunnableParallel(
 chain = reranker_setup_and_retrieval | prompt | llm
 ```
 
+
 ```html
 
 <style>
@@ -530,11 +541,13 @@ chain = reranker_setup_and_retrieval | prompt | llm
 </style>
  
 ```
+
 
 ```python
 query = "how did the name google originate?"
 ```
 
+
 ```html
 
 <style>
@@ -544,11 +557,13 @@ query = "how did the name google originate?"
 </style>
  
 ```
+
 
 ```python
 chain.invoke(query)
 ```
 
+
 ```html
 
 <style>
@@ -558,6 +573,7 @@ chain.invoke(query)
 </style>
  
 ```
+
 
 ```output
 'The name "Google" originated as a misspelling of the word "googol," a mathematical term for the number 1 followed by 100 zeros. Larry Page and Sergey Brin, the founders of Google, chose the name because it reflected their goal of building a search engine that could handle massive amounts of information. \n'

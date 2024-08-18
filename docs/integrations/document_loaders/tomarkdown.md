@@ -1,11 +1,11 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/tomarkdown/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/tomarkdown.ipynb
+description: 웹사이트 콘텐츠를 구조화된 마크다운 파일로 변환하는 2Markdown 서비스에 대한 설명입니다.
 ---
 
 # 2Markdown
 
-> [2markdown](https://2markdown.com/) service transforms website content into structured markdown files.
+> [2markdown](https://2markdown.com/) 서비스는 웹사이트 콘텐츠를 구조화된 마크다운 파일로 변환합니다.
 
 ```python
 # You will need to get your own API key. See https://2markdown.com/login
@@ -13,22 +13,27 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 api_key = ""
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "ToMarkdownLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.tomarkdown.ToMarkdownLoader.html", "title": "2Markdown"}]-->
 from langchain_community.document_loaders import ToMarkdownLoader
 ```
 
+
 ```python
 loader = ToMarkdownLoader(url="/docs/get_started/introduction", api_key=api_key)
 ```
+
 
 ```python
 docs = loader.load()
 ```
 
+
 ```python
 print(docs[0].page_content)
 ```
+
 ```output
 **LangChain** is a framework for developing applications powered by language models. It enables applications that:
 
@@ -132,7 +137,8 @@ Check out the developer's guide for guidelines on contributing and help getting 
 Head to the [Community navigator](/docs/community) to find places to ask questions, share feedback, meet other developers, and dream about the future of LLM’s.
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

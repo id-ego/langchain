@@ -1,28 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/gpt4all/
+description: 이 문서는 LangChain 내에서 `GPT4All` 래퍼를 사용하는 방법을 설치, 설정 및 예제를 통해 안내합니다.
 ---
 
 # GPT4All
 
-This page covers how to use the `GPT4All` wrapper within LangChain. The tutorial is divided into two parts: installation and setup, followed by usage with an example.
+이 페이지는 LangChain 내에서 `GPT4All` 래퍼를 사용하는 방법을 다룹니다. 튜토리얼은 설치 및 설정, 사용 예제로 나뉘어 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the Python package with `pip install gpt4all`
-- Download a [GPT4All model](https://gpt4all.io/index.html) and place it in your desired directory
+- `pip install gpt4all`로 Python 패키지를 설치합니다.
+- 원하는 디렉토리에 [GPT4All 모델](https://gpt4all.io/index.html)을 다운로드하여 배치합니다.
 
-In this example, we are using `mistral-7b-openorca.Q4_0.gguf`:
+이 예제에서는 `mistral-7b-openorca.Q4_0.gguf`를 사용하고 있습니다:
 
 ```bash
 mkdir models
 wget https://gpt4all.io/models/gguf/mistral-7b-openorca.Q4_0.gguf -O models/mistral-7b-openorca.Q4_0.gguf
 ```
 
-## Usage
+
+## 사용법
 
 ### GPT4All
 
-To use the GPT4All wrapper, you need to provide the path to the pre-trained model file and the model's configuration.
+GPT4All 래퍼를 사용하려면 사전 훈련된 모델 파일의 경로와 모델의 구성을 제공해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "GPT4All", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.gpt4all.GPT4All.html", "title": "GPT4All"}]-->
@@ -35,9 +36,10 @@ model = GPT4All(model="./models/mistral-7b-openorca.Q4_0.gguf", n_threads=8)
 response = model.invoke("Once upon a time, ")
 ```
 
-You can also customize the generation parameters, such as `n_predict`, `temp`, `top_p`, `top_k`, and others.
 
-To stream the model's predictions, add in a CallbackManager.
+생성 매개변수(`n_predict`, `temp`, `top_p`, `top_k` 등)를 사용자 정의할 수도 있습니다.
+
+모델의 예측을 스트리밍하려면 CallbackManager를 추가하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "GPT4All", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.gpt4all.GPT4All.html", "title": "GPT4All"}, {"imported": "StreamingStdOutCallbackHandler", "source": "langchain.callbacks.streaming_stdout", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "GPT4All"}, {"imported": "StreamlitCallbackHandler", "source": "langchain.callbacks.streamlit", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain.callbacks.streamlit.StreamlitCallbackHandler.html", "title": "GPT4All"}]-->
@@ -54,8 +56,9 @@ model = GPT4All(model="./models/mistral-7b-openorca.Q4_0.gguf", n_threads=8)
 model.invoke("Once upon a time, ", callbacks=callbacks)
 ```
 
-## Model File
 
-You can download model files from the GPT4All client. You can download the client from the [GPT4All](https://gpt4all.io/index.html) website.
+## 모델 파일
 
-For a more detailed walkthrough of this, see [this notebook](/docs/integrations/llms/gpt4all)
+GPT4All 클라이언트에서 모델 파일을 다운로드할 수 있습니다. [GPT4All](https://gpt4all.io/index.html) 웹사이트에서 클라이언트를 다운로드할 수 있습니다.
+
+자세한 안내는 [이 노트북](/docs/integrations/llms/gpt4all)을 참조하세요.

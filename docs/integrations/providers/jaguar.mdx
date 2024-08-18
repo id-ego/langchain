@@ -1,52 +1,53 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/jaguar/
+description: 이 문서는 LangChain 내에서 Jaguar 벡터 데이터베이스 사용 방법을 소개하며, 설치 및 설정, API에 대한 정보를
+  포함합니다.
 ---
 
-# Jaguar
+# 재규어
 
-This page describes how to use Jaguar vector database within LangChain.
-It contains three sections: introduction, installation and setup, and Jaguar API.
+이 페이지는 LangChain 내에서 재규어 벡터 데이터베이스를 사용하는 방법을 설명합니다. 소개, 설치 및 설정, 재규어 API의 세 가지 섹션으로 구성되어 있습니다.
 
-## Introduction
+## 소개
 
-Jaguar vector database has the following characteristics:
+재규어 벡터 데이터베이스는 다음과 같은 특징을 가지고 있습니다:
 
-1. It is a distributed vector database
-2. The “ZeroMove” feature of JaguarDB enables instant horizontal scalability
-3. Multimodal: embeddings, text, images, videos, PDFs, audio, time series, and geospatial
-4. All-masters: allows both parallel reads and writes
-5. Anomaly detection capabilities
-6. RAG support: combines LLM with proprietary and real-time data
-7. Shared metadata: sharing of metadata across multiple vector indexes
-8. Distance metrics: Euclidean, Cosine, InnerProduct, Manhatten, Chebyshev, Hamming, Jeccard, Minkowski
+1. 분산 벡터 데이터베이스입니다.
+2. 재규어DB의 “ZeroMove” 기능은 즉각적인 수평 확장을 가능하게 합니다.
+3. 다중 모드: 임베딩, 텍스트, 이미지, 비디오, PDF, 오디오, 시계열 및 지리적 데이터
+4. 올-마스터: 병렬 읽기 및 쓰기를 허용합니다.
+5. 이상 탐지 기능
+6. RAG 지원: LLM과 독점적이며 실시간 데이터를 결합합니다.
+7. 공유 메타데이터: 여러 벡터 인덱스 간의 메타데이터 공유
+8. 거리 측정: 유클리드, 코사인, 내적, 맨해튼, 체비셰프, 해밍, 제카드, 민코프스키
 
-[Overview of Jaguar scalable vector database](http://www.jaguardb.com)
+[재규어 확장 가능한 벡터 데이터베이스 개요](http://www.jaguardb.com)
 
-You can run JaguarDB in docker container; or download the software and run on-cloud or off-cloud.
+재규어DB는 도커 컨테이너에서 실행하거나 소프트웨어를 다운로드하여 클라우드 또는 오프 클라우드에서 실행할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the JaguarDB on one host or multiple hosts
-- Install the Jaguar HTTP Gateway server on one host
-- Install the JaguarDB HTTP Client package
+- 하나의 호스트 또는 여러 호스트에 재규어DB 설치
+- 하나의 호스트에 재규어 HTTP 게이트웨이 서버 설치
+- 재규어DB HTTP 클라이언트 패키지 설치
 
-The steps are described in [Jaguar Documents](http://www.jaguardb.com/support.html)
+단계는 [재규어 문서](http://www.jaguardb.com/support.html)에 설명되어 있습니다.
 
-Environment Variables in client programs:
+클라이언트 프로그램의 환경 변수:
 
     export OPENAI_API_KEY="......"
     export JAGUAR_API_KEY="......"
 
-## Jaguar API
+## 재규어 API
 
-Together with LangChain, a Jaguar client class is provided by importing it in Python:
+LangChain과 함께, 재규어 클라이언트 클래스는 Python에서 가져와서 제공됩니다:
 
 ```python
 <!--IMPORTS:[{"imported": "Jaguar", "source": "langchain_community.vectorstores.jaguar", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.jaguar.Jaguar.html", "title": "Jaguar"}]-->
 from langchain_community.vectorstores.jaguar import Jaguar
 ```
 
-Supported API functions of the Jaguar class are:
+
+재규어 클래스의 지원 API 함수는 다음과 같습니다:
 
 - `add_texts`
 - `add_documents`
@@ -61,4 +62,4 @@ Supported API functions of the Jaguar class are:
 - `login`
 - `logout`
 
-For more details of the Jaguar API, please refer to [this notebook](/docs/integrations/vectorstores/jaguar)
+재규어 API에 대한 자세한 내용은 [이 노트북](/docs/integrations/vectorstores/jaguar)을 참조하십시오.

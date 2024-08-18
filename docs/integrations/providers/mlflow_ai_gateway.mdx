@@ -1,34 +1,34 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/mlflow_ai_gateway/
+description: MLflow AI Gateway는 다양한 대형 언어 모델 제공업체와의 상호작용을 간소화하는 강력한 도구입니다.
 ---
 
 # MLflow AI Gateway
 
 :::warning
 
-MLflow AI Gateway has been deprecated. Please use [MLflow Deployments for LLMs](/docs/integrations/providers/mlflow/) instead.
+MLflow AI Gateway는 더 이상 지원되지 않습니다. 대신 [MLflow Deployments for LLMs](/docs/integrations/providers/mlflow/)를 사용해 주시기 바랍니다.
 
 :::
 
-> [The MLflow AI Gateway](https://www.mlflow.org/docs/latest/index.html) service is a powerful tool designed to streamline the usage and management of various large
-language model (LLM) providers, such as OpenAI and Anthropic, within an organization. It offers a high-level interface
-that simplifies the interaction with these services by providing a unified endpoint to handle specific LLM related requests.
+> [MLflow AI Gateway](https://www.mlflow.org/docs/latest/index.html) 서비스는 OpenAI 및 Anthropic과 같은 다양한 대형 언어 모델(LLM) 제공자의 사용 및 관리를 간소화하도록 설계된 강력한 도구입니다. 이 서비스는 특정 LLM 관련 요청을 처리하기 위한 통합 엔드포인트를 제공하여 이러한 서비스와의 상호작용을 단순화하는 고급 인터페이스를 제공합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install `mlflow` with MLflow AI Gateway dependencies:
+MLflow AI Gateway 종속성과 함께 `mlflow`를 설치합니다:
 
 ```sh
 pip install 'mlflow[gateway]'
 ```
 
-Set the OpenAI API key as an environment variable:
+
+OpenAI API 키를 환경 변수로 설정합니다:
 
 ```sh
 export OPENAI_API_KEY=...
 ```
 
-Create a configuration file:
+
+구성 파일을 생성합니다:
 
 ```yaml
 routes:
@@ -49,21 +49,21 @@ routes:
         openai_api_key: $OPENAI_API_KEY
 ```
 
-Start the Gateway server:
+
+Gateway 서버를 시작합니다:
 
 ```sh
 mlflow gateway start --config-path /path/to/config.yaml
 ```
 
-## Example provided by `MLflow`
 
-> The `mlflow.langchain` module provides an API for logging and loading `LangChain` models.
-This module exports multivariate LangChain models in the langchain flavor and univariate LangChain
-models in the pyfunc flavor.
+## `MLflow`에서 제공하는 예제
 
-See the [API documentation and examples](https://www.mlflow.org/docs/latest/python_api/mlflow.langchain.html?highlight=langchain#module-mlflow.langchain).
+> `mlflow.langchain` 모듈은 `LangChain` 모델을 로깅하고 로드하기 위한 API를 제공합니다. 이 모듈은 langchain 맛의 다변량 LangChain 모델과 pyfunc 맛의 단변량 LangChain 모델을 내보냅니다.
 
-## Completions Example
+[API 문서 및 예제](https://www.mlflow.org/docs/latest/python_api/mlflow.langchain.html?highlight=langchain#module-mlflow.langchain)를 참조하십시오.
+
+## 완성 예제
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "MLflow AI Gateway"}, {"imported": "MlflowAIGateway", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.mlflow_ai_gateway.MlflowAIGateway.html", "title": "MLflow AI Gateway"}]-->
@@ -97,7 +97,8 @@ model = mlflow.pyfunc.load_model(model_info.model_uri)
 print(model.predict([{"adjective": "funny"}]))
 ```
 
-## Embeddings Example
+
+## 임베딩 예제
 
 ```python
 <!--IMPORTS:[{"imported": "MlflowAIGatewayEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.mlflow_gateway.MlflowAIGatewayEmbeddings.html", "title": "MLflow AI Gateway"}]-->
@@ -112,7 +113,8 @@ print(embeddings.embed_query("hello"))
 print(embeddings.embed_documents(["hello"]))
 ```
 
-## Chat Example
+
+## 채팅 예제
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMLflowAIGateway", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.mlflow_ai_gateway.ChatMLflowAIGateway.html", "title": "MLflow AI Gateway"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "MLflow AI Gateway"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "MLflow AI Gateway"}]-->
@@ -138,10 +140,10 @@ messages = [
 print(chat(messages))
 ```
 
+
 ## Databricks MLflow AI Gateway
 
-Databricks MLflow AI Gateway is in private preview.
-Please contact a Databricks representative to enroll in the preview.
+Databricks MLflow AI Gateway는 비공식 미리보기 상태입니다. 미리보기 등록을 위해 Databricks 담당자에게 문의하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "MLflow AI Gateway"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "MLflow AI Gateway"}, {"imported": "MlflowAIGateway", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.mlflow_ai_gateway.MlflowAIGateway.html", "title": "MLflow AI Gateway"}]-->

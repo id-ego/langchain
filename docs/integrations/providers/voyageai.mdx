@@ -1,34 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/voyageai/
+description: VoyageAI는 도메인 및 회사에 맞춤화된 임베딩 모델을 구축하여 더 나은 검색 품질을 제공합니다.
 ---
 
 # VoyageAI
 
-All functionality related to VoyageAI
+VoyageAI와 관련된 모든 기능
 
-> [VoyageAI](https://www.voyageai.com/) Voyage AI builds embedding models, customized for your domain and company, for better retrieval quality.
+> [VoyageAI](https://www.voyageai.com/) Voyage AI는 도메인 및 회사에 맞게 맞춤화된 임베딩 모델을 구축하여 더 나은 검색 품질을 제공합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the integration package with
+통합 패키지를 설치하려면
 ```bash
 pip install langchain-voyageai
 ```
 
-Get a VoyageAI API key and set it as an environment variable (`VOYAGE_API_KEY`)
 
-## Text Embedding Model
+VoyageAI API 키를 가져와 환경 변수(`VOYAGE_API_KEY`)로 설정합니다.
 
-See a [usage example](/docs/integrations/text_embedding/voyageai)
+## 텍스트 임베딩 모델
+
+[사용 예제](/docs/integrations/text_embedding/voyageai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "VoyageAIEmbeddings", "source": "langchain_voyageai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_voyageai.embeddings.VoyageAIEmbeddings.html", "title": "VoyageAI"}]-->
 from langchain_voyageai import VoyageAIEmbeddings
 ```
 
-## Reranking
 
-See a [usage example](/docs/integrations/document_transformers/voyageai-reranker)
+## 재순위 매기기
+
+[사용 예제](/docs/integrations/document_transformers/voyageai-reranker)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "VoyageAIRerank", "source": "langchain_voyageai", "docs": "https://api.python.langchain.com/en/latest/rerank/langchain_voyageai.rerank.VoyageAIRerank.html", "title": "VoyageAI"}]-->

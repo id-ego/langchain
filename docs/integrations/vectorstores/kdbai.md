@@ -1,23 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/kdbai/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/kdbai.ipynb
+description: KDB.AI는 실시간 데이터를 활용하여 확장 가능하고 신뢰할 수 있는 AI 애플리케이션을 구축할 수 있는 지식 기반 벡터 데이터베이스입니다.
 ---
 
 # KDB.AI
 
-> [KDB.AI](https://kdb.ai/) is a powerful knowledge-based vector database and search engine that allows you to build scalable, reliable AI applications, using real-time data, by providing advanced search, recommendation and personalization.
+> [KDB.AI](https://kdb.ai/)는 실시간 데이터를 사용하여 확장 가능하고 신뢰할 수 있는 AI 애플리케이션을 구축할 수 있도록 고급 검색, 추천 및 개인화를 제공하는 강력한 지식 기반 벡터 데이터베이스 및 검색 엔진입니다.
 
-[This example](https://github.com/KxSystems/kdbai-samples/blob/main/document_search/document_search.ipynb) demonstrates how to use KDB.AI to run semantic search on unstructured text documents.
+[이 예제](https://github.com/KxSystems/kdbai-samples/blob/main/document_search/document_search.ipynb)는 KDB.AI를 사용하여 비구조적 텍스트 문서에서 의미론적 검색을 수행하는 방법을 보여줍니다.
 
-To access your end point and API keys, [sign up to KDB.AI here](https://kdb.ai/get-started/).
+엔드포인트 및 API 키에 액세스하려면, [여기에서 KDB.AI에 가입하세요](https://kdb.ai/get-started/).
 
-To set up your development environment, follow the instructions on the [KDB.AI pre-requisites page](https://code.kx.com/kdbai/pre-requisites.html).
+개발 환경을 설정하려면 [KDB.AI 사전 요구 사항 페이지](https://code.kx.com/kdbai/pre-requisites.html)의 지침을 따르세요.
 
-The following examples demonstrate some of the ways you can interact with KDB.AI through LangChain.
+다음 예제는 LangChain을 통해 KDB.AI와 상호작용할 수 있는 몇 가지 방법을 보여줍니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-## Import required packages
+## 필요한 패키지 가져오기
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "KDB.AI"}, {"imported": "PyPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html", "title": "KDB.AI"}, {"imported": "KDBAI", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kdbai.KDBAI.html", "title": "KDB.AI"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "KDB.AI"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "KDB.AI"}]-->
@@ -34,32 +34,38 @@ from langchain_community.vectorstores import KDBAI
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 ```
 
+
 ```python
 KDBAI_ENDPOINT = input("KDB.AI endpoint: ")
 KDBAI_API_KEY = getpass("KDB.AI API key: ")
 os.environ["OPENAI_API_KEY"] = getpass("OpenAI API Key: ")
 ```
+
 ```output
 KDB.AI endpoint:  https://ui.qa.cld.kx.com/instance/pcnvlmi860
 KDB.AI API key:  ········
 OpenAI API Key:  ········
 ```
 
+
 ```python
 TEMP = 0.0
 K = 3
 ```
 
-## Create a KBD.AI Session
+
+## KDB.AI 세션 생성
 
 ```python
 print("Create a KDB.AI session...")
 session = kdbai.Session(endpoint=KDBAI_ENDPOINT, api_key=KDBAI_API_KEY)
 ```
+
 ```output
 Create a KDB.AI session...
 ```
-## Create a table
+
+## 테이블 생성
 
 ```python
 print('Create table "documents"...')
@@ -78,9 +84,11 @@ schema = {
 }
 table = session.create_table("documents", schema)
 ```
+
 ```output
 Create table "documents"...
 ```
+
 
 ```python
 %%time
@@ -88,16 +96,19 @@ URL = "https://www.conseil-constitutionnel.fr/node/3850/pdf"
 PDF = "Déclaration_des_droits_de_l_homme_et_du_citoyen.pdf"
 open(PDF, "wb").write(requests.get(URL).content)
 ```
+
 ```output
 CPU times: user 44.1 ms, sys: 6.04 ms, total: 50.2 ms
 Wall time: 213 ms
 ```
 
+
 ```output
 562978
 ```
 
-## Read a PDF
+
+## PDF 읽기
 
 ```python
 %%time
@@ -106,17 +117,20 @@ loader = PyPDFLoader(PDF)
 pages = loader.load_and_split()
 len(pages)
 ```
+
 ```output
 Read a PDF...
 CPU times: user 156 ms, sys: 12.5 ms, total: 169 ms
 Wall time: 183 ms
 ```
 
+
 ```output
 3
 ```
 
-## Create a Vector Database from PDF Text
+
+## PDF 텍스트에서 벡터 데이터베이스 생성
 
 ```python
 %%time
@@ -131,11 +145,13 @@ metadata["title"] = "Déclaration des Droits de l'Homme et du Citoyen de 1789".
 vectordb = KDBAI(table, embeddings)
 vectordb.add_texts(texts=texts, metadatas=metadata)
 ```
+
 ```output
 Create a Vector Database from PDF text...
 CPU times: user 211 ms, sys: 18.4 ms, total: 229 ms
 Wall time: 2.23 s
 ```
+
 
 ```output
 ['3ef27d23-47cf-419b-8fe9-5dfae9e8e895',
@@ -143,7 +159,8 @@ Wall time: 2.23 s
  'd2069bda-c0b8-4791-b84d-0c6f84f4be34']
 ```
 
-## Create LangChain Pipeline
+
+## LangChain 파이프라인 생성
 
 ```python
 %%time
@@ -155,12 +172,14 @@ qabot = RetrievalQA.from_chain_type(
     return_source_documents=True,
 )
 ```
+
 ```output
 Create LangChain Pipeline...
 CPU times: user 40.8 ms, sys: 4.69 ms, total: 45.5 ms
 Wall time: 44.7 ms
 ```
-## Summarize the document in English
+
+## 문서 요약 (영어)
 
 ```python
 %%time
@@ -168,6 +187,7 @@ Q = "Summarize the document in English:"
 print(f"\n\n{Q}\n")
 print(qabot.invoke(dict(query=Q))["result"])
 ```
+
 ```output
 
 
@@ -177,7 +197,8 @@ The document is the Declaration of the Rights of Man and of the Citizen of 1789.
 CPU times: user 144 ms, sys: 50.2 ms, total: 194 ms
 Wall time: 4.96 s
 ```
-## Query the Data
+
+## 데이터 쿼리
 
 ```python
 %%time
@@ -185,6 +206,7 @@ Q = "Is it a fair law and why ?"
 print(f"\n\n{Q}\n")
 print(qabot.invoke(dict(query=Q))["result"])
 ```
+
 ```output
 
 
@@ -197,12 +219,14 @@ CPU times: user 85.1 ms, sys: 5.93 ms, total: 91.1 ms
 Wall time: 5.11 s
 ```
 
+
 ```python
 %%time
 Q = "What are the rights and duties of the man, the citizen and the society ?"
 print(f"\n\n{Q}\n")
 print(qabot.invoke(dict(query=Q))["result"])
 ```
+
 ```output
 
 
@@ -238,12 +262,14 @@ CPU times: user 86.5 ms, sys: 5.45 ms, total: 92 ms
 Wall time: 14.9 s
 ```
 
+
 ```python
 %%time
 Q = "Is this law practical ?"
 print(f"\n\n{Q}\n")
 print(qabot.invoke(dict(query=Q))["result"])
 ```
+
 ```output
 
 
@@ -253,7 +279,8 @@ As an AI language model, I cannot provide personal opinions or subjective judgme
 CPU times: user 91.4 ms, sys: 5.89 ms, total: 97.3 ms
 Wall time: 2.78 s
 ```
-## Clean up the Documents table
+
+## 문서 테이블 정리
 
 ```python
 # Clean up KDB.AI "documents" table and index for similarity search
@@ -261,11 +288,13 @@ Wall time: 2.78 s
 session.table("documents").drop()
 ```
 
+
 ```output
 True
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

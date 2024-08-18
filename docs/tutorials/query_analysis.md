@@ -1,37 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/tutorials/query_analysis/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/tutorials/query_analysis.ipynb
+description: 쿼리 분석 시스템 구축에 대한 가이드를 제공하며, 검색 엔진 생성 및 쿼리 분석 기법을 활용한 문제 해결 방법을 설명합니다.
 sidebar_position: 0
 ---
 
-# Build a Query Analysis System
+# 쿼리 분석 시스템 구축
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
 
-- [Document loaders](/docs/concepts/#document-loaders)
-- [Chat models](/docs/concepts/#chat-models)
-- [Embeddings](/docs/concepts/#embedding-models)
-- [Vector stores](/docs/concepts/#vector-stores)
-- [Retrieval](/docs/concepts/#retrieval)
+- [문서 로더](/docs/concepts/#document-loaders)
+- [채팅 모델](/docs/concepts/#chat-models)
+- [임베딩](/docs/concepts/#embedding-models)
+- [벡터 저장소](/docs/concepts/#vector-stores)
+- [검색](/docs/concepts/#retrieval)
 
 :::
 
-This page will show how to use query analysis in a basic end-to-end example. This will cover creating a simple search engine, showing a failure mode that occurs when passing a raw user question to that search, and then an example of how query analysis can help address that issue. There are MANY different query analysis techniques and this end-to-end example will not show all of them.
+이 페이지에서는 기본적인 엔드 투 엔드 예제를 통해 쿼리 분석을 사용하는 방법을 보여줍니다. 여기서는 간단한 검색 엔진을 만들고, 원시 사용자 질문을 검색에 전달할 때 발생하는 실패 모드를 보여준 다음, 쿼리 분석이 그 문제를 해결하는 데 어떻게 도움이 되는지에 대한 예제를 다룰 것입니다. 쿼리 분석 기술은 매우 다양하며, 이 엔드 투 엔드 예제에서는 모든 기술을 보여주지 않습니다.
 
-For the purpose of this example, we will do retrieval over the LangChain YouTube videos.
+이 예제의 목적을 위해 LangChain YouTube 비디오에 대한 검색을 수행할 것입니다.
 
-## Setup
-#### Install dependencies
+## 설정
+#### 의존성 설치
 
 ```python
 # %pip install -qU langchain langchain-community langchain-openai youtube-transcript-api pytube langchain-chroma
 ```
 
-#### Set environment variables
 
-We'll use OpenAI in this example:
+#### 환경 변수 설정
+
+이 예제에서는 OpenAI를 사용할 것입니다:
 
 ```python
 import getpass
@@ -44,9 +45,10 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-### Load documents
 
-We can use the `YouTubeLoader` to load transcripts of a few LangChain videos:
+### 문서 로드
+
+`YouTubeLoader`를 사용하여 몇 개의 LangChain 비디오의 전사를 로드할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "YoutubeLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.youtube.YoutubeLoader.html", "title": "Build a Query Analysis System"}]-->
@@ -72,6 +74,7 @@ for url in urls:
     docs.extend(YoutubeLoader.from_youtube_url(url, add_video_info=True).load())
 ```
 
+
 ```python
 import datetime
 
@@ -84,11 +87,13 @@ for doc in docs:
     )
 ```
 
-Here are the titles of the videos we've loaded:
+
+로드한 비디오의 제목은 다음과 같습니다:
 
 ```python
 [doc.metadata["title"] for doc in docs]
 ```
+
 
 ```output
 ['OpenGPTs',
@@ -106,11 +111,13 @@ Here are the titles of the videos we've loaded:
  'LangServe and LangChain Templates Webinar']
 ```
 
-Here's the metadata associated with each video. We can see that each document also has a title, view count, publication date, and length:
+
+각 비디오와 관련된 메타데이터는 다음과 같습니다. 각 문서에는 제목, 조회수, 게시 날짜 및 길이가 포함되어 있습니다:
 
 ```python
 docs[0].metadata
 ```
+
 
 ```output
 {'source': 'HAn9vnJy6S4',
@@ -124,19 +131,22 @@ docs[0].metadata
  'publish_year': 2024}
 ```
 
-And here's a sample from a document's contents:
+
+문서 내용의 샘플은 다음과 같습니다:
 
 ```python
 docs[0].page_content[:500]
 ```
 
+
 ```output
 "hello today I want to talk about open gpts open gpts is a project that we built here at linkchain uh that replicates the GPT store in a few ways so it creates uh end user-facing friendly interface to create different Bots and these Bots can have access to different tools and they can uh be given files to retrieve things over and basically it's a way to create a variety of bots and expose the configuration of these Bots to end users it's all open source um it can be used with open AI it can be us"
 ```
 
-### Indexing documents
 
-Whenever we perform retrieval we need to create an index of documents that we can query. We'll use a vector store to index our documents, and we'll chunk them first to make our retrievals more concise and precise:
+### 문서 인덱싱
+
+검색을 수행할 때마다 쿼리할 수 있는 문서 인덱스를 생성해야 합니다. 우리는 벡터 저장소를 사용하여 문서를 인덱싱하고, 검색을 더 간결하고 정확하게 만들기 위해 먼저 문서를 청크로 나눌 것입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Build a Query Analysis System"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Build a Query Analysis System"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Build a Query Analysis System"}]-->
@@ -153,22 +163,25 @@ vectorstore = Chroma.from_documents(
 )
 ```
 
-## Retrieval without query analysis
 
-We can perform similarity search on a user question directly to find chunks relevant to the question:
+## 쿼리 분석 없는 검색
+
+사용자 질문에 대해 유사성 검색을 직접 수행하여 질문과 관련된 청크를 찾을 수 있습니다:
 
 ```python
 search_results = vectorstore.similarity_search("how do I build a RAG agent")
 print(search_results[0].metadata["title"])
 print(search_results[0].page_content[:500])
 ```
+
 ```output
 Build and Deploy a RAG app with Pinecone Serverless
 hi this is Lance from the Lang chain team and today we're going to be building and deploying a rag app using pine con serval list from scratch so we're going to kind of walk through all the code required to do this and I'll use these slides as kind of a guide to kind of lay the the ground work um so first what is rag so under capoy has this pretty nice visualization that shows LMS as a kernel of a new kind of operating system and of course one of the core components of our operating system is th
 ```
-This works pretty well! Our first result is quite relevant to the question.
 
-What if we wanted to search for results from a specific time period?
+이것은 꽤 잘 작동합니다! 우리의 첫 번째 결과는 질문과 매우 관련이 있습니다.
+
+특정 기간의 결과를 검색하고 싶다면 어떻게 해야 할까요?
 
 ```python
 search_results = vectorstore.similarity_search("videos on RAG published in 2023")
@@ -176,21 +189,23 @@ print(search_results[0].metadata["title"])
 print(search_results[0].metadata["publish_date"])
 print(search_results[0].page_content[:500])
 ```
+
 ```output
 OpenGPTs
 2024-01-31
 hardcoded that it will always do a retrieval step here the assistant decides whether to do a retrieval step or not sometimes this is good sometimes this is bad sometimes it you don't need to do a retrieval step when I said hi it didn't need to call it tool um but other times you know the the llm might mess up and not realize that it needs to do a retrieval step and so the rag bot will always do a retrieval step so it's more focused there because this is also a simpler architecture so it's always
 ```
-Our first result is from 2024 (despite us asking for videos from 2023), and not very relevant to the input. Since we're just searching against document contents, there's no way for the results to be filtered on any document attributes.
 
-This is just one failure mode that can arise. Let's now take a look at how a basic form of query analysis can fix it!
+우리의 첫 번째 결과는 2024년의 것이며 (2023년 비디오를 요청했음에도 불구하고), 입력과는 그다지 관련이 없습니다. 문서 내용에 대해서만 검색하고 있기 때문에, 결과를 문서 속성에 따라 필터링할 방법이 없습니다.
 
-## Query analysis
+이것은 발생할 수 있는 하나의 실패 모드에 불과합니다. 이제 기본적인 형태의 쿼리 분석이 이를 어떻게 수정할 수 있는지 살펴보겠습니다!
 
-We can use query analysis to improve the results of retrieval. This will involve defining a **query schema** that contains some date filters and use a function-calling model to convert a user question into a structured queries. 
+## 쿼리 분석
 
-### Query schema
-In this case we'll have explicit min and max attributes for publication date so that it can be filtered on.
+쿼리 분석을 사용하여 검색 결과를 개선할 수 있습니다. 여기에는 날짜 필터가 포함된 **쿼리 스키마**를 정의하고, 사용자 질문을 구조화된 쿼리로 변환하는 함수 호출 모델을 사용하는 것이 포함됩니다.
+
+### 쿼리 스키마
+이 경우 게시 날짜에 대한 명시적인 최소 및 최대 속성을 설정하여 필터링할 수 있도록 합니다.
 
 ```python
 from typing import Optional
@@ -208,9 +223,10 @@ class Search(BaseModel):
     publish_year: Optional[int] = Field(None, description="Year video was published")
 ```
 
-### Query generation
 
-To convert user questions to structured queries we'll make use of OpenAI's tool-calling API. Specifically we'll use the new [ChatModel.with_structured_output()](/docs/how_to/structured_output) constructor to handle passing the schema to the model and parsing the output.
+### 쿼리 생성
+
+사용자 질문을 구조화된 쿼리로 변환하기 위해 OpenAI의 도구 호출 API를 사용할 것입니다. 구체적으로, 우리는 새로운 [ChatModel.with_structured_output()](/docs/how_to/structured_output) 생성자를 사용하여 스키마를 모델에 전달하고 출력을 파싱하는 작업을 처리할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a Query Analysis System"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Build a Query Analysis System"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Build a Query Analysis System"}]-->
@@ -233,33 +249,39 @@ llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
 structured_llm = llm.with_structured_output(Search)
 query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
+
 ```output
 /Users/bagatur/langchain/libs/core/langchain_core/_api/beta_decorator.py:86: LangChainBetaWarning: The function `with_structured_output` is in beta. It is actively being worked on, so the API may change.
   warn_beta(
 ```
-Let's see what queries our analyzer generates for the questions we searched earlier:
+
+이제 우리가 이전에 검색한 질문에 대해 분석기가 생성한 쿼리를 살펴보겠습니다:
 
 ```python
 query_analyzer.invoke("how do I build a RAG agent")
 ```
 
+
 ```output
 Search(query='build RAG agent', publish_year=None)
 ```
+
 
 ```python
 query_analyzer.invoke("videos on RAG published in 2023")
 ```
 
+
 ```output
 Search(query='RAG', publish_year=2023)
 ```
 
-## Retrieval with query analysis
 
-Our query analysis looks pretty good; now let's try using our generated queries to actually perform retrieval. 
+## 쿼리 분석을 통한 검색
 
-**Note:** in our example, we specified `tool_choice="Search"`. This will force the LLM to call one - and only one - tool, meaning that we will always have one optimized query to look up. Note that this is not always the case - see other guides for how to deal with situations when no - or multiple - optmized queries are returned.
+우리의 쿼리 분석은 꽤 괜찮아 보입니다. 이제 생성된 쿼리를 사용하여 실제로 검색을 수행해 보겠습니다.
+
+**참고:** 우리의 예제에서는 `tool_choice="Search"`를 지정했습니다. 이것은 LLM이 하나의 도구만 호출하도록 강제하며, 따라서 항상 최적화된 쿼리를 하나만 조회할 수 있습니다. 이는 항상 그런 것은 아니며 - 최적화된 쿼리가 없거나 여러 개가 반환되는 상황을 처리하는 방법에 대한 다른 가이드를 참조하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Build a Query Analysis System"}]-->
@@ -267,6 +289,7 @@ from typing import List
 
 from langchain_core.documents import Document
 ```
+
 
 ```python
 def retrieval(search: Search) -> List[Document]:
@@ -279,19 +302,23 @@ def retrieval(search: Search) -> List[Document]:
     return vectorstore.similarity_search(search.query, filter=_filter)
 ```
 
+
 ```python
 retrieval_chain = query_analyzer | retrieval
 ```
 
-We can now run this chain on the problematic input from before, and see that it yields only results from that year!
+
+이제 이전의 문제 있는 입력에 대해 이 체인을 실행할 수 있으며, 그 결과 해당 연도의 결과만 반환되는 것을 확인할 수 있습니다!
 
 ```python
 results = retrieval_chain.invoke("RAG tutorial published in 2023")
 ```
 
+
 ```python
 [(doc.metadata["title"], doc.metadata["publish_date"]) for doc in results]
 ```
+
 
 ```output
 [('Getting Started with Multi-Modal LLMs', '2023-12-20 00:00:00'),

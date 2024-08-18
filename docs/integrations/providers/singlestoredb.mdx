@@ -1,32 +1,34 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/singlestoredb/
+description: SingleStoreDB는 클라우드 및 온프레미스 배포를 지원하는 고성능 분산 SQL 데이터베이스로, AI 애플리케이션을 위한
+  벡터 저장 및 함수 기능을 제공합니다.
 ---
 
 # SingleStoreDB
 
-> [SingleStoreDB](https://singlestore.com/) is a high-performance distributed SQL database that supports deployment both in the [cloud](https://www.singlestore.com/cloud/) and on-premises. It provides vector storage, and vector functions including [dot_product](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/dot_product.html) and [euclidean_distance](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/euclidean_distance.html), thereby supporting AI applications that require text similarity matching. 
+> [SingleStoreDB](https://singlestore.com/)는 클라우드([cloud](https://www.singlestore.com/cloud/))와 온프레미스 모두에서 배포를 지원하는 고성능 분산 SQL 데이터베이스입니다. 벡터 저장소와 [dot_product](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/dot_product.html), [euclidean_distance](https://docs.singlestore.com/managed-service/en/reference/sql-reference/vector-functions/euclidean_distance.html)와 같은 벡터 기능을 제공하여 텍스트 유사성 매칭이 필요한 AI 애플리케이션을 지원합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-There are several ways to establish a [connection](https://singlestoredb-python.labs.singlestore.com/generated/singlestoredb.connect.html) to the database. You can either set up environment variables or pass named parameters to the `SingleStoreDB constructor`.
-Alternatively, you may provide these parameters to the `from_documents` and `from_texts` methods.
+데이터베이스에 [연결](https://singlestoredb-python.labs.singlestore.com/generated/singlestoredb.connect.html)을 설정하는 방법에는 여러 가지가 있습니다. 환경 변수를 설정하거나 `SingleStoreDB constructor`에 이름이 지정된 매개변수를 전달할 수 있습니다. 또는 이러한 매개변수를 `from_documents` 및 `from_texts` 메서드에 제공할 수 있습니다.
 
 ```bash
 pip install singlestoredb
 ```
 
-## Vector Store
 
-See a [usage example](/docs/integrations/vectorstores/singlestoredb).
+## 벡터 저장소
+
+[사용 예제](/docs/integrations/vectorstores/singlestoredb)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SingleStoreDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.singlestoredb.SingleStoreDB.html", "title": "SingleStoreDB"}]-->
 from langchain_community.vectorstores import SingleStoreDB
 ```
 
-## Memory
 
-See a [usage example](/docs/integrations/memory/singlestoredb_chat_message_history).
+## 메모리
+
+[사용 예제](/docs/integrations/memory/singlestoredb_chat_message_history)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SingleStoreDBChatMessageHistory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.singlestoredb.SingleStoreDBChatMessageHistory.html", "title": "SingleStoreDB"}]-->

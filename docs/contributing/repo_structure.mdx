@@ -1,17 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/contributing/repo_structure/
+description: LangChain 저장소 구조와 문서화에 대한 개요를 제공하며, 기여를 위한 필수 정보와 디렉토리 내용을 설명합니다.
 sidebar_position: 0.5
 ---
 
-# Repository Structure
+# 저장소 구조
 
-If you plan on contributing to LangChain code or documentation, it can be useful
-to understand the high level structure of the repository.
+LangChain 코드나 문서에 기여할 계획이 있다면, 저장소의 높은 수준 구조를 이해하는 것이 유용할 수 있습니다.
 
-LangChain is organized as a [monorepo](https://en.wikipedia.org/wiki/Monorepo) that contains multiple packages.
-You can check out our [installation guide](/docs/how_to/installation/) for more on how they fit together.
+LangChain은 여러 패키지를 포함하는 [모노레포](https://en.wikipedia.org/wiki/Monorepo)로 구성되어 있습니다. 이들이 어떻게 결합되는지에 대한 자세한 내용은 [설치 가이드](/docs/how_to/installation/)를 확인하세요.
 
-Here's the structure visualized as a tree:
+다음은 트리 구조로 시각화한 구조입니다:
 
 ```text
 .
@@ -42,26 +40,26 @@ Here's the structure visualized as a tree:
 ├── templates # A collection of easily deployable reference architectures for a wide variety of tasks.
 ```
 
-The root directory also contains the following files:
 
-* `pyproject.toml`: Dependencies for building docs and linting docs, cookbook.
-* `Makefile`: A file that contains shortcuts for building, linting and docs and cookbook.
+루트 디렉토리에는 다음 파일도 포함되어 있습니다:
 
-There are other files in the root directory level, but their presence should be self-explanatory. Feel free to browse around!
+* `pyproject.toml`: 문서 작성 및 린트, 요리책을 위한 의존성.
+* `Makefile`: 빌드, 린트 및 문서와 요리책을 위한 단축키가 포함된 파일.
 
-## Documentation
+루트 디렉토리 수준에는 다른 파일도 있지만, 그 존재는 자명해야 합니다. 자유롭게 둘러보세요!
 
-The `/docs` directory contains the content for the documentation that is shown
-at https://python.langchain.com/ and the associated API Reference https://api.python.langchain.com/en/latest/langchain_api_reference.html.
+## 문서
 
-See the [documentation](/docs/contributing/documentation/) guidelines to learn how to contribute to the documentation.
+`/docs` 디렉토리에는 https://python.langchain.com/ 에 표시되는 문서 내용과 관련 API 참조 https://api.python.langchain.com/en/latest/langchain_api_reference.html 가 포함되어 있습니다.
 
-## Code
+문서에 기여하는 방법을 배우려면 [문서](/docs/contributing/documentation/) 가이드라인을 참조하세요.
 
-The `/libs` directory contains the code for the LangChain packages.
+## 코드
 
-To learn more about how to contribute code see the following guidelines:
+`/libs` 디렉토리에는 LangChain 패키지의 코드가 포함되어 있습니다.
 
-- [Code](/docs/contributing/code/): Learn how to develop in the LangChain codebase.
-- [Integrations](./integrations.mdx): Learn how to contribute to third-party integrations to `langchain-community` or to start a new partner package.
-- [Testing](./testing.mdx): Guidelines to learn how to write tests for the packages.
+코드 기여 방법에 대한 자세한 내용은 다음 가이드라인을 참조하세요:
+
+- [코드](/docs/contributing/code/): LangChain 코드베이스에서 개발하는 방법을 배우세요.
+- [통합](./integrations.mdx): `langchain-community`에 대한 서드파티 통합에 기여하거나 새로운 파트너 패키지를 시작하는 방법을 배우세요.
+- [테스트](./testing.mdx): 패키지에 대한 테스트를 작성하는 방법을 배우는 가이드라인.

@@ -1,70 +1,77 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/nvidia-rag-canonical/
+description: NVIDIA 모델과 Milvus 벡터 저장소를 사용하여 RAG를 수행하는 템플릿입니다. 환경 설정 및 사용 방법을 안내합니다.
 ---
 
 # nvidia-rag-canonical
 
-This template performs RAG using Milvus Vector Store and NVIDIA Models (Embedding and Chat).
+이 템플릿은 Milvus 벡터 스토어와 NVIDIA 모델(임베딩 및 채팅)을 사용하여 RAG를 수행합니다.
 
-## Environment Setup
+## 환경 설정
 
-You should export your NVIDIA API Key as an environment variable.
-If you do not have an NVIDIA API Key, you can create one by following these steps:
-1. Create a free account with the [NVIDIA GPU Cloud](https://catalog.ngc.nvidia.com/) service, which hosts AI solution catalogs, containers, models, etc.
-2. Navigate to `Catalog > AI Foundation Models > (Model with API endpoint)`.
-3. Select the `API` option and click `Generate Key`.
-4. Save the generated key as `NVIDIA_API_KEY`. From there, you should have access to the endpoints.
+NVIDIA API 키를 환경 변수로 내보내야 합니다.  
+NVIDIA API 키가 없는 경우, 다음 단계를 따라 생성할 수 있습니다:  
+1. AI 솔루션 카탈로그, 컨테이너, 모델 등을 호스팅하는 [NVIDIA GPU Cloud](https://catalog.ngc.nvidia.com/) 서비스에 무료 계정을 생성합니다.  
+2. `Catalog > AI Foundation Models > (API 엔드포인트가 있는 모델)`로 이동합니다.  
+3. `API` 옵션을 선택하고 `Generate Key`를 클릭합니다.  
+4. 생성된 키를 `NVIDIA_API_KEY`로 저장합니다. 그 후, 엔드포인트에 접근할 수 있어야 합니다.  
 
 ```shell
 export NVIDIA_API_KEY=...
 ```
 
-For instructions on hosting the Milvus Vector Store, refer to the section at the bottom.
 
-## Usage
+Milvus 벡터 스토어 호스팅에 대한 지침은 하단 섹션을 참조하세요.
 
-To use this package, you should first have the LangChain CLI installed:
+## 사용법
+
+이 패키지를 사용하려면 먼저 LangChain CLI를 설치해야 합니다:
 
 ```shell
 pip install -U langchain-cli
 ```
 
-To use the NVIDIA models, install the Langchain NVIDIA AI Endpoints package:
+
+NVIDIA 모델을 사용하려면 Langchain NVIDIA AI Endpoints 패키지를 설치합니다:  
 ```shell
 pip install -U langchain_nvidia_aiplay
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새 LangChain 프로젝트를 생성하고 이것을 유일한 패키지로 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package nvidia-rag-canonical
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음을 실행하면 됩니다:
 
 ```shell
 langchain app add nvidia-rag-canonical
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가하세요:  
 ```python
 from nvidia_rag_canonical import chain as nvidia_rag_canonical_chain
 
 add_routes(app, nvidia_rag_canonical_chain, path="/nvidia-rag-canonical")
 ```
 
-If you want to set up an ingestion pipeline, you can add the following code to your `server.py` file:
+
+데이터 수집 파이프라인을 설정하려면 `server.py` 파일에 다음 코드를 추가할 수 있습니다:  
 ```python
 from nvidia_rag_canonical import ingest as nvidia_rag_ingest
 
 add_routes(app, nvidia_rag_ingest, path="/nvidia-rag-ingest")
 ```
-Note that for files ingested by the ingestion API, the server will need to be restarted for the newly ingested files to be accessible by the retriever.
+  
+데이터 수집 API로 수집된 파일의 경우, 새로 수집된 파일이 검색 가능해지려면 서버를 재시작해야 합니다.
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.  
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줍니다.  
+LangSmith에 [여기](https://smith.langchain.com/)에서 가입할 수 있습니다.  
+접근할 수 없는 경우, 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -72,23 +79,25 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you DO NOT already have a Milvus Vector Store you want to connect to, see `Milvus Setup` section below before proceeding.
 
-If you DO have a Milvus Vector Store you want to connect to, edit the connection details in `nvidia_rag_canonical/chain.py`
+연결할 Milvus 벡터 스토어가 이미 없는 경우, 진행하기 전에 아래의 `Milvus Setup` 섹션을 참조하세요.
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+연결할 Milvus 벡터 스토어가 있는 경우, `nvidia_rag_canonical/chain.py`에서 연결 세부 정보를 수정하세요.
+
+이 디렉토리 내에 있다면, 다음과 같이 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버가 로컬에서 실행됩니다.  
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/nvidia-rag-canonical/playground](http://127.0.0.1:8000/nvidia-rag-canonical/playground)
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 확인할 수 있습니다.  
+플레이그라운드는 [http://127.0.0.1:8000/nvidia-rag-canonical/playground](http://127.0.0.1:8000/nvidia-rag-canonical/playground)에서 접근할 수 있습니다.
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable
@@ -96,27 +105,32 @@ from langserve.client import RemoteRunnable
 runnable = RemoteRunnable("http://localhost:8000/nvidia-rag-canonical")
 ```
 
-## Milvus Setup
 
-Use this step if you need to create a Milvus Vector Store and ingest data.
-We will first follow the standard Milvus setup instructions [here](https://milvus.io/docs/install_standalone-docker.md).
+## Milvus 설정
 
-1. Download the Docker Compose YAML file.
+Milvus 벡터 스토어를 생성하고 데이터를 수집해야 하는 경우 이 단계를 사용하세요.  
+먼저 표준 Milvus 설정 지침을 [여기](https://milvus.io/docs/install_standalone-docker.md)에서 따릅니다.
+
+1. Docker Compose YAML 파일을 다운로드합니다.  
    ```shell
    wget https://github.com/milvus-io/milvus/releases/download/v2.3.3/milvus-standalone-docker-compose.yml -O docker-compose.yml
    ```
-2. Start the Milvus Vector Store container
+  
+2. Milvus 벡터 스토어 컨테이너를 시작합니다.  
    ```shell
    sudo docker compose up -d
    ```
-3. Install the PyMilvus package to interact with the Milvus container.
+  
+3. Milvus 컨테이너와 상호작용하기 위해 PyMilvus 패키지를 설치합니다.  
    ```shell
    pip install pymilvus
    ```
-4. Let's now ingest some data! We can do that by moving into this directory and running the code in `ingest.py`, eg:
+  
+4. 이제 데이터를 수집해 보겠습니다! 이 디렉토리로 이동하여 `ingest.py`의 코드를 실행하면 됩니다, 예를 들어:  
    
    ```shell
    python ingest.py
    ```
+  
    
-   Note that you can (and should!) change this to ingest data of your choice.
+   원하는 데이터로 수집할 수 있도록 변경할 수 있습니다(그리고 변경해야 합니다!).

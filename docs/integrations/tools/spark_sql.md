@@ -1,15 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/spark_sql/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/spark_sql.ipynb
+description: 이 노트북은 `Spark SQL`과 상호작용하는 에이전트를 사용하는 방법을 보여줍니다. 일반적인 질문과 오류 복구를 지원합니다.
 ---
 
-# Spark SQL Toolkit
+# Spark SQL 툴킷
 
-This notebook shows how to use agents to interact with `Spark SQL`. Similar to [SQL Database Agent](/docs/integrations/tools/sql_database), it is designed to address general inquiries about `Spark SQL` and facilitate error recovery.
+이 노트북은 에이전트를 사용하여 `Spark SQL`과 상호작용하는 방법을 보여줍니다. [SQL 데이터베이스 에이전트](/docs/integrations/tools/sql_database)와 유사하게, `Spark SQL`에 대한 일반적인 질문을 해결하고 오류 복구를 용이하게 하기 위해 설계되었습니다.
 
-**NOTE: Note that, as this agent is in active development, all answers might not be correct. Additionally, it is not guaranteed that the agent won't perform DML statements on your Spark cluster given certain questions. Be careful running it on sensitive data!**
+**참고: 이 에이전트는 현재 개발 중이므로 모든 답변이 정확하지 않을 수 있습니다. 또한 특정 질문에 대해 에이전트가 Spark 클러스터에서 DML 문을 실행하지 않을 것이라는 보장이 없습니다. 민감한 데이터에서 실행할 때 주의하세요!**
 
-## Initialization
+## 초기화
 
 ```python
 <!--IMPORTS:[{"imported": "SparkSQLToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.spark_sql.toolkit.SparkSQLToolkit.html", "title": "Spark SQL Toolkit"}, {"imported": "create_spark_sql_agent", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.spark_sql.base.create_spark_sql_agent.html", "title": "Spark SQL Toolkit"}, {"imported": "SparkSQL", "source": "langchain_community.utilities.spark_sql", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.spark_sql.SparkSQL.html", "title": "Spark SQL Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Spark SQL Toolkit"}]-->
@@ -17,6 +17,7 @@ from langchain_community.agent_toolkits import SparkSQLToolkit, create_spark_sql
 from langchain_community.utilities.spark_sql import SparkSQL
 from langchain_openai import ChatOpenAI
 ```
+
 
 ```python
 from pyspark.sql import SparkSession
@@ -30,6 +31,7 @@ table = "titanic"
 spark.read.csv(csv_file_path, header=True, inferSchema=True).write.saveAsTable(table)
 spark.table(table).show()
 ```
+
 ```output
 Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
@@ -62,6 +64,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 only showing top 20 rows
 ```
 
+
 ```python
 # Note, you can also connect to Spark via Spark connect. For example:
 # db = SparkSQL.from_uri("sc://localhost:15002", schema=schema)
@@ -71,11 +74,13 @@ toolkit = SparkSQLToolkit(db=spark_sql, llm=llm)
 agent_executor = create_spark_sql_agent(llm=llm, toolkit=toolkit, verbose=True)
 ```
 
-## Example: describing a table
+
+## 예제: 테이블 설명하기
 
 ```python
 agent_executor.run("Describe the titanic table")
 ```
+
 ```output
 
 
@@ -118,15 +123,18 @@ Final Answer: The titanic table has the following columns: PassengerId (INT), Su
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'The titanic table has the following columns: PassengerId (INT), Survived (INT), Pclass (INT), Name (STRING), Sex (STRING), Age (DOUBLE), SibSp (INT), Parch (INT), Ticket (STRING), Fare (DOUBLE), Cabin (STRING), and Embarked (STRING). Here are some sample rows from the table: \n\n1. PassengerId: 1, Survived: 0, Pclass: 3, Name: Braund, Mr. Owen Harris, Sex: male, Age: 22.0, SibSp: 1, Parch: 0, Ticket: A/5 21171, Fare: 7.25, Cabin: None, Embarked: S\n2. PassengerId: 2, Survived: 1, Pclass: 1, Name: Cumings, Mrs. John Bradley (Florence Briggs Thayer), Sex: female, Age: 38.0, SibSp: 1, Parch: 0, Ticket: PC 17599, Fare: 71.2833, Cabin: C85, Embarked: C\n3. PassengerId: 3, Survived: 1, Pclass: 3, Name: Heikkinen, Miss. Laina, Sex: female, Age: 26.0, SibSp: 0, Parch: 0, Ticket: STON/O2. 3101282, Fare: 7.925, Cabin: None, Embarked: S'
 ```
 
-## Example: running queries
+
+## 예제: 쿼리 실행하기
 
 ```python
 agent_executor.run("whats the square root of the average age?")
 ```
+
 ```output
 
 
@@ -175,13 +183,16 @@ Final Answer: The square root of the average age is approximately 5.45.[0m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'The square root of the average age is approximately 5.45.'
 ```
 
+
 ```python
 agent_executor.run("What's the name of the oldest survived passenger?")
 ```
+
 ```output
 
 
@@ -228,11 +239,13 @@ Final Answer: The oldest survived passenger is Barkworth, Mr. Algernon Henry Wil
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'The oldest survived passenger is Barkworth, Mr. Algernon Henry Wilson, who was 80 years old.'
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

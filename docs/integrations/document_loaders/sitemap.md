@@ -1,49 +1,51 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/sitemap/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/sitemap.ipynb
+description: '`SitemapLoader`는 주어진 URL의 사이트맵을 로드하고, 모든 페이지를 스크랩하여 문서로 반환하는 기능을 제공합니다.'
 ---
 
-# Sitemap
+# 사이트맵
 
-Extends from the `WebBaseLoader`, `SitemapLoader` loads a sitemap from a given URL, and then scrapes and loads all pages in the sitemap, returning each page as a Document.
+`WebBaseLoader`에서 확장된 `SitemapLoader`는 주어진 URL에서 사이트맵을 로드한 다음, 사이트맵의 모든 페이지를 스크랩하고 로드하여 각 페이지를 문서로 반환합니다.
 
-The scraping is done concurrently. There are reasonable limits to concurrent requests, defaulting to 2 per second.  If you aren't concerned about being a good citizen, or you control the scrapped server, or don't care about load you can increase this limit. Note, while this will speed up the scraping process, it may cause the server to block you. Be careful!
+스크래핑은 동시에 수행됩니다. 동시 요청에 대한 합리적인 제한이 있으며, 기본적으로 초당 2개로 설정되어 있습니다. 좋은 시민이 되는 것에 대해 걱정하지 않거나, 스크랩된 서버를 제어하거나, 부하에 신경 쓰지 않는 경우 이 제한을 늘릴 수 있습니다. 이로 인해 스크래핑 프로세스가 빨라지지만, 서버가 당신을 차단할 수 있습니다. 주의하세요!
 
-## Overview
-### Integration details
+## 개요
+### 통합 세부정보
 
-| Class | Package | Local | Serializable | [JS support](https://js.langchain.com/v0.2/docs/integrations/document_loaders/web_loaders/sitemap/)|
+| 클래스 | 패키지 | 로컬 | 직렬화 가능 | [JS 지원](https://js.langchain.com/v0.2/docs/integrations/document_loaders/web_loaders/sitemap/)|
 | :--- | :--- | :---: | :---: |  :---: |
 | [SiteMapLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.sitemap.SitemapLoader.html#langchain_community.document_loaders.sitemap.SitemapLoader) | [langchain_community](https://api.python.langchain.com/en/latest/community_api_reference.html) | ✅ | ❌ | ✅ | 
-### Loader features
-| Source | Document Lazy Loading | Native Async Support
+### 로더 기능
+| 소스 | 문서 지연 로딩 | 네이티브 비동기 지원
 | :---: | :---: | :---: |
 | SiteMapLoader | ✅ | ❌ | 
 
-## Setup
+## 설정
 
-To access SiteMap document loader you'll need to install the `langchain-community` integration package.
+SiteMap 문서 로더에 접근하려면 `langchain-community` 통합 패키지를 설치해야 합니다.
 
-### Credentials
+### 자격 증명
 
-No credentials are needed to run this.
+이를 실행하는 데 자격 증명이 필요하지 않습니다.
 
-If you want to get automated best in-class tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+모델 호출의 자동 최상급 추적을 원하시면 아래의 [LangSmith](https://docs.smith.langchain.com/) API 키를 주석 해제하여 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-### Installation
 
-Install **langchain_community**.
+### 설치
+
+**langchain_community**를 설치합니다.
 
 ```python
 %pip install -qU langchain-community
 ```
 
-### Fix notebook asyncio bug
+
+### 노트북 asyncio 버그 수정
 
 ```python
 import nest_asyncio
@@ -51,40 +53,48 @@ import nest_asyncio
 nest_asyncio.apply()
 ```
 
-## Initialization
 
-Now we can instantiate our model object and load documents:
+## 초기화
+
+이제 모델 객체를 인스턴스화하고 문서를 로드할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "SitemapLoader", "source": "langchain_community.document_loaders.sitemap", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.sitemap.SitemapLoader.html", "title": "Sitemap"}]-->
 from langchain_community.document_loaders.sitemap import SitemapLoader
 ```
 
+
 ```python
 sitemap_loader = SitemapLoader(web_path="https://api.python.langchain.com/sitemap.xml")
 ```
 
-## Load
+
+## 로드
 
 ```python
 docs = sitemap_loader.load()
 docs[0]
 ```
+
 ```output
 Fetching pages: 100%|##########| 28/28 [00:04<00:00,  6.83it/s]
 ```
+
 
 ```output
 Document(metadata={'source': 'https://api.python.langchain.com/en/stable/', 'loc': 'https://api.python.langchain.com/en/stable/', 'lastmod': '2024-05-15T00:29:42.163001+00:00', 'changefreq': 'weekly', 'priority': '1'}, page_content='\n\n\n\n\n\n\n\n\n\nLangChain Python API Reference Documentation.\n\n\nYou will be automatically redirected to the new location of this page.\n\n')
 ```
 
+
 ```python
 print(docs[0].metadata)
 ```
+
 ```output
 {'source': 'https://api.python.langchain.com/en/stable/', 'loc': 'https://api.python.langchain.com/en/stable/', 'lastmod': '2024-05-15T00:29:42.163001+00:00', 'changefreq': 'weekly', 'priority': '1'}
 ```
-You can change the `requests_per_second` parameter to increase the max concurrent requests. and use `requests_kwargs` to pass kwargs when send requests.
+
+`requests_per_second` 매개변수를 변경하여 최대 동시 요청을 늘릴 수 있으며, 요청을 보낼 때 `requests_kwargs`를 사용하여 kwargs를 전달할 수 있습니다.
 
 ```python
 sitemap_loader.requests_per_second = 2
@@ -92,9 +102,10 @@ sitemap_loader.requests_per_second = 2
 sitemap_loader.requests_kwargs = {"verify": False}
 ```
 
-## Lazy Load
 
-You can also load the pages lazily in order to minimize the memory load.
+## 지연 로드
+
+메모리 부하를 최소화하기 위해 페이지를 지연 로드할 수도 있습니다.
 
 ```python
 page = []
@@ -106,12 +117,14 @@ for doc in sitemap_loader.lazy_load():
 
         page = []
 ```
+
 ```output
 Fetching pages: 100%|##########| 28/28 [00:01<00:00, 19.06it/s]
 ```
-## Filtering sitemap URLs
 
-Sitemaps can be massive files, with thousands of URLs.  Often you don't need every single one of them.  You can filter the URLs by passing a list of strings or regex patterns to the `filter_urls` parameter.  Only URLs that match one of the patterns will be loaded.
+## 사이트맵 URL 필터링
+
+사이트맵은 수천 개의 URL을 포함하는 방대한 파일일 수 있습니다. 종종 모든 URL이 필요하지 않습니다. `filter_urls` 매개변수에 문자열 목록이나 정규 표현식을 전달하여 URL을 필터링할 수 있습니다. 패턴 중 하나와 일치하는 URL만 로드됩니다.
 
 ```python
 loader = SitemapLoader(
@@ -121,25 +134,29 @@ loader = SitemapLoader(
 documents = loader.load()
 ```
 
+
 ```python
 documents[0]
 ```
+
 
 ```output
 Document(page_content='\n\n\n\n\n\n\n\n\n\nLangChain Python API Reference Documentation.\n\n\nYou will be automatically redirected to the new location of this page.\n\n', metadata={'source': 'https://api.python.langchain.com/en/latest/', 'loc': 'https://api.python.langchain.com/en/latest/', 'lastmod': '2024-02-12T05:26:10.971077+00:00', 'changefreq': 'daily', 'priority': '0.9'})
 ```
 
-## Add custom scraping rules
 
-The `SitemapLoader` uses `beautifulsoup4` for the scraping process, and it scrapes every element on the page by default. The `SitemapLoader` constructor accepts a custom scraping function. This feature can be helpful to tailor the scraping process to your specific needs; for example, you might want to avoid scraping headers or navigation elements.
+## 사용자 정의 스크래핑 규칙 추가
 
-The following example shows how to develop and use a custom function to avoid navigation and header elements.
+`SitemapLoader`는 스크래핑 프로세스에 `beautifulsoup4`를 사용하며, 기본적으로 페이지의 모든 요소를 스크랩합니다. `SitemapLoader` 생성자는 사용자 정의 스크래핑 함수를 허용합니다. 이 기능은 스크래핑 프로세스를 특정 요구에 맞게 조정하는 데 유용할 수 있습니다. 예를 들어, 헤더나 탐색 요소의 스크래핑을 피하고 싶을 수 있습니다.
 
-Import the `beautifulsoup4` library and define the custom function.
+다음 예제는 탐색 및 헤더 요소를 피하기 위해 사용자 정의 함수를 개발하고 사용하는 방법을 보여줍니다.
+
+`beautifulsoup4` 라이브러리를 가져오고 사용자 정의 함수를 정의합니다.
 
 ```python
 pip install beautifulsoup4
 ```
+
 
 ```python
 from bs4 import BeautifulSoup
@@ -157,7 +174,8 @@ def remove_nav_and_header_elements(content: BeautifulSoup) -> str:
     return str(content.get_text())
 ```
 
-Add your custom function to the `SitemapLoader` object.
+
+사용자 정의 함수를 `SitemapLoader` 객체에 추가합니다.
 
 ```python
 loader = SitemapLoader(
@@ -167,9 +185,10 @@ loader = SitemapLoader(
 )
 ```
 
-## Local Sitemap
 
-The sitemap loader can also be used to load local files.
+## 로컬 사이트맵
+
+사이트맵 로더는 로컬 파일을 로드하는 데에도 사용할 수 있습니다.
 
 ```python
 sitemap_loader = SitemapLoader(web_path="example_data/sitemap.xml", is_local=True)
@@ -177,11 +196,12 @@ sitemap_loader = SitemapLoader(web_path="example_data/sitemap.xml", is_local=Tru
 docs = sitemap_loader.load()
 ```
 
-## API reference
 
-For detailed documentation of all SiteMapLoader features and configurations head to the API reference: https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.sitemap.SitemapLoader.html#langchain_community.document_loaders.sitemap.SitemapLoader
+## API 참조
 
-## Related
+모든 SiteMapLoader 기능 및 구성에 대한 자세한 문서는 API 참조를 참조하세요: https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.sitemap.SitemapLoader.html#langchain_community.document_loaders.sitemap.SitemapLoader
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [방법 가이드](/docs/how_to/#document-loaders)

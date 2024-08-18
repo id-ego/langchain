@@ -1,19 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/tidb/
+description: TiDB Cloud는 AI 애플리케이션 개발을 위한 벡터 검색 기능을 통합한 데이터베이스 서비스입니다. 무료 클러스터를 생성해
+  보세요!
 ---
 
 # TiDB
 
-> [TiDB Cloud](https://www.pingcap.com/tidb-serverless), is a comprehensive Database-as-a-Service (DBaaS) solution,
-that provides dedicated and serverless options. `TiDB Serverless` is now integrating
-a built-in vector search into the MySQL landscape. With this enhancement, you can seamlessly
-develop AI applications using `TiDB Serverless` without the need for a new database or additional
-technical stacks. Create a free TiDB Serverless cluster and start using the vector search feature at https://pingcap.com/ai.
+> [TiDB Cloud](https://www.pingcap.com/tidb-serverless)는 전용 및 서버리스 옵션을 제공하는 종합 데이터베이스 서비스(DBaaS) 솔루션입니다. `TiDB Serverless`는 이제 MySQL 환경에 내장된 벡터 검색 기능을 통합하고 있습니다. 이 향상을 통해 새로운 데이터베이스나 추가 기술 스택 없이도 `TiDB Serverless`를 사용하여 AI 애플리케이션을 원활하게 개발할 수 있습니다. 무료 TiDB Serverless 클러스터를 생성하고 https://pingcap.com/ai에서 벡터 검색 기능을 사용해 보세요.
 
-## Installation and Setup
+## 설치 및 설정
 
-You have to get the connection details for the TiDB database.
-Visit the [TiDB Cloud](https://tidbcloud.com/) to get the connection details.
+TiDB 데이터베이스에 대한 연결 세부정보를 얻어야 합니다. 연결 세부정보를 얻으려면 [TiDB Cloud](https://tidbcloud.com/)를 방문하세요.
 
 ```bash
 ## Document loader
@@ -23,21 +19,24 @@ Visit the [TiDB Cloud](https://tidbcloud.com/) to get the connection details.
 from langchain_community.document_loaders import TiDBLoader
 ```
 
-Please refer the details [here](/docs/integrations/document_loaders/tidb).
 
-## Vector store
+자세한 내용은 [여기](/docs/integrations/document_loaders/tidb)를 참조하세요.
+
+## 벡터 저장소
 
 ```python
 <!--IMPORTS:[{"imported": "TiDBVectorStore", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.tidb_vector.TiDBVectorStore.html", "title": "TiDB"}]-->
 from langchain_community.vectorstores import TiDBVectorStore
 ```
-Please refer the details [here](/docs/integrations/vectorstores/tidb_vector).
 
-## Memory
+자세한 내용은 [여기](/docs/integrations/vectorstores/tidb_vector)를 참조하세요.
+
+## 메모리
 
 ```python
 <!--IMPORTS:[{"imported": "TiDBChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.tidb.TiDBChatMessageHistory.html", "title": "TiDB"}]-->
 from langchain_community.chat_message_histories import TiDBChatMessageHistory
 ```
 
-Please refer the details [here](/docs/integrations/memory/tidb_chat_message_history).
+
+자세한 내용은 [여기](/docs/integrations/memory/tidb_chat_message_history)를 참조하세요.

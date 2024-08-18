@@ -1,26 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/contributing/integrations/
+description: LangChain에 통합 기여 방법에 대한 안내로, 커뮤니티 패키지와 파트너 패키지에 대한 정보를 제공합니다.
 sidebar_position: 5
 ---
 
-# Contribute Integrations
+# 통합 기여하기
 
-To begin, make sure you have all the dependencies outlined in guide on [Contributing Code](/docs/contributing/code/).
+시작하려면 [코드 기여하기](/docs/contributing/code/) 가이드에 설명된 모든 의존성이 설치되어 있는지 확인하세요.
 
-There are a few different places you can contribute integrations for LangChain:
+LangChain에 통합 기여를 할 수 있는 몇 가지 장소가 있습니다:
 
-- **Community**: For lighter-weight integrations that are primarily maintained by LangChain and the Open Source Community.
-- **Partner Packages**: For independent packages that are co-maintained by LangChain and a partner.
+- **커뮤니티**: 주로 LangChain과 오픈 소스 커뮤니티에 의해 유지되는 가벼운 통합을 위한 것입니다.
+- **파트너 패키지**: LangChain과 파트너가 공동으로 유지하는 독립 패키지를 위한 것입니다.
 
-For the most part, **new integrations should be added to the Community package**. Partner packages require more maintenance as separate packages, so please confirm with the LangChain team before creating a new partner package.
+대부분의 경우, **새로운 통합은 커뮤니티 패키지에 추가되어야 합니다**. 파트너 패키지는 별도의 패키지로서 더 많은 유지 관리가 필요하므로, 새로운 파트너 패키지를 생성하기 전에 LangChain 팀에 확인해 주세요.
 
-In the following sections, we'll walk through how to contribute to each of these packages from a fake company, `Parrot Link AI`.
+다음 섹션에서는 가상의 회사인 `Parrot Link AI`에서 각 패키지에 기여하는 방법을 안내합니다.
 
-## Community package
+## 커뮤니티 패키지
 
-The `langchain-community` package is in `libs/community` and contains most integrations.
+`langchain-community` 패키지는 `libs/community`에 있으며 대부분의 통합을 포함하고 있습니다.
 
-It can be installed with `pip install langchain-community`, and exported members can be imported with code like 
+`pip install langchain-community`로 설치할 수 있으며, 내보낸 멤버는 다음과 같은 코드로 가져올 수 있습니다.
 
 ```python
 from langchain_community.chat_models import ChatParrotLink
@@ -28,10 +28,10 @@ from langchain_community.llms import ParrotLinkLLM
 from langchain_community.vectorstores import ParrotLinkVectorStore
 ```
 
-The `community` package relies on manually-installed dependent packages, so you will see errors
-if you try to import a package that is not installed. In our fake example, if you tried to import `ParrotLinkLLM` without installing `parrot-link-sdk`, you will see an `ImportError` telling you to install it when trying to use it.
 
-Let's say we wanted to implement a chat model for Parrot Link AI. We would create a new file in `libs/community/langchain_community/chat_models/parrot_link.py` with the following code:
+`community` 패키지는 수동으로 설치된 의존 패키지에 의존하므로, 설치되지 않은 패키지를 가져오려고 하면 오류가 발생합니다. 우리의 가상의 예에서 `parrot-link-sdk`를 설치하지 않고 `ParrotLinkLLM`을 가져오려고 하면, 이를 설치하라는 `ImportError`가 표시됩니다.
+
+Parrot Link AI를 위한 채팅 모델을 구현하고 싶다고 가정해 봅시다. 다음 코드를 가진 새 파일을 `libs/community/langchain_community/chat_models/parrot_link.py`에 생성합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "BaseChatModel", "source": "langchain_core.language_models.chat_models", "docs": "https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html", "title": "Contribute Integrations"}]-->
@@ -51,45 +51,45 @@ class ChatParrotLink(BaseChatModel):
     ...
 ```
 
-And we would write tests in:
 
-- Unit tests: `libs/community/tests/unit_tests/chat_models/test_parrot_link.py`
-- Integration tests: `libs/community/tests/integration_tests/chat_models/test_parrot_link.py`
+그리고 다음 위치에 테스트를 작성합니다:
 
-And add documentation to:
+- 단위 테스트: `libs/community/tests/unit_tests/chat_models/test_parrot_link.py`
+- 통합 테스트: `libs/community/tests/integration_tests/chat_models/test_parrot_link.py`
+
+그리고 문서를 다음에 추가합니다:
 
 - `docs/docs/integrations/chat/parrot_link.ipynb`
 
-## Partner package in LangChain repo
+## LangChain 레포의 파트너 패키지
 
 :::caution
-Before starting a **partner** package, please confirm your intent with the LangChain team. Partner packages require more maintenance as separate packages, so we will close PRs that add new partner packages without prior discussion. See the above section for how to add a community integration.
+**파트너** 패키지를 시작하기 전에 LangChain 팀에 의도를 확인해 주세요. 파트너 패키지는 별도의 패키지로서 더 많은 유지 관리가 필요하므로, 사전 논의 없이 새로운 파트너 패키지를 추가하는 PR은 닫을 것입니다. 커뮤니티 통합을 추가하는 방법에 대한 내용은 위 섹션을 참조하세요.
 :::
 
-Partner packages can be hosted in the `LangChain` monorepo or in an external repo.
+파트너 패키지는 `LangChain` 모노레포 또는 외부 레포에 호스팅될 수 있습니다.
 
-Partner package in the `LangChain` repo is placed in `libs/partners/{partner}`
-and the package source code is in `libs/partners/{partner}/langchain_{partner}`.
+`LangChain` 레포의 파트너 패키지는 `libs/partners/{partner}`에 위치하며, 패키지 소스 코드는 `libs/partners/{partner}/langchain_{partner}`에 있습니다.
 
-A package is
-installed by users with `pip install langchain-{partner}`, and the package members
-can be imported with code like:
+사용자는 `pip install langchain-{partner}`로 패키지를 설치하며, 패키지 멤버는 다음과 같은 코드로 가져올 수 있습니다:
 
 ```python
 from langchain_{partner} import X
 ```
 
-### Set up a new package
 
-To set up a new partner package, use the latest version of the LangChain CLI. You can install or update it with:
+### 새 패키지 설정하기
+
+새 파트너 패키지를 설정하려면 LangChain CLI의 최신 버전을 사용하세요. 다음과 같이 설치하거나 업데이트할 수 있습니다:
 
 ```bash
 pip install -U langchain-cli
 ```
 
-Let's say you want to create a new partner package working for a company called Parrot Link AI.
 
-Then, run the following command to create a new partner package:
+Parrot Link AI라는 회사에 맞는 새로운 파트너 패키지를 만들고 싶다고 가정해 봅시다.
+
+그런 다음, 다음 명령어를 실행하여 새 파트너 패키지를 생성합니다:
 
 ```bash
 cd libs/partners
@@ -98,7 +98,8 @@ langchain-cli integration new
 > Name of integration in PascalCase [ParrotLink]: ParrotLink
 ```
 
-This will create a new package in `libs/partners/parrot-link` with the following structure:
+
+이렇게 하면 다음 구조를 가진 `libs/partners/parrot-link`에 새 패키지가 생성됩니다:
 
 ```
 libs/partners/parrot-link/
@@ -118,55 +119,54 @@ libs/partners/parrot-link/
   .gitignore
 ```
 
-### Implement your package
 
-First, add any dependencies your package needs, such as your company's SDK:
+### 패키지 구현하기
+
+먼저, 패키지에 필요한 의존성을 추가합니다. 예를 들어, 회사의 SDK와 같은 것입니다:
 
 ```bash
 poetry add parrot-link-sdk
 ```
 
-If you need separate dependencies for type checking, you can add them to the `typing` group with:
+
+타입 검사를 위한 별도의 의존성이 필요한 경우, 다음과 같이 `typing` 그룹에 추가할 수 있습니다:
 
 ```bash
 poetry add --group typing types-parrot-link-sdk
 ```
 
-Then, implement your package in `libs/partners/parrot-link/langchain_parrot_link`.
 
-By default, this will include stubs for a Chat Model, an LLM, and/or a Vector Store. You should delete any of the files you won't use and remove them from `__init__.py`.
+그런 다음, `libs/partners/parrot-link/langchain_parrot_link`에서 패키지를 구현합니다.
 
-### Write Unit and Integration Tests
+기본적으로, 여기에는 채팅 모델, LLM 및/또는 벡터 저장소에 대한 스텁이 포함됩니다. 사용하지 않을 파일은 삭제하고 `__init__.py`에서 제거해야 합니다.
 
-Some basic tests are presented in the `tests/` directory. You should add more tests to cover your package's functionality.
+### 단위 및 통합 테스트 작성하기
 
-For information on running and implementing tests, see the [Testing guide](/docs/contributing/testing/).
+`tests/` 디렉토리에 일부 기본 테스트가 제공됩니다. 패키지의 기능을 커버하기 위해 더 많은 테스트를 추가해야 합니다.
 
-### Write documentation
+테스트 실행 및 구현에 대한 정보는 [테스트 가이드](/docs/contributing/testing/)를 참조하세요.
 
-Documentation is generated from Jupyter notebooks in the `docs/` directory. You should place the notebooks with examples
-to the relevant `docs/docs/integrations` directory in the monorepo root.
+### 문서 작성하기
 
-### (If Necessary) Deprecate community integration
+문서는 `docs/` 디렉토리의 Jupyter 노트북에서 생성됩니다. 예제가 포함된 노트북을 모노레포 루트의 관련 `docs/docs/integrations` 디렉토리에 배치해야 합니다.
 
-Note: this is only necessary if you're migrating an existing community integration into
-a partner package. If the component you're integrating is net-new to LangChain (i.e.
-not already in the `community` package), you can skip this step.
+### (필요한 경우) 커뮤니티 통합 중단하기
 
-Let's pretend we migrated our `ChatParrotLink` chat model from the community package to
-the partner package. We would need to deprecate the old model in the community package.
+참고: 이는 기존 커뮤니티 통합을 파트너 패키지로 마이그레이션하는 경우에만 필요합니다. 통합하는 구성 요소가 LangChain에 새로 추가된 것이라면(즉, `community` 패키지에 이미 포함되지 않은 경우) 이 단계를 건너뛸 수 있습니다.
 
-We would do that by adding a `@deprecated` decorator to the old model as follows, in
-`libs/community/langchain_community/chat_models/parrot_link.py`.
+커뮤니티 패키지에서 `ChatParrotLink` 채팅 모델을 파트너 패키지로 마이그레이션했다고 가정해 봅시다. 커뮤니티 패키지에서 이전 모델을 중단해야 합니다.
 
-Before our change, our chat model might look like this:
+이를 위해 `libs/community/langchain_community/chat_models/parrot_link.py`에서 이전 모델에 `@deprecated` 데코레이터를 추가합니다.
+
+변경 전 우리의 채팅 모델은 다음과 같을 수 있습니다:
 
 ```python
 class ChatParrotLink(BaseChatModel):
   ...
 ```
 
-After our change, it would look like this:
+
+변경 후에는 다음과 같이 보일 것입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "deprecated", "source": "langchain_core._api.deprecation", "docs": "https://api.python.langchain.com/en/latest/_api/langchain_core._api.deprecation.deprecated.html", "title": "Contribute Integrations"}]-->
@@ -181,26 +181,24 @@ class ChatParrotLink(BaseChatModel):
   ...
 ```
 
-You should do this for *each* component that you're migrating to the partner package.
 
-### Additional steps
+파트너 패키지로 마이그레이션하는 각 구성 요소에 대해 이 작업을 수행해야 합니다.
 
-Contributor steps:
+### 추가 단계
 
-- [ ] Add secret names to manual integrations workflow in `.github/workflows/_integration_test.yml`
-- [ ] Add secrets to release workflow (for pre-release testing) in `.github/workflows/_release.yml`
+기여자 단계:
 
-Maintainer steps (Contributors should **not** do these):
+- [ ] `.github/workflows/_integration_test.yml`의 수동 통합 워크플로우에 비밀 이름 추가
+- [ ] `.github/workflows/_release.yml`의 릴리스 워크플로우에 비밀 추가 (사전 릴리스 테스트용)
 
-- [ ] set up pypi and test pypi projects
-- [ ] add credential secrets to Github Actions
-- [ ] add package to conda-forge
+유지 관리 단계 (기여자는 **하지 않아야** 함):
 
-## Partner package in external repo
+- [ ] pypi 및 test pypi 프로젝트 설정
+- [ ] Github Actions에 자격 증명 비밀 추가
+- [ ] conda-forge에 패키지 추가
 
-Partner packages in external repos must be coordinated between the LangChain team and
-the partner organization to ensure that they are maintained and updated.
+## 외부 레포의 파트너 패키지
 
-If you're interested in creating a partner package in an external repo, please start
-with one in the LangChain repo, and then reach out to the LangChain team to discuss
-how to move it to an external repo.
+외부 레포의 파트너 패키지는 LangChain 팀과 파트너 조직 간의 조정이 필요하여 유지 관리 및 업데이트가 보장됩니다.
+
+외부 레포에 파트너 패키지를 생성하는 데 관심이 있다면, 먼저 LangChain 레포에서 하나를 시작한 후 LangChain 팀에 연락하여 외부 레포로 이동하는 방법을 논의하세요.

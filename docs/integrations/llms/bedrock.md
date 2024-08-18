@@ -1,29 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/bedrock/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/bedrock.ipynb
+description: Amazon Bedrock은 다양한 AI 회사의 고성능 기초 모델을 제공하는 완전 관리형 서비스입니다. 안전하고 책임감 있는
+  AI 애플리케이션 구축을 지원합니다.
 ---
 
-# Bedrock
+# 베드록
 
 :::caution
-You are currently on a page documenting the use of Amazon Bedrock models as [text completion models](/docs/concepts/#llms). Many popular models available on Bedrock are [chat completion models](/docs/concepts/#chat-models).
+현재 Amazon Bedrock 모델을 [텍스트 완성 모델](/docs/concepts/#llms)로 사용하는 페이지에 있습니다. Bedrock에서 사용할 수 있는 많은 인기 모델은 [채팅 완성 모델](/docs/concepts/#chat-models)입니다.
 
-You may be looking for [this page instead](/docs/integrations/chat/bedrock/).
+대신 [이 페이지](/docs/integrations/chat/bedrock/)를 찾고 있을 수 있습니다.
 :::
 
-> [Amazon Bedrock](https://aws.amazon.com/bedrock/) is a fully managed service that offers a choice of
-high-performing foundation models (FMs) from leading AI companies like `AI21 Labs`, `Anthropic`, `Cohere`,
-`Meta`, `Stability AI`, and `Amazon` via a single API, along with a broad set of capabilities you need to
-build generative AI applications with security, privacy, and responsible AI. Using `Amazon Bedrock`,
-you can easily experiment with and evaluate top FMs for your use case, privately customize them with
-your data using techniques such as fine-tuning and `Retrieval Augmented Generation` (`RAG`), and build
-agents that execute tasks using your enterprise systems and data sources. Since `Amazon Bedrock` is
-serverless, you don't have to manage any infrastructure, and you can securely integrate and deploy
-generative AI capabilities into your applications using the AWS services you are already familiar with.
+> [Amazon Bedrock](https://aws.amazon.com/bedrock/)는 `AI21 Labs`, `Anthropic`, `Cohere`, `Meta`, `Stability AI`, `Amazon`과 같은 주요 AI 회사의 고성능 기초 모델(FMs)을 단일 API를 통해 제공하는 완전 관리형 서비스로, 보안, 프라이버시 및 책임 있는 AI로 생성 AI 애플리케이션을 구축하는 데 필요한 광범위한 기능을 제공합니다. `Amazon Bedrock`을 사용하면 사용 사례에 맞는 최고의 FMs을 쉽게 실험하고 평가할 수 있으며, 미세 조정 및 `Retrieval Augmented Generation`(`RAG`)과 같은 기술을 사용하여 자신의 데이터로 개인화하고, 기업 시스템 및 데이터 소스를 사용하여 작업을 실행하는 에이전트를 구축할 수 있습니다. `Amazon Bedrock`은 서버리스이므로 인프라를 관리할 필요가 없으며, 이미 익숙한 AWS 서비스를 사용하여 생성 AI 기능을 안전하게 통합하고 배포할 수 있습니다.
 
 ```python
 %pip install --upgrade --quiet langchain_aws
 ```
+
 
 ```python
 from langchain_aws import BedrockLLM
@@ -33,7 +27,8 @@ llm = BedrockLLM(
 )
 ```
 
-### Custom models
+
+### 맞춤형 모델
 
 ```python
 custom_llm = BedrockLLM(
@@ -47,11 +42,12 @@ custom_llm = BedrockLLM(
 custom_llm.invoke(input="What is the recipe of mayonnaise?")
 ```
 
-## Guardrails for Amazon Bedrock
 
-[Guardrails for Amazon Bedrock](https://aws.amazon.com/bedrock/guardrails/) evaluates user inputs and model responses based on use case specific policies, and provides an additional layer of safeguards regardless of the underlying model. Guardrails can be applied across models, including Anthropic Claude, Meta Llama 2, Cohere Command, AI21 Labs Jurassic, and Amazon Titan Text, as well as fine-tuned models.
-**Note**: Guardrails for Amazon Bedrock is currently in preview and not generally available. Reach out through your usual AWS Support contacts if you’d like access to this feature.
-In this section, we are going to set up a Bedrock language model with specific guardrails that include tracing capabilities.   
+## Amazon Bedrock을 위한 가드레일
+
+[Amazon Bedrock을 위한 가드레일](https://aws.amazon.com/bedrock/guardrails/)은 사용자 입력 및 모델 응답을 사용 사례 특정 정책에 따라 평가하고, 기본 모델에 관계없이 추가적인 안전 장치를 제공합니다. 가드레일은 Anthropic Claude, Meta Llama 2, Cohere Command, AI21 Labs Jurassic 및 Amazon Titan Text를 포함한 모델 전반에 적용될 수 있으며, 미세 조정된 모델에도 적용됩니다.  
+**참고**: Amazon Bedrock을 위한 가드레일은 현재 미리보기 상태이며 일반적으로 사용할 수 없습니다. 이 기능에 접근하고 싶으시면 평소 AWS 지원 연락처를 통해 문의하시기 바랍니다.  
+이 섹션에서는 추적 기능을 포함한 특정 가드레일이 설정된 Bedrock 언어 모델을 설정할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.AsyncCallbackHandler.html", "title": "Bedrock"}]-->
@@ -79,7 +75,8 @@ llm = BedrockLLM(
 )
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

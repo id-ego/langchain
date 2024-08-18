@@ -1,17 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/html2text/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/html2text.ipynb
+description: HTML을 깔끔하고 읽기 쉬운 ASCII 텍스트로 변환하는 Python 패키지인 html2text에 대한 설명입니다. Markdown
+  형식도 지원합니다.
 ---
 
-# HTML to text
+# HTML을 텍스트로 변환하기
 
-> [html2text](https://github.com/Alir3z4/html2text/) is a Python package that converts a page of `HTML` into clean, easy-to-read plain `ASCII text`. 
+> [html2text](https://github.com/Alir3z4/html2text/)는 `HTML` 페이지를 깔끔하고 읽기 쉬운 일반 `ASCII 텍스트`로 변환하는 Python 패키지입니다.
 
-The ASCII also happens to be a valid `Markdown` (a text-to-HTML format).
+ASCII는 유효한 `Markdown`(텍스트-HTML 형식)이기도 합니다.
 
 ```python
 %pip install --upgrade --quiet html2text
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncHtmlLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.async_html.AsyncHtmlLoader.html", "title": "HTML to text"}]-->
@@ -21,10 +23,12 @@ urls = ["https://www.espn.com", "https://lilianweng.github.io/posts/2023-06-23-a
 loader = AsyncHtmlLoader(urls)
 docs = loader.load()
 ```
+
 ```output
 USER_AGENT environment variable not set, consider setting it to identify your requests.
 Fetching pages: 100%|##########| 2/2 [00:00<00:00, 14.74it/s]
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Html2TextTransformer", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.html2text.Html2TextTransformer.html", "title": "HTML to text"}]-->
@@ -38,6 +42,7 @@ print(docs_transformed[0].page_content[1000:2000])
 
 print(docs_transformed[1].page_content[1000:2000])
 ```
+
 ```output
 ## Fantasy
 

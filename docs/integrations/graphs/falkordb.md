@@ -1,23 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/graphs/falkordb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/graphs/falkordb.ipynb
+description: FalkorDB는 GenAI에 지식을 제공하는 저지연 그래프 데이터베이스입니다. 이 문서는 LLM을 활용한 자연어 인터페이스
+  사용법을 설명합니다.
 ---
 
 # FalkorDB
 
-> [FalkorDB](https://www.falkordb.com/) is a low-latency Graph Database that delivers knowledge to GenAI.
+> [FalkorDB](https://www.falkordb.com/)는 GenAI에 지식을 제공하는 저지연 그래프 데이터베이스입니다.
 
-This notebook shows how to use LLMs to provide a natural language interface to `FalkorDB` database.
+이 노트북은 LLM을 사용하여 `FalkorDB` 데이터베이스에 자연어 인터페이스를 제공하는 방법을 보여줍니다.
 
-## Setting up
+## 설정
 
-You can run the `falkordb` Docker container locally:
+로컬에서 `falkordb` Docker 컨테이너를 실행할 수 있습니다:
 
 ```bash
 docker run -p 6379:6379 -it --rm falkordb/falkordb
 ```
 
-Once launched, you create a database on the local machine and connect to it.
+
+시작되면, 로컬 머신에 데이터베이스를 생성하고 연결합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "FalkorDBQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.falkordb.FalkorDBQAChain.html", "title": "FalkorDB"}, {"imported": "FalkorDBGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.falkordb_graph.FalkorDBGraph.html", "title": "FalkorDB"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "FalkorDB"}]-->
@@ -26,11 +28,13 @@ from langchain_community.graphs import FalkorDBGraph
 from langchain_openai import ChatOpenAI
 ```
 
-## Create a graph connection and insert the demo data
+
+## 그래프 연결 생성 및 데모 데이터 삽입
 
 ```python
 graph = FalkorDBGraph(database="movies")
 ```
+
 
 ```python
 graph.query(
@@ -60,11 +64,13 @@ graph.query(
 )
 ```
 
+
 ```output
 []
 ```
 
-## Creating FalkorDBQAChain
+
+## FalkorDBQAChain 생성
 
 ```python
 graph.refresh_schema()
@@ -74,21 +80,25 @@ import os
 
 os.environ["OPENAI_API_KEY"] = "API_KEY_HERE"
 ```
+
 ```output
 Node properties: [[OrderedDict([('label', None), ('properties', ['name', 'birthDate', 'title'])])]]
 Relationships properties: [[OrderedDict([('type', None), ('properties', [])])]]
 Relationships: [['(:Person)-[:ACTED_IN]->(:Movie)']]
 ```
 
+
 ```python
 chain = FalkorDBQAChain.from_llm(ChatOpenAI(temperature=0), graph=graph, verbose=True)
 ```
 
-## Querying the graph
+
+## 그래프 쿼리
 
 ```python
 chain.run("Who played in Top Gun?")
 ```
+
 ```output
 
 
@@ -103,13 +113,16 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Tom Cruise, Val Kilmer, Anthony Edwards, and Meg Ryan played in Top Gun.'
 ```
 
+
 ```python
 chain.run("Who is the oldest actor who played in The Godfather: Part II?")
 ```
+
 ```output
 
 
@@ -126,13 +139,16 @@ Full Context:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'The oldest actor who played in The Godfather: Part II is Al Pacino.'
 ```
 
+
 ```python
 chain.run("Robert De Niro played in which movies?")
 ```
+
 ```output
 
 
@@ -145,6 +161,7 @@ Full Context:
 
 [1m> Finished chain.[0m
 ```
+
 
 ```output
 'Robert De Niro played in "The Godfather: Part II".'

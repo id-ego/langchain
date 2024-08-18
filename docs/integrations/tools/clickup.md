@@ -1,17 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/clickup/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/clickup.ipynb
+description: ClickUp 툴킷은 팀이 목표를 달성할 수 있도록 돕는 유연하고 맞춤화 가능한 프로젝트 관리 솔루션을 제공합니다.
 ---
 
-# ClickUp Toolkit
+# ClickUp 툴킷
 
-> [ClickUp](https://clickup.com/) is an all-in-one productivity platform that provides small and large teams across industries with flexible and customizable work management solutions, tools, and functions. 
+> [ClickUp](https://clickup.com/)은 모든 산업의 소규모 및 대규모 팀에 유연하고 사용자 정의 가능한 작업 관리 솔루션, 도구 및 기능을 제공하는 올인원 생산성 플랫폼입니다.
 
-> It is a cloud-based project management solution for businesses of all sizes featuring communication and collaboration tools to help achieve organizational goals.
+> 이는 모든 규모의 비즈니스를 위한 클라우드 기반 프로젝트 관리 솔루션으로, 조직 목표 달성을 돕기 위한 커뮤니케이션 및 협업 도구를 특징으로 합니다.
 
 ```python
 %pip install -qU langchain-community
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "ClickUp Toolkit"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "ClickUp Toolkit"}, {"imported": "ClickupToolkit", "source": "langchain_community.agent_toolkits.clickup.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.clickup.toolkit.ClickupToolkit.html", "title": "ClickUp Toolkit"}, {"imported": "ClickupAPIWrapper", "source": "langchain_community.utilities.clickup", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.clickup.ClickupAPIWrapper.html", "title": "ClickUp Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "ClickUp Toolkit"}]-->
@@ -25,13 +26,14 @@ from langchain_community.utilities.clickup import ClickupAPIWrapper
 from langchain_openai import OpenAI
 ```
 
-## Initializing
 
-### Get Authenticated
-1. Create a [ClickUp App](https://help.clickup.com/hc/en-us/articles/6303422883095-Create-your-own-app-with-the-ClickUp-API)
-2. Follow [these steps](https://clickup.com/api/developer-portal/authentication/) to get your `client_id` and `client_secret`.
-   - *Suggestion: use `https://google.com` as the redirect_uri. This is what we assume in the defaults for this toolkit.*
-3. Copy/paste them and run the next cell to get your `code`
+## 초기화
+
+### 인증 받기
+1. [ClickUp 앱](https://help.clickup.com/hc/en-us/articles/6303422883095-Create-your-own-app-with-the-ClickUp-API)을 생성합니다.
+2. [이 단계](https://clickup.com/api/developer-portal/authentication/)를 따라 `client_id`와 `client_secret`을 얻습니다.
+   - *제안: `https://google.com`을 redirect_uri로 사용하세요. 이는 이 툴킷의 기본값으로 가정하는 것입니다.*
+3. 복사하여 붙여넣고 다음 셀을 실행하여 `code`를 얻습니다.
 
 ```python
 # Copilot Sandbox
@@ -42,34 +44,39 @@ redirect_uri = "https://google.com"
 print("Click this link, select your workspace, click `Connect Workspace`")
 print(ClickupAPIWrapper.get_access_code_url(oauth_client_id, redirect_uri))
 ```
+
 ```output
 Click this link, select your workspace, click `Connect Workspace`
 https://app.clickup.com/api?client_id=ABC...&redirect_uri=https://google.com
 ```
-The url should change to something like this https://www.google.com/?code=THISISMYCODERIGHTHERE.
 
-Next, copy/paste the `CODE` (THISISMYCODERIGHTHERE) generated in the URL in the cell below.
+URL은 https://www.google.com/?code=THISISMYCODERIGHTHERE와 같은 형식으로 변경되어야 합니다.
+
+다음으로, 아래 셀에 URL에서 생성된 `CODE` (THISISMYCODERIGHTHERE)를 복사하여 붙여넣습니다.
 
 ```python
 code = "THISISMYCODERIGHTHERE"
 ```
 
-### Get Access Token
-Then, use the code below to get your `access_token`.
 
-*Important*: Each code is a one time code that will expire after use. The `access_token` can be used for a period of time. Make sure to copy paste the `access_token` once you get it!
+### 액세스 토큰 받기
+그런 다음, 아래 코드를 사용하여 `access_token`을 얻습니다.
+
+*중요*: 각 코드는 사용 후 만료되는 일회용 코드입니다. `access_token`은 일정 기간 동안 사용할 수 있습니다. 얻은 후 `access_token`을 반드시 복사하여 붙여넣으세요!
 
 ```python
 access_token = ClickupAPIWrapper.get_access_token(
     oauth_client_id, oauth_client_secret, code
 )
 ```
+
 ```output
 Error: {'err': 'Code already used', 'ECODE': 'OAUTH_014'}
 You already used this code once. Go back a step and generate a new code.
 Our best guess for the url to get a new code is:
 https://app.clickup.com/api?client_id=B5D61F8EVO04PR0JX0U73984LLS9GI6P&redirect_uri=https://google.com
 ```
+
 
 ```python
 # Init toolkit
@@ -79,12 +86,14 @@ print(
     f"Found team_id: {clickup_api_wrapper.team_id}.\nMost request require the team id, so we store it for you in the toolkit, we assume the first team in your list is the one you want. \nNote: If you know this is the wrong ID, you can pass it at initialization."
 )
 ```
+
 ```output
 Found team_id: 9011010153.
 Most request require the team id, so we store it for you in the toolkit, we assume the first team in your list is the one you want. 
 Note: If you know this is the wrong ID, you can pass it at initialization.
 ```
-### Create Agent
+
+### 에이전트 생성
 
 ```python
 llm = OpenAI(temperature=0, openai_api_key="")
@@ -94,7 +103,8 @@ agent = initialize_agent(
 )
 ```
 
-## Use an Agent
+
+## 에이전트 사용
 
 ```python
 # helper function for demo
@@ -107,14 +117,16 @@ def print_and_run(command):
     return response
 ```
 
-### Navigation
-You can get the teams, folder and spaces your user has access to
+
+### 탐색
+사용자가 액세스할 수 있는 팀, 폴더 및 공간을 가져올 수 있습니다.
 
 ```python
 print_and_run("Get all the teams that the user is authorized to access")
 print_and_run("Get all the spaces available to the team")
 print_and_run("Get all the folders for the team")
 ```
+
 ```output
 [94m$ COMMAND[0m
 Get all the teams that the user is authorized to access
@@ -166,18 +178,21 @@ Final Answer: The folders in the team are listed in the observation.[0m
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 'The folders in the team are listed in the observation.'
 ```
 
-### Task Operations
-You can get, ask question about tasks and update them
+
+### 작업 작업
+작업에 대한 정보를 가져오고 질문하며 업데이트할 수 있습니다.
 
 ```python
 task_id = "8685mb5fn"
 ```
 
-#### Basic attirbute getting and updating
+
+#### 기본 속성 가져오기 및 업데이트
 
 ```python
 # We can get a task to inspect it's contents
@@ -199,6 +214,7 @@ print_and_run(
     f"For task with id {task_id}, change the description to '{previous_description}'"
 )
 ```
+
 ```output
 [94m$ COMMAND[0m
 Get task with id 8685mb5fn
@@ -282,13 +298,16 @@ Final Answer: The description of task 8685mb5fn has been updated to 'An old, bor
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 "The description of task 8685mb5fn has been updated to 'An old, boring task description'."
 ```
 
+
 ```python
 print_and_run("Change the descrition task 8685mj6cd to 'Look ma no hands'")
 ```
+
 ```output
 [94m$ COMMAND[0m
 Change the descrition task 8685mj6cd to 'Look ma no hands'
@@ -308,16 +327,19 @@ Final Answer: The description of task 8685mj6cd has been changed to 'Look ma no 
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 "The description of task 8685mj6cd has been changed to 'Look ma no hands'."
 ```
 
-#### Advanced Attributes (Assignees)
-You can query and update almost every thing about a task!
+
+#### 고급 속성 (담당자)
+작업에 대한 거의 모든 것을 쿼리하고 업데이트할 수 있습니다!
 
 ```python
 user_id = 81928627
 ```
+
 
 ```python
 print_and_run(f"What are the assignees of task id {task_id}?")
@@ -325,6 +347,7 @@ print_and_run(f"Remove user {user_id} from the assignees of task id {task_id}")
 print_and_run(f"What are the assignees of task id {task_id}?")
 print_and_run(f"Add user {user_id} from the assignees of task id {task_id}")
 ```
+
 ```output
 [94m$ COMMAND[0m
 What are the assignees of task id 8685mb5fn?
@@ -400,12 +423,14 @@ Final Answer: User 81928627 has been removed from the assignees of task id 8685m
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 'User 81928627 has been removed from the assignees of task id 8685mb5fn.'
 ```
 
-### Creation
-You can create tasks, lists and folders
+
+### 생성
+작업, 목록 및 폴더를 생성할 수 있습니다.
 
 ```python
 time_str = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
@@ -413,6 +438,7 @@ print_and_run(
     f"Create a task called 'Test Task - {time_str}' with description 'This is a Test'"
 )
 ```
+
 ```output
 [94m$ COMMAND[0m
 Create a task called 'Test Task - 18/09/2023-10:31:22' with description 'This is a Test'
@@ -432,14 +458,17 @@ Final Answer: A task called 'Test Task - 18/09/2023-10:31:22' with description '
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 "A task called 'Test Task - 18/09/2023-10:31:22' with description 'This is a Test' was successfully created."
 ```
+
 
 ```python
 time_str = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
 print_and_run(f"Create a list called Test List - {time_str}")
 ```
+
 ```output
 [94m$ COMMAND[0m
 Create a list called Test List - 18/09/2023-10:32:12
@@ -459,14 +488,17 @@ Final Answer: The list "Test List - 18/09/2023-10:32:12" has been created with i
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 'The list "Test List - 18/09/2023-10:32:12" has been created with id 901100774700.'
 ```
+
 
 ```python
 time_str = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
 print_and_run(f"Create a folder called 'Test Folder - {time_str}'")
 ```
+
 ```output
 [94m$ COMMAND[0m
 Create a folder called 'Test Folder - 18/09/2023-10:32:51'
@@ -486,9 +518,11 @@ Final Answer: The folder 'Test Folder - 18/09/2023-10:32:51' has been successful
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 "The folder 'Test Folder - 18/09/2023-10:32:51' has been successfully created."
 ```
+
 
 ```python
 time_str = datetime.now().strftime("%d/%m/%Y-%H:%M:%S")
@@ -496,6 +530,7 @@ print_and_run(
     f"Create a list called 'Test List - {time_str}' with content My test list with high priority and status red"
 )
 ```
+
 ```output
 [94m$ COMMAND[0m
 Create a list called 'Test List - 18/09/2023-10:34:01' with content My test list with high priority and status red
@@ -515,17 +550,20 @@ Final Answer: The list 'Test List - 18/09/2023-10:34:01' with content 'My test l
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 "The list 'Test List - 18/09/2023-10:34:01' with content 'My test list' with high priority and status red has been successfully created."
 ```
 
-## Multi-Step Tasks
+
+## 다단계 작업
 
 ```python
 print_and_run(
     "Figure out what user ID Rodrigo is, create a task called 'Rod's task', assign it to Rodrigo"
 )
 ```
+
 ```output
 [94m$ COMMAND[0m
 Figure out what user ID Rodrigo is, create a task called 'Rod's task', assign it to Rodrigo
@@ -555,11 +593,13 @@ Final Answer: Rodrigo's user ID is 81928627 and a task called 'Rod's task' has b
 --------------------------------------------------------------------------------
 ```
 
+
 ```output
 "Rodrigo's user ID is 81928627 and a task called 'Rod's task' has been created and assigned to him."
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

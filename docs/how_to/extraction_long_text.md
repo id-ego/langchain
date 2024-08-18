@@ -1,23 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/extraction_long_text/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/extraction_long_text.ipynb
+description: 긴 텍스트 추출 시 LLM의 컨텍스트 창을 초과하는 문제를 해결하는 전략을 설명하는 가이드입니다.
 ---
 
-# How to handle long text when doing extraction
+# 긴 텍스트를 추출할 때 처리하는 방법
 
-When working with files, like PDFs, you're likely to encounter text that exceeds your language model's context window. To process this text, consider these strategies:
+PDF와 같은 파일을 작업할 때, 언어 모델의 컨텍스트 창을 초과하는 텍스트를 만날 가능성이 높습니다. 이 텍스트를 처리하기 위해 다음과 같은 전략을 고려해 보세요:
 
-1. **Change LLM** Choose a different LLM that supports a larger context window.
-2. **Brute Force** Chunk the document, and extract content from each chunk.
-3. **RAG** Chunk the document, index the chunks, and only extract content from a subset of chunks that look "relevant".
+1. **LLM 변경** 더 큰 컨텍스트 창을 지원하는 다른 LLM을 선택합니다.
+2. **무차별 대입** 문서를 청크로 나누고 각 청크에서 내용을 추출합니다.
+3. **RAG** 문서를 청크로 나누고, 청크를 인덱싱한 후 "관련"으로 보이는 청크의 하위 집합에서만 내용을 추출합니다.
 
-Keep in mind that these strategies have different trade off and the best strategy likely depends on the application that you're designing!
+이러한 전략은 각각의 장단점이 있으며, 최상의 전략은 설계 중인 애플리케이션에 따라 다를 수 있습니다!
 
-This guide demonstrates how to implement strategies 2 and 3.
+이 가이드는 전략 2와 3을 구현하는 방법을 보여줍니다.
 
-## Set up
+## 설정
 
-We need some example data! Let's download an article about [cars from wikipedia](https://en.wikipedia.org/wiki/Car) and load it as a LangChain [Document](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html).
+예제 데이터가 필요합니다! [위키피디아의 자동차에 대한 기사](https://en.wikipedia.org/wiki/Car)를 다운로드하고 LangChain [문서](https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html)로 로드해 보겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "BSHTMLLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.html_bs.BSHTMLLoader.html", "title": "How to handle long text when doing extraction"}]-->
@@ -39,17 +39,21 @@ document = loader.load()[0]
 document.page_content = re.sub("\n\n+", "\n", document.page_content)
 ```
 
+
 ```python
 print(len(document.page_content))
 ```
+
 ```output
 79174
 ```
-## Define the schema
 
-Following the [extraction tutorial](/docs/tutorials/extraction), we will use Pydantic to define the schema of information we wish to extract. In this case, we will extract a list of "key developments" (e.g., important historical events) that include a year and description.
 
-Note that we also include an `evidence` key and instruct the model to provide in verbatim the relevant sentences of text from the article. This allows us to compare the extraction results to (the model's reconstruction of) text from the original document.
+## 스키마 정의
+
+[추출 튜토리얼](/docs/tutorials/extraction)을 따라, 추출하고자 하는 정보의 스키마를 정의하기 위해 Pydantic을 사용할 것입니다. 이 경우, 연도와 설명을 포함하는 "주요 개발" 목록(예: 중요한 역사적 사건)을 추출할 것입니다.
+
+또한 `evidence` 키를 포함하고 모델에게 기사에서 관련 문장을 그대로 제공하도록 지시합니다. 이를 통해 추출 결과를 원본 문서의 텍스트(모델의 재구성)와 비교할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to handle long text when doing extraction"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to handle long text when doing extraction"}]-->
@@ -96,9 +100,10 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-## Create an extractor
 
-Let's select an LLM. Because we are using tool-calling, we will need a model that supports a tool-calling feature. See [this table](/docs/integrations/chat) for available LLMs.
+## 추출기 생성
+
+LLM을 선택해 보겠습니다. 도구 호출을 사용하고 있기 때문에 도구 호출 기능을 지원하는 모델이 필요합니다. 사용 가능한 LLM에 대한 [이 표](/docs/integrations/chat)를 참조하세요.
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -114,9 +119,10 @@ extractor = prompt | llm.with_structured_output(
 )
 ```
 
-## Brute force approach
 
-Split the documents into chunks such that each chunk fits into the context window of the LLMs.
+## 무차별 대입 접근법
+
+문서를 청크로 나누어 각 청크가 LLM의 컨텍스트 창에 맞도록 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TokenTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/base/langchain_text_splitters.base.TokenTextSplitter.html", "title": "How to handle long text when doing extraction"}]-->
@@ -132,12 +138,13 @@ text_splitter = TokenTextSplitter(
 texts = text_splitter.split_text(document.page_content)
 ```
 
-Use [batch](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html) functionality to run the extraction in **parallel** across each chunk! 
+
+[배치](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.Runnable.html) 기능을 사용하여 각 청크에서 추출을 **병렬로** 실행하세요!
 
 :::tip
-You can often use .batch() to parallelize the extractions! `.batch` uses a threadpool under the hood to help you parallelize workloads.
+종종 .batch()를 사용하여 추출을 병렬화할 수 있습니다! `.batch`는 내부적으로 스레드 풀을 사용하여 작업을 병렬화하는 데 도움을 줍니다.
 
-If your model is exposed via an API, this will likely speed up your extraction flow!
+모델이 API를 통해 노출되어 있다면, 추출 흐름이 빨라질 것입니다!
 :::
 
 ```python
@@ -151,9 +158,10 @@ extractions = extractor.batch(
 )
 ```
 
-### Merge results
 
-After extracting data from across the chunks, we'll want to merge the extractions together.
+### 결과 병합
+
+청크에서 데이터를 추출한 후, 추출 결과를 병합하고자 합니다.
 
 ```python
 key_developments = []
@@ -163,6 +171,7 @@ for extraction in extractions:
 
 key_developments[:10]
 ```
+
 
 ```output
 [KeyDevelopment(year=1966, description='The Toyota Corolla began production, becoming the best-selling series of automobile in history.', evidence='The Toyota Corolla, which has been in production since 1966, is the best-selling series of automobile in history.'),
@@ -177,25 +186,25 @@ key_developments[:10]
  KeyDevelopment(year=1891, description='Auguste Doriot and Louis Rigoulot completed the longest trip by a petrol-driven vehicle with a Daimler powered Peugeot Type 3.', evidence='In 1891, Auguste Doriot and his Peugeot colleague Louis Rigoulot completed the longest trip by a petrol-driven vehicle when their self-designed and built Daimler powered Peugeot Type 3 completed 2,100 kilometres (1,300 mi) from Valentigney to Paris and Brest and back again.')]
 ```
 
-## RAG based approach
 
-Another simple idea is to chunk up the text, but instead of extracting information from every chunk, just focus on the the most relevant chunks.
+## RAG 기반 접근법
+
+또 다른 간단한 아이디어는 텍스트를 청크로 나누는 것이지만, 모든 청크에서 정보를 추출하는 대신 가장 관련성이 높은 청크에만 집중하는 것입니다.
 
 :::caution
-It can be difficult to identify which chunks are relevant.
+어떤 청크가 관련이 있는지 식별하기 어려울 수 있습니다.
 
-For example, in the `car` article we're using here, most of the article contains key development information. So by using
-**RAG**, we'll likely be throwing out a lot of relevant information.
+예를 들어, 여기서 사용하는 `car` 기사에서는 대부분의 기사가 주요 개발 정보로 구성되어 있습니다. 따라서 **RAG**를 사용하면 많은 관련 정보를 버릴 가능성이 높습니다.
 
-We suggest experimenting with your use case and determining whether this approach works or not.
+사용 사례를 실험해 보고 이 접근법이 작동하는지 여부를 판단하는 것을 권장합니다.
 :::
 
-To implement the RAG based approach: 
+RAG 기반 접근법을 구현하려면:
 
-1. Chunk up your document(s) and index them (e.g., in a vectorstore);
-2. Prepend the `extractor` chain with a retrieval step using the vectorstore.
+1. 문서를 청크로 나누고 인덱싱합니다(예: 벡터 저장소에);
+2. 벡터 저장소를 사용하여 검색 단계를 추가하여 `extractor` 체인을 전처리합니다.
 
-Here's a simple example that relies on the `FAISS` vectorstore.
+다음은 `FAISS` 벡터 저장소에 의존하는 간단한 예입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to handle long text when doing extraction"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "How to handle long text when doing extraction"}, {"imported": "RunnableLambda", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableLambda.html", "title": "How to handle long text when doing extraction"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to handle long text when doing extraction"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "How to handle long text when doing extraction"}]-->
@@ -213,7 +222,8 @@ retriever = vectorstore.as_retriever(
 )  # Only extract from first document
 ```
 
-In this case the RAG extractor is only looking at the top document.
+
+이 경우 RAG 추출기는 상위 문서만 살펴보고 있습니다.
 
 ```python
 rag_extractor = {
@@ -221,25 +231,30 @@ rag_extractor = {
 } | extractor
 ```
 
+
 ```python
 results = rag_extractor.invoke("Key developments associated with cars")
 ```
+
 
 ```python
 for key_development in results.key_developments:
     print(key_development)
 ```
+
 ```output
 year=1869 description='Mary Ward became one of the first documented car fatalities in Parsonstown, Ireland.' evidence='Mary Ward became one of the first documented car fatalities in 1869 in Parsonstown, Ireland,'
 year=1899 description="Henry Bliss one of the US's first pedestrian car casualties in New York City." evidence="Henry Bliss one of the US's first pedestrian car casualties in 1899 in New York City."
 year=2030 description='All fossil fuel vehicles will be banned in Amsterdam.' evidence='all fossil fuel vehicles will be banned in Amsterdam from 2030.'
 ```
-## Common issues
 
-Different methods have their own pros and cons related to cost, speed, and accuracy.
 
-Watch out for these issues:
+## 일반적인 문제
 
-* Chunking content means that the LLM can fail to extract information if the information is spread across multiple chunks.
-* Large chunk overlap may cause the same information to be extracted twice, so be prepared to de-duplicate!
-* LLMs can make up data. If looking for a single fact across a large text and using a brute force approach, you may end up getting more made up data.
+다양한 방법은 비용, 속도 및 정확성과 관련하여 각각 장단점이 있습니다.
+
+다음 문제에 주의하세요:
+
+* 콘텐츠를 청크로 나누면 정보가 여러 청크에 분산되어 LLM이 정보를 추출하지 못할 수 있습니다.
+* 큰 청크 중복은 동일한 정보가 두 번 추출될 수 있으므로 중복 제거를 준비하세요!
+* LLM은 데이터를 만들어낼 수 있습니다. 큰 텍스트에서 단일 사실을 찾고 무차별 대입 접근법을 사용할 경우, 더 많은 허위 데이터를 얻을 수 있습니다.

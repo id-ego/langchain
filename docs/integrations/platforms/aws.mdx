@@ -1,219 +1,204 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/platforms/aws/
+description: AWS와 LangChain 통합에 대한 설명으로, Amazon Bedrock과 관련된 챗 모델 및 패키지 정보를 제공합니다.
 ---
 
 # AWS
 
-The `LangChain` integrations related to [Amazon AWS](https://aws.amazon.com/) platform.
+`LangChain` 통합은 [Amazon AWS](https://aws.amazon.com/) 플랫폼과 관련이 있습니다.
 
-First-party AWS integrations are available in the `langchain_aws` package.
+1차 AWS 통합은 `langchain_aws` 패키지에서 사용할 수 있습니다.
 
 ```bash
 pip install langchain-aws
 ```
 
-And there are also some community integrations available in the `langchain_community` package with the `boto3` optional dependency.
+
+그리고 `boto3` 선택적 종속성이 있는 `langchain_community` 패키지에서 사용할 수 있는 커뮤니티 통합도 있습니다.
 
 ```bash
 pip install langchain-community boto3
 ```
 
-## Chat models
 
-### Bedrock Chat
+## 채팅 모델
 
-> [Amazon Bedrock](https://aws.amazon.com/bedrock/) is a fully managed service that offers a choice of
-high-performing foundation models (FMs) from leading AI companies like `AI21 Labs`, `Anthropic`, `Cohere`,
-`Meta`, `Stability AI`, and `Amazon` via a single API, along with a broad set of capabilities you need to
-build generative AI applications with security, privacy, and responsible AI. Using `Amazon Bedrock`,
-you can easily experiment with and evaluate top FMs for your use case, privately customize them with
-your data using techniques such as fine-tuning and `Retrieval Augmented Generation` (`RAG`), and build
-agents that execute tasks using your enterprise systems and data sources. Since `Amazon Bedrock` is
-serverless, you don't have to manage any infrastructure, and you can securely integrate and deploy
-generative AI capabilities into your applications using the AWS services you are already familiar with.
+### Bedrock 채팅
 
-See a [usage example](/docs/integrations/chat/bedrock).
+> [Amazon Bedrock](https://aws.amazon.com/bedrock/)는 `AI21 Labs`, `Anthropic`, `Cohere`, `Meta`, `Stability AI`, 및 `Amazon`과 같은 주요 AI 회사의 고성능 기초 모델(FMs)을 단일 API를 통해 제공하는 완전 관리형 서비스입니다. 보안, 개인 정보 보호 및 책임 있는 AI를 갖춘 생성 AI 애플리케이션을 구축하는 데 필요한 광범위한 기능 세트와 함께 제공됩니다. `Amazon Bedrock`을 사용하면 사용 사례에 맞는 최고의 FMs을 쉽게 실험하고 평가할 수 있으며, 미세 조정 및 `Retrieval Augmented Generation`(`RAG`)과 같은 기술을 사용하여 데이터를 개인적으로 사용자 정의하고, 기업 시스템 및 데이터 소스를 사용하여 작업을 실행하는 에이전트를 구축할 수 있습니다. `Amazon Bedrock`은 서버리스이므로 인프라를 관리할 필요가 없으며, 이미 익숙한 AWS 서비스를 사용하여 생성 AI 기능을 안전하게 통합하고 배포할 수 있습니다.
+
+[사용 예시](/docs/integrations/chat/bedrock)를 참조하세요.
 
 ```python
 from langchain_aws import ChatBedrock
 ```
 
+
 ## LLMs
 
 ### Bedrock
 
-See a [usage example](/docs/integrations/llms/bedrock).
+[사용 예시](/docs/integrations/llms/bedrock)를 참조하세요.
 
 ```python
 from langchain_aws import BedrockLLM
 ```
 
+
 ### Amazon API Gateway
 
-> [Amazon API Gateway](https://aws.amazon.com/api-gateway/) is a fully managed service that makes it easy for
-developers to create, publish, maintain, monitor, and secure APIs at any scale. APIs act as the "front door"
-for applications to access data, business logic, or functionality from your backend services. Using
-`API Gateway`, you can create RESTful APIs and WebSocket APIs that enable real-time two-way communication
-applications. `API Gateway` supports containerized and serverless workloads, as well as web applications.
+> [Amazon API Gateway](https://aws.amazon.com/api-gateway/)는 개발자가 모든 규모의 API를 쉽게 생성, 게시, 유지 관리, 모니터링 및 보호할 수 있도록 하는 완전 관리형 서비스입니다. API는 애플리케이션이 백엔드 서비스에서 데이터, 비즈니스 논리 또는 기능에 접근할 수 있는 "정문" 역할을 합니다. `API Gateway`를 사용하면 실시간 양방향 통신 애플리케이션을 가능하게 하는 RESTful API 및 WebSocket API를 생성할 수 있습니다. `API Gateway`는 컨테이너화된 및 서버리스 워크로드, 웹 애플리케이션을 지원합니다.
 > 
-> `API Gateway` handles all the tasks involved in accepting and processing up to hundreds of thousands of
-concurrent API calls, including traffic management, CORS support, authorization and access control,
-throttling, monitoring, and API version management. `API Gateway` has no minimum fees or startup costs.
-You pay for the API calls you receive and the amount of data transferred out and, with the `API Gateway`
-tiered pricing model, you can reduce your cost as your API usage scales.
+> `API Gateway`는 수십만 개의 동시 API 호출을 수용하고 처리하는 데 필요한 모든 작업을 처리합니다. 여기에는 트래픽 관리, CORS 지원, 인증 및 접근 제어, 스로틀링, 모니터링 및 API 버전 관리가 포함됩니다. `API Gateway`는 최소 요금이나 시작 비용이 없습니다. 수신한 API 호출 수와 전송된 데이터 양에 대해 요금을 지불하며, `API Gateway`의 계층화된 가격 모델을 통해 API 사용량이 증가함에 따라 비용을 줄일 수 있습니다.
 
-See a [usage example](/docs/integrations/llms/amazon_api_gateway).
+[사용 예시](/docs/integrations/llms/amazon_api_gateway)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AmazonAPIGateway", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.amazon_api_gateway.AmazonAPIGateway.html", "title": "AWS"}]-->
 from langchain_community.llms import AmazonAPIGateway
 ```
 
-### SageMaker Endpoint
 
-> [Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a system that can build, train, and deploy
-machine learning (ML) models with fully managed infrastructure, tools, and workflows.
+### SageMaker 엔드포인트
 
-We use `SageMaker` to host our model and expose it as the `SageMaker Endpoint`.
+> [Amazon SageMaker](https://aws.amazon.com/sagemaker/)는 완전 관리형 인프라, 도구 및 워크플로를 통해 기계 학습(ML) 모델을 구축, 훈련 및 배포할 수 있는 시스템입니다.
 
-See a [usage example](/docs/integrations/llms/sagemaker).
+우리는 `SageMaker`를 사용하여 모델을 호스팅하고 이를 `SageMaker Endpoint`로 노출합니다.
+
+[사용 예시](/docs/integrations/llms/sagemaker)를 참조하세요.
 
 ```python
 from langchain_aws import SagemakerEndpoint
 ```
 
-## Embedding Models
+
+## 임베딩 모델
 
 ### Bedrock
 
-See a [usage example](/docs/integrations/text_embedding/bedrock).
+[사용 예시](/docs/integrations/text_embedding/bedrock)를 참조하세요.
 ```python
 <!--IMPORTS:[{"imported": "BedrockEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.bedrock.BedrockEmbeddings.html", "title": "AWS"}]-->
 from langchain_community.embeddings import BedrockEmbeddings
 ```
 
-### SageMaker Endpoint
 
-See a [usage example](/docs/integrations/text_embedding/sagemaker-endpoint).
+### SageMaker 엔드포인트
+
+[사용 예시](/docs/integrations/text_embedding/sagemaker-endpoint)를 참조하세요.
 ```python
 <!--IMPORTS:[{"imported": "SagemakerEndpointEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sagemaker_endpoint.SagemakerEndpointEmbeddings.html", "title": "AWS"}, {"imported": "ContentHandlerBase", "source": "langchain_community.llms.sagemaker_endpoint", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sagemaker_endpoint.ContentHandlerBase.html", "title": "AWS"}]-->
 from langchain_community.embeddings import SagemakerEndpointEmbeddings
 from langchain_community.llms.sagemaker_endpoint import ContentHandlerBase
 ```
 
-## Document loaders
 
-### AWS S3 Directory and File
+## 문서 로더
 
-> [Amazon Simple Storage Service (Amazon S3)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-folders.html)
-is an object storage service.
-[AWS S3 Directory](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-folders.html)
-[AWS S3 Buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingBucket.html)
+### AWS S3 디렉토리 및 파일
 
-See a [usage example for S3DirectoryLoader](/docs/integrations/document_loaders/aws_s3_directory).
+> [Amazon Simple Storage Service (Amazon S3)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-folders.html)는 객체 저장 서비스입니다.
+[AWS S3 디렉토리](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-folders.html)
+[AWS S3 버킷](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingBucket.html)
 
-See a [usage example for S3FileLoader](/docs/integrations/document_loaders/aws_s3_file).
+[S3DirectoryLoader에 대한 사용 예시](/docs/integrations/document_loaders/aws_s3_directory)를 참조하세요.
+
+[S3FileLoader에 대한 사용 예시](/docs/integrations/document_loaders/aws_s3_file)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "S3DirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.s3_directory.S3DirectoryLoader.html", "title": "AWS"}, {"imported": "S3FileLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.s3_file.S3FileLoader.html", "title": "AWS"}]-->
 from langchain_community.document_loaders import S3DirectoryLoader, S3FileLoader
 ```
 
+
 ### Amazon Textract
 
-> [Amazon Textract](https://docs.aws.amazon.com/managedservices/latest/userguide/textract.html) is a machine
-learning (ML) service that automatically extracts text, handwriting, and data from scanned documents.
+> [Amazon Textract](https://docs.aws.amazon.com/managedservices/latest/userguide/textract.html)는 스캔한 문서에서 텍스트, 손글씨 및 데이터를 자동으로 추출하는 기계 학습(ML) 서비스입니다.
 
-See a [usage example](/docs/integrations/document_loaders/amazon_textract).
+[사용 예시](/docs/integrations/document_loaders/amazon_textract)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AmazonTextractPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.AmazonTextractPDFLoader.html", "title": "AWS"}]-->
 from langchain_community.document_loaders import AmazonTextractPDFLoader
 ```
 
+
 ### Amazon Athena
 
-> [Amazon Athena](https://aws.amazon.com/athena/) is a serverless, interactive analytics service built
-on open-source frameworks, supporting open-table and file formats.
+> [Amazon Athena](https://aws.amazon.com/athena/)는 오픈 소스 프레임워크를 기반으로 구축된 서버리스 대화형 분석 서비스로, 오픈 테이블 및 파일 형식을 지원합니다.
 
-See a [usage example](/docs/integrations/document_loaders/athena).
+[사용 예시](/docs/integrations/document_loaders/athena)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AthenaLoader", "source": "langchain_community.document_loaders.athena", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.athena.AthenaLoader.html", "title": "AWS"}]-->
 from langchain_community.document_loaders.athena import AthenaLoader
 ```
 
+
 ### AWS Glue
 
-> The [AWS Glue Data Catalog](https://docs.aws.amazon.com/en_en/glue/latest/dg/catalog-and-crawler.html) is a centralized metadata
-repository that allows you to manage, access, and share metadata about
-your data stored in AWS. It acts as a metadata store for your data assets,
-enabling various AWS services and your applications to query and connect
-to the data they need efficiently.
+> [AWS Glue Data Catalog](https://docs.aws.amazon.com/en_en/glue/latest/dg/catalog-and-crawler.html)는 AWS에 저장된 데이터에 대한 메타데이터를 관리, 접근 및 공유할 수 있도록 하는 중앙 집중식 메타데이터 저장소입니다. 이는 데이터 자산에 대한 메타데이터 저장소 역할을 하여 다양한 AWS 서비스와 애플리케이션이 필요한 데이터를 효율적으로 쿼리하고 연결할 수 있도록 합니다.
 
-See a [usage example](/docs/integrations/document_loaders/glue_catalog).
+[사용 예시](/docs/integrations/document_loaders/glue_catalog)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "GlueCatalogLoader", "source": "langchain_community.document_loaders.glue_catalog", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.glue_catalog.GlueCatalogLoader.html", "title": "AWS"}]-->
 from langchain_community.document_loaders.glue_catalog import GlueCatalogLoader
 ```
 
-## Vector stores
 
-### Amazon OpenSearch Service
+## 벡터 저장소
 
-> [Amazon OpenSearch Service](https://aws.amazon.com/opensearch-service/) performs
-interactive log analytics, real-time application monitoring, website search, and more. `OpenSearch` is
-an open source,
-distributed search and analytics suite derived from `Elasticsearch`. `Amazon OpenSearch Service` offers the
-latest versions of `OpenSearch`, support for many versions of `Elasticsearch`, as well as
-visualization capabilities powered by `OpenSearch Dashboards` and `Kibana`.
+### Amazon OpenSearch 서비스
 
-We need to install several python libraries.
+> [Amazon OpenSearch 서비스](https://aws.amazon.com/opensearch-service/)는 대화형 로그 분석, 실시간 애플리케이션 모니터링, 웹사이트 검색 등을 수행합니다. `OpenSearch`는 `Elasticsearch`에서 파생된 오픈 소스 분산 검색 및 분석 제품군입니다. `Amazon OpenSearch 서비스`는 `OpenSearch`의 최신 버전과 여러 버전의 `Elasticsearch`를 지원하며, `OpenSearch Dashboards` 및 `Kibana`에 의해 제공되는 시각화 기능도 포함되어 있습니다.
+
+여러 개의 파이썬 라이브러리를 설치해야 합니다.
 
 ```bash
 pip install boto3 requests requests-aws4auth
 ```
 
-See a [usage example](/docs/integrations/vectorstores/opensearch#using-aos-amazon-opensearch-service).
+
+[사용 예시](/docs/integrations/vectorstores/opensearch#using-aos-amazon-opensearch-service)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "OpenSearchVectorSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.opensearch_vector_search.OpenSearchVectorSearch.html", "title": "AWS"}]-->
 from langchain_community.vectorstores import OpenSearchVectorSearch
 ```
 
-### Amazon DocumentDB Vector Search
 
-> [Amazon DocumentDB (with MongoDB Compatibility)](https://docs.aws.amazon.com/documentdb/) makes it easy to set up, operate, and scale MongoDB-compatible databases in the cloud.
-With Amazon DocumentDB, you can run the same application code and use the same drivers and tools that you use with MongoDB.
-Vector search for Amazon DocumentDB combines the flexibility and rich querying capability of a JSON-based document database with the power of vector search.
+### Amazon DocumentDB 벡터 검색
 
-#### Installation and Setup
+> [Amazon DocumentDB (MongoDB 호환)](https://docs.aws.amazon.com/documentdb/)는 클라우드에서 MongoDB 호환 데이터베이스를 쉽게 설정, 운영 및 확장할 수 있도록 합니다. Amazon DocumentDB를 사용하면 MongoDB에서 사용하는 것과 동일한 애플리케이션 코드를 실행하고 동일한 드라이버 및 도구를 사용할 수 있습니다. Amazon DocumentDB의 벡터 검색은 JSON 기반 문서 데이터베이스의 유연성과 풍부한 쿼리 기능을 벡터 검색의 강력함과 결합합니다.
 
-See [detail configuration instructions](/docs/integrations/vectorstores/documentdb).
+#### 설치 및 설정
 
-We need to install the `pymongo` python package.
+[상세 구성 지침](/docs/integrations/vectorstores/documentdb)을 참조하세요.
+
+`pymongo` 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install pymongo
 ```
 
-#### Deploy DocumentDB on AWS
 
-[Amazon DocumentDB (with MongoDB Compatibility)](https://docs.aws.amazon.com/documentdb/) is a fast, reliable, and fully managed database service. Amazon DocumentDB makes it easy to set up, operate, and scale MongoDB-compatible databases in the cloud.
+#### AWS에 DocumentDB 배포
 
-AWS offers services for computing, databases, storage, analytics, and other functionality. For an overview of all AWS services, see [Cloud Computing with Amazon Web Services](https://aws.amazon.com/what-is-aws/).
+[Amazon DocumentDB (MongoDB 호환)](https://docs.aws.amazon.com/documentdb/)는 빠르고 신뢰할 수 있으며 완전 관리형 데이터베이스 서비스입니다. Amazon DocumentDB는 클라우드에서 MongoDB 호환 데이터베이스를 쉽게 설정, 운영 및 확장할 수 있도록 합니다.
 
-See a [usage example](/docs/integrations/vectorstores/documentdb).
+AWS는 컴퓨팅, 데이터베이스, 저장소, 분석 및 기타 기능을 위한 서비스를 제공합니다. 모든 AWS 서비스에 대한 개요는 [Cloud Computing with Amazon Web Services](https://aws.amazon.com/what-is-aws/)를 참조하세요.
+
+[사용 예시](/docs/integrations/vectorstores/documentdb)를 참조하세요.
 
 ```python
 from langchain.vectorstores import DocumentDBVectorSearch
 ```
-### Amazon MemoryDB
-[Amazon MemoryDB](https://aws.amazon.com/memorydb/) is a durable, in-memory database service that delivers ultra-fast performance. MemoryDB is compatible with Redis OSS, a popular open source data store,
-enabling you to quickly build applications using the same flexible and friendly Redis OSS APIs, and commands that they already use today. 
 
-InMemoryVectorStore class provides a vectorstore to connect with Amazon MemoryDB.
+
+### Amazon MemoryDB
+[Amazon MemoryDB](https://aws.amazon.com/memorydb/)는 초고속 성능을 제공하는 내구성 있는 인메모리 데이터베이스 서비스입니다. MemoryDB는 인기 있는 오픈 소스 데이터 저장소인 Redis OSS와 호환되어, 사용자가 오늘날 이미 사용하는 유연하고 친숙한 Redis OSS API 및 명령을 사용하여 애플리케이션을 빠르게 구축할 수 있도록 합니다.
+
+InMemoryVectorStore 클래스는 Amazon MemoryDB와 연결할 수 있는 벡터 저장소를 제공합니다.
 
 ```python
 from langchain_aws.vectorstores.inmemorydb import InMemoryVectorStore
@@ -226,97 +211,92 @@ vds = InMemoryVectorStore.from_documents(
             index_name=INDEX_NAME,
         )
 ```
-See a [usage example](/docs/integrations/vectorstores/memorydb).
 
-## Retrievers
+[사용 예시](/docs/integrations/vectorstores/memorydb)를 참조하세요.
+
+## 검색기
 
 ### Amazon Kendra
 
-> [Amazon Kendra](https://docs.aws.amazon.com/kendra/latest/dg/what-is-kendra.html) is an intelligent search service
-provided by `Amazon Web Services` (`AWS`). It utilizes advanced natural language processing (NLP) and machine
-learning algorithms to enable powerful search capabilities across various data sources within an organization.
-`Kendra` is designed to help users find the information they need quickly and accurately,
-improving productivity and decision-making.
+> [Amazon Kendra](https://docs.aws.amazon.com/kendra/latest/dg/what-is-kendra.html)는 `Amazon Web Services`(`AWS`)에서 제공하는 지능형 검색 서비스입니다. 이는 고급 자연어 처리(NLP) 및 기계 학습 알고리즘을 활용하여 조직 내 다양한 데이터 소스에서 강력한 검색 기능을 제공합니다. `Kendra`는 사용자가 필요한 정보를 빠르고 정확하게 찾을 수 있도록 설계되어 생산성과 의사 결정을 향상시킵니다.
+> 
+> `Kendra`를 사용하면 문서, FAQ, 지식 기반, 매뉴얼 및 웹사이트를 포함한 다양한 콘텐츠 유형을 검색할 수 있습니다. 여러 언어를 지원하며 복잡한 쿼리, 동의어 및 맥락적 의미를 이해하여 매우 관련성 높은 검색 결과를 제공합니다.
 
-> With `Kendra`, we can search across a wide range of content types, including documents, FAQs, knowledge bases,
-manuals, and websites. It supports multiple languages and can understand complex queries, synonyms, and
-contextual meanings to provide highly relevant search results.
-
-We need to install the `langchain-aws` library.
+`langchain-aws` 라이브러리를 설치해야 합니다.
 
 ```bash
 pip install langchain-aws
 ```
 
-See a [usage example](/docs/integrations/retrievers/amazon_kendra_retriever).
+
+[사용 예시](/docs/integrations/retrievers/amazon_kendra_retriever)를 참조하세요.
 
 ```python
 from langchain_aws import AmazonKendraRetriever
 ```
 
-### Amazon Bedrock (Knowledge Bases)
 
-> [Knowledge bases for Amazon Bedrock](https://aws.amazon.com/bedrock/knowledge-bases/) is an
-`Amazon Web Services` (`AWS`) offering which lets you quickly build RAG applications by using your
-private data to customize foundation model response.
+### Amazon Bedrock (지식 기반)
 
-We need to install the `langchain-aws` library.
+> [Amazon Bedrock의 지식 기반](https://aws.amazon.com/bedrock/knowledge-bases/)은 개인 데이터를 사용하여 기초 모델 응답을 사용자 정의하여 RAG 애플리케이션을 빠르게 구축할 수 있도록 하는 `Amazon Web Services`(`AWS`)의 제공 서비스입니다.
+
+`langchain-aws` 라이브러리를 설치해야 합니다.
 
 ```bash
 pip install langchain-aws
 ```
 
-See a [usage example](/docs/integrations/retrievers/bedrock).
+
+[사용 예시](/docs/integrations/retrievers/bedrock)를 참조하세요.
 
 ```python
 from langchain_aws import AmazonKnowledgeBasesRetriever
 ```
 
-## Tools
+
+## 도구
 
 ### AWS Lambda
 
-> [`Amazon AWS Lambda`](https://aws.amazon.com/pm/lambda/) is a serverless computing service provided by
-`Amazon Web Services` (`AWS`). It helps developers to build and run applications and services without
-provisioning or managing servers. This serverless architecture enables you to focus on writing and
-deploying code, while AWS automatically takes care of scaling, patching, and managing the
-infrastructure required to run your applications.
+> [`Amazon AWS Lambda`](https://aws.amazon.com/pm/lambda/)는 `Amazon Web Services`(`AWS`)에서 제공하는 서버리스 컴퓨팅 서비스입니다. 이는 개발자가 서버를 프로비저닝하거나 관리하지 않고 애플리케이션 및 서비스를 구축하고 실행할 수 있도록 도와줍니다. 이 서버리스 아키텍처는 AWS가 애플리케이션을 실행하는 데 필요한 인프라의 확장, 패치 및 관리를 자동으로 처리하는 동안 코드 작성 및 배포에 집중할 수 있도록 합니다.
 
-We need to install `boto3` python library.
+`boto3` 파이썬 라이브러리를 설치해야 합니다.
 
 ```bash
 pip install boto3
 ```
 
-See a [usage example](/docs/integrations/tools/awslambda).
 
-## Memory
+[사용 예시](/docs/integrations/tools/awslambda)를 참조하세요.
+
+## 메모리
 
 ### AWS DynamoDB
 
-> [AWS DynamoDB](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/dynamodb/index.html)
-is a fully managed `NoSQL` database service that provides fast and predictable performance with seamless scalability.
+> [AWS DynamoDB](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/dynamodb/index.html)는 빠르고 예측 가능한 성능과 원활한 확장성을 제공하는 완전 관리형 `NoSQL` 데이터베이스 서비스입니다.
 
-We have to configure the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html). 
+[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)를 구성해야 합니다.
 
-We need to install the `boto3` library.
+`boto3` 라이브러리를 설치해야 합니다.
 
 ```bash
 pip install boto3
 ```
 
-See a [usage example](/docs/integrations/memory/aws_dynamodb).
+
+[사용 예시](/docs/integrations/memory/aws_dynamodb)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "DynamoDBChatMessageHistory", "source": "langchain.memory", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.dynamodb.DynamoDBChatMessageHistory.html", "title": "AWS"}]-->
 from langchain.memory import DynamoDBChatMessageHistory
 ```
 
-## Graphs
+
+## 그래프
 
 ### Amazon Neptune with Cypher
 
-See a [usage example](/docs/integrations/graphs/amazon_neptune_open_cypher).
+[사용 예시](/docs/integrations/graphs/amazon_neptune_open_cypher)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "NeptuneGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neptune_graph.NeptuneGraph.html", "title": "AWS"}, {"imported": "NeptuneAnalyticsGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neptune_graph.NeptuneAnalyticsGraph.html", "title": "AWS"}, {"imported": "NeptuneOpenCypherQAChain", "source": "langchain_community.chains.graph_qa.neptune_cypher", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.neptune_cypher.NeptuneOpenCypherQAChain.html", "title": "AWS"}]-->
@@ -325,9 +305,10 @@ from langchain_community.graphs import NeptuneAnalyticsGraph
 from langchain_community.chains.graph_qa.neptune_cypher import NeptuneOpenCypherQAChain
 ```
 
+
 ### Amazon Neptune with SPARQL
 
-See a [usage example](/docs/integrations/graphs/amazon_neptune_sparql).
+[사용 예시](/docs/integrations/graphs/amazon_neptune_sparql)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "NeptuneRdfGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neptune_rdf_graph.NeptuneRdfGraph.html", "title": "AWS"}, {"imported": "NeptuneSparqlQAChain", "source": "langchain_community.chains.graph_qa.neptune_sparql", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.neptune_sparql.NeptuneSparqlQAChain.html", "title": "AWS"}]-->
@@ -335,44 +316,44 @@ from langchain_community.graphs import NeptuneRdfGraph
 from langchain_community.chains.graph_qa.neptune_sparql import NeptuneSparqlQAChain
 ```
 
-## Callbacks
 
-### SageMaker Tracking
+## 콜백
 
-> [Amazon SageMaker](https://aws.amazon.com/sagemaker/) is a fully managed service that is used to quickly
-and easily build, train and deploy machine learning (ML) models.
+### SageMaker 추적
 
-> [Amazon SageMaker Experiments](https://docs.aws.amazon.com/sagemaker/latest/dg/experiments.html) is a capability
-of `Amazon SageMaker` that lets you organize, track,
-compare and evaluate ML experiments and model versions.
+> [Amazon SageMaker](https://aws.amazon.com/sagemaker/)는 기계 학습(ML) 모델을 빠르고 쉽게 구축, 훈련 및 배포하는 데 사용되는 완전 관리형 서비스입니다.
+> 
+> [Amazon SageMaker 실험](https://docs.aws.amazon.com/sagemaker/latest/dg/experiments.html)은 `Amazon SageMaker`의 기능으로, ML 실험 및 모델 버전을 조직하고, 추적하고, 비교하고 평가할 수 있도록 합니다.
 
-We need to install several python libraries.
+여러 개의 파이썬 라이브러리를 설치해야 합니다.
 
 ```bash
 pip install google-search-results sagemaker
 ```
 
-See a [usage example](/docs/integrations/callbacks/sagemaker_tracking).
+
+[사용 예시](/docs/integrations/callbacks/sagemaker_tracking)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SageMakerCallbackHandler", "source": "langchain.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.sagemaker_callback.SageMakerCallbackHandler.html", "title": "AWS"}]-->
 from langchain.callbacks import SageMakerCallbackHandler
 ```
 
-## Chains
+
+## 체인
 
 ### Amazon Comprehend Moderation Chain
 
-> [Amazon Comprehend](https://aws.amazon.com/comprehend/) is a natural-language processing (NLP) service that
-uses machine learning to uncover valuable insights and connections in text.
+> [Amazon Comprehend](https://aws.amazon.com/comprehend/)는 기계 학습을 사용하여 텍스트에서 귀중한 통찰력과 연결을 발견하는 자연어 처리(NLP) 서비스입니다.
 
-We need to install the `boto3` and `nltk` libraries.
+`boto3` 및 `nltk` 라이브러리를 설치해야 합니다.
 
 ```bash
 pip install boto3 nltk
 ```
 
-See a [usage example](https://python.langchain.com/v0.1/docs/guides/productionization/safety/amazon_comprehend_chain/).
+
+[사용 예시](https://python.langchain.com/v0.1/docs/guides/productionization/safety/amazon_comprehend_chain/)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AmazonComprehendModerationChain", "source": "langchain_experimental.comprehend_moderation", "docs": "https://api.python.langchain.com/en/latest/comprehend_moderation/langchain_experimental.comprehend_moderation.amazon_comprehend_moderation.AmazonComprehendModerationChain.html", "title": "AWS"}]-->

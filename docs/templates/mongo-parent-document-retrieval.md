@@ -1,61 +1,66 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/mongo-parent-document-retrieval/
+description: 이 템플릿은 MongoDB와 OpenAI를 사용하여 부모 문서 검색을 통한 RAG를 수행합니다. 더 정교한 검색을 가능하게
+  합니다.
 ---
 
 # mongo-parent-document-retrieval
 
-This template performs RAG using MongoDB and OpenAI.
-It does a more advanced form of RAG called Parent-Document Retrieval.
+이 템플릿은 MongoDB와 OpenAI를 사용하여 RAG를 수행합니다.  
+부모 문서 검색이라고 하는 보다 고급 형태의 RAG를 수행합니다.
 
-In this form of retrieval, a large document is first split into medium sized chunks.
-From there, those medium size chunks are split into small chunks.
-Embeddings are created for the small chunks.
-When a query comes in, an embedding is created for that query and compared to the small chunks.
-But rather than passing the small chunks directly to the LLM for generation, the medium-sized chunks
-from whence the smaller chunks came are passed.
-This helps enable finer-grained search, but then passing of larger context (which can be useful during generation).
+이 검색 형태에서는 큰 문서를 먼저 중간 크기의 청크로 나눕니다.  
+그 다음, 중간 크기의 청크를 작은 청크로 나눕니다.  
+작은 청크에 대한 임베딩이 생성됩니다.  
+쿼리가 들어오면, 해당 쿼리에 대한 임베딩이 생성되고 작은 청크와 비교됩니다.  
+하지만 작은 청크를 직접 LLM에 전달하는 대신, 작은 청크가 나온 중간 크기의 청크가 전달됩니다.  
+이것은 더 세밀한 검색을 가능하게 하지만, 생성 중에 유용할 수 있는 더 큰 컨텍스트를 전달합니다.
 
-## Environment Setup
+## 환경 설정
 
-You should export two environment variables, one being your MongoDB URI, the other being your OpenAI API KEY.
-If you do not have a MongoDB URI, see the `Setup Mongo` section at the bottom for instructions on how to do so.
+MongoDB URI와 OpenAI API KEY라는 두 개의 환경 변수를 내보내야 합니다.  
+MongoDB URI가 없는 경우, 아래의 `Mongo 설정` 섹션에서 설정 방법을 참조하세요.
 
 ```shell
 export MONGO_URI=...
 export OPENAI_API_KEY=...
 ```
 
-## Usage
 
-To use this package, you should first have the LangChain CLI installed:
+## 사용법
+
+이 패키지를 사용하려면 먼저 LangChain CLI를 설치해야 합니다:
 
 ```shell
 pip install -U langchain-cli
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새로운 LangChain 프로젝트를 만들고 이것을 유일한 패키지로 설치하려면, 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package mongo-parent-document-retrieval
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음을 실행하면 됩니다:
 
 ```shell
 langchain app add mongo-parent-document-retrieval
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가하세요:
 ```python
 from mongo_parent_document_retrieval import chain as mongo_parent_document_retrieval_chain
 
 add_routes(app, mongo_parent_document_retrieval_chain, path="/mongo-parent-document-retrieval")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.  
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줍니다.  
+LangSmith에 가입하려면 [여기](https://smith.langchain.com/)를 클릭하세요.  
+접근 권한이 없는 경우 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -63,24 +68,26 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you DO NOT already have a Mongo Search Index you want to connect to, see `MongoDB Setup` section below before proceeding.
-Note that because Parent Document Retrieval uses a different indexing strategy, it's likely you will want to run this new setup.
 
-If you DO have a MongoDB Search index you want to connect to, edit the connection details in `mongo_parent_document_retrieval/chain.py`
+MongoDB 검색 인덱스에 연결하려는 경우가 아니라면, 진행하기 전에 아래의 `MongoDB 설정` 섹션을 참조하세요.  
+부모 문서 검색이 다른 인덱싱 전략을 사용하기 때문에, 이 새로운 설정을 실행하고 싶을 것입니다.
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+MongoDB 검색 인덱스에 연결하려는 경우, `mongo_parent_document_retrieval/chain.py`에서 연결 세부정보를 수정하세요.
+
+이 디렉토리 내에 있다면, 다음과 같이 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며, 서버가 로컬에서 실행됩니다.  
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/mongo-parent-document-retrieval/playground](http://127.0.0.1:8000/mongo-parent-document-retrieval/playground)  
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 확인할 수 있습니다.  
+플레이그라운드는 [http://127.0.0.1:8000/mongo-parent-document-retrieval/playground](http://127.0.0.1:8000/mongo-parent-document-retrieval/playground)에서 접근할 수 있습니다.  
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable
@@ -88,56 +95,60 @@ from langserve.client import RemoteRunnable
 runnable = RemoteRunnable("http://localhost:8000/mongo-parent-document-retrieval")
 ```
 
-For additional context, please refer to [this notebook](https://colab.research.google.com/drive/1cr2HBAHyBmwKUerJq2if0JaNhy-hIq7I#scrollTo=TZp7_CBfxTOB).
 
-## MongoDB Setup
+추가적인 맥락은 [이 노트북](https://colab.research.google.com/drive/1cr2HBAHyBmwKUerJq2if0JaNhy-hIq7I#scrollTo=TZp7_CBfxTOB)을 참조하세요.
 
-Use this step if you need to setup your MongoDB account and ingest data.
-We will first follow the standard MongoDB Atlas setup instructions [here](https://www.mongodb.com/docs/atlas/getting-started/).
+## MongoDB 설정
 
-1. Create an account (if not already done)
-2. Create a new project (if not already done)
-3. Locate your MongoDB URI.
+MongoDB 계정을 설정하고 데이터를 수집해야 하는 경우 이 단계를 사용하세요.  
+먼저 표준 MongoDB Atlas 설정 지침을 [여기](https://www.mongodb.com/docs/atlas/getting-started/)에서 따르겠습니다.
 
-This can be done by going to the deployment overview page and connecting to you database
+1. 계정을 생성합니다 (아직 하지 않았다면)
+2. 새 프로젝트를 생성합니다 (아직 하지 않았다면)
+3. MongoDB URI를 찾습니다.
 
-We then look at the drivers available
+배포 개요 페이지로 가서 데이터베이스에 연결하여 찾을 수 있습니다.
 
-Among which we will see our URI listed
+그런 다음 사용 가능한 드라이버를 살펴봅니다.
 
-Let's then set that as an environment variable locally:
+그 중에서 URI가 나열된 것을 볼 수 있습니다.
+
+그것을 로컬 환경 변수로 설정합시다:
 
 ```shell
 export MONGO_URI=...
 ```
 
-4. Let's also set an environment variable for OpenAI (which we will use as an LLM)
+
+4. OpenAI에 대한 환경 변수도 설정합시다 (우리는 이를 LLM으로 사용할 것입니다).
 
 ```shell
 export OPENAI_API_KEY=...
 ```
 
-5. Let's now ingest some data! We can do that by moving into this directory and running the code in `ingest.py`, eg:
+
+5. 이제 데이터를 수집합시다! 이 디렉토리로 이동하여 `ingest.py`의 코드를 실행하면 됩니다, 예를 들어:
 
 ```shell
 python ingest.py
 ```
 
-Note that you can (and should!) change this to ingest data of your choice
 
-6. We now need to set up a vector index on our data.
+원하는 데이터로 수집할 수 있도록 변경할 수 있습니다 (그리고 변경해야 합니다!).
 
-We can first connect to the cluster where our database lives
+6. 이제 데이터에 대한 벡터 인덱스를 설정해야 합니다.
 
-We can then navigate to where all our collections are listed
+먼저 데이터베이스가 있는 클러스터에 연결합니다.
 
-We can then find the collection we want and look at the search indexes for that collection
+그런 다음 모든 컬렉션이 나열된 곳으로 이동합니다.
 
-That should likely be empty, and we want to create a new one:
+원하는 컬렉션을 찾아 해당 컬렉션의 검색 인덱스를 확인합니다.
 
-We will use the JSON editor to create it
+그것은 아마 비어 있을 것이고, 우리는 새 인덱스를 생성하고 싶습니다:
 
-And we will paste the following JSON in:
+JSON 편집기를 사용하여 생성할 것입니다.
+
+다음 JSON을 붙여넣습니다:
 
 ```text
 {
@@ -159,4 +170,5 @@ And we will paste the following JSON in:
 }
 ```
 
-From there, hit "Next" and then "Create Search Index". It will take a little bit but you should then have an index over your data!
+
+그런 다음 "다음"을 클릭하고 "검색 인덱스 생성"을 클릭합니다. 조금 시간이 걸리겠지만, 그러면 데이터에 대한 인덱스가 생성될 것입니다!

@@ -1,38 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/few_shot_examples_chat/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/few_shot_examples_chat.ipynb
+description: 챗 모델에 예시 입력과 출력을 제공하는 방법을 안내합니다. Few-shot 기법으로 모델 성능을 향상시키는 방법을 다룹니다.
 sidebar_position: 2
 ---
 
-# How to use few shot examples in chat models
+# 챗 모델에서 몇 가지 샷 예제 사용 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [Prompt templates](/docs/concepts/#prompt-templates)
-- [Example selectors](/docs/concepts/#example-selectors)
-- [Chat models](/docs/concepts/#chat-model)
-- [Vectorstores](/docs/concepts/#vector-stores)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [프롬프트 템플릿](/docs/concepts/#prompt-templates)
+- [예제 선택기](/docs/concepts/#example-selectors)
+- [챗 모델](/docs/concepts/#chat-model)
+- [벡터 스토어](/docs/concepts/#vector-stores)
 
 :::
 
-This guide covers how to prompt a chat model with example inputs and outputs. Providing the model with a few such examples is called few-shotting, and is a simple yet powerful way to guide generation and in some cases drastically improve model performance.
+이 가이드는 예제 입력 및 출력으로 챗 모델에 프롬프트를 제공하는 방법을 다룹니다. 모델에 몇 가지 예제를 제공하는 것을 몇 샷(few-shot)이라고 하며, 이는 생성 과정을 안내하는 간단하면서도 강력한 방법으로, 경우에 따라 모델 성능을 극적으로 향상시킬 수 있습니다.
 
-There does not appear to be solid consensus on how best to do few-shot prompting, and the optimal prompt compilation will likely vary by model. Because of this, we provide few-shot prompt templates like the [FewShotChatMessagePromptTemplate](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotChatMessagePromptTemplate.html?highlight=fewshot#langchain_core.prompts.few_shot.FewShotChatMessagePromptTemplate) as a flexible starting point, and you can modify or replace them as you see fit.
+몇 샷 프롬프트를 수행하는 최선의 방법에 대한 확고한 합의는 없는 것 같으며, 최적의 프롬프트 조합은 모델에 따라 다를 수 있습니다. 따라서 우리는 [FewShotChatMessagePromptTemplate](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotChatMessagePromptTemplate.html?highlight=fewshot#langchain_core.prompts.few_shot.FewShotChatMessagePromptTemplate)와 같은 몇 샷 프롬프트 템플릿을 유연한 시작점으로 제공하며, 필요에 따라 수정하거나 교체할 수 있습니다.
 
-The goal of few-shot prompt templates are to dynamically select examples based on an input, and then format the examples in a final prompt to provide for the model.
+몇 샷 프롬프트 템플릿의 목표는 입력에 따라 동적으로 예제를 선택하고, 그런 다음 모델에 제공할 최종 프롬프트에서 예제를 형식화하는 것입니다.
 
-**Note:** The following code examples are for chat models only, since `FewShotChatMessagePromptTemplates` are designed to output formatted [chat messages](/docs/concepts/#message-types) rather than pure strings. For similar few-shot prompt examples for pure string templates compatible with completion models (LLMs), see the [few-shot prompt templates](/docs/how_to/few_shot_examples/) guide.
+**참고:** 다음 코드 예제는 챗 모델에만 해당되며, `FewShotChatMessagePromptTemplates`는 순수 문자열이 아닌 형식화된 [챗 메시지](/docs/concepts/#message-types)를 출력하도록 설계되었습니다. 완료 모델(LLMs)과 호환되는 순수 문자열 템플릿에 대한 유사한 몇 샷 프롬프트 예제는 [few-shot 프롬프트 템플릿](/docs/how_to/few_shot_examples/) 가이드를 참조하세요.
 
-## Fixed Examples
+## 고정된 예제
 
-The most basic (and common) few-shot prompting technique is to use fixed prompt examples. This way you can select a chain, evaluate it, and avoid worrying about additional moving parts in production.
+가장 기본적이고 일반적인 몇 샷 프롬프트 기법은 고정된 프롬프트 예제를 사용하는 것입니다. 이렇게 하면 체인을 선택하고 평가할 수 있으며, 프로덕션에서 추가적인 이동 부품에 대해 걱정할 필요가 없습니다.
 
-The basic components of the template are:
-- `examples`: A list of dictionary examples to include in the final prompt.
-- `example_prompt`: converts each example into 1 or more messages through its [`format_messages`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html?highlight=format_messages#langchain_core.prompts.chat.ChatPromptTemplate.format_messages) method. A common example would be to convert each example into one human message and one AI message response, or a human message followed by a function call message.
+템플릿의 기본 구성 요소는 다음과 같습니다:
+- `examples`: 최종 프롬프트에 포함할 사전 예제 목록입니다.
+- `example_prompt`: 각 예제를 [`format_messages`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html?highlight=format_messages#langchain_core.prompts.chat.ChatPromptTemplate.format_messages) 메서드를 통해 1개 이상의 메시지로 변환합니다. 일반적인 예는 각 예제를 하나의 인간 메시지와 하나의 AI 메시지 응답으로 변환하거나, 인간 메시지 다음에 함수 호출 메시지를 추가하는 것입니다.
 
-Below is a simple demonstration. First, define the examples you'd like to include. Let's give the LLM an unfamiliar mathematical operator, denoted by the "🦜" emoji:
+아래는 간단한 시연입니다. 먼저 포함할 예제를 정의합니다. LLM에 익숙하지 않은 수학 연산자를 "🦜" 이모지로 표시해 보겠습니다:
 
 ```python
 %pip install -qU langchain langchain-openai langchain-chroma
@@ -43,7 +43,8 @@ from getpass import getpass
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
 
-If we try to ask the model what the result of this expression is, it will fail:
+
+이 표현의 결과가 무엇인지 모델에 물어보면 실패할 것입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use few shot examples in chat models"}]-->
@@ -54,11 +55,13 @@ model = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.0)
 model.invoke("What is 2 🦜 9?")
 ```
 
+
 ```output
 AIMessage(content='The expression "2 🦜 9" is not a standard mathematical operation or equation. It appears to be a combination of the number 2 and the parrot emoji 🦜 followed by the number 9. It does not have a specific mathematical meaning.', response_metadata={'token_usage': {'completion_tokens': 54, 'prompt_tokens': 17, 'total_tokens': 71}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-aad12dda-5c47-4a1e-9949-6fe94e03242a-0', usage_metadata={'input_tokens': 17, 'output_tokens': 54, 'total_tokens': 71})
 ```
 
-Now let's see what happens if we give the LLM some examples to work with. We'll define some below:
+
+이제 LLM에 작업할 예제를 제공하면 어떤 일이 발생하는지 살펴보겠습니다. 아래에 몇 가지를 정의하겠습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use few shot examples in chat models"}, {"imported": "FewShotChatMessagePromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotChatMessagePromptTemplate.html", "title": "How to use few shot examples in chat models"}]-->
@@ -70,7 +73,8 @@ examples = [
 ]
 ```
 
-Next, assemble them into the few-shot prompt template.
+
+다음으로, 이를 몇 샷 프롬프트 템플릿으로 조합합니다.
 
 ```python
 # This is a prompt template used to format each individual example.
@@ -87,10 +91,12 @@ few_shot_prompt = FewShotChatMessagePromptTemplate(
 
 print(few_shot_prompt.invoke({}).to_messages())
 ```
+
 ```output
 [HumanMessage(content='2 🦜 2'), AIMessage(content='4'), HumanMessage(content='2 🦜 3'), AIMessage(content='5')]
 ```
-Finally, we assemble the final prompt as shown below, passing `few_shot_prompt` directly into the `from_messages` factory method, and use it with a model:
+
+마지막으로, 아래와 같이 최종 프롬프트를 조립하고, `few_shot_prompt`를 `from_messages` 팩토리 메서드에 직접 전달하여 모델과 함께 사용합니다:
 
 ```python
 final_prompt = ChatPromptTemplate.from_messages(
@@ -102,7 +108,8 @@ final_prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-And now let's ask the model the initial question and see how it does:
+
+이제 모델에 초기 질문을 하고 결과를 확인해 보겠습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use few shot examples in chat models"}]-->
@@ -113,22 +120,24 @@ chain = final_prompt | model
 chain.invoke({"input": "What is 2 🦜 9?"})
 ```
 
+
 ```output
 AIMessage(content='11', response_metadata={'token_usage': {'completion_tokens': 1, 'prompt_tokens': 60, 'total_tokens': 61}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-5ec4e051-262f-408e-ad00-3f2ebeb561c3-0', usage_metadata={'input_tokens': 60, 'output_tokens': 1, 'total_tokens': 61})
 ```
 
-And we can see that the model has now inferred that the parrot emoji means addition from the given few-shot examples!
 
-## Dynamic few-shot prompting
+모델이 주어진 몇 샷 예제에서 앵무새 이모지가 덧셈을 의미한다고 추론한 것을 확인할 수 있습니다!
 
-Sometimes you may want to select only a few examples from your overall set to show based on the input. For this, you can replace the `examples` passed into `FewShotChatMessagePromptTemplate` with an `example_selector`. The other components remain the same as above! Our dynamic few-shot prompt template would look like:
+## 동적 몇 샷 프롬프트
 
-- `example_selector`: responsible for selecting few-shot examples (and the order in which they are returned) for a given input. These implement the [BaseExampleSelector](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.base.BaseExampleSelector.html?highlight=baseexampleselector#langchain_core.example_selectors.base.BaseExampleSelector) interface. A common example is the vectorstore-backed [SemanticSimilarityExampleSelector](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html?highlight=semanticsimilarityexampleselector#langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector)
-- `example_prompt`: convert each example into 1 or more messages through its [`format_messages`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html?highlight=chatprompttemplate#langchain_core.prompts.chat.ChatPromptTemplate.format_messages) method. A common example would be to convert each example into one human message and one AI message response, or a human message followed by a function call message.
+때때로 입력에 따라 전체 집합에서 몇 가지 예제만 선택하고 싶을 수 있습니다. 이를 위해 `FewShotChatMessagePromptTemplate`에 전달된 `examples`를 `example_selector`로 교체할 수 있습니다. 다른 구성 요소는 위와 동일하게 유지됩니다! 우리의 동적 몇 샷 프롬프트 템플릿은 다음과 같습니다:
 
-These once again can be composed with other messages and chat templates to assemble your final prompt.
+- `example_selector`: 주어진 입력에 대해 몇 샷 예제를 선택하고 반환되는 순서를 담당합니다. 이는 [BaseExampleSelector](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.base.BaseExampleSelector.html?highlight=baseexampleselector#langchain_core.example_selectors.base.BaseExampleSelector) 인터페이스를 구현합니다. 일반적인 예는 벡터스토어 기반의 [SemanticSimilarityExampleSelector](https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html?highlight=semanticsimilarityexampleselector#langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector)입니다.
+- `example_prompt`: 각 예제를 [`format_messages`](https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html?highlight=chatprompttemplate#langchain_core.prompts.chat.ChatPromptTemplate.format_messages) 메서드를 통해 1개 이상의 메시지로 변환합니다. 일반적인 예는 각 예제를 하나의 인간 메시지와 하나의 AI 메시지 응답으로 변환하거나, 인간 메시지 다음에 함수 호출 메시지를 추가하는 것입니다.
 
-Let's walk through an example with the `SemanticSimilarityExampleSelector`. Since this implementation uses a vectorstore to select examples based on semantic similarity, we will want to first populate the store. Since the basic idea here is that we want to search for and return examples most similar to the text input, we embed the `values` of our prompt examples rather than considering the keys:
+이들은 다시 다른 메시지 및 챗 템플릿과 결합하여 최종 프롬프트를 조립할 수 있습니다.
+
+`SemanticSimilarityExampleSelector`와 함께 예제를 살펴보겠습니다. 이 구현은 벡터스토어를 사용하여 의미적 유사성을 기반으로 예제를 선택하므로, 먼저 스토어를 채워야 합니다. 기본 아이디어는 텍스트 입력과 가장 유사한 예제를 검색하고 반환하는 것이므로, 키를 고려하기보다는 프롬프트 예제의 `values`를 임베딩합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "How to use few shot examples in chat models"}, {"imported": "SemanticSimilarityExampleSelector", "source": "langchain_core.example_selectors", "docs": "https://api.python.langchain.com/en/latest/example_selectors/langchain_core.example_selectors.semantic_similarity.SemanticSimilarityExampleSelector.html", "title": "How to use few shot examples in chat models"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to use few shot examples in chat models"}]-->
@@ -152,9 +161,10 @@ embeddings = OpenAIEmbeddings()
 vectorstore = Chroma.from_texts(to_vectorize, embeddings, metadatas=examples)
 ```
 
-### Create the `example_selector`
 
-With a vectorstore created, we can create the `example_selector`. Here we will call it in isolation, and set `k` on it to only fetch the two example closest to the input.
+### `example_selector` 생성
+
+벡터스토어가 생성되면 `example_selector`를 생성할 수 있습니다. 여기서는 독립적으로 호출하고, 입력에 가장 가까운 두 예제를 가져오도록 `k`를 설정합니다.
 
 ```python
 example_selector = SemanticSimilarityExampleSelector(
@@ -166,14 +176,16 @@ example_selector = SemanticSimilarityExampleSelector(
 example_selector.select_examples({"input": "horse"})
 ```
 
+
 ```output
 [{'input': 'What did the cow say to the moon?', 'output': 'nothing at all'},
  {'input': '2 🦜 4', 'output': '6'}]
 ```
 
-### Create prompt template
 
-We now assemble the prompt template, using the `example_selector` created above.
+### 프롬프트 템플릿 생성
+
+이제 위에서 생성한 `example_selector`를 사용하여 프롬프트 템플릿을 조립합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use few shot examples in chat models"}, {"imported": "FewShotChatMessagePromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.few_shot.FewShotChatMessagePromptTemplate.html", "title": "How to use few shot examples in chat models"}]-->
@@ -194,10 +206,12 @@ few_shot_prompt = FewShotChatMessagePromptTemplate(
 
 print(few_shot_prompt.invoke(input="What's 3 🦜 3?").to_messages())
 ```
+
 ```output
 [HumanMessage(content='2 🦜 3'), AIMessage(content='5'), HumanMessage(content='2 🦜 4'), AIMessage(content='6')]
 ```
-And we can pass this few-shot chat message prompt template into another chat prompt template:
+
+그리고 이 몇 샷 챗 메시지 프롬프트 템플릿을 다른 챗 프롬프트 템플릿에 전달할 수 있습니다:
 
 ```python
 final_prompt = ChatPromptTemplate.from_messages(
@@ -210,12 +224,14 @@ final_prompt = ChatPromptTemplate.from_messages(
 
 print(few_shot_prompt.invoke(input="What's 3 🦜 3?"))
 ```
+
 ```output
 messages=[HumanMessage(content='2 🦜 3'), AIMessage(content='5'), HumanMessage(content='2 🦜 4'), AIMessage(content='6')]
 ```
-### Use with an chat model
 
-Finally, you can connect your model to the few-shot prompt.
+### 챗 모델과 함께 사용
+
+마지막으로, 모델을 몇 샷 프롬프트에 연결할 수 있습니다.
 
 ```python
 chain = final_prompt | ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.0)
@@ -223,12 +239,14 @@ chain = final_prompt | ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0.0)
 chain.invoke({"input": "What's 3 🦜 3?"})
 ```
 
+
 ```output
 AIMessage(content='6', response_metadata={'token_usage': {'completion_tokens': 1, 'prompt_tokens': 60, 'total_tokens': 61}, 'model_name': 'gpt-3.5-turbo-0125', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-d1863e5e-17cd-4e9d-bf7a-b9f118747a65-0', usage_metadata={'input_tokens': 60, 'output_tokens': 1, 'total_tokens': 61})
 ```
 
-## Next steps
 
-You've now learned how to add few-shot examples to your chat prompts.
+## 다음 단계
 
-Next, check out the other how-to guides on prompt templates in this section, the related how-to guide on [few shotting with text completion models](/docs/how_to/few_shot_examples), or the other [example selector how-to guides](/docs/how_to/example_selectors/).
+이제 챗 프롬프트에 몇 샷 예제를 추가하는 방법을 배웠습니다.
+
+다음으로, 이 섹션의 프롬프트 템플릿에 대한 다른 사용 방법 가이드를 확인하거나, [텍스트 완성 모델과 함께 몇 샷 사용하기](/docs/how_to/few_shot_examples) 관련 가이드를 확인하거나, 다른 [예제 선택기 사용 방법 가이드](/docs/how_to/example_selectors/)를 확인하세요.

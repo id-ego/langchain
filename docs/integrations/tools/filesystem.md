@@ -1,19 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/filesystem/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/filesystem.ipynb
+description: LangChain은 로컬 파일 시스템과 상호작용하는 도구를 제공하며, 안전한 환경에서 파일 작업을 수행하는 방법을 안내합니다.
 ---
 
-# File System
+# 파일 시스템
 
-LangChain provides tools for interacting with a local file system out of the box. This notebook walks through some of them.
+LangChain은 기본적으로 로컬 파일 시스템과 상호작용할 수 있는 도구를 제공합니다. 이 노트북에서는 그 중 일부를 살펴봅니다.
 
-**Note:** these tools are not recommended for use outside a sandboxed environment! 
+**참고:** 이러한 도구는 샌드박스 환경 외부에서 사용하는 것이 권장되지 않습니다!
 
 ```python
 %pip install -qU langchain-community
 ```
 
-First, we'll import the tools.
+
+먼저, 도구를 가져옵니다.
 
 ```python
 <!--IMPORTS:[{"imported": "FileManagementToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.file_management.toolkit.FileManagementToolkit.html", "title": "File System"}]-->
@@ -25,12 +26,12 @@ from langchain_community.agent_toolkits import FileManagementToolkit
 working_directory = TemporaryDirectory()
 ```
 
-## The FileManagementToolkit
 
-If you want to provide all the file tooling to your agent, it's easy to do so with the toolkit. We'll pass the temporary directory in as a root directory as a workspace for the LLM.
+## 파일 관리 툴킷
 
-It's recommended to always pass in a root directory, since without one, it's easy for the LLM to pollute the working directory, and without one, there isn't any validation against
-straightforward prompt injection.
+에이전트에게 모든 파일 도구를 제공하고 싶다면, 툴킷을 사용하여 쉽게 할 수 있습니다. 우리는 임시 디렉토리를 루트 디렉토리로 전달하여 LLM의 작업 공간으로 사용할 것입니다.
+
+루트 디렉토리를 항상 전달하는 것이 좋습니다. 루트 디렉토리가 없으면 LLM이 작업 디렉토리를 오염시키기 쉽고, 루트 디렉토리가 없으면 간단한 프롬프트 주입에 대한 검증이 없습니다.
 
 ```python
 toolkit = FileManagementToolkit(
@@ -38,6 +39,7 @@ toolkit = FileManagementToolkit(
 )  # If you don't provide a root_dir, operations will default to the current working directory
 toolkit.get_tools()
 ```
+
 
 ```output
 [CopyFileTool(root_dir='/tmp/tmprdvsw3tg'),
@@ -49,9 +51,10 @@ toolkit.get_tools()
  ListDirectoryTool(root_dir='/tmp/tmprdvsw3tg')]
 ```
 
-### Selecting File System Tools
 
-If you only want to select certain tools, you can pass them in as arguments when initializing the toolkit, or you can individually initialize the desired tools.
+### 파일 시스템 도구 선택
+
+특정 도구만 선택하고 싶다면, 툴킷을 초기화할 때 인수로 전달하거나 원하는 도구를 개별적으로 초기화할 수 있습니다.
 
 ```python
 tools = FileManagementToolkit(
@@ -61,31 +64,37 @@ tools = FileManagementToolkit(
 tools
 ```
 
+
 ```output
 [ReadFileTool(root_dir='/tmp/tmprdvsw3tg'),
  WriteFileTool(root_dir='/tmp/tmprdvsw3tg'),
  ListDirectoryTool(root_dir='/tmp/tmprdvsw3tg')]
 ```
 
+
 ```python
 read_tool, write_tool, list_tool = tools
 write_tool.invoke({"file_path": "example.txt", "text": "Hello World!"})
 ```
 
+
 ```output
 'File written successfully to example.txt.'
 ```
+
 
 ```python
 # List files in the working directory
 list_tool.invoke({})
 ```
 
+
 ```output
 'example.txt'
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

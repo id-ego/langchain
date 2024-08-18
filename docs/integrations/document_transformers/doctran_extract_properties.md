@@ -1,21 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/doctran_extract_properties/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/doctran_extract_properties.ipynb
+description: 문서에서 유용한 메타데이터를 추출하는 Doctran 라이브러리의 기능과 활용 방법을 설명합니다. 분류, 데이터 마이닝, 스타일
+  전환에 유용합니다.
 ---
 
-# Doctran: extract properties
+# Doctran: 속성 추출
 
-We can extract useful features of documents using the [Doctran](https://github.com/psychic-api/doctran) library, which uses OpenAI's function calling feature to extract specific metadata.
+우리는 OpenAI의 함수 호출 기능을 사용하여 특정 메타데이터를 추출하는 [Doctran](https://github.com/psychic-api/doctran) 라이브러리를 사용하여 문서의 유용한 기능을 추출할 수 있습니다.
 
-Extracting metadata from documents is helpful for a variety of tasks, including:
+문서에서 메타데이터를 추출하는 것은 다음과 같은 다양한 작업에 유용합니다:
 
-* **Classification:** classifying documents into different categories
-* **Data mining:** Extract structured data that can be used for data analysis
-* **Style transfer:** Change the way text is written to more closely match expected user input, improving vector search results
+* **분류:** 문서를 서로 다른 범주로 분류하기
+* **데이터 마이닝:** 데이터 분석에 사용할 수 있는 구조화된 데이터 추출
+* **스타일 전이:** 텍스트 작성 방식을 변경하여 예상 사용자 입력에 더 가깝게 맞추고, 벡터 검색 결과 개선
 
 ```python
 %pip install --upgrade --quiet  doctran
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "DoctranPropertyExtractor", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.doctran_text_extract.DoctranPropertyExtractor.html", "title": "Doctran: extract properties"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Doctran: extract properties"}]-->
@@ -25,18 +27,21 @@ from langchain_community.document_transformers import DoctranPropertyExtractor
 from langchain_core.documents import Document
 ```
 
+
 ```python
 from dotenv import load_dotenv
 
 load_dotenv()
 ```
 
+
 ```output
 True
 ```
 
-## Input
-This is the document we'll extract properties from.
+
+## 입력
+이것은 우리가 속성을 추출할 문서입니다.
 
 ```python
 sample_text = """[Generated with ChatGPT]
@@ -76,6 +81,7 @@ jason@psychic.dev
 """
 print(sample_text)
 ```
+
 ```output
 [Generated with ChatGPT]
 
@@ -113,6 +119,7 @@ Psychic
 jason@psychic.dev
 ```
 
+
 ```python
 documents = [Document(page_content=sample_text)]
 properties = [
@@ -144,8 +151,9 @@ properties = [
 property_extractor = DoctranPropertyExtractor(properties=properties)
 ```
 
-## Output
-After extracting properties from a document, the result will be returned as a new document with properties provided in the metadata
+
+## 출력
+문서에서 속성을 추출한 후, 결과는 메타데이터에 제공된 속성과 함께 새로운 문서로 반환됩니다.
 
 ```python
 extracted_document = property_extractor.transform_documents(
@@ -153,9 +161,11 @@ extracted_document = property_extractor.transform_documents(
 )
 ```
 
+
 ```python
 print(json.dumps(extracted_document[0].metadata, indent=2))
 ```
+
 ```output
 {
   "extracted_properties": {

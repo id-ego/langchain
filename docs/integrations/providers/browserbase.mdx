@@ -1,38 +1,41 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/browserbase/
+description: Browserbase는 복잡한 UI에서 데이터를 추출하기 위해 신뢰할 수 있는 헤드리스 브라우저를 실행, 관리 및 모니터링하는
+  개발자 플랫폼입니다.
 ---
 
 # Browserbase
 
-[Browserbase](https://browserbase.com) is a developer platform to reliably run, manage, and monitor headless browsers.
+[Browserbase](https://browserbase.com)는 헤드리스 브라우저를 신뢰성 있게 실행, 관리 및 모니터링하기 위한 개발자 플랫폼입니다.
 
-Power your AI data retrievals with:
-- [Serverless Infrastructure](https://docs.browserbase.com/under-the-hood) providing reliable browsers to extract data from complex UIs
-- [Stealth Mode](https://docs.browserbase.com/features/stealth-mode) with included fingerprinting tactics and automatic captcha solving
-- [Session Debugger](https://docs.browserbase.com/features/sessions) to inspect your Browser Session with networks timeline and logs
-- [Live Debug](https://docs.browserbase.com/guides/session-debug-connection/browser-remote-control) to quickly debug your automation
+AI 데이터 검색을 다음으로 강화하세요:
+- [서버리스 인프라](https://docs.browserbase.com/under-the-hood)로 복잡한 UI에서 데이터를 추출하기 위한 신뢰할 수 있는 브라우저 제공
+- [스텔스 모드](https://docs.browserbase.com/features/stealth-mode)로 포함된 지문 인식 전술 및 자동 캡차 해결
+- [세션 디버거](https://docs.browserbase.com/features/sessions)로 네트워크 타임라인 및 로그와 함께 브라우저 세션을 검사
+- [라이브 디버그](https://docs.browserbase.com/guides/session-debug-connection/browser-remote-control)로 자동화를 신속하게 디버깅
 
-## Installation and Setup
+## 설치 및 설정
 
-- Get an API key and Project ID from [browserbase.com](https://browserbase.com) and set it in environment variables (`BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID`).
-- Install the [Browserbase SDK](http://github.com/browserbase/python-sdk):
+- [browserbase.com](https://browserbase.com)에서 API 키와 프로젝트 ID를 가져와 환경 변수(`BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID`)에 설정합니다.
+- [Browserbase SDK](http://github.com/browserbase/python-sdk)를 설치합니다:
 
 ```python
 pip install browserbase
 ```
 
-## Document loader
 
-See a [usage example](/docs/integrations/document_loaders/browserbase).
+## 문서 로더
+
+[사용 예시](/docs/integrations/document_loaders/browserbase)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "BrowserbaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.browserbase.BrowserbaseLoader.html", "title": "Browserbase"}]-->
 from langchain_community.document_loaders import BrowserbaseLoader
 ```
 
-## Multi-Modal
 
-See a [usage example](/docs/integrations/document_loaders/browserbase).
+## 멀티 모달
+
+[사용 예시](/docs/integrations/document_loaders/browserbase)를 참조하세요.
 
 ```python
 from browserbase.helpers.gpt4 import GPT4VImage, GPT4VImageDetail

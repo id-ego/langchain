@@ -1,17 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/deepinfra/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/deepinfra.ipynb
+description: DeepInfra는 다양한 LLM 및 임베딩 모델에 대한 서버리스 추론 서비스를 제공하며, LangChain과의 통합 방법을
+  설명합니다.
 ---
 
 # DeepInfra
 
-[DeepInfra](https://deepinfra.com/?utm_source=langchain) is a serverless inference as a service that provides access to a [variety of LLMs](https://deepinfra.com/models?utm_source=langchain) and [embeddings models](https://deepinfra.com/models?type=embeddings&utm_source=langchain). This notebook goes over how to use LangChain with DeepInfra for chat models.
+[DeepInfra](https://deepinfra.com/?utm_source=langchain)는 다양한 [LLM](https://deepinfra.com/models?utm_source=langchain) 및 [임베딩 모델](https://deepinfra.com/models?type=embeddings&utm_source=langchain)에 대한 접근을 제공하는 서버리스 추론 서비스입니다. 이 노트북에서는 DeepInfra와 함께 LangChain을 사용하여 채팅 모델을 사용하는 방법을 설명합니다.
 
-## Set the Environment API Key
-Make sure to get your API key from DeepInfra. You have to [Login](https://deepinfra.com/login?from=%2Fdash) and get a new token.
+## 환경 API 키 설정
+DeepInfra에서 API 키를 받아야 합니다. [로그인](https://deepinfra.com/login?from=%2Fdash)하여 새 토큰을 받아야 합니다.
 
-You are given a 1 hour free of serverless GPU compute to test different models. (see [here](https://github.com/deepinfra/deepctl#deepctl))
-You can print your token with `deepctl auth token`
+다양한 모델을 테스트하기 위해 1시간의 무료 서버리스 GPU 컴퓨팅이 제공됩니다. (자세한 내용은 [여기](https://github.com/deepinfra/deepctl#deepctl) 참조)
+`deepctl auth token`으로 토큰을 출력할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatDeepInfra", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.deepinfra.ChatDeepInfra.html", "title": "DeepInfra"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "DeepInfra"}]-->
@@ -38,16 +39,19 @@ messages = [
 chat.invoke(messages)
 ```
 
-## `ChatDeepInfra` also supports async and streaming functionality:
+
+## `ChatDeepInfra`는 비동기 및 스트리밍 기능도 지원합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "DeepInfra"}]-->
 from langchain_core.callbacks import StreamingStdOutCallbackHandler
 ```
 
+
 ```python
 await chat.agenerate([messages])
 ```
+
 
 ```python
 chat = ChatDeepInfra(
@@ -58,11 +62,12 @@ chat = ChatDeepInfra(
 chat.invoke(messages)
 ```
 
-# Tool Calling
 
-DeepInfra currently supports only invoke and async invoke tool calling.
+# 도구 호출
 
-For a complete list of models that support tool calling, please refer to our [tool calling documentation](https://deepinfra.com/docs/advanced/function_calling).
+DeepInfra는 현재 invoke 및 async invoke 도구 호출만 지원합니다.
+
+도구 호출을 지원하는 모델의 전체 목록은 [도구 호출 문서](https://deepinfra.com/docs/advanced/function_calling)를 참조하시기 바랍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatDeepInfra", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.deepinfra.ChatDeepInfra.html", "title": "DeepInfra"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "DeepInfra"}, {"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "DeepInfra"}]-->
@@ -119,7 +124,8 @@ asyncio.run(call_ainvoke())
 # [{'name': 'foo', 'args': {'something': None}, 'id': 'call_ZH7FetmgSot4LHcMU6CEb8tI'}, {'name': 'Bar', 'args': {}, 'id': 'call_2MQhDifAJVoijZEvH8PeFSVB'}]
 ```
 
-## Related
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

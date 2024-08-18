@@ -1,21 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/stochasticai/
+description: StochasticAI 생태계를 LangChain 내에서 사용하는 방법에 대한 설치, 설정 및 특정 래퍼에 대한 참조를 다룹니다.
 ---
 
 # StochasticAI
 
-This page covers how to use the StochasticAI ecosystem within LangChain.
-It is broken into two parts: installation and setup, and then references to specific StochasticAI wrappers.
+이 페이지는 LangChain 내에서 StochasticAI 생태계를 사용하는 방법을 다룹니다. 설치 및 설정, 그리고 특정 StochasticAI 래퍼에 대한 참조로 나뉘어 있습니다.
 
-## Installation and Setup
-- Install with `pip install stochasticx`
-- Get an StochasticAI api key and set it as an environment variable (`STOCHASTICAI_API_KEY`)
+## 설치 및 설정
+- `pip install stochasticx`로 설치
+- StochasticAI API 키를 얻고 이를 환경 변수로 설정 (`STOCHASTICAI_API_KEY`)
 
-## Wrappers
+## 래퍼
 
 ### LLM
 
-There exists an StochasticAI LLM wrapper, which you can access with 
+StochasticAI LLM 래퍼가 존재하며, 이를 통해 접근할 수 있습니다.
 ```python
 <!--IMPORTS:[{"imported": "StochasticAI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.stochasticai.StochasticAI.html", "title": "StochasticAI"}]-->
 from langchain_community.llms import StochasticAI

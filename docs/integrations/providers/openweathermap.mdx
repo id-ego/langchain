@@ -1,45 +1,47 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/openweathermap/
+description: OpenWeatherMap API를 LangChain에서 사용하는 방법과 설치, 설정, 유틸리티 및 도구에 대한 정보를 제공합니다.
 ---
 
 # OpenWeatherMap
 
-> [OpenWeatherMap](https://openweathermap.org/api/) provides all essential weather data for a specific location:
-> - Current weather
-> - Minute forecast for 1 hour
-> - Hourly forecast for 48 hours
-> - Daily forecast for 8 days
-> - National weather alerts
-> - Historical weather data for 40+ years back
+> [OpenWeatherMap](https://openweathermap.org/api/)는 특정 위치에 대한 모든 필수 날씨 데이터를 제공합니다:
+> - 현재 날씨
+> - 1시간 동안의 분 단위 예보
+> - 48시간 동안의 시간 단위 예보
+> - 8일 동안의 일 단위 예보
+> - 국가 날씨 경고
+> - 40년 이상의 과거 날씨 데이터
 
-This page covers how to use the `OpenWeatherMap API` within LangChain.
+이 페이지는 LangChain 내에서 `OpenWeatherMap API`를 사용하는 방법을 다룹니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install requirements with
+- 다음 명령어로 요구 사항을 설치합니다.
 ```bash
 pip install pyowm
 ```
-- Go to OpenWeatherMap and sign up for an account to get your API key [here](https://openweathermap.org/api/)
-- Set your API key as `OPENWEATHERMAP_API_KEY` environment variable
 
-## Wrappers
+- OpenWeatherMap에 가서 계정을 등록하여 API 키를 [여기](https://openweathermap.org/api/)에서 받으세요.
+- API 키를 `OPENWEATHERMAP_API_KEY` 환경 변수로 설정하세요.
 
-### Utility
+## 래퍼
 
-There exists a OpenWeatherMapAPIWrapper utility which wraps this API. To import this utility:
+### 유틸리티
+
+이 API를 래핑하는 OpenWeatherMapAPIWrapper 유틸리티가 존재합니다. 이 유틸리티를 가져오려면:
 
 ```python
 <!--IMPORTS:[{"imported": "OpenWeatherMapAPIWrapper", "source": "langchain_community.utilities.openweathermap", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.openweathermap.OpenWeatherMapAPIWrapper.html", "title": "OpenWeatherMap"}]-->
 from langchain_community.utilities.openweathermap import OpenWeatherMapAPIWrapper
 ```
 
-For a more detailed walkthrough of this wrapper, see [this notebook](/docs/integrations/tools/openweathermap).
 
-### Tool
+이 래퍼에 대한 더 자세한 안내는 [이 노트북](/docs/integrations/tools/openweathermap)을 참조하세요.
 
-You can also easily load this wrapper as a Tool (to use with an Agent).
-You can do this with:
+### 도구
+
+이 래퍼를 도구로 쉽게 로드하여 에이전트와 함께 사용할 수 있습니다.
+다음 명령어로 할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "OpenWeatherMap"}]-->
@@ -47,4 +49,5 @@ from langchain.agents import load_tools
 tools = load_tools(["openweathermap-api"])
 ```
 
-For more information on tools, see [this page](/docs/how_to/tools_builtin).
+
+도구에 대한 더 많은 정보는 [이 페이지](/docs/how_to/tools_builtin)를 참조하세요.

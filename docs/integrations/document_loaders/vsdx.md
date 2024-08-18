@@ -1,27 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/vsdx/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/vsdx.ipynb
+description: Visio 파일(.vsdx)은 다이어그램 생성 소프트웨어로, 구조와 그래픽 요소 정보를 저장하며, 비즈니스 및 공학 분야에서
+  시각화를 지원합니다.
 ---
 
 # Vsdx
 
-> A [visio file](https://fr.wikipedia.org/wiki/Microsoft_Visio) (with extension .vsdx) is associated with Microsoft Visio, a diagram creation software. It stores information about the structure, layout, and graphical elements of a diagram. This format facilitates the creation and sharing of visualizations in areas such as business, engineering, and computer science.
+> [비지오 파일](https://fr.wikipedia.org/wiki/Microsoft_Visio) (확장자 .vsdx)은 다이어그램 작성 소프트웨어인 Microsoft Visio와 관련이 있습니다. 이 파일은 다이어그램의 구조, 레이아웃 및 그래픽 요소에 대한 정보를 저장합니다. 이 형식은 비즈니스, 엔지니어링 및 컴퓨터 과학과 같은 분야에서 시각화를 생성하고 공유하는 데 용이합니다.
 
-A Visio file can contain multiple pages. Some of them may serve as the background for others, and this can occur across multiple layers. This **loader** extracts the textual content from each page and its associated pages, enabling the extraction of all visible text from each page, similar to what an OCR algorithm would do.
+비지오 파일은 여러 페이지를 포함할 수 있습니다. 그 중 일부는 다른 페이지의 배경 역할을 할 수 있으며, 이는 여러 레이어에 걸쳐 발생할 수 있습니다. 이 **로더**는 각 페이지와 관련된 페이지에서 텍스트 콘텐츠를 추출하여, 각 페이지에서 모든 가시적 텍스트를 추출할 수 있도록 합니다. 이는 OCR 알고리즘이 수행하는 것과 유사합니다.
 
-**WARNING** : Only Visio files with the **.vsdx** extension are compatible with this loader. Files with extensions such as .vsd, ... are not compatible because they cannot be converted to compressed XML.
+**경고** : **.vsdx** 확장자를 가진 비지오 파일만 이 로더와 호환됩니다. .vsd와 같은 확장자를 가진 파일은 압축 XML로 변환할 수 없기 때문에 호환되지 않습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "VsdxLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.vsdx.VsdxLoader.html", "title": "Vsdx"}]-->
 from langchain_community.document_loaders import VsdxLoader
 ```
 
+
 ```python
 loader = VsdxLoader(file_path="./example_data/fake.vsdx")
 documents = loader.load()
 ```
 
-**Display loaded documents**
+
+**로드된 문서 표시**
 
 ```python
 for i, doc in enumerate(documents):
@@ -31,6 +34,7 @@ for i, doc in enumerate(documents):
     print("\n==> CONTENT <== ")
     print(doc.page_content)
 ```
+
 ```output
 
 ------ Page 0 ------
@@ -420,7 +424,8 @@ This diagramm is a base of many pages in this file. But it is editable in file \
 Only connectors on this page. This is the CoNNeCtor page
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

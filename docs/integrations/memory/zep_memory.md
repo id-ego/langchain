@@ -1,34 +1,34 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/zep_memory/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/zep_memory.ipynb
+description: Zep 오픈 소스 메모리는 AI 어시스턴트가 과거 대화를 기억하고 개인화된 경험을 제공합니다. 설치 및 사용법을 안내합니다.
 ---
 
-# Zep Open Source Memory
-> Recall, understand, and extract data from chat histories. Power personalized AI experiences.
+# Zep 오픈 소스 메모리
+> 채팅 기록에서 데이터를 기억하고 이해하며 추출합니다. 개인화된 AI 경험을 제공합니다.
 
-> [Zep](https://www.getzep.com) is a long-term memory service for AI Assistant apps.
-With Zep, you can provide AI assistants with the ability to recall past conversations, no matter how distant,
-while also reducing hallucinations, latency, and cost.
+> [Zep](https://www.getzep.com)은 AI 어시스턴트 앱을 위한 장기 메모리 서비스입니다.
+Zep을 사용하면 AI 어시스턴트가 과거의 대화를 기억할 수 있는 능력을 제공하며,
+환각, 지연 및 비용을 줄일 수 있습니다.
 
-> Interested in Zep Cloud? See [Zep Cloud Installation Guide](https://help.getzep.com/sdks) and [Zep Cloud Memory Example](https://help.getzep.com/langchain/examples/messagehistory-example)
+> Zep Cloud에 관심이 있으신가요? [Zep Cloud 설치 가이드](https://help.getzep.com/sdks) 및 [Zep Cloud 메모리 예제](https://help.getzep.com/langchain/examples/messagehistory-example)를 참조하세요.
 
-## Open Source Installation and Setup
+## 오픈 소스 설치 및 설정
 
-> Zep Open Source project: [https://github.com/getzep/zep](https://github.com/getzep/zep)
+> Zep 오픈 소스 프로젝트: [https://github.com/getzep/zep](https://github.com/getzep/zep)
 > 
-> Zep Open Source Docs: [https://docs.getzep.com/](https://docs.getzep.com/)
+> Zep 오픈 소스 문서: [https://docs.getzep.com/](https://docs.getzep.com/)
 
-## Example
+## 예제
 
-This notebook demonstrates how to use [Zep](https://www.getzep.com/) as memory for your chatbot.
-REACT Agent Chat Message History with Zep - A long-term memory store for LLM applications.
+이 노트북은 [Zep](https://www.getzep.com/)을 챗봇의 메모리로 사용하는 방법을 보여줍니다.
+REACT 에이전트 채팅 메시지 기록과 Zep - LLM 애플리케이션을 위한 장기 메모리 저장소입니다.
 
-We'll demonstrate:
+다음과 같은 내용을 시연할 것입니다:
 
-1. Adding conversation history to Zep.
-2. Running an agent and having message automatically added to the store.
-3. Viewing the enriched messages.
-4. Vector search over the conversation history.
+1. Zep에 대화 기록 추가하기.
+2. 에이전트를 실행하고 메시지를 자동으로 저장소에 추가하기.
+3. 풍부해진 메시지 보기.
+4. 대화 기록에 대한 벡터 검색.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Zep Open Source Memory"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Zep Open Source Memory"}, {"imported": "ZepMemory", "source": "langchain_community.memory.zep_memory", "docs": "https://api.python.langchain.com/en/latest/memory/langchain_community.memory.zep_memory.ZepMemory.html", "title": "Zep Open Source Memory"}, {"imported": "ZepRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.zep.ZepRetriever.html", "title": "Zep Open Source Memory"}, {"imported": "WikipediaAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wikipedia.WikipediaAPIWrapper.html", "title": "Zep Open Source Memory"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "Zep Open Source Memory"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Zep Open Source Memory"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Zep Open Source Memory"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Zep Open Source Memory"}]-->
@@ -48,6 +48,7 @@ ZEP_API_URL = "http://localhost:8000"
 session_id = str(uuid4())  # This is a unique identifier for the user
 ```
 
+
 ```python
 # Provide your OpenAI key
 import getpass
@@ -55,13 +56,15 @@ import getpass
 openai_key = getpass.getpass()
 ```
 
+
 ```python
 # Provide your Zep API key. Note that this is optional. See https://docs.getzep.com/deployment/auth
 
 zep_api_key = getpass.getpass()
 ```
 
-### Initialize the Zep Chat Message History Class and initialize the Agent
+
+### Zep 채팅 메시지 기록 클래스 초기화 및 에이전트 초기화
 
 ```python
 search = WikipediaAPIWrapper()
@@ -95,7 +98,8 @@ agent_chain = initialize_agent(
 )
 ```
 
-### Add some history data
+
+### 일부 기록 데이터 추가
 
 ```python
 # Preload some messages into the memory. The default message window is 12 messages. We want to push beyond this to demonstrate auto-summarization.
@@ -170,15 +174,17 @@ for msg in test_history:
     )
 ```
 
-### Run the agent
 
-Doing so will automatically add the input and response to the Zep memory.
+### 에이전트 실행
+
+이렇게 하면 입력 및 응답이 Zep 메모리에 자동으로 추가됩니다.
 
 ```python
 agent_chain.run(
     input="What is the book's relevance to the challenges facing contemporary society?",
 )
 ```
+
 ```output
 
 
@@ -189,15 +195,17 @@ AI: Parable of the Sower is a prescient novel that speaks to the challenges faci
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Parable of the Sower is a prescient novel that speaks to the challenges facing contemporary society, such as climate change, inequality, and violence. It is a cautionary tale that warns of the dangers of unchecked greed and the need for individuals to take responsibility for their own lives and the lives of those around them.'
 ```
 
-### Inspect the Zep memory
 
-Note the summary, and that the history has been enriched with token counts, UUIDs, and timestamps.
+### Zep 메모리 검사
 
-Summaries are biased towards the most recent messages.
+요약을 확인하고, 기록이 토큰 수, UUID 및 타임스탬프와 함께 풍부해졌음을 주목하세요.
+
+요약은 가장 최근 메시지에 편향되어 있습니다.
 
 ```python
 def print_messages(messages):
@@ -209,6 +217,7 @@ print(memory.chat_memory.zep_summary)
 print("\n")
 print_messages(memory.chat_memory.messages)
 ```
+
 ```output
 The human inquires about Octavia Butler. The AI identifies her as an American science fiction author. The human then asks which books of hers were made into movies. The AI responds by mentioning the FX series Kindred, based on her novel of the same name. The human then asks about her contemporaries, and the AI lists Ursula K. Le Guin, Samuel R. Delany, and Joanna Russ.
 
@@ -232,11 +241,12 @@ human :
 ai :
  {'content': 'Parable of the Sower is a prescient novel that speaks to the challenges facing contemporary society, such as climate change, inequality, and violence. It is a cautionary tale that warns of the dangers of unchecked greed and the need for individuals to take responsibility for their own lives and the lives of those around them.', 'additional_kwargs': {'uuid': '3e14ac8f-b7c1-4360-958b-9f3eae1f784f', 'created_at': '2023-07-09T19:23:19.332517Z', 'token_count': 66, 'metadata': {'system': {'entities': [{'Label': 'GPE', 'Matches': [{'End': 20, 'Start': 15, 'Text': 'Sower'}], 'Name': 'Sower'}], 'intent': 'The subject is providing an analysis and evaluation of the novel "Parable of the Sower" and highlighting its relevance to contemporary societal challenges.'}}}, 'example': False}
 ```
-### Vector search over the Zep memory
 
-Zep provides native vector search over historical conversation memory via the `ZepRetriever`.
+### Zep 메모리에 대한 벡터 검색
 
-You can use the `ZepRetriever` with chains that support passing in a Langchain `Retriever` object.
+Zep은 `ZepRetriever`를 통해 역사적 대화 메모리에 대한 기본 벡터 검색을 제공합니다.
+
+Langchain `Retriever` 객체를 전달하는 것을 지원하는 체인과 함께 `ZepRetriever`를 사용할 수 있습니다.
 
 ```python
 retriever = ZepRetriever(
@@ -250,6 +260,7 @@ for r in search_results:
     if r.dist > 0.8:  # Only print results with similarity of 0.8 or higher
         print(r.message, r.dist)
 ```
+
 ```output
 {'uuid': 'ccdcc901-ea39-4981-862f-6fe22ab9289b', 'created_at': '2023-07-09T19:23:16.62678Z', 'role': 'human', 'content': 'Which other women sci-fi writers might I want to read?', 'metadata': {'system': {'entities': [], 'intent': 'The subject is seeking recommendations for additional women science fiction writers to explore.'}}, 'token_count': 14} 0.9119619869747062
 {'uuid': '7977099a-0c62-4c98-bfff-465bbab6c9c3', 'created_at': '2023-07-09T19:23:16.631721Z', 'role': 'ai', 'content': 'You might want to read Ursula K. Le Guin or Joanna Russ.', 'metadata': {'system': {'entities': [{'Label': 'ORG', 'Matches': [{'End': 40, 'Start': 23, 'Text': 'Ursula K. Le Guin'}], 'Name': 'Ursula K. Le Guin'}, {'Label': 'PERSON', 'Matches': [{'End': 55, 'Start': 44, 'Text': 'Joanna Russ'}], 'Name': 'Joanna Russ'}], 'intent': 'The subject is suggesting that the person should consider reading the works of Ursula K. Le Guin or Joanna Russ.'}}, 'token_count': 18} 0.8534346954749745

@@ -1,40 +1,42 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/milvus_hybrid_search/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/milvus_hybrid_search.ipynb
+description: Milvus 하이브리드 검색 리트리버는 밀러스의 밀집 및 희소 벡터 검색의 강점을 결합하여 비정형 데이터 검색을 용이하게 합니다.
 sidebar_label: Milvus Hybrid Search
 ---
 
-# Milvus Hybrid Search Retriever
+# Milvus 하이브리드 검색 리트리버
 
-> [Milvus](https://milvus.io/docs) is an open-source vector database built to power embedding similarity search and AI applications. Milvus makes unstructured data search more accessible, and provides a consistent user experience regardless of the deployment environment.
+> [Milvus](https://milvus.io/docs)는 임베딩 유사성 검색 및 AI 애플리케이션을 지원하기 위해 구축된 오픈 소스 벡터 데이터베이스입니다. Milvus는 비구조적 데이터 검색을 보다 접근 가능하게 만들고, 배포 환경에 관계없이 일관된 사용자 경험을 제공합니다.
 
-This will help you getting started with the Milvus Hybrid Search [retriever](/docs/concepts/#retrievers), which combines the strengths of both dense and sparse vector search. For detailed documentation of all `MilvusCollectionHybridSearchRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/retrievers/langchain_milvus.retrievers.milvus_hybrid_search.MilvusCollectionHybridSearchRetriever.html).
+이 문서는 밀버스 하이브리드 검색 [리트리버](/docs/concepts/#retrievers)를 시작하는 데 도움이 될 것입니다. 이는 밀집 벡터 검색과 희소 벡터 검색의 강점을 결합합니다. `MilvusCollectionHybridSearchRetriever`의 모든 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/retrievers/langchain_milvus.retrievers.milvus_hybrid_search.MilvusCollectionHybridSearchRetriever.html)에서 확인할 수 있습니다.
 
-See also the Milvus Multi-Vector Search [docs](https://milvus.io/docs/multi-vector-search.md).
+또한 Milvus 다중 벡터 검색 [문서](https://milvus.io/docs/multi-vector-search.md)를 참조하십시오.
 
-### Integration details
+### 통합 세부정보
 
 import {ItemTable} from "@theme/FeatureTables";
 
 <ItemTable category="document_retrievers" item="MilvusCollectionHybridSearchRetriever" />
 
 
-## Setup
+## 설정
 
-If you want to get automated tracing from individual queries, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+개별 쿼리에서 자동 추적을 원하시면 아래의 주석을 해제하여 [LangSmith](https://docs.smith.langchain.com/) API 키를 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-### Installation
 
-This retriever lives in the `langchain-milvus` package. This guide requires the following dependencies:
+### 설치
+
+이 리트리버는 `langchain-milvus` 패키지에 포함되어 있습니다. 이 가이드는 다음 종속성을 요구합니다:
 
 ```python
 %pip install --upgrade --quiet pymilvus[model] langchain-milvus langchain-openai
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "MilvusCollectionHybridSearchRetriever", "source": "langchain_milvus.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_milvus.retrievers.milvus_hybrid_search.MilvusCollectionHybridSearchRetriever.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "BM25SparseEmbedding", "source": "langchain_milvus.utils.sparse", "docs": "https://api.python.langchain.com/en/latest/utils/langchain_milvus.utils.sparse.BM25SparseEmbedding.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Milvus Hybrid Search Retriever"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Milvus Hybrid Search Retriever"}]-->
@@ -54,27 +56,30 @@ from pymilvus import (
 )
 ```
 
-### Start the Milvus service
 
-Please refer to the [Milvus documentation](https://milvus.io/docs/install_standalone-docker.md) to start the Milvus service.
+### Milvus 서비스 시작
 
-After starting milvus, you need to specify your milvus connection URI.
+Milvus 서비스를 시작하려면 [Milvus 문서](https://milvus.io/docs/install_standalone-docker.md)를 참조하십시오.
+
+Milvus를 시작한 후, Milvus 연결 URI를 지정해야 합니다.
 
 ```python
 CONNECTION_URI = "http://localhost:19530"
 ```
 
-### Prepare OpenAI API Key
 
-Please refer to the [OpenAI documentation](https://platform.openai.com/account/api-keys) to obtain your OpenAI API key, and set it as an environment variable.
+### OpenAI API 키 준비
+
+OpenAI API 키를 얻으려면 [OpenAI 문서](https://platform.openai.com/account/api-keys)를 참조하고, 이를 환경 변수로 설정하십시오.
 
 ```shell
 export OPENAI_API_KEY=<your_api_key>
 ```
 
-### Prepare dense and sparse embedding functions
 
-Let us fictionalize 10 fake descriptions of novels. In actual production, it may be a large amount of text data.
+### 밀집 및 희소 임베딩 함수 준비
+
+10개의 가상의 소설 설명을 만들어 봅시다. 실제 생산에서는 대량의 텍스트 데이터가 될 수 있습니다.
 
 ```python
 texts = [
@@ -91,9 +96,10 @@ texts = [
 ]
 ```
 
-We will use the [OpenAI Embedding](https://platform.openai.com/docs/guides/embeddings) to generate dense vectors, and the [BM25 algorithm](https://en.wikipedia.org/wiki/Okapi_BM25) to generate sparse vectors.
 
-Initialize dense embedding function and get dimension
+밀집 벡터를 생성하기 위해 [OpenAI Embedding](https://platform.openai.com/docs/guides/embeddings)을 사용하고, 희소 벡터를 생성하기 위해 [BM25 알고리즘](https://en.wikipedia.org/wiki/Okapi_BM25)을 사용합니다.
+
+밀집 임베딩 함수를 초기화하고 차원을 가져옵니다.
 
 ```python
 dense_embedding_func = OpenAIEmbeddings()
@@ -101,18 +107,21 @@ dense_dim = len(dense_embedding_func.embed_query(texts[1]))
 dense_dim
 ```
 
+
 ```output
 1536
 ```
 
-Initialize sparse embedding function.
 
-Note that the output of sparse embedding is a set of sparse vectors, which represents the index and weight of the keywords of the input text.
+희소 임베딩 함수를 초기화합니다.
+
+희소 임베딩의 출력은 입력 텍스트의 키워드의 인덱스와 가중치를 나타내는 희소 벡터 집합입니다.
 
 ```python
 sparse_embedding_func = BM25SparseEmbedding(corpus=texts)
 sparse_embedding_func.embed_query(texts[1])
 ```
+
 
 ```output
 {0: 0.4270424944042204,
@@ -137,15 +146,17 @@ sparse_embedding_func.embed_query(texts[1])
  39: 1.845826690498331}
 ```
 
-### Create Milvus Collection and load data
 
-Initialize connection URI and establish connection
+### Milvus 컬렉션 생성 및 데이터 로드
+
+연결 URI를 초기화하고 연결을 설정합니다.
 
 ```python
 connections.connect(uri=CONNECTION_URI)
 ```
 
-Define field names and their data types
+
+필드 이름과 데이터 유형을 정의합니다.
 
 ```python
 pk_field = "doc_id"
@@ -166,7 +177,8 @@ fields = [
 ]
 ```
 
-Create a collection with the defined schema
+
+정의된 스키마로 컬렉션을 생성합니다.
 
 ```python
 schema = CollectionSchema(fields=fields, enable_dynamic_field=False)
@@ -175,7 +187,8 @@ collection = Collection(
 )
 ```
 
-Define index for dense and sparse vectors
+
+밀집 및 희소 벡터에 대한 인덱스를 정의합니다.
 
 ```python
 dense_index = {"index_type": "FLAT", "metric_type": "IP"}
@@ -185,7 +198,8 @@ collection.create_index("sparse_vector", sparse_index)
 collection.flush()
 ```
 
-Insert entities into the collection and load the collection
+
+컬렉션에 엔티티를 삽입하고 컬렉션을 로드합니다.
 
 ```python
 entities = []
@@ -200,9 +214,10 @@ collection.insert(entities)
 collection.load()
 ```
 
-## Instantiation
 
-Now we can instantiate our retriever, defining search parameters for sparse and dense fields:
+## 인스턴스화
+
+이제 리트리버를 인스턴스화하고 희소 및 밀집 필드에 대한 검색 매개변수를 정의할 수 있습니다:
 
 ```python
 sparse_search_params = {"metric_type": "IP"}
@@ -218,13 +233,15 @@ retriever = MilvusCollectionHybridSearchRetriever(
 )
 ```
 
-In the input parameters of this Retriever, we use a dense embedding and a sparse embedding to perform hybrid search on the two fields of this Collection, and use WeightedRanker for reranking. Finally, 3 top-K Documents will be returned.
 
-## Usage
+이 리트리버의 입력 매개변수에서 밀집 임베딩과 희소 임베딩을 사용하여 이 컬렉션의 두 필드에서 하이브리드 검색을 수행하고, 재순위를 위해 WeightedRanker를 사용합니다. 마지막으로, 상위 K개의 문서 3개가 반환됩니다.
+
+## 사용법
 
 ```python
 retriever.invoke("What are the story about ventures?")
 ```
+
 
 ```output
 [Document(page_content="In 'The Lost Expedition' by Caspian Grey, a team of explorers ventures into the heart of the Amazon rainforest in search of a lost city, but soon finds themselves hunted by a ruthless treasure hunter and the treacherous jungle itself.", metadata={'doc_id': '449281835035545843'}),
@@ -232,9 +249,10 @@ retriever.invoke("What are the story about ventures?")
  Document(page_content="In 'The Dreamwalker's Journey' by Lyra Snow, a young dreamwalker discovers she has the ability to enter people's dreams, but soon finds herself trapped in a surreal world of nightmares and illusions, where the boundaries between reality and fantasy blur.", metadata={'doc_id': '449281835035545846'})]
 ```
 
-## Use within a chain
 
-Initialize ChatOpenAI and define a prompt template
+## 체인 내에서 사용
+
+ChatOpenAI를 초기화하고 프롬프트 템플릿을 정의합니다.
 
 ```python
 llm = ChatOpenAI()
@@ -258,14 +276,16 @@ prompt = PromptTemplate(
 )
 ```
 
-Define a function for formatting documents
+
+문서를 포맷하는 함수를 정의합니다.
 
 ```python
 def format_docs(docs):
     return "\n\n".join(doc.page_content for doc in docs)
 ```
 
-Define a chain using the retriever and other components
+
+리트리버 및 기타 구성 요소를 사용하여 체인을 정의합니다.
 
 ```python
 rag_chain = (
@@ -276,27 +296,31 @@ rag_chain = (
 )
 ```
 
-Perform a query using the defined chain
+
+정의된 체인을 사용하여 쿼리를 수행합니다.
 
 ```python
 rag_chain.invoke("What novels has Lila written and what are their contents?")
 ```
 
+
 ```output
 "Lila Rose has written 'The Memory Thief,' which follows a charismatic thief with the ability to steal and manipulate memories as they navigate a daring heist and a web of deceit and betrayal."
 ```
 
-Drop the collection
+
+컬렉션을 삭제합니다.
 
 ```python
 collection.drop()
 ```
 
-## API reference
 
-For detailed documentation of all `MilvusCollectionHybridSearchRetriever` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/retrievers/langchain_milvus.retrievers.milvus_hybrid_search.MilvusCollectionHybridSearchRetriever.html).
+## API 참조
 
-## Related
+`MilvusCollectionHybridSearchRetriever`의 모든 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/retrievers/langchain_milvus.retrievers.milvus_hybrid_search.MilvusCollectionHybridSearchRetriever.html)에서 확인할 수 있습니다.
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 리트리버 [개념 가이드](/docs/concepts/#retrievers)
+- 리트리버 [사용 방법 가이드](/docs/how_to/#retrievers)

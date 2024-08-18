@@ -1,33 +1,35 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/diffbot/
+description: Diffbot은 웹 데이터를 구조화하고 통합하는 ML 기반 제품 모음으로, Extract API를 통해 페이지 내용을 쉽게
+  처리합니다.
 ---
 
 # Diffbot
 
-> [Diffbot](https://docs.diffbot.com/docs) is a suite of ML-based products that make it easy to structure and integrate web data.
+> [Diffbot](https://docs.diffbot.com/docs)는 웹 데이터를 구조화하고 통합하는 것을 쉽게 만들어주는 ML 기반 제품 모음입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-[Get a free Diffbot API token](https://app.diffbot.com/get-started/) and [follow these instructions](https://docs.diffbot.com/reference/authentication) to authenticate your requests.
+[무료 Diffbot API 토큰을 받으세요](https://app.diffbot.com/get-started/) 그리고 [이 지침을 따르세요](https://docs.diffbot.com/reference/authentication) 요청을 인증합니다.
 
-## Document Loader
+## 문서 로더
 
-Diffbot's [Extract API](https://docs.diffbot.com/reference/extract-introduction) is a service that structures and normalizes data from web pages. 
+Diffbot의 [Extract API](https://docs.diffbot.com/reference/extract-introduction)는 웹 페이지에서 데이터를 구조화하고 정규화하는 서비스입니다.
 
-Unlike traditional web scraping tools, `Diffbot Extract` doesn't require any rules to read the content on a page. It uses a computer vision model to classify a page into one of 20 possible types, and then transforms raw HTML markup into JSON. The resulting structured JSON follows a consistent [type-based ontology](https://docs.diffbot.com/docs/ontology), which makes it easy to extract data from multiple different web sources with the same schema. 
+전통적인 웹 스크래핑 도구와 달리, `Diffbot Extract`는 페이지의 내용을 읽기 위해 어떤 규칙도 필요하지 않습니다. 컴퓨터 비전 모델을 사용하여 페이지를 20가지 가능한 유형 중 하나로 분류한 다음, 원시 HTML 마크업을 JSON으로 변환합니다. 결과로 생성된 구조화된 JSON은 일관된 [유형 기반 온톨로지](https://docs.diffbot.com/docs/ontology)를 따르므로 동일한 스키마를 가진 여러 다른 웹 소스에서 데이터를 쉽게 추출할 수 있습니다.
 
-See a [usage example](/docs/integrations/document_loaders/diffbot).
+[사용 예시를 보세요](/docs/integrations/document_loaders/diffbot).
 
 ```python
 <!--IMPORTS:[{"imported": "DiffbotLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.diffbot.DiffbotLoader.html", "title": "Diffbot"}]-->
 from langchain_community.document_loaders import DiffbotLoader
 ```
 
-## Graphs
 
-Diffbot's [Natural Language Processing API](https://www.diffbot.com/products/natural-language/) allows for the extraction of entities, relationships, and semantic meaning from unstructured text data.
+## 그래프
 
-See a [usage example](/docs/integrations/graphs/diffbot).
+Diffbot의 [자연어 처리 API](https://www.diffbot.com/products/natural-language/)는 비구조화된 텍스트 데이터에서 엔티티, 관계 및 의미를 추출할 수 있게 해줍니다.
+
+[사용 예시를 보세요](/docs/integrations/graphs/diffbot).
 
 ```python
 <!--IMPORTS:[{"imported": "DiffbotGraphTransformer", "source": "langchain_experimental.graph_transformers.diffbot", "docs": "https://api.python.langchain.com/en/latest/graph_transformers/langchain_experimental.graph_transformers.diffbot.DiffbotGraphTransformer.html", "title": "Diffbot"}]-->

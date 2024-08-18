@@ -1,36 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/xata/
+description: Xata는 PostgreSQL 기반의 서버리스 데이터 플랫폼으로, Python SDK와 UI를 제공하여 데이터 관리 및 유사성
+  검색을 지원합니다.
 ---
 
 # Xata
 
-> [Xata](https://xata.io) is a serverless data platform, based on `PostgreSQL`.
-It provides a Python SDK for interacting with your database, and a UI
-for managing your data.
-`Xata` has a native vector type, which can be added to any table, and
-supports similarity search. LangChain inserts vectors directly to `Xata`,
-and queries it for the nearest neighbors of a given vector, so that you can
-use all the LangChain Embeddings integrations with `Xata`.
+> [Xata](https://xata.io)는 `PostgreSQL` 기반의 서버리스 데이터 플랫폼입니다.  
+데이터베이스와 상호작용하기 위한 Python SDK와 데이터를 관리하기 위한 UI를 제공합니다.  
+`Xata`는 모든 테이블에 추가할 수 있는 네이티브 벡터 유형을 가지고 있으며, 유사성 검색을 지원합니다.  
+LangChain은 벡터를 `Xata`에 직접 삽입하고, 주어진 벡터의 가장 가까운 이웃을 쿼리하여 `Xata`와 함께 모든 LangChain Embeddings 통합을 사용할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-We need to install `xata` python package.
+`xata` 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install xata==1.0.0a7 
 ```
 
-## Vector Store
 
-See a [usage example](/docs/integrations/vectorstores/xata).
+## 벡터 저장소
+
+[사용 예시](/docs/integrations/vectorstores/xata)를 참조하세요.
 
 ```python
 from langchain_community.vectorstores import XataVectorStore
 ```
 
-## Memory
 
-See a [usage example](/docs/integrations/memory/xata_chat_message_history).
+## 메모리
+
+[사용 예시](/docs/integrations/memory/xata_chat_message_history)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "XataChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.xata.XataChatMessageHistory.html", "title": "Xata"}]-->

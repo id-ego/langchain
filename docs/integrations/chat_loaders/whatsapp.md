@@ -1,26 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat_loaders/whatsapp/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat_loaders/whatsapp.ipynb
+description: 이 문서는 WhatsApp 대화를 LangChain 채팅 메시지로 변환하는 WhatsAppChatLoader 사용 방법을 설명합니다.
 ---
 
 # WhatsApp
 
-This notebook shows how to use the WhatsApp chat loader. This class helps map exported WhatsApp conversations to LangChain chat messages.
+이 노트북은 WhatsApp 채팅 로더를 사용하는 방법을 보여줍니다. 이 클래스는 내보낸 WhatsApp 대화를 LangChain 채팅 메시지에 매핑하는 데 도움을 줍니다.
 
-The process has three steps:
-1. Export the chat conversations to computer
-2. Create the `WhatsAppChatLoader` with the file path pointed to the json file or directory of JSON files
-3. Call `loader.load()` (or `loader.lazy_load()`) to perform the conversion.
+프로세스는 세 단계로 구성됩니다:
+1. 채팅 대화를 컴퓨터로 내보내기
+2. JSON 파일 또는 JSON 파일 디렉토리를 가리키는 파일 경로로 `WhatsAppChatLoader` 생성
+3. 변환을 수행하기 위해 `loader.load()` (또는 `loader.lazy_load()`) 호출
 
-## 1. Create message dump
+## 1. 메시지 덤프 생성
 
-To make the export of your WhatsApp conversation(s), complete the following steps:
+WhatsApp 대화를 내보내려면 다음 단계를 완료하세요:
 
-1. Open the target conversation
-2. Click the three dots in the top right corner and select "More".
-3. Then select "Export chat" and choose "Without media".
+1. 대상 대화를 엽니다.
+2. 오른쪽 상단 모서리에 있는 세 개의 점을 클릭하고 "더보기"를 선택합니다.
+3. 그런 다음 "채팅 내보내기"를 선택하고 "미디어 없이"를 선택합니다.
 
-An example of the data format for each conversation is below: 
+각 대화에 대한 데이터 형식의 예는 아래와 같습니다: 
 
 ```python
 %%writefile whatsapp_chat.txt
@@ -37,19 +37,23 @@ An example of the data format for each conversation is below:
 [8/15/23, 9:15:20 AM] Dr. Feather: Thank you! I'll send you a draft soon.
 [8/15/23, 9:25:16 PM] Jungle Jane: Looking forward to it! Keep up the great work.
 ```
+
 ```output
 Writing whatsapp_chat.txt
 ```
-## 2. Create the Chat Loader
 
-The WhatsAppChatLoader accepts the resulting zip file, unzipped directory, or the path to any of the chat `.txt` files therein.
 
-Provide that as well as the user name you want to take on the role of "AI" when fine-tuning.
+## 2. 채팅 로더 생성
+
+WhatsAppChatLoader는 결과 zip 파일, 압축 해제된 디렉토리 또는 그 안에 있는 채팅 `.txt` 파일의 경로를 수락합니다.
+
+그것과 함께 "AI" 역할을 맡고 싶은 사용자 이름을 제공하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "WhatsAppChatLoader", "source": "langchain_community.chat_loaders.whatsapp", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.whatsapp.WhatsAppChatLoader.html", "title": "WhatsApp"}]-->
 from langchain_community.chat_loaders.whatsapp import WhatsAppChatLoader
 ```
+
 
 ```python
 loader = WhatsAppChatLoader(
@@ -57,9 +61,10 @@ loader = WhatsAppChatLoader(
 )
 ```
 
-## 3. Load messages
 
-The `load()` (or `lazy_load`) methods return a list of "ChatSessions" that currently store the list of messages per loaded conversation.
+## 3. 메시지 로드
+
+`load()` (또는 `lazy_load`) 메서드는 현재 로드된 대화당 메시지 목록을 저장하는 "ChatSessions" 목록을 반환합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "map_ai_messages", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.map_ai_messages.html", "title": "WhatsApp"}, {"imported": "merge_chat_runs", "source": "langchain_community.chat_loaders.utils", "docs": "https://api.python.langchain.com/en/latest/chat_loaders/langchain_community.chat_loaders.utils.merge_chat_runs.html", "title": "WhatsApp"}, {"imported": "ChatSession", "source": "langchain_core.chat_sessions", "docs": "https://api.python.langchain.com/en/latest/chat_sessions/langchain_core.chat_sessions.ChatSession.html", "title": "WhatsApp"}]-->
@@ -80,6 +85,7 @@ messages: List[ChatSession] = list(
 )
 ```
 
+
 ```output
 [{'messages': [AIMessage(content='I spotted a rare Hyacinth Macaw yesterday in the Amazon Rainforest. Such a magnificent creature!', additional_kwargs={'sender': 'Dr. Feather', 'events': [{'message_time': '8/15/23, 9:12:43 AM'}]}, example=False),
    HumanMessage(content="That's stunning! Were you able to observe its behavior?", additional_kwargs={'sender': 'Jungle Jane', 'events': [{'message_time': '8/15/23, 9:13:15 AM'}]}, example=False),
@@ -91,9 +97,10 @@ messages: List[ChatSession] = list(
    HumanMessage(content='Looking forward to it! Keep up the great work.', additional_kwargs={'sender': 'Jungle Jane', 'events': [{'message_time': '8/15/23, 9:25:16 PM'}]}, example=False)]}]
 ```
 
-### Next Steps
 
-You can then use these messages how you see fit, such as fine-tuning a model, few-shot example selection, or directly make predictions for the next message.
+### 다음 단계
+
+그런 다음 이러한 메시지를 모델 미세 조정, 몇 가지 예제 선택 또는 다음 메시지에 대한 직접 예측과 같이 원하는 대로 사용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "WhatsApp"}]-->
@@ -104,6 +111,7 @@ llm = ChatOpenAI()
 for chunk in llm.stream(messages[0]["messages"]):
     print(chunk.content, end="", flush=True)
 ```
+
 ```output
 Thank you for the encouragement! I'll do my best to continue studying and sharing fascinating insights about parrot communication.
 ```

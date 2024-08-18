@@ -1,30 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/unstructured_file/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/unstructured_file.ipynb
+description: 이 노트북은 다양한 파일 유형을 로드하는 `Unstructured` 문서 로더 사용법을 다룹니다. 텍스트, 파워포인트, PDF
+  등 지원.
 ---
 
-# Unstructured
+# 비구조적
 
-This notebook covers how to use `Unstructured` [document loader](https://python.langchain.com/v0.2/docs/concepts/#document-loaders) to load files of many types. `Unstructured` currently supports loading of text files, powerpoints, html, pdfs, images, and more.
+이 노트북에서는 다양한 유형의 파일을 로드하기 위해 `Unstructured` [문서 로더](https://python.langchain.com/v0.2/docs/concepts/#document-loaders)를 사용하는 방법을 다룹니다. `Unstructured`는 현재 텍스트 파일, 파워포인트, HTML, PDF, 이미지 등을 로드하는 것을 지원합니다.
 
-Please see [this guide](../../integrations/providers/unstructured.mdx) for more instructions on setting up Unstructured locally, including setting up required system dependencies.
+로컬에서 Unstructured를 설정하는 방법에 대한 추가 지침은 [이 가이드](../../integrations/providers/unstructured.mdx)를 참조하세요. 여기에는 필요한 시스템 종속성 설정이 포함되어 있습니다.
 
-## Overview
-### Integration details
+## 개요
+### 통합 세부정보
 
-| Class | Package | Local | Serializable | [JS support](https://js.langchain.com/v0.2/docs/integrations/document_loaders/file_loaders/unstructured/)|
+| 클래스 | 패키지 | 로컬 | 직렬화 가능 | [JS 지원](https://js.langchain.com/v0.2/docs/integrations/document_loaders/file_loaders/unstructured/)|
 | :--- | :--- | :---: | :---: |  :---: |
 | [UnstructuredLoader](https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html) | [langchain_community](https://api.python.langchain.com/en/latest/unstructured_api_reference.html) | ✅ | ❌ | ✅ | 
-### Loader features
-| Source | Document Lazy Loading | Native Async Support
+### 로더 기능
+| 소스 | 문서 지연 로딩 | 네이티브 비동기 지원
 | :---: | :---: | :---: |
 | UnstructuredLoader | ✅ | ❌ | 
 
-## Setup
+## 설정
 
-### Credentials
+### 자격 증명
 
-By default, `langchain-unstructured` installs a smaller footprint that requires offloading of the partitioning logic to the Unstructured API, which requires an API key. If you use the local installation, you do not need an API key. To get your API key, head over to [this site](https://unstructured.io) and get an API key, and then set it in the cell below:
+기본적으로 `langchain-unstructured`는 파티셔닝 로직을 Unstructured API에 오프로드해야 하는 작은 풋프린트를 설치하며, 이는 API 키가 필요합니다. 로컬 설치를 사용하는 경우 API 키가 필요하지 않습니다. API 키를 얻으려면 [이 사이트](https://unstructured.io)로 이동하여 API 키를 얻고, 아래 셀에 설정하세요:
 
 ```python
 import getpass
@@ -35,22 +36,24 @@ os.environ["UNSTRUCTURED_API_KEY"] = getpass.getpass(
 )
 ```
 
-### Installation
 
-#### Normal Installation
+### 설치
 
-The following packages are required to run the rest of this notebook.
+#### 일반 설치
+
+이 노트북의 나머지를 실행하려면 다음 패키지가 필요합니다.
 
 ```python
 # Install package, compatible with API partitioning
 %pip install --upgrade --quiet langchain-unstructured unstructured-client unstructured "unstructured[pdf]" python-magic
 ```
 
-#### Installation for Local
 
-If you would like to run the partitioning logic locally, you will need to install a combination of system dependencies, as outlined in the [Unstructured documentation here](https://docs.unstructured.io/open-source/installation/full-installation).
+#### 로컬 설치
 
-For example, on Macs you can install the required dependencies with:
+파티셔닝 로직을 로컬에서 실행하려면, [Unstructured 문서 여기](https://docs.unstructured.io/open-source/installation/full-installation)에 설명된 시스템 종속성 조합을 설치해야 합니다.
+
+예를 들어, Mac에서는 다음과 같이 필요한 종속성을 설치할 수 있습니다:
 
 ```bash
 # base dependencies
@@ -60,15 +63,17 @@ brew install libmagic poppler tesseract
 brew install libxml2 libxslt
 ```
 
-You can install the required `pip` dependencies needed for local with:
+
+로컬에 필요한 `pip` 종속성을 설치하려면:
 
 ```bash
 pip install "langchain-unstructured[local]"
 ```
 
-## Initialization
 
-The `UnstructuredLoader` allows loading from a variety of different file types. To read all about the `unstructured` package please refer to their [documentation](https://docs.unstructured.io/open-source/introduction/overview)/. In this example, we show loading from both a text file and a PDF file.
+## 초기화
+
+`UnstructuredLoader`는 다양한 파일 유형에서 로드를 허용합니다. `unstructured` 패키지에 대한 모든 내용을 읽으려면 그들의 [문서](https://docs.unstructured.io/open-source/introduction/overview)/를 참조하세요. 이 예제에서는 텍스트 파일과 PDF 파일에서 로드하는 방법을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
@@ -83,29 +88,35 @@ file_paths = [
 loader = UnstructuredLoader(file_paths)
 ```
 
-## Load
+
+## 로드
 
 ```python
 docs = loader.load()
 
 docs[0]
 ```
+
 ```output
 INFO: NumExpr defaulting to 12 threads.
 INFO: pikepdf C++ to Python logger bridge initialized
 ```
 
+
 ```output
 Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((16.34, 213.36), (16.34, 253.36), (36.34, 253.36), (36.34, 213.36)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-07-25T21:28:58', 'page_number': 1, 'filetype': 'application/pdf', 'category': 'UncategorizedText', 'element_id': 'd3ce55f220dfb75891b4394a18bcb973'}, page_content='1 2 0 2')
 ```
 
+
 ```python
 print(docs[0].metadata)
 ```
+
 ```output
 {'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((16.34, 213.36), (16.34, 253.36), (36.34, 253.36), (36.34, 213.36)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-07-25T21:28:58', 'page_number': 1, 'filetype': 'application/pdf', 'category': 'UncategorizedText', 'element_id': 'd3ce55f220dfb75891b4394a18bcb973'}
 ```
-## Lazy Load
+
+## 지연 로드
 
 ```python
 pages = []
@@ -115,14 +126,15 @@ for doc in loader.lazy_load():
 pages[0]
 ```
 
+
 ```output
 Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((16.34, 213.36), (16.34, 253.36), (36.34, 253.36), (36.34, 213.36)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-07-25T21:28:58', 'page_number': 1, 'filetype': 'application/pdf', 'category': 'UncategorizedText', 'element_id': 'd3ce55f220dfb75891b4394a18bcb973'}, page_content='1 2 0 2')
 ```
 
-## Post Processing
 
-If you need to post process the `unstructured` elements after extraction, you can pass in a list of
-`str` -> `str` functions to the `post_processors` kwarg when you instantiate the `UnstructuredLoader`. This applies to other Unstructured loaders as well. Below is an example.
+## 후처리
+
+추출 후 `unstructured` 요소를 후처리해야 하는 경우, `UnstructuredLoader`를 인스턴스화할 때 `post_processors` kwarg에 `str` -> `str` 함수 목록을 전달할 수 있습니다. 이는 다른 Unstructured 로더에도 적용됩니다. 아래는 예시입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
@@ -139,6 +151,7 @@ docs = loader.load()
 docs[5:10]
 ```
 
+
 ```output
 [Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((16.34, 393.9), (16.34, 560.0), (36.34, 560.0), (36.34, 393.9)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-02-27T15:49:27', 'page_number': 1, 'parent_id': '89565df026a24279aaea20dc08cedbec', 'filetype': 'application/pdf', 'category': 'UncategorizedText', 'element_id': 'e9fa370aef7ee5c05744eb7bb7d9981b'}, page_content='2 v 8 4 3 5 1 . 3 0 1 2 : v i X r a'),
  Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((157.62199999999999, 114.23496279999995), (157.62199999999999, 146.5141628), (457.7358962799999, 146.5141628), (457.7358962799999, 114.23496279999995)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-02-27T15:49:27', 'page_number': 1, 'filetype': 'application/pdf', 'category': 'Title', 'element_id': 'bde0b230a1aa488e3ce837d33015181b'}, page_content='LayoutParser: A Uniﬁed Toolkit for Deep Learning Based Document Image Analysis'),
@@ -147,18 +160,15 @@ docs[5:10]
  Document(metadata={'source': './example_data/layout-parser-paper.pdf', 'coordinates': {'points': ((162.779, 338.45008160000003), (162.779, 566.8455408), (454.0372021523199, 566.8455408), (454.0372021523199, 338.45008160000003)), 'system': 'PixelSpace', 'layout_width': 612, 'layout_height': 792}, 'file_directory': './example_data', 'filename': 'layout-parser-paper.pdf', 'languages': ['eng'], 'last_modified': '2024-02-27T15:49:27', 'links': [{'text': ':// layout - parser . github . io', 'url': 'https://layout-parser.github.io', 'start_index': 1477}], 'page_number': 1, 'parent_id': 'bde0b230a1aa488e3ce837d33015181b', 'filetype': 'application/pdf', 'category': 'NarrativeText', 'element_id': 'cfc957c94fe63c8fd7c7f4bcb56e75a7'}, page_content='Abstract. Recent advances in document image analysis (DIA) have been primarily driven by the application of neural networks. Ideally, research outcomes could be easily deployed in production and extended for further investigation. However, various factors like loosely organized codebases and sophisticated model conﬁgurations complicate the easy reuse of im- portant innovations by a wide audience. Though there have been on-going eﬀorts to improve reusability and simplify deep learning (DL) model development in disciplines like natural language processing and computer vision, none of them are optimized for challenges in the domain of DIA. This represents a major gap in the existing toolkit, as DIA is central to academic research across a wide range of disciplines in the social sciences and humanities. This paper introduces LayoutParser, an open-source library for streamlining the usage of DL in DIA research and applica- tions. The core LayoutParser library comes with a set of simple and intuitive interfaces for applying and customizing DL models for layout de- tection, character recognition, and many other document processing tasks. To promote extensibility, LayoutParser also incorporates a community platform for sharing both pre-trained models and full document digiti- zation pipelines. We demonstrate that LayoutParser is helpful for both lightweight and large-scale digitization pipelines in real-word use cases. The library is publicly available at https://layout-parser.github.io.')]
 ```
 
+
 ## Unstructured API
 
-If you want to get up and running with smaller packages and get the most up-to-date partitioning you can `pip install unstructured-client` and `pip install langchain-unstructured`. For
-more information about the `UnstructuredLoader`, refer to the
-[Unstructured provider page](https://python.langchain.com/v0.1/docs/integrations/document_loaders/unstructured_file/).
+더 작은 패키지로 시작하고 최신 파티셔닝을 얻으려면 `pip install unstructured-client` 및 `pip install langchain-unstructured`를 실행할 수 있습니다. `UnstructuredLoader`에 대한 더 많은 정보는
+[Unstructured 제공자 페이지](https://python.langchain.com/v0.1/docs/integrations/document_loaders/unstructured_file/)를 참조하세요.
 
-The loader will process your document using the hosted Unstructured serverless API when you pass in
-your `api_key` and set `partition_via_api=True`. You can generate a free
-Unstructured API key [here](https://unstructured.io/api-key/).
+로더는 `api_key`를 전달하고 `partition_via_api=True`로 설정할 때 호스팅된 Unstructured 서버리스 API를 사용하여 문서를 처리합니다. 무료 Unstructured API 키를 [여기](https://unstructured.io/api-key/)에서 생성할 수 있습니다.
 
-Check out the instructions [here](https://github.com/Unstructured-IO/unstructured-api#dizzy-instructions-for-using-the-docker-image)
-if you’d like to self-host the Unstructured API or run it locally.
+Unstructured API를 자체 호스팅하거나 로컬에서 실행하려면 [여기](https://github.com/Unstructured-IO/unstructured-api#dizzy-instructions-for-using-the-docker-image)에서 지침을 확인하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
@@ -173,6 +183,7 @@ loader = UnstructuredLoader(
 docs = loader.load()
 docs[0]
 ```
+
 ```output
 INFO: Preparing to split document for partition.
 INFO: Given file doesn't have '.pdf' extension, so splitting is not enabled.
@@ -180,11 +191,13 @@ INFO: Partitioning without split.
 INFO: Successfully partitioned the document.
 ```
 
+
 ```output
 Document(metadata={'source': 'example_data/fake.docx', 'category_depth': 0, 'filename': 'fake.docx', 'languages': ['por', 'cat'], 'filetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'category': 'Title', 'element_id': '56d531394823d81787d77a04462ed096'}, page_content='Lorem ipsum dolor sit amet.')
 ```
 
-You can also batch multiple files through the Unstructured API in a single API using `UnstructuredLoader`.
+
+`UnstructuredLoader`를 사용하여 단일 API에서 여러 파일을 배치로 처리할 수도 있습니다.
 
 ```python
 loader = UnstructuredLoader(
@@ -198,6 +211,7 @@ docs = loader.load()
 print(docs[0].metadata["filename"], ": ", docs[0].page_content[:100])
 print(docs[-1].metadata["filename"], ": ", docs[-1].page_content[:100])
 ```
+
 ```output
 INFO: Preparing to split document for partition.
 INFO: Given file doesn't have '.pdf' extension, so splitting is not enabled.
@@ -211,14 +225,15 @@ INFO: Successfully partitioned the document.
 fake.docx :  Lorem ipsum dolor sit amet.
 fake-email.eml :  Violets are blue
 ```
-### Unstructured SDK Client
 
-Partitioning with the Unstructured API relies on the [Unstructured SDK
-Client](https://docs.unstructured.io/api-reference/api-services/sdk).
+### Unstructured SDK 클라이언트
 
-Below is an example showing how you can customize some features of the client and use your own `requests.Session()`, pass in an alternative `server_url`, or customize the `RetryConfig` object for more control over how failed requests are handled.
+Unstructured API로의 파티셔닝은 [Unstructured SDK
+Client](https://docs.unstructured.io/api-reference/api-services/sdk)에 의존합니다.
 
-Note that the example below may not use the latest version of the UnstructuredClient and there could be breaking changes in future releases. For the latest examples, refer to the [Unstructured Python SDK](https://docs.unstructured.io/api-reference/api-services/sdk-python) docs.
+아래는 클라이언트의 일부 기능을 사용자 정의하고 자신의 `requests.Session()`을 사용하거나 대체 `server_url`을 전달하거나 실패한 요청 처리에 대한 더 많은 제어를 위해 `RetryConfig` 객체를 사용자 정의하는 방법을 보여주는 예입니다.
+
+아래 예제는 최신 버전의 UnstructuredClient를 사용하지 않을 수 있으며 향후 릴리스에서 중단된 변경 사항이 있을 수 있습니다. 최신 예제는 [Unstructured Python SDK](https://docs.unstructured.io/api-reference/api-services/sdk-python) 문서를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
@@ -255,6 +270,7 @@ docs = loader.load()
 
 print(docs[0].metadata["filename"], ": ", docs[0].page_content[:100])
 ```
+
 ```output
 INFO: Preparing to split document for partition.
 INFO: Concurrency level set to 5
@@ -276,22 +292,12 @@ INFO: Successfully partitioned the document.
 ``````output
 layout-parser-paper.pdf :  LayoutParser: A Uniﬁed Toolkit for Deep Learning Based Document Image Analysis
 ```
-## Chunking
 
-The `UnstructuredLoader` does not support `mode` as parameter for grouping text like the older
-loader `UnstructuredFileLoader` and others did. It instead supports "chunking". Chunking in
-unstructured differs from other chunking mechanisms you may be familiar with that form chunks based
-on plain-text features--character sequences like "\n\n" or "\n" that might indicate a paragraph
-boundary or list-item boundary. Instead, all documents are split using specific knowledge about each
-document format to partition the document into semantic units (document elements) and we only need to
-resort to text-splitting when a single element exceeds the desired maximum chunk size. In general,
-chunking combines consecutive elements to form chunks as large as possible without exceeding the
-maximum chunk size. Chunking produces a sequence of CompositeElement, Table, or TableChunk elements.
-Each “chunk” is an instance of one of these three types.
+## 청킹
 
-See this [page](https://docs.unstructured.io/open-source/core-functionality/chunking) for more
-details about chunking options, but to reproduce the same behavior as `mode="single"`, you can set
-`chunking_strategy="basic"`, `max_characters=<some-really-big-number>`, and `include_orig_elements=False`.
+`UnstructuredLoader`는 이전 로더인 `UnstructuredFileLoader`와 다른 로더들이 했던 것처럼 텍스트 그룹화를 위한 `mode` 매개변수를 지원하지 않습니다. 대신 "청킹"을 지원합니다. 비구조적 청킹은 일반적으로 알고 있는 다른 청킹 메커니즘과 다르며, 일반적으로 "\n\n" 또는 "\n"과 같은 문장 경계나 목록 항목 경계를 나타낼 수 있는 일반 텍스트 기능을 기반으로 청크를 형성합니다. 대신 모든 문서는 각 문서 형식에 대한 특정 지식을 사용하여 문서를 의미 단위(문서 요소)로 파티셔닝하기 위해 분할되며, 단일 요소가 원하는 최대 청크 크기를 초과할 때만 텍스트 분할에 의존해야 합니다. 일반적으로 청킹은 최대 청크 크기를 초과하지 않도록 가능한 한 큰 청크를 형성하기 위해 연속 요소를 결합합니다. 청킹은 CompositeElement, Table 또는 TableChunk 요소의 시퀀스를 생성합니다. 각 “청크”는 이 세 가지 유형 중 하나의 인스턴스입니다.
+
+청킹 옵션에 대한 자세한 내용은 [이 페이지](https://docs.unstructured.io/open-source/core-functionality/chunking)를 참조하세요. 그러나 `mode="single"`과 동일한 동작을 재현하려면 `chunking_strategy="basic"`, `max_characters=<some-really-big-number>`, 및 `include_orig_elements=False`를 설정할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "UnstructuredLoader", "source": "langchain_unstructured", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html", "title": "Unstructured"}]-->
@@ -309,17 +315,19 @@ docs = loader.load()
 print("Number of LangChain documents:", len(docs))
 print("Length of text in the document:", len(docs[0].page_content))
 ```
+
 ```output
 WARNING: Partitioning locally even though api_key is defined since partition_via_api=False.
 ``````output
 Number of LangChain documents: 1
 Length of text in the document: 42772
 ```
-## API reference
 
-For detailed documentation of all `UnstructuredLoader` features and configurations head to the API reference: https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html
+## API 참조
 
-## Related
+모든 `UnstructuredLoader` 기능 및 구성에 대한 자세한 문서는 API 참조를 참조하세요: https://api.python.langchain.com/en/latest/document_loaders/langchain_unstructured.document_loaders.UnstructuredLoader.html
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

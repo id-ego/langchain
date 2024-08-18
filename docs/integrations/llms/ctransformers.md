@@ -1,21 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/ctransformers/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/ctransformers.ipynb
+description: C Transformers 라이브러리는 GGML 모델을 위한 Python 바인딩을 제공하며, LangChain을 사용하여 모델과
+  상호작용하는 방법을 설명합니다.
 ---
 
 # C Transformers
 
-The [C Transformers](https://github.com/marella/ctransformers) library provides Python bindings for GGML models.
+[C Transformers](https://github.com/marella/ctransformers) 라이브러리는 GGML 모델을 위한 Python 바인딩을 제공합니다.
 
-This example goes over how to use LangChain to interact with `C Transformers` [models](https://github.com/marella/ctransformers#supported-models).
+이 예제는 LangChain을 사용하여 `C Transformers` [모델](https://github.com/marella/ctransformers#supported-models)과 상호작용하는 방법을 설명합니다.
 
-**Install**
+**설치**
 
 ```python
 %pip install --upgrade --quiet  ctransformers
 ```
 
-**Load Model**
+
+**모델 로드**
 
 ```python
 <!--IMPORTS:[{"imported": "CTransformers", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.ctransformers.CTransformers.html", "title": "C Transformers"}]-->
@@ -24,13 +26,15 @@ from langchain_community.llms import CTransformers
 llm = CTransformers(model="marella/gpt-2-ggml")
 ```
 
-**Generate Text**
+
+**텍스트 생성**
 
 ```python
 print(llm.invoke("AI is going to"))
 ```
 
-**Streaming**
+
+**스트리밍**
 
 ```python
 <!--IMPORTS:[{"imported": "StreamingStdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.streaming_stdout.StreamingStdOutCallbackHandler.html", "title": "C Transformers"}]-->
@@ -42,6 +46,7 @@ llm = CTransformers(
 
 response = llm.invoke("AI is going to")
 ```
+
 
 **LLMChain**
 
@@ -61,7 +66,8 @@ llm_chain = LLMChain(prompt=prompt, llm=llm)
 response = llm_chain.run("What is AI?")
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

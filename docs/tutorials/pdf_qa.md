@@ -1,42 +1,43 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/tutorials/pdf_qa/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/tutorials/pdf_qa.ipynb
+description: PDF 파일에 대한 질문에 답변할 수 있는 시스템을 구축하는 방법을 안내합니다. 문서 로더와 RAG 파이프라인을 활용합니다.
 keywords:
 - pdf
 - document loader
 ---
 
-# Build a PDF ingestion and Question/Answering system
+# PDF 수집 및 질문/답변 시스템 구축
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
 
-- [Document loaders](/docs/concepts/#document-loaders)
-- [Chat models](/docs/concepts/#chat-models)
-- [Embeddings](/docs/concepts/#embedding-models)
-- [Vector stores](/docs/concepts/#vector-stores)
-- [Retrieval-augmented generation](/docs/tutorials/rag/)
+- [문서 로더](/docs/concepts/#document-loaders)
+- [채팅 모델](/docs/concepts/#chat-models)
+- [임베딩](/docs/concepts/#embedding-models)
+- [벡터 저장소](/docs/concepts/#vector-stores)
+- [검색 증강 생성](/docs/tutorials/rag/)
 
 :::
 
-PDF files often hold crucial unstructured data unavailable from other sources. They can be quite lengthy, and unlike plain text files, cannot generally be fed directly into the prompt of a language model.
+PDF 파일은 종종 다른 출처에서 사용할 수 없는 중요한 비구조적 데이터를 포함하고 있습니다. 이들은 상당히 길 수 있으며, 일반 텍스트 파일과 달리 언어 모델의 프롬프트에 직접 입력할 수 없습니다.
 
-In this tutorial, you'll create a system that can answer questions about PDF files. More specifically, you'll use a [Document Loader](/docs/concepts/#document-loaders) to load text in a format usable by an LLM, then build a retrieval-augmented generation (RAG) pipeline to answer questions, including citations from the source material.
+이 튜토리얼에서는 PDF 파일에 대한 질문에 답할 수 있는 시스템을 생성합니다. 더 구체적으로, [문서 로더](/docs/concepts/#document-loaders)를 사용하여 LLM에서 사용할 수 있는 형식으로 텍스트를 로드한 다음, 출처 자료에서 인용을 포함하여 질문에 답하기 위해 검색 증강 생성(RAG) 파이프라인을 구축합니다.
 
-This tutorial will gloss over some concepts more deeply covered in our [RAG](/docs/tutorials/rag/) tutorial, so you may want to go through those first if you haven't already.
+이 튜토리얼은 [RAG](/docs/tutorials/rag/) 튜토리얼에서 더 깊이 다룬 몇 가지 개념을 간단히 설명할 것이므로, 아직 보지 않았다면 먼저 그 내용을 살펴보는 것이 좋습니다.
 
-Let's dive in!
+자, 시작해봅시다!
 
-## Loading documents
+## 문서 로드하기
 
-First, you'll need to choose a PDF to load. We'll use a document from [Nike's annual public SEC report](https://s1.q4cdn.com/806093406/files/doc_downloads/2023/414759-1-_5_Nike-NPS-Combo_Form-10-K_WR.pdf). It's over 100 pages long, and contains some crucial data mixed with longer explanatory text. However, you can feel free to use a PDF of your choosing.
+먼저, 로드할 PDF를 선택해야 합니다. 우리는 [Nike의 연례 공공 SEC 보고서](https://s1.q4cdn.com/806093406/files/doc_downloads/2023/414759-1-_5_Nike-NPS-Combo_Form-10-K_WR.pdf)의 문서를 사용할 것입니다. 이 문서는 100페이지가 넘으며, 긴 설명 텍스트와 혼합된 중요한 데이터를 포함하고 있습니다. 그러나 원하는 PDF를 자유롭게 사용하실 수 있습니다.
 
-Once you've chosen your PDF, the next step is to load it into a format that an LLM can more easily handle, since LLMs generally require text inputs. LangChain has a few different [built-in document loaders](/docs/how_to/document_loader_pdf/) for this purpose which you can experiment with. Below, we'll use one powered by the [`pypdf`](https://pypi.org/project/pypdf/) package that reads from a filepath:
+PDF를 선택한 후, 다음 단계는 LLM이 더 쉽게 처리할 수 있는 형식으로 로드하는 것입니다. LLM은 일반적으로 텍스트 입력을 요구하기 때문입니다. LangChain에는 이 목적을 위해 사용할 수 있는 몇 가지 [내장 문서 로더](/docs/how_to/document_loader_pdf/)가 있습니다. 아래에서는 파일 경로에서 읽는 [`pypdf`](https://pypi.org/project/pypdf/) 패키지로 구동되는 로더를 사용할 것입니다:
 
 ```python
 %pip install -qU pypdf langchain_community
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "PyPDFLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.pdf.PyPDFLoader.html", "title": "Build a PDF ingestion and Question/Answering system"}]-->
@@ -49,14 +50,17 @@ docs = loader.load()
 
 print(len(docs))
 ```
+
 ```output
 107
 ```
+
 
 ```python
 print(docs[0].page_content[0:100])
 print(docs[0].metadata)
 ```
+
 ```output
 Table of Contents
 UNITED STATES
@@ -66,17 +70,18 @@ FORM 10-K
 
 {'source': '../example_data/nke-10k-2023.pdf', 'page': 0}
 ```
-So what just happened?
 
-- The loader reads the PDF at the specified path into memory.
-- It then extracts text data using the `pypdf` package.
-- Finally, it creates a LangChain [Document](/docs/concepts/#documents) for each page of the PDF with the page's content and some metadata about where in the document the text came from.
+방금 무슨 일이 있었나요?
 
-LangChain has [many other document loaders](/docs/integrations/document_loaders/) for other data sources, or you can create a [custom document loader](/docs/how_to/document_loader_custom/).
+- 로더는 지정된 경로의 PDF를 메모리로 읽어옵니다.
+- 그런 다음 `pypdf` 패키지를 사용하여 텍스트 데이터를 추출합니다.
+- 마지막으로, PDF의 각 페이지에 대한 LangChain [문서](/docs/concepts/#documents)를 생성하며, 페이지의 내용과 텍스트가 문서의 어디에서 왔는지에 대한 메타데이터를 포함합니다.
 
-## Question answering with RAG
+LangChain에는 다른 데이터 소스를 위한 [많은 다른 문서 로더](/docs/integrations/document_loaders/)가 있으며, [사용자 정의 문서 로더](/docs/how_to/document_loader_custom/)를 생성할 수도 있습니다.
 
-Next, you'll prepare the loaded documents for later retrieval. Using a [text splitter](/docs/concepts/#text-splitters), you'll split your loaded documents into smaller documents that can more easily fit into an LLM's context window, then load them into a [vector store](/docs/concepts/#vector-stores). You can then create a [retriever](/docs/concepts/#retrievers) from the vector store for use in our RAG chain:
+## RAG를 통한 질문 답변
+
+다음으로, 로드한 문서를 나중에 검색할 수 있도록 준비합니다. [텍스트 분할기](/docs/concepts/#text-splitters)를 사용하여 로드한 문서를 LLM의 컨텍스트 창에 더 쉽게 맞출 수 있는 작은 문서로 분할한 다음, 이를 [벡터 저장소](/docs/concepts/#vector-stores)에 로드합니다. 그런 다음 RAG 체인에서 사용할 수 있도록 벡터 저장소에서 [검색기](/docs/concepts/#retrievers)를 생성할 수 있습니다:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
@@ -85,6 +90,7 @@ import ChatModelTabs from "@theme/ChatModelTabs";
 ```python
 %pip install langchain_chroma langchain_openai
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Build a PDF ingestion and Question/Answering system"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Build a PDF ingestion and Question/Answering system"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Build a PDF ingestion and Question/Answering system"}]-->
@@ -99,7 +105,8 @@ vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings
 retriever = vectorstore.as_retriever()
 ```
 
-Finally, you'll use some built-in helpers to construct the final `rag_chain`:
+
+마지막으로, 최종 `rag_chain`을 구성하기 위해 몇 가지 내장 도우미를 사용할 것입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Build a PDF ingestion and Question/Answering system"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Build a PDF ingestion and Question/Answering system"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Build a PDF ingestion and Question/Answering system"}]-->
@@ -133,6 +140,7 @@ results = rag_chain.invoke({"input": "What was Nike's revenue in 2023?"})
 results
 ```
 
+
 ```output
 {'input': "What was Nike's revenue in 2023?",
  'context': [Document(page_content='Table of Contents\nFISCAL 2023 NIKE BRAND REVENUE HIGHLIGHTS\nThe following tables present NIKE Brand revenues disaggregated by reportable operating segment, distribution channel and major product line:\nFISCAL 2023 COMPARED TO FISCAL 2022\n•NIKE, Inc. Revenues were $51.2 billion in fiscal 2023, which increased 10% and 16% compared to fiscal 2022 on a reported and currency-neutral basis, respectively.\nThe increase was due to higher revenues in North America, Europe, Middle East & Africa ("EMEA"), APLA and Greater China, which contributed approximately 7, 6,\n2 and 1 percentage points to NIKE, Inc. Revenues, respectively.\n•NIKE Brand revenues, which represented over 90% of NIKE, Inc. Revenues, increased 10% and 16% on a reported and currency-neutral basis, respectively. This\nincrease was primarily due to higher revenues in Men\'s, the Jordan Brand, Women\'s and Kids\' which grew 17%, 35%,11% and 10%, respectively, on a wholesale\nequivalent basis.', metadata={'page': 35, 'source': '../example_data/nke-10k-2023.pdf'}),
@@ -142,13 +150,15 @@ results
  'answer': 'According to the financial highlights, Nike, Inc. achieved record revenues of $51.2 billion in fiscal 2023, which increased 10% on a reported basis and 16% on a currency-neutral basis compared to fiscal 2022.'}
 ```
 
-You can see that you get both a final answer in the `answer` key of the results dict, and the `context` the LLM used to generate an answer.
 
-Examining the values under the `context` further, you can see that they are documents that each contain a chunk of the ingested page content. Usefully, these documents also preserve the original metadata from way back when you first loaded them:
+결과 사전의 `answer` 키에서 최종 답변을 얻고, LLM이 답변을 생성하는 데 사용한 `context`를 확인할 수 있습니다.
+
+`context` 아래의 값을 더 살펴보면, 각 문서가 섭취된 페이지 내용의 조각을 포함하고 있음을 알 수 있습니다. 유용하게도, 이러한 문서는 처음 로드했을 때의 원래 메타데이터를 보존합니다:
 
 ```python
 print(results["context"][0].page_content)
 ```
+
 ```output
 Table of Contents
 FISCAL 2023 NIKE BRAND REVENUE HIGHLIGHTS
@@ -162,30 +172,33 @@ increase was primarily due to higher revenues in Men's, the Jordan Brand, Women'
 equivalent basis.
 ```
 
+
 ```python
 print(results["context"][0].metadata)
 ```
+
 ```output
 {'page': 35, 'source': '../example_data/nke-10k-2023.pdf'}
 ```
-This particular chunk came from page 35 in the original PDF. You can use this data to show which page in the PDF the answer came from, allowing users to quickly verify that answers are based on the source material.
+
+이 특정 조각은 원래 PDF의 35페이지에서 왔습니다. 이 데이터를 사용하여 답변이 PDF의 어느 페이지에서 왔는지 보여줄 수 있으며, 사용자가 답변이 출처 자료에 기반하고 있음을 빠르게 확인할 수 있도록 합니다.
 
 :::info
-For a deeper dive into RAG, see [this more focused tutorial](/docs/tutorials/rag/) or [our how-to guides](/docs/how_to/#qa-with-rag).
+RAG에 대한 더 깊은 탐구를 원하신다면 [이 더 집중된 튜토리얼](/docs/tutorials/rag/)이나 [우리의 사용 방법 가이드](/docs/how_to/#qa-with-rag)를 참조하세요.
 :::
 
-## Next steps
+## 다음 단계
 
-You've now seen how to load documents from a PDF file with a Document Loader and some techniques you can use to prepare that loaded data for RAG.
+이제 문서 로더를 사용하여 PDF 파일에서 문서를 로드하는 방법과 RAG를 위해 로드된 데이터를 준비하는 몇 가지 기술을 살펴보았습니다.
 
-For more on document loaders, you can check out:
+문서 로더에 대한 더 많은 정보는 다음을 확인하세요:
 
-- [The entry in the conceptual guide](/docs/concepts/#document-loaders)
-- [Related how-to guides](/docs/how_to/#document-loaders)
-- [Available integrations](/docs/integrations/document_loaders/)
-- [How to create a custom document loader](/docs/how_to/document_loader_custom/)
+- [개념 가이드의 항목](/docs/concepts/#document-loaders)
+- [관련 사용 방법 가이드](/docs/how_to/#document-loaders)
+- [사용 가능한 통합](/docs/integrations/document_loaders/)
+- [사용자 정의 문서 로더를 만드는 방법](/docs/how_to/document_loader_custom/)
 
-For more on RAG, see:
+RAG에 대한 더 많은 정보는 다음을 참조하세요:
 
-- [Build a Retrieval Augmented Generation (RAG) App](/docs/tutorials/rag/)
-- [Related how-to guides](/docs/how_to/#qa-with-rag)
+- [검색 증강 생성(RAG) 앱 구축](/docs/tutorials/rag/)
+- [관련 사용 방법 가이드](/docs/how_to/#qa-with-rag)

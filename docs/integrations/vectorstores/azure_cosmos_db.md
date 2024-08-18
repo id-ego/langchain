@@ -1,27 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/azure_cosmos_db/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/azure_cosmos_db.ipynb
+description: Azure Cosmos DB Mongo vCore를 활용하여 벡터 검색 쿼리를 수행하고 문서를 저장하는 방법을 소개합니다.
 ---
 
 # Azure Cosmos DB Mongo vCore
 
-This notebook shows you how to leverage this integrated [vector database](https://learn.microsoft.com/en-us/azure/cosmos-db/vector-database) to store documents in collections, create indicies and perform vector search queries using approximate nearest neighbor algorithms such as COS (cosine distance), L2 (Euclidean distance), and IP (inner product) to locate documents close to the query vectors. 
+이 노트북은 통합된 [벡터 데이터베이스](https://learn.microsoft.com/en-us/azure/cosmos-db/vector-database)를 활용하여 컬렉션에 문서를 저장하고, 인덱스를 생성하며, COS(코사인 거리), L2(유클리드 거리), IP(내적)과 같은 근사 최근접 이웃 알고리즘을 사용하여 쿼리 벡터에 가까운 문서를 찾기 위한 벡터 검색 쿼리를 수행하는 방법을 보여줍니다.
 
-Azure Cosmos DB is the database that powers OpenAI's ChatGPT service. It offers single-digit millisecond response times, automatic and instant scalability, along with guaranteed speed at any scale. 
+Azure Cosmos DB는 OpenAI의 ChatGPT 서비스를 지원하는 데이터베이스입니다. 단일 밀리초 응답 시간, 자동 및 즉각적인 확장성, 모든 규모에서 보장된 속도를 제공합니다.
 
-Azure Cosmos DB for MongoDB vCore(https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/) provides developers with a fully managed MongoDB-compatible database service for building modern applications with a familiar architecture. You can apply your MongoDB experience and continue to use your favorite MongoDB drivers, SDKs, and tools by pointing your application to the API for MongoDB vCore account's connection string.
+Azure Cosmos DB for MongoDB vCore(https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/)는 개발자에게 친숙한 아키텍처로 현대 애플리케이션을 구축하기 위한 완전 관리형 MongoDB 호환 데이터베이스 서비스를 제공합니다. MongoDB 경험을 적용하고 애플리케이션을 MongoDB vCore 계정의 연결 문자열에 맞춰 API에 지정하여 좋아하는 MongoDB 드라이버, SDK 및 도구를 계속 사용할 수 있습니다.
 
-[Sign Up](https://azure.microsoft.com/en-us/free/) for lifetime free access to get started today.
+[가입하기](https://azure.microsoft.com/en-us/free/)를 통해 평생 무료 액세스를 시작하세요.
 
 ```python
 %pip install --upgrade --quiet  pymongo langchain-openai langchain-community
 ```
+
 ```output
 
 [1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m23.2.1[0m[39;49m -> [0m[32;49m23.3.2[0m
 [1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpip install --upgrade pip[0m
 Note: you may need to restart the kernel to use updated packages.
 ```
+
 
 ```python
 import os
@@ -32,7 +34,8 @@ NAMESPACE = "izzy_test_db.izzy_test_collection"
 DB_NAME, COLLECTION_NAME = NAMESPACE.split(".")
 ```
 
-We want to use `OpenAIEmbeddings` so we need to set up our Azure OpenAI API Key alongside other environment variables. 
+
+`OpenAIEmbeddings`를 사용하려고 하므로 Azure OpenAI API 키와 기타 환경 변수를 설정해야 합니다.
 
 ```python
 # Set up the OpenAI Environment Variables
@@ -48,9 +51,10 @@ os.environ["OPENAI_EMBEDDINGS_DEPLOYMENT"] = (
 os.environ["OPENAI_EMBEDDINGS_MODEL_NAME"] = "text-embedding-ada-002"  # the model name
 ```
 
-Now, we need to load the documents into the collection, create the index and then run our queries against the index to retrieve matches.
 
-Please refer to the [documentation](https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/vector-search) if you have questions about certain parameters
+이제 문서를 컬렉션에 로드하고 인덱스를 생성한 다음 인덱스를 기준으로 쿼리를 실행하여 일치를 검색해야 합니다.
+
+특정 매개변수에 대한 질문이 있는 경우 [문서](https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/vector-search)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "AzureCosmosDBVectorSearch", "source": "langchain_community.vectorstores.azure_cosmos_db", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azure_cosmos_db.AzureCosmosDBVectorSearch.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "CosmosDBSimilarityType", "source": "langchain_community.vectorstores.azure_cosmos_db", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azure_cosmos_db.CosmosDBSimilarityType.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "CosmosDBVectorSearchType", "source": "langchain_community.vectorstores.azure_cosmos_db", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.azure_cosmos_db.CosmosDBVectorSearchType.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Azure Cosmos DB Mongo vCore"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Azure Cosmos DB Mongo vCore"}]-->
@@ -81,6 +85,7 @@ openai_embeddings: OpenAIEmbeddings = OpenAIEmbeddings(
     deployment=model_deployment, model=model_name, chunk_size=1
 )
 ```
+
 
 ```python
 from pymongo import MongoClient
@@ -119,6 +124,7 @@ vectorstore.create_index(
 )
 ```
 
+
 ```output
 {'raw': {'defaultShard': {'numIndexesBefore': 1,
    'numIndexesAfter': 2,
@@ -127,15 +133,18 @@ vectorstore.create_index(
  'ok': 1}
 ```
 
+
 ```python
 # perform a similarity search between the embedding of the query and the embeddings of the documents
 query = "What did the president say about Ketanji Brown Jackson"
 docs = vectorstore.similarity_search(query)
 ```
 
+
 ```python
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -145,7 +154,8 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
-Once the documents have been loaded and the index has been created, you can now instantiate the vector store directly and run queries against the index
+
+문서가 로드되고 인덱스가 생성되면 이제 벡터 저장소를 직접 인스턴스화하고 인덱스를 기준으로 쿼리를 실행할 수 있습니다.
 
 ```python
 vectorstore = AzureCosmosDBVectorSearch.from_connection_string(
@@ -158,6 +168,7 @@ docs = vectorstore.similarity_search(query)
 
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -167,6 +178,7 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
+
 
 ```python
 vectorstore = AzureCosmosDBVectorSearch(
@@ -179,6 +191,7 @@ docs = vectorstore.similarity_search(query)
 
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -188,10 +201,11 @@ One of the most serious constitutional responsibilities a President has is nomin
 
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
-## Filtered vector search (Preview)
-Azure Cosmos DB for MongoDB supports pre-filtering with $lt, $lte, $eq, $neq, $gte, $gt, $in, $nin, and $regex. To use this feature, enable "filtering vector search" in the "Preview Features" tab of your Azure Subscription. Learn more about preview features [here](https://learn.microsoft.com/azure/cosmos-db/mongodb/vcore/vector-search#filtered-vector-search-preview).
 
-## Related
+## 필터링된 벡터 검색 (미리 보기)
+Azure Cosmos DB for MongoDB는 $lt, $lte, $eq, $neq, $gte, $gt, $in, $nin 및 $regex로 사전 필터링을 지원합니다. 이 기능을 사용하려면 Azure 구독의 "미리 보기 기능" 탭에서 "벡터 검색 필터링"을 활성화하세요. 미리 보기 기능에 대한 자세한 내용은 [여기](https://learn.microsoft.com/azure/cosmos-db/mongodb/vcore/vector-search#filtered-vector-search-preview)에서 확인하세요.
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

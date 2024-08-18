@@ -1,28 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/alibabacloud_opensearch/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/alibabacloud_opensearch.ipynb
+description: Alibaba Cloud OpenSearch는 지능형 검색 서비스를 개발하기 위한 원스톱 플랫폼으로, 다양한 검색 시나리오를
+  지원합니다.
 ---
 
 # Alibaba Cloud OpenSearch
 
-> [Alibaba Cloud Opensearch](https://www.alibabacloud.com/product/opensearch) is a one-stop platform to develop intelligent search services. `OpenSearch` was built on the large-scale distributed search engine developed by `Alibaba`. `OpenSearch` serves more than 500 business cases in Alibaba Group and thousands of Alibaba Cloud customers. `OpenSearch` helps develop search services in different search scenarios, including e-commerce, O2O, multimedia, the content industry, communities and forums, and big data query in enterprises.
+> [Alibaba Cloud Opensearch](https://www.alibabacloud.com/product/opensearch)는 지능형 검색 서비스를 개발하기 위한 원스톱 플랫폼입니다. `OpenSearch`는 `Alibaba`에서 개발한 대규모 분산 검색 엔진을 기반으로 구축되었습니다. `OpenSearch`는 Alibaba Group의 500개 이상의 비즈니스 사례와 수천 개의 Alibaba Cloud 고객에게 서비스를 제공합니다. `OpenSearch`는 전자상거래, O2O, 멀티미디어, 콘텐츠 산업, 커뮤니티 및 포럼, 기업의 빅데이터 쿼리 등 다양한 검색 시나리오에서 검색 서비스를 개발하는 데 도움을 줍니다.
 
-> `OpenSearch` helps you develop high-quality, maintenance-free, and high-performance intelligent search services to provide your users with high search efficiency and accuracy.
+> `OpenSearch`는 사용자에게 높은 검색 효율성과 정확성을 제공하기 위해 고품질, 유지보수가 필요 없는 고성능 지능형 검색 서비스를 개발하는 데 도움을 줍니다.
 
-> `OpenSearch` provides the vector search feature. In specific scenarios, especially test question search and image search scenarios, you can use the vector search feature together with the multimodal search feature to improve the accuracy of search results.
+> `OpenSearch`는 벡터 검색 기능을 제공합니다. 특정 시나리오, 특히 시험 질문 검색 및 이미지 검색 시나리오에서는 벡터 검색 기능과 멀티모달 검색 기능을 함께 사용하여 검색 결과의 정확성을 향상시킬 수 있습니다.
 
-This notebook shows how to use functionality related to the `Alibaba Cloud OpenSearch Vector Search Edition`.
+이 노트북은 `Alibaba Cloud OpenSearch Vector Search Edition`과 관련된 기능을 사용하는 방법을 보여줍니다.
 
-## Setting up
+## 설정
 
-### Purchase an instance and configure it
+### 인스턴스 구매 및 구성
 
-Purchase OpenSearch Vector Search Edition from [Alibaba Cloud](https://opensearch.console.aliyun.com) and configure the instance according to the help [documentation](https://help.aliyun.com/document_detail/463198.html?spm=a2c4g.465092.0.0.2cd15002hdwavO).
+[Alibaba Cloud](https://opensearch.console.aliyun.com)에서 OpenSearch Vector Search Edition을 구매하고 도움말 [문서](https://help.aliyun.com/document_detail/463198.html?spm=a2c4g.465092.0.0.2cd15002hdwavO)에 따라 인스턴스를 구성합니다.
 
-To run, you should have an [OpenSearch Vector Search Edition](https://opensearch.console.aliyun.com) instance up and running.
+실행하려면 [OpenSearch Vector Search Edition](https://opensearch.console.aliyun.com) 인스턴스가 실행 중이어야 합니다.
 
-### Alibaba Cloud OpenSearch Vector Store class
-                                                                                                                `AlibabaCloudOpenSearch` class supports functions:
+### Alibaba Cloud OpenSearch Vector Store 클래스
+                                                                                                                `AlibabaCloudOpenSearch` 클래스는 다음 기능을 지원합니다:
 - `add_texts`
 - `add_documents`
 - `from_texts`
@@ -34,19 +35,20 @@ To run, you should have an [OpenSearch Vector Search Edition](https://opensearch
 - `similarity_search_with_relevance_scores`
 - `delete_doc_by_texts`
 
-Read the [help document](https://www.alibabacloud.com/help/en/opensearch/latest/vector-search) to quickly familiarize and configure OpenSearch Vector Search Edition instance.
+OpenSearch Vector Search Edition 인스턴스를 빠르게 익히고 구성하려면 [도움 문서](https://www.alibabacloud.com/help/en/opensearch/latest/vector-search)를 읽어보세요.
 
-If you encounter any problems during use, please feel free to contact xingshaomin.xsm@alibaba-inc.com, and we will do our best to provide you with assistance and support.
+사용 중 문제가 발생하면 언제든지 xingshaomin.xsm@alibaba-inc.com으로 문의해 주시면 최선을 다해 도움과 지원을 제공하겠습니다.
 
-After the instance is up and running, follow these steps to split documents, get embeddings, connect to the alibaba cloud opensearch instance, index documents, and perform vector retrieval.
+인스턴스가 실행 중이면 다음 단계를 따라 문서를 분할하고, 임베딩을 가져오고, Alibaba Cloud OpenSearch 인스턴스에 연결하고, 문서를 인덱싱하고, 벡터 검색을 수행합니다.
 
-We need to install the following Python packages first.
+먼저 다음 Python 패키지를 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet  langchain-community alibabacloud_ha3engine_vector
 ```
 
-We want to use `OpenAIEmbeddings` so we have to get the OpenAI API Key.
+
+`OpenAIEmbeddings`를 사용하려면 OpenAI API 키를 가져와야 합니다.
 
 ```python
 import getpass
@@ -55,7 +57,8 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
-## Example
+
+## 예제
 
 ```python
 <!--IMPORTS:[{"imported": "AlibabaCloudOpenSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.alibabacloud_opensearch.AlibabaCloudOpenSearch.html", "title": "Alibaba Cloud OpenSearch"}, {"imported": "AlibabaCloudOpenSearchSettings", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.alibabacloud_opensearch.AlibabaCloudOpenSearchSettings.html", "title": "Alibaba Cloud OpenSearch"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Alibaba Cloud OpenSearch"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Alibaba Cloud OpenSearch"}]-->
@@ -67,7 +70,8 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
-Split documents and get embeddings.
+
+문서를 분할하고 임베딩을 가져옵니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Alibaba Cloud OpenSearch"}]-->
@@ -81,7 +85,8 @@ docs = text_splitter.split_documents(documents)
 embeddings = OpenAIEmbeddings()
 ```
 
-Create opensearch settings.
+
+OpenSearch 설정을 만듭니다.
 
 ```python
 settings = AlibabaCloudOpenSearchSettings(
@@ -126,7 +131,8 @@ settings = AlibabaCloudOpenSearchSettings(
 # )
 ```
 
-Create an opensearch access instance by settings.
+
+설정으로 OpenSearch 액세스 인스턴스를 만듭니다.
 
 ```python
 # Create an opensearch instance and index docs.
@@ -135,14 +141,16 @@ opensearch = AlibabaCloudOpenSearch.from_texts(
 )
 ```
 
-or
+
+또는
 
 ```python
 # Create an opensearch instance.
 opensearch = AlibabaCloudOpenSearch(embedding=embeddings, config=settings)
 ```
 
-Add texts and build index.
+
+텍스트를 추가하고 인덱스를 구축합니다.
 
 ```python
 metadatas = [
@@ -154,7 +162,8 @@ metadatas = [
 opensearch.add_texts(texts=docs, ids=[], metadatas=metadatas)
 ```
 
-Query and retrieve data.
+
+쿼리하고 데이터를 검색합니다.
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -162,7 +171,8 @@ docs = opensearch.similarity_search(query)
 print(docs[0].page_content)
 ```
 
-Query and retrieve data with metadata.
+
+메타데이터로 쿼리하고 데이터를 검색합니다.
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
@@ -176,9 +186,10 @@ docs = opensearch.similarity_search(query, filter=metadata)
 print(docs[0].page_content)
 ```
 
-If you encounter any problems during use, please feel free to contact <mailto:xingshaomin.xsm@alibaba-inc.com>, and we will do our best to provide you with assistance and support.
 
-## Related
+사용 중 문제가 발생하면 언제든지 <mailto:xingshaomin.xsm@alibaba-inc.com>으로 문의해 주시면 최선을 다해 도움과 지원을 제공하겠습니다.
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

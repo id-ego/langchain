@@ -1,24 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/figma/
+description: Figma는 인터페이스 디자인을 위한 협업 웹 애플리케이션으로, API를 통해 액세스 토큰, 노드 ID 및 파일 키를 사용하여
+  설정할 수 있습니다.
 ---
 
 # Figma
 
-> [Figma](https://www.figma.com/) is a collaborative web application for interface design.
+> [Figma](https://www.figma.com/)는 인터페이스 디자인을 위한 협업 웹 애플리케이션입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-The Figma API requires an `access token`, `node_ids`, and a `file key`.
+Figma API는 `access token`, `node_ids`, 및 `file key`가 필요합니다.
 
-The `file key` can be pulled from the URL.  https://www.figma.com/file/{filekey}/sampleFilename
+`file key`는 URL에서 가져올 수 있습니다. https://www.figma.com/file/{filekey}/sampleFilename
 
-`Node IDs` are also available in the URL. Click on anything and look for the '?node-id={node_id}' param.
+`Node IDs`도 URL에서 확인할 수 있습니다. 아무 것이나 클릭하고 '?node-id={node_id}' 파라미터를 찾으세요.
 
-`Access token` [instructions](https://help.figma.com/hc/en-us/articles/8085703771159-Manage-personal-access-tokens).
+`Access token` [지침](https://help.figma.com/hc/en-us/articles/8085703771159-Manage-personal-access-tokens).
 
-## Document Loader
+## 문서 로더
 
-See a [usage example](/docs/integrations/document_loaders/figma).
+[사용 예시](/docs/integrations/document_loaders/figma)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "FigmaFileLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.figma.FigmaFileLoader.html", "title": "Figma"}]-->

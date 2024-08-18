@@ -1,51 +1,54 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/requests/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/requests.ipynb
+description: HTTP 요청을 생성하는 에이전트를 구축하기 위한 Requests 툴킷에 대한 문서입니다. 설치 및 보안 주의사항을 포함합니다.
 ---
 
-# Requests Toolkit
+# 요청 툴킷
 
-We can use the Requests [toolkit](/docs/concepts/#toolkits) to construct agents that generate HTTP requests.
+우리는 요청 [툴킷](/docs/concepts/#toolkits)을 사용하여 HTTP 요청을 생성하는 에이전트를 구성할 수 있습니다.
 
-For detailed documentation of all API toolkit features and configurations head to the API reference for [RequestsToolkit](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.toolkit.RequestsToolkit.html).
+모든 API 툴킷 기능 및 구성에 대한 자세한 문서는 [RequestsToolkit](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.toolkit.RequestsToolkit.html) API 참조로 이동하십시오.
 
-## ⚠️ Security note ⚠️
-There are inherent risks in giving models discretion to execute real-world actions. Take precautions to mitigate these risks:
+## ⚠️ 보안 노트 ⚠️
+모델에게 실제 세계의 행동을 실행할 재량을 부여하는 데는 고유한 위험이 있습니다. 이러한 위험을 완화하기 위한 예방 조치를 취하십시오:
 
-- Make sure that permissions associated with the tools are narrowly-scoped (e.g., for database operations or API requests);
-- When desired, make use of human-in-the-loop workflows.
+- 도구와 관련된 권한이 좁게 제한되어 있는지 확인하십시오 (예: 데이터베이스 작업 또는 API 요청의 경우);
+- 필요할 경우, 인간-루프 워크플로우를 활용하십시오.
 
-## Setup
+## 설정
 
-### Installation
+### 설치
 
-This toolkit lives in the `langchain-community` package:
+이 툴킷은 `langchain-community` 패키지에 포함되어 있습니다:
 
 ```python
 %pip install -qU langchain-community
 ```
 
-Note that if you want to get automated tracing from runs of individual tools, you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+
+개별 도구의 실행에서 자동 추적을 얻고 싶다면 아래의 주석을 제거하여 [LangSmith](https://docs.smith.langchain.com/) API 키를 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-## Instantiation
 
-First we will demonstrate a minimal example.
+## 인스턴스화
 
-**NOTE**: There are inherent risks in giving models discretion to execute real-world actions. We must "opt-in" to these risks by setting `allow_dangerous_request=True` to use these tools.
-**This can be dangerous for calling unwanted requests**. Please make sure your custom OpenAPI spec (yaml) is safe and that permissions associated with the tools are narrowly-scoped.
+먼저 최소한의 예제를 보여드리겠습니다.
+
+**노트**: 모델에게 실제 세계의 행동을 실행할 재량을 부여하는 데는 고유한 위험이 있습니다. 이러한 도구를 사용하기 위해 `allow_dangerous_request=True`를 설정하여 이러한 위험을 "옵트인"해야 합니다.
+**원하지 않는 요청을 호출하는 데 위험할 수 있습니다**. 사용자 정의 OpenAPI 사양(yaml)이 안전하고 도구와 관련된 권한이 좁게 제한되어 있는지 확인하십시오.
 
 ```python
 ALLOW_DANGEROUS_REQUEST = True
 ```
 
-We can use the [JSONPlaceholder](https://jsonplaceholder.typicode.com) API as a testing ground.
 
-Let's create (a subset of) its API spec:
+우리는 [JSONPlaceholder](https://jsonplaceholder.typicode.com) API를 테스트 공간으로 사용할 수 있습니다.
+
+그의 API 사양의 (부분 집합)을 생성해 보겠습니다:
 
 ```python
 from typing import Any, Dict, Union
@@ -108,7 +111,8 @@ def _get_api_spec() -> str:
 api_spec = _get_api_spec()
 ```
 
-Next we can instantiate the toolkit. We require no authorization or other headers for this API:
+
+다음으로 툴킷을 인스턴스화할 수 있습니다. 이 API에는 인증이나 기타 헤더가 필요하지 않습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "RequestsToolkit", "source": "langchain_community.agent_toolkits.openapi.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.toolkit.RequestsToolkit.html", "title": "Requests Toolkit"}, {"imported": "TextRequestsWrapper", "source": "langchain_community.utilities.requests", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.requests.TextRequestsWrapper.html", "title": "Requests Toolkit"}]-->
@@ -121,15 +125,17 @@ toolkit = RequestsToolkit(
 )
 ```
 
-## Tools
 
-View available tools:
+## 도구
+
+사용 가능한 도구 보기:
 
 ```python
 tools = toolkit.get_tools()
 
 tools
 ```
+
 
 ```output
 [RequestsGetTool(requests_wrapper=TextRequestsWrapper(headers={}, aiosession=None, auth=None, response_content_type='text', verify=True), allow_dangerous_requests=True),
@@ -139,13 +145,14 @@ tools
  RequestsDeleteTool(requests_wrapper=TextRequestsWrapper(headers={}, aiosession=None, auth=None, response_content_type='text', verify=True), allow_dangerous_requests=True)]
 ```
 
+
 - [RequestsGetTool](https://api.python.langchain.com/en/latest/tools/langchain_community.tools.requests.tool.RequestsGetTool.html)
 - [RequestsPostTool](https://api.python.langchain.com/en/latest/tools/langchain_community.tools.requests.tool.RequestsPostTool.html)
 - [RequestsPatchTool](https://api.python.langchain.com/en/latest/tools/langchain_community.tools.requests.tool.RequestsPatchTool.html)
 - [RequestsPutTool](https://api.python.langchain.com/en/latest/tools/langchain_community.tools.requests.tool.RequestsPutTool.html)
 - [RequestsDeleteTool](https://api.python.langchain.com/en/latest/tools/langchain_community.tools.requests.tool.RequestsDeleteTool.html)
 
-## Use within an agent
+## 에이전트 내에서 사용
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Requests Toolkit"}]-->
@@ -163,6 +170,7 @@ Here is documentation on the API:
 agent_executor = create_react_agent(llm, tools, state_modifier=system_message)
 ```
 
+
 ```python
 example_query = "Fetch the top two posts. What are their titles?"
 
@@ -173,6 +181,7 @@ events = agent_executor.stream(
 for event in events:
     event["messages"][-1].pretty_print()
 ```
+
 ```output
 ================================[1m Human Message [0m=================================
 
@@ -206,11 +215,12 @@ The titles of the top two posts are:
 1. "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"
 2. "qui est esse"
 ```
-## API reference
 
-For detailed documentation of all API toolkit features and configurations head to the API reference for [RequestsToolkit](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.toolkit.RequestsToolkit.html).
+## API 참조
 
-## Related
+모든 API 툴킷 기능 및 구성에 대한 자세한 문서는 [RequestsToolkit](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.toolkit.RequestsToolkit.html) API 참조로 이동하십시오.
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

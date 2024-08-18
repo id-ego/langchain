@@ -1,17 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/dashscope_rerank/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/dashscope_rerank.ipynb
+description: DashScope Reranker를 사용하여 문서 압축 및 검색 방법을 보여주는 노트북입니다. 다양한 언어를 지원하는 AI
+  서비스입니다.
 ---
 
 # DashScope Reranker
 
-This notebook shows how to use DashScope Reranker for document compression and retrieval. [DashScope](https://dashscope.aliyun.com/) is the generative AI service from Alibaba Cloud (Aliyun).
+이 노트북은 문서 압축 및 검색을 위한 DashScope Reranker 사용 방법을 보여줍니다. [DashScope](https://dashscope.aliyun.com/)는 Alibaba Cloud (Aliyun)의 생성 AI 서비스입니다.
 
-DashScope's [Text ReRank Model](https://help.aliyun.com/document_detail/2780058.html?spm=a2c4g.2780059.0.0.6d995024FlrJ12) supports reranking documents with a maximum of 4000 tokens. Moreover, it supports Chinese, English, Japanese, Korean, Thai, Spanish, French, Portuguese, Indonesian, Arabic, and over 50 other languages. For more details, please visit [here](https://help.aliyun.com/document_detail/2780059.html?spm=a2c4g.2780058.0.0.3a9e5b1dWeOQjI).
+DashScope의 [Text ReRank Model](https://help.aliyun.com/document_detail/2780058.html?spm=a2c4g.2780059.0.0.6d995024FlrJ12)은 최대 4000 토큰으로 문서의 재순위를 지원합니다. 또한, 중국어, 영어, 일본어, 한국어, 태국어, 스페인어, 프랑스어, 포르투갈어, 인도네시아어, 아랍어 및 50개 이상의 언어를 지원합니다. 자세한 내용은 [여기](https://help.aliyun.com/document_detail/2780059.html?spm=a2c4g.2780058.0.0.3a9e5b1dWeOQjI)에서 확인하세요.
 
 ```python
 %pip install --upgrade --quiet  dashscope
 ```
+
 
 ```python
 %pip install --upgrade --quiet  faiss
@@ -21,6 +23,7 @@ DashScope's [Text ReRank Model](https://help.aliyun.com/document_detail/2780058.
 %pip install --upgrade --quiet  faiss-cpu
 ```
 
+
 ```python
 # To create api key: https://bailian.console.aliyun.com/?apiKey=1#/api-key
 
@@ -29,6 +32,7 @@ import os
 
 os.environ["DASHSCOPE_API_KEY"] = getpass.getpass("DashScope API Key:")
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -40,8 +44,9 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+
+## 기본 벡터 저장소 검색기 설정
+2023년 국정 연설을 (청크로) 저장하여 간단한 벡터 저장소 검색기를 초기화하는 것부터 시작하겠습니다. 검색기를 설정하여 많은 수(20)의 문서를 검색할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "DashScope Reranker"}, {"imported": "DashScopeEmbeddings", "source": "langchain_community.embeddings.dashscope", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.dashscope.DashScopeEmbeddings.html", "title": "DashScope Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores.faiss", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "DashScope Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "DashScope Reranker"}]-->
@@ -61,6 +66,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 Document 1:
 
@@ -258,8 +264,9 @@ With a duty to one another to the American people to the Constitution.
 
 And with an unwavering resolve that freedom will always triumph over tyranny.
 ```
-## Reranking with DashScopeRerank
-Now let's wrap our base retriever with a `ContextualCompressionRetriever`. We'll use the `DashScopeRerank` to rerank the returned results.
+
+## DashScopeRerank로 재순위 지정
+이제 기본 검색기를 `ContextualCompressionRetriever`로 감싸겠습니다. 반환된 결과의 재순위를 지정하기 위해 `DashScopeRerank`를 사용할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "DashScope Reranker"}, {"imported": "DashScopeRerank", "source": "langchain_community.document_compressors.dashscope_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.dashscope_rerank.DashScopeRerank.html", "title": "DashScope Reranker"}]-->
@@ -276,6 +283,7 @@ compressed_docs = compression_retriever.invoke(
 )
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 

@@ -1,11 +1,12 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/jina_rerank/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/jina_rerank.ipynb
+description: 이 문서는 Jina Reranker를 사용하여 문서 압축 및 검색을 수행하는 방법을 보여줍니다. 다양한 코드 예제와 설정 방법이
+  포함되어 있습니다.
 ---
 
-# Jina Reranker
+# 지나 리랭커
 
-This notebook shows how to use Jina Reranker for document compression and retrieval.
+이 노트북은 문서 압축 및 검색을 위해 지나 리랭커를 사용하는 방법을 보여줍니다.
 
 ```python
 %pip install -qU langchain langchain-openai langchain-community langchain-text-splitters langchainhub
@@ -16,6 +17,7 @@ This notebook shows how to use Jina Reranker for document compression and retrie
 
 %pip install --upgrade --quiet  faiss_cpu
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -29,11 +31,12 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
 
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+## 기본 벡터 저장소 검색기 설정
 
-##### Set the Jina and OpenAI API keys
+간단한 벡터 저장소 검색기를 초기화하고 2023년 국정 연설을 (청크로) 저장하는 것으로 시작하겠습니다. 검색기가 많은 수(20)의 문서를 검색하도록 설정할 수 있습니다.
+
+##### 지나 및 OpenAI API 키 설정
 
 ```python
 import getpass
@@ -42,6 +45,7 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 os.environ["JINA_API_KEY"] = getpass.getpass()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Jina Reranker"}, {"imported": "JinaEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.jina.JinaEmbeddings.html", "title": "Jina Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "Jina Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Jina Reranker"}]-->
@@ -64,9 +68,10 @@ docs = retriever.get_relevant_documents(query)
 pretty_print_docs(docs)
 ```
 
-## Doing reranking with JinaRerank
 
-Now let's wrap our base retriever with a ContextualCompressionRetriever, using Jina Reranker as a compressor.
+## 지나 리랭커로 리랭킹 수행
+
+이제 기본 검색기를 ContextualCompressionRetriever로 감싸고, 지나 리랭커를 압축기로 사용하겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "Jina Reranker"}, {"imported": "JinaRerank", "source": "langchain_community.document_compressors", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.jina_rerank.JinaRerank.html", "title": "Jina Reranker"}]-->
@@ -83,11 +88,13 @@ compressed_docs = compression_retriever.get_relevant_documents(
 )
 ```
 
+
 ```python
 pretty_print_docs(compressed_docs)
 ```
 
-## QA reranking with Jina Reranker
+
+## QA 리랭킹과 지나 리랭커
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "Jina Reranker"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "Jina Reranker"}]-->
@@ -98,6 +105,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 retrieval_qa_chat_prompt = hub.pull("langchain-ai/retrieval-qa-chat")
 retrieval_qa_chat_prompt.pretty_print()
 ```
+
 ```output
 ================================[1m System Message [0m================================
 
@@ -116,6 +124,7 @@ Answer any use questions based solely on the context below:
 [33;1m[1;3m{input}[0m
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Jina Reranker"}]-->
 from langchain_openai import ChatOpenAI
@@ -124,6 +133,7 @@ llm = ChatOpenAI(model="gpt-3.5-turbo-0125", temperature=0)
 combine_docs_chain = create_stuff_documents_chain(llm, retrieval_qa_chat_prompt)
 chain = create_retrieval_chain(compression_retriever, combine_docs_chain)
 ```
+
 
 ```python
 chain.invoke({"input": query})

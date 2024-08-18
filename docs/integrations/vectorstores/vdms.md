@@ -1,50 +1,54 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/vdms/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/vdms.ipynb
+description: 인텔의 VDMS는 시각적 메타데이터를 그래프로 저장하여 대규모 시각 데이터에 효율적으로 접근할 수 있는 저장 솔루션입니다.
 ---
 
-# Intel's Visual Data Management System (VDMS)
+# 인텔의 비주얼 데이터 관리 시스템 (VDMS)
 
-> Intel's [VDMS](https://github.com/IntelLabs/vdms) is a storage solution for efficient access of big-”visual”-data that aims to achieve cloud scale by searching for relevant visual data via visual metadata stored as a graph and enabling machine friendly enhancements to visual data for faster access. VDMS is licensed under MIT.
+> 인텔의 [VDMS](https://github.com/IntelLabs/vdms)는 그래프로 저장된 비주얼 메타데이터를 통해 관련 비주얼 데이터 검색을 목표로 하여 클라우드 규모에 도달하는 효율적인 대용량 "비주얼" 데이터 접근을 위한 저장 솔루션입니다. VDMS는 MIT 라이선스 하에 배포됩니다.
 
-VDMS supports:
-* K nearest neighbor search
-* Euclidean distance (L2) and inner product (IP)
-* Libraries for indexing and computing distances: TileDBDense, TileDBSparse, FaissFlat (Default), FaissIVFFlat, Flinng
-* Embeddings for text, images, and video
-* Vector and metadata searches
+VDMS는 다음을 지원합니다:
+* K 최근접 이웃 검색
+* 유클리드 거리 (L2) 및 내적 (IP)
+* 인덱싱 및 거리 계산을 위한 라이브러리: TileDBDense, TileDBSparse, FaissFlat (기본값), FaissIVFFlat, Flinng
+* 텍스트, 이미지 및 비디오에 대한 임베딩
+* 벡터 및 메타데이터 검색
 
-VDMS has server and client components. To setup the server, see the [installation instructions](https://github.com/IntelLabs/vdms/blob/master/INSTALL.md) or use the [docker image](https://hub.docker.com/r/intellabs/vdms).
+VDMS는 서버 및 클라이언트 구성 요소를 가지고 있습니다. 서버를 설정하려면 [설치 지침](https://github.com/IntelLabs/vdms/blob/master/INSTALL.md)을 참조하거나 [도커 이미지](https://hub.docker.com/r/intellabs/vdms)를 사용하세요.
 
-This notebook shows how to use VDMS as a vector store using the docker image.
+이 노트북은 도커 이미지를 사용하여 VDMS를 벡터 저장소로 사용하는 방법을 보여줍니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-To begin, install the Python packages for the VDMS client and Sentence Transformers:
+시작하려면 VDMS 클라이언트 및 Sentence Transformers에 대한 Python 패키지를 설치하세요:
 
 ```python
 # Pip install necessary package
 %pip install --upgrade --quiet pip vdms sentence-transformers langchain-huggingface > /dev/null
 ```
+
 ```output
 Note: you may need to restart the kernel to use updated packages.
 ```
-## Start VDMS Server
-Here we start the VDMS server with port 55555.
+
+## VDMS 서버 시작
+여기에서 포트 55555로 VDMS 서버를 시작합니다.
 
 ```python
 !docker run --rm -d -p 55555:55555 --name vdms_vs_test_nb intellabs/vdms:latest
 ```
+
 ```output
 b26917ffac236673ef1d035ab9c91fe999e29c9eb24aa6c7103d7baa6bf2f72d
 ```
-## Basic Example (using the Docker Container)
 
-In this basic example, we demonstrate adding documents into VDMS and using it as a vector database.
+## 기본 예제 (도커 컨테이너 사용)
 
-You can run the VDMS Server in a Docker container separately to use with LangChain which connects to the server via the VDMS Python Client. 
+이 기본 예제에서는 VDMS에 문서를 추가하고 이를 벡터 데이터베이스로 사용하는 방법을 보여줍니다.
 
-VDMS has the ability to handle multiple collections of documents, but the LangChain interface expects one, so we need to specify the name of the collection . The default collection name used by LangChain is "langchain".
+VDMS 서버를 도커 컨테이너에서 별도로 실행하여 LangChain과 함께 사용할 수 있으며, LangChain은 VDMS Python 클라이언트를 통해 서버에 연결됩니다.
+
+VDMS는 여러 문서 컬렉션을 처리할 수 있지만, LangChain 인터페이스는 하나의 컬렉션을 기대하므로 컬렉션의 이름을 지정해야 합니다. LangChain에서 사용하는 기본 컬렉션 이름은 "langchain"입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders.text", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "Intel's Visual Data Management System (VDMS)"}, {"imported": "VDMS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vdms.VDMS.html", "title": "Intel's Visual Data Management System (VDMS)"}, {"imported": "VDMS_Client", "source": "langchain_community.vectorstores.vdms", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.vdms.VDMS_Client.html", "title": "Intel's Visual Data Management System (VDMS)"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Intel's Visual Data Management System (VDMS)"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters.character", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "Intel's Visual Data Management System (VDMS)"}]-->
@@ -66,7 +70,8 @@ DELIMITER = "-" * 50
 vdms_client = VDMS_Client(host="localhost", port=55555)
 ```
 
-Here are some helper functions for printing results.
+
+결과를 인쇄하기 위한 몇 가지 도우미 함수입니다.
 
 ```python
 def print_document_details(doc):
@@ -98,10 +103,11 @@ def print_response(list_of_entities):
         print(f"{DELIMITER}\n")
 ```
 
-### Load Document and Obtain Embedding Function
-Here we load the most recent State of the Union Address and split the document into chunks. 
 
-LangChain vector stores use a string/keyword `id` for bookkeeping documents. By default, `id` is a uuid but here we're defining it as an integer cast as a string. Additional metadata is also provided with the documents and the HuggingFaceEmbeddings are used for this example as the embedding function.
+### 문서 로드 및 임베딩 함수 얻기
+여기에서는 최근의 국정 연설을 로드하고 문서를 청크로 나눕니다.
+
+LangChain 벡터 저장소는 문서를 관리하기 위해 문자열/키워드 `id`를 사용합니다. 기본적으로 `id`는 uuid이지만, 여기에서는 이를 문자열로 캐스팅한 정수로 정의합니다. 추가 메타데이터도 문서와 함께 제공되며, 이 예제에서는 임베딩 함수로 HuggingFaceEmbeddings를 사용합니다.
 
 ```python
 # load the document and split it into chunks
@@ -128,13 +134,15 @@ print(
     f"# Embedding Dimensions: {len(embedding.embed_query('This is a test document.'))}"
 )
 ```
+
 ```output
 # Documents: 42
 # Embedding Dimensions: 768
 ```
-### Similarity Search using Faiss Flat and Euclidean Distance (Default)
 
-In this section, we add the documents to VDMS using FAISS IndexFlat indexing (default) and Euclidena distance (default) as the distance metric for simiarity search. We search for three documents (`k=3`) related to the query `What did the president say about Ketanji Brown Jackson`.
+### Faiss Flat 및 유클리드 거리 (기본값)를 사용한 유사성 검색
+
+이 섹션에서는 FAISS IndexFlat 인덱싱 (기본값) 및 유클리드 거리 (기본값)를 거리 메트릭으로 사용하여 VDMS에 문서를 추가합니다. 우리는 쿼리 `Ketanji Brown Jackson에 대해 대통령이 뭐라고 했는가`와 관련된 세 개의 문서 (`k=3`)를 검색합니다.
 
 ```python
 # add data
@@ -153,6 +161,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 returned_docs = db_FaissFlat.similarity_search(query, k=k, filter=None)
 print_results(returned_docs, score=False)
 ```
+
 ```output
 --------------------------------------------------
 
@@ -217,6 +226,7 @@ Metadata:
 --------------------------------------------------
 ```
 
+
 ```python
 # Query (with filtering)
 k = 3
@@ -225,6 +235,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 returned_docs = db_FaissFlat.similarity_search(query, k=k, filter=constraints)
 print_results(returned_docs, score=False)
 ```
+
 ```output
 --------------------------------------------------
 
@@ -295,9 +306,10 @@ Metadata:
 	source:	../../how_to/state_of_the_union.txt
 --------------------------------------------------
 ```
-### Similarity Search using Faiss IVFFlat and Inner Product (IP) Distance
 
-In this section, we add the documents to VDMS using Faiss IndexIVFFlat indexing and IP as the distance metric for similarity search. We search for three documents (`k=3`) related to the query `What did the president say about Ketanji Brown Jackson` and also return the score along with the document.
+### Faiss IVFFlat 및 내적 (IP) 거리 사용한 유사성 검색
+
+이 섹션에서는 Faiss IndexIVFFlat 인덱싱 및 IP를 거리 메트릭으로 사용하여 VDMS에 문서를 추가합니다. 우리는 쿼리 `Ketanji Brown Jackson에 대해 대통령이 뭐라고 했는가`와 관련된 세 개의 문서 (`k=3`)를 검색하고 문서와 함께 점수도 반환합니다.
 
 ```python
 db_FaissIVFFlat = VDMS.from_documents(
@@ -315,6 +327,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db_FaissIVFFlat.similarity_search_with_score(query, k=k, filter=None)
 print_results(docs_with_score)
 ```
+
 ```output
 --------------------------------------------------
 
@@ -384,9 +397,10 @@ Metadata:
 	source:	../../how_to/state_of_the_union.txt
 --------------------------------------------------
 ```
-### Similarity Search using FLINNG and IP Distance
 
-In this section, we add the documents to VDMS using Filters to Identify Near-Neighbor Groups (FLINNG) indexing and IP as the distance metric for similarity search. We search for three documents (`k=3`) related to the query `What did the president say about Ketanji Brown Jackson` and also return the score along with the document.
+### FLINNG 및 IP 거리 사용한 유사성 검색
+
+이 섹션에서는 근접 이웃 그룹을 식별하기 위한 필터 (FLINNG) 인덱싱 및 IP를 거리 메트릭으로 사용하여 VDMS에 문서를 추가합니다. 우리는 쿼리 `Ketanji Brown Jackson에 대해 대통령이 뭐라고 했는가`와 관련된 세 개의 문서 (`k=3`)를 검색하고 문서와 함께 점수도 반환합니다.
 
 ```python
 db_Flinng = VDMS.from_documents(
@@ -404,6 +418,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db_Flinng.similarity_search_with_score(query, k=k, filter=None)
 print_results(docs_with_score)
 ```
+
 ```output
 --------------------------------------------------
 
@@ -473,9 +488,10 @@ Metadata:
 	source:	../../how_to/state_of_the_union.txt
 --------------------------------------------------
 ```
-### Similarity Search using TileDBDense and Euclidean Distance
 
-In this section, we add the documents to VDMS using TileDB Dense indexing and L2 as the distance metric for similarity search. We search for three documents (`k=3`) related to the query `What did the president say about Ketanji Brown Jackson` and also return the score along with the document.
+### TileDBDense 및 유클리드 거리 사용한 유사성 검색
+
+이 섹션에서는 TileDB Dense 인덱싱 및 L2를 거리 메트릭으로 사용하여 VDMS에 문서를 추가합니다. 우리는 쿼리 `Ketanji Brown Jackson에 대해 대통령이 뭐라고 했는가`와 관련된 세 개의 문서 (`k=3`)를 검색하고 문서와 함께 점수도 반환합니다.
 
 ```python
 db_tiledbD = VDMS.from_documents(
@@ -493,6 +509,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs_with_score = db_tiledbD.similarity_search_with_score(query, k=k, filter=None)
 print_results(docs_with_score)
 ```
+
 ```output
 --------------------------------------------------
 
@@ -562,11 +579,12 @@ Metadata:
 	source:	../../how_to/state_of_the_union.txt
 --------------------------------------------------
 ```
-### Update and Delete
 
-While building toward a real application, you want to go beyond adding data, and also update and delete data.
+### 업데이트 및 삭제
 
-Here is a basic example showing how to do so.  First, we will update the metadata for the document most relevant to the query by adding a date. 
+실제 애플리케이션을 구축하는 과정에서 데이터 추가를 넘어 데이터 업데이트 및 삭제도 원할 것입니다.
+
+여기에서는 이를 수행하는 방법을 보여주는 기본 예제가 있습니다. 먼저, 쿼리와 가장 관련이 높은 문서의 메타데이터를 날짜를 추가하여 업데이트합니다.
 
 ```python
 from datetime import datetime
@@ -595,6 +613,7 @@ response, response_array = db_FaissFlat.get(
 print(f"UPDATED ENTRY (id={id_to_update}):")
 print_response([response[0]["FindDescriptor"]["entities"][0]])
 ```
+
 ```output
 Original metadata: 
 	{'id': '32', 'page_number': 32, 'president_included': True, 'source': '../../how_to/state_of_the_union.txt'}
@@ -629,7 +648,8 @@ source:
 	../../how_to/state_of_the_union.txt
 --------------------------------------------------
 ```
-Next we will delete the last document by ID (id=42).
+
+다음으로 ID (id=42)를 사용하여 마지막 문서를 삭제합니다.
 
 ```python
 print("Documents before deletion: ", db_FaissFlat.count(collection_name))
@@ -640,17 +660,19 @@ print(
     f"Documents after deletion (id={id_to_remove}): {db_FaissFlat.count(collection_name)}"
 )
 ```
+
 ```output
 Documents before deletion:  42
 Documents after deletion (id=42): 41
 ```
-## Other Information
-VDMS supports various types of visual data and operations. Some of the capabilities are integrated in the LangChain interface but additional workflow improvements will be added as VDMS is under continuous development.
 
-Addtional capabilities integrated into LangChain are below.
+## 기타 정보
+VDMS는 다양한 유형의 비주얼 데이터 및 작업을 지원합니다. 일부 기능은 LangChain 인터페이스에 통합되어 있지만, VDMS는 지속적인 개발 중이므로 추가 워크플로 개선이 추가될 것입니다.
 
-### Similarity search by vector
-Instead of searching by string query, you can also search by embedding/vector.
+LangChain에 통합된 추가 기능은 아래와 같습니다.
+
+### 벡터에 의한 유사성 검색
+문자열 쿼리로 검색하는 대신 임베딩/벡터로 검색할 수 있습니다.
 
 ```python
 embedding_vector = embedding.embed_query(query)
@@ -659,6 +681,7 @@ returned_docs = db_FaissFlat.similarity_search_by_vector(embedding_vector)
 # Print Results
 print_document_details(returned_docs[0])
 ```
+
 ```output
 Content:
 	Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
@@ -676,11 +699,12 @@ Metadata:
 	president_included:	True
 	source:	../../how_to/state_of_the_union.txt
 ```
-### Filtering on metadata
 
-It can be helpful to narrow down the collection before working with it.
+### 메타데이터 필터링
 
-For example, collections can be filtered on metadata using the get method. A dictionary is used to filter metadata. Here we retrieve the document where `id = 2` and remove it from the vector store.
+작업하기 전에 컬렉션을 좁히는 것이 유용할 수 있습니다.
+
+예를 들어, get 메서드를 사용하여 메타데이터로 컬렉션을 필터링할 수 있습니다. 사전을 사용하여 메타데이터를 필터링합니다. 여기에서는 `id = 2`인 문서를 검색하고 이를 벡터 저장소에서 제거합니다.
 
 ```python
 response, response_array = db_FaissFlat.get(
@@ -696,6 +720,7 @@ db_FaissFlat.delete(collection_name=collection_name, ids=["2"])
 print("Deleted entry:")
 print_response([response[0]["FindDescriptor"]["entities"][0]])
 ```
+
 ```output
 Deleted entry:
 
@@ -736,13 +761,14 @@ source:
 	../../how_to/state_of_the_union.txt
 --------------------------------------------------
 ```
-### Retriever options
 
-This section goes over different options for how to use VDMS as a retriever.
+### 검색기 옵션
 
-#### Simiarity Search
+이 섹션에서는 VDMS를 검색기로 사용하는 다양한 옵션을 다룹니다.
 
-Here we use similarity search in the retriever object.
+#### 유사성 검색
+
+여기에서는 검색기 객체에서 유사성 검색을 사용합니다.
 
 ```python
 retriever = db_FaissFlat.as_retriever()
@@ -750,6 +776,7 @@ relevant_docs = retriever.invoke(query)[0]
 
 print_document_details(relevant_docs)
 ```
+
 ```output
 Content:
 	Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
@@ -767,9 +794,10 @@ Metadata:
 	president_included:	True
 	source:	../../how_to/state_of_the_union.txt
 ```
-#### Maximal Marginal Relevance Search (MMR)
 
-In addition to using similarity search in the retriever object, you can also use `mmr`.
+#### 최대 한계 관련성 검색 (MMR)
+
+검색기 객체에서 유사성 검색을 사용하는 것 외에도 `mmr`을 사용할 수 있습니다.
 
 ```python
 retriever = db_FaissFlat.as_retriever(search_type="mmr")
@@ -777,6 +805,7 @@ relevant_docs = retriever.invoke(query)[0]
 
 print_document_details(relevant_docs)
 ```
+
 ```output
 Content:
 	Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
@@ -794,12 +823,14 @@ Metadata:
 	president_included:	True
 	source:	../../how_to/state_of_the_union.txt
 ```
-We can also use MMR directly.
+
+MMR을 직접 사용할 수도 있습니다.
 
 ```python
 mmr_resp = db_FaissFlat.max_marginal_relevance_search_with_score(query, k=2, fetch_k=10)
 print_results(mmr_resp)
 ```
+
 ```output
 --------------------------------------------------
 
@@ -854,8 +885,9 @@ Metadata:
 	source:	../../how_to/state_of_the_union.txt
 --------------------------------------------------
 ```
-### Delete collection
-Previously, we removed documents based on its `id`. Here, all documents are removed since no ID is provided.
+
+### 컬렉션 삭제
+이전에는 `id`를 기반으로 문서를 제거했습니다. 여기에서는 ID가 제공되지 않았으므로 모든 문서가 제거됩니다.
 
 ```python
 print("Documents before deletion: ", db_FaissFlat.count(collection_name))
@@ -864,15 +896,18 @@ db_FaissFlat.delete(collection_name=collection_name)
 
 print("Documents after deletion: ", db_FaissFlat.count(collection_name))
 ```
+
 ```output
 Documents before deletion:  40
 Documents after deletion:  0
 ```
-## Stop VDMS Server
+
+## VDMS 서버 중지
 
 ```python
 !docker kill vdms_vs_test_nb
 ```
+
 ```output
 huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
 To disable this warning, you can either:
@@ -882,7 +917,8 @@ To disable this warning, you can either:
 vdms_vs_test_nb
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

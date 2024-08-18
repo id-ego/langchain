@@ -1,35 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/browserbase/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/browserbase.ipynb
+description: Browserbase는 헤드리스 브라우저를 안정적으로 실행, 관리 및 모니터링할 수 있는 개발자 플랫폼입니다. AI 데이터
+  수집을 지원합니다.
 ---
 
 # Browserbase
 
-[Browserbase](https://browserbase.com) is a developer platform to reliably run, manage, and monitor headless browsers.
+[Browserbase](https://browserbase.com)는 헤드리스 브라우저를 신뢰성 있게 실행, 관리 및 모니터링하기 위한 개발자 플랫폼입니다.
 
-Power your AI data retrievals with:
-- [Serverless Infrastructure](https://docs.browserbase.com/under-the-hood) providing reliable browsers to extract data from complex UIs
-- [Stealth Mode](https://docs.browserbase.com/features/stealth-mode) with included fingerprinting tactics and automatic captcha solving
-- [Session Debugger](https://docs.browserbase.com/features/sessions) to inspect your Browser Session with networks timeline and logs
-- [Live Debug](https://docs.browserbase.com/guides/session-debug-connection/browser-remote-control) to quickly debug your automation
+AI 데이터 검색을 다음으로 강화하세요:
+- [서버리스 인프라](https://docs.browserbase.com/under-the-hood)는 복잡한 UI에서 데이터를 추출하기 위한 신뢰할 수 있는 브라우저를 제공합니다.
+- [스텔스 모드](https://docs.browserbase.com/features/stealth-mode)는 포함된 지문 인식 전술과 자동 캡차 해결 기능을 제공합니다.
+- [세션 디버거](https://docs.browserbase.com/features/sessions)는 네트워크 타임라인 및 로그와 함께 브라우저 세션을 검사합니다.
+- [라이브 디버그](https://docs.browserbase.com/guides/session-debug-connection/browser-remote-control)는 자동화를 빠르게 디버그할 수 있도록 합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Get an API key and Project ID from [browserbase.com](https://browserbase.com) and set it in environment variables (`BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID`).
-- Install the [Browserbase SDK](http://github.com/browserbase/python-sdk):
+- [browserbase.com](https://browserbase.com)에서 API 키와 프로젝트 ID를 가져와 환경 변수(`BROWSERBASE_API_KEY`, `BROWSERBASE_PROJECT_ID`)에 설정합니다.
+- [Browserbase SDK](http://github.com/browserbase/python-sdk)를 설치합니다:
 
 ```python
 % pip install browserbase
 ```
 
-## Loading documents
 
-You can load webpages into LangChain using `BrowserbaseLoader`. Optionally, you can set `text_content` parameter to convert the pages to text-only representation.
+## 문서 로딩
+
+`BrowserbaseLoader`를 사용하여 LangChain에 웹페이지를 로드할 수 있습니다. 선택적으로 `text_content` 매개변수를 설정하여 페이지를 텍스트 전용 표현으로 변환할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "BrowserbaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.browserbase.BrowserbaseLoader.html", "title": "Browserbase"}]-->
 from langchain_community.document_loaders import BrowserbaseLoader
 ```
+
 
 ```python
 loader = BrowserbaseLoader(
@@ -44,20 +47,21 @@ docs = loader.load()
 print(docs[0].page_content[:61])
 ```
 
-### Loader Options
 
-- `urls` Required. A list of URLs to fetch.
-- `text_content` Retrieve only text content. Default is `False`.
-- `api_key` Optional. Browserbase API key. Default is `BROWSERBASE_API_KEY` env variable.
-- `project_id` Optional. Browserbase Project ID. Default is `BROWSERBASE_PROJECT_ID` env variable.
-- `session_id` Optional. Provide an existing Session ID.
-- `proxy` Optional. Enable/Disable Proxies.
+### 로더 옵션
 
-## Loading images
+- `urls` 필수. 가져올 URL 목록입니다.
+- `text_content` 텍스트 콘텐츠만 검색합니다. 기본값은 `False`입니다.
+- `api_key` 선택 사항. Browserbase API 키입니다. 기본값은 `BROWSERBASE_API_KEY` 환경 변수입니다.
+- `project_id` 선택 사항. Browserbase 프로젝트 ID입니다. 기본값은 `BROWSERBASE_PROJECT_ID` 환경 변수입니다.
+- `session_id` 선택 사항. 기존 세션 ID를 제공합니다.
+- `proxy` 선택 사항. 프록시 사용/사용 중지 설정입니다.
 
-You can also load screenshots of webpages (as bytes) for multi-modal models.
+## 이미지 로딩
 
-Full example using GPT-4V:
+다중 모달 모델을 위해 웹페이지의 스크린샷(바이트 형식)도 로드할 수 있습니다.
+
+GPT-4V를 사용한 전체 예제:
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Browserbase"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Browserbase"}]-->
@@ -85,7 +89,8 @@ result = chat.invoke(
 print(result.content)
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

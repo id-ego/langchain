@@ -1,39 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/myscale/
+description: MyScale 벡터 데이터베이스를 LangChain에서 사용하는 방법을 다루며, 설치, 설정 및 MyScale 래퍼에 대한
+  참조를 포함합니다.
 ---
 
 # MyScale
 
-This page covers how to use MyScale vector database within LangChain.
-It is broken into two parts: installation and setup, and then references to specific MyScale wrappers.
+이 페이지는 LangChain 내에서 MyScale 벡터 데이터베이스를 사용하는 방법을 다룹니다. 설치 및 설정과 특정 MyScale 래퍼에 대한 참조로 나누어져 있습니다.
 
-With MyScale, you can manage both structured and unstructured (vectorized) data, and perform joint queries and analytics on both types of data using SQL. Plus, MyScale's cloud-native OLAP architecture, built on top of ClickHouse, enables lightning-fast data processing even on massive datasets.
+MyScale을 사용하면 구조화된 데이터와 비구조화된(벡터화된) 데이터를 모두 관리하고, SQL을 사용하여 두 유형의 데이터에 대한 공동 쿼리 및 분석을 수행할 수 있습니다. 또한, ClickHouse 위에 구축된 MyScale의 클라우드 네이티브 OLAP 아키텍처는 대규모 데이터 세트에서도 번개처럼 빠른 데이터 처리를 가능하게 합니다.
 
-## Introduction
+## 소개
 
-[Overview to MyScale and High performance vector search](https://docs.myscale.com/en/overview/)
+[MyScale 및 고성능 벡터 검색 개요](https://docs.myscale.com/en/overview/)
 
-You can now register on our SaaS and [start a cluster now!](https://docs.myscale.com/en/quickstart/)
+이제 우리의 SaaS에 등록하고 [클러스터를 시작하세요!](https://docs.myscale.com/en/quickstart/)
 
-If you are also interested in how we managed to integrate SQL and vector, please refer to [this document](https://docs.myscale.com/en/vector-reference/) for further syntax reference.
+SQL과 벡터를 통합하는 방법에 관심이 있으시다면, 추가 구문 참조를 위해 [이 문서](https://docs.myscale.com/en/vector-reference/)를 참조하시기 바랍니다.
 
-We also deliver with live demo on huggingface! Please checkout our [huggingface space](https://huggingface.co/myscale)! They search millions of vector within a blink!
+우리는 또한 huggingface에서 라이브 데모를 제공합니다! 우리의 [huggingface 공간](https://huggingface.co/myscale)을 확인해 보세요! 그들은 눈 깜짝할 사이에 수백만 개의 벡터를 검색합니다!
 
-## Installation and Setup
-- Install the Python SDK with `pip install clickhouse-connect`
+## 설치 및 설정
+- `pip install clickhouse-connect`로 Python SDK를 설치하세요.
 
-### Setting up environments
+### 환경 설정
 
-There are two ways to set up parameters for myscale index.
+myscale 인덱스의 매개변수를 설정하는 방법은 두 가지가 있습니다.
 
-1. Environment Variables
+1. 환경 변수
    
-   Before you run the app, please set the environment variable with `export`:
+   앱을 실행하기 전에 `export`로 환경 변수를 설정하세요:
 `export MYSCALE_HOST='<your-endpoints-url>' MYSCALE_PORT=<your-endpoints-port> MYSCALE_USERNAME=<your-username> MYSCALE_PASSWORD=<your-password> ...`
    
-   You can easily find your account, password and other info on our SaaS. For details please refer to [this document](https://docs.myscale.com/en/cluster-management/)
-Every attributes under `MyScaleSettings` can be set with prefix `MYSCALE_` and is case insensitive.
-2. Create `MyScaleSettings` object with parameters
+   귀하의 계정, 비밀번호 및 기타 정보는 우리의 SaaS에서 쉽게 찾을 수 있습니다. 자세한 내용은 [이 문서](https://docs.myscale.com/en/cluster-management/)를 참조하시기 바랍니다. `MyScaleSettings` 아래의 모든 속성은 접두사 `MYSCALE_`로 설정할 수 있으며 대소문자를 구분하지 않습니다.
+2. 매개변수로 `MyScaleSettings` 객체 생성
    
    ```python
    from langchain_community.vectorstores import MyScale, MyScaleSettings
@@ -42,8 +41,9 @@ Every attributes under `MyScaleSettings` can be set with prefix `MYSCALE_` and i
    index.add_documents(...)
    ```
 
-## Wrappers
-supported functions:
+
+## 래퍼
+지원되는 기능:
 - `add_texts`
 - `add_documents`
 - `from_texts`
@@ -57,13 +57,13 @@ supported functions:
 
 ### VectorStore
 
-There exists a wrapper around MyScale database, allowing you to use it as a vectorstore,
-whether for semantic search or similar example retrieval.
+MyScale 데이터베이스 주위에 래퍼가 존재하여 의미 검색 또는 유사 예제 검색을 위해 벡터 저장소로 사용할 수 있습니다.
 
-To import this vectorstore:
+이 벡터 저장소를 가져오려면:
 ```python
 <!--IMPORTS:[{"imported": "MyScale", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.myscale.MyScale.html", "title": "MyScale"}]-->
 from langchain_community.vectorstores import MyScale
 ```
 
-For a more detailed walkthrough of the MyScale wrapper, see [this notebook](/docs/integrations/vectorstores/myscale)
+
+MyScale 래퍼에 대한 보다 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/myscale)을 참조하세요.

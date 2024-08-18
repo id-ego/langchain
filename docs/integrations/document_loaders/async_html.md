@@ -1,16 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/async_html/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/async_html.ipynb
+description: '`AsyncHtmlLoader`는 URL 목록에서 HTML을 비동기적으로 동시에 로드하는 기능을 제공합니다. 효율적인 웹
+  데이터 수집을 지원합니다.'
 ---
 
 # AsyncHtml
 
-`AsyncHtmlLoader` loads raw HTML from a list of URLs concurrently.
+`AsyncHtmlLoader`는 URL 목록에서 원시 HTML을 동시에 로드합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncHtmlLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.async_html.AsyncHtmlLoader.html", "title": "AsyncHtml"}]-->
 from langchain_community.document_loaders import AsyncHtmlLoader
 ```
+
 
 ```python
 urls = ["https://www.espn.com", "https://lilianweng.github.io/posts/2023-06-23-agent/"]
@@ -21,27 +23,33 @@ loader = AsyncHtmlLoader(urls)
 # Otherwise, loader.load() may stuck becuase aiohttp session does not recognize the proxy by default
 docs = loader.load()
 ```
+
 ```output
 Fetching pages: 100%|############| 2/2 [00:00<00:00,  9.96it/s]
 ```
+
 
 ```python
 docs[0].page_content[1000:2000]
 ```
 
+
 ```output
 ' news. Stream exclusive games on ESPN+ and play fantasy sports." />\n<meta property="og:image" content="https://a1.espncdn.com/combiner/i?img=%2Fi%2Fespn%2Fespn_logos%2Fespn_red.png"/>\n<meta property="og:image:width" content="1200" />\n<meta property="og:image:height" content="630" />\n<meta property="og:type" content="website" />\n<meta name="twitter:site" content="espn" />\n<meta name="twitter:url" content="https://www.espn.com" />\n<meta name="twitter:title" content="ESPN - Serving Sports Fans. Anytime. Anywhere."/>\n<meta name="twitter:description" content="Visit ESPN for live scores, highlights and sports news. Stream exclusive games on ESPN+ and play fantasy sports." />\n<meta name="twitter:card" content="summary">\n<meta name="twitter:app:name:iphone" content="ESPN"/>\n<meta name="twitter:app:id:iphone" content="317469184"/>\n<meta name="twitter:app:name:googleplay" content="ESPN"/>\n<meta name="twitter:app:id:googleplay" content="com.espn.score_center"/>\n<meta name="title" content="ESPN - '
 ```
+
 
 ```python
 docs[1].page_content[1000:2000]
 ```
 
+
 ```output
 'al" href="https://lilianweng.github.io/posts/2023-06-23-agent/" />\n<link crossorigin="anonymous" href="/assets/css/stylesheet.min.67a6fb6e33089cb29e856bcc95d7aa39f70049a42b123105531265a0d9f1258b.css" integrity="sha256-Z6b7bjMInLKehWvMldeqOfcASaQrEjEFUxJloNnxJYs=" rel="preload stylesheet" as="style">\n<script defer crossorigin="anonymous" src="/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js" integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5&#43;kdJvBz5iKbt6B5PJI="\n    onload="hljs.initHighlightingOnLoad();"></script>\n<link rel="icon" href="https://lilianweng.github.io/favicon_peach.ico">\n<link rel="icon" type="image/png" sizes="16x16" href="https://lilianweng.github.io/favicon-16x16.png">\n<link rel="icon" type="image/png" sizes="32x32" href="https://lilianweng.github.io/favicon-32x32.png">\n<link rel="apple-touch-icon" href="https://lilianweng.github.io/apple-touch-icon.png">\n<link rel="mask-icon" href="https://lilianweng.github.io/safari-pinned-tab.'
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

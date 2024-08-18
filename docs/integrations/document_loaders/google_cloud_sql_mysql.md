@@ -1,29 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/google_cloud_sql_mysql/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/google_cloud_sql_mysql.ipynb
+description: Google Cloud SQL for MySQL을 사용하여 Langchain 문서를 저장, 로드 및 삭제하는 방법을 다루는
+  노트북입니다.
 ---
 
 # Google Cloud SQL for MySQL
 
-> [Cloud SQL](https://cloud.google.com/sql) is a fully managed relational database service that offers high performance, seamless integration, and impressive scalability. It offers [MySQL](https://cloud.google.com/sql/mysql), [PostgreSQL](https://cloud.google.com/sql/postgresql), and [SQL Server](https://cloud.google.com/sql/sqlserver) database engines. Extend your database application to build AI-powered experiences leveraging Cloud SQL's Langchain integrations.
+> [Cloud SQL](https://cloud.google.com/sql)는 높은 성능, 원활한 통합 및 인상적인 확장성을 제공하는 완전 관리형 관계형 데이터베이스 서비스입니다. [MySQL](https://cloud.google.com/sql/mysql), [PostgreSQL](https://cloud.google.com/sql/postgresql) 및 [SQL Server](https://cloud.google.com/sql/sqlserver) 데이터베이스 엔진을 제공합니다. Cloud SQL의 Langchain 통합을 활용하여 AI 기반 경험을 구축하기 위해 데이터베이스 애플리케이션을 확장하세요.
 
-This notebook goes over how to use [Cloud SQL for MySQL](https://cloud.google.com/sql/mysql) to [save, load and delete langchain documents](/docs/how_to#document-loaders) with `MySQLLoader` and `MySQLDocumentSaver`.
+이 노트북은 `MySQLLoader` 및 `MySQLDocumentSaver`를 사용하여 [langchain 문서 저장, 로드 및 삭제하기](https://cloud.google.com/sql/mysql) 방법에 대해 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-cloud-sql-mysql-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-cloud-sql-mysql-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-cloud-sql-mysql-python/blob/main/docs/document_loader.ipynb)
 
-## Before You Begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음 작업을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the Cloud SQL Admin API.](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com)
-* [Create a Cloud SQL for MySQL instance](https://cloud.google.com/sql/docs/mysql/create-instance)
-* [Create a Cloud SQL database](https://cloud.google.com/sql/docs/mysql/create-manage-databases)
-* [Add an IAM database user to the database](https://cloud.google.com/sql/docs/mysql/add-manage-iam-users#creating-a-database-user) (Optional)
+* [Google Cloud 프로젝트 만들기](https://developers.google.com/workspace/guides/create-project)
+* [Cloud SQL Admin API 활성화하기.](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com)
+* [MySQL용 Cloud SQL 인스턴스 만들기](https://cloud.google.com/sql/docs/mysql/create-instance)
+* [Cloud SQL 데이터베이스 만들기](https://cloud.google.com/sql/docs/mysql/create-manage-databases)
+* [데이터베이스에 IAM 데이터베이스 사용자 추가하기](https://cloud.google.com/sql/docs/mysql/add-manage-iam-users#creating-a-database-user) (선택 사항)
 
-After confirmed access to database in the runtime environment of this notebook, filling the following values and run the cell before running example scripts.
+이 노트북의 런타임 환경에서 데이터베이스에 대한 액세스를 확인한 후 다음 값을 입력하고 예제 스크립트를 실행하기 전에 셀을 실행하세요.
 
 ```python
 # @markdown Please fill in the both the Google Cloud region and name of your Cloud SQL instance.
@@ -35,15 +36,17 @@ DATABASE = "test"  # @param {type:"string"}
 TABLE_NAME = "test-default"  # @param {type:"string"}
 ```
 
-### 🦜🔗 Library Installation
 
-The integration lives in its own `langchain-google-cloud-sql-mysql` package, so we need to install it.
+### 🦜🔗 라이브러리 설치
+
+통합은 자체 `langchain-google-cloud-sql-mysql` 패키지에 있으므로 설치해야 합니다.
 
 ```python
 %pip install -upgrade --quiet langchain-google-cloud-sql-mysql
 ```
 
-**Colab only**: Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**Colab 전용**: 다음 셀의 주석을 제거하여 커널을 재시작하거나 버튼을 사용하여 커널을 재시작하세요. Vertex AI Workbench에서는 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -53,14 +56,15 @@ The integration lives in its own `langchain-google-cloud-sql-mysql` package, so 
 # app.kernel.do_shutdown(True)
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ Google Cloud 프로젝트 설정
+Google Cloud 리소스를 이 노트북 내에서 활용할 수 있도록 Google Cloud 프로젝트를 설정하세요.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list` 실행.
+* `gcloud projects list` 실행.
+* 지원 페이지 참조: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
@@ -71,12 +75,13 @@ PROJECT_ID = "my-project-id"  # @param {type:"string"}
 !gcloud config set project {PROJECT_ID}
 ```
 
-### 🔐 Authentication
 
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
+### 🔐 인증
 
-- If you are using Colab to run this notebook, use the cell below and continue.
-- If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+Google Cloud에 인증하여 이 노트북에 로그인한 IAM 사용자로 Google Cloud 프로젝트에 액세스하세요.
+
+- 이 노트북을 실행하기 위해 Colab을 사용하는 경우 아래 셀을 사용하고 계속 진행하세요.
+- Vertex AI Workbench를 사용하는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -84,30 +89,31 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-## Basic Usage
 
-### MySQLEngine Connection Pool
+## 기본 사용법
 
-Before saving or loading documents from MySQL table, we need first configures a connection pool to Cloud SQL database. The `MySQLEngine` configures a connection pool to your Cloud SQL database, enabling successful connections from your application and following industry best practices.
+### MySQLEngine 연결 풀
 
-To create a `MySQLEngine` using `MySQLEngine.from_instance()` you need to provide only 4 things:
+MySQL 테이블에서 문서를 저장하거나 로드하기 전에 먼저 Cloud SQL 데이터베이스에 대한 연결 풀을 구성해야 합니다. `MySQLEngine`은 Cloud SQL 데이터베이스에 대한 연결 풀을 구성하여 애플리케이션에서 성공적인 연결을 가능하게 하고 업계 모범 사례를 따릅니다.
 
-1. `project_id` : Project ID of the Google Cloud Project where the Cloud SQL instance is located.
-2. `region` : Region where the Cloud SQL instance is located.
-3. `instance` : The name of the Cloud SQL instance.
-4. `database` : The name of the database to connect to on the Cloud SQL instance.
+`MySQLEngine.from_instance()`를 사용하여 `MySQLEngine`을 생성하려면 4가지만 제공하면 됩니다:
 
-By default, [IAM database authentication](https://cloud.google.com/sql/docs/mysql/iam-authentication#iam-db-auth) will be used as the method of database authentication. This library uses the IAM principal belonging to the [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/application-default-credentials) sourced from the envionment.
+1. `project_id` : Cloud SQL 인스턴스가 위치한 Google Cloud 프로젝트의 프로젝트 ID.
+2. `region` : Cloud SQL 인스턴스가 위치한 지역.
+3. `instance` : Cloud SQL 인스턴스의 이름.
+4. `database` : Cloud SQL 인스턴스에서 연결할 데이터베이스의 이름.
 
-For more informatin on IAM database authentication please see:
+기본적으로 [IAM 데이터베이스 인증](https://cloud.google.com/sql/docs/mysql/iam-authentication#iam-db-auth)이 데이터베이스 인증 방법으로 사용됩니다. 이 라이브러리는 환경에서 가져온 [애플리케이션 기본 자격 증명(ADC)](https://cloud.google.com/docs/authentication/application-default-credentials)에 속한 IAM 주체를 사용합니다.
 
-* [Configure an instance for IAM database authentication](https://cloud.google.com/sql/docs/mysql/create-edit-iam-instances)
-* [Manage users with IAM database authentication](https://cloud.google.com/sql/docs/mysql/add-manage-iam-users)
+IAM 데이터베이스 인증에 대한 자세한 내용은 다음을 참조하세요:
 
-Optionally, [built-in database authentication](https://cloud.google.com/sql/docs/mysql/built-in-authentication) using a username and password to access the Cloud SQL database can also be used. Just provide the optional `user` and `password` arguments to `MySQLEngine.from_instance()`:
+* [IAM 데이터베이스 인증을 위한 인스턴스 구성하기](https://cloud.google.com/sql/docs/mysql/create-edit-iam-instances)
+* [IAM 데이터베이스 인증으로 사용자 관리하기](https://cloud.google.com/sql/docs/mysql/add-manage-iam-users)
 
-* `user` : Database user to use for built-in database authentication and login
-* `password` : Database password to use for built-in database authentication and login.
+선택적으로, 사용자 이름과 비밀번호를 사용하여 Cloud SQL 데이터베이스에 액세스하는 [내장 데이터베이스 인증](https://cloud.google.com/sql/docs/mysql/built-in-authentication)을 사용할 수도 있습니다. `MySQLEngine.from_instance()`에 선택적 `user` 및 `password` 인수를 제공하면 됩니다:
+
+* `user` : 내장 데이터베이스 인증 및 로그인에 사용할 데이터베이스 사용자.
+* `password` : 내장 데이터베이스 인증 및 로그인에 사용할 데이터베이스 비밀번호.
 
 ```python
 from langchain_google_cloud_sql_mysql import MySQLEngine
@@ -117,25 +123,27 @@ engine = MySQLEngine.from_instance(
 )
 ```
 
-### Initialize a table
 
-Initialize a table of default schema via `MySQLEngine.init_document_table(<table_name>)`. Table Columns:
+### 테이블 초기화
 
-- page_content (type: text)
-- langchain_metadata (type: JSON)
+`MySQLEngine.init_document_table(<table_name>)`를 통해 기본 스키마의 테이블을 초기화합니다. 테이블 열:
 
-`overwrite_existing=True` flag means the newly initialized table will replace any existing table of the same name.
+- page_content (유형: text)
+- langchain_metadata (유형: JSON)
+
+`overwrite_existing=True` 플래그는 새로 초기화된 테이블이 동일한 이름의 기존 테이블을 대체함을 의미합니다.
 
 ```python
 engine.init_document_table(TABLE_NAME, overwrite_existing=True)
 ```
 
-### Save documents
 
-Save langchain documents with `MySQLDocumentSaver.add_documents(<documents>)`. To initialize `MySQLDocumentSaver` class you need to provide 2 things:
+### 문서 저장
 
-1. `engine` - An instance of a `MySQLEngine` engine.
-2. `table_name` - The name of the table within the Cloud SQL database to store langchain documents.
+`MySQLDocumentSaver.add_documents(<documents>)`를 사용하여 langchain 문서를 저장합니다. `MySQLDocumentSaver` 클래스를 초기화하려면 2가지를 제공해야 합니다:
+
+1. `engine` - `MySQLEngine` 엔진의 인스턴스.
+2. `table_name` - langchain 문서를 저장할 Cloud SQL 데이터베이스 내의 테이블 이름.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google Cloud SQL for MySQL"}]-->
@@ -160,12 +168,13 @@ saver = MySQLDocumentSaver(engine=engine, table_name=TABLE_NAME)
 saver.add_documents(test_docs)
 ```
 
-### Load documents
 
-Load langchain documents with `MySQLLoader.load()` or `MySQLLoader.lazy_load()`. `lazy_load` returns a generator that only queries database during the iteration. To initialize `MySQLLoader` class you need to provide:
+### 문서 로드
 
-1. `engine` - An instance of a `MySQLEngine` engine.
-2. `table_name` - The name of the table within the Cloud SQL database to store langchain documents.
+`MySQLLoader.load()` 또는 `MySQLLoader.lazy_load()`를 사용하여 langchain 문서를 로드합니다. `lazy_load`는 반복 중에만 데이터베이스를 쿼리하는 생성기를 반환합니다. `MySQLLoader` 클래스를 초기화하려면 다음을 제공해야 합니다:
+
+1. `engine` - `MySQLEngine` 엔진의 인스턴스.
+2. `table_name` - langchain 문서를 저장할 Cloud SQL 데이터베이스 내의 테이블 이름.
 
 ```python
 from langchain_google_cloud_sql_mysql import MySQLLoader
@@ -176,9 +185,10 @@ for doc in docs:
     print("Loaded documents:", doc)
 ```
 
-### Load documents via query
 
-Other than loading documents from a table, we can also choose to load documents from a view generated from a SQL query. For example:
+### 쿼리를 통한 문서 로드
+
+테이블에서 문서를 로드하는 것 외에도 SQL 쿼리에서 생성된 뷰에서 문서를 로드할 수도 있습니다. 예를 들어:
 
 ```python
 from langchain_google_cloud_sql_mysql import MySQLLoader
@@ -191,18 +201,19 @@ onedoc = loader.load()
 onedoc
 ```
 
-The view generated from SQL query can have different schema than default table. In such cases, the behavior of MySQLLoader is the same as loading from table with non-default schema. Please refer to section [Load documents with customized document page content & metadata](#Load-documents-with-customized-document-page-content-&-metadata).
 
-### Delete documents
+SQL 쿼리에서 생성된 뷰는 기본 테이블과 다른 스키마를 가질 수 있습니다. 이러한 경우 MySQLLoader의 동작은 기본 스키마가 아닌 테이블에서 로드하는 것과 동일합니다. [사용자 정의 문서 페이지 콘텐츠 및 메타데이터로 문서 로드하기](#Load-documents-with-customized-document-page-content-&-metadata) 섹션을 참조하세요.
 
-Delete a list of langchain documents from MySQL table with `MySQLDocumentSaver.delete(<documents>)`.
+### 문서 삭제
 
-For table with default schema (page_content, langchain_metadata), the deletion criteria is:
+`MySQLDocumentSaver.delete(<documents>)`를 사용하여 MySQL 테이블에서 langchain 문서 목록을 삭제합니다.
 
-A `row` should be deleted if there exists a `document` in the list, such that
+기본 스키마(페이지 콘텐츠, langchain_metadata)의 테이블에 대해 삭제 기준은 다음과 같습니다:
 
-- `document.page_content` equals `row[page_content]`
-- `document.metadata` equals `row[langchain_metadata]`
+`row`는 목록에 `document`가 존재하는 경우 삭제되어야 하며, 다음 조건을 만족해야 합니다:
+
+- `document.page_content`가 `row[page_content]`와 같음
+- `document.metadata`가 `row[langchain_metadata]`와 같음
 
 ```python
 from langchain_google_cloud_sql_mysql import MySQLLoader
@@ -214,11 +225,12 @@ saver.delete(onedoc)
 print("Documents after delete:", loader.load())
 ```
 
-## Advanced Usage
 
-### Load documents with customized document page content & metadata
+## 고급 사용법
 
-First we prepare an example table with non-default schema, and populate it with some arbitrary data.
+### 사용자 정의 문서 페이지 콘텐츠 및 메타데이터로 문서 로드
+
+먼저 기본 스키마가 아닌 예제 테이블을 준비하고 임의의 데이터로 채웁니다.
 
 ```python
 import sqlalchemy
@@ -254,7 +266,8 @@ with engine.connect() as conn:
     conn.commit()
 ```
 
-If we still load langchain documents with default parameters of `MySQLLoader` from this example table, the `page_content` of loaded documents will be the first column of the table, and `metadata` will be consisting of key-value pairs of all the other columns.
+
+이 예제 테이블에서 `MySQLLoader`의 기본 매개변수를 사용하여 langchain 문서를 로드하면, 로드된 문서의 `page_content`는 테이블의 첫 번째 열이 되고, `metadata`는 모든 다른 열의 키-값 쌍으로 구성됩니다.
 
 ```python
 loader = MySQLLoader(
@@ -264,12 +277,13 @@ loader = MySQLLoader(
 loader.load()
 ```
 
-We can specify the content and metadata we want to load by setting the `content_columns` and `metadata_columns` when initializing the `MySQLLoader`.
 
-1. `content_columns`: The columns to write into the `page_content` of the document.
-2. `metadata_columns`: The columns to write into the `metadata` of the document.
+`MySQLLoader`를 초기화할 때 `content_columns` 및 `metadata_columns`를 설정하여 로드할 콘텐츠와 메타데이터를 지정할 수 있습니다.
 
-For example here, the values of columns in `content_columns` will be joined together into a space-separated string, as `page_content` of loaded documents, and `metadata` of loaded documents will only contain key-value pairs of columns specified in `metadata_columns`.
+1. `content_columns`: 문서의 `page_content`에 기록할 열.
+2. `metadata_columns`: 문서의 `metadata`에 기록할 열.
+
+예를 들어, 여기서 `content_columns`의 열 값은 공백으로 구분된 문자열로 결합되어 로드된 문서의 `page_content`가 되며, 로드된 문서의 `metadata`는 `metadata_columns`에 지정된 열의 키-값 쌍만 포함됩니다.
 
 ```python
 loader = MySQLLoader(
@@ -286,21 +300,22 @@ loader = MySQLLoader(
 loader.load()
 ```
 
-### Save document with customized page content & metadata
 
-In order to save langchain document into table with customized metadata fields. We need first create such a table via `MySQLEngine.init_document_table()`, and specify the list of `metadata_columns` we want it to have. In this example, the created table will have table columns:
+### 사용자 정의 페이지 콘텐츠 및 메타데이터로 문서 저장
 
-- description (type: text): for storing fruit description.
-- fruit_name (type text): for storing fruit name.
-- organic (type tinyint(1)): to tell if the fruit is organic.
-- other_metadata (type: JSON): for storing other metadata information of the fruit.
+사용자 정의 메타데이터 필드가 있는 테이블에 langchain 문서를 저장하려면 먼저 `MySQLEngine.init_document_table()`를 통해 그러한 테이블을 생성하고 원하는 `metadata_columns` 목록을 지정해야 합니다. 이 예제에서 생성된 테이블은 다음과 같은 열을 가집니다:
 
-We can use the following parameters with `MySQLEngine.init_document_table()` to create the table:
+- description (유형: text): 과일 설명을 저장하기 위한 것.
+- fruit_name (유형: text): 과일 이름을 저장하기 위한 것.
+- organic (유형: tinyint(1)): 과일이 유기농인지 여부를 나타내기 위한 것.
+- other_metadata (유형: JSON): 과일의 기타 메타데이터 정보를 저장하기 위한 것.
 
-1. `table_name`: The name of the table within the Cloud SQL database to store langchain documents.
-2. `metadata_columns`: A list of `sqlalchemy.Column` indicating the list of metadata columns we need.
-3. `content_column`: The name of column to store `page_content` of langchain document. Default: `page_content`.
-4. `metadata_json_column`: The name of JSON column to store extra `metadata` of langchain document. Default: `langchain_metadata`.
+다음 매개변수를 사용하여 `MySQLEngine.init_document_table()`로 테이블을 생성할 수 있습니다:
+
+1. `table_name`: langchain 문서를 저장할 Cloud SQL 데이터베이스 내의 테이블 이름.
+2. `metadata_columns`: 필요한 메타데이터 열 목록을 나타내는 `sqlalchemy.Column` 목록.
+3. `content_column`: langchain 문서의 `page_content`를 저장할 열 이름. 기본값: `page_content`.
+4. `metadata_json_column`: langchain 문서의 추가 `metadata`를 저장할 JSON 열 이름. 기본값: `langchain_metadata`.
 
 ```python
 engine.init_document_table(
@@ -325,12 +340,13 @@ engine.init_document_table(
 )
 ```
 
-Save documents with `MySQLDocumentSaver.add_documents(<documents>)`. As you can see in this example, 
 
-- `document.page_content` will be saved into `description` column.
-- `document.metadata.fruit_name` will be saved into `fruit_name` column.
-- `document.metadata.organic` will be saved into `organic` column.
-- `document.metadata.fruit_id` will be saved into `other_metadata` column in JSON format.
+`MySQLDocumentSaver.add_documents(<documents>)`를 사용하여 문서를 저장합니다. 이 예제에서 볼 수 있듯이,
+
+- `document.page_content`는 `description` 열에 저장됩니다.
+- `document.metadata.fruit_name`은 `fruit_name` 열에 저장됩니다.
+- `document.metadata.organic`은 `organic` 열에 저장됩니다.
+- `document.metadata.fruit_id`는 JSON 형식으로 `other_metadata` 열에 저장됩니다.
 
 ```python
 test_docs = [
@@ -348,6 +364,7 @@ saver = MySQLDocumentSaver(
 saver.add_documents(test_docs)
 ```
 
+
 ```python
 with engine.connect() as conn:
     result = conn.execute(sqlalchemy.text(f"select * from `{TABLE_NAME}`;"))
@@ -355,16 +372,17 @@ with engine.connect() as conn:
     print(result.fetchall())
 ```
 
-### Delete documents with customized page content & metadata
 
-We can also delete documents from table with customized metadata columns via `MySQLDocumentSaver.delete(<documents>)`. The deletion criteria is:
+### 사용자 정의 페이지 콘텐츠 및 메타데이터로 문서 삭제
 
-A `row` should be deleted if there exists a `document` in the list, such that
+사용자 정의 메타데이터 열을 가진 테이블에서 문서를 삭제할 수도 있습니다. `MySQLDocumentSaver.delete(<documents>)`를 통해 삭제 기준은 다음과 같습니다:
 
-- `document.page_content` equals `row[page_content]`
-- For every metadata field `k` in `document.metadata`
-  - `document.metadata[k]` equals `row[k]` or `document.metadata[k]` equals `row[langchain_metadata][k]`
-- There no extra metadata field presents in `row` but not in `document.metadata`.
+`row`는 목록에 `document`가 존재하는 경우 삭제되어야 하며, 다음 조건을 만족해야 합니다:
+
+- `document.page_content`가 `row[page_content]`와 같음
+- `document.metadata`의 모든 메타데이터 필드 `k`에 대해
+  - `document.metadata[k]`가 `row[k]`와 같거나 `document.metadata[k]`가 `row[langchain_metadata][k]`와 같음
+- `row`에 존재하지만 `document.metadata`에는 없는 추가 메타데이터 필드가 없음
 
 ```python
 loader = MySQLLoader(engine=engine, table_name=TABLE_NAME)
@@ -374,7 +392,8 @@ saver.delete(docs)
 print("Documents after delete:", loader.load())
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

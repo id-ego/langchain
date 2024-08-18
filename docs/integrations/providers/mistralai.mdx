@@ -1,37 +1,40 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/mistralai/
+description: Mistral AI는 강력한 오픈 소스 모델을 호스팅하는 플랫폼으로, API와 langchain-mistralai 패키지를
+  통해 사용 가능합니다.
 ---
 
 # MistralAI
 
-> [Mistral AI](https://docs.mistral.ai/api/) is a platform that offers hosting for their powerful open source models.
+> [Mistral AI](https://docs.mistral.ai/api/)는 강력한 오픈 소스 모델을 호스팅하는 플랫폼입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-A valid [API key](https://console.mistral.ai/users/api-keys/) is needed to communicate with the API.
+API와 통신하기 위해 유효한 [API 키](https://console.mistral.ai/users/api-keys/)가 필요합니다.
 
-You will also need the `langchain-mistralai` package:
+또한 `langchain-mistralai` 패키지가 필요합니다:
 
 ```bash
 pip install langchain-mistralai
 ```
 
-## Chat models
+
+## 채팅 모델
 
 ### ChatMistralAI
 
-See a [usage example](/docs/integrations/chat/mistralai).
+[사용 예제](/docs/integrations/chat/mistralai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMistralAI", "source": "langchain_mistralai.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_mistralai.chat_models.ChatMistralAI.html", "title": "MistralAI"}]-->
 from langchain_mistralai.chat_models import ChatMistralAI
 ```
 
-## Embedding models
+
+## 임베딩 모델
 
 ### MistralAIEmbeddings
 
-See a [usage example](/docs/integrations/text_embedding/mistralai).
+[사용 예제](/docs/integrations/text_embedding/mistralai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "MistralAIEmbeddings", "source": "langchain_mistralai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_mistralai.embeddings.MistralAIEmbeddings.html", "title": "MistralAI"}]-->

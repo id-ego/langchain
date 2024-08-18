@@ -1,17 +1,17 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/exa_search/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/exa_search.ipynb
+description: Exa는 LLM을 위한 검색 엔진으로, 자연어 쿼리를 통해 문서를 검색하고 정리된 HTML 콘텐츠를 제공합니다.
 ---
 
-# Exa Search
+# Exa 검색
 
-Exa is a search engine fully designed for use by LLMs. Search for documents on the internet using **natural language queries**, then retrieve **cleaned HTML content** from desired documents.
+Exa는 LLMs에서 사용하기 위해 완전히 설계된 검색 엔진입니다. **자연어 쿼리**를 사용하여 인터넷에서 문서를 검색한 다음, 원하는 문서에서 **정리된 HTML 콘텐츠**를 검색합니다.
 
-Unlike keyword-based search (Google), Exa's neural search capabilities allow it to semantically understand queries and return relevant documents. For example, we could search `"fascinating article about cats"` and compare the search results from [Google](https://www.google.com/search?q=fascinating+article+about+cats) and [Exa](https://search.exa.ai/search?q=fascinating%20article%20about%20cats&autopromptString=Here%20is%20a%20fascinating%20article%20about%20cats%3A). Google gives us SEO-optimized listicles based on the keyword "fascinating". Exa just works.
+키워드 기반 검색(Google)과 달리, Exa의 신경망 검색 기능은 쿼리를 의미적으로 이해하고 관련 문서를 반환할 수 있습니다. 예를 들어, 우리는 `"고양이에 대한 매혹적인 기사"`를 검색하고 [Google](https://www.google.com/search?q=fascinating+article+about+cats)와 [Exa](https://search.exa.ai/search?q=fascinating%20article%20about%20cats&autopromptString=Here%20is%20a%20fascinating%20article%20about%20cats%3A)에서 검색 결과를 비교할 수 있습니다. Google은 "매혹적인"이라는 키워드를 기반으로 SEO 최적화된 리스트를 제공합니다. Exa는 그저 작동합니다.
 
-This notebook goes over how to use Exa Search with LangChain.
+이 노트북에서는 LangChain과 함께 Exa 검색을 사용하는 방법을 설명합니다.
 
-First, get an Exa API key and add it as an environment variable. Get $10 free credit (plus more by completing certain actions like making your first search) by [signing up here](https://dashboard.exa.ai/).
+먼저, Exa API 키를 얻고 이를 환경 변수로 추가합니다. [여기에서 가입하여](https://dashboard.exa.ai/) $10 무료 크레딧(첫 검색과 같은 특정 작업을 완료하여 더 많은 크레딧을 받을 수 있음)을 받으세요.
 
 ```python
 import os
@@ -19,7 +19,8 @@ import os
 api_key = os.getenv("EXA_API_KEY")  # Set your API key as an environment variable
 ```
 
-And install the integration package
+
+그리고 통합 패키지를 설치합니다.
 
 ```python
 %pip install --upgrade --quiet langchain-exa 
@@ -28,36 +29,38 @@ And install the integration package
 %pip install --upgrade --quiet langchain langchain-openai langchain-community
 ```
 
-## Using ExaSearchRetriever
 
-ExaSearchRetriever is a retriever that uses Exa Search to retrieve relevant documents.
+## ExaSearchRetriever 사용하기
+
+ExaSearchRetriever는 Exa 검색을 사용하여 관련 문서를 검색하는 검색기입니다.
 
 :::note
 
-The `max_characters` parameter for **TextContentsOptions** used to be called `max_length` which is now deprecated. Make sure to use `max_characters` instead.
+**TextContentsOptions**에 사용되는 `max_characters` 매개변수는 이전에 `max_length`라고 불렸으며 현재는 더 이상 사용되지 않습니다. 대신 `max_characters`를 사용해야 합니다.
 
 :::
 
-## Using the Exa SDK as LangChain Agent Tools
+## LangChain 에이전트 도구로서 Exa SDK 사용하기
 
-The [Exa SDK](https://docs.exa.ai/) creates a client that can interact with three main Exa API endpoints:
+[Exa SDK](https://docs.exa.ai/)는 세 가지 주요 Exa API 엔드포인트와 상호작용할 수 있는 클라이언트를 생성합니다:
 
-- `search`: Given a natural language search query, retrieve a list of search results.
-- `find_similar`: Given a URL, retrieve a list of search results corresponding to webpages which are similar to the document at the provided URL.
-- `get_contents`: Given a list of document ids fetched from `search` or `find_similar`, get cleaned HTML content for each document.
+- `search`: 자연어 검색 쿼리를 주면 검색 결과 목록을 검색합니다.
+- `find_similar`: URL을 주면 제공된 URL의 문서와 유사한 웹페이지에 대한 검색 결과 목록을 검색합니다.
+- `get_contents`: `search` 또는 `find_similar`에서 가져온 문서 ID 목록을 주면 각 문서에 대한 정리된 HTML 콘텐츠를 가져옵니다.
 
-The `exa_py` SDK combines these endpoints into two powerful calls. Using these provide the most flexible and efficient use cases of Exa search:
+`exa_py` SDK는 이러한 엔드포인트를 두 개의 강력한 호출로 결합합니다. 이를 사용하면 Exa 검색의 가장 유연하고 효율적인 사용 사례를 제공합니다:
 
-1. `search_and_contents`: Combines the `search` and `get_contents` endpoints to retrieve search results along with their content in a single operation.
-2. `find_similar_and_contents`: Combines the `find_similar` and `get_contents` endpoints to find similar pages and retrieve their content in one call.
+1. `search_and_contents`: `search`와 `get_contents` 엔드포인트를 결합하여 단일 작업으로 검색 결과와 해당 콘텐츠를 검색합니다.
+2. `find_similar_and_contents`: `find_similar`와 `get_contents` 엔드포인트를 결합하여 유사한 페이지를 찾고 한 번의 호출로 해당 콘텐츠를 검색합니다.
 
-We can use the `@tool` decorator and docstrings to create LangChain Tool wrappers that tell an LLM agent how to use these combined Exa functionalities effectively. This approach simplifies usage and reduces the number of API calls needed to get comprehensive results.
+우리는 `@tool` 데코레이터와 독스트링을 사용하여 LangChain 도구 래퍼를 생성하여 LLM 에이전트가 이러한 결합된 Exa 기능을 효과적으로 사용하는 방법을 알려줄 수 있습니다. 이 접근 방식은 사용을 단순화하고 포괄적인 결과를 얻기 위해 필요한 API 호출 수를 줄입니다.
 
-Before writing code, ensure you have `langchain-exa` installed
+코드를 작성하기 전에 `langchain-exa`가 설치되어 있는지 확인하세요.
 
 ```python
 %pip install --upgrade --quiet  langchain-exa
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "Exa Search"}]-->
@@ -90,9 +93,10 @@ def find_similar_and_contents(url: str):
 tools = [search_and_contents, find_similar_and_contents]
 ```
 
-### Providing Exa Tools to an Agent
 
-We can provide the Exa tools we just created to a LangChain `OpenAIFunctionsAgent`. When asked to `Summarize for me a fascinating article about cats`, the agent uses the `search` tool to perform a Exa search with an appropriate search query, uses the `get_contents` tool to perform Exa content retrieval, and then returns a summary of the retrieved content.
+### 에이전트에 Exa 도구 제공하기
+
+우리는 방금 생성한 Exa 도구를 LangChain `OpenAIFunctionsAgent`에 제공할 수 있습니다. `고양이에 대한 매혹적인 기사를 요약해 주세요`라고 요청하면, 에이전트는 적절한 검색 쿼리로 Exa 검색을 수행하기 위해 `search` 도구를 사용하고, Exa 콘텐츠 검색을 수행하기 위해 `get_contents` 도구를 사용한 다음, 검색된 콘텐츠의 요약을 반환합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Exa Search"}, {"imported": "OpenAIFunctionsAgent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.OpenAIFunctionsAgent.html", "title": "Exa Search"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Exa Search"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Exa Search"}]-->
@@ -111,9 +115,11 @@ agent = OpenAIFunctionsAgent(llm=llm, tools=tools, prompt=agent_prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
 
+
 ```python
 agent_executor.run("Summarize for me a fascinating article about cats.")
 ```
+
 ```output
 
 
@@ -257,15 +263,17 @@ For more details, you can read the full article [here](https://www.mcsweeneys.ne
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Here is a fascinating article about cats:\n\n### The Feline Mystique\n\n**Source:** [McSweeney\'s](https://www.mcsweeneys.net/articles/the-feline-mystique)\n\n**Summary:**\nThe article humorously explores the existential dilemmas faced by American house cats. It delves into the "house cat\'s syndrome," a term coined to describe the dissatisfaction and yearning for something more than the comforts of domestic life. Despite having on-demand petting, free healthcare, and viral video fame, cats seem to crave freedom and adventure. The piece also touches on the psychological struggles of cats, such as feeling hollow or ashamed after chasing a laser pointer. Ultimately, it suggests that cats desire more than just luxury—they want total world domination, but only after a two-hour nap.\n\n**Key Points:**\n- American house cats experience a sense of dissatisfaction and yearning.\n- The "house cat\'s syndrome" describes their existential dilemmas.\n- Despite their luxurious lives, cats crave freedom and adventure.\n- The article humorously suggests that cats aim for world domination.\n\nFor more details, you can read the full article [here](https://www.mcsweeneys.net/articles/the-feline-mystique).'
 ```
 
-## Advanced Exa Features
 
-Exa supports powerful filters by domain and date. We can provide a more powerful `search` tool to the agent that lets it decide to apply filters if they are useful for the objective. See all of Exa's search features [here](https://github.com/metaphorsystems/metaphor-python/).
+## 고급 Exa 기능
 
-[//]: # "TODO(erick): switch metaphor github link to exa github link when sdk published"
+Exa는 도메인 및 날짜별로 강력한 필터를 지원합니다. 우리는 에이전트에게 목표에 유용한 경우 필터를 적용할 수 있도록 하는 보다 강력한 `search` 도구를 제공할 수 있습니다. Exa의 모든 검색 기능은 [여기](https://github.com/metaphorsystems/metaphor-python/)에서 확인하세요.
+
+[//]: # "TODO(erick): sdk가 게시될 때 metaphor github 링크를 exa github 링크로 전환"
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "Exa Search"}]-->
@@ -345,9 +353,10 @@ def find_similar_and_contents(
 tools = [search_and_contents, find_similar_and_contents]
 ```
 
-Now we ask the agent to summarize an article with constraints on domain and publish date. We will use a GPT-4 agent for extra powerful reasoning capability to support more complex tool usage.
 
-The agent correctly uses the search filters to find an article with the desired constraints, and once again retrieves the content and returns a summary.
+이제 우리는 에이전트에게 도메인 및 게시 날짜에 대한 제약 조건으로 기사를 요약해 달라고 요청합니다. 더 복잡한 도구 사용을 지원하기 위해 GPT-4 에이전트를 사용할 것입니다.
+
+에이전트는 원하는 제약 조건에 맞는 기사를 찾기 위해 검색 필터를 올바르게 사용하고, 다시 한 번 콘텐츠를 검색하여 요약을 반환합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Exa Search"}, {"imported": "OpenAIFunctionsAgent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.OpenAIFunctionsAgent.html", "title": "Exa Search"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Exa Search"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Exa Search"}]-->
@@ -366,11 +375,13 @@ agent = OpenAIFunctionsAgent(llm=llm, tools=tools, prompt=agent_prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
 
+
 ```python
 agent_executor.run(
     "Summarize for me an interesting article about AI from lesswrong.com published after October 2023."
 )
 ```
+
 ```output
 
 
@@ -504,11 +515,13 @@ Source: [LessWrong](https://www.lesswrong.com/posts/8SjnKxjLniCAmcjnG/openai-dee
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'I found an interesting article on LessWrong.com titled "OpenAI, DeepMind, Anthropic, etc. should shut down" by Tamsin Leake, published on December 17, 2023. The article argues that major AI organizations like OpenAI, DeepMind, and Anthropic should cease their capabilities development and focus solely on alignment to prevent catastrophic outcomes from powerful AI (PAI).\n\nKey points from the article include:\n\n1. **Definition of PAI**: The author defines PAI as an AI system capable of steering the world towards its goals without being stopped or causing mass destruction, such as creating a supervirus.\n\n2. **Alignment Challenges**: The article emphasizes that current AI organizations do not know how to create a PAI that does not pose existential risks. The author argues that these organizations should halt their capabilities progress and focus entirely on solving alignment issues.\n\n3. **Critique of Current Strategies**: The author criticizes the strategies of these organizations, stating that they are progressing too quickly on capabilities without adequate focus on alignment, which could lead to catastrophic outcomes before alignment solutions are found.\n\n4. **Global Perspective**: The article dismisses the argument that halting AI development in the West would allow countries like China to gain an advantage, asserting that no country currently knows how to build a safe PAI.\n\n5. **Call to Action**: The author urges individuals working in these organizations to either slow down their progress through advocating for more safety checks or to quit their jobs to prevent contributing to potential global catastrophe.\n\nThe article concludes with a call for a collective effort to prioritize alignment over capabilities to ensure the safe development of AI.\n\nFor more details, you can read the full article [here](https://www.lesswrong.com/posts/8SjnKxjLniCAmcjnG/openai-deepmind-anthropic-etc-should-shut-down).\n\nSource: [LessWrong](https://www.lesswrong.com/posts/8SjnKxjLniCAmcjnG/openai-deepmind-anthropic-etc-should-shut-down)'
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

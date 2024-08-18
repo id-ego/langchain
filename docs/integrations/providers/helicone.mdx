@@ -1,30 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/helicone/
+description: Helicone은 OpenAI 트래픽을 프록시하여 비용, 지연 시간 및 사용량에 대한 주요 통찰력을 제공하는 오픈 소스 관측
+  플랫폼입니다.
 ---
 
 # Helicone
 
-This page covers how to use the [Helicone](https://helicone.ai) ecosystem within LangChain.
+이 페이지는 LangChain 내에서 [Helicone](https://helicone.ai) 생태계를 사용하는 방법을 다룹니다.
 
-## What is Helicone?
+## Helicone이란?
 
-Helicone is an [open-source](https://github.com/Helicone/helicone) observability platform that proxies your OpenAI traffic and provides you key insights into your spend, latency and usage.
+Helicone은 OpenAI 트래픽을 프록시하고 지출, 대기 시간 및 사용에 대한 주요 통찰력을 제공하는 [오픈 소스](https://github.com/Helicone/helicone) 관측 플랫폼입니다.
 
-![Screenshot of the Helicone dashboard showing average requests per day, response time, tokens per response, total cost, and a graph of requests over time.](/img/HeliconeDashboard.png "Helicone Dashboard")
+![Helicone 대시보드의 스크린샷으로, 하루 평균 요청 수, 응답 시간, 응답당 토큰 수, 총 비용 및 시간에 따른 요청 그래프를 보여줍니다.](/img/HeliconeDashboard.png "Helicone Dashboard")
 
-## Quick start
+## 빠른 시작
 
-With your LangChain environment you can just add the following parameter.
+LangChain 환경에서 다음 매개변수를 추가하기만 하면 됩니다.
 
 ```bash
 export OPENAI_API_BASE="https://oai.hconeai.com/v1"
 ```
 
-Now head over to [helicone.ai](https://www.helicone.ai/signup) to create your account, and add your OpenAI API key within our dashboard to view your logs.
 
-![Interface for entering and managing OpenAI API keys in the Helicone dashboard.](/img/HeliconeKeys.png "Helicone API Key Input")
+이제 [helicone.ai](https://www.helicone.ai/signup)로 이동하여 계정을 생성하고 대시보드 내에서 OpenAI API 키를 추가하여 로그를 확인하세요.
 
-## How to enable Helicone caching
+![Helicone 대시보드에서 OpenAI API 키를 입력하고 관리하는 인터페이스.](/img/HeliconeKeys.png "Helicone API Key Input")
+
+## Helicone 캐싱 활성화 방법
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Helicone"}]-->
@@ -37,9 +39,10 @@ text = "What is a helicone?"
 print(llm.invoke(text))
 ```
 
-[Helicone caching docs](https://docs.helicone.ai/advanced-usage/caching)
 
-## How to use Helicone custom properties
+[Helicone 캐싱 문서](https://docs.helicone.ai/advanced-usage/caching)
+
+## Helicone 사용자 정의 속성 사용 방법
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Helicone"}]-->
@@ -56,4 +59,5 @@ text = "What is a helicone?"
 print(llm.invoke(text))
 ```
 
-[Helicone property docs](https://docs.helicone.ai/advanced-usage/custom-properties)
+
+[Helicone 속성 문서](https://docs.helicone.ai/advanced-usage/custom-properties)

@@ -1,16 +1,16 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/symblai_nebula/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/symblai_nebula.ipynb
+description: Nebula는 Symbl.ai가 개발한 대화 기반 생성 작업을 수행하는 대형 언어 모델입니다. 대화의 미세한 세부사항을 모델링합니다.
 ---
 
-# Nebula (Symbl.ai)
-[Nebula](https://symbl.ai/nebula/) is a large language model (LLM) built by [Symbl.ai](https://symbl.ai). It is trained to perform generative tasks on human conversations. Nebula excels at modeling the nuanced details of a conversation and performing tasks on the conversation.
+# 네뷸라 (Symbl.ai)
+[네뷸라](https://symbl.ai/nebula/)는 [Symbl.ai](https://symbl.ai)에서 구축한 대형 언어 모델(LLM)입니다. 인간 대화에서 생성 작업을 수행하도록 훈련되었습니다. 네뷸라는 대화의 미묘한 세부 사항을 모델링하고 대화에서 작업을 수행하는 데 뛰어납니다.
 
-Nebula documentation: https://docs.symbl.ai/docs/nebula-llm
+네뷸라 문서: https://docs.symbl.ai/docs/nebula-llm
 
-This example goes over how to use LangChain to interact with the [Nebula platform](https://docs.symbl.ai/docs/nebula-llm).
+이 예제는 LangChain을 사용하여 [네뷸라 플랫폼](https://docs.symbl.ai/docs/nebula-llm)과 상호작용하는 방법을 설명합니다.
 
-Make sure you have API Key with you. If you don't have one please [request one](https://info.symbl.ai/Nebula_Private_Beta.html).
+API 키를 반드시 준비하세요. API 키가 없으면 [요청하세요](https://info.symbl.ai/Nebula_Private_Beta.html).
 
 ```python
 <!--IMPORTS:[{"imported": "Nebula", "source": "langchain_community.llms.symblai_nebula", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.symblai_nebula.Nebula.html", "title": "Nebula (Symbl.ai)"}]-->
@@ -19,7 +19,8 @@ from langchain_community.llms.symblai_nebula import Nebula
 llm = Nebula(nebula_api_key="<your_api_key>")
 ```
 
-Use a conversation transcript and instruction to construct a prompt.
+
+대화 기록과 지침을 사용하여 프롬프트를 구성합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Nebula (Symbl.ai)"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Nebula (Symbl.ai)"}]-->
@@ -45,7 +46,8 @@ llm_chain = LLMChain(prompt=prompt, llm=llm)
 llm_chain.run(instruction=instruction, conversation=conversation)
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

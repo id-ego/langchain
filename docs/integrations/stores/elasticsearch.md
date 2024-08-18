@@ -1,38 +1,40 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/stores/elasticsearch/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/stores/elasticsearch.ipynb
+description: ElasticsearchEmbeddingsCache는 Elasticsearch 인스턴스를 활용하여 임베딩의 효율적인 저장 및
+  검색을 지원하는 ByteStore 구현입니다.
 sidebar_label: Elasticsearch
 ---
 
 # ElasticsearchEmbeddingsCache
 
-This will help you get started with Elasticsearch [key-value stores](/docs/concepts/#key-value-stores). For detailed documentation of all `ElasticsearchEmbeddingsCache` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/cache/langchain_elasticsearch.cache.ElasticsearchEmbeddingsCache.html).
+이 문서는 Elasticsearch [키-값 저장소](/docs/concepts/#key-value-stores)를 시작하는 데 도움이 됩니다. `ElasticsearchEmbeddingsCache`의 모든 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/cache/langchain_elasticsearch.cache.ElasticsearchEmbeddingsCache.html)에서 확인할 수 있습니다.
 
-## Overview
+## 개요
 
-The `ElasticsearchEmbeddingsCache` is a `ByteStore` implementation that uses your Elasticsearch instance for efficient storage and retrieval of embeddings.
+`ElasticsearchEmbeddingsCache`는 Elasticsearch 인스턴스를 사용하여 임베딩의 효율적인 저장 및 검색을 위한 `ByteStore` 구현입니다.
 
-### Integration details
+### 통합 세부정보
 
-| Class | Package | Local | JS support | Package downloads | Package latest |
+| 클래스 | 패키지 | 로컬 | JS 지원 | 패키지 다운로드 | 패키지 최신 |
 | :--- | :--- | :---: | :---: |  :---: | :---: |
 | [ElasticsearchEmbeddingsCache](https://api.python.langchain.com/en/latest/cache/langchain_elasticsearch.cache.ElasticsearchEmbeddingsCache.html) | [langchain_elasticsearch](https://api.python.langchain.com/en/latest/elasticsearch_api_reference.html) | ✅ | ❌ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain_elasticsearch?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain_elasticsearch?style=flat-square&label=%20) |
 
-## Setup
+## 설정
 
-To create a `ElasticsearchEmbeddingsCache` byte store, you'll need an Elasticsearch cluster. You can [set one up locally](https://www.elastic.co/downloads/elasticsearch) or create an [Elastic account](https://www.elastic.co/elasticsearch).
+`ElasticsearchEmbeddingsCache` 바이트 저장소를 생성하려면 Elasticsearch 클러스터가 필요합니다. [로컬로 설정](https://www.elastic.co/downloads/elasticsearch)하거나 [Elastic 계정](https://www.elastic.co/elasticsearch)을 생성할 수 있습니다.
 
-### Installation
+### 설치
 
-The LangChain `ElasticsearchEmbeddingsCache` integration lives in the `__package_name__` package:
+LangChain `ElasticsearchEmbeddingsCache` 통합은 `__package_name__` 패키지에 있습니다:
 
 ```python
 %pip install -qU langchain_elasticsearch
 ```
 
-## Instantiation
 
-Now we can instantiate our byte store:
+## 인스턴스화
+
+이제 바이트 저장소를 인스턴스화할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ElasticsearchEmbeddingsCache", "source": "langchain_elasticsearch", "docs": "https://api.python.langchain.com/en/latest/cache/langchain_elasticsearch.cache.ElasticsearchEmbeddingsCache.html", "title": "ElasticsearchEmbeddingsCache"}]-->
@@ -52,9 +54,10 @@ kv_store = ElasticsearchEmbeddingsCache(
 )
 ```
 
-## Usage
 
-You can set data under keys like this using the `mset` method:
+## 사용법
+
+다음과 같이 `mset` 메서드를 사용하여 키 아래에 데이터를 설정할 수 있습니다:
 
 ```python
 kv_store.mset(
@@ -72,11 +75,13 @@ kv_store.mget(
 )
 ```
 
+
 ```output
 [b'value1', b'value2']
 ```
 
-And you can delete data using the `mdelete` method:
+
+그리고 `mdelete` 메서드를 사용하여 데이터를 삭제할 수 있습니다:
 
 ```python
 kv_store.mdelete(
@@ -94,17 +99,19 @@ kv_store.mget(
 )
 ```
 
+
 ```output
 [None, None]
 ```
 
-## Use as an embeddings cache
 
-Like other `ByteStores`, you can use an `ElasticsearchEmbeddingsCache` instance for [persistent caching in document ingestion](/docs/how_to/caching_embeddings/) for RAG.
+## 임베딩 캐시로 사용
 
-However, cached vectors won't be searchable by default. The developer can customize the building of the Elasticsearch document in order to add indexed vector field.
+다른 `ByteStores`와 마찬가지로, `ElasticsearchEmbeddingsCache` 인스턴스를 RAG를 위한 [문서 수집에서의 지속적인 캐싱](/docs/how_to/caching_embeddings/)에 사용할 수 있습니다.
 
-This can be done by subclassing and overriding methods:
+그러나 기본적으로 캐시된 벡터는 검색할 수 없습니다. 개발자는 인덱스된 벡터 필드를 추가하기 위해 Elasticsearch 문서의 빌드를 사용자 정의할 수 있습니다.
+
+이는 서브클래싱하고 메서드를 재정의하여 수행할 수 있습니다:
 
 ```python
 from typing import Any, Dict, List
@@ -128,12 +135,13 @@ class SearchableElasticsearchStore(ElasticsearchEmbeddingsCache):
         return body
 ```
 
-When overriding the mapping and the document building, please only make additive modifications, keeping the base mapping intact.
 
-## API reference
+매핑 및 문서 빌드를 재정의할 때는 기본 매핑을 그대로 유지하면서 추가적인 수정만 하십시오.
 
-For detailed documentation of all `ElasticsearchEmbeddingsCache` features and configurations, head to the API reference: https://api.python.langchain.com/en/latest/cache/langchain_elasticsearch.cache.ElasticsearchEmbeddingsCache.html
+## API 참조
 
-## Related
+`ElasticsearchEmbeddingsCache`의 모든 기능 및 구성에 대한 자세한 문서는 API 참조에서 확인할 수 있습니다: https://api.python.langchain.com/en/latest/cache/langchain_elasticsearch.cache.ElasticsearchEmbeddingsCache.html
 
-- [Key-value store conceptual guide](/docs/concepts/#key-value-stores)
+## 관련
+
+- [키-값 저장소 개념 가이드](/docs/concepts/#key-value-stores)

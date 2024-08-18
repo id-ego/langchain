@@ -1,27 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/ai21/
+description: AI21 Labs는 자연어 처리(NLP) 전문 회사로, LangChain 내에서 AI21 생태계를 활용하는 방법을 안내합니다.
 ---
 
 # AI21 Labs
 
-> [AI21 Labs](https://www.ai21.com/about) is a company specializing in Natural
-Language Processing (NLP), which develops AI systems
-that can understand and generate natural language.
+> [AI21 Labs](https://www.ai21.com/about)는 자연어 처리(NLP)를 전문으로 하는 회사로, 자연어를 이해하고 생성할 수 있는 AI 시스템을 개발합니다.
 
-This page covers how to use the `AI21` ecosystem within `LangChain`.
+이 페이지에서는 `LangChain` 내에서 `AI21` 생태계를 사용하는 방법을 다룹니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Get an AI21 api key and set it as an environment variable (`AI21_API_KEY`)
-- Install the Python package:
+- AI21 API 키를 얻고 이를 환경 변수(`AI21_API_KEY`)로 설정합니다.
+- Python 패키지를 설치합니다:
 
 ```bash
 pip install langchain-ai21
 ```
 
+
 ## LLMs
 
-See a [usage example](/docs/integrations/llms/ai21).
+[사용 예제](/docs/integrations/llms/ai21)를 참조하세요.
 
 ### AI21 LLM
 
@@ -30,43 +29,46 @@ See a [usage example](/docs/integrations/llms/ai21).
 from langchain_ai21 import AI21LLM
 ```
 
-### AI21 Contextual Answer
 
-You can use AI21’s contextual answers model to receive text or document,
-serving as a context, and a question and return an answer based entirely on this context.
+### AI21 맥락적 답변
+
+AI21의 맥락적 답변 모델을 사용하여 텍스트나 문서를 맥락으로 제공하고 질문을 하여 이 맥락에 전적으로 기반한 답변을 받을 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21ContextualAnswers", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/contextual_answers/langchain_ai21.contextual_answers.AI21ContextualAnswers.html", "title": "AI21 Labs"}]-->
 from langchain_ai21 import AI21ContextualAnswers
 ```
 
-## Chat models
 
-### AI21 Chat
+## 채팅 모델
 
-See a [usage example](/docs/integrations/chat/ai21).
+### AI21 채팅
+
+[사용 예제](/docs/integrations/chat/ai21)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAI21", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_ai21.chat_models.ChatAI21.html", "title": "AI21 Labs"}]-->
 from langchain_ai21 import ChatAI21
 ```
 
-## Embedding models
 
-### AI21 Embeddings
+## 임베딩 모델
 
-See a [usage example](/docs/integrations/text_embedding/ai21).
+### AI21 임베딩
+
+[사용 예제](/docs/integrations/text_embedding/ai21)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21Embeddings", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_ai21.embeddings.AI21Embeddings.html", "title": "AI21 Labs"}]-->
 from langchain_ai21 import AI21Embeddings
 ```
 
-## Text splitters
 
-### AI21 Semantic Text Splitter
+## 텍스트 분할기
 
-See a [usage example](/docs/integrations/document_transformers/ai21_semantic_text_splitter).
+### AI21 의미론적 텍스트 분할기
+
+[사용 예제](/docs/integrations/document_transformers/ai21_semantic_text_splitter)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AI21SemanticTextSplitter", "source": "langchain_ai21", "docs": "https://api.python.langchain.com/en/latest/semantic_text_splitter/langchain_ai21.semantic_text_splitter.AI21SemanticTextSplitter.html", "title": "AI21 Labs"}]-->

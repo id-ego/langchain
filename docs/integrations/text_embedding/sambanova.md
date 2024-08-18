@@ -1,21 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/sambanova/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/sambanova.ipynb
+description: SambaNova의 Sambastudio를 사용하여 LangChain으로 오픈 소스 모델과 상호작용하는 방법을 설명합니다.
 ---
 
 # SambaNova
 
-**[SambaNova](https://sambanova.ai/)'s** [Sambastudio](https://sambanova.ai/technology/full-stack-ai-platform) is a platform for running your own open-source models
+**[SambaNova](https://sambanova.ai/)'s** [Sambastudio](https://sambanova.ai/technology/full-stack-ai-platform)는 오픈 소스 모델을 실행하기 위한 플랫폼입니다.
 
-This example goes over how to use LangChain to interact with SambaNova embedding models
+이 예제는 LangChain을 사용하여 SambaNova 임베딩 모델과 상호작용하는 방법을 설명합니다.
 
 ## SambaStudio
 
-**SambaStudio** allows you to train, run batch inference jobs, and deploy online inference endpoints to run open source models that you fine tuned yourself.
+**SambaStudio**는 자신이 조정한 오픈 소스 모델을 훈련하고, 배치 추론 작업을 실행하며, 온라인 추론 엔드포인트를 배포할 수 있게 해줍니다.
 
-A SambaStudio environment is required to deploy a model. Get more information at [sambanova.ai/products/enterprise-ai-platform-sambanova-suite](https://sambanova.ai/products/enterprise-ai-platform-sambanova-suite)
+모델을 배포하려면 SambaStudio 환경이 필요합니다. 자세한 정보는 [sambanova.ai/products/enterprise-ai-platform-sambanova-suite](https://sambanova.ai/products/enterprise-ai-platform-sambanova-suite)에서 확인하세요.
 
-Register your environment variables:
+환경 변수를 등록하세요:
 
 ```python
 import os
@@ -34,7 +34,8 @@ os.environ["SAMBASTUDIO_EMBEDDINGS_ENDPOINT_ID"] = sambastudio_endpoint_id
 os.environ["SAMBASTUDIO_EMBEDDINGS_API_KEY"] = sambastudio_api_key
 ```
 
-Call SambaStudio hosted embeddings directly from LangChain!
+
+LangChain에서 SambaStudio 호스팅 임베딩을 직접 호출하세요!
 
 ```python
 <!--IMPORTS:[{"imported": "SambaStudioEmbeddings", "source": "langchain_community.embeddings.sambanova", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sambanova.SambaStudioEmbeddings.html", "title": "SambaNova"}]-->
@@ -51,7 +52,8 @@ results = embeddings.embed_documents(texts)
 print(results)
 ```
 
-You can manually pass the endpoint parameters and manually set the batch size you have in your SambaStudio embeddings endpoint
+
+SambaStudio 임베딩 엔드포인트에서 엔드포인트 매개변수를 수동으로 전달하고 배치 크기를 수동으로 설정할 수 있습니다.
 
 ```python
 embeddings = SambaStudioEmbeddings(
@@ -64,7 +66,8 @@ embeddings = SambaStudioEmbeddings(
 )
 ```
 
-Or You can use an embedding model expert included in your deployed CoE
+
+또는 배포된 CoE에 포함된 임베딩 모델 전문가를 사용할 수 있습니다.
 
 ```python
 embeddings = SambaStudioEmbeddings(
@@ -75,7 +78,8 @@ embeddings = SambaStudioEmbeddings(
 )
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

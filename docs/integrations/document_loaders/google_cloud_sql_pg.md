@@ -1,36 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/google_cloud_sql_pg/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/google_cloud_sql_pg.ipynb
+description: Google Cloud SQL for PostgreSQL은 PostgreSQL 데이터베이스를 관리하는 완전 관리형 서비스로,
+  Langchain 통합을 통해 AI 경험을 구축할 수 있습니다.
 ---
 
 # Google Cloud SQL for PostgreSQL
 
-> [Cloud SQL for PostgreSQL](https://cloud.google.com/sql/docs/postgres) is a fully-managed database service that helps you set up, maintain, manage, and administer your PostgreSQL relational databases on Google Cloud Platform. Extend your database application to build AI-powered experiences leveraging Cloud SQL for PostgreSQL's Langchain integrations.
+> [Cloud SQL for PostgreSQL](https://cloud.google.com/sql/docs/postgres)는 Google Cloud Platform에서 PostgreSQL 관계형 데이터베이스를 설정, 유지 관리, 관리 및 운영하는 데 도움을 주는 완전 관리형 데이터베이스 서비스입니다. Cloud SQL for PostgreSQL의 Langchain 통합을 활용하여 AI 기반 경험을 구축하기 위해 데이터베이스 애플리케이션을 확장하세요.
 
-This notebook goes over how to use `Cloud SQL for PostgreSQL` to load Documents with the `PostgresLoader` class.
+이 노트북에서는 `PostgresLoader` 클래스를 사용하여 문서를 로드하는 방법을 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-cloud-sql-pg-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-cloud-sql-pg-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-cloud-sql-pg-python/blob/main/docs/document_loader.ipynb)
 
-## Before you begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the Cloud SQL Admin API.](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com)
-* [Create a Cloud SQL for PostgreSQL instance.](https://cloud.google.com/sql/docs/postgres/create-instance)
-* [Create a Cloud SQL for PostgreSQL database.](https://cloud.google.com/sql/docs/postgres/create-manage-databases)
-* [Add a User to the database.](https://cloud.google.com/sql/docs/postgres/create-manage-users)
+* [Google Cloud 프로젝트 만들기](https://developers.google.com/workspace/guides/create-project)
+* [Cloud SQL Admin API 활성화하기.](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com)
+* [PostgreSQL 인스턴스 만들기.](https://cloud.google.com/sql/docs/postgres/create-instance)
+* [PostgreSQL 데이터베이스 만들기.](https://cloud.google.com/sql/docs/postgres/create-manage-databases)
+* [데이터베이스에 사용자 추가하기.](https://cloud.google.com/sql/docs/postgres/create-manage-users)
 
-### 🦜🔗 Library Installation
-Install the integration library, `langchain_google_cloud_sql_pg`.
+### 🦜🔗 라이브러리 설치
+통합 라이브러리인 `langchain_google_cloud_sql_pg`를 설치합니다.
 
 ```python
 %pip install --upgrade --quiet  langchain_google_cloud_sql_pg
 ```
 
-**Colab only:** Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**Colab 전용:** 다음 셀의 주석을 제거하여 커널을 재시작하거나 버튼을 사용하여 커널을 재시작합니다. Vertex AI Workbench의 경우 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -40,11 +42,12 @@ Install the integration library, `langchain_google_cloud_sql_pg`.
 # app.kernel.do_shutdown(True)
 ```
 
-### 🔐 Authentication
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
 
-* If you are using Colab to run this notebook, use the cell below and continue.
-* If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+### 🔐 인증
+Google Cloud에 인증하여 이 노트북에 로그인한 IAM 사용자로 Google Cloud 프로젝트에 접근합니다.
+
+* Colab을 사용하여 이 노트북을 실행하는 경우 아래 셀을 사용하고 계속 진행합니다.
+* Vertex AI Workbench를 사용하는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -52,14 +55,15 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ Google Cloud 프로젝트 설정
+Google Cloud 프로젝트를 설정하여 이 노트북 내에서 Google Cloud 리소스를 활용할 수 있도록 합니다.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list` 실행.
+* `gcloud projects list` 실행.
+* 지원 페이지 참조: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @title Project { display-mode: "form" }
@@ -69,10 +73,11 @@ PROJECT_ID = "gcp_project_id"  # @param {type:"string"}
 ! gcloud config set project {PROJECT_ID}
 ```
 
-## Basic Usage
 
-### Set Cloud SQL database values
-Find your database variables, in the [Cloud SQL Instances page](https://console.cloud.google.com/sql/instances).
+## 기본 사용법
+
+### Cloud SQL 데이터베이스 값 설정
+[Cloud SQL 인스턴스 페이지](https://console.cloud.google.com/sql/instances)에서 데이터베이스 변수를 찾습니다.
 
 ```python
 # @title Set Your Values Here { display-mode: "form" }
@@ -82,25 +87,26 @@ DATABASE = "my-database"  # @param {type: "string"}
 TABLE_NAME = "vector_store"  # @param {type: "string"}
 ```
 
-### Cloud SQL Engine
 
-One of the requirements and arguments to establish PostgreSQL as a document loader is a `PostgresEngine` object. The `PostgresEngine`  configures a connection pool to your Cloud SQL for PostgreSQL database, enabling successful connections from your application and following industry best practices.
+### Cloud SQL 엔진
 
-To create a `PostgresEngine` using `PostgresEngine.from_instance()` you need to provide only 4 things:
+문서 로더로 PostgreSQL을 설정하기 위한 요구 사항 및 인수 중 하나는 `PostgresEngine` 객체입니다. `PostgresEngine`은 Cloud SQL for PostgreSQL 데이터베이스에 대한 연결 풀을 구성하여 애플리케이션에서 성공적인 연결을 가능하게 하고 업계 모범 사례를 따릅니다.
 
-1. `project_id` : Project ID of the Google Cloud Project where the Cloud SQL instance is located.
-2. `region` : Region where the Cloud SQL instance is located.
-3. `instance` : The name of the Cloud SQL instance.
-4. `database` : The name of the database to connect to on the Cloud SQL instance.
+`PostgresEngine.from_instance()`를 사용하여 `PostgresEngine`을 생성하려면 다음 4가지만 제공하면 됩니다:
 
-By default, [IAM database authentication](https://cloud.google.com/sql/docs/postgres/iam-authentication) will be used as the method of database authentication. This library uses the IAM principal belonging to the [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/application-default-credentials) sourced from the environment.
+1. `project_id` : Cloud SQL 인스턴스가 위치한 Google Cloud 프로젝트의 프로젝트 ID.
+2. `region` : Cloud SQL 인스턴스가 위치한 지역.
+3. `instance` : Cloud SQL 인스턴스의 이름.
+4. `database` : Cloud SQL 인스턴스에서 연결할 데이터베이스의 이름.
 
-Optionally, [built-in database authentication](https://cloud.google.com/sql/docs/postgres/users) using a username and password to access the Cloud SQL database can also be used. Just provide the optional `user` and `password` arguments to `PostgresEngine.from_instance()`:
+기본적으로 [IAM 데이터베이스 인증](https://cloud.google.com/sql/docs/postgres/iam-authentication)이 데이터베이스 인증 방법으로 사용됩니다. 이 라이브러리는 환경에서 가져온 [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/application-default-credentials)에 속하는 IAM 주체를 사용합니다.
 
-* `user` : Database user to use for built-in database authentication and login
-* `password` : Database password to use for built-in database authentication and login.
+선택적으로, 사용자 이름과 비밀번호를 사용하여 Cloud SQL 데이터베이스에 접근하는 [내장 데이터베이스 인증](https://cloud.google.com/sql/docs/postgres/users)도 사용할 수 있습니다. `PostgresEngine.from_instance()`에 선택적 `user` 및 `password` 인수를 제공하기만 하면 됩니다:
 
-**Note**: This tutorial demonstrates the async interface. All async methods have corresponding sync methods.
+* `user` : 내장 데이터베이스 인증 및 로그인에 사용할 데이터베이스 사용자
+* `password` : 내장 데이터베이스 인증 및 로그인에 사용할 데이터베이스 비밀번호.
+
+**참고**: 이 튜토리얼은 비동기 인터페이스를 보여줍니다. 모든 비동기 메서드에는 해당하는 동기 메서드가 있습니다.
 
 ```python
 from langchain_google_cloud_sql_pg import PostgresEngine
@@ -113,7 +119,8 @@ engine = await PostgresEngine.afrom_instance(
 )
 ```
 
-### Create PostgresLoader
+
+### PostgresLoader 생성
 
 ```python
 from langchain_google_cloud_sql_pg import PostgresLoader
@@ -122,9 +129,9 @@ from langchain_google_cloud_sql_pg import PostgresLoader
 loader = await PostgresLoader.create(engine, table_name=TABLE_NAME)
 ```
 
-### Load Documents via default table
-The loader returns a list of Documents from the table using the first column as page_content and all other columns as metadata. The default table will have the first column as
-page_content and the second column as metadata (JSON). Each row becomes a document. Please note that if you want your documents to have ids you will need to add them in.
+
+### 기본 테이블을 통한 문서 로드
+로더는 첫 번째 열을 page_content로, 나머지 열을 메타데이터로 사용하여 테이블에서 문서 목록을 반환합니다. 기본 테이블은 첫 번째 열이 page_content이고 두 번째 열이 메타데이터(JSON)로 구성됩니다. 각 행은 문서가 됩니다. 문서에 ID를 추가하려면 직접 추가해야 합니다.
 
 ```python
 from langchain_google_cloud_sql_pg import PostgresLoader
@@ -136,7 +143,8 @@ docs = await loader.aload()
 print(docs)
 ```
 
-### Load documents via custom table/metadata or custom page content columns
+
+### 사용자 정의 테이블/메타데이터 또는 사용자 정의 페이지 콘텐츠 열을 통한 문서 로드
 
 ```python
 loader = await PostgresLoader.create(
@@ -149,8 +157,9 @@ docs = await loader.aload()
 print(docs)
 ```
 
-### Set page content format
-The loader returns a list of Documents, with one document per row, with page content in specified string format, i.e. text (space separated concatenation), JSON, YAML, CSV, etc. JSON and YAML formats include headers, while text and CSV do not include field headers.
+
+### 페이지 콘텐츠 형식 설정
+로더는 지정된 문자열 형식으로 페이지 콘텐츠가 있는 각 행당 하나의 문서로 문서 목록을 반환합니다. 즉, 텍스트(공백으로 구분된 연결), JSON, YAML, CSV 등입니다. JSON 및 YAML 형식은 헤더를 포함하고, 텍스트 및 CSV는 필드 헤더를 포함하지 않습니다.
 
 ```python
 loader = await PostgresLoader.create(
@@ -163,7 +172,8 @@ docs = await loader.aload()
 print(docs)
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

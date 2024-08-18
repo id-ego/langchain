@@ -1,22 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/json/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/json.ipynb
+description: 이 문서는 대규모 JSON 객체와 상호작용하는 에이전트를 소개하며, API 사양에 대한 질문을 답변하는 데 유용합니다.
 ---
 
-# JSON Toolkit
+# JSON 툴킷
 
-This notebook showcases an agent interacting with large `JSON/dict` objects.
-This is useful when you want to answer questions about a JSON blob that's too large to fit in the context window of an LLM. The agent is able to iteratively explore the blob to find what it needs to answer the user's question.
+이 노트북은 대규모 `JSON/dict` 객체와 상호작용하는 에이전트를 보여줍니다.  
+이는 LLM의 컨텍스트 창에 맞지 않을 정도로 큰 JSON 블롭에 대한 질문에 답변하고자 할 때 유용합니다. 에이전트는 사용자의 질문에 답하기 위해 필요한 정보를 찾기 위해 블롭을 반복적으로 탐색할 수 있습니다.
 
-In the below example, we are using the OpenAPI spec for the OpenAI API, which you can find [here](https://github.com/openai/openai-openapi/blob/master/openapi.yaml).
+아래 예제에서는 OpenAI API에 대한 OpenAPI 사양을 사용하고 있으며, [여기](https://github.com/openai/openai-openapi/blob/master/openapi.yaml)에서 찾을 수 있습니다.
 
-We will use the JSON agent to answer some questions about the API spec.
+우리는 JSON 에이전트를 사용하여 API 사양에 대한 몇 가지 질문에 답변할 것입니다.
 
 ```python
 %pip install -qU langchain-community
 ```
 
-## Initialization
+
+## 초기화
 
 ```python
 <!--IMPORTS:[{"imported": "JsonToolkit", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.json.toolkit.JsonToolkit.html", "title": "JSON Toolkit"}, {"imported": "create_json_agent", "source": "langchain_community.agent_toolkits", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.json.base.create_json_agent.html", "title": "JSON Toolkit"}, {"imported": "JsonSpec", "source": "langchain_community.tools.json.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.json.tool.JsonSpec.html", "title": "JSON Toolkit"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "JSON Toolkit"}]-->
@@ -25,6 +26,7 @@ from langchain_community.agent_toolkits import JsonToolkit, create_json_agent
 from langchain_community.tools.json.tool import JsonSpec
 from langchain_openai import OpenAI
 ```
+
 
 ```python
 with open("openai_openapi.yml") as f:
@@ -37,13 +39,15 @@ json_agent_executor = create_json_agent(
 )
 ```
 
-## Example: getting the required POST parameters for a request
+
+## 예제: 요청을 위한 필수 POST 매개변수 가져오기
 
 ```python
 json_agent_executor.run(
     "What are the required parameters in the request body to the /completions endpoint?"
 )
 ```
+  
 ```output
 
 
@@ -100,12 +104,14 @@ Final Answer: The required parameters in the request body to the /completions en
 
 [1m> Finished chain.[0m
 ```
+  
 
 ```output
 "The required parameters in the request body to the /completions endpoint are 'model'."
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)  
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

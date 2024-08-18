@@ -1,24 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/migrating_chains/multi_prompt_chain/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/versions/migrating_chains/multi_prompt_chain.ipynb
+description: 이 문서는 `MultiPromptChain`과 `LangGraph`의 차이점을 비교하며, 각자의 기능과 장점을 설명합니다.
 title: Migrating from MultiPromptChain
 ---
 
-The [`MultiPromptChain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.router.multi_prompt.MultiPromptChain.html) routed an input query to one of multiple LLMChains-- that is, given an input query, it used a LLM to select from a list of prompts, formatted the query into the prompt, and generated a response.
+[`MultiPromptChain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.router.multi_prompt.MultiPromptChain.html)는 입력 쿼리를 여러 LLMChain 중 하나로 라우팅합니다. 즉, 입력 쿼리를 기반으로 LLM을 사용하여 프롬프트 목록에서 선택하고, 쿼리를 프롬프트 형식으로 변환하여 응답을 생성합니다.
 
-`MultiPromptChain` does not support common [chat model](/docs/concepts/#chat-models) features, such as message roles and [tool calling](/docs/concepts/#functiontool-calling).
+`MultiPromptChain`은 메시지 역할 및 [도구 호출](/docs/concepts/#functiontool-calling)과 같은 일반 [채팅 모델](/docs/concepts/#chat-models) 기능을 지원하지 않습니다.
 
-A [LangGraph](https://langchain-ai.github.io/langgraph/) implementation confers a number of advantages for this problem:
+[LangGraph](https://langchain-ai.github.io/langgraph/) 구현은 이 문제에 대해 여러 가지 장점을 제공합니다:
 
-- Supports chat prompt templates, including messages with `system` and other roles;
-- Supports the use of tool calling for the routing step;
-- Supports streaming of both individual steps and output tokens.
+- `system` 및 기타 역할이 포함된 채팅 프롬프트 템플릿 지원;
+- 라우팅 단계에서 도구 호출 사용 지원;
+- 개별 단계 및 출력 토큰의 스트리밍 지원.
 
-Now let's look at them side-by-side. Note that for this guide we will `langchain-openai >= 0.1.20`
+이제 이를 나란히 살펴보겠습니다. 이 가이드를 위해 우리는 `langchain-openai >= 0.1.20`을 사용할 것입니다.
 
 ```python
 %pip install -qU langchain-core langchain-openai
 ```
+
 
 ```python
 import os
@@ -27,10 +28,10 @@ from getpass import getpass
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
 
-## Legacy
+
+## 레거시
 
 <details open>
-
 
 ```python
 <!--IMPORTS:[{"imported": "MultiPromptChain", "source": "langchain.chains.router.multi_prompt", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.router.multi_prompt.MultiPromptChain.html", "title": "# Legacy"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "# Legacy"}]-->
@@ -67,28 +68,30 @@ prompt_infos = [
 chain = MultiPromptChain.from_prompts(llm, prompt_infos)
 ```
 
+
 ```python
 chain.invoke({"input": "What color are carrots?"})
 ```
+
 
 ```output
 {'input': 'What color are carrots?',
  'text': 'Carrots are most commonly orange, but they can also be found in a variety of other colors including purple, yellow, white, and red. The orange variety is the most popular and widely recognized.'}
 ```
 
-In the [LangSmith trace](https://smith.langchain.com/public/e935238b-0b63-4984-abc8-873b2170a32d/r) we can see the two steps of this process, including the prompts for routing the query and the final selected prompt.
+
+[LangSmith 추적](https://smith.langchain.com/public/e935238b-0b63-4984-abc8-873b2170a32d/r)에서 쿼리를 라우팅하기 위한 프롬프트와 최종 선택된 프롬프트를 포함한 이 과정의 두 단계를 볼 수 있습니다.
 
 </details>
-
 
 ## LangGraph
 
 <details open>
 
-
 ```python
 pip install -qU langgraph
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "# Legacy"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "# Legacy"}, {"imported": "RunnableConfig", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.RunnableConfig.html", "title": "# Legacy"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "# Legacy"}]-->
@@ -195,37 +198,40 @@ graph.add_edge("prompt_2", END)
 app = graph.compile()
 ```
 
+
 ```python
 from IPython.display import Image
 
 Image(app.get_graph().draw_mermaid_png())
 ```
 
+
 ![](/img/167f4f7c1b53d416d949714d03c01ce8.jpg)
 
-We can invoke the chain as follows:
+체인을 다음과 같이 호출할 수 있습니다:
 
 ```python
 state = await app.ainvoke({"query": "what color are carrots"})
 print(state["destination"])
 print(state["answer"])
 ```
+
 ```output
 {'destination': 'vegetable'}
 Carrots are most commonly orange, but they can also come in a variety of other colors, including purple, red, yellow, and white. The different colors often indicate varying flavors and nutritional profiles. For example, purple carrots contain anthocyanins, while orange carrots are rich in beta-carotene, which is converted to vitamin A in the body.
 ```
-In the [LangSmith trace](https://smith.langchain.com/public/1017a9d2-2d2a-4954-a5fd-5689632b4c5f/r) we can see the tool call that routed the query and the prompt that was selected to generate the answer.
+
+[LangSmith 추적](https://smith.langchain.com/public/1017a9d2-2d2a-4954-a5fd-5689632b4c5f/r)에서 쿼리를 라우팅한 도구 호출과 응답 생성을 위해 선택된 프롬프트를 볼 수 있습니다.
 
 </details>
 
+## 개요:
 
-## Overview:
+- 내부적으로 `MultiPromptChain`은 LLM에 JSON 형식의 텍스트 생성을 지시하여 쿼리를 라우팅하고, 의도된 목적지를 파싱합니다. 문자열 프롬프트 템플릿의 레지스트리를 입력으로 사용합니다.
+- 위에서 하위 수준의 원시를 통해 구현된 LangGraph 구현은 도구 호출을 사용하여 임의의 체인으로 라우팅합니다. 이 예제에서 체인에는 채팅 모델 템플릿과 채팅 모델이 포함됩니다.
 
-- Under the hood, `MultiPromptChain` routes the query by instructing the LLM to generate JSON-formatted text, and parses out the intended destination. It takes a registry of string prompt templates as input.
-- The LangGraph implementation, implemented above via lower-level primitives, uses tool-calling to route to arbitrary chains. In this example, the chains include chat model templates and chat models.
+## 다음 단계
 
-## Next steps
+프롬프트 템플릿, LLM 및 출력 파서로 빌드하는 방법에 대한 자세한 내용은 [이 튜토리얼](/docs/tutorials/llm_chain)을 참조하십시오.
 
-See [this tutorial](/docs/tutorials/llm_chain) for more detail on building with prompt templates, LLMs, and output parsers.
-
-Check out the [LangGraph documentation](https://langchain-ai.github.io/langgraph/) for detail on building with LangGraph.
+LangGraph로 빌드하는 방법에 대한 자세한 내용은 [LangGraph 문서](https://langchain-ai.github.io/langgraph/)를 확인하십시오.

@@ -1,29 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/jsonformer_experimental/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/jsonformer_experimental.ipynb
+description: JSONFormer는 JSON Schema의 하위 집합을 구조적으로 디코딩하기 위해 로컬 Hugging Face 파이프라인
+  모델을 래핑하는 라이브러리입니다.
 ---
 
 # JSONFormer
 
-[JSONFormer](https://github.com/1rgs/jsonformer) is a library that wraps local Hugging Face pipeline models for structured decoding of a subset of the JSON Schema.
+[JSONFormer](https://github.com/1rgs/jsonformer)는 JSON Schema의 하위 집합에 대한 구조적 디코딩을 위해 로컬 Hugging Face 파이프라인 모델을 래핑하는 라이브러리입니다.
 
-It works by filling in the structure tokens and then sampling the content tokens from the model.
+구조 토큰을 채운 다음 모델에서 콘텐츠 토큰을 샘플링하여 작동합니다.
 
-**Warning - this module is still experimental**
+**경고 - 이 모듈은 아직 실험적입니다**
 
 ```python
 %pip install --upgrade --quiet  jsonformer > /dev/null
 ```
 
-### Hugging Face Baseline
 
-First, let's establish a qualitative baseline by checking the output of the model without structured decoding.
+### Hugging Face 기준선
+
+먼저, 구조적 디코딩 없이 모델의 출력을 확인하여 질적 기준선을 설정해 봅시다.
 
 ```python
 import logging
 
 logging.basicConfig(level=logging.ERROR)
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "JSONFormer"}]-->
@@ -53,6 +56,7 @@ def ask_star_coder(query: str, temperature: float = 1.0, max_new_tokens: float =
     response.raise_for_status()
     return json.loads(response.content.decode("utf-8"))
 ```
+
 
 ```python
 prompt = """You must respond using JSON format, with a single action and single action input.
@@ -87,6 +91,7 @@ Human: 'What's the difference between an iterator and an iterable?'
 AI Assistant:""".format(arg_schema=ask_star_coder.args)
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "HuggingFacePipeline", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "JSONFormer"}]-->
 from langchain_huggingface import HuggingFacePipeline
@@ -101,16 +106,18 @@ original_model = HuggingFacePipeline(pipeline=hf_model)
 generated = original_model.predict(prompt, stop=["Observation:", "Human:"])
 print(generated)
 ```
+
 ```output
 Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation.
 ``````output
  'What's the difference between an iterator and an iterable?'
 ```
-***That's not so impressive, is it? It didn't follow the JSON format at all! Let's try with the structured decoder.***
 
-## JSONFormer LLM Wrapper
+***그렇게 인상적이지 않네요, 그렇죠? JSON 형식을 전혀 따르지 않았어요! 구조적 디코더로 다시 시도해 봅시다.***
 
-Let's try that again, now providing a the Action input's JSON Schema to the model.
+## JSONFormer LLM 래퍼
+
+이제 모델에 Action 입력의 JSON Schema를 제공하여 다시 시도해 봅시다.
 
 ```python
 decoder_schema = {
@@ -126,6 +133,7 @@ decoder_schema = {
 }
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "JsonFormer", "source": "langchain_experimental.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_experimental.llms.jsonformer_decoder.JsonFormer.html", "title": "JSONFormer"}]-->
 from langchain_experimental.llms import JsonFormer
@@ -133,16 +141,19 @@ from langchain_experimental.llms import JsonFormer
 json_former = JsonFormer(json_schema=decoder_schema, pipeline=hf_model)
 ```
 
+
 ```python
 results = json_former.predict(prompt, stop=["Observation:", "Human:"])
 print(results)
 ```
+
 ```output
 {"action": "ask_star_coder", "action_input": {"query": "What's the difference between an iterator and an iter", "temperature": 0.0, "max_new_tokens": 50.0}}
 ```
-**Voila! Free of parsing errors.**
 
-## Related
+**보아라! 파싱 오류가 없습니다.**
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

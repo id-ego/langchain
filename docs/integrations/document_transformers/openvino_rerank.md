@@ -1,18 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/openvino_rerank/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/openvino_rerank.ipynb
+description: OpenVINO를 활용한 Hugging Face rerank 모델 지원 및 벡터 스토어 검색기 설정 방법을 설명하는 문서입니다.
 ---
 
-# OpenVINO Reranker
+# OpenVINO 리랭커
 
-[OpenVINO™](https://github.com/openvinotoolkit/openvino) is an open-source toolkit for optimizing and deploying AI inference. The OpenVINO™ Runtime supports various hardware [devices](https://github.com/openvinotoolkit/openvino?tab=readme-ov-file#supported-hardware-matrix) including x86 and ARM CPUs, and Intel GPUs. It can help to boost deep learning performance in Computer Vision, Automatic Speech Recognition, Natural Language Processing and other common tasks.
+[OpenVINO™](https://github.com/openvinotoolkit/openvino)는 AI 추론을 최적화하고 배포하기 위한 오픈 소스 툴킷입니다. OpenVINO™ 런타임은 x86 및 ARM CPU, Intel GPU를 포함한 다양한 하드웨어 [장치](https://github.com/openvinotoolkit/openvino?tab=readme-ov-file#supported-hardware-matrix)를 지원합니다. 이는 컴퓨터 비전, 자동 음성 인식, 자연어 처리 및 기타 일반적인 작업에서 딥 러닝 성능을 향상시키는 데 도움을 줄 수 있습니다.
 
-Hugging Face rerank model can be supported by OpenVINO through `OpenVINOReranker` class. If you have an Intel GPU, you can specify `model_kwargs={"device": "GPU"}` to run inference on it.
+Hugging Face 리랭크 모델은 `OpenVINOReranker` 클래스를 통해 OpenVINO에서 지원될 수 있습니다. Intel GPU가 있는 경우, `model_kwargs={"device": "GPU"}`를 지정하여 추론을 실행할 수 있습니다.
 
 ```python
 %pip install --upgrade-strategy eager "optimum[openvino,nncf]" --quiet
 %pip install --upgrade --quiet  faiss-cpu
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -29,8 +30,9 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+
+## 기본 벡터 저장소 검색기 설정
+2023년 국정 연설을 (청크로) 저장하여 간단한 벡터 저장소 검색기를 초기화하는 것으로 시작하겠습니다. 검색기를 설정하여 많은 수(20)의 문서를 검색할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "OpenVINO Reranker"}, {"imported": "OpenVINOEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.openvino.OpenVINOEmbeddings.html", "title": "OpenVINO Reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "OpenVINO Reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "OpenVINO Reranker"}]-->
@@ -56,6 +58,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 /home/ethan/intel/langchain_test/lib/python3.10/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
   from .autonotebook import tqdm as notebook_tqdm
@@ -284,8 +287,10 @@ Imagine what it’s like to look at your child who needs insulin and have no ide
 What it does to your dignity, your ability to look your child in the eye, to be the parent you expect to be.
 Metadata: {'source': '../../how_to/state_of_the_union.txt', 'id': 40}
 ```
-## Reranking with OpenVINO
-Now let's wrap our base retriever with a `ContextualCompressionRetriever`, using `OpenVINOReranker` as a compressor.
+
+
+## OpenVINO를 통한 리랭킹
+이제 기본 검색기를 `ContextualCompressionRetriever`로 감싸고, `OpenVINOReranker`를 압축기로 사용하겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "OpenVINO Reranker"}, {"imported": "OpenVINOReranker", "source": "langchain_community.document_compressors.openvino_rerank", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.openvino_rerank.OpenVINOReranker.html", "title": "OpenVINO Reranker"}]-->
@@ -305,11 +310,13 @@ compressed_docs = compression_retriever.invoke(
 print([doc.metadata["id"] for doc in compressed_docs])
 ```
 
-After reranking, the top 4 documents are different from the top 4 documents retrieved by the base retriever.
+
+리랭킹 후, 상위 4개의 문서는 기본 검색기가 검색한 상위 4개의 문서와 다릅니다.
 
 ```python
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 
@@ -347,8 +354,10 @@ And I’m taking robust action to make sure the pain of our sanctions  is target
 Tonight, I can announce that the United States has worked with 30 other countries to release 60 Million barrels of oil from reserves around the world.
 Metadata: {'id': 6, 'relevance_score': tensor(0.0098)}
 ```
-## Export IR model
-It is possible to export your rerank model to the OpenVINO IR format with `OVModelForSequenceClassification`, and load the model from local folder.
+
+
+## IR 모델 내보내기
+`OVModelForSequenceClassification`을 사용하여 리랭크 모델을 OpenVINO IR 형식으로 내보내고, 로컬 폴더에서 모델을 로드할 수 있습니다.
 
 ```python
 from pathlib import Path
@@ -358,15 +367,20 @@ if not Path(ov_model_dir).exists():
     ov_compressor.save_model(ov_model_dir)
 ```
 
+
 ```python
 ov_compressor = OpenVINOReranker(model_name_or_path=ov_model_dir)
 ```
+
+
 ```output
 Compiling the model to CPU ...
 ```
-For more information refer to:
 
-* [OpenVINO LLM guide](https://docs.openvino.ai/2024/learn-openvino/llm_inference_guide.html).
-* [OpenVINO Documentation](https://docs.openvino.ai/2024/home.html).
-* [OpenVINO Get Started Guide](https://www.intel.com/content/www/us/en/content-details/819067/openvino-get-started-guide.html).
-* [RAG Notebook with LangChain](https://github.com/openvinotoolkit/openvino_notebooks/tree/latest/notebooks/llm-rag-langchain).
+
+자세한 내용은 다음을 참조하십시오:
+
+* [OpenVINO LLM 가이드](https://docs.openvino.ai/2024/learn-openvino/llm_inference_guide.html).
+* [OpenVINO 문서](https://docs.openvino.ai/2024/home.html).
+* [OpenVINO 시작 가이드](https://www.intel.com/content/www/us/en/content-details/819067/openvino-get-started-guide.html).
+* [LangChain과 함께하는 RAG 노트북](https://github.com/openvinotoolkit/openvino_notebooks/tree/latest/notebooks/llm-rag-langchain).

@@ -1,46 +1,47 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/oci_model_deployment_endpoint/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/oci_model_deployment_endpoint.ipynb
+description: OCI 데이터 과학 모델 배포 엔드포인트를 사용하여 LLM을 호스팅하고 인증하는 방법을 안내하는 문서입니다.
 ---
 
-# OCI Data Science Model Deployment Endpoint
+# OCI 데이터 과학 모델 배포 엔드포인트
 
-[OCI Data Science](https://docs.oracle.com/en-us/iaas/data-science/using/home.htm) is a fully managed and serverless platform for data science teams to build, train, and manage machine learning models in the Oracle Cloud Infrastructure.
+[OCI 데이터 과학](https://docs.oracle.com/en-us/iaas/data-science/using/home.htm)은 데이터 과학 팀이 Oracle Cloud Infrastructure에서 기계 학습 모델을 구축, 훈련 및 관리할 수 있는 완전 관리형 서버리스 플랫폼입니다.
 
-This notebooks goes over how to use an LLM hosted on a [OCI Data Science Model Deployment](https://docs.oracle.com/en-us/iaas/data-science/using/model-dep-about.htm).
+이 노트북은 [OCI 데이터 과학 모델 배포](https://docs.oracle.com/en-us/iaas/data-science/using/model-dep-about.htm)에서 호스팅되는 LLM을 사용하는 방법을 설명합니다.
 
-To authenticate, [oracle-ads](https://accelerated-data-science.readthedocs.io/en/latest/user_guide/cli/authentication.html) has been used to automatically load credentials for invoking endpoint.
+인증을 위해 [oracle-ads](https://accelerated-data-science.readthedocs.io/en/latest/user_guide/cli/authentication.html)를 사용하여 엔드포인트를 호출하기 위한 자격 증명을 자동으로 로드합니다.
 
 ```python
 !pip3 install oracle-ads
 ```
 
-## Prerequisite
 
-### Deploy model
-Check [Oracle GitHub samples repository](https://github.com/oracle-samples/oci-data-science-ai-samples/tree/main/model-deployment/containers/llama2) on how to deploy your llm on OCI Data Science Model deployment.
+## 전제 조건
 
-### Policies
-Make sure to have the required [policies](https://docs.oracle.com/en-us/iaas/data-science/using/model-dep-policies-auth.htm#model_dep_policies_auth__predict-endpoint) to access the OCI Data Science Model Deployment endpoint.
+### 모델 배포
+OCI 데이터 과학 모델 배포에서 LLM을 배포하는 방법은 [Oracle GitHub 샘플 리포지토리](https://github.com/oracle-samples/oci-data-science-ai-samples/tree/main/model-deployment/containers/llama2)를 확인하세요.
 
-## Set up
+### 정책
+OCI 데이터 과학 모델 배포 엔드포인트에 접근하기 위해 필요한 [정책](https://docs.oracle.com/en-us/iaas/data-science/using/model-dep-policies-auth.htm#model_dep_policies_auth__predict-endpoint)을 반드시 확인하세요.
+
+## 설정
 
 ### vLLM
-After having deployed model, you have to set up following required parameters of the `OCIModelDeploymentVLLM` call:
+모델을 배포한 후, `OCIModelDeploymentVLLM` 호출의 다음 필수 매개변수를 설정해야 합니다:
 
-- **`endpoint`**: The model HTTP endpoint from the deployed model, e.g. `https://<MD_OCID>/predict`. 
-- **`model`**: The location of the model.
+- **`endpoint`**: 배포된 모델의 HTTP 엔드포인트, 예: `https://<MD_OCID>/predict`. 
+- **`model`**: 모델의 위치.
 
-### Text generation inference (TGI)
-You have to set up following required parameters of the `OCIModelDeploymentTGI` call:
+### 텍스트 생성 추론 (TGI)
+`OCIModelDeploymentTGI` 호출의 다음 필수 매개변수를 설정해야 합니다:
 
-- **`endpoint`**: The model HTTP endpoint from the deployed model, e.g. `https://<MD_OCID>/predict`. 
+- **`endpoint`**: 배포된 모델의 HTTP 엔드포인트, 예: `https://<MD_OCID>/predict`. 
 
-### Authentication
+### 인증
 
-You can set authentication through either ads or environment variables. When you are working in OCI Data Science Notebook Session, you can leverage resource principal to access other OCI resources. Check out [here](https://accelerated-data-science.readthedocs.io/en/latest/user_guide/cli/authentication.html) to see more options. 
+ads 또는 환경 변수를 통해 인증을 설정할 수 있습니다. OCI 데이터 과학 노트북 세션에서 작업할 때는 리소스 주체를 활용하여 다른 OCI 리소스에 접근할 수 있습니다. 더 많은 옵션은 [여기](https://accelerated-data-science.readthedocs.io/en/latest/user_guide/cli/authentication.html)를 확인하세요.
 
-## Example
+## 예제
 
 ```python
 <!--IMPORTS:[{"imported": "OCIModelDeploymentVLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.oci_data_science_model_deployment_endpoint.OCIModelDeploymentVLLM.html", "title": "OCI Data Science Model Deployment Endpoint"}]-->
@@ -60,6 +61,7 @@ llm = OCIModelDeploymentVLLM(endpoint="https://<MD_OCID>/predict", model="model_
 # Run the LLM
 llm.invoke("Who is the first president of United States?")
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "OCIModelDeploymentTGI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.oci_data_science_model_deployment_endpoint.OCIModelDeploymentTGI.html", "title": "OCI Data Science Model Deployment Endpoint"}]-->
@@ -86,7 +88,8 @@ llm = OCIModelDeploymentTGI()
 llm.invoke("Who is the first president of United States?")
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

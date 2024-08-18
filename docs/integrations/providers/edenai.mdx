@@ -1,22 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/edenai/
+description: Eden AI는 최고의 AI 엔진을 활용하여 코드 없이 AI 프로젝트를 처리할 수 있는 사용자 인터페이스를 제공합니다.
 ---
 
-# Eden AI
+# 에덴 AI
 
-> [Eden AI](https://docs.edenai.co/docs/getting-started-with-eden-ai) user interface (UI)
-is designed for handling the AI projects. With `Eden AI Portal`,
-you can perform no-code AI using the best engines for the market.
+> [에덴 AI](https://docs.edenai.co/docs/getting-started-with-eden-ai) 사용자 인터페이스(UI)는 AI 프로젝트를 처리하기 위해 설계되었습니다. `에덴 AI 포털`을 사용하면 시장에서 최고의 엔진을 사용하여 코드 없이 AI를 수행할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Accessing the Eden AI API requires an API key, which you can get by
-[creating an account](https://app.edenai.run/user/register) and
-heading [here](https://app.edenai.run/admin/account/settings). 
+에덴 AI API에 접근하려면 API 키가 필요하며, 이는 [계정 생성](https://app.edenai.run/user/register)을 통해 얻을 수 있으며, [여기](https://app.edenai.run/admin/account/settings)로 이동하면 됩니다.
 
 ## LLMs
 
-See a [usage example](/docs/integrations/llms/edenai).
+[사용 예시](/docs/integrations/llms/edenai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "EdenAI", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.edenai.EdenAI.html", "title": "Eden AI"}]-->
@@ -24,36 +20,39 @@ from langchain_community.llms import EdenAI
 
 ```
 
-## Chat models
 
-See a [usage example](/docs/integrations/chat/edenai).
+## 채팅 모델
+
+[사용 예시](/docs/integrations/chat/edenai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatEdenAI", "source": "langchain_community.chat_models.edenai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.edenai.ChatEdenAI.html", "title": "Eden AI"}]-->
 from langchain_community.chat_models.edenai import ChatEdenAI
 ```
 
-## Embedding models
 
-See a [usage example](/docs/integrations/text_embedding/edenai).
+## 임베딩 모델
+
+[사용 예시](/docs/integrations/text_embedding/edenai)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "EdenAiEmbeddings", "source": "langchain_community.embeddings.edenai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.edenai.EdenAiEmbeddings.html", "title": "Eden AI"}]-->
 from langchain_community.embeddings.edenai import EdenAiEmbeddings
 ```
 
-## Tools
 
-Eden AI provides a list of tools that grants your Agent the ability to do multiple tasks, such as:
-* speech to text
-* text to speech
-* text explicit content detection
-* image explicit content detection
-* object detection
-* OCR invoice parsing
-* OCR ID parsing
+## 도구
 
-See a [usage example](/docs/integrations/tools/edenai_tools).
+에덴 AI는 에이전트가 다음과 같은 여러 작업을 수행할 수 있는 도구 목록을 제공합니다:
+* 음성 인식
+* 텍스트 음성 변환
+* 텍스트 명시적 콘텐츠 탐지
+* 이미지 명시적 콘텐츠 탐지
+* 객체 탐지
+* OCR 송장 파싱
+* OCR 신분증 파싱
+
+[사용 예시](/docs/integrations/tools/edenai_tools)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "EdenAiExplicitImageTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.image_explicitcontent.EdenAiExplicitImageTool.html", "title": "Eden AI"}, {"imported": "EdenAiObjectDetectionTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.image_objectdetection.EdenAiObjectDetectionTool.html", "title": "Eden AI"}, {"imported": "EdenAiParsingIDTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.ocr_identityparser.EdenAiParsingIDTool.html", "title": "Eden AI"}, {"imported": "EdenAiParsingInvoiceTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.ocr_invoiceparser.EdenAiParsingInvoiceTool.html", "title": "Eden AI"}, {"imported": "EdenAiSpeechToTextTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.audio_speech_to_text.EdenAiSpeechToTextTool.html", "title": "Eden AI"}, {"imported": "EdenAiTextModerationTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.text_moderation.EdenAiTextModerationTool.html", "title": "Eden AI"}, {"imported": "EdenAiTextToSpeechTool", "source": "langchain_community.tools.edenai", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.edenai.audio_text_to_speech.EdenAiTextToSpeechTool.html", "title": "Eden AI"}]-->

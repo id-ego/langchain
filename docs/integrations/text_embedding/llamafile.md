@@ -1,21 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/llamafile/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/llamafile.ipynb
+description: 이 문서는 Llamafile Embeddings 클래스를 설정하고 사용하여 텍스트 임베딩을 생성하는 방법을 설명합니다.
 ---
 
 # llamafile
 
-Let's load the [llamafile](https://github.com/Mozilla-Ocho/llamafile) Embeddings class.
+[llamafile](https://github.com/Mozilla-Ocho/llamafile) Embeddings 클래스를 로드해 봅시다.
 
-## Setup
+## 설정
 
-First, the are 3 setup steps:
+먼저, 3단계의 설정이 필요합니다:
 
-1. Download a llamafile. In this notebook, we use `TinyLlama-1.1B-Chat-v1.0.Q5_K_M` but there are many others available on [HuggingFace](https://huggingface.co/models?other=llamafile).
-2. Make the llamafile executable.
-3. Start the llamafile in server mode.
+1. llamafile을 다운로드합니다. 이 노트북에서는 `TinyLlama-1.1B-Chat-v1.0.Q5_K_M`을 사용하지만, [HuggingFace](https://huggingface.co/models?other=llamafile)에서 다른 많은 모델을 사용할 수 있습니다.
+2. llamafile을 실행 가능하게 만듭니다.
+3. 서버 모드에서 llamafile을 시작합니다.
 
-You can run the following bash script to do all this:
+다음 bash 스크립트를 실행하여 이 모든 작업을 수행할 수 있습니다:
 
 ```bash
 %%bash
@@ -35,34 +35,40 @@ pid=$!
 echo "${pid}" > .llamafile_pid  # write the process pid to a file so we can terminate the server later
 ```
 
-## Embedding texts using LlamafileEmbeddings
 
-Now, we can use the `LlamafileEmbeddings` class to interact with the llamafile server that's currently serving our TinyLlama model at http://localhost:8080.
+## LlamafileEmbeddings를 사용한 텍스트 임베딩
+
+이제 `LlamafileEmbeddings` 클래스를 사용하여 현재 http://localhost:8080에서 우리의 TinyLlama 모델을 제공하는 llamafile 서버와 상호작용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "LlamafileEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.llamafile.LlamafileEmbeddings.html", "title": "llamafile"}]-->
 from langchain_community.embeddings import LlamafileEmbeddings
 ```
 
+
 ```python
 embedder = LlamafileEmbeddings()
 ```
+
 
 ```python
 text = "This is a test document."
 ```
 
-To generate embeddings, you can either query an invidivual text, or you can query a list of texts.
+
+임베딩을 생성하려면 개별 텍스트를 쿼리하거나 텍스트 목록을 쿼리할 수 있습니다.
 
 ```python
 query_result = embedder.embed_query(text)
 query_result[:5]
 ```
 
+
 ```python
 doc_result = embedder.embed_documents([text])
 doc_result[0][:5]
 ```
+
 
 ```bash
 %%bash
@@ -71,7 +77,8 @@ kill $(cat .llamafile_pid)
 rm .llamafile_pid
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

@@ -1,17 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/nanopq/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/nanopq.ipynb
+description: 이 문서는 대규모 데이터셋에서 의미 검색을 위한 NanoPQ(제품 양자화) 알고리즘을 사용하는 검색기 구현 방법을 설명합니다.
 ---
 
-# NanoPQ (Product Quantization)
+# NanoPQ (제품 양자화)
 
-> [Product Quantization algorithm (k-NN)](https://towardsdatascience.com/similarity-search-product-quantization-b2a1a6397701) in brief is a quantization algorithm that helps in compression of database vectors which helps in semantic search when large datasets are involved. In a nutshell, the embedding is split into M subspaces which further goes through clustering. Upon clustering the vectors the centroid vector gets mapped to the vectors present in the each of the clusters of the subspace. 
+> [제품 양자화 알고리즘 (k-NN)](https://towardsdatascience.com/similarity-search-product-quantization-b2a1a6397701)은 대규모 데이터 세트가 포함될 때 의미 검색에 도움이 되는 데이터베이스 벡터의 압축을 돕는 양자화 알고리즘입니다. 요약하자면, 임베딩은 M개의 하위 공간으로 나뉘며, 이후 클러스터링을 거칩니다. 벡터를 클러스터링한 후, 중심 벡터는 하위 공간의 각 클러스터에 존재하는 벡터에 매핑됩니다.
 
-This notebook goes over how to use a retriever that under the hood uses a Product Quantization which has been implemented by the [nanopq](https://github.com/matsui528/nanopq) package.
+이 노트북은 [nanopq](https://github.com/matsui528/nanopq) 패키지에 의해 구현된 제품 양자화를 사용하는 검색기를 사용하는 방법을 다룹니다.
 
 ```python
 %pip install -qU langchain-community langchain-openai nanopq
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "SpacyEmbeddings", "source": "langchain_community.embeddings.spacy_embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.spacy_embeddings.SpacyEmbeddings.html", "title": "NanoPQ (Product Quantization)"}, {"imported": "NanoPQRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.nanopq.NanoPQRetriever.html", "title": "NanoPQ (Product Quantization)"}]-->
@@ -19,7 +20,8 @@ from langchain_community.embeddings.spacy_embeddings import SpacyEmbeddings
 from langchain_community.retrievers import NanoPQRetriever
 ```
 
-## Create New Retriever with Texts
+
+## 텍스트로 새 검색기 만들기
 
 ```python
 retriever = NanoPQRetriever.from_texts(
@@ -30,13 +32,15 @@ retriever = NanoPQRetriever.from_texts(
 )
 ```
 
-## Use Retriever
 
-We can now use the retriever!
+## 검색기 사용하기
+
+이제 검색기를 사용할 수 있습니다!
 
 ```python
 retriever.invoke("earth")
 ```
+
 ```output
 M: 2, Ks: 2, metric : <class 'numpy.uint8'>, code_dtype: l2
 iter: 20, seed: 123
@@ -46,6 +50,7 @@ Encoding the subspace: 0 / 2
 Encoding the subspace: 1 / 2
 ```
 
+
 ```output
 [Document(page_content='world'),
  Document(page_content='Great world'),
@@ -53,7 +58,8 @@ Encoding the subspace: 1 / 2
  Document(page_content='planets of the world')]
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련 자료
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

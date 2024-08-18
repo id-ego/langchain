@@ -1,46 +1,47 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/redis/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/redis.ipynb
+description: Redis는 빠른 속도의 벡터 데이터베이스로, 캐시, 메시지 브로커 및 데이터베이스로 사용되며 Langchain과 통합할 수
+  있습니다.
 ---
 
 # Redis
 
-> [Redis vector database](https://redis.io/docs/get-started/vector-database/) introduction and langchain integration guide.
+> [Redis 벡터 데이터베이스](https://redis.io/docs/get-started/vector-database/) 소개 및 Langchain 통합 가이드.
 
-## What is Redis?
+## Redis란 무엇인가?
 
-Most developers from a web services background are familiar with `Redis`. At its core, `Redis` is an open-source key-value store that is used as a cache, message broker, and database. Developers choose `Redis` because it is fast, has a large ecosystem of client libraries, and has been deployed by major enterprises for years.
+웹 서비스 배경을 가진 대부분의 개발자는 `Redis`에 익숙합니다. `Redis`는 본질적으로 캐시, 메시지 브로커 및 데이터베이스로 사용되는 오픈 소스 키-값 저장소입니다. 개발자들은 `Redis`가 빠르고, 클라이언트 라이브러리의 생태계가 크며, 주요 기업들에 의해 수년간 배포되어 왔기 때문에 선택합니다.
 
-On top of these traditional use cases, `Redis` provides additional capabilities like the Search and Query capability that allows users to create secondary index structures within `Redis`. This allows `Redis` to be a Vector Database, at the speed of a cache. 
+이러한 전통적인 사용 사례 외에도 `Redis`는 사용자가 `Redis` 내에서 보조 인덱스 구조를 생성할 수 있는 검색 및 쿼리 기능과 같은 추가 기능을 제공합니다. 이를 통해 `Redis`는 캐시 속도로 벡터 데이터베이스가 될 수 있습니다.
 
-## Redis as a Vector Database
+## 벡터 데이터베이스로서의 Redis
 
-`Redis` uses compressed, inverted indexes for fast indexing with a low memory footprint. It also supports a number of advanced features such as:
+`Redis`는 빠른 인덱싱을 위해 압축된 역 인덱스를 사용하며, 낮은 메모리 사용량을 자랑합니다. 또한 다음과 같은 여러 고급 기능을 지원합니다:
 
-* Indexing of multiple fields in Redis hashes and `JSON`
-* Vector similarity search (with `HNSW` (ANN) or `FLAT` (KNN))
-* Vector Range Search (e.g. find all vectors within a radius of a query vector)
-* Incremental indexing without performance loss
-* Document ranking (using [tf-idf](https://en.wikipedia.org/wiki/Tf%E2%80%93idf), with optional user-provided weights)
-* Field weighting
-* Complex boolean queries with `AND`, `OR`, and `NOT` operators
-* Prefix matching, fuzzy matching, and exact-phrase queries
-* Support for [double-metaphone phonetic matching](https://redis.io/docs/stack/search/reference/phonetic_matching/)
-* Auto-complete suggestions (with fuzzy prefix suggestions)
-* Stemming-based query expansion in [many languages](https://redis.io/docs/stack/search/reference/stemming/) (using [Snowball](http://snowballstem.org/))
-* Support for Chinese-language tokenization and querying (using [Friso](https://github.com/lionsoul2014/friso))
-* Numeric filters and ranges
-* Geospatial searches using Redis geospatial indexing
-* A powerful aggregations engine
-* Supports for all `utf-8` encoded text
-* Retrieve full documents, selected fields, or only the document IDs
-* Sorting results (for example, by creation date)
+* Redis 해시 및 `JSON`의 여러 필드 인덱싱
+* 벡터 유사도 검색 (`HNSW` (ANN) 또는 `FLAT` (KNN) 사용)
+* 벡터 범위 검색 (예: 쿼리 벡터의 반경 내 모든 벡터 찾기)
+* 성능 손실 없이 점진적 인덱싱
+* 문서 순위 매기기 ([tf-idf](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) 사용, 선택적으로 사용자 제공 가중치 포함)
+* 필드 가중치
+* `AND`, `OR`, `NOT` 연산자를 사용한 복잡한 불리언 쿼리
+* 접두사 일치, 퍼지 일치 및 정확한 구문 쿼리
+* [더블 메타폰 음성 일치](https://redis.io/docs/stack/search/reference/phonetic_matching/) 지원
+* 자동 완성 제안 (퍼지 접두사 제안 포함)
+* [여러 언어](https://redis.io/docs/stack/search/reference/stemming/)에서의 형태소 기반 쿼리 확장 (using [Snowball](http://snowballstem.org/))
+* 중국어 토큰화 및 쿼리 지원 (using [Friso](https://github.com/lionsoul2014/friso))
+* 숫자 필터 및 범위
+* Redis 지리 공간 인덱싱을 사용한 지리 공간 검색
+* 강력한 집계 엔진
+* 모든 `utf-8` 인코딩 텍스트 지원
+* 전체 문서, 선택된 필드 또는 문서 ID만 검색
+* 결과 정렬 (예: 생성 날짜 기준)
 
-## Clients
+## 클라이언트
 
-Since `Redis` is much more than just a vector database, there are often use cases that demand the usage of a `Redis` client besides just the `LangChain` integration. You can use any standard `Redis` client library to run Search and Query commands, but it's easiest to use a library that wraps the Search and Query API. Below are a few examples, but you can find more client libraries [here](https://redis.io/resources/clients/).
+`Redis`는 단순한 벡터 데이터베이스 그 이상이기 때문에, `LangChain` 통합 외에도 `Redis` 클라이언트를 사용할 필요가 있는 경우가 많습니다. 검색 및 쿼리 명령을 실행하기 위해 표준 `Redis` 클라이언트 라이브러리를 사용할 수 있지만, 검색 및 쿼리 API를 래핑하는 라이브러리를 사용하는 것이 가장 쉽습니다. 아래는 몇 가지 예시이며, 더 많은 클라이언트 라이브러리는 [여기](https://redis.io/resources/clients/)에서 찾을 수 있습니다.
 
-| Project | Language | License | Author | Stars |
+| 프로젝트 | 언어 | 라이센스 | 저자 | 별점 |
 |----------|---------|--------|---------|-------|
 | [jedis][jedis-url] | Java | MIT | [Redis][redis-url] | ![Stars](https://img.shields.io/github/stars/redis/jedis.svg?style=social&amp;label=Star&amp;maxAge=2592000) |
 | [redisvl][redisvl-url] | Python | MIT | [Redis][redis-url] | ![Stars](https://img.shields.io/github/stars/RedisVentures/redisvl.svg?style=social&amp;label=Star&amp;maxAge=2592000) |
@@ -82,60 +83,62 @@ Since `Redis` is much more than just a vector database, there are often use case
 [redisearch-api-rs-author]: https://redis.com
 [redisearch-api-rs-stars]: https://img.shields.io/github/stars/RediSearch/redisearch-api-rs.svg?style=social&amp;label=Star&amp;maxAge=2592000
 
-## Deployment options
+## 배포 옵션
 
-There are many ways to deploy Redis with RediSearch. The easiest way to get started is to use Docker, but there are are many potential options for deployment such as
+Redis와 RediSearch를 배포하는 방법은 여러 가지가 있습니다. 시작하는 가장 쉬운 방법은 Docker를 사용하는 것이지만, 다음과 같은 여러 배포 옵션이 있습니다.
 
 - [Redis Cloud](https://redis.com/redis-enterprise-cloud/overview/)
 - [Docker (Redis Stack)](https://hub.docker.com/r/redis/redis-stack)
-- Cloud marketplaces: [AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-e6y7ork67pjwg?sr=0-2&ref_=beagle&applicationId=AWSMPContessa), [Google Marketplace](https://console.cloud.google.com/marketplace/details/redislabs-public/redis-enterprise?pli=1), or [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/garantiadata.redis_enterprise_1sp_public_preview?tab=Overview)
-- On-premise: [Redis Enterprise Software](https://redis.com/redis-enterprise-software/overview/)
-- Kubernetes: [Redis Enterprise Software on Kubernetes](https://docs.redis.com/latest/kubernetes/)
+- 클라우드 마켓플레이스: [AWS Marketplace](https://aws.amazon.com/marketplace/pp/prodview-e6y7ork67pjwg?sr=0-2&ref_=beagle&applicationId=AWSMPContessa), [Google Marketplace](https://console.cloud.google.com/marketplace/details/redislabs-public/redis-enterprise?pli=1), 또는 [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/garantiadata.redis_enterprise_1sp_public_preview?tab=Overview)
+- 온프레미스: [Redis Enterprise Software](https://redis.com/redis-enterprise-software/overview/)
+- Kubernetes: [Kubernetes에서의 Redis Enterprise Software](https://docs.redis.com/latest/kubernetes/)
 
-## Additional examples
+## 추가 예제
 
-Many examples can be found in the [Redis AI team's GitHub](https://github.com/RedisVentures/)
+많은 예제는 [Redis AI 팀의 GitHub](https://github.com/RedisVentures/)에서 찾을 수 있습니다.
 
-- [Awesome Redis AI Resources](https://github.com/RedisVentures/redis-ai-resources) - List of examples of using Redis in AI workloads
-- [Azure OpenAI Embeddings Q&A](https://github.com/ruoccofabrizio/azure-open-ai-embeddings-qna) - OpenAI and Redis as a Q&A service on Azure.
-- [ArXiv Paper Search](https://github.com/RedisVentures/redis-arXiv-search) - Semantic search over arXiv scholarly papers
-- [Vector Search on Azure](https://learn.microsoft.com/azure/azure-cache-for-redis/cache-tutorial-vector-similarity) - Vector search on Azure using Azure Cache for Redis and Azure OpenAI
+- [Awesome Redis AI Resources](https://github.com/RedisVentures/redis-ai-resources) - AI 작업에서 Redis를 사용하는 예제 목록
+- [Azure OpenAI Embeddings Q&A](https://github.com/ruoccofabrizio/azure-open-ai-embeddings-qna) - Azure에서 OpenAI와 Redis를 Q&A 서비스로 사용
+- [ArXiv Paper Search](https://github.com/RedisVentures/redis-arXiv-search) - arXiv 학술 논문에 대한 의미적 검색
+- [Azure에서의 벡터 검색](https://learn.microsoft.com/azure/azure-cache-for-redis/cache-tutorial-vector-similarity) - Azure Cache for Redis 및 Azure OpenAI를 사용한 Azure에서의 벡터 검색
 
-## More resources
+## 더 많은 리소스
 
-For more information on how to use Redis as a vector database, check out the following resources:
+Redis를 벡터 데이터베이스로 사용하는 방법에 대한 자세한 정보는 다음 리소스를 확인하세요:
 
-- [RedisVL Documentation](https://redisvl.com) - Documentation for the Redis Vector Library Client
-- [Redis Vector Similarity Docs](https://redis.io/docs/stack/search/reference/vectors/) - Redis official docs for Vector Search.
-- [Redis-py Search Docs](https://redis.readthedocs.io/en/latest/redismodules.html#redisearch-commands) - Documentation for redis-py client library
-- [Vector Similarity Search: From Basics to Production](https://mlops.community/vector-similarity-search-from-basics-to-production/) - Introductory blog post to VSS and Redis as a VectorDB.
+- [RedisVL 문서](https://redisvl.com) - Redis 벡터 라이브러리 클라이언트에 대한 문서
+- [Redis 벡터 유사도 문서](https://redis.io/docs/stack/search/reference/vectors/) - 벡터 검색에 대한 Redis 공식 문서.
+- [Redis-py 검색 문서](https://redis.readthedocs.io/en/latest/redismodules.html#redisearch-commands) - redis-py 클라이언트 라이브러리에 대한 문서
+- [벡터 유사도 검색: 기초부터 생산까지](https://mlops.community/vector-similarity-search-from-basics-to-production/) - VSS 및 Redis를 벡터 DB로 소개하는 블로그 게시물.
 
-## Setup
+## 설정
 
-`Redis-py` is the officially supported client by Redis. Recently released is the `RedisVL` client which is purpose-built for the Vector Database use cases. Both can be installed with pip.
+`Redis-py`는 Redis에서 공식적으로 지원하는 클라이언트입니다. 최근에 벡터 데이터베이스 사용 사례를 위해 특별히 제작된 `RedisVL` 클라이언트가 출시되었습니다. 두 클라이언트 모두 pip로 설치할 수 있습니다.
 
 ```python
 %pip install -qU redis redisvl langchain-community
 ```
 
-### Deploy Redis locally
 
-To locally deploy Redis, run:
+### Redis를 로컬로 배포하기
+
+로컬에서 Redis를 배포하려면 다음을 실행하세요:
 
 ```console
 docker run -d -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
 ```
-If things are running correctly you should see a nice Redis UI at `http://localhost:8001`. See the [Deployment options](#deployment-options) section above for other ways to deploy.
 
-### Redis connection Url schemas
+정상적으로 실행되고 있다면 `http://localhost:8001`에서 멋진 Redis UI를 볼 수 있어야 합니다. 다른 배포 방법에 대한 정보는 위의 [배포 옵션](#deployment-options) 섹션을 참조하세요.
 
-Valid Redis Url schemas are:
-1. `redis://`  - Connection to Redis standalone, unencrypted
-2. `rediss://` - Connection to Redis standalone, with TLS encryption
-3. `redis+sentinel://`  - Connection to Redis server via Redis Sentinel, unencrypted
-4. `rediss+sentinel://` - Connection to Redis server via Redis Sentinel, booth connections with TLS encryption
+### Redis 연결 URL 스키마
 
-More information about additional connection parameters can be found in the [redis-py documentation](https://redis-py.readthedocs.io/en/stable/connections.html).
+유효한 Redis URL 스키마는 다음과 같습니다:
+1. `redis://`  - 암호화되지 않은 Redis 독립형 연결
+2. `rediss://` - TLS 암호화된 Redis 독립형 연결
+3. `redis+sentinel://`  - 암호화되지 않은 Redis Sentinel을 통한 Redis 서버 연결
+4. `rediss+sentinel://` - TLS 암호화된 Redis Sentinel을 통한 Redis 서버 연결
+
+추가 연결 매개변수에 대한 정보는 [redis-py 문서](https://redis-py.readthedocs.io/en/stable/connections.html)에서 확인할 수 있습니다.
 
 ```python
 # connection to redis standalone at localhost, db 0, no password
@@ -159,29 +162,30 @@ redis_url = "rediss://localhost:6379"
 redis_url = "rediss+sentinel://localhost"
 ```
 
-If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+
+모델 호출의 자동 추적을 최상으로 설정하려면 아래 주석을 해제하여 [LangSmith](https://docs.smith.langchain.com/) API 키를 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-## Initialization
 
-The Redis VectorStore instance can be initialized in a number of ways. There are multiple class methods that can be used to initialize a Redis VectorStore instance.
+## 초기화
 
-- `Redis.__init__` - Initialize directly
-- `Redis.from_documents` - Initialize from a list of `Langchain.docstore.Document` objects
-- `Redis.from_texts` - Initialize from a list of texts (optionally with metadata)
-- `Redis.from_texts_return_keys` - Initialize from a list of texts (optionally with metadata) and return the keys
-- `Redis.from_existing_index` - Initialize from an existing Redis index
+Redis VectorStore 인스턴스는 여러 방법으로 초기화할 수 있습니다. Redis VectorStore 인스턴스를 초기화하는 데 사용할 수 있는 여러 클래스 메서드가 있습니다.
 
-Below we will use the `Redis.__init__` method. 
+- `Redis.__init__` - 직접 초기화
+- `Redis.from_documents` - `Langchain.docstore.Document` 객체 목록에서 초기화
+- `Redis.from_texts` - 텍스트 목록에서 초기화 (선택적으로 메타데이터 포함)
+- `Redis.from_texts_return_keys` - 텍스트 목록에서 초기화 (선택적으로 메타데이터 포함)하고 키 반환
+- `Redis.from_existing_index` - 기존 Redis 인덱스에서 초기화
+
+아래에서는 `Redis.__init__` 메서드를 사용할 것입니다.
 
 import EmbeddingTabs from "@theme/EmbeddingTabs";
 
 <EmbeddingTabs/>
-
 
 ```python
 <!--IMPORTS:[{"imported": "Redis", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html", "title": "Redis"}]-->
@@ -194,13 +198,14 @@ vector_store = Redis(
 )
 ```
 
-## Manage vector store
 
-Once you have created your vector store, we can interact with it by adding and deleting different items.
+## 벡터 저장소 관리
 
-### Add items to vector store
+벡터 저장소를 생성한 후에는 다양한 항목을 추가하고 삭제하여 상호작용할 수 있습니다.
 
-We can add items to our vector store by using the `add_documents` function.
+### 벡터 저장소에 항목 추가
+
+`add_documents` 함수를 사용하여 벡터 저장소에 항목을 추가할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Redis"}]-->
@@ -275,6 +280,7 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
+
 ```output
 ['doc:users:622f5f19-9b4b-4896-9a16-e1e95f19db4b',
  'doc:users:032b489f-d37e-4bf1-85ec-4c2275be48ef',
@@ -288,36 +294,41 @@ vector_store.add_documents(documents=documents, ids=uuids)
  'doc:users:cc20438f-741a-40fd-bed8-4f1cee113680']
 ```
 
-### Delete items from vector store
+
+### 벡터 저장소에서 항목 삭제
 
 ```python
 vector_store.delete(ids=[uuids[-1]])
 ```
 
+
 ```output
 True
 ```
 
-### Inspecting the created Index
 
-Once the `Redis` VectorStore object has been constructed, an index will have been created in Redis if it did not already exist. The index can be inspected with both the `rvl`and the `redis-cli` command line tool. If you installed `redisvl` above, you can use the `rvl` command line tool to inspect the index.
+### 생성된 인덱스 검사
+
+`Redis` VectorStore 객체가 구성되면, 이미 존재하지 않았다면 Redis에 인덱스가 생성됩니다. 인덱스는 `rvl` 및 `redis-cli` 명령줄 도구를 사용하여 검사할 수 있습니다. 위에서 `redisvl`을 설치한 경우, `rvl` 명령줄 도구를 사용하여 인덱스를 검사할 수 있습니다.
 
 ```python
 # assumes you're running Redis locally (use --host, --port, --password, --username, to change this)
 !rvl index listall --port 6379
 ```
+
 ```output
 [32m17:24:03[0m [34m[RedisVL][0m [1;30mINFO[0m   Indices:
 [32m17:24:03[0m [34m[RedisVL][0m [1;30mINFO[0m   1. users
 ```
-The `Redis` VectorStore implementation will attempt to generate index schema (fields for filtering) for any metadata passed through the `from_texts`, `from_texts_return_keys`, and `from_documents` methods. This way, whatever metadata is passed will be indexed into the Redis search index allowing
-for filtering on those fields.
 
-Below we show what fields were created from the metadata we defined above
+`Redis` VectorStore 구현은 `from_texts`, `from_texts_return_keys`, 및 `from_documents` 메서드를 통해 전달된 메타데이터에 대해 인덱스 스키마(필터링을 위한 필드)를 생성하려고 시도합니다. 이렇게 하면 전달된 모든 메타데이터가 Redis 검색 인덱스에 인덱싱되어 해당 필드에 대한 필터링이 가능해집니다.
+
+아래에서는 우리가 위에서 정의한 메타데이터로부터 생성된 필드를 보여줍니다.
 
 ```python
 !rvl index info -i users --port 6379
 ```
+
 ```output
 
 
@@ -336,9 +347,11 @@ Index Fields:
 ╰────────────────┴────────────────┴────────┴────────────────┴────────────────┴────────────────┴────────────────┴────────────────┴────────────────┴─────────────────┴────────────────╯
 ```
 
+
 ```python
 !rvl stats -i users --port 6379
 ```
+
 ```output
 
 Statistics:
@@ -366,17 +379,18 @@ Statistics:
 │ vector_index_sz_mb          │ 12.0086     │
 ╰─────────────────────────────┴─────────────╯
 ```
-It's important to note that we have not specified that the `user`, `job`, `credit_score` and `age` in the metadata should be fields within the index, this is because the `Redis` VectorStore object automatically generate the index schema from the passed metadata. For more information on the generation of index fields, see the API documentation.
 
-## Query vector store
+`user`, `job`, `credit_score`, 및 `age`가 메타데이터에서 인덱스 내 필드로 지정되지 않았다는 점에 유의하는 것이 중요합니다. 이는 `Redis` VectorStore 객체가 전달된 메타데이터로부터 인덱스 스키마를 자동으로 생성하기 때문입니다. 인덱스 필드 생성에 대한 자세한 정보는 API 문서를 참조하세요.
 
-Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent. 
+## 벡터 저장소 쿼리
 
-### Query directly
+벡터 저장소가 생성되고 관련 문서가 추가되면, 체인 또는 에이전트를 실행하는 동안 쿼리하고 싶을 것입니다.
 
-#### Similarity search
+### 직접 쿼리
 
-Performing a simple similarity search can be done as follows:
+#### 유사도 검색
+
+간단한 유사도 검색은 다음과 같이 수행할 수 있습니다:
 
 ```python
 results = vector_store.similarity_search(
@@ -385,34 +399,38 @@ results = vector_store.similarity_search(
 for res in results:
     print(f"* {res.page_content} [{res.metadata}]")
 ```
+
 ```output
 * Building an exciting new project with LangChain - come check it out! [{'id': 'doc:users:5daf0855-b352-45bd-9d29-e21ff66e38c8'}]
 * LangGraph is the best framework for building stateful, agentic applications! [{'id': 'doc:users:4005bba2-2a08-4160-a16f-5cc3cf9d4aea'}]
 ```
-#### Similarity search with score
 
-You can also search with score:
+#### 점수와 함께 유사도 검색
+
+점수와 함께 검색할 수도 있습니다:
 
 ```python
 results = vector_store.similarity_search_with_score("Will it be hot tomorrow?", k=1)
 for res, score in results:
     print(f"* [SIM={score:3f}] {res.page_content} [{res.metadata}]")
 ```
+
 ```output
 * [SIM=0.446900] The weather forecast for tomorrow is cloudy and overcast, with a high of 62 degrees. [{'id': 'doc:users:032b489f-d37e-4bf1-85ec-4c2275be48ef'}]
 ```
-#### Other search methods
 
-For a list of all the search functions available to the `Redis` vector store, please refer to the [API reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html)
+#### 기타 검색 방법
 
-## Connect to an existing Index
+`Redis` 벡터 저장소에서 사용할 수 있는 모든 검색 함수 목록은 [API 참조](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html)를 참조하세요.
+## 기존 인덱스에 연결하기
 
-In order to have the same metadata indexed when using the `Redis` VectorStore. You will need to have the same `index_schema` passed in either as a path to a yaml file or as a dictionary. The following shows how to obtain the schema from an index and connect to an existing index.
+`Redis` VectorStore를 사용할 때 동일한 메타데이터가 인덱싱되도록 하려면, `index_schema`를 yaml 파일의 경로 또는 사전으로 전달해야 합니다. 다음은 인덱스에서 스키마를 얻고 기존 인덱스에 연결하는 방법을 보여줍니다.
 
 ```python
 # write the schema to a yaml file
 vector_store.write_schema("redis_schema.yaml")
 ```
+
 
 ```python
 # now we can connect to our existing index as follows
@@ -426,26 +444,30 @@ new_rds = Redis.from_existing_index(
 results = new_rds.similarity_search("foo", k=3)
 print(results[0].metadata)
 ```
+
 ```output
 {'id': 'doc:users:8484c48a032d4c4cbe3cc2ed6845fabb', 'user': 'john', 'job': 'engineer', 'credit_score': 'high', 'age': '18'}
 ```
+
 
 ```python
 # see the schemas are the same
 new_rds.schema == vector_store.schema
 ```
 
+
 ```output
 True
 ```
 
-## Custom metadata indexing
 
-In some cases, you may want to control what fields the metadata maps to. For example, you may want the `credit_score` field to be a categorical field instead of a text field (which is the default behavior for all string fields). In this case, you can use the `index_schema` parameter in each of the initialization methods above to specify the schema for the index. Custom index schema can either be passed as a dictionary or as a path to a YAML file.
+## 사용자 정의 메타데이터 인덱싱
 
-All arguments in the schema have defaults besides the name, so you can specify only the fields you want to change. All the names correspond to the snake/lowercase versions of the arguments you would use on the command line with `redis-cli` or in `redis-py`. For more on the arguments for each field, see the [documentation](https://redis.io/docs/interact/search-and-query/basic-constructs/field-and-type-options/)
+경우에 따라 메타데이터가 매핑되는 필드를 제어하고 싶을 수 있습니다. 예를 들어, `credit_score` 필드를 텍스트 필드 대신 범주형 필드로 설정하고 싶을 수 있습니다(모든 문자열 필드의 기본 동작). 이 경우, 위의 초기화 방법 각각에서 `index_schema` 매개변수를 사용하여 인덱스의 스키마를 지정할 수 있습니다. 사용자 정의 인덱스 스키마는 사전 또는 YAML 파일의 경로로 전달할 수 있습니다.
 
-The below example shows how to specify the schema for the `credit_score` field as a Tag (categorical) field instead of a text field. 
+스키마의 모든 인수는 이름을 제외하고 기본값이 있으므로 변경하려는 필드만 지정할 수 있습니다. 모든 이름은 `redis-cli` 또는 `redis-py`에서 사용할 인수의 스네이크/소문자 버전과 일치합니다. 각 필드의 인수에 대한 자세한 내용은 [문서](https://redis.io/docs/interact/search-and-query/basic-constructs/field-and-type-options/)를 참조하십시오.
+
+아래 예시는 `credit_score` 필드를 텍스트 필드 대신 태그(범주형) 필드로 지정하는 방법을 보여줍니다.
 
 ```yaml
 # index_schema.yml
@@ -458,7 +480,8 @@ numeric:
     - name: age
 ```
 
-In Python, this would look like:
+
+Python에서는 다음과 같이 보일 것입니다:
 
 ```python
 
@@ -470,7 +493,8 @@ index_schema = {
 
 ```
 
-Notice that only the `name` field needs to be specified. All other fields have defaults.
+
+오직 `name` 필드만 지정하면 된다는 점에 유의하십시오. 다른 모든 필드는 기본값을 가집니다.
 
 ```python
 # create a new index with the new schema defined above
@@ -491,26 +515,26 @@ rds, keys = Redis.from_texts_return_keys(
     index_schema=index_schema,  # pass in the new index schema
 )
 ```
+
 ```output
 `index_schema` does not match generated metadata schema.
 If you meant to manually override the schema, please ignore this message.
 index_schema: {'tag': [{'name': 'credit_score'}], 'text': [{'name': 'user'}, {'name': 'job'}], 'numeric': [{'name': 'age'}]}
 generated_schema: {'text': [{'name': 'user'}, {'name': 'job'}, {'name': 'credit_score'}], 'numeric': [{'name': 'age'}], 'tag': []}
 ```
-The above warning is meant to notify users when they are overriding the default behavior. Ignore it if you are intentionally overriding the behavior.
 
-## Hybrid filtering
+위의 경고는 사용자가 기본 동작을 재정의할 때 알리기 위한 것입니다. 의도적으로 동작을 재정의하는 경우 무시하십시오.
 
-With the Redis Filter Expression language built into LangChain, you can create arbitrarily long chains of hybrid filters
-that can be used to filter your search results. The expression language is derived from the [RedisVL Expression Syntax](https://redisvl.com)
-and is designed to be easy to use and understand.
+## 하이브리드 필터링
 
-The following are the available filter types:
-- `RedisText`: Filter by full-text search against metadata fields. Supports exact, fuzzy, and wildcard matching.
-- `RedisNum`: Filter by numeric range against metadata fields.
-- `RedisTag`: Filter by the exact match against string-based categorical metadata fields. Multiple tags can be specified like "tag1,tag2,tag3".
+LangChain에 내장된 Redis 필터 표현 언어를 사용하면 검색 결과를 필터링하는 데 사용할 수 있는 하이브리드 필터의 임의의 긴 체인을 생성할 수 있습니다. 표현 언어는 [RedisVL 표현 구문](https://redisvl.com)에서 파생되었으며 사용하기 쉽고 이해하기 쉽도록 설계되었습니다.
 
-The following are examples of utilizing these filters.
+다음은 사용 가능한 필터 유형입니다:
+- `RedisText`: 메타데이터 필드에 대한 전체 텍스트 검색으로 필터링합니다. 정확한 일치, 퍼지 일치 및 와일드카드 일치를 지원합니다.
+- `RedisNum`: 메타데이터 필드에 대한 숫자 범위로 필터링합니다.
+- `RedisTag`: 문자열 기반 범주형 메타데이터 필드에 대한 정확한 일치로 필터링합니다. "tag1,tag2,tag3"와 같이 여러 태그를 지정할 수 있습니다.
+
+다음은 이러한 필터를 활용하는 예시입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RedisText", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.filters.RedisText.html", "title": "Redis"}, {"imported": "RedisNum", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.filters.RedisNum.html", "title": "Redis"}, {"imported": "RedisTag", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.filters.RedisTag.html", "title": "Redis"}]-->
@@ -536,7 +560,8 @@ age_is_less_than_or_equal_to_18 = RedisNum("age") <= 18
 
 ```
 
-The `RedisFilter` class can be used to simplify the import of these filters as follows
+
+`RedisFilter` 클래스는 이러한 필터의 가져오기를 간소화하는 데 사용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RedisFilter", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.filters.RedisFilter.html", "title": "Redis"}]-->
@@ -549,7 +574,8 @@ does_not_have_high_credit = RedisFilter.num("age") > 8
 job_starts_with_eng = RedisFilter.text("job") % "eng*"
 ```
 
-The following are examples of using a hybrid filter for search
+
+다음은 검색을 위한 하이브리드 필터 사용 예시입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RedisText", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.filters.RedisText.html", "title": "Redis"}]-->
@@ -561,10 +587,12 @@ results = rds.similarity_search("foo", k=3, filter=is_engineer)
 print("Job:", results[0].metadata["job"])
 print("Engineers in the dataset:", len(results))
 ```
+
 ```output
 Job: engineer
 Engineers in the dataset: 2
 ```
+
 
 ```python
 # fuzzy match
@@ -575,11 +603,13 @@ for result in results:
     print("Job:", result.metadata["job"])
 print("Jobs in dataset that start with 'doc':", len(results))
 ```
+
 ```output
 Job: doctor
 Job: doctor
 Jobs in dataset that start with 'doc': 2
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RedisNum", "source": "langchain_community.vectorstores.redis", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.filters.RedisNum.html", "title": "Redis"}]-->
@@ -593,11 +623,13 @@ results = rds.similarity_search("foo", filter=age_range)
 for result in results:
     print("User:", result.metadata["user"], "is", result.metadata["age"])
 ```
+
 ```output
 User: derrick is 45
 User: nancy is 94
 User: joe is 35
 ```
+
 
 ```python
 # make sure to use parenthesis around FilterExpressions
@@ -608,16 +640,18 @@ results = rds.similarity_search("foo", filter=age_range)
 for result in results:
     print("User:", result.metadata["user"], "is", result.metadata["age"])
 ```
+
 ```output
 User: derrick is 45
 User: nancy is 94
 User: joe is 35
 ```
-### Query by turning into retriever
 
-You can also transform the vector store into a retriever for easier usage in your chains. Here we go over different options for using the vector store as a retriever.
+### 검색기로 변환하여 쿼리하기
 
-There are three different search methods we can use to do retrieval. By default, it will use semantic similarity. To see all the options, please refer to the [API reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html#langchain_community.vectorstores.redis.base.Redis.as_retriever)
+벡터 저장소를 검색기로 변환하여 체인에서 더 쉽게 사용할 수 있습니다. 여기서는 벡터 저장소를 검색기로 사용하는 다양한 옵션을 살펴봅니다.
+
+검색을 수행하기 위해 사용할 수 있는 세 가지 검색 방법이 있습니다. 기본적으로 의미적 유사성을 사용합니다. 모든 옵션을 보려면 [API 참조](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html#langchain_community.vectorstores.redis.base.Redis.as_retriever)를 참조하십시오.
 
 ```python
 retriever = vector_store.as_retriever(
@@ -627,23 +661,25 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime")
 ```
 
+
 ```output
 [Document(metadata={'id': 'doc:users:b9204897-190b-4dd9-af2b-081ed4e9cbb0'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
 
-## Usage for retrieval-augmented generation
 
-For guides on how to use this vector store for retrieval-augmented generation (RAG), see the following sections:
+## 검색 보강 생성에 대한 사용법
 
-- [Tutorials: working with external knowledge](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
-- [How-to: Question and answer with RAG](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
-- [Retrieval conceptual docs](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
+이 벡터 저장소를 검색 보강 생성(RAG)에 사용하는 방법에 대한 가이드는 다음 섹션을 참조하십시오:
 
-## API reference
+- [튜토리얼: 외부 지식과 작업하기](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
+- [사용 방법: RAG를 통한 질문 및 답변](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
+- [검색 개념 문서](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
 
-For detailed documentation of all `Redis` vector store features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html
+## API 참조
 
-## Related
+모든 `Redis` 벡터 저장소 기능 및 구성에 대한 자세한 문서는 API 참조를 참조하십시오: https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.redis.base.Redis.html
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

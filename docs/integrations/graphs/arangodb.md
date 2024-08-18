@@ -1,27 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/graphs/arangodb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/graphs/arangodb.ipynb
+description: 이 문서는 ArangoDB 데이터베이스에 자연어 인터페이스를 제공하기 위해 LLM을 사용하는 방법을 보여줍니다.
 ---
 
 # ArangoDB
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/arangodb/interactive_tutorials/blob/master/notebooks/Langchain.ipynb)
 
-> [ArangoDB](https://github.com/arangodb/arangodb) is a scalable graph database system to drive value from
-connected data, faster. Native graphs, an integrated search engine, and JSON support, via
-a single query language. `ArangoDB` runs on-prem or in the cloud.
+> [ArangoDB](https://github.com/arangodb/arangodb)는 연결된 데이터에서 가치를 더 빠르게 이끌어내기 위한 확장 가능한 그래프 데이터베이스 시스템입니다. 네이티브 그래프, 통합 검색 엔진 및 JSON 지원을 단일 쿼리 언어를 통해 제공합니다. `ArangoDB`는 온프레미스 또는 클라우드에서 실행됩니다.
 
-This notebook shows how to use LLMs to provide a natural language interface to an [ArangoDB](https://github.com/arangodb/arangodb#readme) database.
+이 노트북은 LLM을 사용하여 [ArangoDB](https://github.com/arangodb/arangodb#readme) 데이터베이스에 자연어 인터페이스를 제공하는 방법을 보여줍니다.
 
-## Setting up
+## 설정하기
 
-You can get a local `ArangoDB` instance running via the [ArangoDB Docker image](https://hub.docker.com/_/arangodb):  
+[ArangoDB Docker 이미지](https://hub.docker.com/_/arangodb)를 통해 로컬 `ArangoDB` 인스턴스를 실행할 수 있습니다:  
 
 ```
 docker run -p 8529:8529 -e ARANGO_ROOT_PASSWORD= arangodb/arangodb
 ```
 
-An alternative is to use the [ArangoDB Cloud Connector package](https://github.com/arangodb/adb-cloud-connector#readme) to get a temporary cloud instance running:
+
+대안으로는 [ArangoDB Cloud Connector 패키지](https://github.com/arangodb/adb-cloud-connector#readme)를 사용하여 임시 클라우드 인스턴스를 실행할 수 있습니다:
 
 ```python
 %%capture
@@ -30,6 +29,7 @@ An alternative is to use the [ArangoDB Cloud Connector package](https://github.c
 %pip install --upgrade --quiet  langchain-openai
 %pip install --upgrade --quiet  langchain
 ```
+
 
 ```python
 # Instantiate ArangoDB Database
@@ -46,6 +46,7 @@ db = ArangoClient(hosts=con["url"]).db(
 
 print(json.dumps(con, indent=2))
 ```
+
 ```output
 Log: requesting new credentials...
 Succcess: new credentials acquired
@@ -59,6 +60,7 @@ Succcess: new credentials acquired
 }
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "ArangoGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.arangodb_graph.ArangoGraph.html", "title": "ArangoDB"}]-->
 # Instantiate the ArangoDB-LangChain Graph
@@ -67,9 +69,10 @@ from langchain_community.graphs import ArangoGraph
 graph = ArangoGraph(db)
 ```
 
-## Populating database
 
-We will rely on the `Python Driver` to import our [GameOfThrones](https://github.com/arangodb/example-datasets/tree/master/GameOfThrones) data into our database.
+## 데이터베이스 채우기
+
+우리는 `Python Driver`를 사용하여 [GameOfThrones](https://github.com/arangodb/example-datasets/tree/master/GameOfThrones) 데이터를 데이터베이스에 가져올 것입니다.
 
 ```python
 if db.has_graph("GameOfThrones"):
@@ -132,6 +135,7 @@ db.collection("Characters").import_bulk(documents)
 db.collection("ChildOf").import_bulk(edges)
 ```
 
+
 ```output
 {'error': False,
  'created': 4,
@@ -142,9 +146,10 @@ db.collection("ChildOf").import_bulk(edges)
  'details': []}
 ```
 
-## Getting and setting the ArangoDB schema
 
-An initial `ArangoDB Schema` is generated upon instantiating the `ArangoDBGraph` object. Below are the schema's getter & setter methods should you be interested in viewing or modifying the schema:
+## ArangoDB 스키마 가져오기 및 설정하기
+
+`ArangoDBGraph` 객체를 인스턴스화할 때 초기 `ArangoDB Schema`가 생성됩니다. 스키마를 보거나 수정하는 데 관심이 있는 경우 아래는 스키마의 getter 및 setter 메서드입니다:
 
 ```python
 # The schema should be empty here,
@@ -154,6 +159,7 @@ import json
 
 print(json.dumps(graph.schema, indent=4))
 ```
+
 ```output
 {
     "Graph Schema": [],
@@ -161,9 +167,11 @@ print(json.dumps(graph.schema, indent=4))
 }
 ```
 
+
 ```python
 graph.set_schema()
 ```
+
 
 ```python
 # We can now view the generated schema
@@ -172,6 +180,7 @@ import json
 
 print(json.dumps(graph.schema, indent=4))
 ```
+
 ```output
 {
     "Graph Schema": [
@@ -275,15 +284,18 @@ print(json.dumps(graph.schema, indent=4))
     ]
 }
 ```
-## Querying the ArangoDB database
 
-We can now use the `ArangoDB Graph` QA Chain to inquire about our data
+
+## ArangoDB 데이터베이스 쿼리하기
+
+이제 `ArangoDB Graph` QA 체인을 사용하여 데이터에 대해 문의할 수 있습니다.
 
 ```python
 import os
 
 os.environ["OPENAI_API_KEY"] = "your-key-here"
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ArangoGraphQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.arangodb.ArangoGraphQAChain.html", "title": "ArangoDB"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "ArangoDB"}]-->
@@ -295,9 +307,11 @@ chain = ArangoGraphQAChain.from_llm(
 )
 ```
 
+
 ```python
 chain.run("Is Ned Stark alive?")
 ```
+
 ```output
 
 
@@ -314,13 +328,16 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Yes, Ned Stark is alive.'
 ```
 
+
 ```python
 chain.run("How old is Arya Stark?")
 ```
+
 ```output
 
 
@@ -337,13 +354,16 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Arya Stark is 11 years old.'
 ```
 
+
 ```python
 chain.run("Are Arya Stark and Ned Stark related?")
 ```
+
 ```output
 
 
@@ -360,13 +380,16 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Yes, Arya Stark and Ned Stark are related. According to the information retrieved from the database, there is a relationship between them. Arya Stark is the child of Ned Stark.'
 ```
 
+
 ```python
 chain.run("Does Arya Stark have a dead parent?")
 ```
+
 ```output
 
 
@@ -383,13 +406,15 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Yes, Arya Stark has a dead parent. The parent is Catelyn Stark.'
 ```
 
-## Chain modifiers
 
-You can alter the values of the following `ArangoDBGraphQAChain` class variables to modify the behaviour of your chain results
+## 체인 수정자
+
+다음 `ArangoDBGraphQAChain` 클래스 변수의 값을 변경하여 체인 결과의 동작을 수정할 수 있습니다.
 
 ```python
 # Specify the maximum number of AQL Query Results to return
@@ -418,11 +443,13 @@ FOR e IN ChildOf
 """
 ```
 
+
 ```python
 chain.run("Is Ned Stark alive?")
 
 # chain("Is Ned Stark alive?") # Returns a dictionary with the AQL Query & AQL Result
 ```
+
 ```output
 
 
@@ -436,13 +463,16 @@ AQL Result:
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Yes, according to the information in the database, Ned Stark is alive.'
 ```
 
+
 ```python
 chain.run("Is Bran Stark the child of Ned Stark?")
 ```
+
 ```output
 
 
@@ -457,6 +487,7 @@ AQL Result:
 
 [1m> Finished chain.[0m
 ```
+
 
 ```output
 'Yes, according to the information in the ArangoDB database, Bran Stark is indeed the child of Ned Stark.'

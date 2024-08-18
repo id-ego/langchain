@@ -1,14 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/migrating_chains/llm_router_chain/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/versions/migrating_chains/llm_router_chain.ipynb
+description: '`LLMRouterChain`은 입력 쿼리를 여러 목적지 중 하나로 라우팅하며, LLM을 사용해 적절한 체인을 선택합니다.'
 title: Migrating from LLMRouterChain
 ---
 
-The [`LLMRouterChain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.router.llm_router.LLMRouterChain.html) routed an input query to one of multiple destinations-- that is, given an input query, it used a LLM to select from a list of destination chains, and passed its inputs to the selected chain.
+[`LLMRouterChain`](https://api.python.langchain.com/en/latest/chains/langchain.chains.router.llm_router.LLMRouterChain.html)는 입력 쿼리를 여러 목적지 중 하나로 라우팅합니다. 즉, 입력 쿼리를 기반으로 LLM을 사용하여 목적지 체인 목록에서 선택하고, 선택된 체인에 입력을 전달합니다.
 
-`LLMRouterChain` does not support common [chat model](/docs/concepts/#chat-models) features, such as message roles and [tool calling](/docs/concepts/#functiontool-calling). Under the hood, `LLMRouterChain` routes a query by instructing the LLM to generate JSON-formatted text, and parsing out the intended destination.
+`LLMRouterChain`은 메시지 역할 및 [도구 호출](/docs/concepts/#functiontool-calling)과 같은 일반적인 [채팅 모델](/docs/concepts/#chat-models) 기능을 지원하지 않습니다. 내부적으로 `LLMRouterChain`은 LLM에게 JSON 형식의 텍스트를 생성하도록 지시하여 쿼리를 라우팅하고, 의도된 목적지를 파싱합니다.
 
-Consider an example from a [MultiPromptChain](/docs/versions/migrating_chains/multi_prompt_chain), which uses `LLMRouterChain`. Below is an (example) default prompt:
+`LLMRouterChain`을 사용하는 [MultiPromptChain](/docs/versions/migrating_chains/multi_prompt_chain)의 예를 고려해 보십시오. 아래는 (예시) 기본 프롬프트입니다:
 
 ```python
 from langchain.chains.router.multi_prompt import MULTI_PROMPT_ROUTER_TEMPLATE
@@ -22,6 +22,7 @@ router_template = MULTI_PROMPT_ROUTER_TEMPLATE.format(destinations=destinations)
 
 print(router_template.replace("`", "'"))  # for rendering purposes
 ```
+
 ```output
 Given a raw text input to a language model select the model prompt best suited for the input. You will be given the names of the available prompts and a description of what the prompt is best suited for. You may also revise the original input if you think that revising it will ultimately lead to a better response from the language model.
 
@@ -49,17 +50,19 @@ vegetables: prompt for a vegetable expert
 << OUTPUT (must include '''json at the start of the response) >>
 << OUTPUT (must end with ''') >>
 ```
-Most of the behavior is determined via a single natural language prompt. Chat models that support [tool calling](/docs/how_to/tool_calling/) features confer a number of advantages for this task:
 
-- Supports chat prompt templates, including messages with `system` and other roles;
-- Tool-calling models are fine-tuned to generate structured output;
-- Support for runnable methods like streaming and async operations.
+대부분의 동작은 단일 자연어 프롬프트를 통해 결정됩니다. [도구 호출](/docs/how_to/tool_calling/) 기능을 지원하는 채팅 모델은 이 작업에 여러 가지 장점을 제공합니다:
 
-Now let's look at `LLMRouterChain` side-by-side with an LCEL implementation that uses tool-calling. Note that for this guide we will `langchain-openai >= 0.1.20`:
+- `system` 및 기타 역할이 포함된 메시지를 포함한 채팅 프롬프트 템플릿 지원;
+- 도구 호출 모델은 구조화된 출력을 생성하도록 미세 조정됨;
+- 스트리밍 및 비동기 작업과 같은 실행 가능한 메서드 지원.
+
+이제 도구 호출을 사용하는 LCEL 구현과 나란히 `LLMRouterChain`을 살펴보겠습니다. 이 가이드를 위해 `langchain-openai >= 0.1.20`을 사용할 것입니다:
 
 ```python
 %pip install -qU langchain-core langchain-openai
 ```
+
 
 ```python
 import os
@@ -68,10 +71,10 @@ from getpass import getpass
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
 
-## Legacy
+
+## 레거시
 
 <details open>
-
 
 ```python
 <!--IMPORTS:[{"imported": "LLMRouterChain", "source": "langchain.chains.router.llm_router", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.router.llm_router.LLMRouterChain.html", "title": "# Legacy"}, {"imported": "RouterOutputParser", "source": "langchain.chains.router.llm_router", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.router.llm_router.RouterOutputParser.html", "title": "# Legacy"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "# Legacy"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "# Legacy"}]-->
@@ -92,21 +95,22 @@ router_prompt = PromptTemplate(
 chain = LLMRouterChain.from_llm(llm, router_prompt)
 ```
 
+
 ```python
 result = chain.invoke({"input": "What color are carrots?"})
 
 print(result["destination"])
 ```
+
 ```output
 vegetables
 ```
-</details>
 
+</details>
 
 ## LCEL
 
 <details open>
-
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "# Legacy"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "# Legacy"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "# Legacy"}]-->
@@ -142,19 +146,21 @@ class RouteQuery(TypedDict):
 chain = route_prompt | llm.with_structured_output(RouteQuery)
 ```
 
+
 ```python
 result = chain.invoke({"input": "What color are carrots?"})
 
 print(result["destination"])
 ```
+
 ```output
 vegetable
 ```
+
 </details>
 
+## 다음 단계
 
-## Next steps
+프롬프트 템플릿, LLM 및 출력 파서를 사용하여 구축하는 방법에 대한 자세한 내용은 [이 튜토리얼](/docs/tutorials/llm_chain)을 참조하십시오.
 
-See [this tutorial](/docs/tutorials/llm_chain) for more detail on building with prompt templates, LLMs, and output parsers.
-
-Check out the [LCEL conceptual docs](/docs/concepts/#langchain-expression-language-lcel) for more background information.
+더 많은 배경 정보는 [LCEL 개념 문서](/docs/concepts/#langchain-expression-language-lcel)를 확인하십시오.

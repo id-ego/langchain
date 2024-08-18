@@ -1,50 +1,54 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/rag-weaviate/
+description: 이 문서는 Weaviate를 사용한 RAG(정보 검색 및 생성) 수행을 위한 환경 설정 및 사용법을 안내합니다.
 ---
 
 # rag-weaviate
 
-This template performs RAG with Weaviate.
+이 템플릿은 Weaviate와 함께 RAG를 수행합니다.
 
-## Environment Setup
+## 환경 설정
 
-Set the `OPENAI_API_KEY` environment variable to access the OpenAI models.
+OpenAI 모델에 접근하기 위해 `OPENAI_API_KEY` 환경 변수를 설정하세요.
 
-Also, ensure the following environment variables are set:
+또한, 다음 환경 변수가 설정되어 있는지 확인하세요:
 * `WEAVIATE_ENVIRONMENT`
 * `WEAVIATE_API_KEY`
 
-## Usage
+## 사용법
 
-To use this package, you should first have the LangChain CLI installed:
+이 패키지를 사용하려면 먼저 LangChain CLI가 설치되어 있어야 합니다:
 
 ```shell
 pip install -U langchain-cli
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새로운 LangChain 프로젝트를 만들고 이것을 유일한 패키지로 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package rag-weaviate
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음 명령어를 실행하면 됩니다:
 
 ```shell
 langchain app add rag-weaviate
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가하세요:
 ```python
 from rag_weaviate import chain as rag_weaviate_chain
 
 add_routes(app, rag_weaviate_chain, path="/rag-weaviate")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.
+LangSmith는 LangChain 애플리케이션을 추적하고 모니터링하며 디버그하는 데 도움을 줄 것입니다.
+LangSmith에 가입하려면 [여기](https://smith.langchain.com/)를 클릭하세요.
+접근 권한이 없으면 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -52,19 +56,21 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+
+이 디렉토리 안에 있다면, 다음과 같이 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버가 로컬에서 실행됩니다.
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/rag-weaviate/playground](http://127.0.0.1:8000/rag-weaviate/playground)  
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 확인할 수 있습니다.
+플레이그라운드는 [http://127.0.0.1:8000/rag-weaviate/playground](http://127.0.0.1:8000/rag-weaviate/playground)에서 접근할 수 있습니다.
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable

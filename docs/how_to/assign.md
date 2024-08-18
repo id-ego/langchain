@@ -1,6 +1,7 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/assign/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/assign.ipynb
+description: 체인의 상태에 값을 추가하는 방법에 대한 가이드로, LangChain 표현 언어 및 다양한 실행 가능한 기능을 활용하는 방법을
+  설명합니다.
 keywords:
 - RunnablePassthrough
 - assign
@@ -8,24 +9,24 @@ keywords:
 sidebar_position: 6
 ---
 
-# How to add values to a chain's state
+# 체인의 상태에 값을 추가하는 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [LangChain Expression Language (LCEL)](/docs/concepts/#langchain-expression-language)
-- [Chaining runnables](/docs/how_to/sequence/)
-- [Calling runnables in parallel](/docs/how_to/parallel/)
-- [Custom functions](/docs/how_to/functions/)
-- [Passing data through](/docs/how_to/passthrough)
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
+- [LangChain 표현 언어 (LCEL)](/docs/concepts/#langchain-expression-language)
+- [런너블 연결하기](/docs/how_to/sequence/)
+- [런너블을 병렬로 호출하기](/docs/how_to/parallel/)
+- [사용자 정의 함수](/docs/how_to/functions/)
+- [데이터 전달하기](/docs/how_to/passthrough)
 
 :::
 
-An alternate way of [passing data through](/docs/how_to/passthrough) steps of a chain is to leave the current values of the chain state unchanged while assigning a new value under a given key. The [`RunnablePassthrough.assign()`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html#langchain_core.runnables.passthrough.RunnablePassthrough.assign) static method takes an input value and adds the extra arguments passed to the assign function.
+체인의 단계에서 데이터를 [전달하는](https://docs/how_to/passthrough) 또 다른 방법은 주어진 키 아래에 새 값을 할당하면서 체인 상태의 현재 값을 변경하지 않는 것입니다. [`RunnablePassthrough.assign()`](https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html#langchain_core.runnables.passthrough.RunnablePassthrough.assign) 정적 메서드는 입력 값을 받아 할당 함수에 전달된 추가 인수를 추가합니다.
 
-This is useful in the common [LangChain Expression Language](/docs/concepts/#langchain-expression-language) pattern of additively creating a dictionary to use as input to a later step.
+이는 나중 단계의 입력으로 사용할 사전을 추가적으로 생성하는 일반적인 [LangChain 표현 언어](/docs/concepts/#langchain-expression-language) 패턴에서 유용합니다.
 
-Here's an example:
+예를 들어 보겠습니다:
 
 ```python
 %pip install --upgrade --quiet langchain langchain-openai
@@ -35,6 +36,7 @@ from getpass import getpass
 
 os.environ["OPENAI_API_KEY"] = getpass()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RunnableParallel", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.base.RunnableParallel.html", "title": "How to add values to a chain's state"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add values to a chain's state"}]-->
@@ -48,22 +50,24 @@ runnable = RunnableParallel(
 runnable.invoke({"num": 1})
 ```
 
+
 ```output
 {'extra': {'num': 1, 'mult': 3}, 'modified': 2}
 ```
 
-Let's break down what's happening here.
 
-- The input to the chain is `{"num": 1}`. This is passed into a `RunnableParallel`, which invokes the runnables it is passed in parallel with that input.
-- The value under the `extra` key is invoked. `RunnablePassthrough.assign()` keeps the original keys in the input dict (`{"num": 1}`), and assigns a new key called `mult`. The value is `lambda x: x["num"] * 3)`, which is `3`. Thus, the result is `{"num": 1, "mult": 3}`.
-- `{"num": 1, "mult": 3}` is returned to the `RunnableParallel` call, and is set as the value to the key `extra`.
-- At the same time, the `modified` key is called. The result is `2`, since the lambda extracts a key called `"num"` from its input and adds one.
+여기서 무슨 일이 일어나고 있는지 살펴보겠습니다.
 
-Thus, the result is `{'extra': {'num': 1, 'mult': 3}, 'modified': 2}`.
+- 체인에 대한 입력은 `{"num": 1}`입니다. 이는 `RunnableParallel`에 전달되어 해당 입력으로 병렬로 런너블을 호출합니다.
+- `extra` 키 아래의 값이 호출됩니다. `RunnablePassthrough.assign()`은 입력 사전의 원래 키(`{"num": 1}`)를 유지하고 `mult`라는 새 키를 할당합니다. 값은 `lambda x: x["num"] * 3)`으로, 이는 `3`입니다. 따라서 결과는 `{"num": 1, "mult": 3}`입니다.
+- `{"num": 1, "mult": 3}`이 `RunnableParallel` 호출로 반환되며, `extra` 키의 값으로 설정됩니다.
+- 동시에 `modified` 키가 호출됩니다. 결과는 `2`입니다. 이는 람다가 입력에서 `"num"`이라는 키를 추출하고 1을 추가하기 때문입니다.
 
-## Streaming
+따라서 결과는 `{'extra': {'num': 1, 'mult': 3}, 'modified': 2}`입니다.
 
-One convenient feature of this method is that it allows values to pass through as soon as they are available. To show this off, we'll use `RunnablePassthrough.assign()` to immediately return source docs in a retrieval chain:
+## 스트리밍
+
+이 방법의 편리한 기능 중 하나는 값이 사용 가능해지자마자 즉시 전달될 수 있다는 것입니다. 이를 보여주기 위해, 우리는 `RunnablePassthrough.assign()`을 사용하여 검색 체인에서 소스 문서를 즉시 반환할 것입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to add values to a chain's state"}, {"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to add values to a chain's state"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add values to a chain's state"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add values to a chain's state"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add values to a chain's state"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to add values to a chain's state"}]-->
@@ -97,6 +101,7 @@ stream = retrieval_chain.stream("where did harrison work?")
 for chunk in stream:
     print(chunk)
 ```
+
 ```output
 {'question': 'where did harrison work?'}
 {'context': [Document(page_content='harrison worked at kensho')]}
@@ -110,10 +115,11 @@ for chunk in stream:
 {'output': '.'}
 {'output': ''}
 ```
-We can see that the first chunk contains the original `"question"` since that is immediately available. The second chunk contains `"context"` since the retriever finishes second. Finally, the output from the `generation_chain` streams in chunks as soon as it is available.
 
-## Next steps
+첫 번째 청크에는 원래의 `"question"`이 포함되어 있습니다. 이는 즉시 사용 가능하기 때문입니다. 두 번째 청크에는 `"context"`가 포함되어 있습니다. 이는 검색기가 두 번째로 완료되기 때문입니다. 마지막으로, `generation_chain`의 출력은 사용 가능해지자마자 청크로 스트리밍됩니다.
 
-Now you've learned how to pass data through your chains to help to help format the data flowing through your chains.
+## 다음 단계
 
-To learn more, see the other how-to guides on runnables in this section.
+이제 체인을 통해 데이터를 전달하여 체인에서 흐르는 데이터를 형식화하는 방법을 배웠습니다.
+
+더 알아보려면 이 섹션의 런너블에 대한 다른 가이드를 참조하세요.

@@ -1,22 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/rag-supabase/
+description: 이 문서는 Supabase를 사용한 RAG(검색-응답 생성) 구현 방법을 안내하며, 환경 설정 및 데이터베이스 설정 단계를
+  포함합니다.
 ---
 
 # rag_supabase
 
-This template performs RAG with Supabase.
+이 템플릿은 Supabase로 RAG를 수행합니다.
 
-[Supabase](https://supabase.com/docs) is an open-source Firebase alternative. It is built on top of [PostgreSQL](https://en.wikipedia.org/wiki/PostgreSQL), a free and open-source relational database management system (RDBMS) and uses [pgvector](https://github.com/pgvector/pgvector) to store embeddings within your tables.
-## Environment Setup
+[Supabase](https://supabase.com/docs)는 오픈 소스 Firebase 대안입니다. 이는 [PostgreSQL](https://en.wikipedia.org/wiki/PostgreSQL) 위에 구축된 무료 오픈 소스 관계형 데이터베이스 관리 시스템(RDBMS)이며, 테이블 내에서 임베딩을 저장하기 위해 [pgvector](https://github.com/pgvector/pgvector)를 사용합니다.
+## 환경 설정
 
-Set the `OPENAI_API_KEY` environment variable to access the OpenAI models.
+OpenAI 모델에 접근하기 위해 `OPENAI_API_KEY` 환경 변수를 설정합니다.
 
-To get your `OPENAI_API_KEY`, navigate to [API keys](https://platform.openai.com/account/api-keys) on your OpenAI account and create a new secret key.
+`OPENAI_API_KEY`를 얻으려면 OpenAI 계정의 [API 키](https://platform.openai.com/account/api-keys)로 이동하여 새로운 비밀 키를 생성합니다.
 
-To find your `SUPABASE_URL` and `SUPABASE_SERVICE_KEY`, head to your Supabase project's [API settings](https://supabase.com/dashboard/project/_/settings/api). 
+`SUPABASE_URL` 및 `SUPABASE_SERVICE_KEY`를 찾으려면 Supabase 프로젝트의 [API 설정](https://supabase.com/dashboard/project/_/settings/api)으로 이동합니다.
 
-- `SUPABASE_URL` corresponds to the Project URL
-- `SUPABASE_SERVICE_KEY` corresponds to the `service_role` API key
+- `SUPABASE_URL`은 프로젝트 URL에 해당합니다.
+- `SUPABASE_SERVICE_KEY`는 `service_role` API 키에 해당합니다.
 
 ```shell
 export SUPABASE_URL=
@@ -24,12 +25,13 @@ export SUPABASE_SERVICE_KEY=
 export OPENAI_API_KEY=
 ```
 
-## Setup Supabase Database
 
-Use these steps to setup your Supabase database if you haven't already.
+## Supabase 데이터베이스 설정
 
-1. Head over to https://database.new to provision your Supabase database.
-2. In the studio, jump to the [SQL editor](https://supabase.com/dashboard/project/_/sql/new) and run the following script to enable `pgvector` and setup your database as a vector store:
+아직 Supabase 데이터베이스를 설정하지 않았다면 다음 단계를 따라 설정합니다.
+
+1. https://database.new로 이동하여 Supabase 데이터베이스를 프로비저닝합니다.
+2. 스튜디오에서 [SQL 편집기](https://supabase.com/dashboard/project/_/sql/new)로 이동하여 `pgvector`를 활성화하고 데이터베이스를 벡터 저장소로 설정하는 다음 스크립트를 실행합니다:
    
    ```sql
    -- Enable the pgvector extension to work with embedding vectors
@@ -69,31 +71,35 @@ Use these steps to setup your Supabase database if you haven't already.
    $$;
    ```
 
-## Setup Environment Variables
 
-Since we are using [`SupabaseVectorStore`](https://python.langchain.com/docs/integrations/vectorstores/supabase) and [`OpenAIEmbeddings`](https://python.langchain.com/docs/integrations/text_embedding/openai), we need to load their API keys.
+## 환경 변수 설정
 
-## Usage
+[`SupabaseVectorStore`](https://python.langchain.com/docs/integrations/vectorstores/supabase) 및 [`OpenAIEmbeddings`](https://python.langchain.com/docs/integrations/text_embedding/openai)를 사용하므로 이들의 API 키를 로드해야 합니다.
 
-First, install the LangChain CLI:
+## 사용법
+
+먼저, LangChain CLI를 설치합니다:
 
 ```shell
 pip install -U langchain-cli
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새로운 LangChain 프로젝트를 생성하고 이를 유일한 패키지로 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package rag-supabase
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음을 실행하면 됩니다:
 
 ```shell
 langchain app add rag-supabase
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가합니다:
 
 ```python
 from rag_supabase.chain import chain as rag_supabase_chain
@@ -101,10 +107,11 @@ from rag_supabase.chain import chain as rag_supabase_chain
 add_routes(app, rag_supabase_chain, path="/rag-supabase")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줄 것입니다.
+여기에서 LangSmith에 가입할 수 있습니다 [여기](https://smith.langchain.com/).
+접근 권한이 없으면 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -112,19 +119,21 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+
+이 디렉토리 안에 있다면 다음과 같이 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버가 로컬에서 실행됩니다.
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/rag-supabase/playground](http://127.0.0.1:8000/rag-supabase/playground)  
+모든 템플릿은 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 확인할 수 있습니다.
+플레이그라운드는 [http://127.0.0.1:8000/rag-supabase/playground](http://127.0.0.1:8000/rag-supabase/playground)에서 접근할 수 있습니다.  
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable
@@ -132,4 +141,5 @@ from langserve.client import RemoteRunnable
 runnable = RemoteRunnable("http://localhost:8000/rag-supabase")
 ```
 
-TODO: Add details about setting up the Supabase database
+
+TODO: Supabase 데이터베이스 설정에 대한 세부 정보를 추가합니다.

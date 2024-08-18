@@ -1,13 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/merger_retriever/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/merger_retriever.ipynb
+description: '`Lord of the Retrievers (LOTR)`는 여러 검색기를 결합하여 쿼리에 대한 관련 문서 목록을 생성하고
+  순위를 매기는 클래스입니다.'
 ---
 
-# LOTR (Merger Retriever)
+# LOTR (병합 검색기)
 
-> `Lord of the Retrievers (LOTR)`, also known as `MergerRetriever`, takes a list of retrievers as input and merges the results of their get_relevant_documents() methods into a single list. The merged results will be a list of documents that are relevant to the query and that have been ranked by the different retrievers.
+> `검색기의 주인 (LOTR)` 또는 `병합 검색기 (MergerRetriever)`는 검색기 목록을 입력으로 받아 이들의 get_relevant_documents() 메서드 결과를 단일 목록으로 병합합니다. 병합된 결과는 쿼리와 관련된 문서 목록이며, 다양한 검색기에 의해 순위가 매겨집니다.
 
-The `MergerRetriever` class can be used to improve the accuracy of document retrieval in a number of ways. First, it can combine the results of multiple retrievers, which can help to reduce the risk of bias in the results. Second, it can rank the results of the different retrievers, which can help to ensure that the most relevant documents are returned first.
+`병합 검색기 (MergerRetriever)` 클래스는 문서 검색의 정확성을 여러 가지 방법으로 향상시킬 수 있습니다. 첫째, 여러 검색기의 결과를 결합하여 결과의 편향 위험을 줄이는 데 도움을 줄 수 있습니다. 둘째, 다양한 검색기의 결과를 순위 매김하여 가장 관련성이 높은 문서가 먼저 반환되도록 할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "LOTR (Merger Retriever)"}, {"imported": "MergerRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.merger_retriever.MergerRetriever.html", "title": "LOTR (Merger Retriever)"}, {"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "LOTR (Merger Retriever)"}, {"imported": "EmbeddingsClusteringFilter", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.embeddings_redundant_filter.EmbeddingsClusteringFilter.html", "title": "LOTR (Merger Retriever)"}, {"imported": "EmbeddingsRedundantFilter", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.embeddings_redundant_filter.EmbeddingsRedundantFilter.html", "title": "LOTR (Merger Retriever)"}, {"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "LOTR (Merger Retriever)"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "LOTR (Merger Retriever)"}]-->
@@ -67,7 +68,8 @@ retriever_multi_qa = db_multi_qa.as_retriever(
 lotr = MergerRetriever(retrievers=[retriever_all, retriever_multi_qa])
 ```
 
-## Remove redundant results from the merged retrievers.
+
+## 병합된 검색기에서 중복 결과 제거하기.
 
 ```python
 # We can remove redundant results from both retrievers using yet another embedding.
@@ -79,7 +81,8 @@ compression_retriever = ContextualCompressionRetriever(
 )
 ```
 
-## Pick a representative sample of documents from the merged retrievers.
+
+## 병합된 검색기에서 문서의 대표 샘플 선택하기.
 
 ```python
 # This filter will divide the documents vectors into clusters or "centers" of meaning.
@@ -106,10 +109,11 @@ compression_retriever = ContextualCompressionRetriever(
 )
 ```
 
-## Re-order results to avoid performance degradation.
-No matter the architecture of your model, there is a substantial performance degradation when you include 10+ retrieved documents.
-In brief: When models must access relevant information  in the middle of long contexts, then tend to ignore the provided documents.
-See: https://arxiv.org/abs//2307.03172
+
+## 성능 저하를 피하기 위해 결과 재정렬하기.
+모델의 아키텍처와 관계없이, 10개 이상의 검색된 문서를 포함할 경우 상당한 성능 저하가 발생합니다.
+간단히 말해: 모델이 긴 맥락 중간에 관련 정보를 액세스해야 할 때, 제공된 문서를 무시하는 경향이 있습니다.
+참조: https://arxiv.org/abs//2307.03172
 
 ```python
 <!--IMPORTS:[{"imported": "LongContextReorder", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.long_context_reorder.LongContextReorder.html", "title": "LOTR (Merger Retriever)"}]-->
@@ -124,7 +128,8 @@ compression_retriever_reordered = ContextualCompressionRetriever(
 )
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

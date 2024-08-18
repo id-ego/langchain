@@ -1,27 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/yahoo_finance_news/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/yahoo_finance_news.ipynb
+description: 이 문서는 `yahoo_finance_news` 도구를 사용하여 에이전트를 설정하고 활용하는 방법에 대해 설명합니다.
 ---
 
-# Yahoo Finance News
+# 야후 금융 뉴스
 
-This notebook goes over how to use the `yahoo_finance_news` tool with an agent. 
+이 노트북은 에이전트와 함께 `yahoo_finance_news` 도구를 사용하는 방법을 설명합니다. 
 
-## Setting up
+## 설정하기
 
-First, you need to install `yfinance` python package.
+먼저, `yfinance` 파이썬 패키지를 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet  yfinance
 ```
 
-## Example with Chain
+
+## 체인 예시
 
 ```python
 import os
 
 os.environ["OPENAI_API_KEY"] = "..."
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Yahoo Finance News"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Yahoo Finance News"}, {"imported": "YahooFinanceNewsTool", "source": "langchain_community.tools.yahoo_finance_news", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.yahoo_finance_news.YahooFinanceNewsTool.html", "title": "Yahoo Finance News"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Yahoo Finance News"}]-->
@@ -39,11 +41,13 @@ agent_chain = initialize_agent(
 )
 ```
 
+
 ```python
 agent_chain.invoke(
     "What happened today with Microsoft stocks?",
 )
 ```
+
 ```output
 
 
@@ -59,15 +63,18 @@ Final Answer: Microsoft (MSFT) closed at $328.79, with a +0.12% move from the pr
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Microsoft (MSFT) closed at $328.79, with a +0.12% move from the previous day.'
 ```
+
 
 ```python
 agent_chain.invoke(
     "How does Microsoft feels today comparing with Nvidia?",
 )
 ```
+
 ```output
 
 
@@ -87,28 +94,34 @@ Final Answer: I cannot compare the sentiment of Microsoft and Nvidia as I only h
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'I cannot compare the sentiment of Microsoft and Nvidia as I only have information about Microsoft.'
 ```
 
-# How YahooFinanceNewsTool works?
+
+# 야후금융뉴스도구는 어떻게 작동하나요?
 
 ```python
 tool = YahooFinanceNewsTool()
 ```
 
+
 ```python
 tool.invoke("NVDA")
 ```
+
 
 ```output
 'No news found for company that searched with NVDA ticker.'
 ```
 
+
 ```python
 res = tool.invoke("AAPL")
 print(res)
 ```
+
 ```output
 Top Research Reports for Apple, Broadcom & Caterpillar
 Today's Research Daily features new research reports on 16 major stocks, including Apple Inc. (AAPL), Broadcom Inc. (AVGO) and Caterpillar Inc. (CAT).
@@ -117,7 +130,8 @@ Apple Stock on Pace for Worst Month of the Year
 Apple (AAPL) shares are on pace for their worst month of the year, according to Dow Jones Market Data.  The stock is down 4.8% so far in August, putting it on pace for its worst month since December 2022, when it fell 12%.
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

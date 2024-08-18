@@ -1,18 +1,17 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/youtube_audio/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/youtube_audio.ipynb
+description: YouTube 비디오에서 오디오를 텍스트로 변환하고, 이를 기반으로 채팅 애플리케이션을 구축하는 방법을 설명합니다.
 ---
 
-# YouTube audio
+# 유튜브 오디오
 
-Building chat or QA applications on YouTube videos is a topic of high interest.
+유튜브 비디오에서 채팅 또는 QA 애플리케이션을 구축하는 것은 매우 흥미로운 주제입니다.
 
-Below we show how to easily go from a `YouTube url` to `audio of the video` to `text` to `chat`!
+아래에서는 `YouTube url`에서 `비디오의 오디오`를 `텍스트`로 변환하여 `채팅`으로 쉽게 전환하는 방법을 보여줍니다!
 
-We wil use the `OpenAIWhisperParser`, which will use the OpenAI Whisper API to transcribe audio to text,
-and the  `OpenAIWhisperParserLocal` for local support and running on private clouds or on premise.
+우리는 오디오를 텍스트로 전사하기 위해 OpenAI Whisper API를 사용할 `OpenAIWhisperParser`와 로컬 지원 및 개인 클라우드 또는 온프레미스에서 실행하기 위한 `OpenAIWhisperParserLocal`을 사용할 것입니다.
 
-Note: You will need to have an `OPENAI_API_KEY` supplied.
+참고: `OPENAI_API_KEY`를 제공해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "YoutubeAudioLoader", "source": "langchain_community.document_loaders.blob_loaders.youtube_audio", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.blob_loaders.youtube_audio.YoutubeAudioLoader.html", "title": "YouTube audio"}, {"imported": "GenericLoader", "source": "langchain_community.document_loaders.generic", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.generic.GenericLoader.html", "title": "YouTube audio"}, {"imported": "OpenAIWhisperParser", "source": "langchain_community.document_loaders.parsers", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.parsers.audio.OpenAIWhisperParser.html", "title": "YouTube audio"}]-->
@@ -26,9 +25,10 @@ from langchain_community.document_loaders.parsers import (
 )
 ```
 
-We will use `yt_dlp` to download audio for YouTube urls.
 
-We will use `pydub` to split downloaded audio files (such that we adhere to Whisper API's 25MB file size limit).
+우리는 `yt_dlp`를 사용하여 유튜브 URL의 오디오를 다운로드할 것입니다.
+
+우리는 `pydub`를 사용하여 다운로드한 오디오 파일을 분할할 것입니다(Whisper API의 25MB 파일 크기 제한을 준수하기 위해).
 
 ```python
 %pip install --upgrade --quiet  yt_dlp
@@ -36,19 +36,21 @@ We will use `pydub` to split downloaded audio files (such that we adhere to Whis
 %pip install --upgrade --quiet  librosa
 ```
 
-### YouTube url to text
 
-Use `YoutubeAudioLoader` to fetch / download the audio files.
+### 유튜브 URL에서 텍스트로
 
-Then, ues `OpenAIWhisperParser()` to transcribe them to text.
+`YoutubeAudioLoader`를 사용하여 오디오 파일을 가져오거나 다운로드합니다.
 
-Let's take the first lecture of Andrej Karpathy's YouTube course as an example! 
+그런 다음 `OpenAIWhisperParser()`를 사용하여 텍스트로 전사합니다.
+
+안드레이 카르파티의 유튜브 강좌 첫 번째 강의를 예로 들어 보겠습니다!
 
 ```python
 # set a flag to switch between local and remote parsing
 # change this to True if you want to use local parsing
 local = False
 ```
+
 
 ```python
 # Two Karpathy lecture videos
@@ -66,6 +68,7 @@ else:
     loader = GenericLoader(YoutubeAudioLoader(urls, save_dir), OpenAIWhisperParser())
 docs = loader.load()
 ```
+
 ```output
 [youtube] Extracting URL: https://youtu.be/kCc8FmEb1nY
 [youtube] kCc8FmEb1nY: Downloading webpage
@@ -85,18 +88,21 @@ docs = loader.load()
 [ExtractAudio] Not converting audio /Users/31treehaus/Desktop/AI/langchain-fork/docs/modules/indexes/document_loaders/examples/The spelled-out intro to neural networks and backpropagation： building micrograd.m4a; file is already in target format m4a
 ```
 
+
 ```python
 # Returns a list of Documents, which can be easily viewed or parsed
 docs[0].page_content[0:500]
 ```
 
+
 ```output
 "Hello, my name is Andrej and I've been training deep neural networks for a bit more than a decade. And in this lecture I'd like to show you what neural network training looks like under the hood. So in particular we are going to start with a blank Jupyter notebook and by the end of this lecture we will define and train a neural net and you'll get to see everything that goes on under the hood and exactly sort of how that works on an intuitive level. Now specifically what I would like to do is I w"
 ```
 
-### Building a chat app from YouTube video
 
-Given `Documents`, we can easily enable chat / question+answering.
+### 유튜브 비디오에서 채팅 앱 구축하기
+
+`Documents`가 주어지면 채팅/질문+답변을 쉽게 활성화할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "YouTube audio"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "YouTube audio"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "YouTube audio"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "YouTube audio"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "YouTube audio"}]-->
@@ -106,11 +112,13 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 ```
 
+
 ```python
 # Combine doc
 combined_docs = [doc.page_content for doc in docs]
 text = " ".join(combined_docs)
 ```
+
 
 ```python
 # Split them
@@ -118,11 +126,13 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=15
 splits = text_splitter.split_text(text)
 ```
 
+
 ```python
 # Build an index
 embeddings = OpenAIEmbeddings()
 vectordb = FAISS.from_texts(splits, embeddings)
 ```
+
 
 ```python
 # Build a QA chain
@@ -133,35 +143,42 @@ qa_chain = RetrievalQA.from_chain_type(
 )
 ```
 
+
 ```python
 # Ask a question!
 query = "Why do we need to zero out the gradient before backprop at each step?"
 qa_chain.run(query)
 ```
 
+
 ```output
 "We need to zero out the gradient before backprop at each step because the backward pass accumulates gradients in the grad attribute of each parameter. If we don't reset the grad to zero before each backward pass, the gradients will accumulate and add up, leading to incorrect updates and slower convergence. By resetting the grad to zero before each backward pass, we ensure that the gradients are calculated correctly and that the optimization process works as intended."
 ```
+
 
 ```python
 query = "What is the difference between an encoder and decoder?"
 qa_chain.run(query)
 ```
 
+
 ```output
 'In the context of transformers, an encoder is a component that reads in a sequence of input tokens and generates a sequence of hidden representations. On the other hand, a decoder is a component that takes in a sequence of hidden representations and generates a sequence of output tokens. The main difference between the two is that the encoder is used to encode the input sequence into a fixed-length representation, while the decoder is used to decode the fixed-length representation into an output sequence. In machine translation, for example, the encoder reads in the source language sentence and generates a fixed-length representation, which is then used by the decoder to generate the target language sentence.'
 ```
+
 
 ```python
 query = "For any token, what are x, k, v, and q?"
 qa_chain.run(query)
 ```
 
+
 ```output
 'For any token, x is the input vector that contains the private information of that token, k and q are the key and query vectors respectively, which are produced by forwarding linear modules on x, and v is the vector that is calculated by propagating the same linear module on x again. The key vector represents what the token contains, and the query vector represents what the token is looking for. The vector v is the information that the token will communicate to other tokens if it finds them interesting, and it gets aggregated for the purposes of the self-attention mechanism.'
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

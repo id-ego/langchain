@@ -1,72 +1,76 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/templates/rag-conversation-zep/
+description: Zep를 사용하여 RAG 대화 앱을 구축하는 템플릿으로, 문서 수집, 임베딩, 검색 및 대화 체인을 포함합니다.
 ---
 
 # rag-conversation-zep
 
-This template demonstrates building a RAG conversation app using Zep. 
+이 템플릿은 Zep를 사용하여 RAG 대화 앱을 구축하는 방법을 보여줍니다.
 
-Included in this template:
-- Populating a [Zep Document Collection](https://docs.getzep.com/sdk/documents/) with a set of documents (a Collection is analogous to an index in other Vector Databases).
-- Using Zep's [integrated embedding](https://docs.getzep.com/deployment/embeddings/) functionality to embed the documents as vectors.
-- Configuring a LangChain [ZepVectorStore Retriever](https://docs.getzep.com/sdk/documents/) to retrieve documents using Zep's built, hardware accelerated in [Maximal Marginal Relevance](https://docs.getzep.com/sdk/search_query/) (MMR) re-ranking.
-- Prompts, a simple chat history data structure, and other components required to build a RAG conversation app.
-- The RAG conversation chain.
+이 템플릿에 포함된 내용:
+- 문서 집합으로 [Zep 문서 컬렉션](https://docs.getzep.com/sdk/documents/)을 채우기 (컬렉션은 다른 벡터 데이터베이스의 인덱스와 유사합니다).
+- Zep의 [통합 임베딩](https://docs.getzep.com/deployment/embeddings/) 기능을 사용하여 문서를 벡터로 임베딩합니다.
+- Zep의 하드웨어 가속 [최대 한계 관련성](https://docs.getzep.com/sdk/search_query/) (MMR) 재순위를 사용하여 문서를 검색하는 LangChain [ZepVectorStore Retriever](https://docs.getzep.com/sdk/documents/)를 구성합니다.
+- RAG 대화 앱을 구축하는 데 필요한 프롬프트, 간단한 채팅 기록 데이터 구조 및 기타 구성 요소.
+- RAG 대화 체인.
 
-## About [Zep - Fast, scalable building blocks for LLM Apps](https://www.getzep.com/)
-Zep is an open source platform for productionizing LLM apps. Go from a prototype built in LangChain or LlamaIndex, or a custom app, to production in minutes without rewriting code.
+## [Zep - LLM 앱을 위한 빠르고 확장 가능한 빌딩 블록](https://www.getzep.com/)에 대하여
+Zep는 LLM 앱을 프로덕션화하기 위한 오픈 소스 플랫폼입니다. LangChain 또는 LlamaIndex에서 구축한 프로토타입이나 사용자 지정 앱을 코드 재작성 없이 몇 분 만에 프로덕션으로 전환할 수 있습니다.
 
-Key Features:
+주요 기능:
 
-- Fast! Zep’s async extractors operate independently of the your chat loop, ensuring a snappy user experience.
-- Long-term memory persistence, with access to historical messages irrespective of your summarization strategy.
-- Auto-summarization of memory messages based on a configurable message window. A series of summaries are stored, providing flexibility for future summarization strategies.
-- Hybrid search over memories and metadata, with messages automatically embedded on creation.
-- Entity Extractor that automatically extracts named entities from messages and stores them in the message metadata.
-- Auto-token counting of memories and summaries, allowing finer-grained control over prompt assembly.
-- Python and JavaScript SDKs.
+- 빠름! Zep의 비동기 추출기는 채팅 루프와 독립적으로 작동하여 쾌적한 사용자 경험을 보장합니다.
+- 요약 전략에 관계없이 과거 메시지에 대한 접근이 가능한 장기 메모리 지속성.
+- 구성 가능한 메시지 창을 기반으로 메모리 메시지를 자동 요약합니다. 일련의 요약이 저장되어 향후 요약 전략에 유연성을 제공합니다.
+- 메모리와 메타데이터에 대한 하이브리드 검색, 메시지가 생성 시 자동으로 임베딩됩니다.
+- 메시지에서 명명된 개체를 자동으로 추출하고 메시지 메타데이터에 저장하는 개체 추출기.
+- 프롬프트 조립에 대한 세밀한 제어를 가능하게 하는 메모리와 요약의 자동 토큰 수 계산.
+- Python 및 JavaScript SDK.
 
-Zep project: https://github.com/getzep/zep | Docs: https://docs.getzep.com/
+Zep 프로젝트: https://github.com/getzep/zep | 문서: https://docs.getzep.com/
 
-## Environment Setup
+## 환경 설정
 
-Set up a Zep service by following the [Quick Start Guide](https://docs.getzep.com/deployment/quickstart/).
+[빠른 시작 가이드](https://docs.getzep.com/deployment/quickstart/)를 따라 Zep 서비스를 설정합니다.
 
-## Ingesting Documents into a Zep Collection
+## Zep 컬렉션에 문서 수집하기
 
-Run `python ingest.py` to ingest the test documents into a Zep Collection. Review the file to modify the Collection name and document source.
+`python ingest.py`를 실행하여 테스트 문서를 Zep 컬렉션에 수집합니다. 파일을 검토하여 컬렉션 이름과 문서 출처를 수정합니다.
 
-## Usage
+## 사용법
 
-To use this package, you should first have the LangChain CLI installed:
+이 패키지를 사용하려면 먼저 LangChain CLI가 설치되어 있어야 합니다:
 
 ```shell
 pip install -U "langchain-cli[serve]"
 ```
 
-To create a new LangChain project and install this as the only package, you can do:
+
+새 LangChain 프로젝트를 만들고 이를 유일한 패키지로 설치하려면 다음과 같이 할 수 있습니다:
 
 ```shell
 langchain app new my-app --package rag-conversation-zep
 ```
 
-If you want to add this to an existing project, you can just run:
+
+기존 프로젝트에 추가하려면 다음을 실행하면 됩니다:
 
 ```shell
 langchain app add rag-conversation-zep
 ```
 
-And add the following code to your `server.py` file:
+
+그리고 `server.py` 파일에 다음 코드를 추가합니다:
 ```python
 from rag_conversation_zep import chain as rag_conversation_zep_chain
 
 add_routes(app, rag_conversation_zep_chain, path="/rag-conversation-zep")
 ```
 
-(Optional) Let's now configure LangSmith.
-LangSmith will help us trace, monitor and debug LangChain applications.
-You can sign up for LangSmith [here](https://smith.langchain.com/).
-If you don't have access, you can skip this section
+
+(선택 사항) 이제 LangSmith를 구성해 보겠습니다.
+LangSmith는 LangChain 애플리케이션을 추적, 모니터링 및 디버깅하는 데 도움을 줍니다.
+여기에서 LangSmith에 가입할 수 있습니다 [여기](https://smith.langchain.com/).
+접근할 수 없는 경우 이 섹션을 건너뛸 수 있습니다.
 
 ```shell
 export LANGCHAIN_TRACING_V2=true
@@ -74,19 +78,21 @@ export LANGCHAIN_API_KEY=<your-api-key>
 export LANGCHAIN_PROJECT=<your-project>  # if not specified, defaults to "default"
 ```
 
-If you are inside this directory, then you can spin up a LangServe instance directly by:
+
+이 디렉토리 내에 있다면 다음과 같이 LangServe 인스턴스를 직접 시작할 수 있습니다:
 
 ```shell
 langchain serve
 ```
 
-This will start the FastAPI app with a server is running locally at
+
+이렇게 하면 FastAPI 앱이 시작되며 서버는 로컬에서 실행됩니다.
 [http://localhost:8000](http://localhost:8000)
 
-We can see all templates at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-We can access the playground at [http://127.0.0.1:8000/rag-conversation-zep/playground](http://127.0.0.1:8000/rag-conversation-zep/playground)  
+모든 템플릿을 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)에서 볼 수 있습니다.
+플레이그라운드에 접근하려면 [http://127.0.0.1:8000/rag-conversation-zep/playground](http://127.0.0.1:8000/rag-conversation-zep/playground)에서 접근할 수 있습니다.
 
-We can access the template from code with:
+코드에서 템플릿에 접근하려면:
 
 ```python
 from langserve.client import RemoteRunnable

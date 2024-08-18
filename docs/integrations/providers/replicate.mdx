@@ -1,36 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/replicate/
+description: Replicate에서 LangChain을 사용하여 모델을 실행하는 방법과 설치 및 설정 과정을 안내합니다.
 ---
 
-# Replicate
-This page covers how to run models on Replicate within LangChain.
+# 복제
+이 페이지는 LangChain 내에서 Replicate에서 모델을 실행하는 방법을 다룹니다.
 
-## Installation and Setup
-- Create a [Replicate](https://replicate.com) account. Get your API key and set it as an environment variable (`REPLICATE_API_TOKEN`)
-- Install the [Replicate python client](https://github.com/replicate/replicate-python) with `pip install replicate`
+## 설치 및 설정
+- [Replicate](https://replicate.com) 계정을 생성하세요. API 키를 가져와서 환경 변수(`REPLICATE_API_TOKEN`)로 설정하세요.
+- `pip install replicate`를 사용하여 [Replicate 파이썬 클라이언트](https://github.com/replicate/replicate-python)를 설치하세요.
 
-## Calling a model
+## 모델 호출
 
-Find a model on the [Replicate explore page](https://replicate.com/explore), and then paste in the model name and version in this format: `owner-name/model-name:version`
+[Replicate 탐색 페이지](https://replicate.com/explore)에서 모델을 찾은 후, 모델 이름과 버전을 다음 형식으로 붙여넣습니다: `owner-name/model-name:version`
 
-For example, for this [dolly model](https://replicate.com/replicate/dolly-v2-12b), click on the API tab. The model name/version would be: `"replicate/dolly-v2-12b:ef0e1aefc61f8e096ebe4db6b2bacc297daf2ef6899f0f7e001ec445893500e5"`
+예를 들어, 이 [dolly 모델](https://replicate.com/replicate/dolly-v2-12b)의 경우, API 탭을 클릭하세요. 모델 이름/버전은 다음과 같습니다: `"replicate/dolly-v2-12b:ef0e1aefc61f8e096ebe4db6b2bacc297daf2ef6899f0f7e001ec445893500e5"`
 
-Only the `model` param is required, but any other model parameters can also be passed in with the format `input={model_param: value, ...}`
+`model` 매개변수만 필요하지만, 다른 모델 매개변수도 `input={model_param: value, ...}` 형식으로 전달할 수 있습니다.
 
-For example, if we were running stable diffusion and wanted to change the image dimensions:
+예를 들어, 안정적인 확산을 실행하고 이미지 크기를 변경하고 싶다면:
 
 ```
 Replicate(model="stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", input={'image_dimensions': '512x512'})
 ```
 
-*Note that only the first output of a model will be returned.*
-From here, we can initialize our model:
+
+*모델의 첫 번째 출력만 반환된다는 점에 유의하세요.*
+여기서 모델을 초기화할 수 있습니다:
 
 ```python
 llm = Replicate(model="replicate/dolly-v2-12b:ef0e1aefc61f8e096ebe4db6b2bacc297daf2ef6899f0f7e001ec445893500e5")
 ```
 
-And run it:
+
+그리고 실행할 수 있습니다:
 
 ```python
 prompt = """
@@ -40,7 +42,8 @@ Can a dog drive a car?
 llm(prompt)
 ```
 
-We can call any Replicate model (not just LLMs) using this syntax. For example, we can call [Stable Diffusion](https://replicate.com/stability-ai/stable-diffusion):
+
+이 구문을 사용하여 모든 Replicate 모델(LLM뿐만 아니라)을 호출할 수 있습니다. 예를 들어, [Stable Diffusion](https://replicate.com/stability-ai/stable-diffusion)을 호출할 수 있습니다:
 
 ```python
 text2image = Replicate(model="stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf", input={'image_dimensions':'512x512'})

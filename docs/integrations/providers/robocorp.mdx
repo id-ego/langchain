@@ -1,23 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/robocorp/
+description: Robocorp는 어디서나 원활하게 작동하는 Python 작업자를 구축하고 운영하는 데 도움을 줍니다.
 ---
 
 # Robocorp
 
-> [Robocorp](https://robocorp.com/) helps build and operate Python workers that run seamlessly anywhere at any scale
+> [Robocorp](https://robocorp.com/)는 어디서나 어떤 규모에서도 원활하게 실행되는 Python 작업자를 구축하고 운영하는 데 도움을 줍니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-You need to install `langchain-robocorp` python package:
+`langchain-robocorp` 파이썬 패키지를 설치해야 합니다:
 
 ```bash
 pip install langchain-robocorp
 ```
 
-You will need a running instance of `Action Server` to communicate with from your agent application.
-See the [Robocorp Quickstart](https://github.com/robocorp/robocorp#quickstart) on how to setup Action Server and create your Actions.
 
-You can bootstrap a new project using Action Server `new` command.
+에이전트 애플리케이션에서 통신할 수 있도록 `Action Server`의 실행 인스턴스가 필요합니다. `Action Server`를 설정하고 작업을 만드는 방법은 [Robocorp Quickstart](https://github.com/robocorp/robocorp#quickstart)를 참조하세요.
+
+`Action Server`의 `new` 명령을 사용하여 새 프로젝트를 부트스트랩할 수 있습니다.
 
 ```bash
 action-server new
@@ -25,16 +25,18 @@ cd ./your-project-name
 action-server start
 ```
 
-## Tool
+
+## 도구
 
 ```python
 <!--IMPORTS:[{"imported": "ActionServerRequestTool", "source": "langchain_robocorp.toolkits", "docs": "https://api.python.langchain.com/en/latest/toolkits/langchain_robocorp.toolkits.ActionServerRequestTool.html", "title": "Robocorp"}]-->
 from langchain_robocorp.toolkits import ActionServerRequestTool
 ```
 
-## Toolkit
 
-See a [usage example](/docs/integrations/tools/robocorp).
+## 툴킷
+
+[사용 예제](/docs/integrations/tools/robocorp)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ActionServerToolkit", "source": "langchain_robocorp", "docs": "https://api.python.langchain.com/en/latest/toolkits/langchain_robocorp.toolkits.ActionServerToolkit.html", "title": "Robocorp"}]-->

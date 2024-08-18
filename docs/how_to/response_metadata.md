@@ -1,13 +1,13 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/response_metadata/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/response_metadata.ipynb
+description: 이 문서는 다양한 모델 제공업체의 응답 메타데이터를 설명하며, 토큰 수 및 로그 확률과 같은 정보를 포함합니다.
 ---
 
-# Response metadata
+# 응답 메타데이터
 
-Many model providers include some metadata in their chat generation responses. This metadata can be accessed via the `AIMessage.response_metadata: Dict` attribute. Depending on the model provider and model configuration, this can contain information like [token counts](/docs/how_to/chat_token_usage_tracking), [logprobs](/docs/how_to/logprobs), and more.
+많은 모델 제공자는 채팅 생성 응답에 일부 메타데이터를 포함합니다. 이 메타데이터는 `AIMessage.response_metadata: Dict` 속성을 통해 접근할 수 있습니다. 모델 제공자 및 모델 구성에 따라, 여기에는 [토큰 수](/docs/how_to/chat_token_usage_tracking), [로그 확률](/docs/how_to/logprobs) 등과 같은 정보가 포함될 수 있습니다.
 
-Here's what the response metadata looks like for a few different providers:
+다음은 몇 가지 다른 제공자의 응답 메타데이터 모습입니다:
 
 ## OpenAI
 
@@ -20,6 +20,7 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
+
 ```output
 {'token_usage': {'completion_tokens': 164,
   'prompt_tokens': 17,
@@ -29,6 +30,7 @@ msg.response_metadata
  'finish_reason': 'stop',
  'logprobs': None}
 ```
+
 
 ## Anthropic
 
@@ -41,6 +43,7 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
+
 ```output
 {'id': 'msg_01CzQyD7BX8nkhDNfT1QqvEp',
  'model': 'claude-3-sonnet-20240229',
@@ -48,6 +51,7 @@ msg.response_metadata
  'stop_sequence': None,
  'usage': {'input_tokens': 17, 'output_tokens': 296}}
 ```
+
 
 ## Google VertexAI
 
@@ -58,6 +62,7 @@ llm = ChatVertexAI(model="gemini-pro")
 msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
+
 
 ```output
 {'is_blocked': False,
@@ -79,6 +84,7 @@ msg.response_metadata
   'total_token_count': 40}}
 ```
 
+
 ## Bedrock (Anthropic)
 
 ```python
@@ -89,10 +95,12 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
+
 ```output
 {'model_id': 'anthropic.claude-v2',
  'usage': {'prompt_tokens': 19, 'completion_tokens': 371, 'total_tokens': 390}}
 ```
+
 
 ## MistralAI
 
@@ -105,6 +113,7 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
+
 ```output
 {'token_usage': {'prompt_tokens': 19,
   'total_tokens': 141,
@@ -112,6 +121,7 @@ msg.response_metadata
  'model': 'mistral-small',
  'finish_reason': 'stop'}
 ```
+
 
 ## Groq
 
@@ -123,6 +133,7 @@ llm = ChatGroq()
 msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
+
 
 ```output
 {'token_usage': {'completion_time': 0.243,
@@ -137,6 +148,7 @@ msg.response_metadata
  'finish_reason': 'stop',
  'logprobs': None}
 ```
+
 
 ## TogetherAI
 
@@ -155,6 +167,7 @@ msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
 
+
 ```output
 {'token_usage': {'completion_tokens': 208,
   'prompt_tokens': 20,
@@ -164,6 +177,7 @@ msg.response_metadata
  'finish_reason': 'eos',
  'logprobs': None}
 ```
+
 
 ## FireworksAI
 
@@ -175,6 +189,7 @@ llm = ChatFireworks(model="accounts/fireworks/models/mixtral-8x7b-instruct")
 msg = llm.invoke([("human", "What's the oldest known example of cuneiform")])
 msg.response_metadata
 ```
+
 
 ```output
 {'token_usage': {'prompt_tokens': 19,

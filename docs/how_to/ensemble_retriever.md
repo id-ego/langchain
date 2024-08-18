@@ -1,23 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/ensemble_retriever/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/ensemble_retriever.ipynb
+description: 여러 검색기의 결과를 결합하는 방법을 설명하며, EnsembleRetriever와 그 작동 원리를 소개합니다. 하이브리드 검색의
+  장점을 강조합니다.
 ---
 
-# How to combine results from multiple retrievers
+# 여러 검색기에서 결과 결합하는 방법
 
-The [EnsembleRetriever](https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.ensemble.EnsembleRetriever.html) supports ensembling of results from multiple retrievers. It is initialized with a list of [BaseRetriever](https://api.python.langchain.com/en/latest/retrievers/langchain_core.retrievers.BaseRetriever.html) objects. EnsembleRetrievers rerank the results of the constituent retrievers based on the [Reciprocal Rank Fusion](https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf) algorithm.
+[EnsembleRetriever](https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.ensemble.EnsembleRetriever.html)는 여러 검색기의 결과를 앙상블하는 것을 지원합니다. 이는 [BaseRetriever](https://api.python.langchain.com/en/latest/retrievers/langchain_core.retrievers.BaseRetriever.html) 객체의 목록으로 초기화됩니다. EnsembleRetrievers는 [Reciprocal Rank Fusion](https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf) 알고리즘에 따라 구성 요소 검색기의 결과를 재순위화합니다.
 
-By leveraging the strengths of different algorithms, the `EnsembleRetriever` can achieve better performance than any single algorithm. 
+다양한 알고리즘의 강점을 활용함으로써 `EnsembleRetriever`는 단일 알고리즘보다 더 나은 성능을 달성할 수 있습니다.
 
-The most common pattern is to combine a sparse retriever (like BM25) with a dense retriever (like embedding similarity), because their strengths are complementary. It is also known as "hybrid search". The sparse retriever is good at finding relevant documents based on keywords, while the dense retriever is good at finding relevant documents based on semantic similarity.
+가장 일반적인 패턴은 희소 검색기(BM25와 같은)와 밀집 검색기(임베딩 유사성과 같은)를 결합하는 것입니다. 이 두 검색기의 강점은 상호 보완적이기 때문입니다. 이를 "하이브리드 검색"이라고도 합니다. 희소 검색기는 키워드를 기반으로 관련 문서를 찾는 데 강하고, 밀집 검색기는 의미적 유사성을 기반으로 관련 문서를 찾는 데 강합니다.
 
-## Basic usage
+## 기본 사용법
 
-Below we demonstrate ensembling of a [BM25Retriever](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.bm25.BM25Retriever.html) with a retriever derived from the [FAISS vector store](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html).
+아래에서는 [BM25Retriever](https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.bm25.BM25Retriever.html)와 [FAISS 벡터 저장소](https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html)에서 파생된 검색기를 앙상블하는 방법을 보여줍니다.
 
 ```python
 %pip install --upgrade --quiet  rank_bm25 > /dev/null
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "EnsembleRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.ensemble.EnsembleRetriever.html", "title": "How to combine results from multiple retrievers"}, {"imported": "BM25Retriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.bm25.BM25Retriever.html", "title": "How to combine results from multiple retrievers"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "How to combine results from multiple retrievers"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "How to combine results from multiple retrievers"}]-->
@@ -55,10 +57,12 @@ ensemble_retriever = EnsembleRetriever(
 )
 ```
 
+
 ```python
 docs = ensemble_retriever.invoke("apples")
 docs
 ```
+
 
 ```output
 [Document(page_content='I like apples', metadata={'source': 1}),
@@ -67,9 +71,10 @@ docs
  Document(page_content='You like oranges', metadata={'source': 2})]
 ```
 
-## Runtime Configuration
 
-We can also configure the individual retrievers at runtime using [configurable fields](/docs/how_to/configure). Below we update the "top-k" parameter for the FAISS retriever specifically:
+## 런타임 구성
+
+우리는 또한 [구성 가능한 필드](/docs/how_to/configure)를 사용하여 런타임에 개별 검색기를 구성할 수 있습니다. 아래에서는 FAISS 검색기에 대해 "top-k" 매개변수를 업데이트합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ConfigurableField", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.utils.ConfigurableField.html", "title": "How to combine results from multiple retrievers"}]-->
@@ -90,11 +95,13 @@ ensemble_retriever = EnsembleRetriever(
 )
 ```
 
+
 ```python
 config = {"configurable": {"search_kwargs_faiss": {"k": 1}}}
 docs = ensemble_retriever.invoke("apples", config=config)
 docs
 ```
+
 
 ```output
 [Document(page_content='I like apples', metadata={'source': 1}),
@@ -102,4 +109,5 @@ docs
  Document(page_content='Apples and oranges are fruits', metadata={'source': 1})]
 ```
 
-Notice that this only returns one source from the FAISS retriever, because we pass in the relevant configuration at run time
+
+이것은 런타임에 관련 구성을 전달하기 때문에 FAISS 검색기에서 하나의 소스만 반환하는 것을 주의하세요.

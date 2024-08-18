@@ -1,16 +1,16 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/human_tools/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/human_tools.ipynb
+description: 이 문서는 AI 에이전트를 지원하기 위해 인간을 도구로 활용하는 방법과 입력 기능을 사용자 정의하는 방법에 대해 설명합니다.
 ---
 
-# Human as a tool
+# 도구로서의 인간
 
-Human are AGI so they can certainly be used as a tool to help out AI agent
-when it is confused.
+인간은 AGI이므로 AI 에이전트가 혼란스러울 때 도구로 사용될 수 있습니다.
 
 ```python
 %pip install --upgrade --quiet  langchain-community
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Human as a tool"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Human as a tool"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Human as a tool"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Human as a tool"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Human as a tool"}]-->
@@ -32,13 +32,14 @@ agent_chain = initialize_agent(
 )
 ```
 
-In the above code you can see the tool takes input directly from command line.
-You can customize `prompt_func` and `input_func` according to your need (as shown below).
+
+위 코드에서 도구가 명령줄에서 직접 입력을 받는 것을 볼 수 있습니다. 필요에 따라 `prompt_func`와 `input_func`를 사용자 정의할 수 있습니다 (아래와 같이).
 
 ```python
 agent_chain.run("What's my friend Eric's surname?")
 # Answer with 'Zhu'
 ```
+
 ```output
 
 
@@ -59,15 +60,15 @@ Final Answer: Eric's surname is Zhu.[0m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 "Eric's surname is Zhu."
 ```
 
-## Configuring the Input Function
 
-By default, the `HumanInputRun` tool uses the python `input` function to get input from the user.
-You can customize the input_func to be anything you'd like.
-For instance, if you want to accept multi-line input, you could do the following:
+## 입력 함수 구성
+
+기본적으로 `HumanInputRun` 도구는 사용자로부터 입력을 받기 위해 파이썬 `input` 함수를 사용합니다. 원하는 대로 input_func를 사용자 정의할 수 있습니다. 예를 들어, 여러 줄의 입력을 허용하고 싶다면 다음과 같이 할 수 있습니다:
 
 ```python
 def get_input() -> str:
@@ -88,6 +89,7 @@ def get_input() -> str:
 tools = load_tools(["human", "ddg-search"], llm=math_llm, input_func=get_input)
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "HumanInputRun", "source": "langchain_community.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.human.tool.HumanInputRun.html", "title": "Human as a tool"}]-->
 # Or you can directly instantiate the tool
@@ -95,6 +97,7 @@ from langchain_community.tools import HumanInputRun
 
 tool = HumanInputRun(input_func=get_input)
 ```
+
 
 ```python
 agent_chain = initialize_agent(
@@ -105,9 +108,11 @@ agent_chain = initialize_agent(
 )
 ```
 
+
 ```python
 agent_chain.run("I need help attributing a quote")
 ```
+
 ```output
 
 
@@ -150,11 +155,13 @@ Final Answer: Julius Caesar said the quote "Veni, vidi, vici" which means "I cam
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Julius Caesar said the quote "Veni, vidi, vici" which means "I came, I saw, I conquered".'
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

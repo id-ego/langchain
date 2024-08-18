@@ -1,15 +1,16 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/google_serper/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/google_serper.ipynb
+description: 이 문서는 `Google Serper` 컴포넌트를 사용하여 웹 검색을 수행하는 방법과 이미지 및 뉴스 검색 예제를 다룹니다.
 ---
 
 # Google Serper
 
-This notebook goes over how to use the `Google Serper` component to search the web. First you need to sign up for a free account at [serper.dev](https://serper.dev) and get your api key.
+이 노트북은 `Google Serper` 구성 요소를 사용하여 웹을 검색하는 방법에 대해 설명합니다. 먼저 [serper.dev](https://serper.dev)에서 무료 계정을 등록하고 API 키를 받아야 합니다.
 
 ```python
 %pip install --upgrade --quiet  langchain-community
 ```
+
 
 ```python
 import os
@@ -18,28 +19,34 @@ import pprint
 os.environ["SERPER_API_KEY"] = ""
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "GoogleSerperAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_serper.GoogleSerperAPIWrapper.html", "title": "Google Serper"}]-->
 from langchain_community.utilities import GoogleSerperAPIWrapper
 ```
 
+
 ```python
 search = GoogleSerperAPIWrapper()
 ```
+
 
 ```python
 search.run("Obama's first name?")
 ```
 
+
 ```output
 'Barack Hussein Obama II'
 ```
 
-## As part of a Self Ask With Search Chain
+
+## Self Ask With Search Chain의 일환으로
 
 ```python
 os.environ["OPENAI_API_KEY"] = ""
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Google Serper"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Google Serper"}, {"imported": "GoogleSerperAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.google_serper.GoogleSerperAPIWrapper.html", "title": "Google Serper"}, {"imported": "Tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Google Serper"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Google Serper"}]-->
@@ -65,6 +72,7 @@ self_ask_with_search.run(
     "What is the hometown of the reigning men's U.S. Open champion?"
 )
 ```
+
 ```output
 
 
@@ -79,18 +87,21 @@ Intermediate answer: [36;1m[1;3mEl Palmar, Spain[0m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'El Palmar, Spain'
 ```
 
-## Obtaining results with metadata
-If you would also like to obtain the results in a structured way including metadata. For this we will be using the `results` method of the wrapper.
+
+## 메타데이터와 함께 결과 얻기
+메타데이터를 포함하여 구조화된 방식으로 결과를 얻고 싶다면, 래퍼의 `results` 메서드를 사용할 것입니다.
 
 ```python
 search = GoogleSerperAPIWrapper()
 results = search.results("Apple Inc.")
 pprint.pp(results)
 ```
+
 ```output
 {'searchParameters': {'q': 'Apple Inc.',
                       'gl': 'us',
@@ -241,14 +252,16 @@ pprint.pp(results)
                      {'query': 'Apple Watch'},
                      {'query': 'Apple App Store'}]}
 ```
-## Searching for Google Images
-We can also query Google Images using this wrapper. For example:
+
+## Google 이미지 검색
+이 래퍼를 사용하여 Google 이미지를 쿼리할 수도 있습니다. 예를 들어:
 
 ```python
 search = GoogleSerperAPIWrapper(type="images")
 results = search.results("Lion")
 pprint.pp(results)
 ```
+
 ```output
 {'searchParameters': {'q': 'Lion',
                       'gl': 'us',
@@ -369,14 +382,16 @@ pprint.pp(results)
              'link': 'https://virginiazoo.org/zoos-new-male-lion-explores-habitat-for-thefirst-time/',
              'position': 10}]}
 ```
-## Searching for Google News
-We can also query Google News using this wrapper. For example:
+
+## Google 뉴스 검색
+이 래퍼를 사용하여 Google 뉴스를 쿼리할 수도 있습니다. 예를 들어:
 
 ```python
 search = GoogleSerperAPIWrapper(type="news")
 results = search.results("Tesla Inc.")
 pprint.pp(results)
 ```
+
 ```output
 {'searchParameters': {'q': 'Tesla Inc.',
                       'gl': 'us',
@@ -472,13 +487,15 @@ pprint.pp(results)
            'imageUrl': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWWIC4VpMTfRvSyqiomODOoLg0xhoBf-Tc1qweKnSuaiTk-Y1wMJZM3jct0w&s',
            'position': 9}]}
 ```
-If you want to only receive news articles published in the last hour, you can do the following:
+
+지난 한 시간 동안 게시된 뉴스 기사만 받고 싶다면 다음과 같이 할 수 있습니다:
 
 ```python
 search = GoogleSerperAPIWrapper(type="news", tbs="qdr:h")
 results = search.results("Tesla Inc.")
 pprint.pp(results)
 ```
+
 ```output
 {'searchParameters': {'q': 'Tesla Inc.',
                       'gl': 'us',
@@ -517,31 +534,33 @@ pprint.pp(results)
            'imageUrl': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_X9qqSwVFBBdos2CK5ky5IWIE3aJPCQeRYR9O1Jz4t-MjaEYBuwK7AU3AJQ&s',
            'position': 3}]}
 ```
-Some examples of the `tbs` parameter:
 
-`qdr:h` (past hour)
-`qdr:d` (past day)
-`qdr:w` (past week)
-`qdr:m` (past month)
-`qdr:y` (past year)
+`tbs` 매개변수의 몇 가지 예:
 
-You can specify intermediate time periods by adding a number:
-`qdr:h12` (past 12 hours)
-`qdr:d3` (past 3 days)
-`qdr:w2` (past 2 weeks)
-`qdr:m6` (past 6 months)
-`qdr:m2` (past 2 years)
+`qdr:h` (지난 한 시간)
+`qdr:d` (지난 하루)
+`qdr:w` (지난 주)
+`qdr:m` (지난 한 달)
+`qdr:y` (지난 1년)
 
-For all supported filters simply go to [Google Search](https://google.com), search for something, click on "Tools", add your date filter and check the URL for "tbs=".
+숫자를 추가하여 중간 시간 기간을 지정할 수 있습니다:
+`qdr:h12` (지난 12시간)
+`qdr:d3` (지난 3일)
+`qdr:w2` (지난 2주)
+`qdr:m6` (지난 6개월)
+`qdr:m2` (지난 2년)
 
-## Searching for Google Places
-We can also query Google Places using this wrapper. For example:
+지원되는 모든 필터는 [Google 검색](https://google.com)로 가서 무언가를 검색한 후 "도구"를 클릭하고 날짜 필터를 추가한 다음 URL에서 "tbs="를 확인하세요.
+
+## Google 장소 검색
+이 래퍼를 사용하여 Google 장소를 쿼리할 수도 있습니다. 예를 들어:
 
 ```python
 search = GoogleSerperAPIWrapper(type="places")
 results = search.results("Italian restaurants in Upper East Side")
 pprint.pp(results)
 ```
+
 ```output
 {'searchParameters': {'q': 'Italian restaurants in Upper East Side',
                       'gl': 'us',
@@ -641,7 +660,8 @@ pprint.pp(results)
              'category': 'Italian'}]}
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

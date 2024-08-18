@@ -1,36 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/nvidia_riva/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/nvidia_riva.ipynb
+description: NVIDIA Riva는 실시간 대화형 AI 파이프라인 구축을 위한 GPU 가속 다국어 음성 및 번역 AI SDK입니다. ASR,
+  TTS 및 NMT를 지원합니다.
 ---
 
-# NVIDIA Riva: ASR and TTS
+# NVIDIA Riva: ASR 및 TTS
 
 ## NVIDIA Riva
-[NVIDIA Riva](https://www.nvidia.com/en-us/ai-data-science/products/riva/) is a GPU-accelerated multilingual speech and translation AI software development kit for building fully customizable, real-time conversational AI pipelines—including automatic speech recognition (ASR), text-to-speech (TTS), and neural machine translation (NMT) applications—that can be deployed in clouds, in data centers, at the edge, or on embedded devices.
+[NVIDIA Riva](https://www.nvidia.com/en-us/ai-data-science/products/riva/)는 자동 음성 인식(ASR), 텍스트 음성 변환(TTS) 및 신경 기계 번역(NMT) 애플리케이션을 포함한 완전히 사용자 정의 가능한 실시간 대화형 AI 파이프라인을 구축하기 위한 GPU 가속 다국어 음성 및 번역 AI 소프트웨어 개발 키트입니다. 클라우드, 데이터 센터, 엣지 또는 임베디드 장치에 배포할 수 있습니다.
 
-The Riva Speech API server exposes a simple API for performing speech recognition, speech synthesis, and a variety of natural language processing inferences and is integrated into LangChain for ASR and TTS. See instructions on how to [setup a Riva Speech API](#3-setup) server below. 
+Riva Speech API 서버는 음성 인식, 음성 합성 및 다양한 자연어 처리 추론을 수행하기 위한 간단한 API를 노출하며, ASR 및 TTS를 위해 LangChain에 통합되어 있습니다. 아래에서 [Riva Speech API](#3-setup) 서버 설정 방법에 대한 지침을 참조하십시오.
 
-## Integrating NVIDIA Riva to LangChain Chains
-The `NVIDIARivaASR`, `NVIDIARivaTTS` utility runnables are LangChain runnables that integrate [NVIDIA Riva](https://www.nvidia.com/en-us/ai-data-science/products/riva/) into LCEL chains for Automatic Speech Recognition (ASR) and Text To Speech (TTS).
+## NVIDIA Riva를 LangChain 체인에 통합하기
+`NVIDIARivaASR`, `NVIDIARivaTTS` 유틸리티 실행 가능 항목은 자동 음성 인식(ASR) 및 텍스트 음성 변환(TTS)을 위해 [NVIDIA Riva](https://www.nvidia.com/en-us/ai-data-science/products/riva/)를 LCEL 체인에 통합하는 LangChain 실행 가능 항목입니다.
 
-This example goes over how to use these LangChain runnables to:
-1. Accept streamed audio,
-2. convert the audio to text, 
-3. send the text to an LLM, 
-4. stream a textual LLM response, and
-5. convert the response to streamed human-sounding audio.  
+이 예제에서는 이러한 LangChain 실행 가능 항목을 사용하여:
+1. 스트리밍 오디오 수신,
+2. 오디오를 텍스트로 변환,
+3. 텍스트를 LLM에 전송,
+4. 텍스트 LLM 응답을 스트리밍,
+5. 응답을 스트리밍 인간 음성으로 변환하는 방법을 설명합니다.
 
-## 1. NVIDIA Riva Runnables
-There are 2 Riva Runnables:
+## 1. NVIDIA Riva 실행 가능 항목
+Riva 실행 가능 항목은 2개입니다:
 
-a. **RivaASR**: Converts audio bytes into text for an LLM using NVIDIA Riva. 
+a. **RivaASR**: NVIDIA Riva를 사용하여 오디오 바이트를 LLM용 텍스트로 변환합니다.
 
-b. **RivaTTS**: Converts text into audio bytes using NVIDIA Riva.
+b. **RivaTTS**: NVIDIA Riva를 사용하여 텍스트를 오디오 바이트로 변환합니다.
 
 ### a. RivaASR
-The [**RivaASR**](https://github.com/langchain-ai/langchain/blob/master/libs/community/langchain_community/utilities/nvidia_riva.py#L404) runnable converts audio bytes into a string for an LLM using NVIDIA Riva. 
+[**RivaASR**](https://github.com/langchain-ai/langchain/blob/master/libs/community/langchain_community/utilities/nvidia_riva.py#L404) 실행 가능 항목은 NVIDIA Riva를 사용하여 오디오 바이트를 LLM용 문자열로 변환합니다.
 
-It's useful for sending an audio stream (a message containing streaming audio) into a chain and preprocessing that audio by converting it to a string to create an LLM prompt. 
+이는 오디오 스트림(스트리밍 오디오를 포함하는 메시지)을 체인으로 전송하고, 해당 오디오를 문자열로 변환하여 LLM 프롬프트를 생성하는 데 유용합니다.
 
 ```
 ASRInputType = AudioStream # the AudioStream type is a custom type for a message queue containing streaming audio
@@ -70,13 +71,14 @@ class RivaASR(
     )
 ```
 
-When this runnable is called on an input, it takes an input audio stream that acts as a queue and concatenates transcription as chunks are returned.After a response is fully generated, a string is returned. 
-* Note that since the LLM requires a full query the ASR is concatenated and not streamed in token-by-token.
+
+이 실행 가능 항목이 입력에 호출되면, 입력 오디오 스트림을 큐로 사용하고, 반환된 청크에 따라 전사를 연결합니다. 응답이 완전히 생성된 후 문자열이 반환됩니다. 
+* LLM이 전체 쿼리를 요구하므로 ASR은 연결되고 토큰별로 스트리밍되지 않음을 유의하십시오.
 
 ### b. RivaTTS
-The [**RivaTTS**](https://github.com/langchain-ai/langchain/blob/master/libs/community/langchain_community/utilities/nvidia_riva.py#L511) runnable converts text output to audio bytes. 
+[**RivaTTS**](https://github.com/langchain-ai/langchain/blob/master/libs/community/langchain_community/utilities/nvidia_riva.py#L511) 실행 가능 항목은 텍스트 출력을 오디오 바이트로 변환합니다.
 
-It's useful for processing the streamed textual response from an LLM by converting the text to audio bytes. These audio bytes sound like a natural human voice to be played back to the user. 
+이는 LLM에서 스트리밍된 텍스트 응답을 처리하여 텍스트를 오디오 바이트로 변환하는 데 유용합니다. 이러한 오디오 바이트는 사용자에게 재생될 자연스러운 인간 음성과 같습니다.
 
 ```
 TTSInputType = Union[str, AnyMessage, PromptValue]
@@ -114,26 +116,29 @@ class RivaTTS(
         ),
 ```
 
-When this runnable is called on an input, it takes iterable text chunks and streams them into output audio bytes that are either written to a `.wav` file or played out loud.
 
-## 2. Installation
+이 실행 가능 항목이 입력에 호출되면, 반복 가능한 텍스트 청크를 받아 출력 오디오 바이트로 스트리밍하여 `.wav` 파일에 기록되거나 소리 내어 재생됩니다.
 
-The NVIDIA Riva client library must be installed.
+## 2. 설치
+
+NVIDIA Riva 클라이언트 라이브러리를 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet nvidia-riva-client
 ```
+
 ```output
 Note: you may need to restart the kernel to use updated packages.
 ```
-## 3. Setup
 
-**To get started with NVIDIA Riva:**
+## 3. 설정
 
-1. Follow the Riva Quick Start setup instructions for [Local Deployment Using Quick Start Scripts](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/quick-start-guide.html#local-deployment-using-quick-start-scripts).
+**NVIDIA Riva를 시작하려면:**
 
-## 4. Import and Inspect Runnables
-Import the RivaASR and RivaTTS runnables and inspect their schemas to understand their fields. 
+1. [빠른 시작 스크립트를 사용한 로컬 배포](https://docs.nvidia.com/deeplearning/riva/user-guide/docs/quick-start-guide.html#local-deployment-using-quick-start-scripts)에 대한 Riva 빠른 시작 설정 지침을 따르십시오.
+
+## 4. 실행 가능 항목 가져오기 및 검사
+RivaASR 및 RivaTTS 실행 가능 항목을 가져오고 해당 스키마를 검사하여 필드를 이해합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RivaASR", "source": "langchain_community.utilities.nvidia_riva", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.nvidia_riva.RivaASR.html", "title": "NVIDIA Riva: ASR and TTS"}, {"imported": "RivaTTS", "source": "langchain_community.utilities.nvidia_riva", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.nvidia_riva.RivaTTS.html", "title": "NVIDIA Riva: ASR and TTS"}]-->
@@ -145,12 +150,14 @@ from langchain_community.utilities.nvidia_riva import (
 )
 ```
 
-Let's view the schemas.
+
+스키마를 봅시다.
 
 ```python
 print(json.dumps(RivaASR.schema(), indent=2))
 print(json.dumps(RivaTTS.schema(), indent=2))
 ```
+
 ```output
 {
   "title": "RivaASR",
@@ -338,16 +345,17 @@ print(json.dumps(RivaTTS.schema(), indent=2))
   }
 }
 ```
-## 5. Declare Riva ASR and Riva TTS Runnables
 
-For this example, a single-channel audio file (mulaw format, so `.wav`) is used.
+## 5. Riva ASR 및 Riva TTS 실행 가능 항목 선언
 
-You will need a Riva speech server setup, so if you don't have a Riva speech server, go to [Setup](#3-setup).
+이 예제에서는 단일 채널 오디오 파일(멀라우 형식, 즉 `.wav`)을 사용합니다.
 
-### a. Set Audio Parameters
-Some parameters of audio can be inferred by the mulaw file, but others are set explicitly.
+Riva 음성 서버 설정이 필요하므로 Riva 음성 서버가 없는 경우 [설정](#3-setup)으로 이동하십시오.
 
-Replace `audio_file` with the path of your audio file.
+### a. 오디오 매개변수 설정
+오디오의 일부 매개변수는 멀라우 파일에서 유추할 수 있지만, 다른 매개변수는 명시적으로 설정됩니다.
+
+`audio_file`을 오디오 파일의 경로로 교체하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "RivaAudioEncoding", "source": "langchain_community.utilities.nvidia_riva", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.nvidia_riva.RivaAudioEncoding.html", "title": "NVIDIA Riva: ASR and TTS"}]-->
@@ -365,11 +373,13 @@ delay_time = 1 / 8
 num_channels = wav_file.getnumofchannels()
 ```
 
+
 ```python
 import IPython
 
 IPython.display.Audio(audio_file)
 ```
+
 
 ```html
 
@@ -380,11 +390,12 @@ IPython.display.Audio(audio_file)
  
 ```
 
-### b. Set the Speech Server and Declare Riva LangChain Runnables
 
-Be sure to set `RIVA_SPEECH_URL` to be the URI of your Riva speech server.
+### b. 음성 서버 설정 및 Riva LangChain 실행 가능 항목 선언
 
-The runnables act as clients to the speech server. Many of the fields set in this example are configured based on the sample audio data. 
+`RIVA_SPEECH_URL`을 Riva 음성 서버의 URI로 설정해야 합니다.
+
+실행 가능 항목은 음성 서버의 클라이언트 역할을 합니다. 이 예제에서 설정된 많은 필드는 샘플 오디오 데이터를 기반으로 구성됩니다.
 
 ```python
 RIVA_SPEECH_URL = "http://localhost:50051/"
@@ -407,20 +418,22 @@ riva_tts = RivaTTS(
 )
 ```
 
-## 6. Create Additional Chain Components
-As usual, declare the other parts of the chain. In this case, it's just a prompt template and an LLM.
 
-You can use any [LangChain compatible LLM](https://python.langchain.com/v0.1/docs/integrations/llms/) in the chain. In this example, we use a [Mixtral8x7b NIM from NVIDIA](https://python.langchain.com/v0.2/docs/integrations/chat/nvidia_ai_endpoints/). NVIDIA NIMs are supported in LangChain via the `langchain-nvidia-ai-endpoints` package, so you can easily build applications with best in class throughput and latency. 
+## 6. 추가 체인 구성 요소 생성
+일반적으로 체인의 다른 부분을 선언합니다. 이 경우 프롬프트 템플릿과 LLM만 있습니다.
 
-LangChain compatible NVIDIA LLMs from [NVIDIA AI Foundation Endpoints](https://www.nvidia.com/en-us/ai-data-science/foundation-models/) can also be used by following these [instructions](https://python.langchain.com/docs/integrations/chat/nvidia_ai_endpoints). 
+체인에서 사용할 수 있는 [LangChain 호환 LLM](https://python.langchain.com/v0.1/docs/integrations/llms/)을 사용할 수 있습니다. 이 예제에서는 [NVIDIA의 Mixtral8x7b NIM](https://python.langchain.com/v0.2/docs/integrations/chat/nvidia_ai_endpoints/)을 사용합니다. NVIDIA NIM은 `langchain-nvidia-ai-endpoints` 패키지를 통해 LangChain에서 지원되므로 최고의 처리량과 대기 시간을 가진 애플리케이션을 쉽게 구축할 수 있습니다.
+
+[NVIDIA AI Foundation Endpoints](https://www.nvidia.com/en-us/ai-data-science/foundation-models/)의 LangChain 호환 NVIDIA LLM도 이러한 [지침](https://python.langchain.com/docs/integrations/chat/nvidia_ai_endpoints)을 따라 사용할 수 있습니다.
 
 ```python
 %pip install --upgrade --quiet langchain-nvidia-ai-endpoints
 ```
 
-Follow the [instructions for LangChain](https://python.langchain.com/v0.2/docs/integrations/chat/nvidia_ai_endpoints/) to use NVIDIA NIM in your speech-enabled LangChain application. 
 
-Set your key for NVIDIA API catalog, where NIMs are hosted for you to try.
+[NVIDIA NIM을 사용하여 음성 지원 LangChain 애플리케이션을 만드는 방법에 대한 지침](https://python.langchain.com/v0.2/docs/integrations/chat/nvidia_ai_endpoints/)을 따르십시오.
+
+NIM이 호스팅되는 NVIDIA API 카탈로그의 키를 설정하십시오.
 
 ```python
 import getpass
@@ -431,7 +444,8 @@ assert nvapi_key.startswith("nvapi-"), f"{nvapi_key[:5]}... is not a valid key"
 os.environ["NVIDIA_API_KEY"] = nvapi_key
 ```
 
-Instantiate LLM.
+
+LLM을 인스턴스화합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "NVIDIA Riva: ASR and TTS"}, {"imported": "ChatNVIDIA", "source": "langchain_nvidia_ai_endpoints", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_nvidia_ai_endpoints.chat_models.ChatNVIDIA.html", "title": "NVIDIA Riva: ASR and TTS"}]-->
@@ -443,18 +457,20 @@ prompt = PromptTemplate.from_template("{user_input}")
 llm = ChatNVIDIA(model="mistralai/mixtral-8x7b-instruct-v0.1")
 ```
 
-Now, tie together all the parts of the chain including RivaASR and RivaTTS.
+
+이제 RivaASR 및 RivaTTS를 포함하여 체인의 모든 부분을 연결합니다.
 
 ```python
 chain = {"user_input": riva_asr} | prompt | llm | riva_tts
 ```
 
-## 7. Run the Chain with Streamed Inputs and Outputs
 
-### a. Mimic Audio Streaming
-To mimic streaming, first convert the processed audio data to iterable chunks of audio bytes. 
+## 7. 스트리밍 입력 및 출력으로 체인 실행
 
-Two functions, `producer` and `consumer`, respectively handle asynchronously passing audio data into the chain and consuming audio data out of the chain.
+### a. 오디오 스트리밍 모방
+스트리밍을 모방하기 위해, 먼저 처리된 오디오 데이터를 반복 가능한 청크의 오디오 바이트로 변환합니다.
+
+두 개의 함수 `producer`와 `consumer`는 각각 체인에 오디오 데이터를 비동기적으로 전달하고 체인에서 오디오 데이터를 소비하는 역할을 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AudioStream", "source": "langchain_community.utilities.nvidia_riva", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.nvidia_riva.AudioStream.html", "title": "NVIDIA Riva: ASR and TTS"}]-->
@@ -507,9 +523,10 @@ await producer_task
 await consumer_task
 ```
 
-## 8. Listen to Voice Response
 
-The audio response is written to `./scratch` and should contain an audio clip that is a response to the input audio.
+## 8. 음성 응답 듣기
+
+오디오 응답은 `./scratch`에 기록되며, 입력 오디오에 대한 응답인 오디오 클립을 포함해야 합니다.
 
 ```python
 import glob
@@ -523,6 +540,7 @@ files = glob.glob(files_path)
 IPython.display.Audio(files[0])
 ```
 
+
 ```html
 
 <audio  controls="controls" >
@@ -532,7 +550,8 @@ IPython.display.Audio(files[0])
  
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

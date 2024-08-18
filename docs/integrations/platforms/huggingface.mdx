@@ -1,133 +1,141 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/platforms/huggingface/
+description: Hugging Face 플랫폼과 관련된 모든 기능 및 설치 방법, 채팅 모델, LLM, 임베딩 모델에 대한 정보를 제공합니다.
 ---
 
-# Hugging Face
+# 허깅 페이스
 
-All functionality related to the [Hugging Face Platform](https://huggingface.co/).
+[허깅 페이스 플랫폼](https://huggingface.co/)과 관련된 모든 기능.
 
-## Installation
+## 설치
 
-Most of the Hugging Face integrations are available in the `langchain-huggingface` package.
+대부분의 허깅 페이스 통합은 `langchain-huggingface` 패키지에서 사용할 수 있습니다.
 
 ```bash
 pip install langchain-huggingface
 ```
 
-## Chat models
 
-### Models from Hugging Face
+## 채팅 모델
 
-We can use the `Hugging Face` LLM classes or directly use the `ChatHuggingFace` class.
+### 허깅 페이스의 모델
 
-See a [usage example](/docs/integrations/chat/huggingface).
+`허깅 페이스` LLM 클래스 또는 `ChatHuggingFace` 클래스를 직접 사용할 수 있습니다.
+
+[사용 예시](/docs/integrations/chat/huggingface)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatHuggingFace", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_huggingface.chat_models.huggingface.ChatHuggingFace.html", "title": "Hugging Face"}]-->
 from langchain_huggingface import ChatHuggingFace
 ```
 
+
 ## LLMs
 
-### Hugging Face Local Pipelines
+### 허깅 페이스 로컬 파이프라인
 
-Hugging Face models can be run locally through the `HuggingFacePipeline` class.
+허깅 페이스 모델은 `HuggingFacePipeline` 클래스를 통해 로컬에서 실행할 수 있습니다.
 
-See a [usage example](/docs/integrations/llms/huggingface_pipelines).
+[사용 예시](/docs/integrations/llms/huggingface_pipelines)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFacePipeline", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "Hugging Face"}]-->
 from langchain_huggingface import HuggingFacePipeline
 ```
 
-## Embedding Models
+
+## 임베딩 모델
 
 ### HuggingFaceEmbeddings
 
-See a [usage example](/docs/integrations/text_embedding/huggingfacehub).
+[사용 예시](/docs/integrations/text_embedding/huggingfacehub)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceEmbeddings", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_huggingface.embeddings.huggingface.HuggingFaceEmbeddings.html", "title": "Hugging Face"}]-->
 from langchain_huggingface import HuggingFaceEmbeddings
 ```
 
+
 ### HuggingFaceInstructEmbeddings
 
-See a [usage example](/docs/integrations/text_embedding/instruct_embeddings).
+[사용 예시](/docs/integrations/text_embedding/instruct_embeddings)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceInstructEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.huggingface.HuggingFaceInstructEmbeddings.html", "title": "Hugging Face"}]-->
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 ```
 
+
 ### HuggingFaceBgeEmbeddings
 
-> [BGE models on the HuggingFace](https://huggingface.co/BAAI/bge-large-en) are [the best open-source embedding models](https://huggingface.co/spaces/mteb/leaderboard).
-BGE model is created by the [Beijing Academy of Artificial Intelligence (BAAI)](https://en.wikipedia.org/wiki/Beijing_Academy_of_Artificial_Intelligence). `BAAI` is a private non-profit organization engaged in AI research and development.
+> [허깅 페이스의 BGE 모델](https://huggingface.co/BAAI/bge-large-en)은 [최고의 오픈 소스 임베딩 모델](https://huggingface.co/spaces/mteb/leaderboard)입니다.
+BGE 모델은 [베이징 인공지능 연구원(BAAI)](https://en.wikipedia.org/wiki/Beijing_Academy_of_Artificial_Intelligence)에서 생성되었습니다. `BAAI`는 AI 연구 및 개발에 종사하는 비영리 민간 기관입니다.
 
-See a [usage example](/docs/integrations/text_embedding/bge_huggingface).
+[사용 예시](/docs/integrations/text_embedding/bge_huggingface)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceBgeEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.huggingface.HuggingFaceBgeEmbeddings.html", "title": "Hugging Face"}]-->
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 ```
 
-### Hugging Face Text Embeddings Inference (TEI)
 
-> [Hugging Face Text Embeddings Inference (TEI)](https://huggingface.co/docs/text-generation-inference/index) is a toolkit for deploying and serving open-source
-text embeddings and sequence classification models. `TEI` enables high-performance extraction for the most popular models,
-including `FlagEmbedding`, `Ember`, `GTE` and `E5`.
+### 허깅 페이스 텍스트 임베딩 추론 (TEI)
 
-We need to install `huggingface-hub` python package.
+> [허깅 페이스 텍스트 임베딩 추론(TEI)](https://huggingface.co/docs/text-generation-inference/index)은 오픈 소스
+텍스트 임베딩 및 시퀀스 분류 모델을 배포하고 제공하기 위한 도구 모음입니다. `TEI`는 `FlagEmbedding`, `Ember`, `GTE` 및 `E5`를 포함한 가장 인기 있는 모델에 대한 고성능 추출을 가능하게 합니다.
+
+`huggingface-hub` 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install huggingface-hub
 ```
 
-See a [usage example](/docs/integrations/text_embedding/text_embeddings_inference).
+
+[사용 예시](/docs/integrations/text_embedding/text_embeddings_inference)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceHubEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.huggingface_hub.HuggingFaceHubEmbeddings.html", "title": "Hugging Face"}]-->
 from langchain_community.embeddings import HuggingFaceHubEmbeddings
 ```
 
-## Document Loaders
 
-### Hugging Face dataset
+## 문서 로더
 
-> [Hugging Face Hub](https://huggingface.co/docs/hub/index) is home to over 75,000
-[datasets](https://huggingface.co/docs/hub/index#datasets) in more than 100 languages
-that can be used for a broad range of tasks across NLP, Computer Vision, and Audio.
-They used for a diverse range of tasks such as translation, automatic speech
-recognition, and image classification.
+### 허깅 페이스 데이터셋
 
-We need to install `datasets` python package.
+> [허깅 페이스 허브](https://huggingface.co/docs/hub/index)는 100개 이상의 언어로 75,000개 이상의
+[데이터셋](https://huggingface.co/docs/hub/index#datasets)을 보유하고 있으며,
+NLP, 컴퓨터 비전 및 오디오 전반에 걸쳐 다양한 작업에 사용할 수 있습니다.
+이들은 번역, 자동 음성 인식 및 이미지 분류와 같은 다양한 작업에 사용됩니다.
+
+`datasets` 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install datasets
 ```
 
-See a [usage example](/docs/integrations/document_loaders/hugging_face_dataset).
+
+[사용 예시](/docs/integrations/document_loaders/hugging_face_dataset)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFaceDatasetLoader", "source": "langchain_community.document_loaders.hugging_face_dataset", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.hugging_face_dataset.HuggingFaceDatasetLoader.html", "title": "Hugging Face"}]-->
 from langchain_community.document_loaders.hugging_face_dataset import HuggingFaceDatasetLoader
 ```
 
-## Tools
 
-### Hugging Face Hub Tools
+## 도구
 
-> [Hugging Face Tools](https://huggingface.co/docs/transformers/v4.29.0/en/custom_tools)
-support text I/O and are loaded using the `load_huggingface_tool` function.
+### 허깅 페이스 허브 도구
 
-We need to install several python packages.
+> [허깅 페이스 도구](https://huggingface.co/docs/transformers/v4.29.0/en/custom_tools)는 텍스트 I/O를 지원하며 `load_huggingface_tool` 함수를 사용하여 로드됩니다.
+
+여러 개의 파이썬 패키지를 설치해야 합니다.
 
 ```bash
 pip install transformers huggingface_hub
 ```
 
-See a [usage example](/docs/integrations/tools/huggingface_tools).
+
+[사용 예시](/docs/integrations/tools/huggingface_tools)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "load_huggingface_tool", "source": "langchain_community.agent_toolkits.load_tools", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_huggingface_tool.html", "title": "Hugging Face"}]-->

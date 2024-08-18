@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/query_few_shot/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/query_few_shot.ipynb
+description: 쿼리 분석을 개선하기 위해 LangChain YouTube 비디오 쿼리 분석기에 예제를 추가하는 방법을 설명합니다.
 sidebar_position: 2
 ---
 
-# How to add examples to the prompt for query analysis
+# 쿼리 분석을 위한 프롬프트에 예제 추가하는 방법
 
-As our query analysis becomes more complex, the LLM may struggle to understand how exactly it should respond in certain scenarios. In order to improve performance here, we can add examples to the prompt to guide the LLM.
+쿼리 분석이 복잡해짐에 따라 LLM은 특정 시나리오에서 어떻게 응답해야 하는지 이해하는 데 어려움을 겪을 수 있습니다. 여기서 성능을 개선하기 위해 LLM을 안내하는 예제를 프롬프트에 추가할 수 있습니다.
 
-Let's take a look at how we can add examples for the LangChain YouTube video query analyzer we built in the [Quickstart](/docs/tutorials/query_analysis).
+우리가 [Quickstart](/docs/tutorials/query_analysis)에서 구축한 LangChain YouTube 비디오 쿼리 분석기를 위한 예제를 추가하는 방법을 살펴보겠습니다.
 
-## Setup
-#### Install dependencies
+## 설정
+#### 종속성 설치
 
 ```python
 # %pip install -qU langchain-core langchain-openai
 ```
 
-#### Set environment variables
 
-We'll use OpenAI in this example:
+#### 환경 변수 설정
+
+이번 예제에서는 OpenAI를 사용할 것입니다:
 
 ```python
 import getpass
@@ -32,9 +33,10 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 ```
 
-## Query schema
 
-We'll define a query schema that we want our model to output. To make our query analysis a bit more interesting, we'll add a `sub_queries` field that contains more narrow questions derived from the top level question.
+## 쿼리 스키마
+
+모델이 출력하기를 원하는 쿼리 스키마를 정의할 것입니다. 쿼리 분석을 좀 더 흥미롭게 만들기 위해, 최상위 질문에서 파생된 더 좁은 질문을 포함하는 `sub_queries` 필드를 추가할 것입니다.
 
 ```python
 from typing import List, Optional
@@ -63,7 +65,8 @@ class Search(BaseModel):
     publish_year: Optional[int] = Field(None, description="Year video was published")
 ```
 
-## Query generation
+
+## 쿼리 생성
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add examples to the prompt for query analysis"}]-->
@@ -89,7 +92,8 @@ structured_llm = llm.with_structured_output(Search)
 query_analyzer = {"question": RunnablePassthrough()} | prompt | structured_llm
 ```
 
-Let's try out our query analyzer without any examples in the prompt:
+
+프롬프트에 예제 없이 쿼리 분석기를 시도해 보겠습니다:
 
 ```python
 query_analyzer.invoke(
@@ -97,19 +101,22 @@ query_analyzer.invoke(
 )
 ```
 
+
 ```output
 Search(query='web voyager vs reflection agents', sub_queries=['difference between web voyager and reflection agents', 'do web voyager and reflection agents use langgraph'], publish_year=None)
 ```
 
-## Adding examples and tuning the prompt
 
-This works pretty well, but we probably want it to decompose the question even further to separate the queries about Web Voyager and Reflection Agents.
+## 예제 추가 및 프롬프트 조정
 
-To tune our query generation results, we can add some examples of inputs questions and gold standard output queries to our prompt.
+이것은 꽤 잘 작동하지만, 아마도 웹 탐색기와 반사 에이전트에 대한 쿼리를 분리하기 위해 질문을 더 세분화하기를 원할 것입니다.
+
+쿼리 생성 결과를 조정하기 위해, 프롬프트에 입력 질문과 금 표준 출력 쿼리의 몇 가지 예제를 추가할 수 있습니다.
 
 ```python
 examples = []
 ```
+
 
 ```python
 question = "What's chat langchain, is it a langchain template?"
@@ -119,6 +126,7 @@ query = Search(
 )
 examples.append({"input": question, "tool_calls": [query]})
 ```
+
 
 ```python
 question = "How to build multi-agent system and stream intermediate steps from it"
@@ -134,6 +142,7 @@ query = Search(
 examples.append({"input": question, "tool_calls": [query]})
 ```
 
+
 ```python
 question = "LangChain agents vs LangGraph?"
 query = Search(
@@ -148,7 +157,8 @@ query = Search(
 examples.append({"input": question, "tool_calls": [query]})
 ```
 
-Now we need to update our prompt template and chain so that the examples are included in each prompt. Since we're working with OpenAI function-calling, we'll need to do a bit of extra structuring to send example inputs and outputs to the model. We'll create a `tool_example_to_messages` helper function to handle this for us:
+
+이제 각 프롬프트에 예제가 포함되도록 프롬프트 템플릿과 체인을 업데이트해야 합니다. OpenAI 함수 호출을 사용하고 있으므로, 모델에 예제 입력 및 출력을 전송하기 위해 약간의 추가 구조가 필요합니다. 이를 처리하기 위해 `tool_example_to_messages` 도우미 함수를 생성할 것입니다:
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "BaseMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.base.BaseMessage.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "How to add examples to the prompt for query analysis"}, {"imported": "ToolMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessage.html", "title": "How to add examples to the prompt for query analysis"}]-->
@@ -192,6 +202,7 @@ def tool_example_to_messages(example: Dict) -> List[BaseMessage]:
 example_msgs = [msg for ex in examples for msg in tool_example_to_messages(ex)]
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add examples to the prompt for query analysis"}]-->
 from langchain_core.prompts import MessagesPlaceholder
@@ -203,16 +214,19 @@ query_analyzer_with_examples = (
 )
 ```
 
+
 ```python
 query_analyzer_with_examples.invoke(
     "what's the difference between web voyager and reflection agents? do both use langgraph?"
 )
 ```
 
+
 ```output
 Search(query='Difference between web voyager and reflection agents, do they both use LangGraph?', sub_queries=['What is Web Voyager', 'What are Reflection agents', 'Do Web Voyager and Reflection agents use LangGraph'], publish_year=None)
 ```
 
-Thanks to our examples we get a slightly more decomposed search query. With some more prompt engineering and tuning of our examples we could improve query generation even more.
 
-You can see that the examples are passed to the model as messages in the [LangSmith trace](https://smith.langchain.com/public/aeaaafce-d2b1-4943-9a61-bc954e8fc6f2/r).
+예제 덕분에 우리는 약간 더 세분화된 검색 쿼리를 얻습니다. 더 많은 프롬프트 엔지니어링과 예제 조정을 통해 쿼리 생성을 더욱 개선할 수 있습니다.
+
+예제가 [LangSmith trace](https://smith.langchain.com/public/aeaaafce-d2b1-4943-9a61-bc954e8fc6f2/r)에서 메시지로 모델에 전달되는 것을 볼 수 있습니다.

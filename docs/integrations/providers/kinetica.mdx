@@ -1,51 +1,49 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/kinetica/
+description: Kinetica는 시계열 및 공간 데이터에 대한 분석과 생성 AI를 지원하는 실시간 데이터베이스입니다.
 ---
 
 # Kinetica
 
-[Kinetica](https://www.kinetica.com/) is a real-time database purpose built for enabling
-analytics and generative AI on time-series & spatial data.
+[Kinetica](https://www.kinetica.com/)는 시계열 및 공간 데이터에 대한 분석 및 생성 AI를 가능하게 하기 위해 특별히 제작된 실시간 데이터베이스입니다.
 
 ## Chat Model
 
-The Kinetica LLM wrapper uses the [Kinetica SqlAssist
-LLM](https://docs.kinetica.com/7.2/sql-gpt/concepts/) to transform natural language into
-SQL to simplify the process of data retrieval.
+Kinetica LLM 래퍼는 자연어를 SQL로 변환하여 데이터 검색 프로세스를 단순화하기 위해 [Kinetica SqlAssist LLM](https://docs.kinetica.com/7.2/sql-gpt/concepts/)을 사용합니다.
 
-See [Kinetica Language To SQL Chat Model](/docs/integrations/chat/kinetica) for usage.
+사용법은 [Kinetica Language To SQL Chat Model](/docs/integrations/chat/kinetica)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatKinetica", "source": "langchain_community.chat_models.kinetica", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.kinetica.ChatKinetica.html", "title": "Kinetica"}]-->
 from langchain_community.chat_models.kinetica import ChatKinetica
 ```
 
+
 ## Vector Store
 
-The Kinetca vectorstore wrapper leverages Kinetica's native support for [vector
-similarity search](https://docs.kinetica.com/7.2/vector_search/).
+Kinetica 벡터스토어 래퍼는 Kinetica의 [벡터 유사성 검색](https://docs.kinetica.com/7.2/vector_search/)에 대한 기본 지원을 활용합니다.
 
-See [Kinetica Vectorsore API](/docs/integrations/vectorstores/kinetica) for usage.
+사용법은 [Kinetica Vectorsore API](/docs/integrations/vectorstores/kinetica)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "Kinetica", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.kinetica.Kinetica.html", "title": "Kinetica"}]-->
 from langchain_community.vectorstores import Kinetica
 ```
 
+
 ## Document Loader
 
-The Kinetica Document loader can be used to load LangChain Documents from the
-Kinetica database.
+Kinetica 문서 로더는 Kinetica 데이터베이스에서 LangChain 문서를 로드하는 데 사용할 수 있습니다.
 
-See [Kinetica Document Loader](/docs/integrations/document_loaders/kinetica) for usage
+사용법은 [Kinetica Document Loader](/docs/integrations/document_loaders/kinetica)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "KineticaLoader", "source": "langchain_community.document_loaders.kinetica_loader", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.kinetica_loader.KineticaLoader.html", "title": "Kinetica"}]-->
 from langchain_community.document_loaders.kinetica_loader import KineticaLoader
 ```
 
+
 ## Retriever
 
-The Kinetica Retriever can return documents given an unstructured query.
+Kinetica 리트리버는 비구조적 쿼리를 기반으로 문서를 반환할 수 있습니다.
 
-See [Kinetica VectorStore based Retriever](/docs/integrations/retrievers/kinetica) for usage
+사용법은 [Kinetica VectorStore based Retriever](/docs/integrations/retrievers/kinetica)를 참조하세요.

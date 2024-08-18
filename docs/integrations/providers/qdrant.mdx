@@ -1,30 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/qdrant/
+description: Qdrant는 벡터 유사성 검색 엔진으로, API를 통해 벡터 저장, 검색 및 관리 기능을 제공합니다. 확장된 필터링 지원이
+  특징입니다.
 ---
 
 # Qdrant
 
-> [Qdrant](https://qdrant.tech/documentation/) (read: quadrant) is a vector similarity search engine.
-It provides a production-ready service with a convenient API to store, search, and manage
-points - vectors with an additional payload. `Qdrant` is tailored to extended filtering support.
+> [Qdrant](https://qdrant.tech/documentation/) (읽기: 쿼드런트)는 벡터 유사성 검색 엔진입니다.  
+생산 준비가 완료된 서비스와 함께 포인트 - 추가 페이로드가 있는 벡터를 저장, 검색 및 관리할 수 있는 편리한 API를 제공합니다. `Qdrant`는 확장된 필터링 지원에 맞춰 조정되었습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the Python partner package:
+Python 파트너 패키지를 설치하세요:
 
 ```bash
 pip install langchain-qdrant
 ```
 
-## Vector Store
 
-There exists a wrapper around `Qdrant` indexes, allowing you to use it as a vectorstore,
-whether for semantic search or example selection.
+## 벡터 저장소
 
-To import this vectorstore:
+`Qdrant` 인덱스를 감싸는 래퍼가 존재하여, 의미 검색이나 예제 선택을 위해 벡터 저장소로 사용할 수 있습니다.
+
+이 벡터 저장소를 가져오려면:
 ```python
 <!--IMPORTS:[{"imported": "QdrantVectorStore", "source": "langchain_qdrant", "docs": "https://api.python.langchain.com/en/latest/qdrant/langchain_qdrant.qdrant.QdrantVectorStore.html", "title": "Qdrant"}]-->
 from langchain_qdrant import QdrantVectorStore
 ```
 
-For a more detailed walkthrough of the Qdrant wrapper, see [this notebook](/docs/integrations/vectorstores/qdrant)
+
+Qdrant 래퍼에 대한 더 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/qdrant)을 참조하세요.

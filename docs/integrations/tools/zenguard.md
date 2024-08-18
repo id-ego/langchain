@@ -1,53 +1,56 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/zenguard/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/zenguard.ipynb
+description: ZenGuard AI는 Langchain 애플리케이션에서 GenAI를 보호하기 위한 초고속 가드레일을 제공합니다. 안전한 사용을
+  위한 다양한 기능을 포함합니다.
 ---
 
 # ZenGuard AI
 
 <a href="https://colab.research.google.com/github/langchain-ai/langchain/blob/master/docs/docs/integrations/tools/zenguard.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab" /></a>
 
-This tool lets you quickly set up [ZenGuard AI](https://www.zenguard.ai/) in your Langchain-powered application. The ZenGuard AI provides ultrafast guardrails to protect your GenAI application from:
+이 도구는 Langchain 기반 애플리케이션에서 [ZenGuard AI](https://www.zenguard.ai/)를 신속하게 설정할 수 있게 해줍니다. ZenGuard AI는 다음으로부터 GenAI 애플리케이션을 보호하는 초고속 가드레일을 제공합니다:
 
-- Prompts Attacks
-- Veering of the pre-defined topics
-- PII, sensitive info, and keywords leakage.
-- Toxicity
-- Etc.
+- 프롬프트 공격
+- 미리 정의된 주제에서 벗어나는 것
+- PII, 민감한 정보 및 키워드 유출
+- 독성
+- 기타
 
-Please, also check out our [open-source Python Client](https://github.com/ZenGuard-AI/fast-llm-security-guardrails?tab=readme-ov-file) for more inspiration.
+더 많은 영감을 얻기 위해 [오픈 소스 Python 클라이언트](https://github.com/ZenGuard-AI/fast-llm-security-guardrails?tab=readme-ov-file)도 확인해 주세요.
 
-Here is our main website - https://www.zenguard.ai/
+여기 우리의 주요 웹사이트가 있습니다 - https://www.zenguard.ai/
 
-More [Docs](https://docs.zenguard.ai/start/intro/)
+더 많은 [문서](https://docs.zenguard.ai/start/intro/)
 
-## Installation
+## 설치
 
-Using pip:
+pip 사용:
 
 ```python
 pip install langchain-community
 ```
 
-## Prerequisites
 
-Generate an API Key:
+## 전제 조건
 
-1. Navigate to the [Settings](https://console.zenguard.ai/settings)
-2. Click on the `+ Create new secret key`.
-3. Name the key `Quickstart Key`.
-4. Click on the `Add` button.
-5. Copy the key value by pressing on the copy icon.
+API 키 생성:
 
-## Code Usage
+1. [설정](https://console.zenguard.ai/settings)으로 이동합니다.
+2. `+ 새 비밀 키 생성`을 클릭합니다.
+3. 키 이름을 `Quickstart Key`로 지정합니다.
+4. `추가` 버튼을 클릭합니다.
+5. 복사 아이콘을 눌러 키 값을 복사합니다.
 
-Instantiate the pack with the API Key
+## 코드 사용
 
-paste your api key into env ZENGUARD_API_KEY
+API 키로 패키지 인스턴스화
+
+env ZENGUARD_API_KEY에 API 키를 붙여넣습니다.
 
 ```python
 %set_env ZENGUARD_API_KEY=your_api_key
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ZenGuardTool", "source": "langchain_community.tools.zenguard", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.zenguard.tool.ZenGuardTool.html", "title": "ZenGuard AI"}]-->
@@ -56,7 +59,8 @@ from langchain_community.tools.zenguard import ZenGuardTool
 tool = ZenGuardTool()
 ```
 
-### Detect Prompt Injection
+
+### 프롬프트 주입 감지
 
 ```python
 <!--IMPORTS:[{"imported": "Detector", "source": "langchain_community.tools.zenguard", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.zenguard.tool.Detector.html", "title": "ZenGuard AI"}]-->
@@ -71,27 +75,28 @@ else:
     print("No prompt injection detected: carry on with the LLM of your choice.")
 ```
 
-* `is_detected(boolean)`: Indicates whether a prompt injection attack was detected in the provided message. In this example, it is False.
-* `score(float: 0.0 - 1.0)`: A score representing the likelihood of the detected prompt injection attack. In this example, it is 0.0.
-* `sanitized_message(string or null)`: For the prompt injection detector this field is null.
-* `latency(float or null)`: Time in milliseconds during which the detection was performed
 
-**Error Codes:**
+* `is_detected(boolean)`: 제공된 메시지에서 프롬프트 주입 공격이 감지되었는지 여부를 나타냅니다. 이 예에서는 False입니다.
+* `score(float: 0.0 - 1.0)`: 감지된 프롬프트 주입 공격의 가능성을 나타내는 점수입니다. 이 예에서는 0.0입니다.
+* `sanitized_message(string or null)`: 프롬프트 주입 감지기에서 이 필드는 null입니다.
+* `latency(float or null)`: 감지가 수행된 시간(밀리초)
 
-* `401 Unauthorized`: API key is missing or invalid.
-* `400 Bad Request`: The request body is malformed.
-* `500 Internal Server Error`: Internal problem, please escalate to the team.
+**오류 코드:**
 
-### More examples
+* `401 Unauthorized`: API 키가 없거나 유효하지 않습니다.
+* `400 Bad Request`: 요청 본문이 잘못되었습니다.
+* `500 Internal Server Error`: 내부 문제, 팀에 에스컬레이션 해주세요.
 
-* [Detect PII](https://docs.zenguard.ai/detectors/pii/)
-* [Detect Allowed Topics](https://docs.zenguard.ai/detectors/allowed-topics/)
-* [Detect Banned Topics](https://docs.zenguard.ai/detectors/banned-topics/)
-* [Detect Keywords](https://docs.zenguard.ai/detectors/keywords/)
-* [Detect Secrets](https://docs.zenguard.ai/detectors/secrets/)
-* [Detect Toxicity](https://docs.zenguard.ai/detectors/toxicity/)
+### 더 많은 예시
 
-## Related
+* [PII 감지](https://docs.zenguard.ai/detectors/pii/)
+* [허용된 주제 감지](https://docs.zenguard.ai/detectors/allowed-topics/)
+* [금지된 주제 감지](https://docs.zenguard.ai/detectors/banned-topics/)
+* [키워드 감지](https://docs.zenguard.ai/detectors/keywords/)
+* [비밀 감지](https://docs.zenguard.ai/detectors/secrets/)
+* [독성 감지](https://docs.zenguard.ai/detectors/toxicity/)
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

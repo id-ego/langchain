@@ -1,15 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/output_parser_fixing/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/output_parser_fixing.ipynb
+description: 이 문서는 출력 수정 파서를 사용하여 형식 오류를 수정하는 방법과 Pydantic 출력 파서의 활용 예제를 설명합니다.
 ---
 
-# How to use the output-fixing parser
+# 출력 수정 파서를 사용하는 방법
 
-This output parser wraps another output parser, and in the event that the first one fails it calls out to another LLM to fix any errors.
+이 출력 파서는 다른 출력 파서를 감싸고, 첫 번째 파서가 실패할 경우 다른 LLM을 호출하여 오류를 수정합니다.
 
-But we can do other things besides throw errors. Specifically, we can pass the misformatted output, along with the formatted instructions, to the model and ask it to fix it.
+하지만 우리는 오류를 던지는 것 외에도 다른 작업을 수행할 수 있습니다. 구체적으로, 잘못 형식화된 출력과 형식화된 지침을 모델에 전달하고 수정하도록 요청할 수 있습니다.
 
-For this example, we'll use the above Pydantic output parser. Here's what happens if we pass it a result that does not comply with the schema:
+이 예제에서는 위의 Pydantic 출력 파서를 사용할 것입니다. 스키마를 준수하지 않는 결과를 전달하면 다음과 같은 일이 발생합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html", "title": "How to use the output-fixing parser"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use the output-fixing parser"}]-->
@@ -19,6 +19,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_openai import ChatOpenAI
 ```
+
 
 ```python
 class Actor(BaseModel):
@@ -31,13 +32,16 @@ actor_query = "Generate the filmography for a random actor."
 parser = PydanticOutputParser(pydantic_object=Actor)
 ```
 
+
 ```python
 misformatted = "{'name': 'Tom Hanks', 'film_names': ['Forrest Gump']}"
 ```
 
+
 ```python
 parser.parse(misformatted)
 ```
+
 
 ```output
 ---------------------------------------------------------------------------
@@ -84,7 +88,8 @@ File ~/workplace/langchain/libs/langchain/langchain/output_parsers/pydantic.py:3
 OutputParserException: Failed to parse Actor from completion {'name': 'Tom Hanks', 'film_names': ['Forrest Gump']}. Got: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
 ```
 
-Now we can construct and use a `OutputFixingParser`. This output parser takes as an argument another output parser but also an LLM with which to try to correct any formatting mistakes.
+
+이제 `OutputFixingParser`를 구성하고 사용할 수 있습니다. 이 출력 파서는 다른 출력 파서를 인수로 받지만 형식 오류를 수정하기 위해 시도할 LLM도 포함합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OutputFixingParser", "source": "langchain.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.fix.OutputFixingParser.html", "title": "How to use the output-fixing parser"}]-->
@@ -93,12 +98,15 @@ from langchain.output_parsers import OutputFixingParser
 new_parser = OutputFixingParser.from_llm(parser=parser, llm=ChatOpenAI())
 ```
 
+
 ```python
 new_parser.parse(misformatted)
 ```
+
 
 ```output
 Actor(name='Tom Hanks', film_names=['Forrest Gump'])
 ```
 
-Find out api documentation for [OutputFixingParser](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.fix.OutputFixingParser.html#langchain.output_parsers.fix.OutputFixingParser).
+
+[OutputFixingParser](https://api.python.langchain.com/en/latest/output_parsers/langchain.output_parsers.fix.OutputFixingParser.html#langchain.output_parsers.fix.OutputFixingParser)의 API 문서를 확인하세요.

@@ -1,22 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/bageldb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/bageldb.ipynb
+description: BagelDB는 AI 데이터의 협업 플랫폼으로, 사용자가 벡터 데이터셋을 생성, 공유 및 관리할 수 있도록 지원합니다.
 ---
 
 # BagelDB
 
-> [BagelDB](https://www.bageldb.ai/) (`Open Vector Database for AI`), is like GitHub for AI data.
-It is a collaborative platform where users can create,
-share, and manage vector datasets. It can support private projects for independent developers,
-internal collaborations for enterprises, and public contributions for data DAOs.
+> [BagelDB](https://www.bageldb.ai/) (`AI를 위한 오픈 벡터 데이터베이스`)는 AI 데이터의 GitHub와 같습니다.
+사용자들이 벡터 데이터셋을 생성하고, 공유하며, 관리할 수 있는 협업 플랫폼입니다. 독립 개발자를 위한 개인 프로젝트, 기업의 내부 협업, 데이터 DAO를 위한 공개 기여를 지원할 수 있습니다.
 
-### Installation and Setup
+### 설치 및 설정
 
 ```bash
 pip install betabageldb langchain-community
 ```
 
-## Create VectorStore from texts
+
+## 텍스트에서 VectorStore 생성
 
 ```python
 <!--IMPORTS:[{"imported": "Bagel", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.bagel.Bagel.html", "title": "BagelDB"}]-->
@@ -27,10 +26,12 @@ texts = ["hello bagel", "hello langchain", "I love salad", "my car", "a dog"]
 cluster = Bagel.from_texts(cluster_name="testing", texts=texts)
 ```
 
+
 ```python
 # similarity search
 cluster.similarity_search("bagel", k=3)
 ```
+
 
 ```output
 [Document(page_content='hello bagel', metadata={}),
@@ -38,10 +39,12 @@ cluster.similarity_search("bagel", k=3)
  Document(page_content='I love salad', metadata={})]
 ```
 
+
 ```python
 # the score is a distance metric, so lower is better
 cluster.similarity_search_with_score("bagel", k=3)
 ```
+
 
 ```output
 [(Document(page_content='hello bagel', metadata={}), 0.27392977476119995),
@@ -49,12 +52,14 @@ cluster.similarity_search_with_score("bagel", k=3)
  (Document(page_content='I love salad', metadata={}), 1.5342965126037598)]
 ```
 
+
 ```python
 # delete the cluster
 cluster.delete_cluster()
 ```
 
-## Create VectorStore from docs
+
+## 문서에서 VectorStore 생성
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "BagelDB"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "BagelDB"}]-->
@@ -67,10 +72,12 @@ text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 docs = text_splitter.split_documents(documents)[:10]
 ```
 
+
 ```python
 # create cluster with docs
 cluster = Bagel.from_documents(cluster_name="testing_with_docs", documents=docs)
 ```
+
 
 ```python
 # similarity search
@@ -78,10 +85,12 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = cluster.similarity_search(query)
 print(docs[0].page_content[:102])
 ```
+
 ```output
 Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the
 ```
-## Get all text/doc from Cluster
+
+## 클러스터에서 모든 텍스트/문서 가져오기
 
 ```python
 texts = ["hello bagel", "this is langchain"]
@@ -89,19 +98,23 @@ cluster = Bagel.from_texts(cluster_name="testing", texts=texts)
 cluster_data = cluster.get()
 ```
 
+
 ```python
 # all keys
 cluster_data.keys()
 ```
 
+
 ```output
 dict_keys(['ids', 'embeddings', 'metadatas', 'documents'])
 ```
+
 
 ```python
 # all values and keys
 cluster_data
 ```
+
 
 ```output
 {'ids': ['578c6d24-3763-11ee-a8ab-b7b7b34f99ba',
@@ -124,11 +137,13 @@ cluster_data
   'this is langchain']}
 ```
 
+
 ```python
 cluster.delete_cluster()
 ```
 
-## Create cluster with metadata & filter using metadata
+
+## 메타데이터로 클러스터 생성 및 메타데이터를 사용한 필터링
 
 ```python
 texts = ["hello bagel", "this is langchain"]
@@ -138,16 +153,19 @@ cluster = Bagel.from_texts(cluster_name="testing", texts=texts, metadatas=metada
 cluster.similarity_search_with_score("hello bagel", where={"source": "notion"})
 ```
 
+
 ```output
 [(Document(page_content='hello bagel', metadata={'source': 'notion'}), 0.0)]
 ```
+
 
 ```python
 # delete the cluster
 cluster.delete_cluster()
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 스토어 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 스토어 [사용 방법 가이드](/docs/how_to/#vector-stores)

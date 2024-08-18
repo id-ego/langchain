@@ -1,43 +1,45 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/chroma/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/chroma.ipynb
+description: 이 문서는 `Chroma` 벡터 저장소를 시작하는 방법과 설정, 초기화 과정을 다룹니다. AI-native 오픈소스 데이터베이스에
+  대해 알아보세요.
 ---
 
 # Chroma
 
-This notebook covers how to get started with the `Chroma` vector store.
+이 노트북은 `Chroma` 벡터 저장소를 시작하는 방법을 다룹니다.
 
-> [Chroma](https://docs.trychroma.com/getting-started) is a AI-native open-source vector database focused on developer productivity and happiness. Chroma is licensed under Apache 2.0. View the full docs of `Chroma` at [this page](https://docs.trychroma.com/reference/py-collection), and find the API reference for the LangChain integration at [this page](https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html).
+> [Chroma](https://docs.trychroma.com/getting-started)는 개발자 생산성과 행복에 중점을 둔 AI 네이티브 오픈 소스 벡터 데이터베이스입니다. Chroma는 Apache 2.0 라이센스 하에 배포됩니다. `Chroma`의 전체 문서는 [이 페이지](https://docs.trychroma.com/reference/py-collection)에서 확인할 수 있으며, LangChain 통합에 대한 API 참조는 [이 페이지](https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html)에서 찾을 수 있습니다.
 
-## Setup
+## 설정
 
-To access `Chroma` vector stores you'll need to install the `langchain-chroma` integration package.
+`Chroma` 벡터 저장소에 접근하려면 `langchain-chroma` 통합 패키지를 설치해야 합니다.
 
 ```python
 pip install -qU "langchain-chroma>=0.1.2"
 ```
 
-### Credentials
 
-You can use the `Chroma` vector store without any credentials, simply installing the package above is enough!
+### 자격 증명
 
-If you want to get best in-class automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+자격 증명 없이 `Chroma` 벡터 저장소를 사용할 수 있으며, 위의 패키지를 설치하는 것만으로 충분합니다!
+
+모델 호출에 대한 최상의 자동 추적을 원하신다면 아래의 [LangSmith](https://docs.smith.langchain.com/) API 키를 주석 해제하여 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-## Initialization
 
-### Basic Initialization
+## 초기화
 
-Below is a basic initialization, including the use of a directory to save the data locally.
+### 기본 초기화
+
+아래는 데이터를 로컬에 저장하기 위한 디렉토리 사용을 포함한 기본 초기화입니다.
 
 import EmbeddingTabs from "@theme/EmbeddingTabs";
 
 <EmbeddingTabs/>
-
 
 ```python
 <!--IMPORTS:[{"imported": "Chroma", "source": "langchain_chroma", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html", "title": "Chroma"}]-->
@@ -50,9 +52,10 @@ vector_store = Chroma(
 )
 ```
 
-### Initialization from client
 
-You can also initialize from a `Chroma` client, which is particularly useful if you want easier access to the underlying database.
+### 클라이언트에서 초기화
+
+`Chroma` 클라이언트에서 초기화할 수도 있으며, 이는 기본 데이터베이스에 더 쉽게 접근하고자 할 때 유용합니다.
 
 ```python
 import chromadb
@@ -68,13 +71,14 @@ vector_store_from_client = Chroma(
 )
 ```
 
-## Manage vector store
 
-Once you have created your vector store, we can interact with it by adding and deleting different items.
+## 벡터 저장소 관리
 
-### Add items to vector store
+벡터 저장소를 생성한 후에는 다양한 항목을 추가하고 삭제하여 상호작용할 수 있습니다.
 
-We can add items to our vector store by using the `add_documents` function.
+### 벡터 저장소에 항목 추가
+
+`add_documents` 함수를 사용하여 벡터 저장소에 항목을 추가할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Chroma"}]-->
@@ -159,6 +163,7 @@ uuids = [str(uuid4()) for _ in range(len(documents))]
 vector_store.add_documents(documents=documents, ids=uuids)
 ```
 
+
 ```output
 ['f22ed484-6db3-4b76-adb1-18a777426cd6',
  'e0d5bab4-6453-4511-9a37-023d9d288faa',
@@ -172,9 +177,10 @@ vector_store.add_documents(documents=documents, ids=uuids)
  '3b18e210-bb59-47a0-8e17-c8e51176ea5e']
 ```
 
-### Update items in vector store
 
-Now that we have added documents to our vector store, we can update existing documents by using the `update_documents` function. 
+### 벡터 저장소의 항목 업데이트
+
+벡터 저장소에 문서를 추가한 후, `update_documents` 함수를 사용하여 기존 문서를 업데이트할 수 있습니다.
 
 ```python
 updated_document_1 = Document(
@@ -196,23 +202,25 @@ vector_store.update_documents(
 )
 ```
 
-### Delete items from vector store
 
-We can also delete items from our vector store as follows:
+### 벡터 저장소에서 항목 삭제
+
+다음과 같이 벡터 저장소에서 항목을 삭제할 수 있습니다:
 
 ```python
 vector_store.delete(ids=uuids[-1])
 ```
 
-## Query vector store
 
-Once your vector store has been created and the relevant documents have been added you will most likely wish to query it during the running of your chain or agent. 
+## 벡터 저장소 쿼리
 
-### Query directly
+벡터 저장소가 생성되고 관련 문서가 추가되면 체인이나 에이전트를 실행하는 동안 쿼리하고 싶을 것입니다.
 
-#### Similarity search
+### 직접 쿼리
 
-Performing a simple similarity search can be done as follows:
+#### 유사성 검색
+
+간단한 유사성 검색은 다음과 같이 수행할 수 있습니다:
 
 ```python
 results = vector_store.similarity_search(
@@ -223,13 +231,16 @@ results = vector_store.similarity_search(
 for res in results:
     print(f"* {res.page_content} [{res.metadata}]")
 ```
+
 ```output
 * Building an exciting new project with LangChain - come check it out! [{'source': 'tweet'}]
 * LangGraph is the best framework for building stateful, agentic applications! [{'source': 'tweet'}]
 ```
-#### Similarity search with score
 
-If you want to execute a similarity search and receive the corresponding scores you can run:
+
+#### 점수가 포함된 유사성 검색
+
+유사성 검색을 실행하고 해당 점수를 받으려면 다음을 실행할 수 있습니다:
 
 ```python
 results = vector_store.similarity_search_with_score(
@@ -238,12 +249,15 @@ results = vector_store.similarity_search_with_score(
 for res, score in results:
     print(f"* [SIM={score:3f}] {res.page_content} [{res.metadata}]")
 ```
+
 ```output
 * [SIM=1.726390] The stock market is down 500 points today due to fears of a recession. [{'source': 'news'}]
 ```
-#### Search by vector
 
-You can also search by vector:
+
+#### 벡터로 검색
+
+벡터로 검색할 수도 있습니다:
 
 ```python
 results = vector_store.similarity_search_by_vector(
@@ -252,16 +266,19 @@ results = vector_store.similarity_search_by_vector(
 for doc in results:
     print(f"* {doc.page_content} [{doc.metadata}]")
 ```
+
 ```output
 * I had chocalate chip pancakes and fried eggs for breakfast this morning. [{'source': 'tweet'}]
 ```
-#### Other search methods
 
-There are a variety of other search methods that are not covered in this notebook, such as MMR search or searching by vector. For a full list of the search abilities available for `AstraDBVectorStore` check out the [API reference](https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html).
 
-### Query by turning into retriever
+#### 기타 검색 방법
 
-You can also transform the vector store into a retriever for easier usage in your chains. For more information on the different search types and kwargs you can pass, please visit the API reference [here](https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html#langchain_chroma.vectorstores.Chroma.as_retriever).
+MMR 검색이나 벡터로 검색하는 것과 같이 이 노트북에서 다루지 않는 다양한 다른 검색 방법이 있습니다. `AstraDBVectorStore`에 대한 검색 기능의 전체 목록은 [API 참조](https://api.python.langchain.com/en/latest/vectorstores/langchain_astradb.vectorstores.AstraDBVectorStore.html)에서 확인하세요.
+
+### 검색기로 변환하여 쿼리하기
+
+벡터 저장소를 검색기로 변환하여 체인에서 더 쉽게 사용할 수 있습니다. 다양한 검색 유형 및 전달할 수 있는 kwargs에 대한 자세한 정보는 [여기](https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html#langchain_chroma.vectorstores.Chroma.as_retriever)에서 API 참조를 방문하세요.
 
 ```python
 retriever = vector_store.as_retriever(
@@ -270,23 +287,25 @@ retriever = vector_store.as_retriever(
 retriever.invoke("Stealing from the bank is a crime", filter={"source": "news"})
 ```
 
+
 ```output
 [Document(metadata={'source': 'news'}, page_content='Robbers broke into the city bank and stole $1 million in cash.')]
 ```
 
-## Usage for retrieval-augmented generation
 
-For guides on how to use this vector store for retrieval-augmented generation (RAG), see the following sections:
+## 검색 보강 생성 사용법
 
-- [Tutorials: working with external knowledge](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
-- [How-to: Question and answer with RAG](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
-- [Retrieval conceptual docs](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
+이 벡터 저장소를 검색 보강 생성(RAG)에 사용하는 방법에 대한 가이드는 다음 섹션을 참조하세요:
 
-## API reference
+- [튜토리얼: 외부 지식과 작업하기](https://python.langchain.com/v0.2/docs/tutorials/#working-with-external-knowledge)
+- [방법: RAG를 통한 질문과 답변](https://python.langchain.com/v0.2/docs/how_to/#qa-with-rag)
+- [검색 개념 문서](https://python.langchain.com/v0.2/docs/concepts/#retrieval)
 
-For detailed documentation of all `Chroma` vector store features and configurations head to the API reference: https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html
+## API 참조
 
-## Related
+모든 `Chroma` 벡터 저장소 기능 및 구성에 대한 자세한 문서는 API 참조에서 확인하세요: https://api.python.langchain.com/en/latest/vectorstores/langchain_chroma.vectorstores.Chroma.html
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

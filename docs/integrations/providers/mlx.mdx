@@ -1,35 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/mlx/
+description: MLX는 Apple 실리콘에서 효율적이고 유연한 머신러닝을 위한 NumPy 유사 배열 프레임워크입니다. Apple 머신러닝
+  연구팀이 개발했습니다.
 ---
 
 # MLX
 
-> [MLX](https://ml-explore.github.io/mlx/build/html/index.html) is a `NumPy`-like array framework
-designed for efficient and flexible machine learning on `Apple` silicon,
-brought to you by `Apple machine learning research`.
+> [MLX](https://ml-explore.github.io/mlx/build/html/index.html)는 `Apple` 실리콘에서 효율적이고 유연한 머신 러닝을 위해 설계된 `NumPy`-유사 배열 프레임워크로, `Apple 머신 러닝 연구`에서 제공합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install several Python packages:
+여러 Python 패키지를 설치합니다:
 
 ```bash
 pip install mlx-lm transformers huggingface_hub
 ```
 
-## Chat models
 
-See a [usage example](/docs/integrations/chat/mlx).
+## 챗 모델
+
+[사용 예시](/docs/integrations/chat/mlx)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMLX", "source": "langchain_community.chat_models.mlx", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.mlx.ChatMLX.html", "title": "MLX"}]-->
 from langchain_community.chat_models.mlx import ChatMLX
 ```
 
+
 ## LLMs
 
-### MLX Local Pipelines
+### MLX 로컬 파이프라인
 
-See a [usage example](/docs/integrations/llms/mlx_pipelines).
+[사용 예시](/docs/integrations/llms/mlx_pipelines)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "MLXPipeline", "source": "langchain_community.llms.mlx_pipeline", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.mlx_pipeline.MLXPipeline.html", "title": "MLX"}]-->

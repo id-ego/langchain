@@ -1,94 +1,91 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/introduction/
+description: LangChain은 대형 언어 모델(LLM) 기반 애플리케이션 개발을 위한 프레임워크로, 개발, 운영 및 배포의 모든 단계를
+  간소화합니다.
 sidebar_class_name: hidden
 sidebar_position: 0
 ---
 
-# Introduction
+# 소개
 
-**LangChain** is a framework for developing applications powered by large language models (LLMs).
+**LangChain**은 대형 언어 모델(LLM)로 구동되는 애플리케이션을 개발하기 위한 프레임워크입니다.
 
-LangChain simplifies every stage of the LLM application lifecycle:
-- **Development**: Build your applications using LangChain's open-source [building blocks](/docs/concepts#langchain-expression-language-lcel), [components](/docs/concepts), and [third-party integrations](/docs/integrations/platforms/).
-Use [LangGraph](/docs/concepts/#langgraph) to build stateful agents with first-class streaming and human-in-the-loop support.
-- **Productionization**: Use [LangSmith](https://docs.smith.langchain.com/) to inspect, monitor and evaluate your chains, so that you can continuously optimize and deploy with confidence.
-- **Deployment**: Turn your LangGraph applications into production-ready APIs and Assistants with [LangGraph Cloud](https://langchain-ai.github.io/langgraph/cloud/).
+LangChain은 LLM 애플리케이션 생애 주기의 모든 단계를 간소화합니다:
+- **개발**: LangChain의 오픈 소스 [구성 요소](/docs/concepts#langchain-expression-language-lcel), [컴포넌트](/docs/concepts), 및 [타사 통합](/docs/integrations/platforms/)을 사용하여 애플리케이션을 구축하세요. [LangGraph](/docs/concepts/#langgraph)를 사용하여 1급 스트리밍 및 인간 개입 지원이 있는 상태 저장 에이전트를 구축하세요.
+- **생산화**: [LangSmith](https://docs.smith.langchain.com/)를 사용하여 체인을 검사, 모니터링 및 평가하여 지속적으로 최적화하고 자신 있게 배포할 수 있습니다.
+- **배포**: LangGraph 애플리케이션을 [LangGraph Cloud](https://langchain-ai.github.io/langgraph/cloud/)를 사용하여 생산 준비가 완료된 API 및 어시스턴트로 변환하세요.
 
 import ThemedImage from '@theme/ThemedImage';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 <ThemedImage
-alt="Diagram outlining the hierarchical organization of the LangChain framework, displaying the interconnected parts across multiple layers."
+alt="LangChain 프레임워크의 계층적 조직을 설명하는 다이어그램으로, 여러 레이어에 걸쳐 상호 연결된 부분을 표시합니다."
 sources={{
 light: useBaseUrl('/svg/langchain_stack_062024.svg'),
 dark: useBaseUrl('/svg/langchain_stack_062024_dark.svg'),
 }}
 style={{ width: "100%" }}
-title="LangChain Framework Overview"
+title="LangChain 프레임워크 개요"
 />
 
-Concretely, the framework consists of the following open-source libraries:
+구체적으로, 이 프레임워크는 다음의 오픈 소스 라이브러리로 구성됩니다:
 
-- **`langchain-core`**: Base abstractions and LangChain Expression Language.
-- **`langchain-community`**: Third party integrations.
-  - Partner packages (e.g. **`langchain-openai`**, **`langchain-anthropic`**, etc.): Some integrations have been further split into their own lightweight packages that only depend on **`langchain-core`**.
-- **`langchain`**: Chains, agents, and retrieval strategies that make up an application's cognitive architecture.
-- **[LangGraph](https://langchain-ai.github.io/langgraph)**: Build robust and stateful multi-actor applications with LLMs by modeling steps as edges and nodes in a graph. Integrates smoothly with LangChain, but can be used without it.
-- **[LangServe](/docs/langserve)**: Deploy LangChain chains as REST APIs.
-- **[LangSmith](https://docs.smith.langchain.com)**: A developer platform that lets you debug, test, evaluate, and monitor LLM applications.
+- **`langchain-core`**: 기본 추상화 및 LangChain 표현 언어.
+- **`langchain-community`**: 타사 통합.
+  - 파트너 패키지(예: **`langchain-openai`**, **`langchain-anthropic`** 등): 일부 통합은 **`langchain-core`**에만 의존하는 경량 패키지로 추가 분리되었습니다.
+- **`langchain`**: 애플리케이션의 인지 아키텍처를 구성하는 체인, 에이전트 및 검색 전략.
+- **[LangGraph](https://langchain-ai.github.io/langgraph)**: 단계를 그래프의 엣지와 노드로 모델링하여 LLM으로 강력하고 상태 저장의 다중 행위자 애플리케이션을 구축합니다. LangChain과 원활하게 통합되지만, 없이도 사용할 수 있습니다.
+- **[LangServe](/docs/langserve)**: LangChain 체인을 REST API로 배포합니다.
+- **[LangSmith](https://docs.smith.langchain.com)**: LLM 애플리케이션을 디버그, 테스트, 평가 및 모니터링할 수 있는 개발자 플랫폼입니다.
 
 :::note
 
-These docs focus on the Python LangChain library. [Head here](https://js.langchain.com) for docs on the JavaScript LangChain library.
+이 문서는 Python LangChain 라이브러리에 중점을 두고 있습니다. JavaScript LangChain 라이브러리에 대한 문서는 [여기](https://js.langchain.com)에서 확인하세요.
 
 :::
 
-## [Tutorials](/docs/tutorials)
+## [튜토리얼](/docs/tutorials)
 
-If you're looking to build something specific or are more of a hands-on learner, check out our [tutorials section](/docs/tutorials).
-This is the best place to get started.
+특정한 것을 구축하고 싶거나 실습 학습자라면 [튜토리얼 섹션](/docs/tutorials)을 확인하세요. 시작하기에 가장 좋은 장소입니다.
 
-These are the best ones to get started with:
+시작하기에 가장 좋은 튜토리얼은 다음과 같습니다:
 
-- [Build a Simple LLM Application](/docs/tutorials/llm_chain)
-- [Build a Chatbot](/docs/tutorials/chatbot)
-- [Build an Agent](/docs/tutorials/agents)
-- [Introduction to LangGraph](https://langchain-ai.github.io/langgraph/tutorials/introduction/)
+- [간단한 LLM 애플리케이션 구축하기](/docs/tutorials/llm_chain)
+- [챗봇 구축하기](/docs/tutorials/chatbot)
+- [에이전트 구축하기](/docs/tutorials/agents)
+- [LangGraph 소개](https://langchain-ai.github.io/langgraph/tutorials/introduction/)
 
-Explore the full list of LangChain tutorials [here](/docs/tutorials), and check out other [LangGraph tutorials here](https://langchain-ai.github.io/langgraph/tutorials/).
+LangChain 튜토리얼의 전체 목록은 [여기](/docs/tutorials)에서 확인하고, 다른 [LangGraph 튜토리얼은 여기](https://langchain-ai.github.io/langgraph/tutorials/)에서 확인하세요.
 
-## [How-to guides](/docs/how_to)
+## [사용 방법 가이드](/docs/how_to)
 
-[Here](/docs/how_to) you’ll find short answers to “How do I….?” types of questions.
-These how-to guides don’t cover topics in depth – you’ll find that material in the [Tutorials](/docs/tutorials) and the [API Reference](https://api.python.langchain.com/en/latest/).
-However, these guides will help you quickly accomplish common tasks.
+[여기](/docs/how_to)에서 “어떻게 …?” 유형의 질문에 대한 간단한 답변을 찾을 수 있습니다. 이러한 사용 방법 가이드는 주제를 깊이 있게 다루지 않으며, 해당 자료는 [튜토리얼](/docs/tutorials) 및 [API 참조](https://api.python.langchain.com/en/latest/)에서 찾을 수 있습니다. 그러나 이러한 가이드는 일반적인 작업을 신속하게 수행하는 데 도움이 됩니다.
 
-Check out [LangGraph-specific how-tos here](https://langchain-ai.github.io/langgraph/how-tos/).
+[LangGraph 전용 사용 방법은 여기](https://langchain-ai.github.io/langgraph/how-tos/)에서 확인하세요.
 
-## [Conceptual guide](/docs/concepts)
+## [개념 가이드](/docs/concepts)
 
-Introductions to all the key parts of LangChain you’ll need to know! [Here](/docs/concepts) you'll find high level explanations of all LangChain concepts.
+알아야 할 LangChain의 모든 주요 부분에 대한 소개입니다! [여기](/docs/concepts)에서 모든 LangChain 개념에 대한 높은 수준의 설명을 찾을 수 있습니다.
 
-For a deeper dive into LangGraph concepts, check out [this page](https://langchain-ai.github.io/langgraph/concepts/).
+LangGraph 개념에 대한 더 깊은 탐구는 [이 페이지](https://langchain-ai.github.io/langgraph/concepts/)를 확인하세요.
 
-## [API reference](https://api.python.langchain.com)
-Head to the reference section for full documentation of all classes and methods in the LangChain Python packages.
+## [API 참조](https://api.python.langchain.com)
+LangChain Python 패키지의 모든 클래스 및 메서드에 대한 전체 문서는 참조 섹션에서 확인하세요.
 
-## Ecosystem
+## 생태계
 
 ### [🦜🛠️ LangSmith](https://docs.smith.langchain.com)
-Trace and evaluate your language model applications and intelligent agents to help you move from prototype to production.
+언어 모델 애플리케이션 및 지능형 에이전트를 추적하고 평가하여 프로토타입에서 생산으로 이동하는 데 도움을 줍니다.
 
 ### [🦜🕸️ LangGraph](https://langchain-ai.github.io/langgraph)
-Build stateful, multi-actor applications with LLMs. Integrates smoothly with LangChain, but can be used without it.
+LLM으로 상태 저장의 다중 행위자 애플리케이션을 구축합니다. LangChain과 원활하게 통합되지만, 없이도 사용할 수 있습니다.
 
-## Additional resources
+## 추가 리소스
 
-### [Security](/docs/security)
-Read up on our [Security](/docs/security) best practices to make sure you're developing safely with LangChain.
+### [보안](/docs/security)
+LangChain을 안전하게 개발하기 위한 [보안](/docs/security) 모범 사례를 읽어보세요.
 
-### [Integrations](/docs/integrations/providers/)
-LangChain is part of a rich ecosystem of tools that integrate with our framework and build on top of it. Check out our growing list of [integrations](/docs/integrations/providers/).
+### [통합](/docs/integrations/providers/)
+LangChain은 우리의 프레임워크와 통합되고 그 위에 구축된 도구의 풍부한 생태계의 일부입니다. 성장하는 [통합 목록](/docs/integrations/providers/)을 확인하세요.
 
-### [Contributing](/docs/contributing)
-Check out the developer's guide for guidelines on contributing and help getting your dev environment set up.
+### [기여하기](/docs/contributing)
+기여에 대한 지침과 개발 환경 설정에 대한 도움을 위한 개발자 가이드를 확인하세요.

@@ -1,20 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/analyticdb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/analyticdb.ipynb
+description: AnalyticDB for PostgreSQL는 대량의 데이터를 온라인으로 분석할 수 있는 MPP 데이터 웨어하우스 서비스입니다.
+  고성능 쿼리를 지원합니다.
 ---
 
 # AnalyticDB
 
-> [AnalyticDB for PostgreSQL](https://www.alibabacloud.com/help/en/analyticdb-for-postgresql/latest/product-introduction-overview) is a massively parallel processing (MPP) data warehousing service that is designed to analyze large volumes of data online.
+> [AnalyticDB for PostgreSQL](https://www.alibabacloud.com/help/en/analyticdb-for-postgresql/latest/product-introduction-overview)는 대량의 데이터를 온라인으로 분석하기 위해 설계된 대규모 병렬 처리(MPP) 데이터 웨어하우징 서비스입니다.
 
-> `AnalyticDB for PostgreSQL` is developed based on the open-source `Greenplum Database` project and is enhanced with in-depth extensions by `Alibaba Cloud`. AnalyticDB for PostgreSQL is compatible with the ANSI SQL 2003 syntax and the PostgreSQL and Oracle database ecosystems. AnalyticDB for PostgreSQL also supports row store and column store. AnalyticDB for PostgreSQL processes petabytes of data offline at a high performance level and supports highly concurrent online queries.
+> `AnalyticDB for PostgreSQL`는 오픈 소스 `Greenplum Database` 프로젝트를 기반으로 개발되었으며, `Alibaba Cloud`에 의해 심층적인 확장이 이루어졌습니다. AnalyticDB for PostgreSQL은 ANSI SQL 2003 구문 및 PostgreSQL과 Oracle 데이터베이스 생태계와 호환됩니다. AnalyticDB for PostgreSQL은 행 저장소 및 열 저장소를 지원합니다. AnalyticDB for PostgreSQL은 페타바이트의 데이터를 오프라인에서 높은 성능 수준으로 처리하며, 고도로 동시적인 온라인 쿼리를 지원합니다.
 
-You'll need to install `langchain-community` with `pip install -qU langchain-community` to use this integration
+이 통합을 사용하려면 `pip install -qU langchain-community`로 `langchain-community`를 설치해야 합니다.
 
-This notebook shows how to use functionality related to the `AnalyticDB` vector database.
-To run, you should have an [AnalyticDB](https://www.alibabacloud.com/help/en/analyticdb-for-postgresql/latest/product-introduction-overview) instance up and running:
+이 노트북은 `AnalyticDB` 벡터 데이터베이스와 관련된 기능을 사용하는 방법을 보여줍니다.
+실행하려면 [AnalyticDB](https://www.alibabacloud.com/help/en/analyticdb-for-postgresql/latest/product-introduction-overview) 인스턴스가 실행 중이어야 합니다:
 
-- Using [AnalyticDB Cloud Vector Database](https://www.alibabacloud.com/product/hybriddb-postgresql). Click here to fast deploy it.
+- [AnalyticDB Cloud Vector Database](https://www.alibabacloud.com/product/hybriddb-postgresql)를 사용합니다. 여기를 클릭하여 빠르게 배포하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AnalyticDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.analyticdb.AnalyticDB.html", "title": "AnalyticDB"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "AnalyticDB"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "AnalyticDB"}]-->
@@ -23,7 +24,8 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 ```
 
-Split documents and get embeddings by call OpenAI API
+
+OpenAI API를 호출하여 문서를 분할하고 임베딩을 가져옵니다.
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "AnalyticDB"}]-->
@@ -37,7 +39,8 @@ docs = text_splitter.split_documents(documents)
 embeddings = OpenAIEmbeddings()
 ```
 
-Connect to AnalyticDB by setting related ENVIRONMENTS.
+
+관련 ENVIRONMENTS를 설정하여 AnalyticDB에 연결합니다.
 ```
 export PG_HOST={your_analyticdb_hostname}
 export PG_PORT={your_analyticdb_port} # Optional, default is 5432
@@ -46,7 +49,8 @@ export PG_USER={database_username}
 export PG_PASSWORD={database_password}
 ```
 
-Then store your embeddings and documents into AnalyticDB
+
+그런 다음 임베딩과 문서를 AnalyticDB에 저장합니다.
 
 ```python
 import os
@@ -67,16 +71,19 @@ vector_db = AnalyticDB.from_documents(
 )
 ```
 
-Query and retrieve data
+
+데이터를 쿼리하고 검색합니다.
 
 ```python
 query = "What did the president say about Ketanji Brown Jackson"
 docs = vector_db.similarity_search(query)
 ```
 
+
 ```python
 print(docs[0].page_content)
 ```
+
 ```output
 Tonight. I call on the Senate to: Pass the Freedom to Vote Act. Pass the John Lewis Voting Rights Act. And while you’re at it, pass the Disclose Act so Americans can know who is funding our elections. 
 
@@ -87,7 +94,8 @@ One of the most serious constitutional responsibilities a President has is nomin
 And I did that 4 days ago, when I nominated Circuit Court of Appeals Judge Ketanji Brown Jackson. One of our nation’s top legal minds, who will continue Justice Breyer’s legacy of excellence.
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

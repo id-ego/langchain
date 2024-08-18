@@ -1,21 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/stackexchange/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/stackexchange.ipynb
+description: Stack Exchange는 다양한 주제를 다루는 Q&A 웹사이트 네트워크로, StackOverflow API를 통해 프로그래밍
+  관련 질문과 답변에 접근할 수 있습니다.
 ---
 
 # StackExchange
 
-> [Stack Exchange](https://stackexchange.com/) is a network of question-and-answer (Q&A) websites on topics in diverse fields, each site covering a specific topic, where questions, answers, and users are subject to a reputation award process. The reputation system allows the sites to be self-moderating.
+> [Stack Exchange](https://stackexchange.com/)는 다양한 분야의 주제에 대한 질문과 답변(Q&A) 웹사이트 네트워크로, 각 사이트는 특정 주제를 다루며, 질문, 답변 및 사용자는 평판 보상 프로세스의 대상이 됩니다. 평판 시스템은 사이트가 자율적으로 관리될 수 있도록 합니다.
 
-The `StackExchange` component integrates the StackExchange API into LangChain allowing access to the [StackOverflow](https://stackoverflow.com/) site of the Stack Excchange network. Stack Overflow focuses on computer programming.
+`StackExchange` 구성 요소는 StackExchange API를 LangChain에 통합하여 Stack Excange 네트워크의 [StackOverflow](https://stackoverflow.com/) 사이트에 접근할 수 있게 합니다. Stack Overflow는 컴퓨터 프로그래밍에 중점을 둡니다.
 
-This notebook goes over how to use the `StackExchange` component.
+이 노트북은 `StackExchange` 구성 요소를 사용하는 방법을 설명합니다.
 
-We first have to install the python package stackapi which implements the Stack Exchange API.
+먼저 Stack Exchange API를 구현하는 python 패키지 stackapi를 설치해야 합니다.
 
 ```python
 pip install --upgrade stackapi
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "StackExchangeAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.stackexchange.StackExchangeAPIWrapper.html", "title": "StackExchange"}]-->
@@ -26,7 +28,8 @@ stackexchange = StackExchangeAPIWrapper()
 stackexchange.run("zsh: command not found: python")
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

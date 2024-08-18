@@ -1,36 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/memory/google_sql_mysql/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/memory/google_sql_mysql.ipynb
+description: Google Cloud SQL for MySQL을 사용하여 채팅 메시지 기록을 저장하는 방법을 설명하는 노트북입니다. Langchain
+  통합을 활용하세요.
 ---
 
 # Google SQL for MySQL
 
-> [Cloud Cloud SQL](https://cloud.google.com/sql) is a fully managed relational database service that offers high performance, seamless integration, and impressive scalability. It offers `MySQL`, `PostgreSQL`, and `SQL Server` database engines. Extend your database application to build AI-powered experiences leveraging Cloud SQL's Langchain integrations.
+> [Cloud Cloud SQL](https://cloud.google.com/sql)는 높은 성능, 원활한 통합 및 인상적인 확장성을 제공하는 완전 관리형 관계형 데이터베이스 서비스입니다. `MySQL`, `PostgreSQL`, 및 `SQL Server` 데이터베이스 엔진을 제공합니다. Cloud SQL의 Langchain 통합을 활용하여 AI 기반 경험을 구축하기 위해 데이터베이스 애플리케이션을 확장하세요.
 
-This notebook goes over how to use `Google Cloud SQL for MySQL` to store chat message history with the `MySQLChatMessageHistory` class.
+이 노트북에서는 `MySQLChatMessageHistory` 클래스를 사용하여 채팅 메시지 기록을 저장하기 위해 `Google Cloud SQL for MySQL`을 사용하는 방법을 설명합니다.
 
-Learn more about the package on [GitHub](https://github.com/googleapis/langchain-google-cloud-sql-mysql-python/).
+패키지에 대한 자세한 내용은 [GitHub](https://github.com/googleapis/langchain-google-cloud-sql-mysql-python/)에서 확인하세요.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/googleapis/langchain-google-cloud-sql-mysql-python/blob/main/docs/chat_message_history.ipynb)
 
-## Before You Begin
+## 시작하기 전에
 
-To run this notebook, you will need to do the following:
+이 노트북을 실행하려면 다음을 수행해야 합니다:
 
-* [Create a Google Cloud Project](https://developers.google.com/workspace/guides/create-project)
-* [Enable the Cloud SQL Admin API.](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com)
-* [Create a Cloud SQL for MySQL instance](https://cloud.google.com/sql/docs/mysql/create-instance)
-* [Create a Cloud SQL database](https://cloud.google.com/sql/docs/mysql/create-manage-databases)
-* [Add an IAM database user to the database](https://cloud.google.com/sql/docs/mysql/add-manage-iam-users#creating-a-database-user) (Optional)
+* [Google Cloud 프로젝트 만들기](https://developers.google.com/workspace/guides/create-project)
+* [Cloud SQL Admin API 활성화.](https://console.cloud.google.com/marketplace/product/google/sqladmin.googleapis.com)
+* [MySQL용 Cloud SQL 인스턴스 만들기](https://cloud.google.com/sql/docs/mysql/create-instance)
+* [Cloud SQL 데이터베이스 만들기](https://cloud.google.com/sql/docs/mysql/create-manage-databases)
+* [데이터베이스에 IAM 데이터베이스 사용자 추가](https://cloud.google.com/sql/docs/mysql/add-manage-iam-users#creating-a-database-user) (선택 사항)
 
-### 🦜🔗 Library Installation
-The integration lives in its own `langchain-google-cloud-sql-mysql` package, so we need to install it.
+### 🦜🔗 라이브러리 설치
+통합은 자체 `langchain-google-cloud-sql-mysql` 패키지에 있으므로 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet langchain-google-cloud-sql-mysql langchain-google-vertexai
 ```
 
-**Colab only:** Uncomment the following cell to restart the kernel or use the button to restart the kernel. For Vertex AI Workbench you can restart the terminal using the button on top.
+
+**Colab 전용:** 다음 셀의 주석을 제거하여 커널을 재시작하거나 버튼을 사용하여 커널을 재시작하세요. Vertex AI Workbench에서는 상단의 버튼을 사용하여 터미널을 재시작할 수 있습니다.
 
 ```python
 # # Automatically restart kernel after installs so that your environment can access the new packages
@@ -40,11 +42,12 @@ The integration lives in its own `langchain-google-cloud-sql-mysql` package, so 
 # app.kernel.do_shutdown(True)
 ```
 
-### 🔐 Authentication
-Authenticate to Google Cloud as the IAM user logged into this notebook in order to access your Google Cloud Project.
 
-* If you are using Colab to run this notebook, use the cell below and continue.
-* If you are using Vertex AI Workbench, check out the setup instructions [here](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env).
+### 🔐 인증
+Google Cloud에 인증하여 이 노트북에 로그인한 IAM 사용자로 Google Cloud 프로젝트에 접근하세요.
+
+* 이 노트북을 실행하기 위해 Colab을 사용하는 경우 아래 셀을 사용하고 계속 진행하세요.
+* Vertex AI Workbench를 사용하는 경우 [여기](https://github.com/GoogleCloudPlatform/generative-ai/tree/main/setup-env)에서 설정 지침을 확인하세요.
 
 ```python
 from google.colab import auth
@@ -52,14 +55,15 @@ from google.colab import auth
 auth.authenticate_user()
 ```
 
-### ☁ Set Your Google Cloud Project
-Set your Google Cloud project so that you can leverage Google Cloud resources within this notebook.
 
-If you don't know your project ID, try the following:
+### ☁ Google Cloud 프로젝트 설정
+Google Cloud 프로젝트를 설정하여 이 노트북 내에서 Google Cloud 리소스를 활용할 수 있도록 합니다.
 
-* Run `gcloud config list`.
-* Run `gcloud projects list`.
-* See the support page: [Locate the project ID](https://support.google.com/googleapi/answer/7014113).
+프로젝트 ID를 모르는 경우 다음을 시도하세요:
+
+* `gcloud config list`를 실행합니다.
+* `gcloud projects list`를 실행합니다.
+* 지원 페이지를 참조하세요: [프로젝트 ID 찾기](https://support.google.com/googleapi/answer/7014113).
 
 ```python
 # @markdown Please fill in the value below with your Google Cloud project ID and then run the cell.
@@ -70,18 +74,20 @@ PROJECT_ID = "my-project-id"  # @param {type:"string"}
 !gcloud config set project {PROJECT_ID}
 ```
 
-### 💡 API Enablement
-The `langchain-google-cloud-sql-mysql` package requires that you [enable the Cloud SQL Admin API](https://console.cloud.google.com/flows/enableapi?apiid=sqladmin.googleapis.com) in your Google Cloud Project.
+
+### 💡 API 활성화
+`langchain-google-cloud-sql-mysql` 패키지는 Google Cloud 프로젝트에서 [Cloud SQL Admin API를 활성화](https://console.cloud.google.com/flows/enableapi?apiid=sqladmin.googleapis.com)해야 합니다.
 
 ```python
 # enable Cloud SQL Admin API
 !gcloud services enable sqladmin.googleapis.com
 ```
 
-## Basic Usage
 
-### Set Cloud SQL database values
-Find your database values, in the [Cloud SQL Instances page](https://console.cloud.google.com/sql?_ga=2.223735448.2062268965.1707700487-2088871159.1707257687).
+## 기본 사용법
+
+### Cloud SQL 데이터베이스 값 설정
+[Cloud SQL 인스턴스 페이지](https://console.cloud.google.com/sql?_ga=2.223735448.2062268965.1707700487-2088871159.1707257687)에서 데이터베이스 값을 찾습니다.
 
 ```python
 # @title Set Your Values Here { display-mode: "form" }
@@ -91,28 +97,29 @@ DATABASE = "my-database"  # @param {type: "string"}
 TABLE_NAME = "message_store"  # @param {type: "string"}
 ```
 
-### MySQLEngine Connection Pool
 
-One of the requirements and arguments to establish Cloud SQL as a ChatMessageHistory memory store is a `MySQLEngine` object. The `MySQLEngine`  configures a connection pool to your Cloud SQL database, enabling successful connections from your application and following industry best practices.
+### MySQLEngine 연결 풀
 
-To create a `MySQLEngine` using `MySQLEngine.from_instance()` you need to provide only 4 things:
+Cloud SQL을 ChatMessageHistory 메모리 저장소로 설정하기 위한 요구 사항 및 인수 중 하나는 `MySQLEngine` 객체입니다. `MySQLEngine`은 Cloud SQL 데이터베이스에 대한 연결 풀을 구성하여 애플리케이션에서 성공적인 연결을 가능하게 하고 업계 모범 사례를 따릅니다.
 
-1. `project_id` : Project ID of the Google Cloud Project where the Cloud SQL instance is located.
-2. `region` : Region where the Cloud SQL instance is located.
-3. `instance` : The name of the Cloud SQL instance.
-4. `database` : The name of the database to connect to on the Cloud SQL instance.
+`MySQLEngine.from_instance()`를 사용하여 `MySQLEngine`을 생성하려면 다음 4가지만 제공하면 됩니다:
 
-By default, [IAM database authentication](https://cloud.google.com/sql/docs/mysql/iam-authentication#iam-db-auth) will be used as the method of database authentication. This library uses the IAM principal belonging to the [Application Default Credentials (ADC)](https://cloud.google.com/docs/authentication/application-default-credentials) sourced from the envionment.
+1. `project_id` : Cloud SQL 인스턴스가 위치한 Google Cloud 프로젝트의 프로젝트 ID.
+2. `region` : Cloud SQL 인스턴스가 위치한 지역.
+3. `instance` : Cloud SQL 인스턴스의 이름.
+4. `database` : Cloud SQL 인스턴스에서 연결할 데이터베이스의 이름.
 
-For more informatin on IAM database authentication please see:
+기본적으로 [IAM 데이터베이스 인증](https://cloud.google.com/sql/docs/mysql/iam-authentication#iam-db-auth)이 데이터베이스 인증 방법으로 사용됩니다. 이 라이브러리는 환경에서 가져온 [애플리케이션 기본 자격 증명(ADC)](https://cloud.google.com/docs/authentication/application-default-credentials)에 속하는 IAM 주체를 사용합니다.
 
-* [Configure an instance for IAM database authentication](https://cloud.google.com/sql/docs/mysql/create-edit-iam-instances)
-* [Manage users with IAM database authentication](https://cloud.google.com/sql/docs/mysql/add-manage-iam-users)
+IAM 데이터베이스 인증에 대한 자세한 내용은 다음을 참조하세요:
 
-Optionally, [built-in database authentication](https://cloud.google.com/sql/docs/mysql/built-in-authentication) using a username and password to access the Cloud SQL database can also be used. Just provide the optional `user` and `password` arguments to `MySQLEngine.from_instance()`:
+* [IAM 데이터베이스 인증을 위한 인스턴스 구성](https://cloud.google.com/sql/docs/mysql/create-edit-iam-instances)
+* [IAM 데이터베이스 인증으로 사용자 관리](https://cloud.google.com/sql/docs/mysql/add-manage-iam-users)
 
-* `user` : Database user to use for built-in database authentication and login
-* `password` : Database password to use for built-in database authentication and login.
+선택적으로, 사용자 이름과 비밀번호를 사용하여 Cloud SQL 데이터베이스에 접근하는 [내장 데이터베이스 인증](https://cloud.google.com/sql/docs/mysql/built-in-authentication)을 사용할 수도 있습니다. `MySQLEngine.from_instance()`에 선택적 `user` 및 `password` 인수를 제공하면 됩니다:
+
+* `user` : 내장 데이터베이스 인증 및 로그인을 위해 사용할 데이터베이스 사용자
+* `password` : 내장 데이터베이스 인증 및 로그인을 위해 사용할 데이터베이스 비밀번호.
 
 ```python
 from langchain_google_cloud_sql_mysql import MySQLEngine
@@ -122,22 +129,24 @@ engine = MySQLEngine.from_instance(
 )
 ```
 
-### Initialize a table
-The `MySQLChatMessageHistory` class requires a database table with a specific schema in order to store the chat message history.
 
-The `MySQLEngine` engine has a helper method `init_chat_history_table()` that can be used to create a table with the proper schema for you.
+### 테이블 초기화
+`MySQLChatMessageHistory` 클래스는 채팅 메시지 기록을 저장하기 위해 특정 스키마를 가진 데이터베이스 테이블이 필요합니다.
+
+`MySQLEngine` 엔진은 적절한 스키마로 테이블을 생성하는 데 사용할 수 있는 도우미 메서드 `init_chat_history_table()`을 가지고 있습니다.
 
 ```python
 engine.init_chat_history_table(table_name=TABLE_NAME)
 ```
 
+
 ### MySQLChatMessageHistory
 
-To initialize the `MySQLChatMessageHistory` class you need to provide only 3 things:
+`MySQLChatMessageHistory` 클래스를 초기화하려면 다음 3가지만 제공하면 됩니다:
 
-1. `engine` - An instance of a `MySQLEngine` engine.
-2. `session_id` - A unique identifier string that specifies an id for the session.
-3. `table_name` : The name of the table within the Cloud SQL database to store the chat message history.
+1. `engine` - `MySQLEngine` 엔진의 인스턴스.
+2. `session_id` - 세션에 대한 ID를 지정하는 고유 식별자 문자열.
+3. `table_name` : 채팅 메시지 기록을 저장할 Cloud SQL 데이터베이스 내의 테이블 이름.
 
 ```python
 from langchain_google_cloud_sql_mysql import MySQLChatMessageHistory
@@ -149,33 +158,38 @@ history.add_user_message("hi!")
 history.add_ai_message("whats up?")
 ```
 
+
 ```python
 history.messages
 ```
+
 
 ```output
 [HumanMessage(content='hi!'), AIMessage(content='whats up?')]
 ```
 
-#### Cleaning up
-When the history of a specific session is obsolete and can be deleted, it can be done the following way.
 
-**Note:** Once deleted, the data is no longer stored in Cloud SQL and is gone forever.
+#### 정리
+특정 세션의 기록이 더 이상 필요하지 않으면 다음과 같은 방법으로 삭제할 수 있습니다.
+
+**참고:** 삭제된 후 데이터는 더 이상 Cloud SQL에 저장되지 않으며 영원히 사라집니다.
 
 ```python
 history.clear()
 ```
 
-## 🔗 Chaining
 
-We can easily combine this message history class with [LCEL Runnables](/docs/how_to/message_history)
+## 🔗 체이닝
 
-To do this we will use one of [Google's Vertex AI chat models](/docs/integrations/chat/google_vertex_ai_palm) which requires that you [enable the Vertex AI API](https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com) in your Google Cloud Project.
+이 메시지 기록 클래스를 [LCEL Runnables](/docs/how_to/message_history)와 쉽게 결합할 수 있습니다.
+
+이를 위해 [Google의 Vertex AI 채팅 모델](/docs/integrations/chat/google_vertex_ai_palm)을 사용하며, Google Cloud 프로젝트에서 [Vertex AI API를 활성화](https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com)해야 합니다.
 
 ```python
 # enable Vertex AI API
 !gcloud services enable aiplatform.googleapis.com
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Google SQL for MySQL"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "Google SQL for MySQL"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "Google SQL for MySQL"}]-->
@@ -183,6 +197,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_google_vertexai import ChatVertexAI
 ```
+
 
 ```python
 prompt = ChatPromptTemplate.from_messages(
@@ -195,6 +210,7 @@ prompt = ChatPromptTemplate.from_messages(
 
 chain = prompt | ChatVertexAI(project=PROJECT_ID)
 ```
+
 
 ```python
 chain_with_history = RunnableWithMessageHistory(
@@ -209,22 +225,27 @@ chain_with_history = RunnableWithMessageHistory(
 )
 ```
 
+
 ```python
 # This is where we configure the session id
 config = {"configurable": {"session_id": "test_session"}}
 ```
 
+
 ```python
 chain_with_history.invoke({"question": "Hi! I'm bob"}, config=config)
 ```
+
 
 ```output
 AIMessage(content=' Hello Bob, how can I help you today?')
 ```
 
+
 ```python
 chain_with_history.invoke({"question": "Whats my name"}, config=config)
 ```
+
 
 ```output
 AIMessage(content=' Your name is Bob.')

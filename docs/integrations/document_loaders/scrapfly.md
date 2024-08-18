@@ -1,18 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/scrapfly/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/scrapfly.ipynb
+description: ScrapFly는 웹 페이지 데이터를 추출할 수 있는 웹 스크래핑 API로, 헤드리스 브라우저, 프록시 및 봇 우회 기능을
+  제공합니다.
 ---
 
 ## ScrapFly
-[ScrapFly](https://scrapfly.io/) is a web scraping API with headless browser capabilities, proxies, and anti-bot bypass. It allows for extracting web page data into accessible LLM markdown or text.
+[ScrapFly](https://scrapfly.io/)는 헤드리스 브라우저 기능, 프록시 및 안티봇 우회를 갖춘 웹 스크래핑 API입니다. 웹 페이지 데이터를 접근 가능한 LLM 마크다운 또는 텍스트로 추출할 수 있습니다.
 
-#### Installation
-Install ScrapFly Python SDK and he required Langchain packages using pip:
+#### 설치
+ScrapFly Python SDK와 필요한 Langchain 패키지를 pip를 사용하여 설치합니다:
 ```shell
 pip install scrapfly-sdk langchain langchain-community
 ```
 
-#### Usage
+
+#### 사용법
 
 ```python
 <!--IMPORTS:[{"imported": "ScrapflyLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.scrapfly.ScrapflyLoader.html", "title": "# ScrapFly"}]-->
@@ -29,7 +31,8 @@ documents = scrapfly_loader.load()
 print(documents)
 ```
 
-The ScrapflyLoader also allows passigng ScrapeConfig object for customizing the scrape request. See the documentation for the full feature details and their API params: https://scrapfly.io/docs/scrape-api/getting-started
+
+ScrapflyLoader는 스크랩 요청을 사용자 정의하기 위해 ScrapeConfig 객체를 전달할 수도 있습니다. 전체 기능 세부정보 및 API 매개변수는 문서를 참조하십시오: https://scrapfly.io/docs/scrape-api/getting-started
 
 ```python
 <!--IMPORTS:[{"imported": "ScrapflyLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.scrapfly.ScrapflyLoader.html", "title": "# ScrapFly"}]-->
@@ -57,7 +60,8 @@ documents = scrapfly_loader.load()
 print(documents)
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

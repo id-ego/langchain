@@ -1,31 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/airbyte_zendesk_support/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/airbyte_zendesk_support.ipynb
+description: Zendesk Support 커넥터는 문서 로더로 다양한 객체를 문서로 로드할 수 있도록 하며, Airbyte의 데이터 통합
+  플랫폼을 활용합니다.
 sidebar_class_name: hidden
 ---
 
-# Airbyte Zendesk Support (Deprecated)
+# Airbyte Zendesk Support (사용 중단)
 
-Note: This connector-specific loader is deprecated. Please use [`AirbyteLoader`](/docs/integrations/document_loaders/airbyte) instead.
+참고: 이 커넥터 전용 로더는 사용 중단되었습니다. 대신 [`AirbyteLoader`](/docs/integrations/document_loaders/airbyte)를 사용하세요.
 
-> [Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs, databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
+> [Airbyte](https://github.com/airbytehq/airbyte)는 API, 데이터베이스 및 파일에서 데이터 웨어하우스 및 데이터 레이크로의 ELT 파이프라인을 위한 데이터 통합 플랫폼입니다. 데이터 웨어하우스 및 데이터베이스에 대한 ELT 커넥터의 가장 큰 카탈로그를 보유하고 있습니다.
 
-This loader exposes the Zendesk Support connector as a document loader, allowing you to load various objects as documents.
+이 로더는 Zendesk Support 커넥터를 문서 로더로 노출하여 다양한 객체를 문서로 로드할 수 있도록 합니다.
 
-## Installation
+## 설치
 
-First, you need to install the `airbyte-source-zendesk-support` python package.
+먼저 `airbyte-source-zendesk-support` 파이썬 패키지를 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet  airbyte-source-zendesk-support
 ```
 
-## Example
 
-Check out the [Airbyte documentation page](https://docs.airbyte.com/integrations/sources/zendesk-support/) for details about how to configure the reader.
-The JSON schema the config object should adhere to can be found on Github: [https://github.com/airbytehq/airbyte/blob/master/airbyte-integrations/connectors/source-zendesk-support/source_zendesk_support/spec.json](https://github.com/airbytehq/airbyte/blob/master/airbyte-integrations/connectors/source-zendesk-support/source_zendesk_support/spec.json).
+## 예제
 
-The general shape looks like this:
+리더를 구성하는 방법에 대한 자세한 내용은 [Airbyte 문서 페이지](https://docs.airbyte.com/integrations/sources/zendesk-support/)를 확인하세요. 구성 객체가 준수해야 하는 JSON 스키마는 Github에서 확인할 수 있습니다: [https://github.com/airbytehq/airbyte/blob/master/airbyte-integrations/connectors/source-zendesk-support/source_zendesk_support/spec.json](https://github.com/airbytehq/airbyte/blob/master/airbyte-integrations/connectors/source-zendesk-support/source_zendesk_support/spec.json).
+
+일반적인 형태는 다음과 같습니다:
 ```python
 {
   "subdomain": "<your zendesk subdomain>",
@@ -38,7 +39,8 @@ The general shape looks like this:
 }
 ```
 
-By default all fields are stored as metadata in the documents and the text is set to an empty string. Construct the text of the document by transforming the documents returned by the reader.
+
+기본적으로 모든 필드는 문서의 메타데이터로 저장되며 텍스트는 빈 문자열로 설정됩니다. 리더가 반환하는 문서를 변환하여 문서의 텍스트를 구성하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "AirbyteZendeskSupportLoader", "source": "langchain_community.document_loaders.airbyte", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.airbyte.AirbyteZendeskSupportLoader.html", "title": "Airbyte Zendesk Support (Deprecated)"}]-->
@@ -53,19 +55,22 @@ loader = AirbyteZendeskSupportLoader(
 )  # check the documentation linked above for a list of all streams
 ```
 
-Now you can load documents the usual way
+
+이제 문서를 일반적인 방법으로 로드할 수 있습니다.
 
 ```python
 docs = loader.load()
 ```
 
-As `load` returns a list, it will block until all documents are loaded. To have better control over this process, you can also you the `lazy_load` method which returns an iterator instead:
+
+`load`가 목록을 반환하므로 모든 문서가 로드될 때까지 블록됩니다. 이 프로세스를 더 잘 제어하려면 대신 이터레이터를 반환하는 `lazy_load` 메서드를 사용할 수 있습니다:
 
 ```python
 docs_iterator = loader.lazy_load()
 ```
 
-Keep in mind that by default the page content is empty and the metadata object contains all the information from the record. To create documents in a different, pass in a record_handler function when creating the loader:
+
+기본적으로 페이지 내용은 비어 있으며 메타데이터 객체는 레코드의 모든 정보를 포함하고 있습니다. 다른 방식으로 문서를 생성하려면 로더를 생성할 때 record_handler 함수를 전달하세요:
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Airbyte Zendesk Support (Deprecated)"}]-->
@@ -82,11 +87,12 @@ loader = AirbyteZendeskSupportLoader(
 docs = loader.load()
 ```
 
-## Incremental loads
 
-Some streams allow incremental loading, this means the source keeps track of synced records and won't load them again. This is useful for sources that have a high volume of data and are updated frequently.
+## 증분 로드
 
-To take advantage of this, store the `last_state` property of the loader and pass it in when creating the loader again. This will ensure that only new records are loaded.
+일부 스트림은 증분 로드를 허용합니다. 이는 소스가 동기화된 레코드를 추적하고 다시 로드하지 않음을 의미합니다. 이는 데이터 양이 많고 자주 업데이트되는 소스에 유용합니다.
+
+이를 활용하려면 로더의 `last_state` 속성을 저장하고 로더를 다시 생성할 때 전달하세요. 이렇게 하면 새 레코드만 로드됩니다.
 
 ```python
 last_state = loader.last_state  # store safely
@@ -98,7 +104,8 @@ incremental_loader = AirbyteZendeskSupportLoader(
 new_docs = incremental_loader.load()
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

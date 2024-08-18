@@ -1,26 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/opensearch/
+description: 이 문서는 LangChain 내에서 OpenSearch 생태계를 사용하는 방법을 설치 및 설정, OpenSearch 래퍼 참조로
+  나누어 설명합니다.
 ---
 
 # OpenSearch
 
-This page covers how to use the OpenSearch ecosystem within LangChain.
-It is broken into two parts: installation and setup, and then references to specific OpenSearch wrappers.
+이 페이지는 LangChain 내에서 OpenSearch 생태계를 사용하는 방법을 다룹니다. 설치 및 설정과 특정 OpenSearch 래퍼에 대한 참조로 두 부분으로 나뉘어 있습니다.
 
-## Installation and Setup
-- Install the Python package with `pip install opensearch-py`
-## Wrappers
+## 설치 및 설정
+- `pip install opensearch-py`로 Python 패키지를 설치합니다.
+## 래퍼
 
 ### VectorStore
 
-There exists a wrapper around OpenSearch vector databases, allowing you to use it as a vectorstore
-for semantic search using approximate vector search powered by lucene, nmslib and faiss engines
-or using painless scripting and script scoring functions for bruteforce vector search.
+OpenSearch 벡터 데이터베이스 주위에 래퍼가 존재하여, 이를 벡터 저장소로 사용하여 lucene, nmslib 및 faiss 엔진에 의해 지원되는 근사 벡터 검색을 위한 의미적 검색을 수행하거나, 브루트포스 벡터 검색을 위한 painless 스크립팅 및 스크립트 점수 함수 사용이 가능합니다.
 
-To import this vectorstore:
+이 벡터 저장소를 가져오려면:
 ```python
 <!--IMPORTS:[{"imported": "OpenSearchVectorSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.opensearch_vector_search.OpenSearchVectorSearch.html", "title": "OpenSearch"}]-->
 from langchain_community.vectorstores import OpenSearchVectorSearch
 ```
 
-For a more detailed walkthrough of the OpenSearch wrapper, see [this notebook](/docs/integrations/vectorstores/opensearch)
+
+OpenSearch 래퍼에 대한 더 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/opensearch)을 참조하세요.

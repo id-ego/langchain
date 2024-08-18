@@ -1,19 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/multimodal_inputs/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/multimodal_inputs.ipynb
+description: 모델에 멀티모달 데이터를 직접 전달하는 방법을 설명하며, 이미지 설명 요청 예제를 포함합니다. 다양한 모델 통합 방식을 다룹니다.
 ---
 
-# How to pass multimodal data directly to models
+# 모델에 다중 모달 데이터를 직접 전달하는 방법
 
-Here we demonstrate how to pass multimodal input directly to models.
-We currently expect all input to be passed in the same format as [OpenAI expects](https://platform.openai.com/docs/guides/vision).
-For other model providers that support multimodal input, we have added logic inside the class to convert to the expected format.
+여기에서는 다중 모달 입력을 모델에 직접 전달하는 방법을 보여줍니다. 현재 모든 입력이 [OpenAI에서 기대하는 형식](https://platform.openai.com/docs/guides/vision)으로 전달될 것으로 예상합니다. 다중 모달 입력을 지원하는 다른 모델 제공업체에 대해서는 예상 형식으로 변환하는 로직을 클래스 내부에 추가했습니다.
 
-In this example we will ask a model to describe an image.
+이 예제에서는 모델에게 이미지를 설명하도록 요청할 것입니다.
 
 ```python
 image_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to pass multimodal data directly to models"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to pass multimodal data directly to models"}]-->
@@ -23,8 +22,8 @@ from langchain_openai import ChatOpenAI
 model = ChatOpenAI(model="gpt-4o")
 ```
 
-The most commonly supported way to pass in images is to pass it in as a byte string.
-This should work for most model integrations.
+
+이미지를 전달하는 가장 일반적으로 지원되는 방법은 바이트 문자열로 전달하는 것입니다. 이는 대부분의 모델 통합에서 작동해야 합니다.
 
 ```python
 import base64
@@ -33,6 +32,7 @@ import httpx
 
 image_data = base64.b64encode(httpx.get(image_url).content).decode("utf-8")
 ```
+
 
 ```python
 message = HumanMessage(
@@ -47,10 +47,12 @@ message = HumanMessage(
 response = model.invoke([message])
 print(response.content)
 ```
+
 ```output
 The weather in the image appears to be clear and pleasant. The sky is mostly blue with scattered, light clouds, suggesting a sunny day with minimal cloud cover. There is no indication of rain or strong winds, and the overall scene looks bright and calm. The lush green grass and clear visibility further indicate good weather conditions.
 ```
-We can feed the image URL directly in a content block of type "image_url". Note that only some model providers support this.
+
+이미지 URL을 "image_url" 유형의 콘텐츠 블록에 직접 전달할 수 있습니다. 이는 일부 모델 제공업체만 지원한다는 점에 유의하세요.
 
 ```python
 message = HumanMessage(
@@ -62,10 +64,12 @@ message = HumanMessage(
 response = model.invoke([message])
 print(response.content)
 ```
+
 ```output
 The weather in the image appears to be clear and sunny. The sky is mostly blue with a few scattered clouds, suggesting good visibility and a likely pleasant temperature. The bright sunlight is casting distinct shadows on the grass and vegetation, indicating it is likely daytime, possibly late morning or early afternoon. The overall ambiance suggests a warm and inviting day, suitable for outdoor activities.
 ```
-We can also pass in multiple images.
+
+여러 이미지를 전달할 수도 있습니다.
 
 ```python
 message = HumanMessage(
@@ -78,12 +82,14 @@ message = HumanMessage(
 response = model.invoke([message])
 print(response.content)
 ```
+
 ```output
 Yes, the two images are the same. They both depict a wooden boardwalk extending through a grassy field under a blue sky with light clouds. The scenery, lighting, and composition are identical.
 ```
-## Tool calls
 
-Some multimodal models support [tool calling](/docs/concepts/#functiontool-calling) features as well. To call tools using such models, simply bind tools to them in the [usual way](/docs/how_to/tool_calling), and invoke the model using content blocks of the desired type (e.g., containing image data).
+## 도구 호출
+
+일부 다중 모달 모델은 [도구 호출](/docs/concepts/#functiontool-calling) 기능도 지원합니다. 이러한 모델을 사용하여 도구를 호출하려면, [일반적인 방법](/docs/how_to/tool_calling)으로 도구를 바인딩하고 원하는 유형의 콘텐츠 블록(예: 이미지 데이터가 포함된 블록)을 사용하여 모델을 호출하면 됩니다.
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "How to pass multimodal data directly to models"}]-->
@@ -109,6 +115,7 @@ message = HumanMessage(
 response = model_with_tools.invoke([message])
 print(response.tool_calls)
 ```
+
 ```output
 [{'name': 'weather_tool', 'args': {'weather': 'sunny'}, 'id': 'call_BSX4oq4SKnLlp2WlzDhToHBr'}]
 ```

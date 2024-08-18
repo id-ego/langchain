@@ -1,36 +1,38 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/bibtex/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/bibtex.ipynb
+description: BibTeX는 LaTeX와 함께 사용되는 참고 문헌 관리 시스템으로, 학술 문서의 서지 정보를 조직하고 저장하는 데 사용됩니다.
 ---
 
 # BibTeX
 
-> [BibTeX](https://www.ctan.org/pkg/bibtex) is a file format and reference management system commonly used in conjunction with `LaTeX` typesetting. It serves as a way to organize and store bibliographic information for academic and research documents.
+> [BibTeX](https://www.ctan.org/pkg/bibtex)는 일반적으로 `LaTeX` 조판과 함께 사용되는 파일 형식 및 참고 문헌 관리 시스템입니다. 이는 학술 및 연구 문서의 서지 정보를 구성하고 저장하는 방법으로 사용됩니다.
 
-`BibTeX` files have a `.bib` extension and consist of plain text entries representing references to various publications, such as books, articles, conference papers, theses, and more. Each `BibTeX` entry follows a specific structure and contains fields for different bibliographic details like author names, publication title, journal or book title, year of publication, page numbers, and more.
+`BibTeX` 파일은 `.bib` 확장자를 가지며, 책, 기사, 학회 논문, 학위 논문 등 다양한 출판물에 대한 참조를 나타내는 일반 텍스트 항목으로 구성됩니다. 각 `BibTeX` 항목은 특정 구조를 따르며, 저자 이름, 출판 제목, 저널 또는 책 제목, 출판 연도, 페이지 번호 등 다양한 서지 세부 정보를 위한 필드를 포함합니다.
 
-BibTeX files can also store the path to documents, such as `.pdf` files that can be retrieved.
+BibTeX 파일은 또한 검색할 수 있는 `.pdf` 파일과 같은 문서의 경로를 저장할 수 있습니다.
 
-## Installation
-First, you need to install `bibtexparser` and `PyMuPDF`.
+## 설치
+먼저 `bibtexparser`와 `PyMuPDF`를 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet  bibtexparser pymupdf
 ```
 
-## Examples
 
-`BibtexLoader` has these arguments:
-- `file_path`: the path of the `.bib` bibtex file
-- optional `max_docs`: default=None, i.e. not limit. Use it to limit number of retrieved documents.
-- optional `max_content_chars`: default=4000. Use it to limit the number of characters in a single document.
-- optional `load_extra_meta`: default=False. By default only the most important fields from the bibtex entries: `Published` (publication year), `Title`, `Authors`, `Summary`, `Journal`, `Keywords`, and `URL`. If True, it will also try to load return `entry_id`, `note`, `doi`, and `links` fields. 
-- optional `file_pattern`: default=`r'[^:]+\.pdf'`. Regex pattern to find files in the `file` entry. Default pattern supports `Zotero` flavour bibtex style and bare file path.
+## 예제
+
+`BibtexLoader`는 다음과 같은 인수를 가집니다:
+- `file_path`: `.bib` bibtex 파일의 경로
+- 선택적 `max_docs`: 기본값=None, 즉 제한 없음. 검색된 문서 수를 제한하는 데 사용합니다.
+- 선택적 `max_content_chars`: 기본값=4000. 단일 문서의 문자 수를 제한하는 데 사용합니다.
+- 선택적 `load_extra_meta`: 기본값=False. 기본적으로 bibtex 항목에서 가장 중요한 필드만 로드합니다: `Published` (출판 연도), `Title`, `Authors`, `Summary`, `Journal`, `Keywords`, 및 `URL`. True인 경우 `entry_id`, `note`, `doi`, 및 `links` 필드도 로드하려고 시도합니다.
+- 선택적 `file_pattern`: 기본값=`r'[^:]+\.pdf'`. `file` 항목에서 파일을 찾기 위한 정규 표현식 패턴. 기본 패턴은 `Zotero` 스타일의 bibtex 및 일반 파일 경로를 지원합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "BibtexLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.bibtex.BibtexLoader.html", "title": "BibTeX"}]-->
 from langchain_community.document_loaders import BibtexLoader
 ```
+
 
 ```python
 # Create a dummy bibtex file and download a pdf.
@@ -60,13 +62,16 @@ with open("./biblio.bib", "w") as file:
     file.write(bibtex_text)
 ```
 
+
 ```python
 docs = BibtexLoader("./biblio.bib").load()
 ```
 
+
 ```python
 docs[0].metadata
 ```
+
 
 ```output
 {'id': 'einstein1915',
@@ -78,9 +83,11 @@ docs[0].metadata
  'url': 'https://doi.org/10.1002/andp.19163540702'}
 ```
 
+
 ```python
 print(docs[0].page_content[:400])  # all pages of the pdf content
 ```
+
 ```output
 ON THE ELECTRODYNAMICS OF MOVING
 BODIES
@@ -93,7 +100,8 @@ cal electrodynamic action of a magnet and a conductor. The observable phe-
 nomenon here depends only on the r
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

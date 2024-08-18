@@ -1,18 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/financial_datasets/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/financial_datasets.ipynb
+description: 금융 데이터셋 툴킷은 30년 이상의 데이터를 포함한 16,000개 이상의 주식 티커에 대한 REST API 엔드포인트를 제공합니다.
 ---
 
 # FinancialDatasets Toolkit
 
-The [financial datasets](https://financialdatasets.ai/) stock market API provides REST endpoints that let you get financial data for 16,000+ tickers spanning 30+ years.
+[financial datasets](https://financialdatasets.ai/) 주식 시장 API는 30년 이상에 걸쳐 16,000개 이상의 티커에 대한 재무 데이터를 가져올 수 있는 REST 엔드포인트를 제공합니다.
 
-## Setup
+## 설정
 
-To use this toolkit, you need two API keys:
+이 툴킷을 사용하려면 두 개의 API 키가 필요합니다:
 
-`FINANCIAL_DATASETS_API_KEY`: Get it from [financialdatasets.ai](https://financialdatasets.ai/).
-`OPENAI_API_KEY`: Get it from [OpenAI](https://platform.openai.com/).
+`FINANCIAL_DATASETS_API_KEY`: [financialdatasets.ai](https://financialdatasets.ai/)에서 가져옵니다.
+`OPENAI_API_KEY`: [OpenAI](https://platform.openai.com/)에서 가져옵니다.
 
 ```python
 import getpass
@@ -21,21 +21,24 @@ import os
 os.environ["FINANCIAL_DATASETS_API_KEY"] = getpass.getpass()
 ```
 
+
 ```python
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ```
 
-### Installation
 
-This toolkit lives in the `langchain-community` package.
+### 설치
+
+이 툴킷은 `langchain-community` 패키지에 있습니다.
 
 ```python
 %pip install -qU langchain-community
 ```
 
-## Instantiation
 
-Now we can instantiate our toolkit:
+## 인스턴스화
+
+이제 툴킷을 인스턴스화할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "FinancialDatasetsToolkit", "source": "langchain_community.agent_toolkits.financial_datasets.toolkit", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.financial_datasets.toolkit.FinancialDatasetsToolkit.html", "title": "FinancialDatasets Toolkit"}, {"imported": "FinancialDatasetsAPIWrapper", "source": "langchain_community.utilities.financial_datasets", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.financial_datasets.FinancialDatasetsAPIWrapper.html", "title": "FinancialDatasets Toolkit"}]-->
@@ -50,17 +53,19 @@ api_wrapper = FinancialDatasetsAPIWrapper(
 toolkit = FinancialDatasetsToolkit(api_wrapper=api_wrapper)
 ```
 
-## Tools
 
-View available tools:
+## 도구
+
+사용 가능한 도구 보기:
 
 ```python
 tools = toolkit.get_tools()
 ```
 
-## Use within an agent
 
-Let's equip our agent with the FinancialDatasetsToolkit and ask financial questions.
+## 에이전트 내에서 사용
+
+우리의 에이전트에 FinancialDatasetsToolkit을 장착하고 재무 질문을 해봅시다.
 
 ```python
 system_prompt = """
@@ -97,7 +102,8 @@ help users make informed decisions. Always maintain a professional and objective
 """
 ```
 
-Instantiate the LLM.
+
+LLM을 인스턴스화합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "tool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.convert.tool.html", "title": "FinancialDatasets Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "FinancialDatasets Toolkit"}]-->
@@ -107,13 +113,15 @@ from langchain_openai import ChatOpenAI
 model = ChatOpenAI(model="gpt-4o")
 ```
 
-Define a user query.
+
+사용자 쿼리를 정의합니다.
 
 ```python
 query = "What was AAPL's revenue in 2023? What about it's total debt in Q1 2024?"
 ```
 
-Create the agent.
+
+에이전트를 생성합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "FinancialDatasets Toolkit"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "FinancialDatasets Toolkit"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "FinancialDatasets Toolkit"}]-->
@@ -134,17 +142,19 @@ agent = create_tool_calling_agent(model, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools)
 ```
 
-Query the agent.
+
+에이전트에 쿼리합니다.
 
 ```python
 agent_executor.invoke({"input": query})
 ```
 
-## API reference
 
-For detailed documentation of all `FinancialDatasetsToolkit` features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.financial_datasets.toolkit.FinancialDatasetsToolkit.html).
+## API 참조
 
-## Related
+모든 `FinancialDatasetsToolkit` 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.financial_datasets.toolkit.FinancialDatasetsToolkit.html)에서 확인하세요.
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

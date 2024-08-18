@@ -1,24 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/graph_mapping/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/graph_mapping.ipynb
+description: 사용자 입력 값을 그래프 데이터베이스에 매핑하여 쿼리 생성을 개선하는 전략을 다루는 가이드입니다.
 sidebar_position: 1
 ---
 
-# How to map values to a graph database
+# 그래프 데이터베이스에 값을 매핑하는 방법
 
-In this guide we'll go over strategies to improve graph database query generation by mapping values from user inputs to database.
-When using the built-in graph chains, the LLM is aware of the graph schema, but has no information about the values of properties stored in the database.
-Therefore, we can introduce a new step in graph database QA system to accurately map values.
+이 가이드에서는 사용자 입력의 값을 데이터베이스에 매핑하여 그래프 데이터베이스 쿼리 생성을 개선하는 전략을 살펴보겠습니다. 내장 그래프 체인을 사용할 때 LLM은 그래프 스키마를 인식하지만 데이터베이스에 저장된 속성의 값에 대한 정보는 없습니다. 따라서 값을 정확하게 매핑하기 위해 그래프 데이터베이스 QA 시스템에 새로운 단계를 도입할 수 있습니다.
 
-## Setup
+## 설정
 
-First, get required packages and set environment variables:
+먼저 필요한 패키지를 가져오고 환경 변수를 설정합니다:
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai neo4j
 ```
 
-We default to OpenAI models in this guide, but you can swap them out for the model provider of your choice.
+
+이 가이드에서는 OpenAI 모델을 기본으로 사용하지만, 원하는 모델 제공자로 교체할 수 있습니다.
 
 ```python
 import getpass
@@ -30,11 +29,12 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 ```
+
 ```output
  ········
 ```
-Next, we need to define Neo4j credentials.
-Follow [these installation steps](https://neo4j.com/docs/operations-manual/current/installation/) to set up a Neo4j database.
+
+다음으로 Neo4j 자격 증명을 정의해야 합니다. [이 설치 단계](https://neo4j.com/docs/operations-manual/current/installation/)를 따라 Neo4j 데이터베이스를 설정하세요.
 
 ```python
 os.environ["NEO4J_URI"] = "bolt://localhost:7687"
@@ -42,7 +42,8 @@ os.environ["NEO4J_USERNAME"] = "neo4j"
 os.environ["NEO4J_PASSWORD"] = "password"
 ```
 
-The below example will create a connection with a Neo4j database and will populate it with example data about movies and their actors.
+
+아래 예제는 Neo4j 데이터베이스와 연결을 생성하고 영화 및 그 배우에 대한 예제 데이터로 채웁니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Neo4jGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neo4j_graph.Neo4jGraph.html", "title": "How to map values to a graph database"}]-->
@@ -74,12 +75,14 @@ FOREACH (genre in split(row.genres, '|') |
 graph.query(movies_query)
 ```
 
+
 ```output
 []
 ```
 
-## Detecting entities in the user input
-We have to extract the types of entities/values we want to map to a graph database. In this example, we are dealing with a movie graph, so we can map movies and people to the database.
+
+## 사용자 입력에서 엔티티 감지
+우리는 그래프 데이터베이스에 매핑할 엔티티/값의 유형을 추출해야 합니다. 이 예제에서는 영화 그래프를 다루고 있으므로 영화와 사람을 데이터베이스에 매핑할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to map values to a graph database"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to map values to a graph database"}]-->
@@ -119,18 +122,21 @@ prompt = ChatPromptTemplate.from_messages(
 entity_chain = prompt | llm.with_structured_output(Entities)
 ```
 
-We can test the entity extraction chain.
+
+엔티티 추출 체인을 테스트할 수 있습니다.
 
 ```python
 entities = entity_chain.invoke({"question": "Who played in Casino movie?"})
 entities
 ```
 
+
 ```output
 Entities(names=['Casino'])
 ```
 
-We will utilize a simple `CONTAINS` clause to match entities to database. In practice, you might want to use a fuzzy search or a fulltext index to allow for minor misspellings.
+
+우리는 엔티티를 데이터베이스에 매칭하기 위해 간단한 `CONTAINS` 절을 활용할 것입니다. 실제로는 약간의 철자 오류를 허용하기 위해 퍼지 검색이나 전체 텍스트 인덱스를 사용하는 것이 좋습니다.
 
 ```python
 match_query = """MATCH (p:Person|Movie)
@@ -154,14 +160,15 @@ def map_to_database(entities: Entities) -> Optional[str]:
 map_to_database(entities)
 ```
 
+
 ```output
 'Casino maps to Casino Movie in database\n'
 ```
 
-## Custom Cypher generating chain
 
-We need to define a custom Cypher prompt that takes the entity mapping information along with the schema and the user question to construct a Cypher statement.
-We will be using the LangChain expression language to accomplish that.
+## 사용자 정의 Cypher 생성 체인
+
+우리는 엔티티 매핑 정보와 스키마, 사용자 질문을 사용하여 Cypher 문을 구성하는 사용자 정의 Cypher 프롬프트를 정의해야 합니다. 이를 위해 LangChain 표현 언어를 사용할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "StrOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.string.StrOutputParser.html", "title": "How to map values to a graph database"}, {"imported": "RunnablePassthrough", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.passthrough.RunnablePassthrough.html", "title": "How to map values to a graph database"}]-->
@@ -198,19 +205,21 @@ cypher_response = (
 )
 ```
 
+
 ```python
 cypher = cypher_response.invoke({"question": "Who played in Casino movie?"})
 cypher
 ```
 
+
 ```output
 'MATCH (:Movie {title: "Casino"})<-[:ACTED_IN]-(actor)\nRETURN actor.name'
 ```
 
-## Generating answers based on database results
 
-Now that we have a chain that generates the Cypher statement, we need to execute the Cypher statement against the database and send the database results back to an LLM to generate the final answer.
-Again, we will be using LCEL.
+## 데이터베이스 결과를 기반으로 답변 생성
+
+이제 Cypher 문을 생성하는 체인이 있으므로, 데이터베이스에 대해 Cypher 문을 실행하고 데이터베이스 결과를 LLM에 다시 보내 최종 답변을 생성해야 합니다. 다시 말해, 우리는 LCEL을 사용할 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "CypherQueryCorrector", "source": "langchain_community.chains.graph_qa.cypher_utils", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher_utils.CypherQueryCorrector.html", "title": "How to map values to a graph database"}, {"imported": "Schema", "source": "langchain_community.chains.graph_qa.cypher_utils", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.cypher_utils.Schema.html", "title": "How to map values to a graph database"}]-->
@@ -254,9 +263,11 @@ chain = (
 )
 ```
 
+
 ```python
 chain.invoke({"question": "Who played in Casino movie?"})
 ```
+
 
 ```output
 'Robert De Niro, James Woods, Joe Pesci, and Sharon Stone played in the movie "Casino".'

@@ -1,52 +1,48 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/openllm/
+description: OpenLLM은 LangChain과 함께 사용하여 오픈 소스 대형 언어 모델을 운영하고 강력한 AI 앱을 구축할 수 있는 플랫폼입니다.
 ---
 
 # OpenLLM
 
-This page demonstrates how to use [OpenLLM](https://github.com/bentoml/OpenLLM)
-with LangChain.
+이 페이지는 LangChain과 함께 [OpenLLM](https://github.com/bentoml/OpenLLM)을 사용하는 방법을 보여줍니다.
 
-`OpenLLM` is an open platform for operating large language models (LLMs) in
-production. It enables developers to easily run inference with any open-source
-LLMs, deploy to the cloud or on-premises, and build powerful AI apps.
+`OpenLLM`은 대규모 언어 모델(LLM)을 운영하기 위한 오픈 플랫폼입니다. 개발자는 오픈 소스 LLM으로 쉽게 추론을 실행하고, 클라우드 또는 온프레미스에 배포하며, 강력한 AI 앱을 구축할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the OpenLLM package via PyPI:
+PyPI를 통해 OpenLLM 패키지를 설치합니다:
 
 ```bash
 pip install openllm
 ```
 
+
 ## LLM
 
-OpenLLM supports a wide range of open-source LLMs as well as serving users' own
-fine-tuned LLMs. Use `openllm model` command to see all available models that
-are pre-optimized for OpenLLM.
+OpenLLM은 다양한 오픈 소스 LLM을 지원하며 사용자의 맞춤형 LLM도 제공합니다. `openllm model` 명령어를 사용하여 OpenLLM에 최적화된 모든 사용 가능한 모델을 확인하세요.
 
-## Wrappers
+## 래퍼
 
-There is a OpenLLM Wrapper which supports loading LLM in-process or accessing a
-remote OpenLLM server:
+LLM을 프로세스 내에서 로드하거나 원격 OpenLLM 서버에 접근할 수 있는 OpenLLM 래퍼가 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "OpenLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.openllm.OpenLLM.html", "title": "OpenLLM"}]-->
 from langchain_community.llms import OpenLLM
 ```
 
-### Wrapper for OpenLLM server
 
-This wrapper supports connecting to an OpenLLM server via HTTP or gRPC. The
-OpenLLM server can run either locally or on the cloud.
+### OpenLLM 서버용 래퍼
 
-To try it out locally, start an OpenLLM server:
+이 래퍼는 HTTP 또는 gRPC를 통해 OpenLLM 서버에 연결하는 것을 지원합니다. OpenLLM 서버는 로컬 또는 클라우드에서 실행할 수 있습니다.
+
+로컬에서 시도하려면 OpenLLM 서버를 시작하세요:
 
 ```bash
 openllm start flan-t5
 ```
 
-Wrapper usage:
+
+래퍼 사용법:
 
 ```python
 <!--IMPORTS:[{"imported": "OpenLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.openllm.OpenLLM.html", "title": "OpenLLM"}]-->
@@ -57,10 +53,10 @@ llm = OpenLLM(server_url='http://localhost:3000')
 llm("What is the difference between a duck and a goose? And why there are so many Goose in Canada?")
 ```
 
-### Wrapper for Local Inference
 
-You can also use the OpenLLM wrapper to load LLM in current Python process for
-running inference.
+### 로컬 추론용 래퍼
+
+OpenLLM 래퍼를 사용하여 현재 Python 프로세스에서 LLM을 로드하여 추론을 실행할 수도 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OpenLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.openllm.OpenLLM.html", "title": "OpenLLM"}]-->
@@ -71,7 +67,7 @@ llm = OpenLLM(model_name="dolly-v2", model_id='databricks/dolly-v2-7b')
 llm("What is the difference between a duck and a goose? And why there are so many Goose in Canada?")
 ```
 
-### Usage
 
-For a more detailed walkthrough of the OpenLLM Wrapper, see the
-[example notebook](/docs/integrations/llms/openllm)
+### 사용법
+
+OpenLLM 래퍼에 대한 보다 자세한 안내는 [예제 노트북](/docs/integrations/llms/openllm)을 참조하세요.

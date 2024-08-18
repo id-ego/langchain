@@ -1,29 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/notion/
+description: Notion은 협업 플랫폼으로, 수정된 Markdown 지원을 통해 작업 관리, 위키 및 데이터베이스를 통합한 올인원 작업
+  공간입니다.
 ---
 
 # Notion DB
 
-> [Notion](https://www.notion.so/) is a collaboration platform with modified Markdown support that integrates kanban
-boards, tasks, wikis and databases. It is an all-in-one workspace for notetaking, knowledge and data management,
-and project and task management.
+> [Notion](https://www.notion.so/)은 칸반 보드, 작업, 위키 및 데이터베이스를 통합한 수정된 Markdown 지원을 갖춘 협업 플랫폼입니다. 노트 작성, 지식 및 데이터 관리, 프로젝트 및 작업 관리를 위한 올인원 작업 공간입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-All instructions are in examples below.
+모든 지침은 아래 예제에 있습니다.
 
-## Document Loader
+## 문서 로더
 
-We have two different loaders: `NotionDirectoryLoader` and `NotionDBLoader`.
+두 가지 다른 로더가 있습니다: `NotionDirectoryLoader`와 `NotionDBLoader`.
 
-See a [usage example for the NotionDirectoryLoader](/docs/integrations/document_loaders/notion).
+[NotionDirectoryLoader의 사용 예제 보기](/docs/integrations/document_loaders/notion).
 
 ```python
 <!--IMPORTS:[{"imported": "NotionDirectoryLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.notion.NotionDirectoryLoader.html", "title": "Notion DB"}]-->
 from langchain_community.document_loaders import NotionDirectoryLoader
 ```
 
-See a [usage example for the NotionDBLoader](/docs/integrations/document_loaders/notiondb).
+
+[NotionDBLoader의 사용 예제 보기](/docs/integrations/document_loaders/notiondb).
 
 ```python
 <!--IMPORTS:[{"imported": "NotionDBLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.notiondb.NotionDBLoader.html", "title": "Notion DB"}]-->

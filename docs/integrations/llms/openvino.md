@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/openvino/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/openvino.ipynb
+description: OpenVINO™는 AI 추론 최적화 및 배포를 위한 오픈 소스 툴킷으로, 다양한 하드웨어에서 모델을 실행할 수 있게 해줍니다.
 ---
 
 # OpenVINO
 
-[OpenVINO™](https://github.com/openvinotoolkit/openvino) is an open-source toolkit for optimizing and deploying AI inference. OpenVINO™ Runtime can enable running the same model optimized across various hardware [devices](https://github.com/openvinotoolkit/openvino?tab=readme-ov-file#supported-hardware-matrix). Accelerate your deep learning performance across use cases like: language + LLMs, computer vision, automatic speech recognition, and more.
+[OpenVINO™](https://github.com/openvinotoolkit/openvino)는 AI 추론을 최적화하고 배포하기 위한 오픈 소스 툴킷입니다. OpenVINO™ Runtime은 다양한 하드웨어 [장치](https://github.com/openvinotoolkit/openvino?tab=readme-ov-file#supported-hardware-matrix)에서 최적화된 동일한 모델을 실행할 수 있게 합니다. 언어 + LLM, 컴퓨터 비전, 자동 음성 인식 등과 같은 사용 사례에서 딥 러닝 성능을 가속화하세요.
 
-OpenVINO models can be run locally through the `HuggingFacePipeline` [class](https://python.langchain.com/docs/integrations/llms/huggingface_pipeline). To deploy a model with OpenVINO, you can specify the `backend="openvino"` parameter to trigger OpenVINO as backend inference framework.
+OpenVINO 모델은 `HuggingFacePipeline` [클래스](https://python.langchain.com/docs/integrations/llms/huggingface_pipeline)를 통해 로컬에서 실행할 수 있습니다. OpenVINO로 모델을 배포하려면 `backend="openvino"` 매개변수를 지정하여 OpenVINO를 백엔드 추론 프레임워크로 트리거할 수 있습니다.
 
-To use, you should have the `optimum-intel` with OpenVINO Accelerator python [package installed](https://github.com/huggingface/optimum-intel?tab=readme-ov-file#installation).
+사용하려면 `optimum-intel`과 OpenVINO Accelerator python [패키지 설치](https://github.com/huggingface/optimum-intel?tab=readme-ov-file#installation)가 필요합니다.
 
 ```python
 %pip install --upgrade-strategy eager "optimum[openvino,nncf]" langchain-huggingface --quiet
 ```
 
-### Model Loading
 
-Models can be loaded by specifying the model parameters using the `from_model_id` method.
+### 모델 로딩
 
-If you have an Intel GPU, you can specify `model_kwargs={"device": "GPU"}` to run inference on it.
+모델 매개변수를 사용하여 `from_model_id` 메서드를 지정함으로써 모델을 로드할 수 있습니다.
+
+Intel GPU가 있는 경우 `model_kwargs={"device": "GPU"}`를 지정하여 해당 GPU에서 추론을 실행할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "HuggingFacePipeline", "source": "langchain_huggingface", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_huggingface.llms.huggingface_pipeline.HuggingFacePipeline.html", "title": "OpenVINO"}]-->
@@ -36,7 +37,8 @@ ov_llm = HuggingFacePipeline.from_model_id(
 )
 ```
 
-They can also be loaded by passing in an existing [`optimum-intel`](https://huggingface.co/docs/optimum/main/en/intel/inference) pipeline directly
+
+기존 [`optimum-intel`](https://huggingface.co/docs/optimum/main/en/intel/inference) 파이프라인을 직접 전달하여 로드할 수도 있습니다.
 
 ```python
 from optimum.intel.openvino import OVModelForCausalLM
@@ -54,10 +56,10 @@ ov_pipe = pipeline(
 ov_llm = HuggingFacePipeline(pipeline=ov_pipe)
 ```
 
-### Create Chain
 
-With the model loaded into memory, you can compose it with a prompt to
-form a chain.
+### 체인 생성
+
+메모리에 로드된 모델을 사용하여 프롬프트와 결합하여 체인을 형성할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "OpenVINO"}]-->
@@ -75,7 +77,8 @@ question = "What is electroencephalography?"
 print(chain.invoke({"question": question}))
 ```
 
-To get response without prompt, you can bind `skip_prompt=True` with LLM.
+
+프롬프트 없이 응답을 얻으려면 LLM과 함께 `skip_prompt=True`를 바인딩할 수 있습니다.
 
 ```python
 chain = prompt | ov_llm.bind(skip_prompt=True)
@@ -85,21 +88,24 @@ question = "What is electroencephalography?"
 print(chain.invoke({"question": question}))
 ```
 
-### Inference with local OpenVINO model
 
-It is possible to [export your model](https://github.com/huggingface/optimum-intel?tab=readme-ov-file#export) to the OpenVINO IR format with the CLI, and load the model from local folder.
+### 로컬 OpenVINO 모델로 추론하기
+
+CLI를 사용하여 모델을 OpenVINO IR 형식으로 [내보내기](https://github.com/huggingface/optimum-intel?tab=readme-ov-file#export)하고 로컬 폴더에서 모델을 로드할 수 있습니다.
 
 ```python
 !optimum-cli export openvino --model gpt2 ov_model_dir
 ```
 
-It is recommended to apply 8 or 4-bit weight quantization to reduce inference latency and model footprint using `--weight-format`:
+
+추론 지연 시간과 모델 크기를 줄이기 위해 `--weight-format`을 사용하여 8비트 또는 4비트 가중치 양자화를 적용하는 것이 좋습니다:
 
 ```python
 !optimum-cli export openvino --model gpt2  --weight-format int8 ov_model_dir # for 8-bit quantization
 
 !optimum-cli export openvino --model gpt2  --weight-format int4 ov_model_dir # for 4-bit quantization
 ```
+
 
 ```python
 ov_llm = HuggingFacePipeline.from_model_id(
@@ -117,7 +123,8 @@ question = "What is electroencephalography?"
 print(chain.invoke({"question": question}))
 ```
 
-You can get additional inference speed improvement with Dynamic Quantization of activations and KV-cache quantization. These options can be enabled with `ov_config` as follows:
+
+활성화 및 KV-캐시 양자화의 동적 양자화를 통해 추가적인 추론 속도 개선을 얻을 수 있습니다. 이러한 옵션은 다음과 같이 `ov_config`로 활성화할 수 있습니다:
 
 ```python
 ov_config = {
@@ -129,9 +136,10 @@ ov_config = {
 }
 ```
 
-### Streaming
 
-You can use `stream` method to get a streaming of LLM output, 
+### 스트리밍
+
+LLM 출력의 스트리밍을 얻으려면 `stream` 메서드를 사용할 수 있습니다.
 
 ```python
 generation_config = {"skip_prompt": True, "pipeline_kwargs": {"max_new_tokens": 100}}
@@ -141,14 +149,15 @@ for chunk in chain.stream(question):
     print(chunk, end="", flush=True)
 ```
 
-For more information refer to:
 
-* [OpenVINO LLM guide](https://docs.openvino.ai/2024/learn-openvino/llm_inference_guide.html).
-* [OpenVINO Documentation](https://docs.openvino.ai/2024/home.html).
-* [OpenVINO Get Started Guide](https://www.intel.com/content/www/us/en/content-details/819067/openvino-get-started-guide.html).
-* [RAG Notebook with LangChain](https://github.com/openvinotoolkit/openvino_notebooks/tree/latest/notebooks/llm-rag-langchain).
+자세한 정보는 다음을 참조하세요:
 
-## Related
+* [OpenVINO LLM 가이드](https://docs.openvino.ai/2024/learn-openvino/llm_inference_guide.html).
+* [OpenVINO 문서](https://docs.openvino.ai/2024/home.html).
+* [OpenVINO 시작 가이드](https://www.intel.com/content/www/us/en/content-details/819067/openvino-get-started-guide.html).
+* [LangChain과 함께하는 RAG 노트북](https://github.com/openvinotoolkit/openvino_notebooks/tree/latest/notebooks/llm-rag-langchain).
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

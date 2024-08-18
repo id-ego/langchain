@@ -1,27 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/lancedb/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/lancedb.ipynb
+description: LanceDB는 벡터 검색을 위한 오픈 소스 데이터베이스로, 임베딩의 검색, 필터링 및 관리를 간소화합니다.
 ---
 
 # LanceDB
 
-> [LanceDB](https://lancedb.com/) is an open-source database for vector-search built with persistent storage, which greatly simplifies retrevial, filtering and management of embeddings. Fully open source.
+> [LanceDB](https://lancedb.com/)는 영구 저장소로 구축된 벡터 검색을 위한 오픈 소스 데이터베이스로, 임베딩의 검색, 필터링 및 관리를 크게 단순화합니다. 완전한 오픈 소스입니다.
 
-This notebook shows how to use functionality related to the `LanceDB` vector database based on the Lance data format.
+이 노트북은 Lance 데이터 형식에 기반한 `LanceDB` 벡터 데이터베이스와 관련된 기능을 사용하는 방법을 보여줍니다.
 
 ```python
 ! pip install tantivy
 ```
 
+
 ```python
 ! pip install -U langchain-openai langchain-community
 ```
+
 
 ```python
 ! pip install lancedb
 ```
 
-We want to use OpenAIEmbeddings so we have to get the OpenAI API Key. 
+
+OpenAIEmbeddings를 사용하려면 OpenAI API 키를 받아야 합니다.
 
 ```python
 import getpass
@@ -30,9 +33,11 @@ import os
 os.environ["OPENAI_API_KEY"] = getpass.getpass("OpenAI API Key:")
 ```
 
+
 ```python
 ! rm -rf /tmp/lancedb
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "LanceDB"}, {"imported": "LanceDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.lancedb.LanceDB.html", "title": "LanceDB"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "LanceDB"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "LanceDB"}]-->
@@ -48,7 +53,8 @@ documents = CharacterTextSplitter().split_documents(documents)
 embeddings = OpenAIEmbeddings()
 ```
 
-##### For LanceDB cloud, you can invoke the vector store as follows :
+
+##### LanceDB 클라우드의 경우, 다음과 같이 벡터 저장소를 호출할 수 있습니다:
 
 ```python
 db_url = "db://lang_test" # url of db you created
@@ -64,7 +70,8 @@ vector_store = LanceDB(
     )
 ```
 
-You can also add `region`, `api_key`, `uri` to `from_documents()` classmethod
+
+`from_documents()` 클래스 메서드에 `region`, `api_key`, `uri`를 추가할 수도 있습니다.
 
 ```python
 from lancedb.rerankers import LinearCombinationReranker
@@ -75,11 +82,13 @@ docsearch = LanceDB.from_documents(documents, embeddings, reranker=reranker)
 query = "What did the president say about Ketanji Brown Jackson"
 ```
 
+
 ```python
 docs = docsearch.similarity_search_with_relevance_scores(query)
 print("relevance score - ", docs[0][1])
 print("text- ", docs[0][0].page_content[:1000])
 ```
+
 ```output
 relevance score -  0.7066475030191711
 text-  They were responding to a 9-1-1 call when a man shot and killed them with a stolen gun. 
@@ -105,11 +114,13 @@ That’s why the Justice Department required body cameras, banned chokeholds, an
 That’s why the American Rescue
 ```
 
+
 ```python
 docs = docsearch.similarity_search_with_score(query="Headaches", query_type="hybrid")
 print("distance - ", docs[0][1])
 print("text- ", docs[0][0].page_content[:1000])
 ```
+
 ```output
 distance -  0.30000001192092896
 text-  My administration is providing assistance with job training and housing, and now helping lower-income veterans get VA care debt-free.  
@@ -141,13 +152,16 @@ He was born a soldier. Army National Guard. Combat medic in Kosovo and Iraq.
 Stationed near Baghdad, just ya
 ```
 
+
 ```python
 print("reranker : ", docsearch._reranker)
 ```
+
 ```output
 reranker :  <lancedb.rerankers.linear_combination.LinearCombinationReranker object at 0x107ef1130>
 ```
-Additionaly, to explore the table you can load it into a df or save it in a csv file: 
+
+추가적으로, 테이블을 탐색하려면 이를 df로 로드하거나 csv 파일로 저장할 수 있습니다:
 ```python
 tbl = docsearch.get_table()
 print("tbl:", tbl)
@@ -157,6 +171,7 @@ pd_df = tbl.to_pandas()
 # you can also create a new vector store object using an older connection object:
 vector_store = LanceDB(connection=tbl, embedding=embeddings)
 ```
+
 
 ```python
 docs = docsearch.similarity_search(
@@ -171,6 +186,7 @@ print("\nSQL filtering :\n")
 docs = docsearch.similarity_search(query=query, filter="text LIKE '%Officer Rivera%'")
 print(docs[0].page_content)
 ```
+
 ```output
 metadata : {'source': '../../how_to/state_of_the_union.txt'}
 
@@ -236,24 +252,29 @@ We’ve set up joint patrols with Mexico and Guatemala to catch more human traff
 
 We’re putting in place dedicated immigration judges so families fleeing persecution and violence can have their cases heard faster.
 ```
-## Adding images
+
+## 이미지 추가
 
 ```python
 ! pip install -U langchain-experimental
 ```
 
+
 ```python
 ! pip install open_clip_torch torch
 ```
+
 
 ```python
 ! rm -rf '/tmp/multimmodal_lance'
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "OpenCLIPEmbeddings", "source": "langchain_experimental.open_clip", "docs": "https://api.python.langchain.com/en/latest/open_clip/langchain_experimental.open_clip.open_clip.OpenCLIPEmbeddings.html", "title": "LanceDB"}]-->
 from langchain_experimental.open_clip import OpenCLIPEmbeddings
 ```
+
 
 ```python
 import os
@@ -284,6 +305,7 @@ for i, url in enumerate(image_urls, start=1):
         f.write(response.content)
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "LanceDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.lancedb.LanceDB.html", "title": "LanceDB"}]-->
 from langchain_community.vectorstores import LanceDB
@@ -294,45 +316,55 @@ vec_store = LanceDB(
 )
 ```
 
+
 ```python
 vec_store.add_images(uris=image_uris)
 ```
+
 
 ```output
 ['b673620b-01f0-42ca-a92e-d033bb92c0a6',
  '99c3a5b0-b577-417a-8177-92f4a655dbfb']
 ```
 
+
 ```python
 vec_store.add_texts(texts)
 ```
+
 
 ```output
 ['f7adde5d-a4a3-402b-9e73-088b230722c3',
  'cbed59da-0aec-4bff-8820-9e59d81a2140']
 ```
 
+
 ```python
 img_embed = vec_store._embedding.embed_query("bird")
 ```
+
 
 ```python
 vec_store.similarity_search_by_vector(img_embed)[0]
 ```
 
+
 ```output
 Document(page_content='bird', metadata={'id': 'f7adde5d-a4a3-402b-9e73-088b230722c3'})
 ```
+
 
 ```python
 vec_store._table
 ```
 
+
 ```output
 LanceTable(connection=LanceDBConnection(/tmp/lancedb), name="multimodal_test")
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

@@ -1,49 +1,52 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/textembed/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/textembed.ipynb
+description: TextEmbed는 다양한 문장 변환 모델을 지원하는 고속, 저지연 REST API로, 자연어 처리 응용 프로그램에 적합합니다.
 ---
 
-# TextEmbed - Embedding Inference Server
+# TextEmbed - 임베딩 추론 서버
 
-TextEmbed is a high-throughput, low-latency REST API designed for serving vector embeddings. It supports a wide range of sentence-transformer models and frameworks, making it suitable for various applications in natural language processing.
+TextEmbed는 벡터 임베딩을 제공하기 위해 설계된 고처리량, 저지연 REST API입니다. 다양한 문장 변환기 모델과 프레임워크를 지원하여 자연어 처리의 다양한 애플리케이션에 적합합니다.
 
-## Features
+## 특징
 
-- **High Throughput & Low Latency:** Designed to handle a large number of requests efficiently.
-- **Flexible Model Support:** Works with various sentence-transformer models.
-- **Scalable:** Easily integrates into larger systems and scales with demand.
-- **Batch Processing:** Supports batch processing for better and faster inference.
-- **OpenAI Compatible REST API Endpoint:** Provides an OpenAI compatible REST API endpoint.
-- **Single Line Command Deployment:** Deploy multiple models via a single command for efficient deployment.
-- **Support for Embedding Formats:** Supports binary, float16, and float32 embeddings formats for faster retrieval.
+- **고처리량 및 저지연:** 많은 요청을 효율적으로 처리하도록 설계되었습니다.
+- **유연한 모델 지원:** 다양한 문장 변환기 모델과 함께 작동합니다.
+- **확장 가능:** 더 큰 시스템에 쉽게 통합되고 수요에 따라 확장됩니다.
+- **배치 처리:** 더 나은 및 빠른 추론을 위한 배치 처리를 지원합니다.
+- **OpenAI 호환 REST API 엔드포인트:** OpenAI 호환 REST API 엔드포인트를 제공합니다.
+- **단일 명령 배포:** 효율적인 배포를 위해 단일 명령으로 여러 모델을 배포합니다.
+- **임베딩 형식 지원:** 더 빠른 검색을 위한 이진, float16 및 float32 임베딩 형식을 지원합니다.
 
-## Getting Started
+## 시작하기
 
-### Prerequisites
+### 전제 조건
 
-Ensure you have Python 3.10 or higher installed. You will also need to install the required dependencies.
+Python 3.10 이상이 설치되어 있는지 확인하십시오. 필요한 종속성도 설치해야 합니다.
 
-## Installation via PyPI
+## PyPI를 통한 설치
 
-1. **Install the required dependencies:**
+1. **필요한 종속성 설치:**
    
    ```bash
    pip install -U textembed
    ```
-2. **Start the TextEmbed server with your desired models:**
+
+2. **원하는 모델로 TextEmbed 서버 시작:**
    
    ```bash
    python -m textembed.server --models sentence-transformers/all-MiniLM-L12-v2 --workers 4 --api-key TextEmbed 
    ```
 
-For more information, please read the [documentation](https://github.com/kevaldekivadiya2415/textembed/blob/main/docs/setup.md).
 
-### Import
+자세한 내용은 [문서](https://github.com/kevaldekivadiya2415/textembed/blob/main/docs/setup.md)를 참조하십시오.
+
+### 가져오기
 
 ```python
 <!--IMPORTS:[{"imported": "TextEmbedEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.textembed.TextEmbedEmbeddings.html", "title": "TextEmbed - Embedding Inference Server"}]-->
 from langchain_community.embeddings import TextEmbedEmbeddings
 ```
+
 
 ```python
 embeddings = TextEmbedEmbeddings(
@@ -53,7 +56,8 @@ embeddings = TextEmbedEmbeddings(
 )
 ```
 
-### Embed your documents
+
+### 문서 임베드하기
 
 ```python
 # Define a list of documents
@@ -69,6 +73,7 @@ documents = [
 query = "What is the cultural heritage of India?"
 ```
 
+
 ```python
 # Embed all documents
 document_embeddings = embeddings.embed_documents(documents)
@@ -76,6 +81,7 @@ document_embeddings = embeddings.embed_documents(documents)
 # Embed the query
 query_embedding = embeddings.embed_query(query)
 ```
+
 
 ```python
 # Compute Similarity
@@ -85,6 +91,7 @@ scores = np.array(document_embeddings) @ np.array(query_embedding).T
 dict(zip(documents, scores))
 ```
 
+
 ```output
 {'Data science involves extracting insights from data.': 0.05121298956322118,
  'Artificial intelligence is transforming various industries.': -0.0060612142358469345,
@@ -93,7 +100,8 @@ dict(zip(documents, scores))
  'India has a diverse cultural heritage.': 0.7408992963028144}
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

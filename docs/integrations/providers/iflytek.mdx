@@ -1,42 +1,43 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/iflytek/
+description: iFlytek은 음성 인식 소프트웨어 및 관련 제품을 개발하는 중국 정보 기술 회사로, 교육, 통신, 음악, 지능형 장난감
+  산업을 포함합니다.
 ---
 
 # iFlytek
 
-> [iFlytek](https://www.iflytek.com) is a Chinese information technology company
-established in 1999. It creates voice recognition software and
-voice-based internet/mobile products covering education, communication,
-music, intelligent toys industries.
+> [iFlytek](https://www.iflytek.com)는 1999년에 설립된 중국의 정보 기술 회사입니다. 이 회사는 교육, 통신, 음악, 지능형 장난감 산업을 아우르는 음성 인식 소프트웨어 및 음성 기반 인터넷/모바일 제품을 만듭니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Get `SparkLLM` app_id, api_key and api_secret from [iFlyTek SparkLLM API Console](https://console.xfyun.cn/services/bm3) (for more info, see [iFlyTek SparkLLM Intro](https://xinghuo.xfyun.cn/sparkapi)).
-- Install the Python package (not for the embedding models):
+- [iFlyTek SparkLLM API Console](https://console.xfyun.cn/services/bm3)에서 `SparkLLM` app_id, api_key 및 api_secret을 가져옵니다 (자세한 내용은 [iFlyTek SparkLLM 소개](https://xinghuo.xfyun.cn/sparkapi)를 참조하세요).
+- Python 패키지를 설치합니다 (임베딩 모델은 제외):
 
 ```bash
 pip install websocket-client
 ```
 
+
 ## LLMs
 
-See a [usage example](/docs/integrations/llms/sparkllm).
+[사용 예제](/docs/integrations/llms/sparkllm)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "SparkLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.sparkllm.SparkLLM.html", "title": "iFlytek"}]-->
 from langchain_community.llms import SparkLLM
 ```
 
-## Chat models
 
-See a [usage example](/docs/integrations/chat/sparkllm).
+## 채팅 모델
+
+[사용 예제](/docs/integrations/chat/sparkllm)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatSparkLLM", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.sparkllm.ChatSparkLLM.html", "title": "iFlytek"}]-->
 from langchain_community.chat_models import ChatSparkLLM
 ```
 
-## Embedding models
+
+## 임베딩 모델
 
 ```python
 <!--IMPORTS:[{"imported": "SparkLLMTextEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.sparkllm.SparkLLMTextEmbeddings.html", "title": "iFlytek"}]-->

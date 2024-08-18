@@ -1,17 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/pinecone/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/pinecone.ipynb
+description: Pinecone의 인퍼런스 API를 사용하여 텍스트 임베딩을 생성하는 방법을 설명합니다. 동기 및 비동기 방식의 임베딩 생성
+  예시 포함.
 ---
 
-# Pinecone Embeddings
+# 파인콘 임베딩
 
-Pinecone's inference API can be accessed via `PineconeEmbeddings`. Providing text embeddings via the Pinecone service. We start by installing prerequisite libraries:
+파인콘의 추론 API는 `PineconeEmbeddings`를 통해 접근할 수 있습니다. 파인콘 서비스를 통해 텍스트 임베딩을 제공합니다. 먼저 필수 라이브러리를 설치합니다:
 
 ```python
 !pip install -qU "langchain-pinecone>=0.2.0" 
 ```
 
-Next, we [sign up / log in to Pinecone](https://app.pinecone.io) to get our API key:
+
+다음으로 [파인콘에 가입/로그인](https://app.pinecone.io)하여 API 키를 받습니다:
 
 ```python
 import os
@@ -22,7 +24,8 @@ os.environ["PINECONE_API_KEY"] = os.getenv("PINECONE_API_KEY") or getpass(
 )
 ```
 
-Check the document for available [models](https://docs.pinecone.io/models/overview). Now we initialize our embedding model like so:
+
+사용 가능한 [모델](https://docs.pinecone.io/models/overview)을 문서에서 확인합니다. 이제 다음과 같이 임베딩 모델을 초기화합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "PineconeEmbeddings", "source": "langchain_pinecone", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_pinecone.embeddings.PineconeEmbeddings.html", "title": "Pinecone Embeddings"}]-->
@@ -31,7 +34,8 @@ from langchain_pinecone import PineconeEmbeddings
 embeddings = PineconeEmbeddings(model="multilingual-e5-large")
 ```
 
-From here we can create embeddings either sync or async, let's start with sync! We embed a single text as a query embedding (ie what we search with in RAG) using `embed_query`:
+
+여기서 우리는 동기 또는 비동기로 임베딩을 생성할 수 있습니다. 먼저 동기 방식으로 시작하겠습니다! `embed_query`를 사용하여 단일 텍스트를 쿼리 임베딩(즉, RAG에서 검색하는 내용)으로 임베딩합니다:
 
 ```python
 docs = [
@@ -43,10 +47,12 @@ docs = [
 ]
 ```
 
+
 ```python
 doc_embeds = embeddings.embed_documents(docs)
 doc_embeds
 ```
+
 
 ```python
 query = "Tell me about the tech company known as Apple"
@@ -54,7 +60,8 @@ query_embed = embeddings.embed_query(query)
 query_embed
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

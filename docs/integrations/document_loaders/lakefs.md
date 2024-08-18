@@ -1,22 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/lakefs/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/lakefs.ipynb
+description: lakeFS는 데이터 레이크에 대한 확장 가능한 버전 관리를 제공하며, Git과 유사한 방식으로 버전을 생성하고 접근할 수
+  있습니다.
 ---
 
 # lakeFS
 
-> [lakeFS](https://docs.lakefs.io/) provides scalable version control over the data lake, and uses Git-like semantics to create and access those versions.
+> [lakeFS](https://docs.lakefs.io/)는 데이터 레이크에 대한 확장 가능한 버전 관리를 제공하며, Git과 유사한 의미를 사용하여 이러한 버전을 생성하고 액세스합니다.
 
-This notebooks covers how to load document objects from a `lakeFS` path (whether it's an object or a prefix).
+이 노트북은 `lakeFS` 경로에서 문서 객체를 로드하는 방법을 다룹니다(객체이든 접두사이든 상관없이).
 
-## Initializing the lakeFS loader
+## lakeFS 로더 초기화
 
-Replace `ENDPOINT`, `LAKEFS_ACCESS_KEY`, and `LAKEFS_SECRET_KEY` values with your own.
+`ENDPOINT`, `LAKEFS_ACCESS_KEY`, 및 `LAKEFS_SECRET_KEY` 값을 자신의 값으로 교체하십시오.
 
 ```python
 <!--IMPORTS:[{"imported": "LakeFSLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.lakefs.LakeFSLoader.html", "title": "lakeFS"}]-->
 from langchain_community.document_loaders import LakeFSLoader
 ```
+
 
 ```python
 ENDPOINT = ""
@@ -30,10 +32,11 @@ lakefs_loader = LakeFSLoader(
 )
 ```
 
-## Specifying a path
-You can specify a prefix or a complete object path to control which files to load.
 
-Specify the repository, reference (branch, commit id, or tag), and path in the corresponding `REPO`, `REF`, and `PATH` to load the documents from:
+## 경로 지정
+로드할 파일을 제어하기 위해 접두사 또는 전체 객체 경로를 지정할 수 있습니다.
+
+문서를 로드할 `REPO`, `REF`(브랜치, 커밋 ID 또는 태그), 및 경로를 해당하는 `PATH`에 지정하십시오:
 
 ```python
 REPO = ""
@@ -48,7 +51,8 @@ docs = lakefs_loader.load()
 docs
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

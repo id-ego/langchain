@@ -1,32 +1,33 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/robocorp/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/robocorp.ipynb
+description: 이 문서는 Robocorp Action Server와 LangChain을 사용하여 AI 에이전트의 기능을 확장하는 방법을 소개합니다.
 ---
 
-# Robocorp Toolkit
+# 로보코프 툴킷
 
-This notebook covers how to get started with [Robocorp Action Server](https://github.com/robocorp/robocorp) action toolkit and LangChain.
+이 노트북은 [Robocorp Action Server](https://github.com/robocorp/robocorp) 액션 툴킷과 LangChain을 시작하는 방법을 다룹니다.
 
-Robocorp is the easiest way to extend the capabilities of AI agents, assistants and copilots with custom actions.
+Robocorp는 AI 에이전트, 어시스턴트 및 코파일럿의 기능을 사용자 정의 액션으로 확장하는 가장 쉬운 방법입니다.
 
-## Installation
+## 설치
 
-First, see the [Robocorp Quickstart](https://github.com/robocorp/robocorp#quickstart) on how to setup `Action Server` and create your Actions.
+먼저, `Action Server`를 설정하고 액션을 생성하는 방법에 대한 [Robocorp 빠른 시작 가이드](https://github.com/robocorp/robocorp#quickstart)를 참조하세요.
 
-In your LangChain application, install the `langchain-robocorp` package: 
+당신의 LangChain 애플리케이션에서 `langchain-robocorp` 패키지를 설치합니다: 
 
 ```python
 # Install package
 %pip install --upgrade --quiet langchain-robocorp
 ```
 
-When you create the new `Action Server` following the above quickstart.
 
-It will create a directory with files, including `action.py`.
+위의 빠른 시작 가이드를 따라 새로운 `Action Server`를 생성하면,
 
-We can add python function as actions as shown [here](https://github.com/robocorp/robocorp/tree/master/actions#describe-your-action).
+`action.py`를 포함한 파일들이 있는 디렉토리가 생성됩니다.
 
-Let's add a dummy function to `action.py`.
+우리는 [여기](https://github.com/robocorp/robocorp/tree/master/actions#describe-your-action)에서 보여준 것처럼 액션으로서 파이썬 함수를 추가할 수 있습니다.
+
+더미 함수를 `action.py`에 추가해 보겠습니다.
 
 ```python
 @action
@@ -45,30 +46,33 @@ def get_weather_forecast(city: str, days: int, scale: str = "celsius") -> str:
     return "75F and sunny :)"
 ```
 
-We then start the server:
+
+그런 다음 서버를 시작합니다:
 
 ```bash
 action-server start
 ```
 
-And we can see: 
+
+그리고 우리는 다음을 볼 수 있습니다: 
 
 ```
 Found new action: get_weather_forecast
 
 ```
 
-Test locally by going to the server running at `http://localhost:8080` and use the UI to run the function.
 
-## Environment Setup
+서버가 실행 중인 `http://localhost:8080`으로 가서 UI를 사용하여 함수를 실행하여 로컬에서 테스트합니다.
 
-Optionally you can set the following environment variables:
+## 환경 설정
 
-- `LANGCHAIN_TRACING_V2=true`: To enable LangSmith log run tracing that can also be bind to respective Action Server action run logs. See [LangSmith documentation](https://docs.smith.langchain.com/tracing#log-runs) for more.
+선택적으로 다음 환경 변수를 설정할 수 있습니다:
 
-## Usage
+- `LANGCHAIN_TRACING_V2=true`: LangSmith 로그 실행 추적을 활성화하여 해당 Action Server 액션 실행 로그에 바인딩할 수 있습니다. 자세한 내용은 [LangSmith 문서](https://docs.smith.langchain.com/tracing#log-runs)를 참조하세요.
 
-We started the local action server, above, running on `http://localhost:8080`.
+## 사용법
+
+우리는 위에서 `http://localhost:8080`에서 실행 중인 로컬 액션 서버를 시작했습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Robocorp Toolkit"}, {"imported": "OpenAIFunctionsAgent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.openai_functions_agent.base.OpenAIFunctionsAgent.html", "title": "Robocorp Toolkit"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Robocorp Toolkit"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Robocorp Toolkit"}, {"imported": "ActionServerToolkit", "source": "langchain_robocorp", "docs": "https://api.python.langchain.com/en/latest/toolkits/langchain_robocorp.toolkits.ActionServerToolkit.html", "title": "Robocorp Toolkit"}]-->
@@ -93,6 +97,7 @@ executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 executor.invoke("What is the current weather today in San Francisco in fahrenheit?")
 ```
+
 ```output
 
 
@@ -106,16 +111,18 @@ Invoking: `robocorp_action_server_get_weather_forecast` with `{'city': 'San Fran
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': 'What is the current weather today in San Francisco in fahrenheit?',
  'output': 'The current weather today in San Francisco is 75F and sunny.'}
 ```
 
-### Single input tools
 
-By default `toolkit.get_tools()` will return the actions as Structured Tools. 
+### 단일 입력 도구
 
-To return single input tools, pass a Chat model to be used for processing the inputs.
+기본적으로 `toolkit.get_tools()`는 액션을 구조화된 도구로 반환합니다.
+
+단일 입력 도구를 반환하려면 입력 처리를 위해 사용할 채팅 모델을 전달합니다.
 
 ```python
 # Initialize single input Action Server Toolkit
@@ -123,7 +130,8 @@ toolkit = ActionServerToolkit(url="http://localhost:8080")
 tools = toolkit.get_tools(llm=llm)
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

@@ -1,16 +1,15 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/clarifai/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/clarifai.ipynb
+description: Clarifai는 데이터 탐색, 라벨링, 모델 훈련 및 추론을 포함한 전체 AI 라이프사이클을 제공하는 AI 플랫폼입니다.
 ---
 
 # Clarifai
 
-> [Clarifai](https://www.clarifai.com/) is an AI Platform that provides the full AI lifecycle ranging from data exploration, data labeling, model training, evaluation, and inference.
+> [Clarifai](https://www.clarifai.com/)는 데이터 탐색, 데이터 레이블링, 모델 훈련, 평가 및 추론에 이르는 전체 AI 생애 주기를 제공하는 AI 플랫폼입니다.
 
-This example goes over how to use LangChain to interact with `Clarifai` [models](https://clarifai.com/explore/models). 
+이 예제는 LangChain을 사용하여 `Clarifai` [모델](https://clarifai.com/explore/models)과 상호작용하는 방법을 설명합니다.
 
-To use Clarifai, you must have an account and a Personal Access Token (PAT) key.
-[Check here](https://clarifai.com/settings/security) to get or create a PAT.
+Clarifai를 사용하려면 계정과 개인 액세스 토큰(PAT) 키가 필요합니다. [여기에서 확인](https://clarifai.com/settings/security)하여 PAT를 얻거나 생성하세요.
 
 # Dependencies
 
@@ -19,6 +18,7 @@ To use Clarifai, you must have an account and a Personal Access Token (PAT) key.
 %pip install --upgrade --quiet  clarifai
 ```
 
+
 ```python
 # Declare clarifai pat token as environment variable or you can pass it as argument in clarifai class.
 import os
@@ -26,8 +26,9 @@ import os
 os.environ["CLARIFAI_PAT"] = "CLARIFAI_PAT_TOKEN"
 ```
 
+
 # Imports
-Here we will be setting the personal access token. You can find your PAT under [settings/security](https://clarifai.com/settings/security) in your Clarifai account.
+여기에서는 개인 액세스 토큰을 설정합니다. Clarifai 계정의 [설정/보안](https://clarifai.com/settings/security)에서 PAT를 찾을 수 있습니다.
 
 ```python
 # Please login and get your API key from  https://clarifai.com/settings/security
@@ -35,6 +36,7 @@ from getpass import getpass
 
 CLARIFAI_PAT = getpass()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Clarifai"}, {"imported": "Clarifai", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.clarifai.Clarifai.html", "title": "Clarifai"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Clarifai"}]-->
@@ -44,8 +46,9 @@ from langchain_community.llms import Clarifai
 from langchain_core.prompts import PromptTemplate
 ```
 
+
 # Input
-Create a prompt template to be used with the LLM Chain:
+LLM 체인과 함께 사용할 프롬프트 템플릿을 만듭니다:
 
 ```python
 template = """Question: {question}
@@ -55,12 +58,13 @@ Answer: Let's think step by step."""
 prompt = PromptTemplate.from_template(template)
 ```
 
+
 # Setup
-Setup the user id and app id where the model resides. You can find a list of public models on https://clarifai.com/explore/models
+모델이 있는 사용자 ID와 앱 ID를 설정합니다. 공개 모델 목록은 https://clarifai.com/explore/models 에서 확인할 수 있습니다.
 
-You will have to also initialize the model id and if needed, the model version id. Some models have many versions, you can choose the one appropriate for your task.
+모델 ID와 필요할 경우 모델 버전 ID도 초기화해야 합니다. 일부 모델은 여러 버전이 있으므로 작업에 적합한 버전을 선택할 수 있습니다.
 
-Alternatively, You can use the model_url (for ex: "https://clarifai.com/anthropic/completion/models/claude-v2") for intialization.
+또는 초기화에 모델 URL(예: "https://clarifai.com/anthropic/completion/models/claude-v2")을 사용할 수 있습니다.
 
 ```python
 USER_ID = "openai"
@@ -74,6 +78,7 @@ MODEL_ID = "GPT-3_5-turbo"
 MODEL_URL = "https://clarifai.com/openai/chat-completion/models/GPT-4"
 ```
 
+
 ```python
 # Initialize a Clarifai LLM
 clarifai_llm = Clarifai(user_id=USER_ID, app_id=APP_ID, model_id=MODEL_ID)
@@ -82,10 +87,12 @@ clarifai_llm = Clarifai(user_id=USER_ID, app_id=APP_ID, model_id=MODEL_ID)
 clarifai_llm = Clarifai(model_url=MODEL_URL)
 ```
 
+
 ```python
 # Create LLM chain
 llm_chain = LLMChain(prompt=prompt, llm=clarifai_llm)
 ```
+
 
 # Run Chain
 
@@ -95,17 +102,20 @@ question = "What NFL team won the Super Bowl in the year Justin Beiber was born?
 llm_chain.run(question)
 ```
 
+
 ```output
 ' Okay, here are the steps to figure this out:\n\n1. Justin Bieber was born on March 1, 1994.\n\n2. The Super Bowl that took place in the year of his birth was Super Bowl XXVIII. \n\n3. Super Bowl XXVIII was played on January 30, 1994.\n\n4. The two teams that played in Super Bowl XXVIII were the Dallas Cowboys and the Buffalo Bills. \n\n5. The Dallas Cowboys defeated the Buffalo Bills 30-13 to win Super Bowl XXVIII.\n\nTherefore, the NFL team that won the Super Bowl in the year Justin Bieber was born was the Dallas Cowboys.'
 ```
 
-## Model Predict with Inference parameters for GPT.
-Alternatively you can use GPT models with inference parameters (like temperature, max_tokens etc)
+
+## 모델 예측 및 추론 매개변수 설정
+대안으로, 추론 매개변수(예: 온도, 최대 토큰 등)와 함께 GPT 모델을 사용할 수 있습니다.
 
 ```python
 # Initialize the parameters as dict.
 params = dict(temperature=str(0.3), max_tokens=100)
 ```
+
 
 ```python
 clarifai_llm = Clarifai(user_id=USER_ID, app_id=APP_ID, model_id=MODEL_ID)
@@ -114,17 +124,20 @@ llm_chain = LLMChain(
 )
 ```
 
+
 ```python
 question = "How many 3 digit even numbers you can form that if one of the digits is 5 then the following digit must be 7?"
 
 llm_chain.run(question)
 ```
 
+
 ```output
 'Step 1: The first digit can be any even number from 1 to 9, except for 5. So there are 4 choices for the first digit.\n\nStep 2: If the first digit is not 5, then the second digit must be 7. So there is only 1 choice for the second digit.\n\nStep 3: The third digit can be any even number from 0 to 9, except for 5 and 7. So there are '
 ```
 
-Generate responses for list of prompts
+
+프롬프트 목록에 대한 응답 생성
 
 ```python
 # We can use _generate to generate the response for list of prompts.
@@ -138,11 +151,13 @@ clarifai_llm._generate(
 )
 ```
 
+
 ```output
 LLMResult(generations=[[Generation(text=' Here is a 5 sentence summary of the key events of the American Revolution:\n\nThe American Revolution began with growing tensions between American colonists and the British government over issues of taxation without representation. In 1775, fighting broke out between British troops and American militiamen in Lexington and Concord, starting the Revolutionary War. The Continental Congress appointed George Washington as commander of the Continental Army, which went on to win key victories over the British. In 1776, the Declaration of Independence was adopted, formally declaring the 13 American colonies free from British rule. After years of fighting, the Revolutionary War ended with the British defeat at Yorktown in 1781 and recognition of American independence.')], [Generation(text=" Here's a humorous take on explaining rocket science:\n\nRocket science is so easy, it's practically child's play! Just strap a big metal tube full of explosive liquid to your butt and light the fuse. What could go wrong? Blastoff!  Whoosh, you'll be zooming to the moon in no time. Just remember your helmet or your head might go pop like a zit when you leave the atmosphere. \n\nMaking rockets is a cinch too. Simply mix together some spicy spices, garlic powder, chili powder, a dash of gunpowder and voila - rocket fuel! Add a pinch of baking soda and vinegar if you want an extra kick. Shake well and pour into your DIY soda bottle rocket. Stand back and watch that baby soar!\n\nGuiding a rocket is fun for the whole family. Just strap in, push some random buttons and see where you end up. It's like the ultimate surprise vacation! You never know if you'll wind up on Venus, crash land on Mars, or take a quick dip through the rings of Saturn. \n\nAnd if anything goes wrong, don't sweat it. Rocket science is easy breezy. Just troubleshoot on the fly with some duct tape and crazy glue and you'll be back on course in a jiffy. Who needs mission control when you've got this!")], [Generation(text=" Here is a draft welcome speech for a college sports day:\n\nGood morning everyone and welcome to our college's annual sports day! It's wonderful to see so many students, faculty, staff, alumni, and guests gathered here today to celebrate sportsmanship and athletic achievement at our college. \n\nLet's begin by thanking all the organizers, volunteers, coaches, and staff members who worked tirelessly behind the scenes to make this event possible. Our sports day would not happen without your dedication and commitment. \n\nI also want to recognize all the student-athletes with us today. You inspire us with your talent, spirit, and determination. Sports have a unique power to unite and energize our community. Through both individual and team sports, you demonstrate focus, collaboration, perseverance and resilience – qualities that will serve you well both on and off the field.\n\nThe spirit of competition and fair play are core values of any sports event. I encourage all of you to compete enthusiastically today. Play to the best of your ability and have fun. Applaud the effort and sportsmanship of your fellow athletes, regardless of the outcome. \n\nWin or lose, this sports day is a day for us to build camaraderie and create lifelong memories. Let's make it a day of fitness and friendship for all. With that, let the games begin. Enjoy the day!")]], llm_output=None, run=None)
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

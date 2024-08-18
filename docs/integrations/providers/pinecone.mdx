@@ -1,40 +1,42 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/pinecone/
+description: 파인콘은 광범위한 기능을 갖춘 벡터 데이터베이스로, 설치, 벡터 저장소 및 검색기 사용법을 안내합니다.
 keywords:
 - pinecone
 ---
 
-# Pinecone
+# 파인콘
 
-> [Pinecone](https://docs.pinecone.io/docs/overview) is a vector database with broad functionality.
+> [파인콘](https://docs.pinecone.io/docs/overview)은 광범위한 기능을 갖춘 벡터 데이터베이스입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the Python SDK:
+Python SDK를 설치하세요:
 
 ```bash
 pip install langchain-pinecone
 ```
 
-## Vector store
 
-There exists a wrapper around Pinecone indexes, allowing you to use it as a vectorstore,
-whether for semantic search or example selection.
+## 벡터 저장소
+
+파인콘 인덱스를 감싸는 래퍼가 존재하여, 의미 검색이나 예제 선택을 위해 벡터 저장소로 사용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PineconeVectorStore", "source": "langchain_pinecone", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_pinecone.vectorstores.PineconeVectorStore.html", "title": "Pinecone"}]-->
 from langchain_pinecone import PineconeVectorStore
 ```
 
-For a more detailed walkthrough of the Pinecone vectorstore, see [this notebook](/docs/integrations/vectorstores/pinecone)
 
-## Retrievers
+파인콘 벡터 저장소에 대한 보다 자세한 안내는 [이 노트북](/docs/integrations/vectorstores/pinecone)을 참조하세요.
 
-### Pinecone Hybrid Search
+## 검색기
+
+### 파인콘 하이브리드 검색
 
 ```bash
 pip install pinecone-client pinecone-text
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "PineconeHybridSearchRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.pinecone_hybrid_search.PineconeHybridSearchRetriever.html", "title": "Pinecone"}]-->
@@ -43,10 +45,11 @@ from langchain_community.retrievers import (
 )
 ```
 
-For more detailed information, see [this notebook](/docs/integrations/retrievers/pinecone_hybrid_search).
 
-### Self Query retriever
+자세한 정보는 [이 노트북](/docs/integrations/retrievers/pinecone_hybrid_search)을 참조하세요.
 
-Pinecone vector store can be used as a retriever for self-querying.
+### 자기 쿼리 검색기
 
-For more detailed information, see [this notebook](/docs/integrations/retrievers/self_query/pinecone).
+파인콘 벡터 저장소는 자기 쿼리를 위한 검색기로 사용할 수 있습니다.
+
+자세한 정보는 [이 노트북](/docs/integrations/retrievers/self_query/pinecone)을 참조하세요.

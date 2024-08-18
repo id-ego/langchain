@@ -1,22 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/doctran_translate_document/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/doctran_translate_document.ipynb
+description: 다국어 문서 비교를 위한 Doctran 라이브러리를 사용하여 문서를 번역하고 임베딩을 통해 의미를 분석하는 방법을 설명합니다.
 ---
 
-# Doctran: language translation
+# Doctran: 언어 번역
 
-Comparing documents through embeddings has the benefit of working across multiple languages. "Harrison says hello" and "Harrison dice hola" will occupy similar positions in the vector space because they have the same meaning semantically.
+임베딩을 통해 문서를 비교하는 것은 여러 언어에서 작업할 수 있는 이점이 있습니다. "Harrison says hello"와 "Harrison dice hola"는 의미적으로 동일하기 때문에 벡터 공간에서 유사한 위치를 차지합니다.
 
-However, it can still be useful to use an LLM to **translate documents into other languages** before vectorizing them. This is especially helpful when users are expected to query the knowledge base in different languages, or when state-of-the-art embedding models are not available for a given language.
+그러나 문서를 벡터화하기 전에 LLM을 사용하여 **다른 언어로 문서를 번역하는 것**은 여전히 유용할 수 있습니다. 이는 사용자가 다양한 언어로 지식 기반을 쿼리할 것으로 예상되거나, 특정 언어에 대해 최첨단 임베딩 모델을 사용할 수 없을 때 특히 도움이 됩니다.
 
-We can accomplish this using the [Doctran](https://github.com/psychic-api/doctran) library, which uses OpenAI's function calling feature to translate documents between languages.
+우리는 OpenAI의 함수 호출 기능을 사용하여 언어 간 문서를 번역하는 [Doctran](https://github.com/psychic-api/doctran) 라이브러리를 사용하여 이를 수행할 수 있습니다.
 
 ```python
 %pip install --upgrade --quiet  doctran
 ```
+
 ```output
 Note: you may need to restart the kernel to use updated packages.
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "DoctranTextTranslator", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.doctran_text_translate.DoctranTextTranslator.html", "title": "Doctran: language translation"}, {"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Doctran: language translation"}]-->
@@ -24,18 +26,21 @@ from langchain_community.document_transformers import DoctranTextTranslator
 from langchain_core.documents import Document
 ```
 
+
 ```python
 from dotenv import load_dotenv
 
 load_dotenv()
 ```
 
+
 ```output
 True
 ```
 
-## Input
-This is the document we'll translate
+
+## 입력
+이것은 우리가 번역할 문서입니다
 
 ```python
 sample_text = """[Generated with ChatGPT]
@@ -75,21 +80,25 @@ jason@psychic.dev
 """
 ```
 
+
 ```python
 documents = [Document(page_content=sample_text)]
 qa_translator = DoctranTextTranslator(language="spanish")
 ```
 
-## Output using Sync version
-After translating a document, the result will be returned as a new document with the page_content translated into the target language
+
+## 동기식 버전을 사용한 출력
+문서를 번역한 후 결과는 페이지 내용이 대상 언어로 번역된 새로운 문서로 반환됩니다.
 
 ```python
 translated_document = qa_translator.transform_documents(documents)
 ```
 
+
 ```python
 print(translated_document[0].page_content)
 ```
+
 ```output
 Documento Confidencial - Solo para Uso Interno
 
@@ -124,21 +133,25 @@ Cofundador y CEO
 Psychic
 jason@psychic.dev
 ```
-## Output using the Async version
 
-After translating a document, the result will be returned as a new document with the page_content translated into the target language. The async version will improve performance when the documents are chunked in multiple parts. It will also make sure to return the output in the correct order.
+## 비동기식 버전을 사용한 출력
+
+문서를 번역한 후 결과는 페이지 내용이 대상 언어로 번역된 새로운 문서로 반환됩니다. 비동기식 버전은 문서가 여러 부분으로 나뉘어 있을 때 성능을 향상시킵니다. 또한 출력을 올바른 순서로 반환하도록 보장합니다.
 
 ```python
 import asyncio
 ```
 
+
 ```python
 result = await qa_translator.atransform_documents(documents)
 ```
 
+
 ```python
 print(result[0].page_content)
 ```
+
 ```output
 Documento Confidencial - Solo para Uso Interno
 

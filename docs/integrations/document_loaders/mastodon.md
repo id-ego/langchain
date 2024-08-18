@@ -1,26 +1,29 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/mastodon/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/mastodon.ipynb
+description: Mastodon은 연합형 소셜 미디어 서비스로, Mastodon.py 패키지를 사용하여 계정의 '투트' 텍스트를 가져오는 로더를
+  제공합니다.
 ---
 
-# Mastodon
+# 마스토돈
 
-> [Mastodon](https://joinmastodon.org/) is a federated social media and social networking service.
+> [마스토돈](https://joinmastodon.org/)은 연합된 소셜 미디어 및 소셜 네트워킹 서비스입니다.
 
-This loader fetches the text from the "toots" of a list of `Mastodon` accounts, using the `Mastodon.py` Python package.
+이 로더는 `Mastodon.py` 파이썬 패키지를 사용하여 여러 `Mastodon` 계정의 "투트"에서 텍스트를 가져옵니다.
 
-Public accounts can the queried by default without any authentication. If non-public accounts or instances are queried, you have to register an application for your account which gets you an access token, and set that token and your account's API base URL.
+공개 계정은 기본적으로 인증 없이 쿼리할 수 있습니다. 비공식 계정이나 인스턴스를 쿼리하려면, 계정에 대한 애플리케이션을 등록하여 액세스 토큰을 얻고, 해당 토큰과 계정의 API 기본 URL을 설정해야 합니다.
 
-Then you need to pass in the Mastodon account names you want to extract, in the `@account@instance` format.
+그런 다음 추출하려는 마스토돈 계정 이름을 `@account@instance` 형식으로 전달해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "MastodonTootsLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.mastodon.MastodonTootsLoader.html", "title": "Mastodon"}]-->
 from langchain_community.document_loaders import MastodonTootsLoader
 ```
 
+
 ```python
 %pip install --upgrade --quiet  Mastodon.py
 ```
+
 
 ```python
 loader = MastodonTootsLoader(
@@ -39,12 +42,14 @@ loader = MastodonTootsLoader(
 # )
 ```
 
+
 ```python
 documents = loader.load()
 for doc in documents[:3]:
     print(doc.page_content)
     print("=" * 80)
 ```
+
 ```output
 <p>It is tough to leave this behind and go back to reality. And some people live here! I’m sure there are downsides but it sounds pretty good to me right now.</p>
 ================================================================================
@@ -53,9 +58,10 @@ for doc in documents[:3]:
 <p>Last day of the honeymoon. And it’s <a href="https://mastodon.social/tags/caturday" class="mention hashtag" rel="tag">#<span>caturday</span></a>! This cute tabby came to the restaurant to beg for food and got some chicken.</p>
 ================================================================================
 ```
-The toot texts (the documents' `page_content`) is by default HTML as returned by the Mastodon API.
 
-## Related
+투트 텍스트(문서의 `page_content`)는 기본적으로 마스토돈 API에서 반환된 HTML입니다.
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

@@ -1,18 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/python/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/python.ipynb
+description: 복잡한 계산을 위해 LLM이 생성한 코드를 실행할 수 있는 간단한 Python REPL 인터페이스에 대한 설명입니다.
 ---
 
-# Python REPL
+# 파이썬 REPL
 
-Sometimes, for complex calculations, rather than have an LLM generate the answer directly, it can be better to have the LLM generate code to calculate the answer, and then run that code to get the answer. In order to easily do that, we provide a simple Python REPL to execute commands in.
+때때로 복잡한 계산을 위해 LLM이 직접 답을 생성하는 것보다 LLM이 답을 계산하는 코드를 생성하고, 그 코드를 실행하여 답을 얻는 것이 더 나을 수 있습니다. 이를 쉽게 하기 위해 명령을 실행할 수 있는 간단한 파이썬 REPL을 제공합니다.
 
-This interface will only return things that are printed - therefore, if you want to use it to calculate an answer, make sure to have it print out the answer.
+이 인터페이스는 출력된 것만 반환합니다 - 따라서 답을 계산하기 위해 사용하려면 반드시 답을 출력하도록 해야 합니다.
 
 :::caution
-Python REPL can execute arbitrary code on the host machine (e.g., delete files, make network requests). Use with caution.
+파이썬 REPL은 호스트 머신에서 임의의 코드를 실행할 수 있습니다(예: 파일 삭제, 네트워크 요청). 주의해서 사용하세요.
 
-For more information general security guidelines, please see https://python.langchain.com/v0.2/docs/security/.
+자세한 보안 지침은 https://python.langchain.com/v0.2/docs/security/를 참조하세요.
 :::
 
 ```python
@@ -21,20 +21,25 @@ from langchain_core.tools import Tool
 from langchain_experimental.utilities import PythonREPL
 ```
 
+
 ```python
 python_repl = PythonREPL()
 ```
 
+
 ```python
 python_repl.run("print(1+1)")
 ```
+
 ```output
 Python REPL can execute arbitrary code. Use with caution.
 ```
 
+
 ```output
 '2\n'
 ```
+
 
 ```python
 # You can create the tool to pass to an agent
@@ -45,7 +50,8 @@ repl_tool = Tool(
 )
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

@@ -1,35 +1,37 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/ragatouille/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/ragatouille.ipynb
+description: RAGatouille는 ColBERT를 사용하여 대규모 텍스트 컬렉션에서 빠르고 정확한 검색을 가능하게 하는 통합 도구입니다.
 ---
 
 # RAGatouille
 
-> [RAGatouille](https://github.com/bclavie/RAGatouille) makes it as simple as can be to use `ColBERT`!
+> [RAGatouille](https://github.com/bclavie/RAGatouille)는 `ColBERT`를 사용하는 것을 최대한 간단하게 만들어 줍니다!
 > 
-> [ColBERT](https://github.com/stanford-futuredata/ColBERT) is a fast and accurate retrieval model, enabling scalable BERT-based search over large text collections in tens of milliseconds.
+> [ColBERT](https://github.com/stanford-futuredata/ColBERT)는 빠르고 정확한 검색 모델로, 수십 밀리초 내에 대규모 텍스트 컬렉션에 대한 BERT 기반 검색을 가능하게 합니다.
 
-We can use this as a [retriever](/docs/how_to#retrievers). It will show functionality specific to this integration. After going through, it may be useful to explore [relevant use-case pages](/docs/how_to#qa-with-rag) to learn how to use this vector store as part of a larger chain.
+우리는 이것을 [retriever](/docs/how_to#retrievers)로 사용할 수 있습니다. 이 통합에 특화된 기능을 보여줄 것입니다. 살펴본 후, 이 벡터 저장소를 더 큰 체인의 일부로 사용하는 방법을 배우기 위해 [관련 사용 사례 페이지](/docs/how_to#qa-with-rag)를 탐색하는 것이 유용할 수 있습니다.
 
-This page covers how to use [RAGatouille](https://github.com/bclavie/RAGatouille) as a retriever in a LangChain chain. 
+이 페이지에서는 LangChain 체인에서 [RAGatouille](https://github.com/bclavie/RAGatouille)를 retriever로 사용하는 방법을 다룹니다.
 
-## Setup
+## 설정
 
-The integration lives in the `ragatouille` package.
+통합은 `ragatouille` 패키지에 있습니다.
 
 ```bash
 pip install -U ragatouille
 ```
 
-## Usage
 
-This example is taken from their documentation
+## 사용법
+
+이 예시는 그들의 문서에서 가져온 것입니다.
 
 ```python
 from ragatouille import RAGPretrainedModel
 
 RAG = RAGPretrainedModel.from_pretrained("colbert-ir/colbertv2.0")
 ```
+
 
 ```python
 import requests
@@ -65,9 +67,11 @@ def get_wikipedia_page(title: str):
     return page["extract"] if "extract" in page else None
 ```
 
+
 ```python
 full_document = get_wikipedia_page("Hayao_Miyazaki")
 ```
+
 
 ```python
 RAG.index(
@@ -77,6 +81,7 @@ RAG.index(
     split_documents=True,
 )
 ```
+
 ```output
 
 
@@ -145,9 +150,11 @@ Clustering 10001 points in 128D to 1024 clusters, redo 1 times, 20 iterations
 Done indexing!
 ```
 
+
 ```python
 results = RAG.search(query="What animation studio did Miyazaki found?", k=3)
 ```
+
 ```output
 Loading searcher for index Miyazaki-123 for the first time... This may take a few seconds
 [Jan 07, 10:38:34] Loading segmented_maxsim_cpp extension (set COLBERT_LOAD_TORCH_EXTENSION_VERBOSE=True for more info)...
@@ -187,9 +194,11 @@ Searcher loaded!
   warnings.warn(
 ```
 
+
 ```python
 results
 ```
+
 
 ```output
 [{'content': 'In April 1984, Miyazaki opened his own office in Suginami Ward, naming it Nibariki.\n\n\n=== Studio Ghibli ===\n\n\n==== Early films (1985–1996) ====\nIn June 1985, Miyazaki, Takahata, Tokuma and Suzuki founded the animation production company Studio Ghibli, with funding from Tokuma Shoten. Studio Ghibli\'s first film, Laputa: Castle in the Sky (1986), employed the same production crew of Nausicaä. Miyazaki\'s designs for the film\'s setting were inspired by Greek architecture and "European urbanistic templates".',
@@ -203,19 +212,23 @@ results
   'rank': 3}]
 ```
 
-We can then convert easily to a LangChain retriever! We can pass in any kwargs we want when creating (like `k`)
+
+우리는 이를 LangChain retriever로 쉽게 변환할 수 있습니다! 생성할 때 원하는 모든 kwargs를 전달할 수 있습니다 (예: `k`).
 
 ```python
 retriever = RAG.as_langchain_retriever(k=3)
 ```
 
+
 ```python
 retriever.invoke("What animation studio did Miyazaki found?")
 ```
+
 ```output
 /Users/harrisonchase/.pyenv/versions/3.10.1/envs/langchain/lib/python3.10/site-packages/torch/amp/autocast_mode.py:250: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
   warnings.warn(
 ```
+
 
 ```output
 [Document(page_content='In April 1984, Miyazaki opened his own office in Suginami Ward, naming it Nibariki.\n\n\n=== Studio Ghibli ===\n\n\n==== Early films (1985–1996) ====\nIn June 1985, Miyazaki, Takahata, Tokuma and Suzuki founded the animation production company Studio Ghibli, with funding from Tokuma Shoten. Studio Ghibli\'s first film, Laputa: Castle in the Sky (1986), employed the same production crew of Nausicaä. Miyazaki\'s designs for the film\'s setting were inspired by Greek architecture and "European urbanistic templates".'),
@@ -223,9 +236,10 @@ retriever.invoke("What animation studio did Miyazaki found?")
  Document(page_content='Glen Keane said Miyazaki is a "huge influence" on Walt Disney Animation Studios and has been "part of our heritage" ever since The Rescuers Down Under (1990). The Disney Renaissance era was also prompted by competition with the development of Miyazaki\'s films. Artists from Pixar and Aardman Studios signed a tribute stating, "You\'re our inspiration, Miyazaki-san!"')]
 ```
 
-## Chaining
 
-We can easily combine this retriever in to a chain.
+## 체인 구성
+
+우리는 이 retriever를 체인에 쉽게 결합할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "create_retrieval_chain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval.create_retrieval_chain.html", "title": "RAGatouille"}, {"imported": "create_stuff_documents_chain", "source": "langchain.chains.combine_documents", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.combine_documents.stuff.create_stuff_documents_chain.html", "title": "RAGatouille"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "RAGatouille"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "RAGatouille"}]-->
@@ -250,13 +264,16 @@ document_chain = create_stuff_documents_chain(llm, prompt)
 retrieval_chain = create_retrieval_chain(retriever, document_chain)
 ```
 
+
 ```python
 retrieval_chain.invoke({"input": "What animation studio did Miyazaki found?"})
 ```
+
 ```output
 /Users/harrisonchase/.pyenv/versions/3.10.1/envs/langchain/lib/python3.10/site-packages/torch/amp/autocast_mode.py:250: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
   warnings.warn(
 ```
+
 
 ```output
 {'input': 'What animation studio did Miyazaki found?',
@@ -266,10 +283,12 @@ retrieval_chain.invoke({"input": "What animation studio did Miyazaki found?"})
  'answer': 'Miyazaki founded Studio Ghibli.'}
 ```
 
+
 ```python
 for s in retrieval_chain.stream({"input": "What animation studio did Miyazaki found?"}):
     print(s.get("answer", ""), end="")
 ```
+
 ```output
 /Users/harrisonchase/.pyenv/versions/3.10.1/envs/langchain/lib/python3.10/site-packages/torch/amp/autocast_mode.py:250: UserWarning: User provided device_type of 'cuda', but CUDA is not available. Disabling
   warnings.warn(
@@ -277,7 +296,8 @@ for s in retrieval_chain.stream({"input": "What animation studio did Miyazaki fo
 Miyazaki founded Studio Ghibli.
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- Retriever [개념 가이드](/docs/concepts/#retrievers)
+- Retriever [사용 방법 가이드](/docs/how_to/#retrievers)

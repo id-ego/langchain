@@ -1,20 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/yi/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/yi.ipynb
+description: Yi는 Dr. Kai-Fu Lee가 설립한 AI 2.0의 선두주자로, 다양한 언어 모델과 API 플랫폼을 제공합니다.
 ---
 
 # Yi
-[01.AI](https://www.lingyiwanwu.com/en), founded by Dr. Kai-Fu Lee, is a global company at the forefront of AI 2.0. They offer cutting-edge large language models, including the Yi series, which range from 6B to hundreds of billions of parameters. 01.AI also provides multimodal models, an open API platform, and open-source options like Yi-34B/9B/6B and Yi-VL.
+[01.AI](https://www.lingyiwanwu.com/en) 는 Dr. Kai-Fu Lee가 설립한 글로벌 기업으로, AI 2.0의 최전선에 있습니다. 그들은 6B에서 수백억 개의 매개변수에 이르는 Yi 시리즈를 포함한 최첨단 대형 언어 모델을 제공합니다. 01.AI는 또한 다중 모달 모델, 오픈 API 플랫폼 및 Yi-34B/9B/6B와 Yi-VL과 같은 오픈 소스 옵션을 제공합니다.
 
 ```python
 ## Installing the langchain packages needed to use the integration
 %pip install -qU langchain-community
 ```
 
-## Prerequisite
-An API key is required to access Yi LLM API. Visit https://www.lingyiwanwu.com/ to get your API key. When applying for the API key, you need to specify whether it's for domestic (China) or international use.
 
-## Use Yi LLM
+## 전제 조건
+Yi LLM API에 접근하려면 API 키가 필요합니다. API 키를 얻으려면 https://www.lingyiwanwu.com/ 를 방문하세요. API 키를 신청할 때, 국내(중국) 또는 국제 사용을 명시해야 합니다.
+
+## Yi LLM 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "YiLLM", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.yi.YiLLM.html", "title": "Yi"}]-->
@@ -35,6 +36,7 @@ res = llm.invoke("What's your name?")
 print(res)
 ```
 
+
 ```python
 # Generate method
 res = llm.generate(
@@ -46,11 +48,13 @@ res = llm.generate(
 print(res)
 ```
 
+
 ```python
 # Streaming
 for chunk in llm.stream("Describe the key features of the Yi language model series."):
     print(chunk, end="", flush=True)
 ```
+
 
 ```python
 # Asynchronous streaming
@@ -67,6 +71,7 @@ async def run_aio_stream():
 asyncio.run(run_aio_stream())
 ```
 
+
 ```python
 # Adjusting parameters
 llm_with_params = YiLLM(
@@ -81,7 +86,8 @@ res = llm_with_params(
 print(res)
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련 자료
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

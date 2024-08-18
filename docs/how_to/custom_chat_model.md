@@ -1,45 +1,45 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/custom_chat_model/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/custom_chat_model.ipynb
+description: 이 가이드는 LangChain 추상화를 사용하여 사용자 정의 채팅 모델 클래스를 만드는 방법을 설명합니다.
 ---
 
-# How to create a custom chat model class
+# 사용자 정의 채팅 모델 클래스 만들기
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [Chat models](/docs/concepts/#chat-models)
+이 가이드는 다음 개념에 대한 이해를 가정합니다:
+- [채팅 모델](/docs/concepts/#chat-models)
 
 :::
 
-In this guide, we'll learn how to create a custom chat model using LangChain abstractions.
+이 가이드에서는 LangChain 추상화를 사용하여 사용자 정의 채팅 모델을 만드는 방법을 배웁니다.
 
-Wrapping your LLM with the standard [`BaseChatModel`](https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html) interface allow you to use your LLM in existing LangChain programs with minimal code modifications!
+표준 [`BaseChatModel`](https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html) 인터페이스로 LLM을 래핑하면 최소한의 코드 수정으로 기존 LangChain 프로그램에서 LLM을 사용할 수 있습니다!
 
-As an bonus, your LLM will automatically become a LangChain `Runnable` and will benefit from some optimizations out of the box (e.g., batch via a threadpool), async support, the `astream_events` API, etc.
+보너스로, LLM은 자동으로 LangChain `Runnable`이 되어 기본적으로 몇 가지 최적화를 누릴 수 있습니다(예: 스레드 풀을 통한 배치 처리), 비동기 지원, `astream_events` API 등.
 
-## Inputs and outputs
+## 입력 및 출력
 
-First, we need to talk about **messages**, which are the inputs and outputs of chat models.
+먼저, 채팅 모델의 입력 및 출력인 **메시지**에 대해 이야기해야 합니다.
 
-### Messages
+### 메시지
 
-Chat models take messages as inputs and return a message as output. 
+채팅 모델은 메시지를 입력으로 받아 메시지를 출력으로 반환합니다.
 
-LangChain has a few [built-in message types](/docs/concepts/#message-types):
+LangChain에는 몇 가지 [내장 메시지 유형](/docs/concepts/#message-types)이 있습니다:
 
-| Message Type          | Description                                                                                     |
-|-----------------------|-------------------------------------------------------------------------------------------------|
-| `SystemMessage`       | Used for priming AI behavior, usually passed in as the first of a sequence of input messages.   |
-| `HumanMessage`        | Represents a message from a person interacting with the chat model.                             |
-| `AIMessage`           | Represents a message from the chat model. This can be either text or a request to invoke a tool.|
-| `FunctionMessage` / `ToolMessage` | Message for passing the results of tool invocation back to the model.               |
-| `AIMessageChunk` / `HumanMessageChunk` / ... | Chunk variant of each type of message. |
+| 메시지 유형             | 설명                                                                                     |
+|-----------------------|------------------------------------------------------------------------------------------|
+| `SystemMessage`       | AI 행동을 초기화하는 데 사용되며, 일반적으로 입력 메시지 시퀀스의 첫 번째로 전달됩니다.   |
+| `HumanMessage`        | 채팅 모델과 상호작용하는 사람의 메시지를 나타냅니다.                                     |
+| `AIMessage`           | 채팅 모델의 메시지를 나타냅니다. 이는 텍스트일 수도 있고 도구를 호출하는 요청일 수도 있습니다.|
+| `FunctionMessage` / `ToolMessage` | 도구 호출 결과를 모델에 다시 전달하는 메시지입니다.                             |
+| `AIMessageChunk` / `HumanMessageChunk` / ... | 각 메시지 유형의 청크 변형입니다.                                   |
 
 ::: {.callout-note}
-`ToolMessage` and `FunctionMessage` closely follow OpenAI's `function` and `tool` roles.
+`ToolMessage`와 `FunctionMessage`는 OpenAI의 `function` 및 `tool` 역할을 밀접하게 따릅니다.
 
-This is a rapidly developing field and as more models add function calling capabilities. Expect that there will be additions to this schema.
+이 분야는 빠르게 발전하고 있으며, 더 많은 모델이 함수 호출 기능을 추가하고 있습니다. 이 스키마에 추가 사항이 있을 것으로 예상됩니다.
 :::
 
 ```python
@@ -54,9 +54,10 @@ from langchain_core.messages import (
 )
 ```
 
-### Streaming Variant
 
-All the chat messages have a streaming variant that contains `Chunk` in the name.
+### 스트리밍 변형
+
+모든 채팅 메시지에는 이름에 `Chunk`가 포함된 스트리밍 변형이 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "FunctionMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.function.FunctionMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "HumanMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "SystemMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "ToolMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.tool.ToolMessageChunk.html", "title": "How to create a custom chat model class"}]-->
@@ -69,38 +70,41 @@ from langchain_core.messages import (
 )
 ```
 
-These chunks are used when streaming output from chat models, and they all define an additive property!
+
+이 청크는 채팅 모델에서 출력을 스트리밍할 때 사용되며, 모두 추가 속성을 정의합니다!
 
 ```python
 AIMessageChunk(content="Hello") + AIMessageChunk(content=" World!")
 ```
 
+
 ```output
 AIMessageChunk(content='Hello World!')
 ```
 
-## Base Chat Model
 
-Let's implement a chat model that echoes back the first `n` characters of the last message in the prompt!
+## 기본 채팅 모델
 
-To do so, we will inherit from `BaseChatModel` and we'll need to implement the following:
+프롬프트의 마지막 메시지에서 첫 번째 `n` 문자를 에코백하는 채팅 모델을 구현해 보겠습니다!
 
-| Method/Property                    | Description                                                       | Required/Optional  |
-|------------------------------------|-------------------------------------------------------------------|--------------------|
-| `_generate`                        | Use to generate a chat result from a prompt                       | Required           |
-| `_llm_type` (property)             | Used to uniquely identify the type of the model. Used for logging.| Required           |
-| `_identifying_params` (property)   | Represent model parameterization for tracing purposes.            | Optional           |
-| `_stream`                          | Use to implement streaming.                                       | Optional           |
-| `_agenerate`                       | Use to implement a native async method.                           | Optional           |
-| `_astream`                         | Use to implement async version of `_stream`.                      | Optional           |
+이를 위해 `BaseChatModel`에서 상속받고 다음을 구현해야 합니다:
+
+| 메서드/속성                     | 설명                                                       | 필수/선택  |
+|----------------------------------|-----------------------------------------------------------|------------|
+| `_generate`                      | 프롬프트에서 채팅 결과를 생성하는 데 사용됩니다.         | 필수       |
+| `_llm_type` (속성)              | 모델 유형을 고유하게 식별하는 데 사용됩니다. 로깅에 사용됩니다.| 필수       |
+| `_identifying_params` (속성)    | 추적 목적을 위한 모델 매개변수 표현입니다.                | 선택       |
+| `_stream`                        | 스트리밍을 구현하는 데 사용됩니다.                       | 선택       |
+| `_agenerate`                     | 네이티브 비동기 메서드를 구현하는 데 사용됩니다.         | 선택       |
+| `_astream`                       | `_stream`의 비동기 버전을 구현하는 데 사용됩니다.       | 선택       |
 
 :::tip
-The `_astream` implementation uses `run_in_executor` to launch the sync `_stream` in a separate thread if `_stream` is implemented, otherwise it fallsback to use `_agenerate`.
+`_astream` 구현은 `_stream`이 구현된 경우 동기 `_stream`을 별도의 스레드에서 시작하기 위해 `run_in_executor`를 사용합니다. 그렇지 않으면 `_agenerate`를 사용하도록 대체됩니다.
 
-You can use this trick if you want to reuse the `_stream` implementation, but if you're able to implement code that's natively async that's a better solution since that code will run with less overhead.
+이 트릭을 사용하면 `_stream` 구현을 재사용할 수 있지만, 네이티브 비동기 코드를 구현할 수 있다면 더 나은 솔루션입니다. 그 코드는 더 적은 오버헤드로 실행됩니다.
 :::
 
-### Implementation
+### 구현
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncCallbackManagerForLLMRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.AsyncCallbackManagerForLLMRun.html", "title": "How to create a custom chat model class"}, {"imported": "CallbackManagerForLLMRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForLLMRun.html", "title": "How to create a custom chat model class"}, {"imported": "BaseChatModel", "source": "langchain_core.language_models", "docs": "https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.BaseChatModel.html", "title": "How to create a custom chat model class"}, {"imported": "SimpleChatModel", "source": "langchain_core.language_models", "docs": "https://api.python.langchain.com/en/latest/language_models/langchain_core.language_models.chat_models.SimpleChatModel.html", "title": "How to create a custom chat model class"}, {"imported": "AIMessageChunk", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessageChunk.html", "title": "How to create a custom chat model class"}, {"imported": "BaseMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.base.BaseMessage.html", "title": "How to create a custom chat model class"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to create a custom chat model class"}, {"imported": "ChatGeneration", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.chat_generation.ChatGeneration.html", "title": "How to create a custom chat model class"}, {"imported": "ChatGenerationChunk", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.chat_generation.ChatGenerationChunk.html", "title": "How to create a custom chat model class"}, {"imported": "ChatResult", "source": "langchain_core.outputs", "docs": "https://api.python.langchain.com/en/latest/outputs/langchain_core.outputs.chat_result.ChatResult.html", "title": "How to create a custom chat model class"}, {"imported": "run_in_executor", "source": "langchain_core.runnables", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.config.run_in_executor.html", "title": "How to create a custom chat model class"}]-->
@@ -245,9 +249,10 @@ class CustomChatModelAdvanced(BaseChatModel):
         }
 ```
 
-### Let's test it 🧪
 
-The chat model will implement the standard `Runnable` interface of LangChain which many of the LangChain abstractions support!
+### 테스트해 보겠습니다 🧪
+
+채팅 모델은 많은 LangChain 추상화가 지원하는 표준 `Runnable` 인터페이스를 구현합니다!
 
 ```python
 model = CustomChatModelAdvanced(n=3, model_name="my_custom_model")
@@ -261,49 +266,60 @@ model.invoke(
 )
 ```
 
+
 ```output
 AIMessage(content='Meo', response_metadata={'time_in_seconds': 3}, id='run-ddb42bd6-4fdd-4bd2-8be5-e11b67d3ac29-0')
 ```
+
 
 ```python
 model.invoke("hello")
 ```
 
+
 ```output
 AIMessage(content='hel', response_metadata={'time_in_seconds': 3}, id='run-4d3cc912-44aa-454b-977b-ca02be06c12e-0')
 ```
 
+
 ```python
 model.batch(["hello", "goodbye"])
 ```
+
 
 ```output
 [AIMessage(content='hel', response_metadata={'time_in_seconds': 3}, id='run-9620e228-1912-4582-8aa1-176813afec49-0'),
  AIMessage(content='goo', response_metadata={'time_in_seconds': 3}, id='run-1ce8cdf8-6f75-448e-82f7-1bb4a121df93-0')]
 ```
 
+
 ```python
 for chunk in model.stream("cat"):
     print(chunk.content, end="|")
 ```
+
 ```output
 c|a|t||
 ```
-Please see the implementation of `_astream` in the model! If you do not implement it, then no output will stream.!
+
+모델에서 `_astream`의 구현을 확인하십시오! 이를 구현하지 않으면 출력이 스트리밍되지 않습니다.!
 
 ```python
 async for chunk in model.astream("cat"):
     print(chunk.content, end="|")
 ```
+
 ```output
 c|a|t||
 ```
-Let's try to use the astream events API which will also help double check that all the callbacks were implemented!
+
+모든 콜백이 구현되었는지 다시 확인하는 데 도움이 되는 astream 이벤트 API를 사용해 보겠습니다!
 
 ```python
 async for event in model.astream_events("cat", version="v1"):
     print(event)
 ```
+
 ```output
 {'event': 'on_chat_model_start', 'run_id': '125a2a16-b9cd-40de-aa08-8aa9180b07d0', 'name': 'CustomChatModelAdvanced', 'tags': [], 'metadata': {}, 'data': {'input': 'cat'}}
 {'event': 'on_chat_model_stream', 'run_id': '125a2a16-b9cd-40de-aa08-8aa9180b07d0', 'tags': [], 'metadata': {}, 'name': 'CustomChatModelAdvanced', 'data': {'chunk': AIMessageChunk(content='c', id='run-125a2a16-b9cd-40de-aa08-8aa9180b07d0')}}
@@ -315,47 +331,48 @@ async for event in model.astream_events("cat", version="v1"):
 /home/eugene/src/langchain/libs/core/langchain_core/_api/beta_decorator.py:87: LangChainBetaWarning: This API is in beta and may change in the future.
   warn_beta(
 ```
-## Contributing
 
-We appreciate all chat model integration contributions. 
+## 기여하기
 
-Here's a checklist to help make sure your contribution gets added to LangChain:
+채팅 모델 통합 기여를 감사히 생각합니다.
 
-Documentation:
+기여가 LangChain에 추가되도록 하기 위한 체크리스트입니다:
 
-* The model contains doc-strings for all initialization arguments, as these will be surfaced in the [APIReference](https://api.python.langchain.com/en/stable/langchain_api_reference.html).
-* The class doc-string for the model contains a link to the model API if the model is powered by a service.
+문서:
 
-Tests:
+* 모델은 모든 초기화 인수에 대한 doc-string을 포함해야 하며, 이는 [APIReference](https://api.python.langchain.com/en/stable/langchain_api_reference.html)에서 표시됩니다.
+* 모델의 클래스 doc-string에는 서비스에 의해 지원되는 경우 모델 API에 대한 링크가 포함되어야 합니다.
 
-* [ ] Add unit or integration tests to the overridden methods. Verify that `invoke`, `ainvoke`, `batch`, `stream` work if you've over-ridden the corresponding code.
+테스트:
 
-Streaming (if you're implementing it):
+* [ ] 재정의된 메서드에 단위 또는 통합 테스트를 추가합니다. `invoke`, `ainvoke`, `batch`, `stream`이 해당 코드를 재정의한 경우 작동하는지 확인합니다.
 
-* [ ] Implement the _stream method to get streaming working
+스트리밍(구현하는 경우):
 
-Stop Token Behavior:
+* [ ] 스트리밍을 작동시키기 위해 _stream 메서드를 구현합니다.
 
-* [ ] Stop token should be respected
-* [ ] Stop token should be INCLUDED as part of the response
+정지 토큰 동작:
 
-Secret API Keys:
+* [ ] 정지 토큰은 존중되어야 합니다.
+* [ ] 정지 토큰은 응답의 일부로 포함되어야 합니다.
 
-* [ ] If your model connects to an API it will likely accept API keys as part of its initialization. Use Pydantic's `SecretStr` type for secrets, so they don't get accidentally printed out when folks print the model.
+비밀 API 키:
 
-Identifying Params:
+* [ ] 모델이 API에 연결되는 경우 초기화의 일부로 API 키를 수락할 가능성이 높습니다. 비밀이 우연히 출력되지 않도록 Pydantic의 `SecretStr` 유형을 사용합니다.
 
-* [ ] Include a `model_name` in identifying params
+식별 매개변수:
 
-Optimizations:
+* [ ] 식별 매개변수에 `model_name`을 포함합니다.
 
-Consider providing native async support to reduce the overhead from the model!
+최적화:
 
-* [ ] Provided a native async of `_agenerate` (used by `ainvoke`)
-* [ ] Provided a native async of `_astream` (used by `astream`)
+모델의 오버헤드를 줄이기 위해 네이티브 비동기 지원을 제공하는 것을 고려하십시오!
 
-## Next steps
+* [ ] `_agenerate`의 네이티브 비동기를 제공했습니다(사용되는 `ainvoke`).
+* [ ] `_astream`의 네이티브 비동기를 제공했습니다(사용되는 `astream`).
 
-You've now learned how to create your own custom chat models.
+## 다음 단계
 
-Next, check out the other how-to guides chat models in this section, like [how to get a model to return structured output](/docs/how_to/structured_output) or [how to track chat model token usage](/docs/how_to/chat_token_usage_tracking).
+이제 사용자 정의 채팅 모델을 만드는 방법을 배웠습니다.
+
+다음으로, 이 섹션의 다른 채팅 모델에 대한 방법 가이드를 확인하세요. 예를 들어 [모델이 구조화된 출력을 반환하도록 하는 방법](/docs/how_to/structured_output) 또는 [채팅 모델 토큰 사용량 추적하는 방법](/docs/how_to/chat_token_usage_tracking) 등이 있습니다.

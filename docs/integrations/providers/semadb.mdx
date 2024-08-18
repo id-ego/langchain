@@ -1,24 +1,25 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/semadb/
+description: SemaDB는 AI 애플리케이션 구축을 쉽게 도와주는 간편한 벡터 유사성 검색 엔진입니다. 클라우드 호스팅 버전을 제공합니다.
 ---
 
 # SemaDB
 
-> [SemaDB](https://semafind.com/) is a no fuss vector similarity search engine. It provides a low-cost cloud hosted version to help you build AI applications with ease.
+> [SemaDB](https://semafind.com/)는 번거로움 없는 벡터 유사성 검색 엔진입니다. AI 애플리케이션을 쉽게 구축할 수 있도록 저렴한 클라우드 호스팅 버전을 제공합니다.
 
-With SemaDB Cloud, our hosted version, no fuss means no pod size calculations, no schema definitions, no partition settings, no parameter tuning, no search algorithm tuning, no complex installation, no complex API. It is integrated with [RapidAPI](https://rapidapi.com/semafind-semadb/api/semadb) providing transparent billing, automatic sharding and an interactive API playground.
+SemaDB Cloud, 우리의 호스팅 버전에서는 번거로움이란 포드 크기 계산, 스키마 정의, 파티션 설정, 매개변수 조정, 검색 알고리즘 조정, 복잡한 설치, 복잡한 API가 필요 없음을 의미합니다. [RapidAPI](https://rapidapi.com/semafind-semadb/api/semadb)와 통합되어 투명한 청구, 자동 샤딩 및 대화형 API 놀이터를 제공합니다.
 
-## Installation
+## 설치
 
-None required, get started directly with SemaDB Cloud at [RapidAPI](https://rapidapi.com/semafind-semadb/api/semadb).
+필요 없음, [RapidAPI](https://rapidapi.com/semafind-semadb/api/semadb)에서 SemaDB Cloud로 바로 시작하세요.
 
-## Vector Store
+## 벡터 저장소
 
-There is a basic wrapper around `SemaDB` collections allowing you to use it as a vectorstore.
+`SemaDB` 컬렉션 주위에 기본 래퍼가 있어 이를 벡터 저장소로 사용할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "SemaDB", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.semadb.SemaDB.html", "title": "SemaDB"}]-->
 from langchain_community.vectorstores import SemaDB
 ```
 
-You can follow a tutorial on how to use the wrapper in [this notebook](/docs/integrations/vectorstores/semadb).
+
+[이 노트북](/docs/integrations/vectorstores/semadb)에서 래퍼를 사용하는 방법에 대한 튜토리얼을 따라할 수 있습니다.

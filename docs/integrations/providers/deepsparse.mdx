@@ -1,27 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/deepsparse/
+description: 이 문서는 LangChain 내에서 DeepSparse 추론 런타임을 사용하는 방법에 대해 설명하며, 설치, 설정 및 사용
+  예제를 포함합니다.
 ---
 
 # DeepSparse
 
-This page covers how to use the [DeepSparse](https://github.com/neuralmagic/deepsparse) inference runtime within LangChain.
-It is broken into two parts: installation and setup, and then examples of DeepSparse usage.
+이 페이지는 LangChain 내에서 [DeepSparse](https://github.com/neuralmagic/deepsparse) 추론 런타임을 사용하는 방법을 다룹니다. 설치 및 설정, 그리고 DeepSparse 사용 예제로 나뉘어 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-- Install the Python package with `pip install deepsparse`
-- Choose a [SparseZoo model](https://sparsezoo.neuralmagic.com/?useCase=text_generation) or export a support model to ONNX [using Optimum](https://github.com/neuralmagic/notebooks/blob/main/notebooks/opt-text-generation-deepsparse-quickstart/OPT_Text_Generation_DeepSparse_Quickstart.ipynb)
+- `pip install deepsparse`를 사용하여 Python 패키지를 설치합니다.
+- [SparseZoo 모델](https://sparsezoo.neuralmagic.com/?useCase=text_generation)을 선택하거나 ONNX로 지원 모델을 내보냅니다 [Optimum을 사용하여](https://github.com/neuralmagic/notebooks/blob/main/notebooks/opt-text-generation-deepsparse-quickstart/OPT_Text_Generation_DeepSparse_Quickstart.ipynb)
 
 ## LLMs
 
-There exists a DeepSparse LLM wrapper, which you can access with:
+DeepSparse LLM 래퍼가 존재하며, 다음과 같이 접근할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "DeepSparse", "source": "langchain_community.llms", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_community.llms.deepsparse.DeepSparse.html", "title": "DeepSparse"}]-->
 from langchain_community.llms import DeepSparse
 ```
 
-It provides a unified interface for all models:
+
+모든 모델에 대한 통합 인터페이스를 제공합니다:
 
 ```python
 llm = DeepSparse(model='zoo:nlg/text_generation/codegen_mono-350m/pytorch/huggingface/bigpython_bigquery_thepile/base-none')
@@ -29,7 +30,8 @@ llm = DeepSparse(model='zoo:nlg/text_generation/codegen_mono-350m/pytorch/huggin
 print(llm.invoke('def fib():'))
 ```
 
-Additional parameters can be passed using the `config` parameter:
+
+추가 매개변수는 `config` 매개변수를 사용하여 전달할 수 있습니다:
 
 ```python
 config = {'max_generated_tokens': 256}

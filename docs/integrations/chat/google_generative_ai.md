@@ -1,42 +1,43 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/google_generative_ai/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/google_generative_ai.ipynb
+description: Google AI의 채팅 모델을 시작하는 방법과 API 참조에 대한 정보를 제공합니다. 최신 모델 및 기능에 대한 자세한 내용을
+  확인하세요.
 sidebar_label: Google AI
 ---
 
 # ChatGoogleGenerativeAI
 
-This docs will help you get started with Google AI [chat models](/docs/concepts/#chat-models). For detailed documentation of all ChatGoogleGenerativeAI features and configurations head to the [API reference](https://api.python.langchain.com/en/latest/chat_models/langchain_google_genai.chat_models.ChatGoogleGenerativeAI.html).
+이 문서는 Google AI [채팅 모델](/docs/concepts/#chat-models)로 시작하는 데 도움이 됩니다. ChatGoogleGenerativeAI의 모든 기능 및 구성에 대한 자세한 문서는 [API 참조](https://api.python.langchain.com/en/latest/chat_models/langchain_google_genai.chat_models.ChatGoogleGenerativeAI.html)를 참조하세요.
 
-Google AI offers a number of different chat models. For information on the latest models, their features, context windows, etc. head to the [Google AI docs](https://ai.google.dev/gemini-api/docs/models/gemini).
+Google AI는 여러 가지 다른 채팅 모델을 제공합니다. 최신 모델, 기능, 컨텍스트 윈도우 등에 대한 정보는 [Google AI 문서](https://ai.google.dev/gemini-api/docs/models/gemini)를 참조하세요.
 
 :::info Google AI vs Google Cloud Vertex AI
 
-Google's Gemini models are accessible through Google AI and through Google Cloud Vertex AI. Using Google AI just requires a Google account and an API key. Using Google Cloud Vertex AI requires a Google Cloud account (with term agreements and billing) but offers enterprise features like customer encription key, virtual private cloud, and more.
+Google의 Gemini 모델은 Google AI와 Google Cloud Vertex AI를 통해 접근할 수 있습니다. Google AI를 사용하려면 Google 계정과 API 키만 필요합니다. Google Cloud Vertex AI를 사용하려면 Google Cloud 계정(약관 동의 및 청구 포함)이 필요하지만, 고객 암호화 키, 가상 사설 클라우드 등과 같은 엔터프라이즈 기능을 제공합니다.
 
-To learn more about the key features of the two APIs see the [Google docs](https://cloud.google.com/vertex-ai/generative-ai/docs/migrate/migrate-google-ai#google-ai).
+두 API의 주요 기능에 대해 자세히 알아보려면 [Google 문서](https://cloud.google.com/vertex-ai/generative-ai/docs/migrate/migrate-google-ai#google-ai)를 참조하세요.
 
 :::
 
-## Overview
-### Integration details
+## 개요
+### 통합 세부정보
 
-| Class | Package | Local | Serializable | [JS support](https://js.langchain.com/v0.2/docs/integrations/chat/google_generativeai) | Package downloads | Package latest |
+| 클래스 | 패키지 | 로컬 | 직렬화 가능 | [JS 지원](https://js.langchain.com/v0.2/docs/integrations/chat/google_generativeai) | 패키지 다운로드 | 패키지 최신 |
 | :--- | :--- | :---: | :---: |  :---: | :---: | :---: |
 | [ChatGoogleGenerativeAI](https://api.python.langchain.com/en/latest/chat_models/langchain_google_genai.chat_models.ChatGoogleGenerativeAI.html) | [langchain-google-genai](https://api.python.langchain.com/en/latest/google_genai_api_reference.html) | ❌ | beta | ✅ | ![PyPI - Downloads](https://img.shields.io/pypi/dm/langchain-google-genai?style=flat-square&label=%20) | ![PyPI - Version](https://img.shields.io/pypi/v/langchain-google-genai?style=flat-square&label=%20) |
 
-### Model features
-| [Tool calling](/docs/how_to/tool_calling) | [Structured output](/docs/how_to/structured_output/) | JSON mode | [Image input](/docs/how_to/multimodal_inputs/) | Audio input | Video input | [Token-level streaming](/docs/how_to/chat_streaming/) | Native async | [Token usage](/docs/how_to/chat_token_usage_tracking/) | [Logprobs](/docs/how_to/logprobs/) |
+### 모델 기능
+| [도구 호출](/docs/how_to/tool_calling) | [구조화된 출력](/docs/how_to/structured_output/) | JSON 모드 | [이미지 입력](/docs/how_to/multimodal_inputs/) | 오디오 입력 | 비디오 입력 | [토큰 수준 스트리밍](/docs/how_to/chat_streaming/) | 네이티브 비동기 | [토큰 사용](/docs/how_to/chat_token_usage_tracking/) | [로그 확률](/docs/how_to/logprobs/) |
 | :---: | :---: | :---: | :---: |  :---: | :---: | :---: | :---: | :---: | :---: |
 | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | 
 
-## Setup
+## 설정
 
-To access Google AI models you'll need to create a Google Acount account, get a Google AI API key, and install the `langchain-google-genai` integration package.
+Google AI 모델에 접근하려면 Google Acount 계정을 생성하고, Google AI API 키를 얻고, `langchain-google-genai` 통합 패키지를 설치해야 합니다.
 
-### Credentials
+### 자격 증명
 
-Head to https://ai.google.dev/gemini-api/docs/api-key to generate a Google AI API key. Once you've done this set the GOOGLE_API_KEY environment variable:
+https://ai.google.dev/gemini-api/docs/api-key로 이동하여 Google AI API 키를 생성하세요. 완료되면 GOOGLE_API_KEY 환경 변수를 설정하세요:
 
 ```python
 import getpass
@@ -45,24 +46,27 @@ import os
 os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter your Google AI API key: ")
 ```
 
-If you want to get automated tracing of your model calls you can also set your [LangSmith](https://docs.smith.langchain.com/) API key by uncommenting below:
+
+모델 호출의 자동 추적을 원하시면 아래의 [LangSmith](https://docs.smith.langchain.com/) API 키 주석을 제거하여 설정할 수 있습니다:
 
 ```python
 # os.environ["LANGSMITH_API_KEY"] = getpass.getpass("Enter your LangSmith API key: ")
 # os.environ["LANGSMITH_TRACING"] = "true"
 ```
 
-### Installation
 
-The LangChain Google AI integration lives in the `langchain-google-genai` package:
+### 설치
+
+LangChain Google AI 통합은 `langchain-google-genai` 패키지에 있습니다:
 
 ```python
 %pip install -qU langchain-google-genai
 ```
 
-## Instantiation
 
-Now we can instantiate our model object and generate chat completions:
+## 인스턴스화
+
+이제 모델 객체를 인스턴스화하고 채팅 완료를 생성할 수 있습니다:
 
 ```python
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -77,7 +81,8 @@ llm = ChatGoogleGenerativeAI(
 )
 ```
 
-## Invocation
+
+## 호출
 
 ```python
 messages = [
@@ -91,19 +96,23 @@ ai_msg = llm.invoke(messages)
 ai_msg
 ```
 
+
 ```output
 AIMessage(content="J'adore programmer. \n", response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'safety_ratings': [{'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT', 'probability': 'NEGLIGIBLE', 'blocked': False}, {'category': 'HARM_CATEGORY_HATE_SPEECH', 'probability': 'NEGLIGIBLE', 'blocked': False}, {'category': 'HARM_CATEGORY_HARASSMENT', 'probability': 'NEGLIGIBLE', 'blocked': False}, {'category': 'HARM_CATEGORY_DANGEROUS_CONTENT', 'probability': 'NEGLIGIBLE', 'blocked': False}]}, id='run-eef5b138-1da6-4226-9cfe-ab9073ddd77e-0', usage_metadata={'input_tokens': 21, 'output_tokens': 5, 'total_tokens': 26})
 ```
 
+
 ```python
 print(ai_msg.content)
 ```
+
 ```output
 J'adore programmer.
 ```
-## Chaining
 
-We can [chain](/docs/how_to/sequence/) our model with a prompt template like so:
+## 체이닝
+
+다음과 같이 프롬프트 템플릿과 함께 모델을 [체인](/docs/how_to/sequence/)할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "ChatGoogleGenerativeAI"}]-->
@@ -129,13 +138,15 @@ chain.invoke(
 )
 ```
 
+
 ```output
 AIMessage(content='Ich liebe das Programmieren. \n', response_metadata={'prompt_feedback': {'block_reason': 0, 'safety_ratings': []}, 'finish_reason': 'STOP', 'safety_ratings': [{'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT', 'probability': 'NEGLIGIBLE', 'blocked': False}, {'category': 'HARM_CATEGORY_HATE_SPEECH', 'probability': 'NEGLIGIBLE', 'blocked': False}, {'category': 'HARM_CATEGORY_HARASSMENT', 'probability': 'NEGLIGIBLE', 'blocked': False}, {'category': 'HARM_CATEGORY_DANGEROUS_CONTENT', 'probability': 'NEGLIGIBLE', 'blocked': False}]}, id='run-fbb35f30-4937-4a81-ae68-f7cb35721a0c-0', usage_metadata={'input_tokens': 16, 'output_tokens': 7, 'total_tokens': 23})
 ```
 
-## Safety Settings
 
-Gemini models have default safety settings that can be overridden. If you are receiving lots of "Safety Warnings" from your models, you can try tweaking the `safety_settings` attribute of the model. For example, to turn off safety blocking for dangerous content, you can construct your LLM as follows:
+## 안전 설정
+
+Gemini 모델은 기본 안전 설정이 있으며 이를 재정의할 수 있습니다. 모델에서 "안전 경고"가 많이 발생하는 경우 모델의 `safety_settings` 속성을 조정해 볼 수 있습니다. 예를 들어, 위험한 콘텐츠에 대한 안전 차단을 끄려면 다음과 같이 LLM을 구성할 수 있습니다:
 
 ```python
 from langchain_google_genai import (
@@ -152,13 +163,14 @@ llm = ChatGoogleGenerativeAI(
 )
 ```
 
-For an enumeration of the categories and thresholds available, see Google's [safety setting types](https://ai.google.dev/api/python/google/generativeai/types/SafetySettingDict).
 
-## API reference
+사용 가능한 카테고리 및 임계값의 열거에 대해서는 Google의 [안전 설정 유형](https://ai.google.dev/api/python/google/generativeai/types/SafetySettingDict)을 참조하세요.
 
-For detailed documentation of all ChatGoogleGenerativeAI features and configurations head to the API reference: https://api.python.langchain.com/en/latest/chat_models/langchain_google_genai.chat_models.ChatGoogleGenerativeAI.html
+## API 참조
 
-## Related
+ChatGoogleGenerativeAI의 모든 기능 및 구성에 대한 자세한 문서는 API 참조를 참조하세요: https://api.python.langchain.com/en/latest/chat_models/langchain_google_genai.chat_models.ChatGoogleGenerativeAI.html
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

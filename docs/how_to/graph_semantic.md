@@ -1,29 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/graph_semantic/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/graph_semantic.ipynb
+description: 그래프 데이터베이스에 대한 의미론적 레이어 추가 방법과 Cypher 템플릿을 활용한 LLM 에이전트 상호작용 설정 방법을 설명합니다.
 sidebar_position: 1
 ---
 
-# How to add a semantic layer over graph database
+# 그래프 데이터베이스에 의미 계층 추가하는 방법
 
-You can use database queries to retrieve information from a graph database like Neo4j.
-One option is to use LLMs to generate Cypher statements.
-While that option provides excellent flexibility, the solution could be brittle and not consistently generating precise Cypher statements.
-Instead of generating Cypher statements, we can implement Cypher templates as tools in a semantic layer that an LLM agent can interact with.
+Neo4j와 같은 그래프 데이터베이스에서 정보를 검색하기 위해 데이터베이스 쿼리를 사용할 수 있습니다. 
+한 가지 옵션은 LLM을 사용하여 Cypher 문을 생성하는 것입니다. 
+이 옵션은 뛰어난 유연성을 제공하지만, 솔루션이 취약할 수 있으며 일관되게 정확한 Cypher 문을 생성하지 못할 수 있습니다. 
+Cypher 문을 생성하는 대신, LLM 에이전트가 상호작용할 수 있는 의미 계층의 도구로 Cypher 템플릿을 구현할 수 있습니다.
 
 ![graph_semantic.png](../../static/img/graph_semantic.png)
 
-## Setup
+## 설정
 
-First, get required packages and set environment variables:
+먼저, 필요한 패키지를 설치하고 환경 변수를 설정합니다:
 
 ```python
 %pip install --upgrade --quiet  langchain langchain-community langchain-openai neo4j
 ```
+
 ```output
 Note: you may need to restart the kernel to use updated packages.
 ```
-We default to OpenAI models in this guide, but you can swap them out for the model provider of your choice.
+
+이 가이드에서는 기본적으로 OpenAI 모델을 사용하지만, 원하는 모델 공급자로 교체할 수 있습니다.
 
 ```python
 import getpass
@@ -35,11 +37,13 @@ os.environ["OPENAI_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_API_KEY"] = getpass.getpass()
 # os.environ["LANGCHAIN_TRACING_V2"] = "true"
 ```
+
 ```output
  ········
 ```
-Next, we need to define Neo4j credentials.
-Follow [these installation steps](https://neo4j.com/docs/operations-manual/current/installation/) to set up a Neo4j database.
+
+다음으로, Neo4j 자격 증명을 정의해야 합니다. 
+Neo4j 데이터베이스를 설정하려면 [이 설치 단계](https://neo4j.com/docs/operations-manual/current/installation/)를 따르세요.
 
 ```python
 os.environ["NEO4J_URI"] = "bolt://localhost:7687"
@@ -47,7 +51,8 @@ os.environ["NEO4J_USERNAME"] = "neo4j"
 os.environ["NEO4J_PASSWORD"] = "password"
 ```
 
-The below example will create a connection with a Neo4j database and will populate it with example data about movies and their actors.
+
+아래 예제는 Neo4j 데이터베이스와 연결을 생성하고 영화 및 그 배우에 대한 예제 데이터로 채웁니다.
 
 ```python
 <!--IMPORTS:[{"imported": "Neo4jGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.neo4j_graph.Neo4jGraph.html", "title": "How to add a semantic layer over graph database"}]-->
@@ -79,16 +84,18 @@ FOREACH (genre in split(row.genres, '|') |
 graph.query(movies_query)
 ```
 
+
 ```output
 []
 ```
 
-## Custom tools with Cypher templates
 
-A semantic layer consists of various tools exposed to an LLM that it can use to interact with a knowledge graph.
-They can be of various complexity. You can think of each tool in a semantic layer as a function.
+## Cypher 템플릿을 사용한 사용자 정의 도구
 
-The function we will implement is to retrieve information about movies or their cast.
+의미 계층은 LLM이 지식 그래프와 상호작용하는 데 사용할 수 있는 다양한 도구로 구성됩니다. 
+이 도구들은 다양한 복잡성을 가질 수 있습니다. 의미 계층의 각 도구를 함수로 생각할 수 있습니다.
+
+우리가 구현할 함수는 영화 또는 그 출연진에 대한 정보를 검색하는 것입니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncCallbackManagerForToolRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun.html", "title": "How to add a semantic layer over graph database"}, {"imported": "CallbackManagerForToolRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForToolRun.html", "title": "How to add a semantic layer over graph database"}, {"imported": "BaseTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.base.BaseTool.html", "title": "How to add a semantic layer over graph database"}]-->
@@ -124,9 +131,10 @@ def get_information(entity: str) -> str:
         return "No information was found"
 ```
 
-You can observe that we have defined the Cypher statement used to retrieve information.
-Therefore, we can avoid generating Cypher statements and use the LLM agent to only populate the input parameters.
-To provide additional information to an LLM agent about when to use the tool and their input parameters, we wrap the function as a tool.
+
+정보를 검색하는 데 사용되는 Cypher 문을 정의했음을 알 수 있습니다. 
+따라서 Cypher 문을 생성하는 것을 피하고 LLM 에이전트를 사용하여 입력 매개변수만 채울 수 있습니다. 
+도구를 사용할 때 LLM 에이전트에 추가 정보를 제공하기 위해, 함수를 도구로 감쌉니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncCallbackManagerForToolRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.AsyncCallbackManagerForToolRun.html", "title": "How to add a semantic layer over graph database"}, {"imported": "CallbackManagerForToolRun", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.manager.CallbackManagerForToolRun.html", "title": "How to add a semantic layer over graph database"}, {"imported": "BaseTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.base.BaseTool.html", "title": "How to add a semantic layer over graph database"}]-->
@@ -169,9 +177,10 @@ class InformationTool(BaseTool):
         return get_information(entity)
 ```
 
-## OpenAI Agent
 
-LangChain expression language makes it very convenient to define an agent to interact with a graph database over the semantic layer.
+## OpenAI 에이전트
+
+LangChain 표현 언어는 의미 계층을 통해 그래프 데이터베이스와 상호작용하는 에이전트를 정의하는 데 매우 편리합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to add a semantic layer over graph database"}, {"imported": "format_to_openai_function_messages", "source": "langchain.agents.format_scratchpad", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.format_scratchpad.openai_functions.format_to_openai_function_messages.html", "title": "How to add a semantic layer over graph database"}, {"imported": "OpenAIFunctionsAgentOutputParser", "source": "langchain.agents.output_parsers", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.output_parsers.openai_functions.OpenAIFunctionsAgentOutputParser.html", "title": "How to add a semantic layer over graph database"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to add a semantic layer over graph database"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add a semantic layer over graph database"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add a semantic layer over graph database"}, {"imported": "MessagesPlaceholder", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.MessagesPlaceholder.html", "title": "How to add a semantic layer over graph database"}, {"imported": "convert_to_openai_function", "source": "langchain_core.utils.function_calling", "docs": "https://api.python.langchain.com/en/latest/utils/langchain_core.utils.function_calling.convert_to_openai_function.html", "title": "How to add a semantic layer over graph database"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add a semantic layer over graph database"}]-->
@@ -233,9 +242,11 @@ agent = (
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
 
+
 ```python
 agent_executor.invoke({"input": "Who played in Casino?"})
 ```
+
 ```output
 
 
@@ -252,6 +263,7 @@ ACTED_IN: Joe Pesci, Robert De Niro, Sharon Stone, James Woods
 
 [1m> Finished chain.[0m
 ```
+
 
 ```output
 {'input': 'Who played in Casino?',

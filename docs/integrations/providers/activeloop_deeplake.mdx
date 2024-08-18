@@ -1,35 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/activeloop_deeplake/
+description: Activeloop Deep Lake는 딥러닝 애플리케이션을 위한 데이터 레이크로, 벡터 저장소로 사용되며, 원본 데이터와
+  임베딩을 자동으로 관리합니다.
 ---
 
 # Activeloop Deep Lake
 
-> [Activeloop Deep Lake](https://docs.activeloop.ai/) is a data lake for Deep Learning applications, allowing you to use it
-as a vector store.
+> [Activeloop Deep Lake](https://docs.activeloop.ai/)는 딥 러닝 애플리케이션을 위한 데이터 레이크로, 벡터 저장소로 사용할 수 있습니다.
 
-## Why Deep Lake?
+## 왜 Deep Lake인가요?
 
-- More than just a (multi-modal) vector store. You can later use the dataset to fine-tune your own LLM models.
-- Not only stores embeddings, but also the original data with automatic version control.
-- Truly serverless. Doesn't require another service and can be used with major cloud providers (`AWS S3`, `GCS`, etc.)
+- 단순한 (다중 모달) 벡터 저장소 이상입니다. 나중에 데이터셋을 사용하여 자신의 LLM 모델을 미세 조정할 수 있습니다.
+- 임베딩뿐만 아니라 원본 데이터도 자동 버전 관리와 함께 저장합니다.
+- 진정한 서버리스입니다. 다른 서비스를 요구하지 않으며 주요 클라우드 제공업체(`AWS S3`, `GCS` 등)와 함께 사용할 수 있습니다.
 
-`Activeloop Deep Lake` supports `SelfQuery Retrieval`:
+`Activeloop Deep Lake`는 `SelfQuery Retrieval`을 지원합니다:
 [Activeloop Deep Lake Self Query Retrieval](/docs/integrations/retrievers/self_query/activeloop_deeplake_self_query)
 
-## More Resources
+## 추가 리소스
 
-1. [Ultimate Guide to LangChain & Deep Lake: Build ChatGPT to Answer Questions on Your Financial Data](https://www.activeloop.ai/resources/ultimate-guide-to-lang-chain-deep-lake-build-chat-gpt-to-answer-questions-on-your-financial-data/)
-2. [Twitter the-algorithm codebase analysis with Deep Lake](https://github.com/langchain-ai/langchain/blob/master/cookbook/twitter-the-algorithm-analysis-deeplake.ipynb)
-3. Here is [whitepaper](https://www.deeplake.ai/whitepaper) and [academic paper](https://arxiv.org/pdf/2209.10785.pdf) for Deep Lake
-4. Here is a set of additional resources available for review: [Deep Lake](https://github.com/activeloopai/deeplake), [Get started](https://docs.activeloop.ai/getting-started) and [Tutorials](https://docs.activeloop.ai/hub-tutorials)
+1. [LangChain & Deep Lake에 대한 궁극적인 가이드: 재무 데이터에 대한 질문에 답하기 위해 ChatGPT 구축하기](https://www.activeloop.ai/resources/ultimate-guide-to-lang-chain-deep-lake-build-chat-gpt-to-answer-questions-on-your-financial-data/)
+2. [Deep Lake를 사용한 Twitter 알고리즘 코드베이스 분석](https://github.com/langchain-ai/langchain/blob/master/cookbook/twitter-the-algorithm-analysis-deeplake.ipynb)
+3. Deep Lake에 대한 [백서](https://www.deeplake.ai/whitepaper)와 [학술 논문](https://arxiv.org/pdf/2209.10785.pdf)입니다.
+4. 검토를 위한 추가 리소스 세트: [Deep Lake](https://github.com/activeloopai/deeplake), [시작하기](https://docs.activeloop.ai/getting-started) 및 [튜토리얼](https://docs.activeloop.ai/hub-tutorials)
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the Python package:
+Python 패키지를 설치합니다:
 
 ```bash
 pip install deeplake
 ```
+
 
 ## VectorStore
 
@@ -38,4 +39,5 @@ pip install deeplake
 from langchain_community.vectorstores import DeepLake
 ```
 
-See a [usage example](/docs/integrations/vectorstores/activeloop_deeplake).
+
+[사용 예제](/docs/integrations/vectorstores/activeloop_deeplake)를 참조하세요.

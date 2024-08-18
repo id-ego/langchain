@@ -1,18 +1,20 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/llms/amazon_api_gateway/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/llms/amazon_api_gateway.ipynb
+description: 아마존 API 게이트웨이는 개발자가 API를 쉽게 생성, 게시, 유지 관리, 모니터링 및 보호할 수 있도록 지원하는 완전 관리형
+  서비스입니다.
 ---
 
-# Amazon API Gateway
+# 아마존 API 게이트웨이
 
-> [Amazon API Gateway](https://aws.amazon.com/api-gateway/) is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any >scale. APIs act as the "front door" for applications to access data, business logic, or functionality from your backend services. Using `API Gateway`, you can create RESTful APIs and >WebSocket APIs that enable real-time two-way communication applications. API Gateway supports containerized and serverless workloads, as well as web applications.
+> [아마존 API 게이트웨이](https://aws.amazon.com/api-gateway/)는 개발자가 API를 쉽게 생성, 게시, 유지 관리, 모니터링 및 보안할 수 있도록 하는 완전 관리형 서비스입니다. API는 애플리케이션이 백엔드 서비스에서 데이터, 비즈니스 로직 또는 기능에 접근할 수 있는 "정문" 역할을 합니다. `API Gateway`를 사용하면 실시간 양방향 통신 애플리케이션을 가능하게 하는 RESTful API 및 WebSocket API를 생성할 수 있습니다. API 게이트웨이는 컨테이너화된 및 서버리스 워크로드와 웹 애플리케이션을 지원합니다.
 
-> `API Gateway` handles all the tasks involved in accepting and processing up to hundreds of thousands of concurrent API calls, including traffic management, CORS support, authorization >and access control, throttling, monitoring, and API version management. `API Gateway` has no minimum fees or startup costs. You pay for the API calls you receive and the amount of data >transferred out and, with the `API Gateway` tiered pricing model, you can reduce your cost as your API usage scales.
+> `API Gateway`는 수십만 개의 동시 API 호출을 수락하고 처리하는 데 필요한 모든 작업을 처리하며, 여기에는 트래픽 관리, CORS 지원, 인증 및 접근 제어, 스로틀링, 모니터링 및 API 버전 관리가 포함됩니다. `API Gateway`는 최소 요금이나 초기 비용이 없습니다. 수신한 API 호출과 전송된 데이터 양에 대해 비용을 지불하며, `API Gateway`의 계층화된 가격 모델을 통해 API 사용량이 증가함에 따라 비용을 줄일 수 있습니다.
 
 ```python
 ##Installing the langchain packages needed to use the integration
 %pip install -qU langchain-community
 ```
+
 
 ## LLM
 
@@ -21,10 +23,12 @@ custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs
 from langchain_community.llms import AmazonAPIGateway
 ```
 
+
 ```python
 api_url = "https://<api_gateway_id>.execute-api.<region>.amazonaws.com/LATEST/HF"
 llm = AmazonAPIGateway(api_url=api_url)
 ```
+
 
 ```python
 # These are sample parameters for Falcon 40B Instruct Deployed from Amazon SageMaker JumpStart
@@ -43,11 +47,13 @@ llm.model_kwargs = parameters
 llm(prompt)
 ```
 
+
 ```output
 'what day comes after Friday?\nSaturday'
 ```
 
-## Agent
+
+## 에이전트
 
 ```python
 <!--IMPORTS:[{"imported": "AgentType", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent_types.AgentType.html", "title": "Amazon API Gateway"}, {"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Amazon API Gateway"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Amazon API Gateway"}]-->
@@ -82,6 +88,7 @@ Write a Python script that prints "Hello, world!"
 """
 )
 ```
+
 ```output
 
 
@@ -100,9 +107,11 @@ Hello, world![0m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 'Hello, world!'
 ```
+
 
 ```python
 result = agent.run(
@@ -113,6 +122,7 @@ What is 2.3 ^ 4.5?
 
 result.split("\n")[0]
 ```
+
 ```output
 
 
@@ -133,11 +143,13 @@ Action:[0m
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 '42.43998894277659'
 ```
 
-## Related
 
-- LLM [conceptual guide](/docs/concepts/#llms)
-- LLM [how-to guides](/docs/how_to/#llms)
+## 관련
+
+- LLM [개념 가이드](/docs/concepts/#llms)
+- LLM [사용 방법 가이드](/docs/how_to/#llms)

@@ -1,23 +1,22 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/annoy/
+description: Annoy는 주어진 쿼리 포인트에 가까운 공간의 포인트를 검색하는 C++ 라이브러리입니다. Python 바인딩을 지원합니다.
 ---
 
 # Annoy
 
 > [Annoy](https://github.com/spotify/annoy) (`Approximate Nearest Neighbors Oh Yeah`)
-is a C++ library with Python bindings to search for points in space that are
-close to a given query point. It also creates large read-only file-based data
-structures that are mapped into memory so that many processes may share the same data. 
+는 주어진 쿼리 포인트와 가까운 공간의 포인트를 검색하기 위한 Python 바인딩이 있는 C++ 라이브러리입니다. 또한 많은 프로세스가 동일한 데이터를 공유할 수 있도록 메모리에 매핑된 대규모 읽기 전용 파일 기반 데이터 구조를 생성합니다.
 
-## Installation and Setup
+## 설치 및 설정
 
 ```bash
 pip install annoy
 ```
 
-## Vectorstore
 
-See a [usage example](/docs/integrations/vectorstores/annoy).
+## 벡터 저장소
+
+[사용 예제](/docs/integrations/vectorstores/annoy)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "Annoy", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.annoy.Annoy.html", "title": "Annoy"}]-->

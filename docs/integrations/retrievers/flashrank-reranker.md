@@ -1,13 +1,14 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/flashrank-reranker/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/flashrank-reranker.ipynb
+description: FlashRank는 기존 검색 및 검색 파이프라인에 재순위를 추가하는 초경량 Python 라이브러리입니다. 문서 압축 및 검색
+  방법을 보여줍니다.
 ---
 
-# FlashRank reranker
+# FlashRank 재랭커
 
-> [FlashRank](https://github.com/PrithivirajDamodaran/FlashRank) is the Ultra-lite & Super-fast Python library to add re-ranking to your existing search & retrieval pipelines. It is based on SoTA cross-encoders, with gratitude to all the model owners.
+> [FlashRank](https://github.com/PrithivirajDamodaran/FlashRank)는 기존 검색 및 검색 파이프라인에 재랭킹을 추가하기 위한 초경량 및 초고속 Python 라이브러리입니다. 이는 SoTA 크로스 인코더를 기반으로 하며, 모든 모델 소유자에게 감사드립니다.
 
-This notebook shows how to use [flashrank](https://github.com/PrithivirajDamodaran/FlashRank) for document compression and retrieval.
+이 노트북은 문서 압축 및 검색을 위해 [flashrank](https://github.com/PrithivirajDamodaran/FlashRank)를 사용하는 방법을 보여줍니다.
 
 ```python
 %pip install --upgrade --quiet  flashrank
@@ -17,6 +18,7 @@ This notebook shows how to use [flashrank](https://github.com/PrithivirajDamodar
 
 %pip install --upgrade --quiet  faiss_cpu
 ```
+
 
 ```python
 # Helper function for printing docs
@@ -33,8 +35,9 @@ def pretty_print_docs(docs):
     )
 ```
 
-## Set up the base vector store retriever
-Let's start by initializing a simple vector store retriever and storing the 2023 State of the Union speech (in chunks). We can set up the retriever to retrieve a high number (20) of docs.
+
+## 기본 벡터 저장소 검색기 설정
+2023년 국정 연설문(조각으로 나누어)을 저장하고 간단한 벡터 저장소 검색기를 초기화하는 것으로 시작하겠습니다. 검색기가 많은 수(20)의 문서를 검색하도록 설정할 수 있습니다.
 
 ```python
 import getpass
@@ -42,6 +45,7 @@ import os
 
 os.environ["OPENAI_API_KEY"] = getpass.getpass()
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "FlashRank reranker"}, {"imported": "FAISS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.faiss.FAISS.html", "title": "FlashRank reranker"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "FlashRank reranker"}, {"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "FlashRank reranker"}]-->
@@ -65,6 +69,7 @@ query = "What did the president say about Ketanji Brown Jackson"
 docs = retriever.invoke(query)
 pretty_print_docs(docs)
 ```
+
 ```output
 Document 1:
 
@@ -267,8 +272,9 @@ The United States of America.
 
 May God bless you all. May God protect our troops.
 ```
-## Doing reranking with FlashRank
-Now let's wrap our base retriever with a `ContextualCompressionRetriever`, using `FlashrankRerank` as a compressor.
+
+## FlashRank로 재랭킹 수행하기
+이제 `FlashrankRerank`를 압축기로 사용하여 기본 검색기를 `ContextualCompressionRetriever`로 감싸겠습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ContextualCompressionRetriever", "source": "langchain.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain.retrievers.contextual_compression.ContextualCompressionRetriever.html", "title": "FlashRank reranker"}, {"imported": "FlashrankRerank", "source": "langchain.retrievers.document_compressors", "docs": "https://api.python.langchain.com/en/latest/document_compressors/langchain_community.document_compressors.flashrank_rerank.FlashrankRerank.html", "title": "FlashRank reranker"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "FlashRank reranker"}]-->
@@ -288,14 +294,17 @@ compressed_docs = compression_retriever.invoke(
 )
 print([doc.metadata["id"] for doc in compressed_docs])
 ```
+
 ```output
 [0, 5, 3]
 ```
-After reranking, the top 3 documents are different from the top 3 documents retrieved by the base retriever.
+
+재랭킹 후, 상위 3개의 문서는 기본 검색기로 검색된 상위 3개의 문서와 다릅니다.
 
 ```python
 pretty_print_docs(compressed_docs)
 ```
+
 ```output
 Document 1:
 
@@ -327,7 +336,8 @@ I’m a capitalist, but capitalism without competition isn’t capitalism.
 
 It’s exploitation—and it drives up prices.
 ```
-## QA reranking with FlashRank
+
+## FlashRank로 QA 재랭킹
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "FlashRank reranker"}]-->
@@ -336,16 +346,19 @@ from langchain.chains import RetrievalQA
 chain = RetrievalQA.from_chain_type(llm=llm, retriever=compression_retriever)
 ```
 
+
 ```python
 chain.invoke(query)
 ```
+
 
 ```output
 {'query': 'What did the president say about Ketanji Brown Jackson',
  'result': "The President mentioned that Ketanji Brown Jackson is one of the nation's top legal minds and will continue Justice Breyer's legacy of excellence."}
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

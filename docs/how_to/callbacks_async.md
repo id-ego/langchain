@@ -1,28 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/callbacks_async/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/callbacks_async.ipynb
+description: 비동기 환경에서 콜백을 사용하는 방법에 대한 가이드로, AsyncCallbackHandler의 활용 및 주의사항을 설명합니다.
 ---
 
-# How to use callbacks in async environments
+# 비동기 환경에서 콜백 사용 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
 
-- [Callbacks](/docs/concepts/#callbacks)
-- [Custom callback handlers](/docs/how_to/custom_callbacks)
+- [콜백](/docs/concepts/#callbacks)
+- [사용자 정의 콜백 핸들러](/docs/how_to/custom_callbacks)
 :::
 
-If you are planning to use the async APIs, it is recommended to use and extend [`AsyncCallbackHandler`](https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.AsyncCallbackHandler.html) to avoid blocking the event.
+비동기 API를 사용할 계획이라면, 이벤트를 차단하지 않기 위해 [`AsyncCallbackHandler`](https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.base.AsyncCallbackHandler.html)를 사용하고 확장하는 것이 좋습니다.
 
 :::warning
-If you use a sync `CallbackHandler` while using an async method to run your LLM / Chain / Tool / Agent, it will still work. However, under the hood, it will be called with [`run_in_executor`](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.loop.run_in_executor) which can cause issues if your `CallbackHandler` is not thread-safe.
+비동기 방법을 사용하여 LLM / Chain / Tool / Agent를 실행하는 동안 동기 `CallbackHandler`를 사용하면 여전히 작동합니다. 그러나 내부적으로는 [`run_in_executor`](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.loop.run_in_executor)로 호출되며, `CallbackHandler`가 스레드 안전하지 않은 경우 문제가 발생할 수 있습니다.
 :::
 
 :::danger
 
-If you're on `python<=3.10`, you need to remember to propagate `config` or `callbacks` when invoking other `runnable` from within a `RunnableLambda`, `RunnableGenerator` or `@tool`. If you do not do this,
-the callbacks will not be propagated to the child runnables being invoked.
+`python<=3.10`을 사용하는 경우, `RunnableLambda`, `RunnableGenerator` 또는 `@tool` 내에서 다른 `runnable`을 호출할 때 `config` 또는 `callbacks`를 전파해야 합니다. 이를 수행하지 않으면,
+호출되는 자식 runnable에 콜백이 전파되지 않습니다.
 :::
 
 ```python
@@ -71,6 +71,7 @@ chat = ChatAnthropic(
 
 await chat.agenerate([[HumanMessage(content="Tell me a joke")]])
 ```
+
 ```output
 zzzz....
 Hi! I just woke up. Your llm is starting
@@ -104,12 +105,14 @@ zzzz....
 Hi! I just woke up. Your llm is ending
 ```
 
+
 ```output
 LLMResult(generations=[[ChatGeneration(text="Here's a little joke for you:\n\nWhy can't a bicycle stand up by itself? Because it's two-tire", message=AIMessage(content="Here's a little joke for you:\n\nWhy can't a bicycle stand up by itself? Because it's two-tire", id='run-8afc89e8-02c0-4522-8480-d96977240bd4-0'))]], llm_output={}, run=[RunInfo(run_id=UUID('8afc89e8-02c0-4522-8480-d96977240bd4'))])
 ```
 
-## Next steps
 
-You've now learned how to create your own custom callback handlers.
+## 다음 단계
 
-Next, check out the other how-to guides in this section, such as [how to attach callbacks to a runnable](/docs/how_to/callbacks_attach).
+이제 사용자 정의 콜백 핸들러를 만드는 방법을 배웠습니다.
+
+다음으로, 이 섹션의 다른 가이드도 확인해 보세요. 예를 들어 [runnable에 콜백을 연결하는 방법](/docs/how_to/callbacks_attach)입니다.

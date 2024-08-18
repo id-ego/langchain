@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/oracleadb_loader/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/oracleadb_loader.ipynb
+description: 오라클 자율 데이터베이스에 대한 문서로, 머신러닝을 활용한 데이터베이스 관리 자동화 및 문서 로딩 방법을 다룹니다.
 ---
 
-# Oracle Autonomous Database
+# 오라클 자율 데이터베이스
 
-Oracle autonomous database is a cloud database that uses machine learning to automate database tuning, security, backups, updates, and other routine management tasks traditionally performed by DBAs.
+오라클 자율 데이터베이스는 기계 학습을 사용하여 데이터베이스 조정, 보안, 백업, 업데이트 및 전통적으로 DBA가 수행하는 기타 일상 관리 작업을 자동화하는 클라우드 데이터베이스입니다.
 
-This notebook covers how to load documents from oracle autonomous database, the loader supports connection with connection string or tns configuration.
+이 노트북은 오라클 자율 데이터베이스에서 문서를 로드하는 방법을 다루며, 로더는 연결 문자열 또는 tns 구성으로 연결을 지원합니다.
 
-## Prerequisites
-1. Database runs in a 'Thin' mode:
+## 전제 조건
+1. 데이터베이스가 'Thin' 모드로 실행됩니다:
 https://python-oracledb.readthedocs.io/en/latest/user_guide/appendix_b.html
 2. `pip install oracledb`:
 https://python-oracledb.readthedocs.io/en/latest/user_guide/installation.html
 
-## Instructions
+## 지침
 
 ```python
 pip install oracledb
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "OracleAutonomousDatabaseLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.oracleadb_loader.OracleAutonomousDatabaseLoader.html", "title": "Oracle Autonomous Database"}]-->
@@ -27,7 +28,8 @@ from langchain_community.document_loaders import OracleAutonomousDatabaseLoader
 from settings import s
 ```
 
-With mutual TLS authentication (mTLS), wallet_location and wallet_password are required to create the connection, user can create connection by providing either connection string or tns configuration details.
+
+상호 TLS 인증(mTLS)을 사용하면 연결을 생성하기 위해 wallet_location 및 wallet_password가 필요하며, 사용자는 연결 문자열 또는 tns 구성 세부정보를 제공하여 연결을 생성할 수 있습니다.
 
 ```python
 SQL_QUERY = "select prod_id, time_id from sh.costs fetch first 5 rows only"
@@ -56,7 +58,8 @@ doc_loader_2 = OracleAutonomousDatabaseLoader(
 doc_2 = doc_loader_2.load()
 ```
 
-With TLS authentication, wallet_location and wallet_password are not required.
+
+TLS 인증을 사용할 경우 wallet_location 및 wallet_password가 필요하지 않습니다.
 
 ```python
 doc_loader_3 = OracleAutonomousDatabaseLoader(
@@ -79,7 +82,8 @@ doc_loader_4 = OracleAutonomousDatabaseLoader(
 doc_4 = doc_loader_4.load()
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

@@ -1,31 +1,34 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/ionic_shopping/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/ionic_shopping.ipynb
+description: 이 문서는 Ionic Tool을 에이전트에 통합하는 방법을 설명하며, Jupyter Notebook을 통해 쇼핑 기능을 제공하는
+  방법을 안내합니다.
 ---
 
-# Ionic Shopping Tool
+# 아이오닉 쇼핑 도구
 
-[Ionic](https://www.ioniccommerce.com/) is a plug and play ecommerce marketplace for AI Assistants. By including the [Ionic Tool](https://github.com/ioniccommerce/ionic_langchain) in your agent, you are effortlessly providing your users with the ability to shop and transact directly within your agent, and you'll get a cut of the transaction.
+[아이오닉](https://www.ioniccommerce.com/)은 AI 어시스턴트를 위한 플러그 앤 플레이 전자상거래 마켓플레이스입니다. [아이오닉 도구](https://github.com/ioniccommerce/ionic_langchain)를 에이전트에 포함시키면 사용자가 에이전트 내에서 직접 쇼핑하고 거래할 수 있는 기능을 손쉽게 제공할 수 있으며, 거래의 일부를 수익으로 얻을 수 있습니다.
 
-This is a basic jupyter notebook demonstrating how to integrate the Ionic Tool into your agent. For more information on setting up your Agent with Ionic, see the Ionic [documentation](https://docs.ioniccommerce.com/introduction).
+이것은 아이오닉 도구를 에이전트에 통합하는 방법을 보여주는 기본 주피터 노트북입니다. 아이오닉과 함께 에이전트를 설정하는 방법에 대한 자세한 내용은 아이오닉 [문서](https://docs.ioniccommerce.com/introduction)를 참조하세요.
 
-This Jupyter Notebook demonstrates how to use the Ionic tool with an Agent.
+이 주피터 노트북은 에이전트와 함께 아이오닉 도구를 사용하는 방법을 보여줍니다.
 
-**Note: The ionic-langchain package is maintained by the Ionic Commerce team, not the LangChain maintainers.**
+**참고: ionic-langchain 패키지는 LangChain 유지 관리자가 아닌 아이오닉 커머스 팀에 의해 유지 관리됩니다.**
 
 * * *
 
-## Setup
+## 설정
 
 ```python
 pip install langchain langchain_openai langchainhub
 ```
 
+
 ```python
 pip install ionic-langchain
 ```
 
-## Setup Agent
+
+## 에이전트 설정
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Ionic Shopping Tool"}, {"imported": "Tool", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.simple.Tool.html", "title": "Ionic Shopping Tool"}, {"imported": "create_react_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.react.agent.create_react_agent.html", "title": "Ionic Shopping Tool"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Ionic Shopping Tool"}]-->
@@ -89,7 +92,8 @@ agent_executor = AgentExecutor(
 )
 ```
 
-## Run
+
+## 실행
 
 ```python
 input = (
@@ -98,7 +102,8 @@ input = (
 agent_executor.invoke({"input": input})
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

@@ -1,20 +1,17 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/infinispanvs/
+description: 인피니스팬은 모든 유형의 데이터를 저장할 수 있는 오픈 소스 인메모리 데이터 그리드로, 버전 15부터 벡터 검색을 지원합니다.
 ---
 
 # Infinispan VS
 
-> [Infinispan](https://infinispan.org) Infinispan is an open-source in-memory data grid that provides
-a key/value data store able to hold all types of data, from Java objects to plain text.
-Since version 15 Infinispan supports vector search over caches.
+> [Infinispan](https://infinispan.org) Infinispan은 모든 유형의 데이터를 저장할 수 있는 키/값 데이터 저장소를 제공하는 오픈 소스 인메모리 데이터 그리드입니다. Java 객체에서 일반 텍스트까지 가능합니다. 15버전부터 Infinispan은 캐시에서 벡터 검색을 지원합니다.
 
-## Installation and Setup
-See [Get Started](https://infinispan.org/get-started/) to run an Infinispan server, you may want to disable authentication
-(not supported atm)
+## 설치 및 설정
+Infinispan 서버를 실행하려면 [시작하기](https://infinispan.org/get-started/)를 참조하세요. 인증을 비활성화할 수 있습니다 (현재 지원되지 않음).
 
-## Vector Store
+## 벡터 저장소
 
-See a [usage example](/docs/integrations/vectorstores/infinispanvs).
+[사용 예제](/docs/integrations/vectorstores/infinispanvs)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "InfinispanVS", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.infinispanvs.InfinispanVS.html", "title": "Infinispan VS"}]-->

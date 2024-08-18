@@ -1,59 +1,56 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/pydantic_compatibility/
+description: LangChain과 Pydantic의 다양한 버전 사용법에 대한 안내 및 Pydantic v2의 주요 변경 사항을 설명합니다.
 ---
 
-# How to use LangChain with different Pydantic versions
+# LangChain을 다양한 Pydantic 버전과 함께 사용하는 방법
 
-- Pydantic v2 was released in June, 2023 (https://docs.pydantic.dev/2.0/blog/pydantic-v2-final/).
-- v2 contains has a number of breaking changes (https://docs.pydantic.dev/2.0/migration/).
-- Pydantic 1 End of Life was in June 2024. LangChain will be dropping support for Pydantic 1 in the near future,
-and likely migrating internally to Pydantic 2. The timeline is tentatively September. This change will be accompanied by a minor version bump in the main langchain packages to version 0.3.x.
+- Pydantic v2는 2023년 6월에 출시되었습니다 (https://docs.pydantic.dev/2.0/blog/pydantic-v2-final/).
+- v2에는 여러 가지 주요 변경 사항이 포함되어 있습니다 (https://docs.pydantic.dev/2.0/migration/).
+- Pydantic 1의 지원 종료는 2024년 6월입니다. LangChain은 가까운 미래에 Pydantic 1에 대한 지원을 중단하고,
+내부적으로 Pydantic 2로 마이그레이션할 가능성이 높습니다. 일정은 잠정적으로 9월입니다. 이 변경은 주요 langchain 패키지의 마이너 버전 증가와 함께 0.3.x로 진행됩니다.
 
-As of `langchain>=0.0.267`, LangChain allows users to install either Pydantic V1 or V2.
+`langchain>=0.0.267`부터 LangChain은 사용자가 Pydantic V1 또는 V2를 설치할 수 있도록 허용합니다.
 
-Internally, LangChain continues to use the [Pydantic V1](https://docs.pydantic.dev/latest/migration/#continue-using-pydantic-v1-features) via
-the v1 namespace of Pydantic 2.
+내부적으로 LangChain은 Pydantic 2의 v1 네임스페이스를 통해 [Pydantic V1](https://docs.pydantic.dev/latest/migration/#continue-using-pydantic-v1-features)을 계속 사용합니다.
 
-Because Pydantic does not support mixing .v1 and .v2 objects, users should be aware of a number of issues
-when using LangChain with Pydantic.
+Pydantic이 .v1 및 .v2 객체 혼합을 지원하지 않기 때문에, 사용자는 LangChain을 Pydantic과 함께 사용할 때 여러 가지 문제를 인식해야 합니다.
 
 :::caution
-While LangChain supports Pydantic V2 objects in some APIs (listed below), it's suggested that users keep using Pydantic V1 objects until LangChain 0.3 is released.
+LangChain은 일부 API에서 Pydantic V2 객체를 지원하지만 (아래 목록 참조), 사용자는 LangChain 0.3이 출시될 때까지 Pydantic V1 객체를 계속 사용하는 것이 좋습니다.
 :::
 
-## 1. Passing Pydantic objects to LangChain APIs
+## 1. Pydantic 객체를 LangChain API에 전달하기
 
-Most LangChain APIs for *tool usage* (see list below) have been updated to accept either Pydantic v1 or v2 objects.
+*도구 사용*을 위한 대부분의 LangChain API(아래 목록 참조)는 Pydantic v1 또는 v2 객체를 모두 수용하도록 업데이트되었습니다.
 
-* Pydantic v1 objects correspond to subclasses of `pydantic.BaseModel` if `pydantic 1` is installed or subclasses of `pydantic.v1.BaseModel` if `pydantic 2` is installed.
-* Pydantic v2 objects correspond to subclasses of `pydantic.BaseModel` if `pydantic 2` is installed.
+* Pydantic v1 객체는 `pydantic 1`이 설치된 경우 `pydantic.BaseModel`의 서브클래스에 해당하며, `pydantic 2`가 설치된 경우 `pydantic.v1.BaseModel`의 서브클래스에 해당합니다.
+* Pydantic v2 객체는 `pydantic 2`가 설치된 경우 `pydantic.BaseModel`의 서브클래스에 해당합니다.
 
 | API                                    | Pydantic 1 | Pydantic 2                                                     |
 |----------------------------------------|------------|----------------------------------------------------------------|
-| `BaseChatModel.bind_tools`             | Yes        | langchain-core>=0.2.23, appropriate version of partner package |
-| `BaseChatModel.with_structured_output` | Yes        | langchain-core>=0.2.23, appropriate version of partner package |
-| `Tool.from_function`                   | Yes        | langchain-core>=0.2.23                                         |
-| `StructuredTool.from_function`         | Yes        | langchain-core>=0.2.23                                         |
+| `BaseChatModel.bind_tools`             | 예         | langchain-core>=0.2.23, 적절한 버전의 파트너 패키지             |
+| `BaseChatModel.with_structured_output` | 예         | langchain-core>=0.2.23, 적절한 버전의 파트너 패키지             |
+| `Tool.from_function`                   | 예         | langchain-core>=0.2.23                                         |
+| `StructuredTool.from_function`         | 예         | langchain-core>=0.2.23                                         |
 
-Partner packages that accept pydantic v2 objects via `bind_tools` or `with_structured_output` APIs:
+`bind_tools` 또는 `with_structured_output` API를 통해 Pydantic v2 객체를 수용하는 파트너 패키지:
 
-| Package Name        | pydantic v1 | pydantic v2 |
+| 패키지 이름          | pydantic v1 | pydantic v2 |
 |---------------------|-------------|-------------|
-| langchain-mistralai | Yes         | >=0.1.11    |
-| langchain-anthropic | Yes         | >=0.1.21    |
-| langchain-robocorp  | Yes         | >=0.0.10    |
-| langchain-openai    | Yes         | >=0.1.19    |
-| langchain-fireworks | Yes         | >=0.1.5     |
-| langchain-aws       | Yes         | >=0.1.15    |
+| langchain-mistralai | 예          | >=0.1.11    |
+| langchain-anthropic | 예          | >=0.1.21    |
+| langchain-robocorp  | 예          | >=0.0.10    |
+| langchain-openai    | 예          | >=0.1.19    |
+| langchain-fireworks | 예          | >=0.1.5     |
+| langchain-aws       | 예          | >=0.1.15    |
 
-Additional partner packages will be updated to accept Pydantic v2 objects in the future.
+추가 파트너 패키지는 향후 Pydantic v2 객체를 수용하도록 업데이트될 예정입니다.
 
-If you are still seeing issues with these APIs or other APIs that accept Pydantic objects, please open an issue, and we'll
-address it.
+이 API 또는 Pydantic 객체를 수용하는 다른 API에서 여전히 문제가 발생하는 경우, 문제를 열어 주시면 해결하겠습니다.
 
-Example:
+예시:
 
-Prior to `langchain-core<0.2.23`, use Pydantic v1 objects when passing to LangChain APIs.
+`langchain-core<0.2.23` 이전에는 LangChain API에 전달할 때 Pydantic v1 객체를 사용하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use LangChain with different Pydantic versions"}]-->
@@ -70,7 +67,8 @@ model = model.with_structured_output(Person)
 model.invoke('Bob is a person.')
 ```
 
-After `langchain-core>=0.2.23`, use either Pydantic v1 or v2 objects when passing to LangChain APIs.
+
+`langchain-core>=0.2.23` 이후에는 LangChain API에 전달할 때 Pydantic v1 또는 v2 객체를 사용하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use LangChain with different Pydantic versions"}]-->
@@ -88,14 +86,14 @@ model = model.with_structured_output(Person)
 model.invoke('Bob is a person.')
 ```
 
-## 2. Sub-classing LangChain models
 
-Because LangChain internally uses Pydantic v1, if you are sub-classing LangChain models, you should use Pydantic v1
-primitives.
+## 2. LangChain 모델 서브클래싱
 
-**Example 1: Extending via inheritance**
+LangChain이 내부적으로 Pydantic v1을 사용하기 때문에, LangChain 모델을 서브클래싱할 경우 Pydantic v1 원시 타입을 사용해야 합니다.
 
-**YES** 
+**예시 1: 상속을 통한 확장**
+
+**예** 
 
 ```python
 <!--IMPORTS:[{"imported": "BaseTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.base.BaseTool.html", "title": "How to use LangChain with different Pydantic versions"}]-->
@@ -121,9 +119,10 @@ CustomTool(
 )
 ```
 
-Mixing Pydantic v2 primitives with Pydantic v1 primitives can raise cryptic errors
 
-**NO** 
+Pydantic v2 원시 타입과 Pydantic v1 원시 타입을 혼합하면 암호화된 오류가 발생할 수 있습니다.
+
+**아니요** 
 
 ```python
 <!--IMPORTS:[{"imported": "BaseTool", "source": "langchain_core.tools", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_core.tools.base.BaseTool.html", "title": "How to use LangChain with different Pydantic versions"}]-->
@@ -149,9 +148,10 @@ CustomTool(
 )
 ```
 
-## 3. Disable run-time validation for LangChain objects used inside Pydantic v2 models
 
-e.g.,
+## 3. Pydantic v2 모델 내에서 사용되는 LangChain 객체에 대한 런타임 검증 비활성화
+
+예:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to use LangChain with different Pydantic versions"}]-->
@@ -167,15 +167,15 @@ class Foo(BaseModel): # <-- BaseModel is from Pydantic v2
 Foo(model=ChatOpenAI(api_key="hello"))
 ```
 
-## 4: LangServe cannot generate OpenAPI docs if running Pydantic 2
 
-If you are using Pydantic 2, you will not be able to generate OpenAPI docs using LangServe.
+## 4: Pydantic 2를 실행하는 경우 LangServe가 OpenAPI 문서를 생성할 수 없습니다
 
-If you need OpenAPI docs, your options are to either install Pydantic 1:
+Pydantic 2를 사용하는 경우 LangServe를 사용하여 OpenAPI 문서를 생성할 수 없습니다.
+
+OpenAPI 문서가 필요하다면, Pydantic 1을 설치하는 방법이 있습니다:
 
 `pip install pydantic==1.10.17`
 
-or else to use the `APIHandler` object in LangChain to manually create the
-routes for your API.
+또는 LangChain의 `APIHandler` 객체를 사용하여 API의 경로를 수동으로 생성하는 방법이 있습니다.
 
-See: https://python.langchain.com/v0.2/docs/langserve/#pydantic
+참고: https://python.langchain.com/v0.2/docs/langserve/#pydantic

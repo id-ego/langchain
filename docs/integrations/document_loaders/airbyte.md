@@ -1,30 +1,31 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/airbyte/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/airbyte.ipynb
+description: AirbyteLoader는 Airbyte에서 LangChain 문서로 데이터를 로드하는 방법을 설명하는 문서입니다. ELT
+  파이프라인을 지원합니다.
 ---
 
 # AirbyteLoader
 
-> [Airbyte](https://github.com/airbytehq/airbyte) is a data integration platform for ELT pipelines from APIs, databases & files to warehouses & lakes. It has the largest catalog of ELT connectors to data warehouses and databases.
+> [Airbyte](https://github.com/airbytehq/airbyte)는 API, 데이터베이스 및 파일에서 데이터 웨어하우스 및 데이터 레이크로 ELT 파이프라인을 위한 데이터 통합 플랫폼입니다. 데이터 웨어하우스 및 데이터베이스에 대한 ELT 커넥터의 가장 큰 카탈로그를 보유하고 있습니다.
 
-This covers how to load any source from Airbyte into LangChain documents
+이 문서는 Airbyte의 모든 소스를 LangChain 문서로 로드하는 방법을 다룹니다.
 
-## Installation
+## 설치
 
-In order to use `AirbyteLoader` you need to install the `langchain-airbyte` integration package.
+`AirbyteLoader`를 사용하려면 `langchain-airbyte` 통합 패키지를 설치해야 합니다.
 
 ```python
 % pip install -qU langchain-airbyte
 ```
 
-Note: Currently, the `airbyte` library does not support Pydantic v2.
-Please downgrade to Pydantic v1 to use this package.
 
-Note: This package also currently requires Python 3.10+.
+참고: 현재 `airbyte` 라이브러리는 Pydantic v2를 지원하지 않습니다. 이 패키지를 사용하려면 Pydantic v1로 다운그레이드하십시오.
 
-## Loading Documents
+참고: 이 패키지는 현재 Python 3.10+를 필요로 합니다.
 
-By default, the `AirbyteLoader` will load any structured data from a stream and output yaml-formatted documents.
+## 문서 로드
+
+기본적으로 `AirbyteLoader`는 스트림에서 구조화된 데이터를 로드하고 yaml 형식의 문서를 출력합니다.
 
 ```python
 from langchain_airbyte import AirbyteLoader
@@ -37,6 +38,7 @@ loader = AirbyteLoader(
 docs = loader.load()
 print(docs[0].page_content[:500])
 ```
+
 ```output
 ```yaml
 academic_degree: PhD
@@ -64,7 +66,8 @@ title: M.Sc.Tech.
 updated_at: '2024-02-27T16:41:01+00:00'
 weight: 6
 ```
-You can also specify a custom prompt template for formatting documents:
+
+문서 형식을 지정하기 위해 사용자 정의 프롬프트 템플릿을 지정할 수도 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "AirbyteLoader"}]-->
@@ -81,12 +84,14 @@ loader_templated = AirbyteLoader(
 docs_templated = loader_templated.load()
 print(docs_templated[0].page_content)
 ```
+
 ```output
 My name is Verdie and I am 1.73 meters tall.
 ```
-## Lazy Loading Documents
 
-One of the powerful features of `AirbyteLoader` is its ability to load large documents from upstream sources. When working with large datasets, the default `.load()` behavior can be slow and memory-intensive. To avoid this, you can use the `.lazy_load()` method to load documents in a more memory-efficient manner.
+## 지연 로드 문서
+
+`AirbyteLoader`의 강력한 기능 중 하나는 상류 소스에서 대용량 문서를 로드할 수 있는 능력입니다. 대용량 데이터 세트를 다룰 때 기본 `.load()` 동작은 느리고 메모리를 많이 사용할 수 있습니다. 이를 피하기 위해 `.lazy_load()` 메서드를 사용하여 메모리 효율적인 방식으로 문서를 로드할 수 있습니다.
 
 ```python
 import time
@@ -106,21 +111,25 @@ print(
     f"Just calling lazy load is quick! This took {time.time() - start_time:.4f} seconds"
 )
 ```
+
 ```output
 Just calling lazy load is quick! This took 0.0001 seconds
 ```
-And you can iterate over documents as they're yielded:
+
+문서가 생성되는 대로 반복할 수도 있습니다:
 
 ```python
 for doc in my_iterator:
     print(doc.page_content)
 ```
+
 ```output
 My name is Andera and I am 1.91 meters tall.
 My name is Jody and I am 1.85 meters tall.
 My name is Zonia and I am 1.53 meters tall.
 ```
-You can also lazy load documents in an async manner with `.alazy_load()`:
+
+또한 `.alazy_load()`를 사용하여 비동기 방식으로 문서를 지연 로드할 수 있습니다:
 
 ```python
 loader = AirbyteLoader(
@@ -137,24 +146,26 @@ my_async_iterator = loader.alazy_load()
 async for doc in my_async_iterator:
     print(doc.page_content)
 ```
+
 ```output
 My name is Carmelina and I am 1.74 meters tall.
 My name is Ali and I am 1.90 meters tall.
 My name is Rochell and I am 1.83 meters tall.
 ```
-## Configuration
 
-`AirbyteLoader` can be configured with the following options:
+## 구성
 
-- `source` (str, required): The name of the Airbyte source to load from.
-- `stream` (str, required): The name of the stream to load from (Airbyte sources can return multiple streams)
-- `config` (dict, required): The configuration for the Airbyte source
-- `template` (PromptTemplate, optional): A custom prompt template for formatting documents
-- `include_metadata` (bool, optional, default True): Whether to include all fields as metadata in the output documents
+`AirbyteLoader`는 다음 옵션으로 구성할 수 있습니다:
 
-The majority of the configuration will be in `config`, and you can find the specific configuration options in the "Config field reference" for each source in the [Airbyte documentation](https://docs.airbyte.com/integrations/).
+- `source` (str, 필수): 로드할 Airbyte 소스의 이름.
+- `stream` (str, 필수): 로드할 스트림의 이름 (Airbyte 소스는 여러 스트림을 반환할 수 있음)
+- `config` (dict, 필수): Airbyte 소스의 구성
+- `template` (PromptTemplate, 선택 사항): 문서 형식을 위한 사용자 정의 프롬프트 템플릿
+- `include_metadata` (bool, 선택 사항, 기본값 True): 출력 문서에 모든 필드를 메타데이터로 포함할지 여부
 
-## Related
+구성의 대부분은 `config`에 있으며, 각 소스에 대한 "구성 필드 참조"에서 특정 구성 옵션을 찾을 수 있습니다 [Airbyte 문서](https://docs.airbyte.com/integrations/)에서.
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

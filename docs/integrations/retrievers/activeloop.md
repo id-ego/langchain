@@ -1,30 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/activeloop/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/activeloop.ipynb
+description: Activeloop Deep Memory는 LLM 앱의 정확도를 높이고 벡터 저장소를 최적화하는 도구 모음입니다. RAG 통합의
+  도전 과제를 해결합니다.
 ---
 
 # Activeloop Deep Memory
 
-> [Activeloop Deep Memory](https://docs.activeloop.ai/performance-features/deep-memory) is a suite of tools that enables you to optimize your Vector Store for your use-case and achieve higher accuracy in your LLM apps.
+> [Activeloop Deep Memory](https://docs.activeloop.ai/performance-features/deep-memory)는 사용 사례에 맞게 벡터 저장소를 최적화하고 LLM 앱에서 더 높은 정확도를 달성할 수 있도록 도와주는 도구 모음입니다.
 
-`Retrieval-Augmented Generatation` (`RAG`) has recently gained significant attention. As advanced RAG techniques and agents emerge, they expand the potential of what RAGs can accomplish. However, several challenges may limit the integration of RAGs into production. The primary factors to consider when implementing RAGs in production settings are accuracy (recall), cost, and latency. For basic use cases, OpenAI's Ada model paired with a naive similarity search can produce satisfactory results. Yet, for higher accuracy or recall during searches, one might need to employ advanced retrieval techniques. These methods might involve varying data chunk sizes, rewriting queries multiple times, and more, potentially increasing latency and costs.  Activeloop's [Deep Memory](https://www.activeloop.ai/resources/use-deep-memory-to-boost-rag-apps-accuracy-by-up-to-22/) a feature available to `Activeloop Deep Lake` users, addresses these issuea by introducing a tiny neural network layer trained to match user queries with relevant data from a corpus. While this addition incurs minimal latency during search, it can boost retrieval accuracy by up to 27
-% and remains cost-effective and simple to use, without requiring any additional advanced rag techniques.
+`Retrieval-Augmented Generation` (`RAG`)은 최근에 상당한 주목을 받고 있습니다. 고급 RAG 기술과 에이전트가 등장함에 따라 RAG가 수행할 수 있는 잠재력이 확장되고 있습니다. 그러나 여러 가지 도전 과제가 RAG를 프로덕션에 통합하는 것을 제한할 수 있습니다. 프로덕션 환경에서 RAG를 구현할 때 고려해야 할 주요 요소는 정확도(재현율), 비용 및 대기 시간입니다. 기본 사용 사례의 경우 OpenAI의 Ada 모델과 단순 유사성 검색을 결합하면 만족스러운 결과를 얻을 수 있습니다. 그러나 검색 중 더 높은 정확도나 재현율이 필요한 경우 고급 검색 기술을 활용해야 할 수 있습니다. 이러한 방법은 데이터 청크 크기를 다양하게 하거나 쿼리를 여러 번 재작성하는 것과 관련이 있을 수 있으며, 이로 인해 대기 시간과 비용이 증가할 수 있습니다. Activeloop의 [Deep Memory](https://www.activeloop.ai/resources/use-deep-memory-to-boost-rag-apps-accuracy-by-up-to-22/)는 `Activeloop Deep Lake` 사용자에게 제공되는 기능으로, 사용자 쿼리를 관련 데이터와 일치시키기 위해 훈련된 작은 신경망 레이어를 도입하여 이러한 문제를 해결합니다. 이 추가 기능은 검색 중 최소한의 대기 시간을 발생시키면서도 최대 27%까지 검색 정확도를 높일 수 있으며, 추가적인 고급 RAG 기술이 필요하지 않아 비용 효율적이고 사용이 간편합니다.
 
-For this tutorial we will parse `DeepLake` documentation, and create a RAG system that could answer the question from the docs. 
+이번 튜토리얼에서는 `DeepLake` 문서를 파싱하고 문서에서 질문에 답할 수 있는 RAG 시스템을 생성할 것입니다.
 
-## 1. Dataset Creation
+## 1. 데이터셋 생성
 
-We will parse activeloop's docs for this tutorial using `BeautifulSoup` library and LangChain's document parsers like `Html2TextTransformer`, `AsyncHtmlLoader`. So we will need to install the following libraries:
+이번 튜토리얼에서는 `BeautifulSoup` 라이브러리와 LangChain의 문서 파서인 `Html2TextTransformer`, `AsyncHtmlLoader`를 사용하여 activeloop의 문서를 파싱할 것입니다. 따라서 다음 라이브러리를 설치해야 합니다:
 
 ```python
 %pip install --upgrade --quiet  tiktoken langchain-openai python-dotenv datasets langchain deeplake beautifulsoup4 html2text ragas
 ```
 
-Also you'll need to create a [Activeloop](https://activeloop.ai) account.
+
+또한 [Activeloop](https://activeloop.ai) 계정을 생성해야 합니다.
 
 ```python
 ORG_ID = "..."
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "RetrievalQA", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.retrieval_qa.base.RetrievalQA.html", "title": "Activeloop Deep Memory"}, {"imported": "DeepLake", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.deeplake.DeepLake.html", "title": "Activeloop Deep Memory"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Activeloop Deep Memory"}, {"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Activeloop Deep Memory"}]-->
@@ -32,6 +34,7 @@ from langchain.chains import RetrievalQA
 from langchain_community.vectorstores import DeepLake
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 ```
+
 
 ```python
 import getpass
@@ -47,6 +50,7 @@ token = os.getenv("ACTIVELOOP_TOKEN")
 openai_embeddings = OpenAIEmbeddings()
 ```
 
+
 ```python
 db = DeepLake(
     dataset_path=f"hub://{ORG_ID}/deeplake-docs-deepmemory",  # org_id stands for your username or organization from activeloop
@@ -58,7 +62,8 @@ db = DeepLake(
 )
 ```
 
-parsing all links in the webpage using `BeautifulSoup`
+
+웹페이지의 모든 링크를 `BeautifulSoup`를 사용하여 파싱합니다.
 
 ```python
 from urllib.parse import urljoin
@@ -87,7 +92,8 @@ base_url = "https://docs.deeplake.ai/en/latest/"
 all_links = get_all_links(base_url)
 ```
 
-Loading data:
+
+데이터 로딩:
 
 ```python
 <!--IMPORTS:[{"imported": "AsyncHtmlLoader", "source": "langchain_community.document_loaders.async_html", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.async_html.AsyncHtmlLoader.html", "title": "Activeloop Deep Memory"}]-->
@@ -97,7 +103,8 @@ loader = AsyncHtmlLoader(all_links)
 docs = loader.load()
 ```
 
-Converting data into user readable format:
+
+사용자가 읽을 수 있는 형식으로 데이터 변환:
 
 ```python
 <!--IMPORTS:[{"imported": "Html2TextTransformer", "source": "langchain_community.document_transformers", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.html2text.Html2TextTransformer.html", "title": "Activeloop Deep Memory"}]-->
@@ -107,7 +114,8 @@ html2text = Html2TextTransformer()
 docs_transformed = html2text.transform_documents(docs)
 ```
 
-Now, let us chunk further the documents as some of the contain too much text:
+
+이제 일부 문서가 너무 많은 텍스트를 포함하고 있으므로 문서를 더 나누어 보겠습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "Activeloop Deep Memory"}]-->
@@ -128,24 +136,26 @@ for doc in docs_transformed:
         docs_new.extend(docs)
 ```
 
-Populating VectorStore:
+
+VectorStore 채우기:
 
 ```python
 docs = db.add_documents(docs_new)
 ```
 
-## 2. Generating synthetic queries and training Deep Memory
 
-Next step would be to train a deep_memory model that will align your users queries with the dataset that you already have. If you don't have any user queries yet, no worries, we will generate them using LLM!
+## 2. 합성 쿼리 생성 및 Deep Memory 훈련
 
-#### TODO: Add image
+다음 단계는 사용자의 쿼리를 이미 보유한 데이터셋과 정렬할 deep_memory 모델을 훈련하는 것입니다. 아직 사용자 쿼리가 없다면 걱정하지 마세요. LLM을 사용하여 쿼리를 생성할 것입니다!
 
-Here above we showed the overall schema how deep_memory works. So as you can see, in order to train it you need relevance, queries together with corpus data (data that we want to query). Corpus data was already populated in the previous section, here we will be generating questions and relevance. 
+#### TODO: 이미지 추가
 
-1. `questions` - is a text of strings, where each string represents a query
-2. `relevance` - contains links to the ground truth for each question. There might be several docs that contain answer to the given question. Because of this relevenve is `List[List[tuple[str, float]]]`, where outer list represents queries and inner list relevant documents. Tuple contains str, float pair where string represent the id of the source doc (corresponds to the `id` tensor in the dataset), while float corresponds to how much current document is related to the question.  
+위에서 deep_memory가 작동하는 전체 스키마를 보여주었습니다. 보시다시피, 이를 훈련하기 위해서는 관련성, 쿼리 및 코퍼스 데이터(쿼리하고자 하는 데이터)가 필요합니다. 코퍼스 데이터는 이전 섹션에서 이미 채워졌으며, 여기서는 질문과 관련성을 생성할 것입니다.
 
-Now, let us generate synthetic questions and relevance:
+1. `questions` - 각 문자열이 쿼리를 나타내는 문자열 텍스트입니다.
+2. `relevance` - 각 질문에 대한 실제 정답 링크를 포함합니다. 주어진 질문에 대한 답변을 포함하는 여러 문서가 있을 수 있습니다. 이로 인해 relevance는 `List[List[tuple[str, float]]]`이며, 외부 리스트는 쿼리를 나타내고 내부 리스트는 관련 문서를 나타냅니다. 튜플은 str, float 쌍을 포함하며, 여기서 문자열은 소스 문서의 ID를 나타내고(데이터셋의 `id` 텐서에 해당), float는 현재 문서가 질문과 얼마나 관련이 있는지를 나타냅니다.
+
+이제 합성 질문과 관련성을 생성해 보겠습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "create_structured_output_chain", "source": "langchain.chains.openai_functions", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.openai_functions.base.create_structured_output_chain.html", "title": "Activeloop Deep Memory"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "Activeloop Deep Memory"}, {"imported": "SystemMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.system.SystemMessage.html", "title": "Activeloop Deep Memory"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "Activeloop Deep Memory"}, {"imported": "HumanMessagePromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.HumanMessagePromptTemplate.html", "title": "Activeloop Deep Memory"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "Activeloop Deep Memory"}]-->
@@ -160,11 +170,13 @@ from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 ```
 
+
 ```python
 # fetch dataset docs and ids if they exist (optional you can also ingest)
 docs = db.vectorstore.dataset.text.data(fetch_chunks=True, aslist=True)["value"]
 ids = db.vectorstore.dataset.id.data(fetch_chunks=True, aslist=True)["value"]
 ```
+
 
 ```python
 # If we pass in a model explicitly, we need to make sure it supports the OpenAI function-calling API.
@@ -194,6 +206,7 @@ text = "# Understanding Hallucinations and Bias ## **Introduction** In this less
 questions = chain.run(input=text)
 print(questions)
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "OpenAIEmbeddings", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_openai.embeddings.base.OpenAIEmbeddings.html", "title": "Activeloop Deep Memory"}]-->
@@ -229,7 +242,8 @@ train_questions, train_relevances = questions[:100], relevances[:100]
 test_questions, test_relevances = questions[100:], relevances[100:]
 ```
 
-Now we created 100 training queries as well as 100 queries for testing. Now let us train the deep_memory:
+
+이제 100개의 훈련 쿼리와 100개의 테스트 쿼리를 생성했습니다. 이제 deep_memory를 훈련시켜 보겠습니다:
 
 ```python
 job_id = db.vectorstore.deep_memory.train(
@@ -238,11 +252,13 @@ job_id = db.vectorstore.deep_memory.train(
 )
 ```
 
-Let us track the training progress:
+
+훈련 진행 상황을 추적해 보겠습니다:
 
 ```python
 db.vectorstore.deep_memory.status("6538939ca0b69a9ca45c528c")
 ```
+
 ```output
 
 --------------------------------------------------------------
@@ -256,15 +272,14 @@ db.vectorstore.deep_memory.status("6538939ca0b69a9ca45c528c")
 | results                    | recall@10: 79.00% (+34.00%)   |
 --------------------------------------------------------------
 ```
-## 3. Evaluating Deep Memory performance
 
-Great we've trained the model! It's showing some substantial improvement in recall, but how can we use it now and evaluate on unseen new data? In this section we will delve into model evaluation and inference part and see how it can be used with LangChain in order to increase retrieval accuracy
+## 3. Deep Memory 성능 평가
 
-### 3.1 Deep Memory evaluation
+훌륭합니다! 모델을 훈련했습니다! 재현율에서 상당한 개선을 보이고 있지만, 이제 어떻게 사용할 수 있고 보지 못한 새로운 데이터에서 평가할 수 있을까요? 이 섹션에서는 모델 평가 및 추론 부분을 살펴보고 LangChain과 함께 사용하여 검색 정확도를 높이는 방법을 알아보겠습니다.
 
-For the beginning we can use deep_memory's builtin evaluation method.
-It calculates several `recall` metrics.
-It can be done easily in a few lines of code.
+### 3.1 Deep Memory 평가
+
+우선 deep_memory의 내장 평가 방법을 사용할 수 있습니다. 여러 `recall` 메트릭을 계산합니다. 몇 줄의 코드로 쉽게 수행할 수 있습니다.
 
 ```python
 recall = db.vectorstore.deep_memory.evaluate(
@@ -272,6 +287,7 @@ recall = db.vectorstore.deep_memory.evaluate(
     relevance=test_relevances,
 )
 ```
+
 ```output
 
 Embedding queries took 0.81 seconds
@@ -290,7 +306,8 @@ Recall@10:	  69.0%
 Recall@50:	  97.0%
 Recall@100:	  97.0%
 ```
-It is showing quite substatntial improvement on an unseen test dataset too!!!
+
+보지 못한 테스트 데이터셋에서도 상당한 개선을 보이고 있습니다!!!
 
 ### 3.2 Deep Memory + RAGas
 
@@ -301,7 +318,8 @@ from ragas.metrics import (
 )
 ```
 
-Let us convert recall into ground truths:
+
+재현율을 실제 정답으로 변환해 보겠습니다:
 
 ```python
 def convert_relevance_to_ground_truth(docs, relevance):
@@ -314,6 +332,7 @@ def convert_relevance_to_ground_truth(docs, relevance):
         ground_truths.append(ground_truth)
     return ground_truths
 ```
+
 
 ```python
 ground_truths = convert_relevance_to_ground_truth(docs, test_relevances)
@@ -350,6 +369,7 @@ for deep_memory in [False, True]:
         print(f"{metric}: {metrics[metric]}")
     print("===================================")
 ```
+
 ```output
 
 Evaluating with deep_memory = False
@@ -362,11 +382,12 @@ Evaluating with deep_memory = True
 context_recall_score = 0.5634545323
 ===================================
 ```
-### 3.3 Deep Memory Inference
 
-#### TODO: Add image
+### 3.3 Deep Memory 추론
 
-with deep_memory
+#### TODO: 이미지 추가
+
+deep_memory와 함께
 
 ```python
 retriever = db.as_retriever()
@@ -379,10 +400,12 @@ qa = RetrievalQA.from_chain_type(
 )
 print(qa.run(query))
 ```
+
 ```output
 The base htype of the 'video_seq' tensor is 'video'.
 ```
-without deep_memory
+
+deep_memory 없이
 
 ```python
 retriever = db.as_retriever()
@@ -395,14 +418,16 @@ qa = RetrievalQA.from_chain_type(
 )
 qa.run(query)
 ```
+
 ```output
 The text does not provide information on the base htype of the 'video_seq' tensor.
 ```
-### 3.4 Deep Memory cost savings
 
-Deep Memory increases retrieval accuracy without altering your existing workflow. Additionally, by reducing the top_k input into the LLM, you can significantly cut inference costs via lower token usage.
+### 3.4 Deep Memory 비용 절감
 
-## Related
+Deep Memory는 기존 워크플로를 변경하지 않고도 검색 정확도를 높입니다. 또한 LLM에 대한 top_k 입력을 줄이면 낮은 토큰 사용량을 통해 추론 비용을 크게 절감할 수 있습니다.
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 리트리버 [개념 가이드](/docs/concepts/#retrievers)
+- 리트리버 [사용 방법 가이드](/docs/how_to/#retrievers)

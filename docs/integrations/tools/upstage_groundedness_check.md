@@ -1,26 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/upstage_groundedness_check/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/upstage_groundedness_check.ipynb
+description: 이 문서는 Upstage groundedness check 모델을 시작하는 방법과 설치, 환경 설정, 사용법을 안내합니다.
 sidebar_label: Upstage
 ---
 
-# Upstage Groundedness Check
+# 업스테이지 그라운디드니스 체크
 
-This notebook covers how to get started with Upstage groundedness check models.
+이 노트북은 업스테이지 그라운디드니스 체크 모델을 시작하는 방법을 다룹니다.
 
-## Installation
+## 설치
 
-Install `langchain-upstage` package.
+`langchain-upstage` 패키지를 설치합니다.
 
 ```bash
 pip install -U langchain-upstage
 ```
 
-## Environment Setup
 
-Make sure to set the following environment variables:
+## 환경 설정
 
-- `UPSTAGE_API_KEY`: Your Upstage API key from [Upstage developers document](https://developers.upstage.ai/docs/getting-started/quick-start).
+다음 환경 변수를 설정해야 합니다:
+
+- `UPSTAGE_API_KEY`: [업스테이지 개발자 문서](https://developers.upstage.ai/docs/getting-started/quick-start)에서 가져온 업스테이지 API 키입니다.
 
 ```python
 import os
@@ -28,9 +29,10 @@ import os
 os.environ["UPSTAGE_API_KEY"] = "YOUR_API_KEY"
 ```
 
-## Usage
 
-Initialize `UpstageGroundednessCheck` class.
+## 사용법
+
+`UpstageGroundednessCheck` 클래스를 초기화합니다.
 
 ```python
 from langchain_upstage import UpstageGroundednessCheck
@@ -38,7 +40,8 @@ from langchain_upstage import UpstageGroundednessCheck
 groundedness_check = UpstageGroundednessCheck()
 ```
 
-Use the `run` method to check the groundedness of the input text.
+
+입력 텍스트의 그라운디드니스를 확인하기 위해 `run` 메서드를 사용합니다.
 
 ```python
 request_input = {
@@ -50,7 +53,8 @@ response = groundedness_check.invoke(request_input)
 print(response)
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

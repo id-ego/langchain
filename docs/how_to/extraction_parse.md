@@ -1,33 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/extraction_parse/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/extraction_parse.ipynb
+description: LLM을 활용하여 도구 호출 없이 정보를 추출하는 방법과 PydanticOutputParser를 사용하는 예제를 제공합니다.
 ---
 
-# How to use prompting alone (no tool calling) to do extraction
+# 프롬프트만 사용하여 추출하는 방법 (도구 호출 없음)
 
-Tool calling features are not required for generating structured output from LLMs. LLMs that are able to follow prompt instructions well can be tasked with outputting information in a given format.
+도구 호출 기능은 LLM에서 구조화된 출력을 생성하는 데 필요하지 않습니다. 프롬프트 지침을 잘 따르는 LLM은 주어진 형식으로 정보를 출력하는 작업을 수행할 수 있습니다.
 
-This approach relies on designing good prompts and then parsing the output of the LLMs to make them extract information well.
+이 접근 방식은 좋은 프롬프트를 설계하고 LLM의 출력을 파싱하여 정보를 잘 추출하도록 하는 데 의존합니다.
 
-To extract data without tool-calling features: 
+도구 호출 기능 없이 데이터를 추출하려면:
 
-1. Instruct the LLM to generate text following an expected format (e.g., JSON with a certain schema);
-2. Use [output parsers](/docs/concepts#output-parsers) to structure the model response into a desired Python object.
+1. LLM에게 예상 형식(예: 특정 스키마가 있는 JSON)에 따라 텍스트를 생성하도록 지시합니다;
+2. [출력 파서](/docs/concepts#output-parsers)를 사용하여 모델 응답을 원하는 Python 객체로 구조화합니다.
 
-First we select a LLM:
+먼저 LLM을 선택합니다:
 
 import ChatModelTabs from "@theme/ChatModelTabs";
 
 <ChatModelTabs customVarName="model" />
 
-
 :::tip
-This tutorial is meant to be simple, but generally should really include reference examples to squeeze out performance!
+이 튜토리얼은 간단하게 구성되어 있지만, 일반적으로 성능을 극대화하기 위해 참조 예제를 포함해야 합니다!
 :::
 
-## Using PydanticOutputParser
+## PydanticOutputParser 사용하기
 
-The following example uses the built-in `PydanticOutputParser` to parse the output of a chat model.
+다음 예제는 채팅 모델의 출력을 파싱하기 위해 내장된 `PydanticOutputParser`를 사용합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "PydanticOutputParser", "source": "langchain_core.output_parsers", "docs": "https://api.python.langchain.com/en/latest/output_parsers/langchain_core.output_parsers.pydantic.PydanticOutputParser.html", "title": "How to use prompting alone (no tool calling) to do extraction"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use prompting alone (no tool calling) to do extraction"}]-->
@@ -68,15 +67,18 @@ prompt = ChatPromptTemplate.from_messages(
 ).partial(format_instructions=parser.get_format_instructions())
 ```
 
-Let's take a look at what information is sent to the model
+
+모델에 전송되는 정보가 무엇인지 살펴보겠습니다.
 
 ```python
 query = "Anna is 23 years old and she is 6 feet tall"
 ```
 
+
 ```python
 print(prompt.format_prompt(query=query).to_string())
 ```
+
 ```output
 System: Answer the user query. Wrap the output in `json` tags
 The output should be formatted as a JSON instance that conforms to the JSON schema below.
@@ -86,35 +88,39 @@ the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. T
 
 Here is the output schema:
 ```
-{"description": "Identifying information about all people in a text.", "properties": {"people": {"title": "People", "type": "array", "items": {"$ref": "#/definitions/Person"}}}, "required": ["people"], "definitions": {"Person": {"title": "Person", "description": "Information about a person.", "type": "object", "properties": {"name": {"title": "Name", "description": "The name of the person", "type": "string"}, "height_in_meters": {"title": "Height In Meters", "description": "The height of the person expressed in meters.", "type": "number"}}, "required": ["name", "height_in_meters"]}}}
+
+{"description": "텍스트에 있는 모든 사람에 대한 식별 정보.", "properties": {"people": {"title": "사람들", "type": "array", "items": {"$ref": "#/definitions/Person"}}}, "required": ["people"], "definitions": {"Person": {"title": "사람", "description": "사람에 대한 정보.", "type": "object", "properties": {"name": {"title": "이름", "description": "사람의 이름", "type": "string"}, "height_in_meters": {"title": "미터 단위의 키", "description": "미터로 표현된 사람의 키.", "type": "number"}}, "required": ["name", "height_in_meters"]}}}
 ```
 Human: Anna is 23 years old and she is 6 feet tall
 ```
-Having defined our prompt, we simply chain together the prompt, model and output parser:
+
+프롬프트를 정의한 후, 프롬프트, 모델 및 출력 파서를 간단히 연결합니다:
 
 ```python
 chain = prompt | model | parser
 chain.invoke({"query": query})
 ```
 
+
 ```output
 People(people=[Person(name='Anna', height_in_meters=1.83)])
 ```
 
-Check out the associated [Langsmith trace](https://smith.langchain.com/public/92ed52a3-92b9-45af-a663-0a9c00e5e396/r).
 
-Note that the schema shows up in two places: 
+관련된 [Langsmith trace](https://smith.langchain.com/public/92ed52a3-92b9-45af-a663-0a9c00e5e396/r)를 확인하세요.
 
-1. In the prompt, via `parser.get_format_instructions()`;
-2. In the chain, to receive the formatted output and structure it into a Python object (in this case, the Pydantic object `People`).
+스키마는 두 곳에서 나타납니다:
 
-## Custom Parsing
+1. 프롬프트에서 `parser.get_format_instructions()`를 통해;
+2. 체인에서 형식화된 출력을 수신하고 이를 Python 객체(이 경우 Pydantic 객체 `People`)로 구조화하기 위해.
 
-If desired, it's easy to create a custom prompt and parser with `LangChain` and `LCEL`.
+## 사용자 정의 파싱
 
-To create a custom parser, define a function to parse the output from the model (typically an [AIMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html)) into an object of your choice.
+원하는 경우, `LangChain` 및 `LCEL`을 사용하여 사용자 정의 프롬프트와 파서를 쉽게 만들 수 있습니다.
 
-See below for a simple implementation of a JSON parser.
+사용자 정의 파서를 만들려면, 모델의 출력을 선택한 객체로 파싱하는 함수를 정의합니다(일반적으로 [AIMessage](https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html)입니다).
+
+아래는 JSON 파서의 간단한 구현을 보여줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "ChatAnthropic", "source": "langchain_anthropic.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_anthropic.chat_models.ChatAnthropic.html", "title": "How to use prompting alone (no tool calling) to do extraction"}, {"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to use prompting alone (no tool calling) to do extraction"}, {"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to use prompting alone (no tool calling) to do extraction"}]-->
@@ -181,10 +187,12 @@ def extract_json(message: AIMessage) -> List[dict]:
         raise ValueError(f"Failed to parse: {message}")
 ```
 
+
 ```python
 query = "Anna is 23 years old and she is 6 feet tall"
 print(prompt.format_prompt(query=query).to_string())
 ```
+
 ```output
 System: Answer the user query. Output your answer as JSON that  matches the given schema: ```json
 {'title': 'People', 'description': 'Identifying information about all people in a text.', 'type': 'object', 'properties': {'people': {'title': 'People', 'type': 'array', 'items': {'$ref': '#/definitions/Person'}}}, 'required': ['people'], 'definitions': {'Person': {'title': 'Person', 'description': 'Information about a person.', 'type': 'object', 'properties': {'name': {'title': 'Name', 'description': 'The name of the person', 'type': 'string'}, 'height_in_meters': {'title': 'Height In Meters', 'description': 'The height of the person expressed in meters.', 'type': 'number'}}, 'required': ['name', 'height_in_meters']}}}
@@ -192,16 +200,18 @@ System: Answer the user query. Output your answer as JSON that  matches the give
 Human: Anna is 23 years old and she is 6 feet tall
 ```
 
+
 ```python
 chain = prompt | model | extract_json
 chain.invoke({"query": query})
 ```
 
+
 ```output
 [{'people': [{'name': 'Anna', 'height_in_meters': 1.83}]}]
 ```
 
-## Other Libraries
 
-If you're looking at extracting using a parsing approach, check out the [Kor](https://eyurtsev.github.io/kor/) library. It's written by one of the `LangChain` maintainers and it
-helps to craft a prompt that takes examples into account, allows controlling formats (e.g., JSON or CSV) and expresses the schema in TypeScript. It seems to work pretty!
+## 기타 라이브러리
+
+파싱 접근 방식을 사용하여 추출하려는 경우, [Kor](https://eyurtsev.github.io/kor/) 라이브러리를 확인하세요. 이 라이브러리는 `LangChain` 유지 관리자의 한 명이 작성하였으며, 예제를 고려한 프롬프트를 작성하고 형식(예: JSON 또는 CSV)을 제어하며 TypeScript로 스키마를 표현하는 데 도움을 줍니다. 꽤 잘 작동하는 것 같습니다!

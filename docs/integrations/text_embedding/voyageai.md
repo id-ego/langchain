@@ -1,22 +1,24 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/text_embedding/voyageai/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/text_embedding/voyageai.ipynb
+description: Voyage AI는 최첨단 임베딩 모델을 제공하며, API 키를 통해 사용량을 모니터링하고 권한을 관리합니다. 다양한 모델을
+  지원합니다.
 ---
 
 # Voyage AI
 
-> [Voyage AI](https://www.voyageai.com/) provides cutting-edge embedding/vectorizations models.
+> [Voyage AI](https://www.voyageai.com/)는 최첨단 임베딩/벡터화 모델을 제공합니다.
 
-Let's load the Voyage AI Embedding class. (Install the LangChain partner package with `pip install langchain-voyageai`)
+Voyage AI Embedding 클래스를 로드해 봅시다. (`pip install langchain-voyageai`로 LangChain 파트너 패키지를 설치하세요)
 
 ```python
 <!--IMPORTS:[{"imported": "VoyageAIEmbeddings", "source": "langchain_voyageai", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_voyageai.embeddings.VoyageAIEmbeddings.html", "title": "Voyage AI"}]-->
 from langchain_voyageai import VoyageAIEmbeddings
 ```
 
-Voyage AI utilizes API keys to monitor usage and manage permissions. To obtain your key, create an account on our [homepage](https://www.voyageai.com). Then, create a VoyageEmbeddings model with your API key. You can use any of the following models: ([source](https://docs.voyageai.com/docs/embeddings)):
 
-- `voyage-large-2` (default)
+Voyage AI는 API 키를 사용하여 사용량을 모니터링하고 권한을 관리합니다. 키를 얻으려면 [홈페이지](https://www.voyageai.com)에서 계정을 생성하세요. 그런 다음 API 키로 VoyageEmbeddings 모델을 생성하세요. 다음 모델 중 하나를 사용할 수 있습니다: ([source](https://docs.voyageai.com/docs/embeddings)):
+
+- `voyage-large-2` (기본값)
 - `voyage-code-2`
 - `voyage-2`
 - `voyage-law-2`
@@ -30,7 +32,8 @@ embeddings = VoyageAIEmbeddings(
 )
 ```
 
-Prepare the documents and use `embed_documents` to get their embeddings.
+
+문서를 준비하고 `embed_documents`를 사용하여 임베딩을 가져옵니다.
 
 ```python
 documents = [
@@ -40,13 +43,16 @@ documents = [
 ]
 ```
 
+
 ```python
 documents_embds = embeddings.embed_documents(documents)
 ```
 
+
 ```python
 documents_embds[0][:5]
 ```
+
 
 ```output
 [0.0562174916267395,
@@ -56,19 +62,23 @@ documents_embds[0][:5]
  0.04108370840549469]
 ```
 
-Similarly, use `embed_query` to embed the query.
+
+유사하게, `embed_query`를 사용하여 쿼리를 임베딩합니다.
 
 ```python
 query = "What's an LLMChain?"
 ```
 
+
 ```python
 query_embd = embeddings.embed_query(query)
 ```
 
+
 ```python
 query_embd[:5]
 ```
+
 
 ```output
 [-0.0052348352037370205,
@@ -78,11 +88,12 @@ query_embd[:5]
  -0.019235141575336456]
 ```
 
-## A minimalist retrieval system
 
-The main feature of the embeddings is that the cosine similarity between two embeddings captures the semantic relatedness of the corresponding original passages. This allows us to use the embeddings to do semantic retrieval / search.
+## 미니멀리스트 검색 시스템
 
-We can find a few closest embeddings in the documents embeddings based on the cosine similarity, and retrieve the corresponding document using the `KNNRetriever` class from LangChain.
+임베딩의 주요 특징은 두 임베딩 간의 코사인 유사성이 해당 원본 구문 간의 의미적 관련성을 포착한다는 것입니다. 이를 통해 임베딩을 사용하여 의미적 검색을 수행할 수 있습니다.
+
+우리는 코사인 유사성을 기반으로 문서 임베딩에서 몇 개의 가장 가까운 임베딩을 찾고, LangChain의 `KNNRetriever` 클래스를 사용하여 해당 문서를 검색할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "KNNRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.knn.KNNRetriever.html", "title": "Voyage AI"}]-->
@@ -96,11 +107,13 @@ top1_retrieved_doc = result[0].page_content  # return the top1 retrieved result
 
 print(top1_retrieved_doc)
 ```
+
 ```output
 An LLMChain is a chain that composes basic LLM functionality. It consists of a PromptTemplate and a language model (either an LLM or chat model). It formats the prompt template using the input key values provided (and also memory key values, if available), passes the formatted string to LLM and returns the LLM output.
 ```
 
-## Related
 
-- Embedding model [conceptual guide](/docs/concepts/#embedding-models)
-- Embedding model [how-to guides](/docs/how_to/#embedding-models)
+## 관련
+
+- 임베딩 모델 [개념 가이드](/docs/concepts/#embedding-models)
+- 임베딩 모델 [사용 방법 가이드](/docs/how_to/#embedding-models)

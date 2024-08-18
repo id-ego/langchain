@@ -1,39 +1,40 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/versions/migrating_chains/
+description: 이 문서는 LangChain v0.0 체인에서 LCEL 및 LangGraph를 사용하여 마이그레이션하는 방법에 대한 가이드를
+  제공합니다.
 sidebar_position: 1
 ---
 
-# How to migrate from v0.0 chains
+# v0.0 체인에서 마이그레이션하는 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
-- [LangChain Expression Language](/docs/concepts#langchain-expression-language-lcel)
+이 가이드는 다음 개념에 대한 친숙함을 가정합니다:
+- [LangChain 표현 언어](/docs/concepts#langchain-expression-language-lcel)
 - [LangGraph](https://langchain-ai.github.io/langgraph/)
 :::
 
-LangChain maintains a number of legacy abstractions. Many of these can be reimplemented via short combinations of LCEL and LangGraph primitives.
+LangChain은 여러 레거시 추상화를 유지합니다. 이들 중 많은 것은 LCEL 및 LangGraph 원시 요소의 짧은 조합을 통해 재구현될 수 있습니다.
 
 ### LCEL
-[LCEL](/docs/concepts/#langchain-expression-language-lcel) is designed to streamline the process of building useful apps with LLMs and combining related components. It does this by providing:
+[LCEL](/docs/concepts/#langchain-expression-language-lcel)은 LLM을 사용하여 유용한 앱을 구축하고 관련 구성 요소를 결합하는 과정을 간소화하도록 설계되었습니다. 이는 다음을 제공함으로써 이루어집니다:
 
-1. **A unified interface**: Every LCEL object implements the `Runnable` interface, which defines a common set of invocation methods (`invoke`, `batch`, `stream`, `ainvoke`, ...). This makes it possible to also automatically and consistently support useful operations like streaming of intermediate steps and batching, since every chain composed of LCEL objects is itself an LCEL object.
-2. **Composition primitives**: LCEL provides a number of primitives that make it easy to compose chains, parallelize components, add fallbacks, dynamically configure chain internals, and more.
+1. **통합 인터페이스**: 모든 LCEL 객체는 `Runnable` 인터페이스를 구현하며, 이는 공통의 호출 메서드 집합(`invoke`, `batch`, `stream`, `ainvoke`, ...)을 정의합니다. 이는 LCEL 객체로 구성된 모든 체인이 자체적으로 LCEL 객체이기 때문에 중간 단계의 스트리밍 및 배치와 같은 유용한 작업을 자동적이고 일관되게 지원할 수 있게 합니다.
+2. **구성 원시 요소**: LCEL은 체인을 구성하고, 구성 요소를 병렬화하며, 대체를 추가하고, 체인 내부를 동적으로 구성하는 것을 쉽게 만드는 여러 원시 요소를 제공합니다.
 
 ### LangGraph
-[LangGraph](https://langchain-ai.github.io/langgraph/), built on top of LCEL, allows for performant orchestrations of application components while maintaining concise and readable code. It includes built-in persistence, support for cycles, and prioritizes controllability.
-If LCEL grows unwieldy for larger or more complex chains, they may benefit from a LangGraph implementation.
+[LangGraph](https://langchain-ai.github.io/langgraph/)는 LCEL 위에 구축되어 애플리케이션 구성 요소의 성능이 뛰어난 오케스트레이션을 가능하게 하면서 간결하고 읽기 쉬운 코드를 유지합니다. 내장된 지속성, 사이클 지원을 포함하며 제어 가능성을 우선시합니다.
+LCEL이 더 크거나 복잡한 체인에 대해 다루기 어려워지면 LangGraph 구현의 혜택을 받을 수 있습니다.
 
-### Advantages
-Using these frameworks for existing v0.0 chains confers some advantages:
+### 장점
+기존 v0.0 체인에 이러한 프레임워크를 사용하면 몇 가지 장점이 있습니다:
 
-- The resulting chains typically implement the full `Runnable` interface, including streaming and asynchronous support where appropriate;
-- The chains may be more easily extended or modified;
-- The parameters of the chain are typically surfaced for easier customization (e.g., prompts) over previous versions, which tended to be subclasses and had opaque parameters and internals.
-- If using LangGraph, the chain supports built-in persistence, allowing for conversational experiences via a "memory" of the chat history.
-- If using LangGraph, the steps of the chain can be streamed, allowing for greater control and customizability.
+- 결과 체인은 일반적으로 전체 `Runnable` 인터페이스를 구현하며, 적절한 경우 스트리밍 및 비동기 지원을 포함합니다;
+- 체인을 더 쉽게 확장하거나 수정할 수 있습니다;
+- 체인의 매개변수는 일반적으로 이전 버전보다 더 쉽게 사용자 정의할 수 있도록 노출됩니다(예: 프롬프트), 이전 버전은 하위 클래스였고 불투명한 매개변수 및 내부를 가졌습니다.
+- LangGraph를 사용하는 경우, 체인은 내장된 지속성을 지원하여 채팅 기록의 "메모리"를 통해 대화형 경험을 가능하게 합니다.
+- LangGraph를 사용하는 경우, 체인의 단계를 스트리밍할 수 있어 더 큰 제어 및 사용자 정의가 가능합니다.
 
-The below pages assist with migration from various specific chains to LCEL and LangGraph:
+아래 페이지는 다양한 특정 체인에서 LCEL 및 LangGraph로의 마이그레이션을 지원합니다:
 
 - [LLMChain](/docs/versions/migrating_chains/llm_chain)
 - [ConversationChain](/docs/versions/migrating_chains/conversation_chain)
@@ -48,4 +49,4 @@ The below pages assist with migration from various specific chains to LCEL and L
 - [LLMMathChain](/docs/versions/migrating_chains/llm_math_chain)
 - [ConstitutionalChain](/docs/versions/migrating_chains/constitutional_chain)
 
-Check out the [LCEL conceptual docs](/docs/concepts/#langchain-expression-language-lcel) and [LangGraph docs](https://langchain-ai.github.io/langgraph/) for more background information.
+더 많은 배경 정보를 원하시면 [LCEL 개념 문서](/docs/concepts/#langchain-expression-language-lcel) 및 [LangGraph 문서](https://langchain-ai.github.io/langgraph/)를 확인하세요.

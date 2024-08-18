@@ -1,19 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/retrievers/sec_filings/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/retrievers/sec_filings.ipynb
+description: SEC 제출 문서는 미국 증권 거래 위원회에 제출되는 공식 문서로, 투자자와 금융 전문가가 기업 정보를 평가하는 데 사용됩니다.
 ---
 
-# SEC filing
+# SEC 제출
 
-> [SEC filing](https://www.sec.gov/edgar) is a financial statement or other formal document submitted to the U.S. Securities and Exchange Commission (SEC). Public companies, certain insiders, and broker-dealers are required to make regular `SEC filings`. Investors and financial professionals rely on these filings for information about companies they are evaluating for investment purposes.
+> [SEC 제출](https://www.sec.gov/edgar)은 미국 증권 거래 위원회(SEC)에 제출된 재무 제표 또는 기타 공식 문서입니다. 공개 회사, 특정 내부자 및 중개인은 정기적으로 `SEC 제출`을 해야 합니다. 투자자와 금융 전문가들은 투자 목적을 위해 평가하는 회사에 대한 정보를 얻기 위해 이러한 제출을 신뢰합니다.
 > 
-> `SEC filings` data powered by [Kay.ai](https://kay.ai) and [Cybersyn](https://www.cybersyn.com/) via [Snowflake Marketplace](https://app.snowflake.com/marketplace/providers/GZTSZAS2KCS/Cybersyn%2C%20Inc).
+> `SEC 제출` 데이터는 [Kay.ai](https://kay.ai)와 [Cybersyn](https://www.cybersyn.com/)의 지원을 받아 [Snowflake Marketplace](https://app.snowflake.com/marketplace/providers/GZTSZAS2KCS/Cybersyn%2C%20Inc)를 통해 제공됩니다.
 
-## Setup
+## 설정
 
-First, you will need to install the `kay` package. You will also need an API key: you can get one for free at [https://kay.ai](https://kay.ai/). Once you have an API key, you must set it as an environment variable `KAY_API_KEY`.
+먼저, `kay` 패키지를 설치해야 합니다. API 키도 필요합니다: [https://kay.ai](https://kay.ai/)에서 무료로 받을 수 있습니다. API 키를 받으면 환경 변수 `KAY_API_KEY`로 설정해야 합니다.
 
-In this example, we're going to use the `KayAiRetriever`. Take a look at the [kay notebook](/docs/integrations/retrievers/kay) for more detailed information for the parameters that it accepts.`
+이 예제에서는 `KayAiRetriever`를 사용할 것입니다. 수용 가능한 매개변수에 대한 자세한 정보는 [kay 노트북](/docs/integrations/retrievers/kay)을 참조하세요.
 
 ```python
 # Setup API keys for Kay and OpenAI
@@ -22,10 +22,12 @@ from getpass import getpass
 KAY_API_KEY = getpass()
 OPENAI_API_KEY = getpass()
 ```
+
 ```output
  ········
  ········
 ```
+
 
 ```python
 import os
@@ -34,7 +36,8 @@ os.environ["KAY_API_KEY"] = KAY_API_KEY
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 ```
 
-## Example
+
+## 예제
 
 ```python
 <!--IMPORTS:[{"imported": "ConversationalRetrievalChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.conversational_retrieval.base.ConversationalRetrievalChain.html", "title": "SEC filing"}, {"imported": "KayAiRetriever", "source": "langchain_community.retrievers", "docs": "https://api.python.langchain.com/en/latest/retrievers/langchain_community.retrievers.kay.KayAiRetriever.html", "title": "SEC filing"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "SEC filing"}]-->
@@ -49,6 +52,7 @@ retriever = KayAiRetriever.create(
 qa = ConversationalRetrievalChain.from_llm(model, retriever=retriever)
 ```
 
+
 ```python
 questions = [
     "What are patterns in Nvidia's spend over the past three quarters?",
@@ -62,6 +66,7 @@ for question in questions:
     print(f"-> **Question**: {question} \n")
     print(f"**Answer**: {result['answer']} \n")
 ```
+
 ```output
 -> **Question**: What are patterns in Nvidia's spend over the past three quarters? 
 
@@ -91,7 +96,8 @@ for question in questions:
 Overall, the pattern indicates a consistent increase in research and development expenses and total operating expenses, while sales, general and administrative expenses show some fluctuations.
 ```
 
-## Related
 
-- Retriever [conceptual guide](/docs/concepts/#retrievers)
-- Retriever [how-to guides](/docs/how_to/#retrievers)
+## 관련
+
+- 검색기 [개념 가이드](/docs/concepts/#retrievers)
+- 검색기 [사용 방법 가이드](/docs/how_to/#retrievers)

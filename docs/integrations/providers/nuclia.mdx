@@ -1,34 +1,30 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/nuclia/
+description: Nuclia는 비정형 데이터를 자동으로 인덱싱하여 최적화된 검색 결과와 생성적 답변을 제공합니다. 비디오, 오디오, 이미지
+  및 문서 처리를 지원합니다.
 ---
 
 # Nuclia
 
-> [Nuclia](https://nuclia.com) automatically indexes your unstructured data from any internal
-and external source, providing optimized search results and generative answers.
-It can handle video and audio transcription, image content extraction, and document parsing.
+> [Nuclia](https://nuclia.com)는 내부 및 외부 소스의 비정형 데이터를 자동으로 인덱싱하여 최적화된 검색 결과와 생성적 답변을 제공합니다. 비디오 및 오디오 전사, 이미지 콘텐츠 추출 및 문서 파싱을 처리할 수 있습니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-We need to install the `nucliadb-protos` package to use the `Nuclia Understanding API`
+`Nuclia Understanding API`를 사용하기 위해 `nucliadb-protos` 패키지를 설치해야 합니다.
 
 ```bash
 pip install nucliadb-protos
 ```
 
-We need to have a `Nuclia account`.
-We can create one for free at [https://nuclia.cloud](https://nuclia.cloud),
-and then [create a NUA key](https://docs.nuclia.dev/docs/docs/using/understanding/intro).
 
-## Document Transformer
+`Nuclia 계정`이 필요합니다. [https://nuclia.cloud](https://nuclia.cloud)에서 무료로 생성할 수 있으며, 이후 [NUA 키를 생성](https://docs.nuclia.dev/docs/docs/using/understanding/intro)할 수 있습니다.
+
+## 문서 변환기
 
 ### Nuclia
 
-> `Nuclia Understanding API` document transformer splits text into paragraphs and sentences,
-identifies entities, provides a summary of the text and generates embeddings for all the sentences.
+> `Nuclia Understanding API` 문서 변환기는 텍스트를 단락과 문장으로 분할하고, 엔티티를 식별하며, 텍스트 요약을 제공하고, 모든 문장에 대한 임베딩을 생성합니다.
 
-To use the Nuclia document transformer, we need to instantiate a `NucliaUnderstandingAPI`
-tool with `enable_ml` set to `True`:
+Nuclia 문서 변환기를 사용하려면 `enable_ml`을 `True`로 설정한 `NucliaUnderstandingAPI` 도구를 인스턴스화해야 합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "NucliaUnderstandingAPI", "source": "langchain_community.tools.nuclia", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.nuclia.tool.NucliaUnderstandingAPI.html", "title": "Nuclia"}]-->
@@ -37,46 +33,51 @@ from langchain_community.tools.nuclia import NucliaUnderstandingAPI
 nua = NucliaUnderstandingAPI(enable_ml=True)
 ```
 
-See a [usage example](/docs/integrations/document_transformers/nuclia_transformer).
+
+[사용 예시](/docs/integrations/document_transformers/nuclia_transformer)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "NucliaTextTransformer", "source": "langchain_community.document_transformers.nuclia_text_transform", "docs": "https://api.python.langchain.com/en/latest/document_transformers/langchain_community.document_transformers.nuclia_text_transform.NucliaTextTransformer.html", "title": "Nuclia"}]-->
 from langchain_community.document_transformers.nuclia_text_transform import NucliaTextTransformer
 ```
 
-## Document Loaders
 
-### Nuclea loader
+## 문서 로더
 
-See a [usage example](/docs/integrations/document_loaders/nuclia).
+### Nuclea 로더
+
+[사용 예시](/docs/integrations/document_loaders/nuclia)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "NucliaLoader", "source": "langchain_community.document_loaders.nuclia", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.nuclia.NucliaLoader.html", "title": "Nuclia"}]-->
 from langchain_community.document_loaders.nuclia import NucliaLoader
 ```
 
-## Vector store
+
+## 벡터 저장소
 
 ### NucliaDB
 
-We need to install a python package:
+파이썬 패키지를 설치해야 합니다:
 
 ```bash
 pip install nuclia
 ```
 
-See a [usage example](/docs/integrations/vectorstores/nucliadb).
+
+[사용 예시](/docs/integrations/vectorstores/nucliadb)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "NucliaDB", "source": "langchain_community.vectorstores.nucliadb", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.nucliadb.NucliaDB.html", "title": "Nuclia"}]-->
 from langchain_community.vectorstores.nucliadb import NucliaDB
 ```
 
-## Tools
+
+## 도구
 
 ### Nuclia Understanding
 
-See a [usage example](/docs/integrations/tools/nuclia).
+[사용 예시](/docs/integrations/tools/nuclia)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "NucliaUnderstandingAPI", "source": "langchain_community.tools.nuclia", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.nuclia.tool.NucliaUnderstandingAPI.html", "title": "Nuclia"}]-->

@@ -1,17 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/mediawikidump/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/mediawikidump.ipynb
+description: 미디어위키 XML 덤프 파일을 문서 형식으로 로드하는 방법을 설명하며, mwxml 및 mwparserfromhell을 사용하여
+  처리합니다.
 ---
 
-# MediaWiki Dump
+# MediaWiki 덤프
 
-> [MediaWiki XML Dumps](https://www.mediawiki.org/wiki/Manual:Importing_XML_dumps) contain the content of a wiki (wiki pages with all their revisions), without the site-related data. A XML dump does not create a full backup of the wiki database, the dump does not contain user accounts, images, edit logs, etc.
+> [MediaWiki XML 덤프](https://www.mediawiki.org/wiki/Manual:Importing_XML_dumps)는 사이트 관련 데이터 없이 위키의 콘텐츠(모든 수정이 포함된 위키 페이지)를 포함합니다. XML 덤프는 위키 데이터베이스의 전체 백업을 생성하지 않으며, 덤프에는 사용자 계정, 이미지, 편집 로그 등이 포함되지 않습니다.
 
-This covers how to load a MediaWiki XML dump file into a document format that we can use downstream.
+이 문서는 MediaWiki XML 덤프 파일을 우리가 하류에서 사용할 수 있는 문서 형식으로 로드하는 방법을 다룹니다.
 
-It uses `mwxml` from `mediawiki-utilities` to dump and `mwparserfromhell` from `earwig` to parse MediaWiki wikicode.
+`mediawiki-utilities`의 `mwxml`을 사용하여 덤프하고, `earwig`의 `mwparserfromhell`을 사용하여 MediaWiki 위키코드를 파싱합니다.
 
-Dump files can be obtained with dumpBackup.php or on the Special:Statistics page of the Wiki.
+덤프 파일은 dumpBackup.php 또는 위키의 Special:Statistics 페이지에서 얻을 수 있습니다.
 
 ```python
 # mediawiki-utilities supports XML schema 0.11 in unmerged branches
@@ -21,10 +22,12 @@ Dump files can be obtained with dumpBackup.php or on the Special:Statistics page
 %pip install --upgrade --quiet mwparserfromhell
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "MWDumpLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.mediawikidump.MWDumpLoader.html", "title": "MediaWiki Dump"}]-->
 from langchain_community.document_loaders import MWDumpLoader
 ```
+
 
 ```python
 loader = MWDumpLoader(
@@ -37,13 +40,16 @@ loader = MWDumpLoader(
 documents = loader.load()
 print(f"You have {len(documents)} document(s) in your data ")
 ```
+
 ```output
 You have 177 document(s) in your data
 ```
 
+
 ```python
 documents[:5]
 ```
+
 
 ```output
 [Document(page_content='\t\n\t\n\tArtist\n\tReleased\n\tRecorded\n\tLength\n\tLabel\n\tProducer', metadata={'source': 'Album'}),
@@ -53,7 +59,8 @@ documents[:5]
  Document(page_content='\t\n\t\t    \n\t\n\t\t    Aliases\n\t    Relatives\n\t    Affiliation\n        Occupation\n    \n            Biographical information\n        Marital status\n    \tDate of birth\n        Place of birth\n        Date of death\n        Place of death\n    \n            Physical description\n        Species\n        Gender\n        Height\n        Weight\n        Eye color\n\t\n           Appearances\n       Portrayed by\n       Appears in\n       Debut\n    ', metadata={'source': 'Character'})]
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

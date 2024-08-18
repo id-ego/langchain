@@ -1,19 +1,19 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/vectorstores/manticore_search/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/vectorstores/manticore_search.ipynb
+description: ManticoreSearch는 빠르고 확장 가능한 오픈 소스 검색 엔진으로, 벡터 검색 기능을 통해 유사성 기반 검색을 지원합니다.
 ---
 
-# ManticoreSearch VectorStore
+# ManticoreSearch 벡터 저장소
 
-[ManticoreSearch](https://manticoresearch.com/) is an open-source search engine that offers fast, scalable, and user-friendly capabilities. Originating as a fork of [Sphinx Search](http://sphinxsearch.com/), it has evolved to incorporate modern search engine features and improvements. ManticoreSearch distinguishes itself with its robust performance and ease of integration into various applications.
+[ManticoreSearch](https://manticoresearch.com/)는 빠르고 확장 가능하며 사용자 친화적인 기능을 제공하는 오픈 소스 검색 엔진입니다. [Sphinx Search](http://sphinxsearch.com/)의 포크로 시작하여 현대적인 검색 엔진 기능과 개선 사항을 통합하여 발전해왔습니다. ManticoreSearch는 강력한 성능과 다양한 애플리케이션에 통합하기 쉬운 점에서 차별화됩니다.
 
-ManticoreSearch has recently introduced [vector search capabilities](https://manual.manticoresearch.com/dev/Searching/KNN), starting with search engine version 6.2 and only with [manticore-columnar-lib](https://github.com/manticoresoftware/columnar) package installed. This feature is a considerable advancement, allowing for the execution of searches based on vector similarity.
+ManticoreSearch는 최근에 [벡터 검색 기능](https://manual.manticoresearch.com/dev/Searching/KNN)을 도입하였으며, 이는 검색 엔진 버전 6.2부터 시작되며 [manticore-columnar-lib](https://github.com/manticoresoftware/columnar) 패키지가 설치되어 있어야만 사용할 수 있습니다. 이 기능은 벡터 유사성을 기반으로 검색을 실행할 수 있는 상당한 발전입니다.
 
-As of now, the vector search functionality is only accessible in the developmental (dev) versions of the search engine. Consequently, it is imperative to employ a developmental [manticoresearch-dev](https://pypi.org/project/manticoresearch-dev/) Python client for utilizing this feature effectively.
+현재 벡터 검색 기능은 검색 엔진의 개발(개발) 버전에서만 접근할 수 있습니다. 따라서 이 기능을 효과적으로 활용하기 위해서는 개발용 [manticoresearch-dev](https://pypi.org/project/manticoresearch-dev/) Python 클라이언트를 사용하는 것이 필수적입니다.
 
-## Setting up environments
+## 환경 설정
 
-Starting Docker-container with ManticoreSearch and installing manticore-columnar-lib package (optional)
+ManticoreSearch와 함께 Docker 컨테이너 시작 및 manticore-columnar-lib 패키지 설치(선택 사항)
 
 ```python
 import time
@@ -34,6 +34,7 @@ container_id = containers[0]
 # Restart container
 !docker restart {container_id}
 ```
+
 ```output
 Get:1 http://repo.manticoresearch.com/repository/manticoresearch_jammy_dev jammy InRelease [3525 kB]
 Get:2 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]            
@@ -75,18 +76,21 @@ Unpacking manticore-columnar-lib (2.2.5-240217-a5342a1) ...
 Setting up manticore-columnar-lib (2.2.5-240217-a5342a1) ...
 a546aec22291
 ```
-Installing ManticoreSearch python client
+
+ManticoreSearch Python 클라이언트 설치
 
 ```python
 %pip install --upgrade --quiet manticoresearch-dev
 ```
+
 ```output
 
 [1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m23.2.1[0m[39;49m -> [0m[32;49m24.0[0m
 [1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpip install --upgrade pip[0m
 Note: you may need to restart the kernel to use updated packages.
 ```
-We want to use OpenAIEmbeddings so we have to get the OpenAI API Key.
+
+OpenAIEmbeddings를 사용하려면 OpenAI API 키를 가져와야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "GPT4AllEmbeddings", "source": "langchain_community.embeddings", "docs": "https://api.python.langchain.com/en/latest/embeddings/langchain_community.embeddings.gpt4all.GPT4AllEmbeddings.html", "title": "ManticoreSearch VectorStore"}, {"imported": "ManticoreSearch", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.manticore_search.ManticoreSearch.html", "title": "ManticoreSearch VectorStore"}, {"imported": "ManticoreSearchSettings", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.manticore_search.ManticoreSearchSettings.html", "title": "ManticoreSearch VectorStore"}, {"imported": "CharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.CharacterTextSplitter.html", "title": "ManticoreSearch VectorStore"}]-->
@@ -94,6 +98,7 @@ from langchain_community.embeddings import GPT4AllEmbeddings
 from langchain_community.vectorstores import ManticoreSearch, ManticoreSearchSettings
 from langchain_text_splitters import CharacterTextSplitter
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "TextLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.text.TextLoader.html", "title": "ManticoreSearch VectorStore"}]-->
@@ -106,6 +111,7 @@ docs = text_splitter.split_documents(documents)
 
 embeddings = GPT4AllEmbeddings()
 ```
+
 ```output
 Created a chunk of size 338, which is longer than the specified 100
 Created a chunk of size 508, which is longer than the specified 100
@@ -282,6 +288,7 @@ bert_load_from_file: model file type      = 1
 bert_load_from_file: bert tokenizer vocab = 30522
 ```
 
+
 ```python
 for d in docs:
     d.metadata = {"some": "metadata"}
@@ -292,11 +299,13 @@ query = "Robert Morris is"
 docs = docsearch.similarity_search(query)
 print(docs)
 ```
+
 ```output
 [Document(page_content='Computer Science is an uneasy alliance between two halves, theory and systems. The theory people prove things, and the systems people build things. I wanted to build things. I had plenty of respect for theory — indeed, a sneaking suspicion that it was the more admirable of the two halves — but building things seemed so much more exciting.', metadata={'some': 'metadata'}), Document(page_content="I applied to 3 grad schools: MIT and Yale, which were renowned for AI at the time, and Harvard, which I'd visited because Rich Draves went there, and was also home to Bill Woods, who'd invented the type of parser I used in my SHRDLU clone. Only Harvard accepted me, so that was where I went.", metadata={'some': 'metadata'}), Document(page_content='For my undergraduate thesis, I reverse-engineered SHRDLU. My God did I love working on that program. It was a pleasing bit of code, but what made it even more exciting was my belief — hard to imagine now, but not unique in 1985 — that it was already climbing the lower slopes of intelligence.', metadata={'some': 'metadata'}), Document(page_content="The problem with systems work, though, was that it didn't last. Any program you wrote today, no matter how good, would be obsolete in a couple decades at best. People might mention your software in footnotes, but no one would actually use it. And indeed, it would seem very feeble work. Only people with a sense of the history of the field would even realize that, in its time, it had been good.", metadata={'some': 'metadata'})]
 ```
 
-## Related
 
-- Vector store [conceptual guide](/docs/concepts/#vector-stores)
-- Vector store [how-to guides](/docs/how_to/#vector-stores)
+## 관련
+
+- 벡터 저장소 [개념 가이드](/docs/concepts/#vector-stores)
+- 벡터 저장소 [사용 방법 가이드](/docs/how_to/#vector-stores)

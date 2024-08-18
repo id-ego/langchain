@@ -1,50 +1,56 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/markdown_header_metadata_splitter/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/markdown_header_metadata_splitter.ipynb
+description: 마크다운 문서를 헤더별로 분할하는 방법을 설명하며, 문서 구조를 유지하면서 효율적으로 텍스트를 청크화하는 전략을 소개합니다.
 ---
 
-# How to split Markdown by Headers
+# 헤더로 마크다운 나누는 방법
 
-### Motivation
+### 동기
 
-Many chat or Q+A applications involve chunking input documents prior to embedding and vector storage.
+많은 채팅 또는 Q+A 애플리케이션은 임베딩 및 벡터 저장 전에 입력 문서를 청크로 나누는 작업을 포함합니다.
 
-[These notes](https://www.pinecone.io/learn/chunking-strategies/) from Pinecone provide some useful tips:
+[Pinecone의 이 노트](https://www.pinecone.io/learn/chunking-strategies/)는 유용한 팁을 제공합니다:
 
 ```
 When a full paragraph or document is embedded, the embedding process considers both the overall context and the relationships between the sentences and phrases within the text. This can result in a more comprehensive vector representation that captures the broader meaning and themes of the text.
 ```
 
-As mentioned, chunking often aims to keep text with common context together. With this in mind, we might want to specifically honor the structure of the document itself. For example, a markdown file is organized by headers. Creating chunks within specific header groups is an intuitive idea. To address this challenge, we can use [MarkdownHeaderTextSplitter](https://api.python.langchain.com/en/latest/markdown/langchain_text_splitters.markdown.MarkdownHeaderTextSplitter.html). This will split a markdown file by a specified set of headers. 
 
-For example, if we want to split this markdown:
+언급했듯이, 청크 나누기는 종종 공통 컨텍스트가 있는 텍스트를 함께 유지하는 것을 목표로 합니다. 이를 염두에 두고, 문서 자체의 구조를 존중하는 것이 좋습니다. 예를 들어, 마크다운 파일은 헤더로 구성됩니다. 특정 헤더 그룹 내에서 청크를 만드는 것은 직관적인 아이디어입니다. 이 문제를 해결하기 위해 [MarkdownHeaderTextSplitter](https://api.python.langchain.com/en/latest/markdown/langchain_text_splitters.markdown.MarkdownHeaderTextSplitter.html)를 사용할 수 있습니다. 이는 지정된 헤더 세트에 따라 마크다운 파일을 나눕니다.
+
+예를 들어, 이 마크다운을 나누고 싶다면:
 ```
 md = '# Foo\n\n ## Bar\n\nHi this is Jim  \nHi this is Joe\n\n ## Baz\n\n Hi this is Molly' 
 ```
 
-We can specify the headers to split on:
+
+나눌 헤더를 지정할 수 있습니다:
 ```
 [("#", "Header 1"),("##", "Header 2")]
 ```
 
-And content is grouped or split by common headers:
+
+그리고 내용은 공통 헤더에 따라 그룹화되거나 나뉩니다:
 ```
 {'content': 'Hi this is Jim  \nHi this is Joe', 'metadata': {'Header 1': 'Foo', 'Header 2': 'Bar'}}
 {'content': 'Hi this is Molly', 'metadata': {'Header 1': 'Foo', 'Header 2': 'Baz'}}
 ```
 
-Let's have a look at some examples below.
 
-### Basic usage:
+아래 몇 가지 예를 살펴보겠습니다.
+
+### 기본 사용법:
 
 ```python
 %pip install -qU langchain-text-splitters
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "MarkdownHeaderTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/markdown/langchain_text_splitters.markdown.MarkdownHeaderTextSplitter.html", "title": "How to split Markdown by Headers"}]-->
 from langchain_text_splitters import MarkdownHeaderTextSplitter
 ```
+
 
 ```python
 markdown_document = "# Foo\n\n    ## Bar\n\nHi this is Jim\n\nHi this is Joe\n\n ### Boo \n\n Hi this is Lance \n\n ## Baz\n\n Hi this is Molly"
@@ -60,21 +66,25 @@ md_header_splits = markdown_splitter.split_text(markdown_document)
 md_header_splits
 ```
 
+
 ```output
 [Document(page_content='Hi this is Jim  \nHi this is Joe', metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}),
  Document(page_content='Hi this is Lance', metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}),
  Document(page_content='Hi this is Molly', metadata={'Header 1': 'Foo', 'Header 2': 'Baz'})]
 ```
 
+
 ```python
 type(md_header_splits[0])
 ```
+
 
 ```output
 langchain_core.documents.base.Document
 ```
 
-By default, `MarkdownHeaderTextSplitter` strips headers being split on from the output chunk's content. This can be disabled by setting `strip_headers = False`.
+
+기본적으로, `MarkdownHeaderTextSplitter`는 출력 청크의 내용에서 나누는 헤더를 제거합니다. 이는 `strip_headers = False`로 설정하여 비활성화할 수 있습니다.
 
 ```python
 markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on, strip_headers=False)
@@ -82,15 +92,17 @@ md_header_splits = markdown_splitter.split_text(markdown_document)
 md_header_splits
 ```
 
+
 ```output
 [Document(page_content='# Foo  \n## Bar  \nHi this is Jim  \nHi this is Joe', metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}),
  Document(page_content='### Boo  \nHi this is Lance', metadata={'Header 1': 'Foo', 'Header 2': 'Bar', 'Header 3': 'Boo'}),
  Document(page_content='## Baz  \nHi this is Molly', metadata={'Header 1': 'Foo', 'Header 2': 'Baz'})]
 ```
 
-### How to return Markdown lines as separate documents
 
-By default, `MarkdownHeaderTextSplitter` aggregates lines based on the headers specified in `headers_to_split_on`. We can disable this by specifying `return_each_line`:
+### 마크다운 줄을 별도의 문서로 반환하는 방법
+
+기본적으로, `MarkdownHeaderTextSplitter`는 `headers_to_split_on`에 지정된 헤더를 기준으로 줄을 집계합니다. `return_each_line`을 지정하여 이를 비활성화할 수 있습니다:
 
 ```python
 markdown_splitter = MarkdownHeaderTextSplitter(
@@ -101,6 +113,7 @@ md_header_splits = markdown_splitter.split_text(markdown_document)
 md_header_splits
 ```
 
+
 ```output
 [Document(page_content='Hi this is Jim', metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}),
  Document(page_content='Hi this is Joe', metadata={'Header 1': 'Foo', 'Header 2': 'Bar'}),
@@ -108,11 +121,12 @@ md_header_splits
  Document(page_content='Hi this is Molly', metadata={'Header 1': 'Foo', 'Header 2': 'Baz'})]
 ```
 
-Note that here header information is retained in the `metadata` for each document.
 
-### How to constrain chunk size:
+여기서 헤더 정보는 각 문서의 `metadata`에 보존됩니다.
 
-Within each markdown group we can then apply any text splitter we want, such as `RecursiveCharacterTextSplitter`, which allows for further control of the chunk size.
+### 청크 크기를 제한하는 방법:
+
+각 마크다운 그룹 내에서 `RecursiveCharacterTextSplitter`와 같은 원하는 텍스트 분할기를 적용할 수 있으며, 이는 청크 크기를 더 세밀하게 제어할 수 있게 해줍니다.
 
 ```python
 <!--IMPORTS:[{"imported": "RecursiveCharacterTextSplitter", "source": "langchain_text_splitters", "docs": "https://api.python.langchain.com/en/latest/character/langchain_text_splitters.character.RecursiveCharacterTextSplitter.html", "title": "How to split Markdown by Headers"}]-->
@@ -142,6 +156,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 splits = text_splitter.split_documents(md_header_splits)
 splits
 ```
+
 
 ```output
 [Document(page_content='# Intro  \n## History  \nMarkdown[9] is a lightweight markup language for creating formatted text using a plain-text editor. John Gruber created Markdown in 2004 as a markup language that is appealing to human readers in its source code form.[9]', metadata={'Header 1': 'Intro', 'Header 2': 'History'}),

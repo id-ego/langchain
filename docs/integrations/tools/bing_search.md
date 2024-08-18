@@ -1,20 +1,21 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/bing_search/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/bing_search.ipynb
+description: Bing Search는 Azure 서비스로, 안전하고 광고 없는 위치 기반 검색 결과를 제공하여 사용자에게 관련 정보를 제공합니다.
 ---
 
-# Bing Search
+# 빙 검색
 
-> [Bing Search](https://learn.microsoft.com/en-us/bing/search-apis/bing-web-search/) is an Azure service and enables safe, ad-free, location-aware search results, surfacing relevant information from billions of web documents. Help your users find what they're looking for from the world-wide-web by harnessing Bing's ability to comb billions of webpages, images, videos, and news with a single API call. 
+> [빙 검색](https://learn.microsoft.com/en-us/bing/search-apis/bing-web-search/)은 Azure 서비스로, 안전하고 광고 없는 위치 기반 검색 결과를 제공하며, 수십억 개의 웹 문서에서 관련 정보를 추출합니다. 사용자가 Bing의 능력을 활용하여 수십억 개의 웹페이지, 이미지, 비디오 및 뉴스를 단일 API 호출로 검색하여 원하는 정보를 찾도록 도와주세요.
 
-## Setup
-Following the [instruction](https://learn.microsoft.com/en-us/bing/search-apis/bing-web-search/create-bing-search-service-resource) to create Azure Bing Search v7 service, and get the subscription key
+## 설정
+Azure Bing Search v7 서비스를 생성하고 구독 키를 얻으려면 [지침](https://learn.microsoft.com/en-us/bing/search-apis/bing-web-search/create-bing-search-service-resource)을 따르세요.
 
-The integration lives in the `langchain-community` package.
+통합은 `langchain-community` 패키지에 있습니다.
 
 ```python
 %pip install -U langchain-community
 ```
+
 
 ```python
 import getpass
@@ -24,53 +25,63 @@ os.environ["BING_SUBSCRIPTION_KEY"] = getpass.getpass()
 os.environ["BING_SEARCH_URL"] = "https://api.bing.microsoft.com/v7.0/search"
 ```
 
+
 ```python
 <!--IMPORTS:[{"imported": "BingSearchAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.bing_search.BingSearchAPIWrapper.html", "title": "Bing Search"}]-->
 from langchain_community.utilities import BingSearchAPIWrapper
 ```
 
+
 ```python
 search = BingSearchAPIWrapper(k=4)
 ```
 
+
 ```python
 search.run("python")
 ```
+
 
 ```output
 '<b>Python is a</b> versatile and powerful language that lets you work quickly and integrate systems more effectively. Learn how to get started, download the latest version, access documentation, find jobs, and join the Python community. <b>Python is a</b> popular programming language for various purposes. Find the latest version of Python for different operating systems, download release notes, and learn about the development process. Learn <b>Python,</b> a popular programming language for web applications, with examples, exercises, and references. Get certified by completing the PYTHON <b>course</b> at W3Schools. Learn the basic concepts and features of <b>Python,</b> a powerful and easy to learn programming language. The tutorial covers topics such as data structures, modules, classes, exceptions, input and output, and more. Learn why and how to use <b>Python,</b> a popular and easy-to-learn programming language. Find installation guides, tutorials, documentation, resources and FAQs for beginners and experienced programmers. Learn about <b>Python,</b> a high-level, general-purpose programming language with a focus on code readability and multiple paradigms. Find out its history, design, features, libraries, implementations, popularity, uses, and influences. Real <b>Python</b> offers tutorials, books, courses, and news for <b>Python</b> developers of all skill levels. Whether you want to learn <b>Python</b> basics, web development, data science, or machine learning, you can find useful articles and code examples here. Learn how to install, use, and extend <b>Python</b> 3.12.3, a popular programming language. Find tutorials, library references, API guides, FAQs, and more. <b>Python</b> is a powerful, fast, friendly and open-source language that runs everywhere. Learn how to get started, explore applications, join the community and access the latest news and events. Learn the basics of <b>Python</b> programming language with examples of numbers, text, variables, and operators. This tutorial covers the syntax, types, and features of <b>Python</b> for beginners.'
 ```
 
-## Number of results
-You can use the `k` parameter to set the number of results
+
+## 결과 수
+`k` 매개변수를 사용하여 결과 수를 설정할 수 있습니다.
 
 ```python
 search = BingSearchAPIWrapper(k=1)
 ```
 
+
 ```python
 search.run("python")
 ```
+
 
 ```output
 '<b>Python</b> is a versatile and powerful language that lets you work quickly and integrate systems more effectively. Learn how to get started, download the latest version, access documentation, find jobs, and join the Python community.'
 ```
 
-## Metadata Results
 
-Run query through BingSearch and return snippet, title, and link metadata.
+## 메타데이터 결과
 
-- Snippet: The description of the result.
-- Title: The title of the result.
-- Link: The link to the result.
+BingSearch를 통해 쿼리를 실행하고 스니펫, 제목 및 링크 메타데이터를 반환합니다.
+
+- 스니펫: 결과의 설명입니다.
+- 제목: 결과의 제목입니다.
+- 링크: 결과에 대한 링크입니다.
 
 ```python
 search = BingSearchAPIWrapper()
 ```
 
+
 ```python
 search.results("apples", 5)
 ```
+
 
 ```output
 [{'snippet': 'Learn about the nutrients, antioxidants, and potential health effects of<b> apples.</b> Find out how<b> apples</b> may help with weight loss, diabetes, heart disease, and cancer.',
@@ -90,7 +101,8 @@ search.results("apples", 5)
   'link': 'https://www.liveeatlearn.com/types-of-apples/'}]
 ```
 
-## Tool Usage
+
+## 도구 사용
 
 ```python
 <!--IMPORTS:[{"imported": "BingSearchResults", "source": "langchain_community.tools.bing_search", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.bing_search.tool.BingSearchResults.html", "title": "Bing Search"}, {"imported": "BingSearchAPIWrapper", "source": "langchain_community.utilities", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.bing_search.BingSearchAPIWrapper.html", "title": "Bing Search"}]-->
@@ -104,9 +116,11 @@ tool = BingSearchResults(api_wrapper=api_wrapper)
 tool
 ```
 
+
 ```output
 BingSearchResults(api_wrapper=BingSearchAPIWrapper(bing_subscription_key='<your subscription key>', bing_search_url='https://api.bing.microsoft.com/v7.0/search', k=10, search_kwargs={}))
 ```
+
 
 ```python
 import json
@@ -117,20 +131,24 @@ response = json.loads(response.replace("'", '"'))
 for item in response:
     print(item)
 ```
+
 ```output
 {'snippet': '<b>Shanghai</b>, <b>Shanghai</b>, China <b>Weather</b> Forecast, with current conditions, wind, air quality, and what to expect for the next 3 days.', 'title': 'Shanghai, Shanghai, China Weather Forecast | AccuWeather', 'link': 'https://www.accuweather.com/en/cn/shanghai/106577/weather-forecast/106577'}
 {'snippet': 'Current <b>weather</b> <b>in Shanghai</b> and forecast for today, tomorrow, and next 14 days', 'title': 'Weather for Shanghai, Shanghai Municipality, China - timeanddate.com', 'link': 'https://www.timeanddate.com/weather/china/shanghai'}
 {'snippet': '<b>Shanghai</b> 14 Day Extended Forecast. <b>Weather</b> Today <b>Weather</b> Hourly 14 Day Forecast Yesterday/Past <b>Weather</b> Climate (Averages) Currently: 73 °F. Rain showers. Partly sunny. (<b>Weather</b> station: <b>Shanghai</b> Hongqiao Airport, China). See more current <b>weather</b>.', 'title': 'Shanghai, Shanghai Municipality, China 14 day weather forecast', 'link': 'https://www.timeanddate.com/weather/china/shanghai/ext'}
 {'snippet': '<b>Shanghai</b> - <b>Weather</b> warnings issued 14-day forecast. <b>Weather</b> warnings issued. Forecast - <b>Shanghai</b>. Day by day forecast. Last updated today at 18:00. Tonight, A clear sky and a gentle breeze. Clear Sky.', 'title': 'Shanghai - BBC Weather', 'link': 'https://www.bbc.com/weather/1796236'}
 ```
-## Chaining
 
-We show here how to use it as part of an [agent](/docs/tutorials/agents). We use the OpenAI Functions Agent, so we will need to setup and install the required dependencies for that. We will also use [LangSmith Hub](https://smith.langchain.com/hub) to pull the prompt from, so we will need to install that.
+
+## 체이닝
+
+여기서는 [에이전트](/docs/tutorials/agents)의 일부로 사용하는 방법을 보여줍니다. OpenAI Functions Agent를 사용하므로 필요한 종속성을 설정하고 설치해야 합니다. 또한 프롬프트를 가져오기 위해 [LangSmith Hub](https://smith.langchain.com/hub)를 사용할 것이므로 이를 설치해야 합니다.
 
 ```python
 # you need a model to use in the chain
 %pip install --upgrade --quiet langchain langchain-openai langchainhub langchain-community
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "Bing Search"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "Bing Search"}, {"imported": "AzureChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.azure.AzureChatOpenAI.html", "title": "Bing Search"}]-->
@@ -165,6 +183,7 @@ agent_executor = AgentExecutor(
 )
 agent_executor.invoke({"input": "What happened in the latest burning man floods?"})
 ```
+
 ```output
 
 
@@ -178,12 +197,14 @@ Invoking: `bing_search_results_json` with `{'query': 'latest burning man floods'
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'input': 'What happened in the latest burning man floods?',
  'output': 'In the latest Burning Man festival, heavy rains caused flooding and resulted in thousands of attendees being stranded. The festival took place in Black Rock Forest, Nevada, and around 70,000 people were gathered for the event. The excessive rainfall led to flash flooding in some parts of the area. As a result, camp sites were filled with ankle-deep mud, making it difficult for people to leave. Authorities were investigating a death at the festival site, which was affected by the flooding. However, in the following days, thousands of Burning Man attendees were able to make a mass exodus after the rain subsided.'}
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)

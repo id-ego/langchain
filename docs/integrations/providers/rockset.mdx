@@ -1,39 +1,42 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/rockset/
+description: Rockset은 실시간 분석 데이터베이스 서비스로, 구조화 및 반구조화 데이터에 대한 저지연 쿼리를 지원합니다.
 ---
 
 # Rockset
 
-> [Rockset](https://rockset.com/product/) is a real-time analytics database service for serving low latency, high concurrency analytical queries at scale. It builds a Converged Index™ on structured and semi-structured data with an efficient store for vector embeddings. Its support for running SQL on schemaless data makes it a perfect choice for running vector search with metadata filters. 
+> [Rockset](https://rockset.com/product/)는 낮은 지연 시간과 높은 동시성을 가진 분석 쿼리를 대규모로 제공하는 실시간 분석 데이터베이스 서비스입니다. 구조화된 데이터와 반구조화된 데이터에 대해 효율적인 벡터 임베딩 저장소를 갖춘 Converged Index™를 구축합니다. 스키마 없는 데이터에서 SQL을 실행할 수 있는 지원 덕분에 메타데이터 필터와 함께 벡터 검색을 실행하는 데 완벽한 선택입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Make sure you have Rockset account and go to the web console to get the API key. Details can be found on [the website](https://rockset.com/docs/rest-api/).
+Rockset 계정을 가지고 웹 콘솔에 가서 API 키를 가져오세요. 자세한 내용은 [웹사이트](https://rockset.com/docs/rest-api/)에서 확인할 수 있습니다.
 
 ```bash
 pip install rockset
 ```
 
-## Vector Store
 
-See a [usage example](/docs/integrations/vectorstores/rockset).
+## 벡터 저장소
+
+[사용 예제](/docs/integrations/vectorstores/rockset)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "Rockset", "source": "langchain_community.vectorstores", "docs": "https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.rocksetdb.Rockset.html", "title": "Rockset"}]-->
 from langchain_community.vectorstores import Rockset 
 ```
 
-## Document Loader
 
-See a [usage example](/docs/integrations/document_loaders/rockset).
+## 문서 로더
+
+[사용 예제](/docs/integrations/document_loaders/rockset)를 참조하세요.
 ```python
 <!--IMPORTS:[{"imported": "RocksetLoader", "source": "langchain_community.document_loaders", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.rocksetdb.RocksetLoader.html", "title": "Rockset"}]-->
 from langchain_community.document_loaders import RocksetLoader
 ```
 
-## Chat Message History
 
-See a [usage example](/docs/integrations/memory/rockset_chat_message_history).
+## 채팅 메시지 기록
+
+[사용 예제](/docs/integrations/memory/rockset_chat_message_history)를 참조하세요.
 ```python
 <!--IMPORTS:[{"imported": "RocksetChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_message_histories/langchain_community.chat_message_histories.rocksetdb.RocksetChatMessageHistory.html", "title": "Rockset"}]-->
 from langchain_community.chat_message_histories import RocksetChatMessageHistory

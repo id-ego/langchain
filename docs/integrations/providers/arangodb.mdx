@@ -1,25 +1,26 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/arangodb/
+description: ArangoDB는 연결된 데이터에서 가치를 빠르게 이끌어내는 확장 가능한 그래프 데이터베이스 시스템입니다. JSON 지원 및
+  통합 검색 엔진을 제공합니다.
 ---
 
 # ArangoDB
 
-> [ArangoDB](https://github.com/arangodb/arangodb) is a scalable graph database system to
-drive value from connected data, faster. Native graphs, an integrated search engine, and JSON support, via a single query language. ArangoDB runs on-prem, in the cloud – anywhere.
+> [ArangoDB](https://github.com/arangodb/arangodb)는 연결된 데이터에서 가치를 더 빠르게 이끌어내기 위한 확장 가능한 그래프 데이터베이스 시스템입니다. 네이티브 그래프, 통합 검색 엔진 및 JSON 지원을 단일 쿼리 언어를 통해 제공합니다. ArangoDB는 온프레미스, 클라우드 등 어디에서나 실행됩니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-Install the [ArangoDB Python Driver](https://github.com/ArangoDB-Community/python-arango) package with
+다음 명령어로 [ArangoDB Python Driver](https://github.com/ArangoDB-Community/python-arango) 패키지를 설치하세요.
 
 ```bash
 pip install python-arango
 ```
 
-## Graph QA Chain
 
-Connect your `ArangoDB` Database with a chat model to get insights on your data. 
+## 그래프 QA 체인
 
-See the notebook example [here](/docs/integrations/graphs/arangodb).
+채팅 모델과 함께 `ArangoDB` 데이터베이스를 연결하여 데이터에 대한 통찰력을 얻으세요.
+
+노트북 예제는 [여기](/docs/integrations/graphs/arangodb)에서 확인하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "ArangoGraph", "source": "langchain_community.graphs", "docs": "https://api.python.langchain.com/en/latest/graphs/langchain_community.graphs.arangodb_graph.ArangoGraph.html", "title": "ArangoDB"}, {"imported": "ArangoGraphQAChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain_community.chains.graph_qa.arangodb.ArangoGraphQAChain.html", "title": "ArangoDB"}]-->

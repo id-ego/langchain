@@ -1,51 +1,54 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/couchbase/
+description: Couchbase는 클라우드, 모바일, AI 및 엣지 컴퓨팅 애플리케이션을 위한 분산 NoSQL 데이터베이스로, 성능과 확장성을
+  제공합니다.
 ---
 
 # Couchbase
 
-> [Couchbase](http://couchbase.com/) is an award-winning distributed NoSQL cloud database
-that delivers unmatched versatility, performance, scalability, and financial value
-for all of your cloud, mobile, AI, and edge computing applications.
+> [Couchbase](http://couchbase.com/)는 모든 클라우드, 모바일, AI 및 엣지 컴퓨팅 애플리케이션에 대해 비할 데 없는 다재다능성, 성능, 확장성 및 재정적 가치를 제공하는 수상 경력에 빛나는 분산 NoSQL 클라우드 데이터베이스입니다.
 
-## Installation and Setup
+## 설치 및 설정
 
-We have to install the `langchain-couchbase` package.
+`langchain-couchbase` 패키지를 설치해야 합니다.
 
 ```bash
 pip install langchain-couchbase
 ```
 
-## Vector Store
 
-See a [usage example](/docs/integrations/vectorstores/couchbase).
+## 벡터 저장소
+
+[사용 예시](/docs/integrations/vectorstores/couchbase)를 참조하세요.
 
 ```python
 from langchain_couchbase import CouchbaseVectorStore
 ```
 
-## Document loader
 
-See a [usage example](/docs/integrations/document_loaders/couchbase).
+## 문서 로더
+
+[사용 예시](/docs/integrations/document_loaders/couchbase)를 참조하세요.
 
 ```python
 <!--IMPORTS:[{"imported": "CouchbaseLoader", "source": "langchain_community.document_loaders.couchbase", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.couchbase.CouchbaseLoader.html", "title": "Couchbase"}]-->
 from langchain_community.document_loaders.couchbase import CouchbaseLoader
 ```
 
-## LLM Caches
+
+## LLM 캐시
 
 ### CouchbaseCache
-Use Couchbase as a cache for prompts and responses.
+프롬프트와 응답을 위한 캐시로 Couchbase를 사용하세요.
 
-See a [usage example](/docs/integrations/llm_caching/#couchbase-cache).
+[사용 예시](/docs/integrations/llm_caching/#couchbase-cache)를 참조하세요.
 
-To import this cache:
+이 캐시를 가져오려면:
 ```python
 from langchain_couchbase.cache import CouchbaseCache
 ```
 
-To use this cache with your LLMs:
+
+LLM와 함께 이 캐시를 사용하려면:
 ```python
 <!--IMPORTS:[{"imported": "set_llm_cache", "source": "langchain_core.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain_core.globals.set_llm_cache.html", "title": "Couchbase"}]-->
 from langchain_core.globals import set_llm_cache
@@ -62,18 +65,19 @@ set_llm_cache(
 )
 ```
 
+
 ### CouchbaseSemanticCache
-Semantic caching allows users to retrieve cached prompts based on the semantic similarity between the user input and previously cached inputs. Under the hood it uses Couchbase as both a cache and a vectorstore.
-The CouchbaseSemanticCache needs a Search Index defined to work. Please look at the [usage example](/docs/integrations/vectorstores/couchbase) on how to set up the index.
+시맨틱 캐싱은 사용자가 입력한 내용과 이전에 캐시된 입력 간의 의미적 유사성에 따라 캐시된 프롬프트를 검색할 수 있도록 합니다. 내부적으로 Couchbase를 캐시와 벡터 저장소로 모두 사용합니다. CouchbaseSemanticCache는 작동하기 위해 정의된 검색 인덱스가 필요합니다. 인덱스를 설정하는 방법에 대한 [사용 예시](/docs/integrations/vectorstores/couchbase)를 참조하세요.
 
-See a [usage example](/docs/integrations/llm_caching/#couchbase-semantic-cache).
+[사용 예시](/docs/integrations/llm_caching/#couchbase-semantic-cache)를 참조하세요.
 
-To import this cache:
+이 캐시를 가져오려면:
 ```python
 from langchain_couchbase.cache import CouchbaseSemanticCache
 ```
 
-To use this cache with your LLMs:
+
+LLM와 함께 이 캐시를 사용하려면:
 ```python
 <!--IMPORTS:[{"imported": "set_llm_cache", "source": "langchain_core.globals", "docs": "https://api.python.langchain.com/en/latest/globals/langchain_core.globals.set_llm_cache.html", "title": "Couchbase"}]-->
 from langchain_core.globals import set_llm_cache
@@ -96,12 +100,13 @@ set_llm_cache(
 )
 ```
 
-## Chat Message History
-Use Couchbase as the storage for your chat messages.
 
-See a [usage example](/docs/integrations/memory/couchbase_chat_message_history).
+## 채팅 메시지 기록
+Couchbase를 채팅 메시지 저장소로 사용하세요.
 
-To use the chat message history in your applications:
+[사용 예시](/docs/integrations/memory/couchbase_chat_message_history)를 참조하세요.
+
+애플리케이션에서 채팅 메시지 기록을 사용하려면:
 ```python
 from langchain_couchbase.chat_message_histories import CouchbaseChatMessageHistory
 

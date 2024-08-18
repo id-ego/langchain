@@ -1,27 +1,28 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/how_to/chatbots_tools/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/how_to/chatbots_tools.ipynb
+description: 챗봇에 도구를 추가하는 방법을 안내합니다. 대화형 에이전트를 설정하고, Tavily를 사용하여 웹 검색 기능을 구현하는 방법을
+  설명합니다.
 ---
 
-# How to add tools to chatbots
+# 챗봇에 도구 추가하는 방법
 
-:::info Prerequisites
+:::info 전제 조건
 
-This guide assumes familiarity with the following concepts:
+이 가이드는 다음 개념에 대한 이해를 전제로 합니다:
 
-- [Chatbots](/docs/concepts/#messages)
-- [Agents](/docs/tutorials/agents)
-- [Chat history](/docs/concepts/#chat-history)
+- [챗봇](/docs/concepts/#messages)
+- [에이전트](/docs/tutorials/agents)
+- [채팅 기록](/docs/concepts/#chat-history)
 
 :::
 
-This section will cover how to create conversational agents: chatbots that can interact with other systems and APIs using tools.
+이 섹션에서는 도구를 사용하여 다른 시스템 및 API와 상호작용할 수 있는 대화형 에이전트를 만드는 방법을 다룹니다.
 
-## Setup
+## 설정
 
-For this guide, we'll be using a [tool calling agent](/docs/how_to/agent_executor) with a single tool for searching the web. The default will be powered by [Tavily](/docs/integrations/tools/tavily_search), but you can switch it out for any similar tool. The rest of this section will assume you're using Tavily.
+이 가이드에서는 웹 검색을 위한 단일 도구를 사용하는 [도구 호출 에이전트](/docs/how_to/agent_executor)를 사용할 것입니다. 기본적으로 [Tavily](/docs/integrations/tools/tavily_search)를 사용하지만, 유사한 도구로 변경할 수 있습니다. 이 섹션의 나머지는 Tavily를 사용한다고 가정합니다.
 
-You'll need to [sign up for an account](https://tavily.com/) on the Tavily website, and install the following packages:
+Tavily 웹사이트에서 [계정을 등록](https://tavily.com/)하고 다음 패키지를 설치해야 합니다:
 
 ```python
 %pip install --upgrade --quiet langchain-community langchain-openai tavily-python
@@ -32,13 +33,14 @@ import dotenv
 dotenv.load_dotenv()
 ```
 
-You will also need your OpenAI key set as `OPENAI_API_KEY` and your Tavily API key set as `TAVILY_API_KEY`.
 
-## Creating an agent
+또한 `OPENAI_API_KEY`로 OpenAI 키를 설정하고 `TAVILY_API_KEY`로 Tavily API 키를 설정해야 합니다.
 
-Our end goal is to create an agent that can respond conversationally to user questions while looking up information as needed.
+## 에이전트 생성
 
-First, let's initialize Tavily and an OpenAI chat model capable of tool calling:
+우리의 최종 목표는 사용자 질문에 대화형으로 응답하면서 필요한 정보를 조회할 수 있는 에이전트를 만드는 것입니다.
+
+먼저, 도구 호출이 가능한 OpenAI 채팅 모델과 Tavily를 초기화합시다:
 
 ```python
 <!--IMPORTS:[{"imported": "TavilySearchResults", "source": "langchain_community.tools.tavily_search", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.tavily_search.tool.TavilySearchResults.html", "title": "How to add tools to chatbots"}, {"imported": "ChatOpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html", "title": "How to add tools to chatbots"}]-->
@@ -52,7 +54,8 @@ tools = [TavilySearchResults(max_results=1)]
 chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0)
 ```
 
-To make our agent conversational, we must also choose a prompt with a placeholder for our chat history. Here's an example:
+
+우리 에이전트를 대화형으로 만들기 위해, 채팅 기록을 위한 플레이스홀더가 있는 프롬프트를 선택해야 합니다. 예를 들어:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatPromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.chat.ChatPromptTemplate.html", "title": "How to add tools to chatbots"}]-->
@@ -71,7 +74,8 @@ prompt = ChatPromptTemplate.from_messages(
 )
 ```
 
-Great! Now let's assemble our agent:
+
+좋습니다! 이제 에이전트를 조립해봅시다:
 
 ```python
 <!--IMPORTS:[{"imported": "AgentExecutor", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.agent.AgentExecutor.html", "title": "How to add tools to chatbots"}, {"imported": "create_tool_calling_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.tool_calling_agent.base.create_tool_calling_agent.html", "title": "How to add tools to chatbots"}]-->
@@ -82,9 +86,10 @@ agent = create_tool_calling_agent(chat, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
 
-## Running the agent
 
-Now that we've set up our agent, let's try interacting with it! It can handle both trivial queries that require no lookup:
+## 에이전트 실행
+
+이제 에이전트를 설정했으니, 상호작용해봅시다! 에이전트는 조회가 필요 없는 사소한 쿼리도 처리할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add tools to chatbots"}]-->
@@ -92,6 +97,7 @@ from langchain_core.messages import HumanMessage
 
 agent_executor.invoke({"messages": [HumanMessage(content="I'm Nemo!")]})
 ```
+
 ```output
 
 
@@ -101,12 +107,14 @@ agent_executor.invoke({"messages": [HumanMessage(content="I'm Nemo!")]})
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'messages': [HumanMessage(content="I'm Nemo!")],
  'output': "Hello Nemo! It's great to meet you. How can I assist you today?"}
 ```
 
-Or, it can use of the passed search tool to get up to date information if needed:
+
+또한, 필요할 경우 전달된 검색 도구를 사용하여 최신 정보를 얻을 수 있습니다:
 
 ```python
 agent_executor.invoke(
@@ -119,6 +127,7 @@ agent_executor.invoke(
     }
 )
 ```
+
 ```output
 
 
@@ -134,14 +143,16 @@ You can read more about it in this article: [Great Barrier Reef hit with widespr
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'messages': [HumanMessage(content='What is the current conservation status of the Great Barrier Reef?')],
  'output': "The Great Barrier Reef is currently showing signs of recovery, with record coral cover being seen across much of the reef. This recovery comes after past storms and mass-bleaching events. However, the rapid growth in coral cover appears to have come at the expense of the diversity of coral on the reef, with most of the increases accounted for by fast-growing branching coral called Acropora. There were discussions about the reef's potential inclusion on the World Heritage In Danger list, but the meeting to consider this was indefinitely postponed due to the war in Ukraine.\n\nYou can read more about it in this article: [Great Barrier Reef hit with widespread and severe bleaching event](https://www.abc.net.au/news/2022-08-04/great-barrier-reef-report-says-coral-recovering-after-bleaching/101296186)"}
 ```
 
-## Conversational responses
 
-Because our prompt contains a placeholder for chat history messages, our agent can also take previous interactions into account and respond conversationally like a standard chatbot:
+## 대화형 응답
+
+우리의 프롬프트에는 채팅 기록 메시지를 위한 플레이스홀더가 포함되어 있기 때문에, 에이전트는 이전 상호작용을 고려하여 표준 챗봇처럼 대화형으로 응답할 수 있습니다:
 
 ```python
 <!--IMPORTS:[{"imported": "AIMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.ai.AIMessage.html", "title": "How to add tools to chatbots"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "How to add tools to chatbots"}]-->
@@ -157,6 +168,7 @@ agent_executor.invoke(
     }
 )
 ```
+
 ```output
 
 
@@ -166,6 +178,7 @@ agent_executor.invoke(
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'messages': [HumanMessage(content="I'm Nemo!"),
   AIMessage(content='Hello Nemo! How can I assist you today?'),
@@ -173,7 +186,8 @@ agent_executor.invoke(
  'output': 'Your name is Nemo!'}
 ```
 
-If preferred, you can also wrap the agent executor in a [`RunnableWithMessageHistory`](/docs/how_to/message_history/) class to internally manage history messages. Let's redeclare it this way:
+
+원하는 경우, 에이전트 실행기를 [`RunnableWithMessageHistory`](/docs/how_to/message_history/) 클래스에 감싸서 내부적으로 기록 메시지를 관리할 수 있습니다. 이렇게 다시 선언해봅시다:
 
 ```python
 agent = create_tool_calling_agent(chat, tools, prompt)
@@ -181,7 +195,8 @@ agent = create_tool_calling_agent(chat, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 ```
 
-Then, because our agent executor has multiple outputs, we also have to set the `output_messages_key` property when initializing the wrapper:
+
+그런 다음, 에이전트 실행기가 여러 출력을 가지므로, 래퍼를 초기화할 때 `output_messages_key` 속성도 설정해야 합니다:
 
 ```python
 <!--IMPORTS:[{"imported": "ChatMessageHistory", "source": "langchain_community.chat_message_histories", "docs": "https://api.python.langchain.com/en/latest/chat_history/langchain_core.chat_history.ChatMessageHistory.html", "title": "How to add tools to chatbots"}, {"imported": "RunnableWithMessageHistory", "source": "langchain_core.runnables.history", "docs": "https://api.python.langchain.com/en/latest/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html", "title": "How to add tools to chatbots"}]-->
@@ -202,6 +217,7 @@ conversational_agent_executor.invoke(
     {"configurable": {"session_id": "unused"}},
 )
 ```
+
 ```output
 
 
@@ -211,12 +227,14 @@ conversational_agent_executor.invoke(
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'messages': [HumanMessage(content="I'm Nemo!")],
  'output': "Hi Nemo! It's great to meet you. How can I assist you today?"}
 ```
 
-And then if we rerun our wrapped agent executor:
+
+그리고 나서 래핑된 에이전트 실행기를 다시 실행하면:
 
 ```python
 conversational_agent_executor.invoke(
@@ -224,6 +242,7 @@ conversational_agent_executor.invoke(
     {"configurable": {"session_id": "unused"}},
 )
 ```
+
 ```output
 
 
@@ -233,6 +252,7 @@ conversational_agent_executor.invoke(
 [1m> Finished chain.[0m
 ```
 
+
 ```output
 {'messages': [HumanMessage(content="I'm Nemo!"),
   AIMessage(content="Hi Nemo! It's great to meet you. How can I assist you today?"),
@@ -240,10 +260,11 @@ conversational_agent_executor.invoke(
  'output': 'Your name is Nemo! How can I assist you today, Nemo?'}
 ```
 
-This [LangSmith trace](https://smith.langchain.com/public/1a9f712a-7918-4661-b3ff-d979bcc2af42/r) shows what's going on under the hood.
 
-## Further reading
+이 [LangSmith 추적](https://smith.langchain.com/public/1a9f712a-7918-4661-b3ff-d979bcc2af42/r)는 내부에서 무슨 일이 일어나고 있는지를 보여줍니다.
 
-Other types agents can also support conversational responses too - for more, check out the [agents section](/docs/tutorials/agents).
+## 추가 읽기
 
-For more on tool usage, you can also check out [this use case section](/docs/how_to#tools).
+다른 유형의 에이전트도 대화형 응답을 지원할 수 있습니다 - 더 많은 정보는 [에이전트 섹션](/docs/tutorials/agents)을 확인하세요.
+
+도구 사용에 대한 더 많은 정보는 [이 사용 사례 섹션](/docs/how_to#tools)을 확인할 수 있습니다.

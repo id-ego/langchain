@@ -1,33 +1,32 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/chat/ernie/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/chat/ernie.ipynb
+description: 이 문서는 Baidu의 ErnieBotChat 모델을 시작하는 방법과 QianfanChatEndpoint로의 마이그레이션 권장
+  사항을 다룹니다.
 sidebar_label: Ernie Bot Chat
 ---
 
 # ErnieBotChat
 
-[ERNIE-Bot](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/jlil56u11) is a large language model developed by Baidu, covering a huge amount of Chinese data.
-This notebook covers how to get started with ErnieBot chat models.
+[ERNIE-Bot](https://cloud.baidu.com/doc/WENXINWORKSHOP/s/jlil56u11)는 방대한 양의 중국어 데이터를 포함하는 바이두에서 개발한 대형 언어 모델입니다. 이 노트북은 ErnieBot 채팅 모델을 시작하는 방법을 다룹니다.
 
-**Deprecated Warning**
+**사용 중단 경고**
 
-We recommend users using `langchain_community.chat_models.ErnieBotChat`
-to use `langchain_community.chat_models.QianfanChatEndpoint` instead.
+사용자에게 `langchain_community.chat_models.ErnieBotChat` 대신 `langchain_community.chat_models.QianfanChatEndpoint`를 사용할 것을 권장합니다.
 
-documentation for `QianfanChatEndpoint` is [here](/docs/integrations/chat/baidu_qianfan_endpoint/).
+`QianfanChatEndpoint`에 대한 문서는 [여기](/docs/integrations/chat/baidu_qianfan_endpoint/)에 있습니다.
 
-they are 4 why we recommend users to use `QianfanChatEndpoint`:
+사용자가 `QianfanChatEndpoint`를 사용하도록 권장하는 이유는 다음과 같습니다:
 
-1. `QianfanChatEndpoint` support more LLM in the Qianfan platform.
-2. `QianfanChatEndpoint` support streaming mode.
-3. `QianfanChatEndpoint` support function calling usgage.
-4. `ErnieBotChat` is lack of maintenance and deprecated.
+1. `QianfanChatEndpoint`는 Qianfan 플랫폼에서 더 많은 LLM을 지원합니다.
+2. `QianfanChatEndpoint`는 스트리밍 모드를 지원합니다.
+3. `QianfanChatEndpoint`는 기능 호출 사용을 지원합니다.
+4. `ErnieBotChat`는 유지 관리가 부족하고 사용 중단되었습니다.
 
-Some tips for migration:
+마이그레이션을 위한 몇 가지 팁:
 
-- change `ernie_client_id` to `qianfan_ak`, also change `ernie_client_secret` to `qianfan_sk`.
-- install `qianfan` package. like `pip install qianfan`
-- change `ErnieBotChat` to `QianfanChatEndpoint`.
+- `ernie_client_id`를 `qianfan_ak`로 변경하고, `ernie_client_secret`를 `qianfan_sk`로 변경합니다.
+- `qianfan` 패키지를 설치합니다. 예: `pip install qianfan`
+- `ErnieBotChat`를 `QianfanChatEndpoint`로 변경합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "QianfanChatEndpoint", "source": "langchain_community.chat_models.baidu_qianfan_endpoint", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.baidu_qianfan_endpoint.QianfanChatEndpoint.html", "title": "ErnieBotChat"}]-->
@@ -39,7 +38,8 @@ chat = QianfanChatEndpoint(
 )
 ```
 
-## Usage
+
+## 사용법
 
 ```python
 <!--IMPORTS:[{"imported": "ErnieBotChat", "source": "langchain_community.chat_models", "docs": "https://api.python.langchain.com/en/latest/chat_models/langchain_community.chat_models.ernie.ErnieBotChat.html", "title": "ErnieBotChat"}, {"imported": "HumanMessage", "source": "langchain_core.messages", "docs": "https://api.python.langchain.com/en/latest/messages/langchain_core.messages.human.HumanMessage.html", "title": "ErnieBotChat"}]-->
@@ -51,21 +51,25 @@ chat = ErnieBotChat(
 )
 ```
 
-or you can set `client_id` and `client_secret` in your environment variables
+
+또는 환경 변수에 `client_id`와 `client_secret`을 설정할 수 있습니다.
 ```bash
 export ERNIE_CLIENT_ID=YOUR_CLIENT_ID
 export ERNIE_CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
 
+
 ```python
 chat([HumanMessage(content="hello there, who are you?")])
 ```
+
 
 ```output
 AIMessage(content='Hello, I am an artificial intelligence language model. My purpose is to help users answer questions or provide information. What can I do for you?', additional_kwargs={}, example=False)
 ```
 
-## Related
 
-- Chat model [conceptual guide](/docs/concepts/#chat-models)
-- Chat model [how-to guides](/docs/how_to/#chat-models)
+## 관련
+
+- 채팅 모델 [개념 가이드](/docs/concepts/#chat-models)
+- 채팅 모델 [사용 방법 가이드](/docs/how_to/#chat-models)

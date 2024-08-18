@@ -1,27 +1,27 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/providers/comet_tracking/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/providers/comet_tracking.ipynb
+description: Comet 플랫폼을 통해 Langchain 실험, 평가 지표 및 LLM 세션을 추적하는 방법을 안내합니다. 머신러닝 최적화를
+  위한 필수 가이드입니다.
 ---
 
-# Comet
+# 코멧
 
-> [Comet](https://www.comet.com/) machine learning platform integrates with your existing infrastructure
-and tools so you can manage, visualize, and optimize models—from training runs to production monitoring
+> [코멧](https://www.comet.com/) 머신 러닝 플랫폼은 기존 인프라 및 도구와 통합되어 모델을 관리, 시각화 및 최적화할 수 있도록 합니다. - 훈련 실행부터 프로덕션 모니터링까지
 
 ![](https://user-images.githubusercontent.com/7529846/230328046-a8b18c51-12e3-4617-9b39-97614a571a2d.png)
 
-In this guide we will demonstrate how to track your Langchain Experiments, Evaluation Metrics, and LLM Sessions with [Comet](https://www.comet.com/site/?utm_source=langchain&utm_medium=referral&utm_campaign=comet_notebook).  
+이 가이드에서는 [코멧](https://www.comet.com/site/?utm_source=langchain&utm_medium=referral&utm_campaign=comet_notebook)과 함께 Langchain 실험, 평가 메트릭 및 LLM 세션을 추적하는 방법을 보여줍니다.  
 
 <a target="_blank" href="https://colab.research.google.com/github/hwchase17/langchain/blob/master/docs/ecosystem/comet_tracking">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
 
-**Example Project:** [Comet with LangChain](https://www.comet.com/examples/comet-example-langchain/view/b5ZThK6OFdhKWVSP3fDfRtrNF/panels?utm_source=langchain&utm_medium=referral&utm_campaign=comet_notebook)
+**예제 프로젝트:** [LangChain과 함께하는 코멧](https://www.comet.com/examples/comet-example-langchain/view/b5ZThK6OFdhKWVSP3fDfRtrNF/panels?utm_source=langchain&utm_medium=referral&utm_campaign=comet_notebook)
 
 ![](https://user-images.githubusercontent.com/7529846/230326720-a9711435-9c6f-4edb-a707-94b67271ab25.png)
 
-### Install Comet and Dependencies
+### 코멧 및 의존성 설치
 
 ```python
 %pip install --upgrade --quiet  comet_ml langchain langchain-openai google-search-results spacy textstat pandas
@@ -30,9 +30,10 @@ In this guide we will demonstrate how to track your Langchain Experiments, Evalu
 !{sys.executable} -m spacy download en_core_web_sm
 ```
 
-### Initialize Comet and Set your Credentials
 
-You can grab your [Comet API Key here](https://www.comet.com/signup?utm_source=langchain&utm_medium=referral&utm_campaign=comet_notebook) or click the link after initializing Comet
+### 코멧 초기화 및 자격 증명 설정
+
+[코멧 API 키를 여기서 가져올 수 있습니다](https://www.comet.com/signup?utm_source=langchain&utm_medium=referral&utm_campaign=comet_notebook) 또는 코멧을 초기화한 후 링크를 클릭하세요.
 
 ```python
 import comet_ml
@@ -40,9 +41,10 @@ import comet_ml
 comet_ml.init(project_name="comet-example-langchain")
 ```
 
-### Set OpenAI and SerpAPI credentials
 
-You will need an [OpenAI API Key](https://platform.openai.com/account/api-keys) and a [SerpAPI API Key](https://serpapi.com/dashboard) to run the following examples
+### OpenAI 및 SerpAPI 자격 증명 설정
+
+다음 예제를 실행하려면 [OpenAI API 키](https://platform.openai.com/account/api-keys)와 [SerpAPI API 키](https://serpapi.com/dashboard)가 필요합니다.
 
 ```python
 import os
@@ -52,7 +54,8 @@ os.environ["OPENAI_API_KEY"] = "..."
 os.environ["SERPAPI_API_KEY"] = "..."
 ```
 
-### Scenario 1: Using just an LLM
+
+### 시나리오 1: LLM만 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "CometCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.comet_ml_callback.CometCallbackHandler.html", "title": "Comet"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Comet"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Comet"}]-->
@@ -75,7 +78,8 @@ print("LLM result", llm_result)
 comet_callback.flush_tracker(llm, finish=True)
 ```
 
-### Scenario 2: Using an LLM in a Chain
+
+### 시나리오 2: 체인에서 LLM 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Comet"}, {"imported": "CometCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.comet_ml_callback.CometCallbackHandler.html", "title": "Comet"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Comet"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Comet"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Comet"}]-->
@@ -105,7 +109,8 @@ print(synopsis_chain.apply(test_prompts))
 comet_callback.flush_tracker(synopsis_chain, finish=True)
 ```
 
-### Scenario 3: Using An Agent with Tools
+
+### 시나리오 3: 도구와 함께 에이전트 사용하기
 
 ```python
 <!--IMPORTS:[{"imported": "initialize_agent", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agents/langchain.agents.initialize.initialize_agent.html", "title": "Comet"}, {"imported": "load_tools", "source": "langchain.agents", "docs": "https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.load_tools.load_tools.html", "title": "Comet"}, {"imported": "CometCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.comet_ml_callback.CometCallbackHandler.html", "title": "Comet"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Comet"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Comet"}]-->
@@ -137,15 +142,17 @@ agent.run(
 comet_callback.flush_tracker(agent, finish=True)
 ```
 
-### Scenario 4: Using Custom Evaluation Metrics
 
-The `CometCallbackManager` also allows you to define and use Custom Evaluation Metrics to assess generated outputs from your model. Let's take a look at how this works. 
+### 시나리오 4: 사용자 정의 평가 메트릭 사용하기
 
-In the snippet below, we will use the [ROUGE](https://huggingface.co/spaces/evaluate-metric/rouge) metric to evaluate the quality of a generated summary of an input prompt. 
+`CometCallbackManager`를 사용하면 모델에서 생성된 출력을 평가하기 위해 사용자 정의 평가 메트릭을 정의하고 사용할 수 있습니다. 이것이 어떻게 작동하는지 살펴보겠습니다. 
+
+아래 코드 조각에서는 [ROUGE](https://huggingface.co/spaces/evaluate-metric/rouge) 메트릭을 사용하여 입력 프롬프트의 생성된 요약 품질을 평가합니다. 
 
 ```python
 %pip install --upgrade --quiet  rouge-score
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "LLMChain", "source": "langchain.chains", "docs": "https://api.python.langchain.com/en/latest/chains/langchain.chains.llm.LLMChain.html", "title": "Comet"}, {"imported": "CometCallbackHandler", "source": "langchain_community.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.comet_ml_callback.CometCallbackHandler.html", "title": "Comet"}, {"imported": "StdOutCallbackHandler", "source": "langchain_core.callbacks", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_core.callbacks.stdout.StdOutCallbackHandler.html", "title": "Comet"}, {"imported": "PromptTemplate", "source": "langchain_core.prompts", "docs": "https://api.python.langchain.com/en/latest/prompts/langchain_core.prompts.prompt.PromptTemplate.html", "title": "Comet"}, {"imported": "OpenAI", "source": "langchain_openai", "docs": "https://api.python.langchain.com/en/latest/llms/langchain_openai.llms.base.OpenAI.html", "title": "Comet"}]-->
@@ -223,11 +230,12 @@ print(synopsis_chain.apply(test_prompts, callbacks=callbacks))
 comet_callback.flush_tracker(synopsis_chain, finish=True)
 ```
 
-### Callback Tracer
 
-There is another integration with Comet:
+### 콜백 추적기
 
-See an [example](/docs/integrations/callbacks/comet_tracing).
+코멧과의 또 다른 통합이 있습니다:
+
+[예제 보기](/docs/integrations/callbacks/comet_tracing).
 
 ```python
 <!--IMPORTS:[{"imported": "CometTracer", "source": "langchain_community.callbacks.tracers.comet", "docs": "https://api.python.langchain.com/en/latest/callbacks/langchain_community.callbacks.tracers.comet.CometTracer.html", "title": "Comet"}]-->

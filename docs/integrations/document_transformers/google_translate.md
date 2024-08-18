@@ -1,22 +1,23 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_transformers/google_translate/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_transformers/google_translate.ipynb
+description: 구글 번역은 텍스트, 문서 및 웹사이트를 다양한 언어로 번역하는 다국어 신경 기계 번역 서비스입니다.
 ---
 
-# Google Translate
+# 구글 번역
 
-[Google Translate](https://translate.google.com/) is a multilingual neural machine translation service developed by Google to translate text, documents and websites from one language into another.
+[구글 번역](https://translate.google.com/)은 텍스트, 문서 및 웹사이트를 한 언어에서 다른 언어로 번역하기 위해 구글이 개발한 다국어 신경망 기계 번역 서비스입니다.
 
-The `GoogleTranslateTransformer` allows you to translate text and HTML with the [Google Cloud Translation API](https://cloud.google.com/translate).
+`GoogleTranslateTransformer`를 사용하면 [Google Cloud Translation API](https://cloud.google.com/translate)를 통해 텍스트와 HTML을 번역할 수 있습니다.
 
-To use it, you should have the `google-cloud-translate` python package installed, and a Google Cloud project with the [Translation API enabled](https://cloud.google.com/translate/docs/setup). This transformer uses the [Advanced edition (v3)](https://cloud.google.com/translate/docs/intro-to-v3).
+사용하려면 `google-cloud-translate` 파이썬 패키지가 설치되어 있어야 하며, [Translation API가 활성화된](https://cloud.google.com/translate/docs/setup) Google Cloud 프로젝트가 필요합니다. 이 변환기는 [고급 버전(v3)](https://cloud.google.com/translate/docs/intro-to-v3)을 사용합니다.
 
-- [Google Neural Machine Translation](https://en.wikipedia.org/wiki/Google_Neural_Machine_Translation)
-- [A Neural Network for Machine Translation, at Production Scale](https://blog.research.google/2016/09/a-neural-network-for-machine.html)
+- [구글 신경망 기계 번역](https://en.wikipedia.org/wiki/Google_Neural_Machine_Translation)
+- [생산 규모의 기계 번역을 위한 신경망](https://blog.research.google/2016/09/a-neural-network-for-machine.html)
 
 ```python
 %pip install --upgrade --quiet  google-cloud-translate
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "Document", "source": "langchain_core.documents", "docs": "https://api.python.langchain.com/en/latest/documents/langchain_core.documents.base.Document.html", "title": "Google Translate"}]-->
@@ -24,9 +25,10 @@ from langchain_core.documents import Document
 from langchain_google_community import GoogleTranslateTransformer
 ```
 
-## Input
 
-This is the document we'll translate
+## 입력
+
+이것은 우리가 번역할 문서입니다.
 
 ```python
 sample_text = """[Generated with Google Bard]
@@ -61,40 +63,42 @@ CEO, Cymbal Bank
 """
 ```
 
-When initializing the `GoogleTranslateTransformer`, you can include the following parameters to configure the requests.
 
-- `project_id`: Google Cloud Project ID.
-- `location`: (Optional) Translate model location.
-  - Default: `global` 
-- `model_id`: (Optional) Translate [model ID][models] to use.
-- `glossary_id`: (Optional) Translate [glossary ID][glossaries] to use.
-- `api_endpoint`: (Optional) [Regional endpoint][endpoints] to use.
+`GoogleTranslateTransformer`를 초기화할 때 요청을 구성하기 위해 다음 매개변수를 포함할 수 있습니다.
 
-[models]: https://cloud.google.com/translate/docs/advanced/translating-text-v3#comparing-models
-[glossaries]: https://cloud.google.com/translate/docs/advanced/glossary
-[endpoints]: https://cloud.google.com/translate/docs/advanced/endpoints
+- `project_id`: Google Cloud 프로젝트 ID.
+- `location`: (선택 사항) 번역 모델 위치.
+  - 기본값: `global` 
+- `model_id`: (선택 사항) 사용할 번역 [모델 ID][models].
+- `glossary_id`: (선택 사항) 사용할 번역 [용어집 ID][glossaries].
+- `api_endpoint`: (선택 사항) 사용할 [지역 엔드포인트][endpoints].
+
+[models]: https://cloud.google.com/translate/docs/advanced/translating-text-v3#comparing-models  
+[glossaries]: https://cloud.google.com/translate/docs/advanced/glossary  
+[endpoints]: https://cloud.google.com/translate/docs/advanced/endpoints  
 
 ```python
 documents = [Document(page_content=sample_text)]
 translator = GoogleTranslateTransformer(project_id="<YOUR_PROJECT_ID>")
 ```
 
-## Output
 
-After translating a document, the result will be returned as a new document with the `page_content` translated into the target language.
+## 출력
 
-You can provide the following keyword parameters to the `transform_documents()` method:
+문서를 번역한 후 결과는 `page_content`가 대상 언어로 번역된 새로운 문서로 반환됩니다.
 
-- `target_language_code`: [ISO 639][iso-639] language code of the output document.
-  - For supported languages, refer to [Language support][supported-languages].
-- `source_language_code`: (Optional) [ISO 639][iso-639] language code of the input document.
-  - If not provided, language will be auto-detected.
-- `mime_type`: (Optional) [Media Type][media-type] of the input text.
-  - Options: `text/plain` (Default), `text/html`.
+`transform_documents()` 메서드에 다음 키워드 매개변수를 제공할 수 있습니다:
 
-[iso-639]: https://en.wikipedia.org/wiki/ISO_639
-[supported-languages]: https://cloud.google.com/translate/docs/languages
-[media-type]: https://en.wikipedia.org/wiki/Media_type
+- `target_language_code`: 출력 문서의 [ISO 639][iso-639] 언어 코드.
+  - 지원되는 언어는 [언어 지원][supported-languages]를 참조하십시오.
+- `source_language_code`: (선택 사항) 입력 문서의 [ISO 639][iso-639] 언어 코드.
+  - 제공되지 않으면 언어가 자동으로 감지됩니다.
+- `mime_type`: (선택 사항) 입력 텍스트의 [미디어 유형][media-type].
+  - 옵션: `text/plain` (기본값), `text/html`.
+
+[iso-639]: https://en.wikipedia.org/wiki/ISO_639  
+[supported-languages]: https://cloud.google.com/translate/docs/languages  
+[media-type]: https://en.wikipedia.org/wiki/Media_type  
 
 ```python
 translated_documents = translator.transform_documents(
@@ -102,11 +106,13 @@ translated_documents = translator.transform_documents(
 )
 ```
 
+
 ```python
 for doc in translated_documents:
     print(doc.metadata)
     print(doc.page_content)
 ```
+  
 ```output
 {'model': '', 'detected_language_code': 'en'}
 [Generado con Google Bard]

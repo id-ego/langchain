@@ -1,35 +1,36 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/document_loaders/microsoft_onenote/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/document_loaders/microsoft_onenote.ipynb
+description: 이 문서는 Microsoft OneNote에서 문서를 로드하는 방법과 필요한 사전 준비 사항을 설명합니다.
 ---
 
 # Microsoft OneNote
 
-This notebook covers how to load documents from `OneNote`.
+이 노트북은 `OneNote`에서 문서를 로드하는 방법을 다룹니다.
 
-## Prerequisites
-1. Register an application with the [Microsoft identity platform](https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app) instructions.
-2. When registration finishes, the Azure portal displays the app registration's Overview pane. You see the Application (client) ID. Also called the `client ID`, this value uniquely identifies your application in the Microsoft identity platform.
-3. During the steps you will be following at **item 1**, you can set the redirect URI as `http://localhost:8000/callback`
-4. During the steps you will be following at **item 1**, generate a new password (`client_secret`) under Application Secrets section.
-5. Follow the instructions at this [document](https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-configure-app-expose-web-apis#add-a-scope) to add the following `SCOPES` (`Notes.Read`) to your application.
-6. You need to install the msal and bs4 packages using the commands `pip install msal` and `pip install beautifulsoup4`.
-7. At the end of the steps you must have the following values: 
+## 필수 조건
+1. [Microsoft identity platform](https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app) 지침에 따라 애플리케이션을 등록합니다.
+2. 등록이 완료되면 Azure 포털에 앱 등록의 개요 창이 표시됩니다. 여기에서 애플리케이션(클라이언트) ID를 확인할 수 있습니다. `client ID`라고도 불리는 이 값은 Microsoft identity platform에서 애플리케이션을 고유하게 식별합니다.
+3. **항목 1**에서 따를 단계 동안 리디렉션 URI를 `http://localhost:8000/callback`으로 설정할 수 있습니다.
+4. **항목 1**에서 따를 단계 동안 애플리케이션 비밀 섹션에서 새 비밀번호(`client_secret`)를 생성합니다.
+5. 이 [문서](https://learn.microsoft.com/en-us/azure/active-directory/develop/quickstart-configure-app-expose-web-apis#add-a-scope)에서 지침에 따라 애플리케이션에 다음 `SCOPES`(`Notes.Read`)를 추가합니다.
+6. `pip install msal` 및 `pip install beautifulsoup4` 명령을 사용하여 msal 및 bs4 패키지를 설치해야 합니다.
+7. 단계가 끝나면 다음 값을 가져야 합니다: 
 - `CLIENT_ID`
 - `CLIENT_SECRET`
 
-## 🧑 Instructions for ingesting your documents from OneNote
+## 🧑 OneNote에서 문서를 가져오는 방법
 
-### 🔑 Authentication
+### 🔑 인증
 
-By default, the `OneNoteLoader` expects that the values of `CLIENT_ID` and `CLIENT_SECRET` must be stored as environment variables named `MS_GRAPH_CLIENT_ID` and `MS_GRAPH_CLIENT_SECRET` respectively. You could pass those environment variables through a `.env` file at the root of your application or using the following command in your script.
+기본적으로 `OneNoteLoader`는 `CLIENT_ID`와 `CLIENT_SECRET`의 값이 각각 `MS_GRAPH_CLIENT_ID` 및 `MS_GRAPH_CLIENT_SECRET`라는 환경 변수로 저장되어 있어야 한다고 예상합니다. 이러한 환경 변수를 애플리케이션의 루트에 있는 `.env` 파일을 통해 전달하거나 스크립트에서 다음 명령을 사용하여 전달할 수 있습니다.
 
 ```python
 os.environ['MS_GRAPH_CLIENT_ID'] = "YOUR CLIENT ID"
 os.environ['MS_GRAPH_CLIENT_SECRET'] = "YOUR CLIENT SECRET"
 ```
 
-This loader uses an authentication called [*on behalf of a user*](https://learn.microsoft.com/en-us/graph/auth-v2-user?context=graph%2Fapi%2F1.0&view=graph-rest-1.0). It is a 2 step authentication with user consent. When you instantiate the loader, it will call will print a url that the user must visit to give consent to the app on the required permissions. The user must then visit this url and give consent to the application. Then the user must copy the resulting page url and paste it back on the console. The method will then return True if the login attempt was successful.
+
+이 로더는 [*사용자를 대신하여*](https://learn.microsoft.com/en-us/graph/auth-v2-user?context=graph%2Fapi%2F1.0&view=graph-rest-1.0)라는 인증을 사용합니다. 이는 사용자 동의가 필요한 2단계 인증입니다. 로더를 인스턴스화하면 사용자가 앱에 필요한 권한에 대한 동의를 제공하기 위해 방문해야 하는 URL을 출력합니다. 사용자는 이 URL을 방문하여 애플리케이션에 동의를 제공해야 합니다. 그런 다음 사용자는 결과 페이지의 URL을 복사하여 콘솔에 붙여넣어야 합니다. 로그인 시도가 성공하면 메서드는 True를 반환합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OneNoteLoader", "source": "langchain_community.document_loaders.onenote", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onenote.OneNoteLoader.html", "title": "Microsoft OneNote"}]-->
@@ -38,7 +39,8 @@ from langchain_community.document_loaders.onenote import OneNoteLoader
 loader = OneNoteLoader(notebook_name="NOTEBOOK NAME", section_name="SECTION NAME", page_title="PAGE TITLE")
 ```
 
-Once the authentication has been done, the loader will store a token (`onenote_graph_token.txt`) at `~/.credentials/` folder. This token could be used later to authenticate without the copy/paste steps explained earlier. To use this token for authentication, you need to change the `auth_with_token` parameter to True in the instantiation of the loader.
+
+인증이 완료되면 로더는 `~/.credentials/` 폴더에 토큰(`onenote_graph_token.txt`)을 저장합니다. 이 토큰은 앞서 설명한 복사/붙여넣기 단계 없이 나중에 인증하는 데 사용할 수 있습니다. 인증에 이 토큰을 사용하려면 로더 인스턴스화 시 `auth_with_token` 매개변수를 True로 변경해야 합니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OneNoteLoader", "source": "langchain_community.document_loaders.onenote", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onenote.OneNoteLoader.html", "title": "Microsoft OneNote"}]-->
@@ -47,7 +49,8 @@ from langchain_community.document_loaders.onenote import OneNoteLoader
 loader = OneNoteLoader(notebook_name="NOTEBOOK NAME", section_name="SECTION NAME", page_title="PAGE TITLE", auth_with_token=True)
 ```
 
-Alternatively, you can also pass the token directly to the loader. This is useful when you want to authenticate with a token that was generated by another application. For instance, you can use the [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer) to generate a token and then pass it to the loader.
+
+또한 토큰을 로더에 직접 전달할 수도 있습니다. 이는 다른 애플리케이션에서 생성된 토큰으로 인증하려는 경우에 유용합니다. 예를 들어, [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer)를 사용하여 토큰을 생성한 다음 이를 로더에 전달할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OneNoteLoader", "source": "langchain_community.document_loaders.onenote", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onenote.OneNoteLoader.html", "title": "Microsoft OneNote"}]-->
@@ -56,11 +59,12 @@ from langchain_community.document_loaders.onenote import OneNoteLoader
 loader = OneNoteLoader(notebook_name="NOTEBOOK NAME", section_name="SECTION NAME", page_title="PAGE TITLE", access_token="TOKEN")
 ```
 
-### 🗂️ Documents loader
 
-#### 📑 Loading pages from a OneNote Notebook
+### 🗂️ 문서 로더
 
-`OneNoteLoader` can load pages from OneNote notebooks stored in OneDrive. You can specify any combination of `notebook_name`, `section_name`, `page_title` to filter for pages under a specific notebook, under a specific section, or with a specific title respectively. For instance, you want to load all pages that are stored under a section called `Recipes` within any of your notebooks OneDrive.
+#### 📑 OneNote 노트북에서 페이지 로드하기
+
+`OneNoteLoader`는 OneDrive에 저장된 OneNote 노트북에서 페이지를 로드할 수 있습니다. 특정 노트북, 특정 섹션 또는 특정 제목 아래의 페이지를 필터링하기 위해 `notebook_name`, `section_name`, `page_title`의 조합을 지정할 수 있습니다. 예를 들어, OneDrive의 노트북 중 `Recipes`라는 섹션 아래에 저장된 모든 페이지를 로드하고 싶습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OneNoteLoader", "source": "langchain_community.document_loaders.onenote", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onenote.OneNoteLoader.html", "title": "Microsoft OneNote"}]-->
@@ -70,11 +74,12 @@ loader = OneNoteLoader(section_name="Recipes", auth_with_token=True)
 documents = loader.load()
 ```
 
-#### 📑 Loading pages from a list of Page IDs
 
-Another possibility is to provide a list of `object_ids` for each page you want to load. For that, you will need to query the [Microsoft Graph API](https://developer.microsoft.com/en-us/graph/graph-explorer) to find all the documents ID that you are interested in. This [link](https://learn.microsoft.com/en-us/graph/onenote-get-content#page-collection) provides a list of endpoints that will be helpful to retrieve the documents ID.
+#### 📑 페이지 ID 목록에서 페이지 로드하기
 
-For instance, to retrieve information about all pages that are stored in your notebooks, you need make a request to: `https://graph.microsoft.com/v1.0/me/onenote/pages`. Once you have the list of IDs that you are interested in, then you can instantiate the loader with the following parameters.
+또 다른 가능성은 로드하려는 각 페이지에 대한 `object_ids` 목록을 제공하는 것입니다. 이를 위해 관심 있는 모든 문서 ID를 찾기 위해 [Microsoft Graph API](https://developer.microsoft.com/en-us/graph/graph-explorer)를 쿼리해야 합니다. 이 [링크](https://learn.microsoft.com/en-us/graph/onenote-get-content#page-collection)는 문서 ID를 검색하는 데 유용한 엔드포인트 목록을 제공합니다.
+
+예를 들어, 노트북에 저장된 모든 페이지에 대한 정보를 검색하려면 다음 요청을 해야 합니다: `https://graph.microsoft.com/v1.0/me/onenote/pages`. 관심 있는 ID 목록을 확보한 후 다음 매개변수로 로더를 인스턴스화할 수 있습니다.
 
 ```python
 <!--IMPORTS:[{"imported": "OneNoteLoader", "source": "langchain_community.document_loaders.onenote", "docs": "https://api.python.langchain.com/en/latest/document_loaders/langchain_community.document_loaders.onenote.OneNoteLoader.html", "title": "Microsoft OneNote"}]-->
@@ -84,7 +89,8 @@ loader = OneNoteLoader(object_ids=["ID_1", "ID_2"], auth_with_token=True)
 documents = loader.load()
 ```
 
-## Related
 
-- Document loader [conceptual guide](/docs/concepts/#document-loaders)
-- Document loader [how-to guides](/docs/how_to/#document-loaders)
+## 관련
+
+- 문서 로더 [개념 가이드](/docs/concepts/#document-loaders)
+- 문서 로더 [사용 방법 가이드](/docs/how_to/#document-loaders)

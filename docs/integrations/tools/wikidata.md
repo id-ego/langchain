@@ -1,17 +1,18 @@
 ---
-canonical: https://python.langchain.com/v0.2/docs/integrations/tools/wikidata/
 custom_edit_url: https://github.com/langchain-ai/langchain/edit/master/docs/docs/integrations/tools/wikidata.ipynb
+description: 위키데이터는 인간과 기계가 읽고 편집할 수 있는 무료 오픈 지식 기반으로, 세계에서 가장 큰 오픈 지식 기반 중 하나입니다.
 ---
 
-# Wikidata
+# 위키데이터
 
-> [Wikidata](https://wikidata.org/) is a free and open knowledge base that can be read and edited by both humans and machines. Wikidata is one of the world's largest open knowledge bases.
+> [위키데이터](https://wikidata.org/)는 인간과 기계 모두가 읽고 편집할 수 있는 무료 오픈 지식 기반입니다. 위키데이터는 세계에서 가장 큰 오픈 지식 기반 중 하나입니다.
 
-First, you need to install `wikibase-rest-api-client` and `mediawikiapi` python packages.
+먼저, `wikibase-rest-api-client`와 `mediawikiapi` 파이썬 패키지를 설치해야 합니다.
 
 ```python
 %pip install --upgrade --quiet "wikibase-rest-api-client<0.2" mediawikiapi
 ```
+
 
 ```python
 <!--IMPORTS:[{"imported": "WikidataAPIWrapper", "source": "langchain_community.tools.wikidata.tool", "docs": "https://api.python.langchain.com/en/latest/utilities/langchain_community.utilities.wikidata.WikidataAPIWrapper.html", "title": "Wikidata"}, {"imported": "WikidataQueryRun", "source": "langchain_community.tools.wikidata.tool", "docs": "https://api.python.langchain.com/en/latest/tools/langchain_community.tools.wikidata.tool.WikidataQueryRun.html", "title": "Wikidata"}]-->
@@ -21,6 +22,7 @@ wikidata = WikidataQueryRun(api_wrapper=WikidataAPIWrapper())
 
 print(wikidata.run("Alan Turing"))
 ```
+
 ```output
 Result Q7251:
 Label: Alan Turing
@@ -54,7 +56,8 @@ instance of: fictional human
 sex or gender: male
 ```
 
-## Related
 
-- Tool [conceptual guide](/docs/concepts/#tools)
-- Tool [how-to guides](/docs/how_to/#tools)
+## 관련
+
+- 도구 [개념 가이드](/docs/concepts/#tools)
+- 도구 [사용 방법 가이드](/docs/how_to/#tools)
