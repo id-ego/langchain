@@ -1,21 +1,20 @@
 .PHONY: copy-infra
+copy-infra: LANG=$(filter-out $@,$(MAKECMDGOALS))
 copy-infra:
-	mkdir -p build
-	cp -r data build
-	cp -r docs build
-	cp -r src build
-	cp -r static build
-	cp babel.config.js build
-	cp package.json build
-	cp yarn.lock build
+	cp -r data _build/$(LANG)
+	cp -r docs _build/$(LANG)
+	cp -r src _build/$(LANG)
+	cp -r static _build/$(LANG)
+	cp babel.config.js _build/$(LANG)
+	cp package.json _build/$(LANG)
+	cp yarn.lock _build/$(LANG)
 
 .PHONY: build
-build: copy-infra
-	cp _build/en/* build
-	cd build
+build: LANG=$(filter-out $@,$(MAKECMDGOALS))
+build: copy-infra $(LANG)
+	cd _build/$(LANG)
 	yarn build
 	mv build v0.2
 	mkdir build
 	mv v0.2 build
 	mv build/v0.2/404.html build
-	mv build ../_build/en

@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd .. && make build",
+  "buildCommand": "cd ../.. && make build",
   "outputDirectory": "build",
   "ignoreCommand": "bash ignore-step.sh",
   "trailingSlash": true,
