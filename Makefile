@@ -2,10 +2,11 @@ LANG ?= en
 
 .PHONY: set-lang
 set-lang:
-	$(eval LANG := $(filter-out $@,$(MAKECMDGOALS)))
+	@:
 
 .PHONY: copy-infra
 copy-infra:
+	mkdir -p _build/$(LANG)
 	cp -r data _build/$(LANG)
 	cp -r docs _build/$(LANG)
 	cp -r src _build/$(LANG)
@@ -22,3 +23,6 @@ build: copy-infra
 	mkdir build && \
 	mv v0.2 build && \
 	mv build/v0.2/404.html build
+
+%:
+	@:
