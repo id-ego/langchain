@@ -4,5 +4,10 @@
   "ignoreCommand": "bash ignore-step.sh",
   "trailingSlash": true,
   "rewrites": [],
-  "redirects": []
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/v0.2/ko/docs/introduction/"
+    }
+  ]
 }
