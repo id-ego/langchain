@@ -308,7 +308,7 @@ for doc in loader.load():
 
 매개변수 `gslide_mode`는 다양한 값을 허용합니다:
 
-- "single" : <PAGE BREAK>가 있는 하나의 문서
+- "single" : &lt;PAGE BREAK&gt;가 있는 하나의 문서
 - "slide" : 슬라이드별 하나의 문서
 - "elements" : 각 요소에 대한 하나의 문서.
 
@@ -327,7 +327,7 @@ for doc in loader.load():
 
 매개변수 `gsheet_mode`는 다양한 값을 허용합니다:
 - `"single"`: 한 줄에 하나의 문서 생성
-- `"elements"` : markdown 배열과 <PAGE BREAK> 태그가 있는 하나의 문서.
+- `"elements"` : markdown 배열과 &lt;PAGE BREAK&gt; 태그가 있는 하나의 문서.
 
 ```python
 loader = GoogleDriveLoader(
