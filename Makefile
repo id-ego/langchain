@@ -17,11 +17,12 @@ copy-infra:
 
 .PHONY: build
 build: copy-infra
-	cd _build/$(LANG) && \
-	yarn build && \
-	mv build v0.2 && \
-	mkdir build && \
-	mv v0.2 build && \
+	cd _build/$(LANG)
+	yarn
+	yarn build
+	mv build v0.2
+	mkdir build
+	mv v0.2 build
 	mv build/v0.2/404.html build
 
 %:
