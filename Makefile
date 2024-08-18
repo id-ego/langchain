@@ -1,5 +1,10 @@
+LANG ?= en
+
+.PHONY: set-lang
+set-lang:
+	$(eval LANG := $(filter-out $@,$(MAKECMDGOALS)))
+
 .PHONY: copy-infra
-copy-infra: LANG=$(filter-out $@,$(MAKECMDGOALS))
 copy-infra:
 	cp -r data _build/$(LANG)
 	cp -r docs _build/$(LANG)
@@ -10,11 +15,10 @@ copy-infra:
 	cp yarn.lock _build/$(LANG)
 
 .PHONY: build
-build: LANG=$(filter-out $@,$(MAKECMDGOALS))
-build: copy-infra $(LANG)
-	cd _build/$(LANG)
-	yarn build
-	mv build v0.2
-	mkdir build
-	mv v0.2 build
+build: copy-infra
+	cd _build/$(LANG) && \
+	yarn build && \
+	mv build v0.2 && \
+	mkdir build && \
+	mv v0.2 build && \
 	mv build/v0.2/404.html build

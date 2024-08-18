@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd ../.. && make build en",
+  "buildCommand": "cd ../.. && make set-lang en build",
   "outputDirectory": "build",
   "ignoreCommand": "bash ignore-step.sh",
   "trailingSlash": true,
