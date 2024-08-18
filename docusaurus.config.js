@@ -9,7 +9,7 @@ const { ProvidePlugin } = require("webpack");
 const baseLightCodeBlockTheme = require("prism-react-renderer/themes/vsLight");
 const baseDarkCodeBlockTheme = require("prism-react-renderer/themes/vsDark");
 
-const baseUrl = "/v0.2/";
+const baseUrl = "/v0.2/ko/";
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -26,8 +26,8 @@ const config = {
 	onBrokenMarkdownLinks: "warn",
 
 	i18n: {
-		defaultLocale: "en",
-		locales: ["en"],
+		defaultLocale: "ko",
+		locales: ["ko"],
 	},
 
 	themes: ["@docusaurus/theme-mermaid"],
